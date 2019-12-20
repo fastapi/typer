@@ -1,0 +1,13 @@
+[build-system]
+requires = ["flit_core >=2,<3"]
+build-backend = "flit_core.buildapi"
+
+[tool.flit.metadata]
+module = "typer"
+author = "Sebastián Ramírez"
+author-email = "tiangolo@gmail.com"
+home-page = "https://github.com/tiangolo/typer"
+classifiers = ["License :: OSI Approved :: MIT License"]
+requires = [
+    "click >= 7.0.0, <8.0.0"
+]
