@@ -17,7 +17,7 @@ And your editor (and Typer) will know that:
 * `formal` is a `bool` and is by default `False`.
 * `intro` is a `str`, and by default is `None`, so it's optional.
 
-These type hints are what gives you autocomplete in your editor and several other features.
+These type hints are what give you autocomplete in your editor and several other features.
 
 Typer is based on these type hints.
 
@@ -33,7 +33,7 @@ So you can come back and see exactly what you need.
 
 ## Run the code
 
-All the code blocks can be copied and used directly (they are actually tested Python files).
+All the code blocks can be copied and used directly (they are tested Python files).
 
 To run any of the examples, copy the code to a file `main.py`, and run it:
 
