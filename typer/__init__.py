@@ -1,6 +1,6 @@
 """Typer, an intuitive CLI library based on optional type hints"""
 
-__version__ = "0.0.2"
+__version__ = "0.0.3"
 
 from click.exceptions import (  # noqa
     Abort,

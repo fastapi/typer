@@ -1,5 +1,7 @@
 ## Latest changes
 
+## 0.0.3
+
 * Fix group creation without name.
 
 ## 0.0.2
