@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://typer.tiangolo.com"><img src="/img/logo-margin/logo-margin-vector.svg" alt="Typer"></a>
+  <a href="https://typer.tiangolo.com"><img src="https://typer.tiangolo.com/img/logo-margin/logo-margin-vector.svg" alt="Typer"></a>
 </p>
 <p align="center">
     <em>Typer: CLIs with autocompletion. While developing and using.</em>
