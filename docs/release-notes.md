@@ -1,5 +1,7 @@
 ## Latest changes
 
+* Fix group creation without name.
+
 ## 0.0.2
 
 * Add initial version of code, docs, etc.
