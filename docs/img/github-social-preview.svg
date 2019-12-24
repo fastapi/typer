@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg8"
+   version="1.1"
+   viewBox="0 0 338.66668 169.33334"
+   height="169.33334mm"
+   width="338.66669mm"
+   sodipodi:docname="github-social-preview.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   inkscape:export-filename="/home/user/code/typer/docs/img/github-social-preview.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1025"
+     id="namedview9"
+     showgrid="false"
+     inkscape:zoom="0.52249777"
+     inkscape:cx="352.93222"
+     inkscape:cy="307.68324"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg8" />
+  <defs
+     id="defs2" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <rect
+     style="opacity:0.98000004;fill:#ffffff;fill-opacity:1;stroke-width:0.26458332"
+     id="rect853"
+     width="338.66666"
+     height="169.33333"
+     x="0"
+     y="0"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96" />
+  <g
+     id="g818"
+     transform="matrix(0.54668739,0,0,0.54668739,4.8193004,2.0789234)">
+    <text
+       id="text861"
+       y="147.41693"
+       x="234.27277"
+       style="font-style:normal;font-weight:normal;font-size:127.57019043px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:3.189255"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono Bold';stroke-width:3.189255"
+         y="147.41693"
+         x="234.27277"
+         id="tspan859"
+         sodipodi:role="line">Typer</tspan></text>
+    <path
+       style="stroke-width:7.00927496"
+       id="path821"
+       d="M 205.78687,60.494874 H 69.079616 c -8.35431,0 -15.189685,5.821962 -15.189685,12.937703 V 99.243294 H 69.079616 V 73.303198 H 205.78687 V 164.06121 H 69.079616 V 138.05642 H 53.889931 v 25.94009 c 0,7.11574 6.835375,12.80833 15.189685,12.80833 H 205.78687 c 8.35432,0 15.18968,-5.69259 15.18968,-12.80833 V 73.432577 c 0,-7.180431 -6.83536,-12.937703 -15.18968,-12.937703 z M 129.8384,144.52526 160.21778,118.64984 129.8384,92.774449 V 112.181 H 53.889931 v 12.93771 H 129.8384 Z"
+       inkscape:connector-curvature="0" />
+  </g>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+     x="169.84227"
+     y="125.57798"
+     id="text851-3"><tspan
+       sodipodi:role="line"
+       x="169.84227"
+       y="125.57798"
+       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Roboto;-inkscape-font-specification:'Roboto Italic';text-align:center;text-anchor:middle;stroke-width:0.26458332"
+       id="tspan855-5">Build great CLIs. Easy to code. Based on Python type hints.</tspan></text>
+</svg>
