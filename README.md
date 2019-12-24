@@ -24,9 +24,9 @@
 
 ---
 
-Typer is library to build <abbr title="command line interface, programs executed from a terminal">CLI</abbr> applications that users love using and developers love creating. Based on Python 3.6+ type hints.
+Typer is library to build <abbr title="command line interface, programs executed from a terminal">CLI</abbr> applications that users will love using and developers will love creating. Based on Python 3.6+ type hints.
 
-**Typer** is the little sibling of <a href="https://fastapi.tiangolo.com" target="_blank">FastAPI</a>. And it's intended to be the FastAPI of CLIs.
+**Typer** is <a href="https://fastapi.tiangolo.com" target="_blank">FastAPI</a>'s little sibling. And it's intended to be the FastAPI of CLIs.
 
 The key features are:
 
@@ -34,13 +34,13 @@ The key features are:
 * **Easy to use**: It's easy to use for the final users. Automatic help commands, and (optional) automatic completion for all shells.
 * **Short**: Minimize code duplication. Multiple features from each parameter declaration. Fewer bugs.
 * **Start simple**: The simplest example adds only 2 lines of code to your app: **1 import, 1 function call**.
-* **Grow large**: Grow in complexity as much as you want create arbitrarily complex trees of commands and groups sub-commands, with options and arguments.
+* **Grow large**: Grow in complexity as much as you want, create arbitrarily complex trees of commands and groups sub-commands, with options and arguments.
 
 ## Requirements
 
 Python 3.6+
 
-Typer stands on the shoulders of a giant. Internally it uses <a href="https://click.palletsprojects.com/" target="_blank">Click</a>, that's the only dependency.
+Typer stands on the shoulders of a giant. Its only internal dependency is <a href="https://click.palletsprojects.com/" target="_blank">Click</a>.
 
 ## Installation
 
@@ -112,7 +112,7 @@ Options:
 
 ## Example upgrade
 
-The previous example was the extreme in terms of simplicity.
+This was the simplest example possible.
 
 Now let's see one a bit more complex.
 
@@ -280,14 +280,14 @@ For a more complete example including more features, see the <a href="https://ty
 
 Typer uses <a href="https://click.palletsprojects.com/" target="_blank">Click</a> internally. That's the only dependency.
 
-But you can install extras:
+But you can also install extras:
 
-* <a href="https://pypi.org/project/colorama/" target="_blank"><code>colorama</code></a>: and Click will automatically use it to make sure colors always work correctly, even in Windows.
-    * Then you can use any tool you want to output colors in all the systems, including the integrated `typer.style()` and `typer.secho()` (provided by Click).
+* <a href="https://pypi.org/project/colorama/" target="_blank"><code>colorama</code></a>: and Click will automatically use it to make sure your terminal's colors always work correctly, even in Windows.
+    * Then you can use any tool you want to output your terminal's colors in all the systems, including the integrated `typer.style()` and `typer.secho()` (provided by Click).
     * Or any other tool, e.g. <a href="https://pypi.org/project/wasabi/" target="_blank"><code>wasabi</code></a>, <a href="https://github.com/erikrose/blessings" target="_blank"><code>blessings</code></a>.
 * <a href="https://github.com/click-contrib/click-completion" target="_blank"><code>click-completion</code></a>: and Typer will automatically configure it to provide completion for all the shells, including installation commands.
 
-You can install `typer` with `colorama` and `click-completion` with `pip3 install typer[all]`.
+You can install `typer` with `colorama` and `click-completion` with `pip install typer[all]`.
 
 ## Other tools and plug-ins
 
@@ -296,7 +296,7 @@ Click has many plug-ins available that you can use. And there are many tools tha
 For example:
 
 * <a href="https://github.com/click-contrib/click-spinner" target="_blank"><code>click-spinner</code></a>: to show the user that you are loading data. A Click plug-in.
-    * * There are several other Click plug-ins at <a href="https://github.com/click-contrib" target="_blank">click-contrib</a> that you can explore.
+    * There are several other Click plug-ins at <a href="https://github.com/click-contrib" target="_blank">click-contrib</a> that you can explore.
 * <a href="https://pypi.org/project/tabulate/" target="_blank"><code>tabulate</code></a>: to automatically display tabular data nicely. Independent of Click or typer.
 * etc... you can re-use many of the great available tools for building CLIs.
 
