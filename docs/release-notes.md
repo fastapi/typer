@@ -1,5 +1,6 @@
 ## Latest changes
 
+* Update short descriptions and assets.
 * Docs rewording and fix typos. PR [#1](https://github.com/tiangolo/typer/pull/1) by [@mariacamilagl](https://github.com/mariacamilagl).
 
 ## 0.0.3
