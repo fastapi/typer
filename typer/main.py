@@ -215,7 +215,7 @@ def get_command(typer_instance: Typer) -> click.Command:
     assert False, "Could not get a command for this Typer instance"
 
 
-def get_group_name(typer_info: TyperInfo) -> str:
+def get_group_name(typer_info: TyperInfo) -> Optional[str]:
     if typer_info.callback:
         # Priority 1: Callback passed in app.add_typer()
         return get_command_name(typer_info.callback.__name__)
@@ -227,7 +227,7 @@ def get_group_name(typer_info: TyperInfo) -> str:
                 return get_command_name(registered_callback.callback.__name__)
         if typer_info.typer_instance.info.callback:
             return get_command_name(typer_info.typer_instance.info.callback.__name__)
-    assert False, "A Group name could not be created"
+    return None
 
 
 def solve_typer_info_defaults(typer_info: TyperInfo) -> TyperInfo:
