@@ -282,7 +282,7 @@ Typer uses <a href="https://click.palletsprojects.com/" target="_blank">Click</a
 
 But you can also install extras:
 
-* <a href="https://pypi.org/project/colorama/" target="_blank"><code>colorama</code></a>: and Click will automatically use it to make sure your terminal´s colors always work correctly, even in Windows.
+* <a href="https://pypi.org/project/colorama/" target="_blank"><code>colorama</code></a>: and Click will automatically use it to make sure your terminal's colors always work correctly, even in Windows.
     * Then you can use any tool you want to output your terminal's colors in all the systems, including the integrated `typer.style()` and `typer.secho()` (provided by Click).
     * Or any other tool, e.g. <a href="https://pypi.org/project/wasabi/" target="_blank"><code>wasabi</code></a>, <a href="https://github.com/erikrose/blessings" target="_blank"><code>blessings</code></a>.
 * <a href="https://github.com/click-contrib/click-completion" target="_blank"><code>click-completion</code></a>: and Typer will automatically configure it to provide completion for all the shells, including installation commands.
