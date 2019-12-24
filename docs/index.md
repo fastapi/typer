@@ -5,8 +5,8 @@
     <em>Typer: CLIs with autocompletion. While developing and using.</em>
 </p>
 <p align="center">
-<a href="https://travis-ci.org/tiangolo/typer" target="_blank">
-    <img src="https://travis-ci.org/tiangolo/typer.svg?branch=master" alt="Build Status">
+<a href="https://travis-ci.com/tiangolo/typer" target="_blank">
+    <img src="https://travis-ci.com/tiangolo/typer.svg?branch=master" alt="Build Status">
 </a>
 <a href="https://codecov.io/gh/tiangolo/typer" target="_blank">
     <img src="https://codecov.io/gh/tiangolo/typer/branch/master/graph/badge.svg" alt="Coverage">

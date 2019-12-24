@@ -1,5 +1,5 @@
-from typer.testing import CliRunner
 import typer
+from typer.testing import CliRunner
 
 from first_steps.tutorial001 import main
 

@@ -1,6 +1,8 @@
-from typing import Optional, Any, List, Callable, Union, Type
-from .models import OptionInfo, ArgumentInfo
+from typing import Any, Callable, List, Optional, Type, Union
+
 import click
+
+from .models import ArgumentInfo, OptionInfo
 
 
 def Option(
@@ -51,7 +53,7 @@ def Option(
     resolve_path: bool = False,
     allow_dash: bool = False,
     path_type: Union[None, Type[str], Type[bytes]] = None,
-):
+) -> Any:
     return OptionInfo(
         # Parameter
         default=default,
@@ -136,7 +138,7 @@ def Argument(
     resolve_path: bool = False,
     allow_dash: bool = False,
     path_type: Union[None, Type[str], Type[bytes]] = None,
-):
+) -> Any:
     return ArgumentInfo(
         # Parameter
         default=default,

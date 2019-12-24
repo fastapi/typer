@@ -3,25 +3,26 @@ from datetime import datetime
 from enum import Enum
 from functools import update_wrapper
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
+from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, Union
 from uuid import UUID
 
 import click
 
 from .models import (
+    AnyType,
     ArgumentInfo,
     BinaryFileRead,
     BinaryFileWrite,
+    CommandFunctionType,
     CommandInfo,
+    Default,
+    DefaultPlaceholder,
     NoneType,
     OptionInfo,
     ParameterInfo,
     Required,
-    TyperInfo,
     TextFile,
-    AnyType,
-    Default,
-    DefaultPlaceholder,
+    TyperInfo,
 )
 
 
@@ -38,7 +39,7 @@ class Typer:
         result_callback: Optional[Callable] = Default(None),
         # Command
         context_settings: Optional[Dict[Any, Any]] = Default(None),
-        callback: Optional[Callable[..., Any]] = Default(None),
+        callback: Optional[Callable] = Default(None),
         help: Optional[str] = Default(None),
         epilog: Optional[str] = Default(None),
         short_help: Optional[str] = Default(None),
@@ -88,8 +89,8 @@ class Typer:
         add_help_option: bool = Default(True),
         hidden: bool = Default(False),
         deprecated: bool = Default(False),
-    ) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
-        def decorator(f: Callable[..., Any]):
+    ) -> Callable[[CommandFunctionType], CommandFunctionType]:
+        def decorator(f: CommandFunctionType) -> CommandFunctionType:
             self.registered_callback = TyperInfo(
                 name=name,
                 cls=cls,
@@ -125,11 +126,11 @@ class Typer:
         add_help_option: bool = True,
         hidden: bool = False,
         deprecated: bool = False,
-    ) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
+    ) -> Callable[[CommandFunctionType], CommandFunctionType]:
         if cls is None:
             cls = click.Command
 
-        def decorator(f):
+        def decorator(f: CommandFunctionType) -> CommandFunctionType:
             self.registered_commands.append(
                 CommandInfo(
                     name=name,
@@ -162,7 +163,7 @@ class Typer:
         result_callback: Optional[Callable] = Default(None),
         # Command
         context_settings: Optional[Dict[Any, Any]] = Default(None),
-        callback: Optional[Callable[..., Any]] = Default(None),
+        callback: Optional[Callable] = Default(None),
         help: Optional[str] = Default(None),
         epilog: Optional[str] = Default(None),
         short_help: Optional[str] = Default(None),
@@ -170,7 +171,7 @@ class Typer:
         add_help_option: bool = Default(True),
         hidden: bool = Default(False),
         deprecated: bool = Default(False),
-    ):
+    ) -> None:
         self.registered_groups.append(
             TyperInfo(
                 typer_instance,
@@ -193,16 +194,16 @@ class Typer:
             )
         )
 
-    def __call__(self):
+    def __call__(self) -> Any:
         return get_command(self)()
 
 
-def get_group(typer_instance: Typer) -> click.Group:
+def get_group(typer_instance: Typer) -> click.Command:
     group = get_group_from_info(TyperInfo(typer_instance))
     return group
 
 
-def get_command(typer_instance: Typer):
+def get_command(typer_instance: Typer) -> click.Command:
     if (
         typer_instance.registered_callback
         or typer_instance.registered_groups
@@ -211,9 +212,10 @@ def get_command(typer_instance: Typer):
         return get_group(typer_instance)
     elif len(typer_instance.registered_commands) == 1:
         return get_command_from_info(typer_instance.registered_commands[0])
+    assert False, "Could not get a command for this Typer instance"
 
 
-def get_group_name(typer_info: TyperInfo):
+def get_group_name(typer_info: TyperInfo) -> str:
     if typer_info.callback:
         # Priority 1: Callback passed in app.add_typer()
         return get_command_name(typer_info.callback.__name__)
@@ -225,9 +227,10 @@ def get_group_name(typer_info: TyperInfo):
                 return get_command_name(registered_callback.callback.__name__)
         if typer_info.typer_instance.info.callback:
             return get_command_name(typer_info.typer_instance.info.callback.__name__)
+    assert False, "A Group name could not be created"
 
 
-def solve_typer_info_defaults(typer_info: TyperInfo):
+def solve_typer_info_defaults(typer_info: TyperInfo) -> TyperInfo:
     values = {}
     name = None
     for name, value in typer_info.__dict__.items():
@@ -256,7 +259,7 @@ def solve_typer_info_defaults(typer_info: TyperInfo):
     return TyperInfo(**values)
 
 
-def get_group_from_info(group_info: TyperInfo):
+def get_group_from_info(group_info: TyperInfo) -> click.Command:
     assert (
         group_info.typer_instance
     ), "A Typer instance is needed to generate a Click Group"
@@ -274,8 +277,8 @@ def get_group_from_info(group_info: TyperInfo):
         context_param_name,
     ) = get_params_convertors_ctx_param_name_from_function(solved_info.callback)
     cls = solved_info.cls or click.Group
-    group = cls(
-        name=solved_info.name,
+    group = cls(  # type: ignore
+        name=solved_info.name or "",
         commands=commands,
         invoke_without_command=solved_info.invoke_without_command,
         no_args_is_help=solved_info.no_args_is_help,
@@ -289,7 +292,7 @@ def get_group_from_info(group_info: TyperInfo):
             convertors=convertors,
             context_param_name=context_param_name,
         ),
-        params=params,
+        params=params,  # type: ignore
         help=solved_info.help,
         epilog=solved_info.epilog,
         short_help=solved_info.short_help,
@@ -301,13 +304,13 @@ def get_group_from_info(group_info: TyperInfo):
     return group
 
 
-def get_command_name(name: str):
+def get_command_name(name: str) -> str:
     return name.lower().replace("_", "-")
 
 
 def get_params_convertors_ctx_param_name_from_function(
     callback: Optional[Callable[..., Any]]
-):
+) -> Tuple[List[Union[click.Argument, click.Option]], Dict[str, Any], Optional[str]]:
     params = []
     convertors = {}
     context_param_name = None
@@ -324,7 +327,7 @@ def get_params_convertors_ctx_param_name_from_function(
     return params, convertors, context_param_name
 
 
-def get_command_from_info(command_info: CommandInfo):
+def get_command_from_info(command_info: CommandInfo) -> click.Command:
     assert command_info.callback, "A command must have a callback function"
     name = command_info.name or get_command_name(command_info.callback.__name__)
     (
@@ -342,7 +345,7 @@ def get_command_from_info(command_info: CommandInfo):
             convertors=convertors,
             context_param_name=context_param_name,
         ),
-        params=params,
+        params=params,  # type: ignore
         help=command_info.help,
         epilog=command_info.epilog,
         short_help=command_info.short_help,
@@ -354,15 +357,16 @@ def get_command_from_info(command_info: CommandInfo):
     return command
 
 
-def param_path_convertor(value: Optional[str] = None):
+def param_path_convertor(value: Optional[str] = None) -> Optional[Path]:
     if value is not None:
         return Path(value)
+    return None
 
 
-def generate_enum_convertor(enum: Type[Enum]):
+def generate_enum_convertor(enum: Type[Enum]) -> Callable:
     lower_val_map = {str(val.value).lower(): val for val in enum}
 
-    def convertor(value: Any):
+    def convertor(value: Any) -> Any:
         if value is not None:
             low = str(value).lower()
             if low in lower_val_map:
@@ -374,11 +378,11 @@ def generate_enum_convertor(enum: Type[Enum]):
 
 def get_callback(
     *,
-    callback: Optional[Callable[..., Any]] = None,
-    params: List[click.Parameter] = [],
+    callback: Optional[Callable] = None,
+    params: Sequence[click.Parameter] = [],
     convertors: Dict[str, Callable[[str], Any]] = {},
     context_param_name: str = None,
-) -> Optional[Callable[..., Any]]:
+) -> Optional[Callable]:
     if not callback:
         return None
     signature = inspect.signature(callback)
@@ -388,7 +392,7 @@ def get_callback(
     for param in params:
         use_params[param.name] = param.default
 
-    def wrapper(**kwargs):
+    def wrapper(**kwargs: Any) -> Any:
         for k, v in kwargs.items():
             if k in convertors:
                 use_params[k] = convertors[k](v)
@@ -396,13 +400,15 @@ def get_callback(
                 use_params[k] = v
         if context_param_name:
             use_params[context_param_name] = click.get_current_context()
-        return callback(**use_params)
+        return callback(**use_params)  # type: ignore
 
     update_wrapper(wrapper, callback)
     return wrapper
 
 
-def get_click_type(*, annotation: Any, parameter_info: ParameterInfo):
+def get_click_type(
+    *, annotation: Any, parameter_info: ParameterInfo
+) -> click.ParamType:
     if annotation == str:
         return click.STRING
     elif annotation == int:
@@ -485,7 +491,9 @@ def lenient_issubclass(
     return isinstance(cls, type) and issubclass(cls, class_or_tuple)
 
 
-def get_click_param(param: inspect.Parameter):
+def get_click_param(
+    param: inspect.Parameter,
+) -> Tuple[Union[click.Argument, click.Option], Any]:
     # First, find out what will be:
     # * ParamInfo (ArgumentInfo or OptionInfo)
     # * default_value
@@ -511,7 +519,7 @@ def get_click_param(param: inspect.Parameter):
         annotation = str
     main_type = annotation
     is_list = False
-    parameter_type = None
+    parameter_type: Any = None
     is_flag = None
     origin = getattr(main_type, "__origin__", None)
     if origin is not None:
@@ -624,9 +632,10 @@ def get_click_param(param: inspect.Parameter):
             ),
             convertor,
         )
+    assert False, "A click.Parameter should be returned"
 
 
-def run(function: Callable):
+def run(function: Callable) -> Any:
     app = Typer()
     app.command()(function)
     app()

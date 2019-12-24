@@ -1,3 +1,4 @@
+import io
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -7,11 +8,9 @@ from typing import (
     Optional,
     Sequence,
     Type,
-    Union,
     TypeVar,
+    Union,
 )
-
-import io
 
 import click
 
@@ -49,14 +48,17 @@ class DefaultPlaceholder:
     It's used internally to recognize when a default value has been overwritten, even
     if the new value is `None`.
     """
+
     def __init__(self, value: Any):
         self.value = value
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
         return bool(self.value)
 
 
 DefaultType = TypeVar("DefaultType")
+
+CommandFunctionType = TypeVar("CommandFunctionType", bound=Callable[..., Any])
 
 
 def Default(value: DefaultType) -> DefaultType:
