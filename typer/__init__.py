@@ -13,7 +13,6 @@ from click.exceptions import (  # noqa
     NoSuchOption,
     UsageError,
 )
-# Terminal functions
 from click.termui import (  # noqa
     clear,
     confirm,
@@ -29,7 +28,6 @@ from click.termui import (  # noqa
     style,
     unstyle,
 )
-# Utilities
 from click.utils import (  # noqa
     echo,
     format_filename,
