@@ -2,7 +2,7 @@
   <a href="https://typer.tiangolo.com"><img src="https://typer.tiangolo.com/img/logo-margin/logo-margin-vector.svg" alt="Typer"></a>
 </p>
 <p align="center">
-    <em>Typer: CLIs with autocompletion. While developing and using.</em>
+    <em>Typer, build great CLIs. Easy to code. Based on Python type hints.</em>
 </p>
 <p align="center">
 <a href="https://travis-ci.com/tiangolo/typer" target="_blank">

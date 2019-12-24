@@ -1,4 +1,4 @@
-"""Typer, an intuitive CLI library based on optional type hints"""
+"""Typer, build great CLIs. Easy to code. Based on Python type hints."""
 
 __version__ = "0.0.3"
 
