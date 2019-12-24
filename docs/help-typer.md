@@ -45,7 +45,7 @@ You can:
 
 ## Tweet about **Typer**
 
-<a href="http://twitter.com/home/?status=I'm loving Typer because... https://github.com/tiangolo/typer cc @tiangolo" target="_blank">Tweet about **Typer**</a> and let me and others know why you like it.
+<a href="https://twitter.com/compose/tweet?text=I'm loving Typer because... https://github.com/tiangolo/typer cc @tiangolo" target="_blank">Tweet about **Typer**</a> and let me and others know why you like it.
 
 ## Let me know how are you using **Typer**
 
@@ -53,7 +53,7 @@ I love to hear about how **Typer** is being used, what have you liked in it, in 
 
 You can let me know:
 
-* <a href="http://twitter.com/home/?status=Hey @tiangolo, I'm using Typer at..." target="_blank">On **Twitter**</a>.
+* <a href="https://twitter.com/compose/tweet?text=Hey @tiangolo, I'm using Typer at..." target="_blank">On **Twitter**</a>.
 * <a href="https://www.linkedin.com/in/tiangolo/" target="_blank">On **Linkedin**</a>.
 * <a href="https://dev.to/tiangolo" target="_blank">On **Dev.to**</a>.
 * <a href="https://medium.com/@tiangolo" target="_blank">On **Medium**</a>.
