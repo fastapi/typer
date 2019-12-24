@@ -158,11 +158,7 @@ Hello Camila Gutiérrez
 
 ## What is a **CLI option**
 
-Here we will use the word **CLI option** to refer to **CLI parameters** passed to the CLI application with a specific name. Because they have a name they don't depend on the order. By default they are *optional* (not *required*).
-
-They are a bit different from **CLI arguments** that you already created.
-
-If you go to your terminal and type:
+Here we will use the word **CLI option** to refer to *CLI parameters* passed to the CLI application with a specific name. For example, if you go to your terminal and type:
 
 ```bash
 ls ./myproject --size
@@ -174,15 +170,25 @@ ls ./myproject --size
 * `./myproject` is a *CLI argument*.
 * `--size` is an optional *CLI option*.
 
-A *CLI option* like `--size` doesn't depend on the order like a *CLI argument*.
-
 The program knows it has to show the size because it sees `--size`, not because of the order.
+
+A *CLI option* like `--size` doesn't depend on the order like a *CLI argument*.
 
 So, if you put the `--size` *before* the *CLI argument*, it still works:
 
 ```bash
 ls --size ./myproject
 ```
+
+The main visual difference between a *CLI option* and and a *CLI argument* is that the *CLI option* has `--` prepended to the name, like in "`--size`".
+
+A *CLI option* doesn't depend on the order because it has a predefined name (here it's `--size`). This is because the CLI app is looking specifically for a literal `--size` parameter or "flag", with that specific "name" (here the specific name is "`--size`"). The CLI app will check if you typed it or not, it will be actively looking for `--size` even if you didn't type it (to check if it's there or not).
+
+In contrast, the CLI app is not actively looking for the *CLI argument* with a text "`./myproject`", it has no way to know if you would type `./myproject` or `./mysuperawesomeproject` or anything else. It's just waiting to get whatever you give it. The only way to know that you refer to a specific *CLI argument* is because of the order. The same way that it knows that the first *CLI argument* was the `name` and the second was the `lastname`, but if you mixed the order, it wouldn't be able to handle it.
+
+Instead, with a *CLI option*, the order doesn't matter.
+
+Also, by default, a *CLI option* is *optional* (not *required*).
 
 !!! tip
     In this example above the *CLI option* `--size` is just a "flag", it's a boolean value, `True` or `False`.
@@ -260,9 +266,9 @@ both still show:
 Good day Ms. Camila Gutiérrez.
 ```
 
-## A **CLI option* with a value
+## A *CLI option* with a value
 
-Let's convert the `lastname` from a *CLI argument* to a *CLI option*:
+To convert the `lastname` from a *CLI argument* to a *CLI option*, give it a default value of `""`:
 
 ```Python hl_lines="4"
 {!./src/first_steps/tutorial005.py!}
@@ -290,6 +296,8 @@ Options:
 !!! tip
     Notice the `--lastname`, and notice that it takes a textual value.
 
+    A *CLI option* with a value like `--lastname` (contrary to a *CLI option* without a value, a `bool` flag, like `--formal` or `--size`) takes as its value whatever is at the *right side* of the *CLI option*.
+
 If you call it without a `--lastname`:
 
 ```bash
@@ -313,6 +321,9 @@ and it shows:
 ```
 Hello Camila Gutiérrez
 ```
+
+!!! tip
+    Notice that "`Gutiérrez`" is at the right side of `--lastname`. A *CLI option* with a value takes as its value whatever is at the *right side*.
 
 And as `--lastname` is now a *CLI option* that doesn't depend on the order, you can pass it before the name:
 

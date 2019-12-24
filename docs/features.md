@@ -1,6 +1,6 @@
 ## Design based on **FastAPI**
 
-**Typer** is the little sibling of <a href="https://fastapi.tiangolo.com" target="_blank">FastAPI</a>.
+**Typer** is <a href="https://fastapi.tiangolo.com" target="_blank">FastAPI</a>'s little sibling.
 
 It follows the same design and ideas. If you know FastAPI, you already know **Typer**... more or less.
 
@@ -46,7 +46,7 @@ The resulting CLI apps created with **Typer** have the nice features of many "pr
 * Automatic command and sub-command structure handling (you will see more about sub-commands in the Tutorial - User Guide).
 * Automatic autocompletion for the CLI app in all operating systems, in all the shells (Bash, Zsh, Fish, PowerShell), so that the final user of your app can just hit <kbd>TAB</kbd> and get the options of sub-commands. *
 
-!!! note * Autocompletion
+!!! note "* Autocompletion"
     For the autocompletion to work on all shells you also need to add the dependency `click-completion`.
 
     Just that. And **Typer** does the rest.

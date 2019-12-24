@@ -287,7 +287,7 @@ But you can also install extras:
     * Or any other tool, e.g. <a href="https://pypi.org/project/wasabi/" target="_blank"><code>wasabi</code></a>, <a href="https://github.com/erikrose/blessings" target="_blank"><code>blessings</code></a>.
 * <a href="https://github.com/click-contrib/click-completion" target="_blank"><code>click-completion</code></a>: and Typer will automatically configure it to provide completion for all the shells, including installation commands.
 
-You can install `typer` with `colorama` and `click-completion` with `pip3 install typer[all]`.
+You can install `typer` with `colorama` and `click-completion` with `pip install typer[all]`.
 
 ## Other tools and plug-ins
 
