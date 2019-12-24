@@ -7,7 +7,48 @@ module = "typer"
 author = "Sebastián Ramírez"
 author-email = "tiangolo@gmail.com"
 home-page = "https://github.com/tiangolo/typer"
-classifiers = ["License :: OSI Approved :: MIT License"]
+classifiers = [
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development",
+    "Typing :: Typed",
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "License :: OSI Approved :: MIT License"
+    ]
 requires = [
     "click >= 7.0.0, <8.0.0"
+]
+description-file = "README.md"
+requires-python = ">=3.6"
+
+[tool.flit.metadata.urls]
+Documentation = "https://typer.tiangolo.com/"
+
+[tool.flit.metadata.requires-extra]
+test = [
+    "pytest >=4.0.0",
+    "pytest-cov",
+    "mypy",
+    "black",
+    "isort"
+]
+doc = [
+    "mkdocs",
+    "mkdocs-material",
+    "markdown-include"
+]
+all = [
+    "colorama",
+    "click-completion"
 ]
