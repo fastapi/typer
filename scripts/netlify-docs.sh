@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Install Flit to be able to install all
-pip install flit
+python3 -m pip install flit
 # Install with Flit
-flit install --deps develop
+python3 -m flit install --deps develop
 # Finally, run mkdocs
-mkdocs build
+python3 -m mkdocs build
