@@ -12,7 +12,7 @@ jobs:
         config: >
             {
               "answered": {
-                "users": ["tiangolo", "dmontagu"],
+                "users": ["tiangolo"],
                 "delay": 864000,
                 "message": "Assuming the original issue was solved, it will be automatically closed now. But feel free to add more comments or create new issues."
               }
