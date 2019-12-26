@@ -1,6 +1,7 @@
 ## Latest changes
 
-* Add custom automatic [Termynal](https://github.com/tiangolo/termynal) for docs.
+* Update Termynal to have fixed sizes, add "fast" button, and use it in [First Steps](https://typer.tiangolo.com/tutorial/first-steps/). PR [#6](https://github.com/tiangolo/typer/pull/6).
+* Add custom automatic [Termynal](https://github.com/tiangolo/termynal) for docs. PR [#5](https://github.com/tiangolo/typer/pull/5).
 
 ## 0.0.4
 
