@@ -10,34 +10,27 @@ Copy that to a file `main.py`.
 
 Test it:
 
-```bash
-python main.py
-```
+<div class="termy">
 
-You will see an output like:
+```console
+$ python main.py
 
-```hl_lines=""
 Hello World
-```
 
-It just prints "Hello World".
+// It just prints "Hello World".
 
-If you type:
+// Now check the --help
+$ python main.py --help
 
-```bash
-python main.py --help
-```
-
-it shows:
-
-```
 Usage: main.py [OPTIONS]
 
 Options:
   --help  Show this message and exit.
 ```
 
-...but this program is still not very useful. Let's increase that.
+</div>
+
+...but this program is still not very useful. Let's extend it.
 
 ## What is a **CLI argument**
 
@@ -45,14 +38,20 @@ Here we will use the word **CLI argument** to refer to **CLI parameters** passed
 
 If you go to your terminal and type:
 
+<div class="termy">
+
 ```bash
-ls ./myproject
+$ ls ./myproject
+
+first-steps.md  intro.md
 ```
+
+</div>
 
 `ls` will show the contents of the directory `./myproject`.
 
-* `ls` is the *command* (or "program", "CLI app").
-* `./myproject` is a *CLI argument*.
+* `ls` is the *program* (or "command", "CLI app").
+* `./myproject` is a *CLI argument*, in this case it refers to the path of a directory.
 
 They are a bit different from **CLI options** that you will see later below.
 
@@ -64,34 +63,28 @@ Update the previous example with an argument `name`:
 {!./src/first_steps/tutorial002.py!}
 ```
 
-If you run it without the argument:
+<div class="termy">
 
-```bash
-python main.py
-```
+```console
 
-it shows:
+$ python main.py
 
-```
+// If you run it without the argument, it shows a nice error
+
 Usage: main.py [OPTIONS] NAME
 Try "main.py --help" for help.
 
 Error: Missing argument "NAME".
-```
 
-Now pass that `name` *CLI argument*:
+// Now pass that NAME CLI argument
+$ python main.py Camila
 
-```bash
-python main.py Camila
-```
-
-it shows:
-
-```
 Hello Camila
+
+// Here "Camila" is the CLI argument
 ```
 
-Here `Camila` is the *CLI argument*.
+</div>
 
 ## Two CLI arguments
 
@@ -101,57 +94,42 @@ Now extend that to have 2 arguments, `name` and `lastname`:
 {!./src/first_steps/tutorial003.py!}
 ```
 
-Now get the help:
+<div class="termy">
 
-```bash
-python main.py --help
-```
+```console
+// Check the main --help
+$ python main.py --help
 
-it shows:
-
-```
 Usage: main.py [OPTIONS] NAME LASTNAME
 
 Options:
   --help  Show this message and exit.
-```
 
-There are now 2 *CLI arguments*, `name` and `lastname`.
+// There are now 2 CLI arguments, name and lastname
 
-Now pass a single `name` argument:
+// Now pass a single name argument
+$ python main.py Camila
 
-```bash
-python main.py Camila
-```
-
-it shows:
-
-```
 Usage: main.py [OPTIONS] NAME LASTNAME
 Try "main.py --help" for help.
 
 Error: Missing argument "LASTNAME".
-```
 
-These 2 arguments are required, so, pass both:
+// These 2 arguments are required, so, pass both:
+$ python main.py Camila Gutiérrez
 
-```bash
-python main.py Camila Gutiérrez
-```
-
-it shows:
-
-```
 Hello Camila Gutiérrez
 ```
+
+</div>
 
 !!! tip
     Notice that the order is important. The last name has to go after the first name.
 
     If you called it with:
 
-    ```bash
-    python main.py Gutiérrez Camila
+    ```
+    $ python main.py Gutiérrez Camila
     ```
 
     your app wouldn't have a way to know which is the `name` and which the `lastname`. It expects the first *CLI argument* to be the `name` and the second *CLI argument* to be the `lastname`.
@@ -160,13 +138,19 @@ Hello Camila Gutiérrez
 
 Here we will use the word **CLI option** to refer to *CLI parameters* passed to the CLI application with a specific name. For example, if you go to your terminal and type:
 
-```bash
-ls ./myproject --size
+<div class="termy">
+
+```console
+$ ls ./myproject --size
+
+12 first-steps.md   4 intro.md
 ```
+
+</div>
 
 `ls` will show the contents of the directory `./myproject` with their `size`.
 
-* `ls` is the *command* (or "program", "CLI app").
+* `ls` is the *program* (or "command", "CLI app").
 * `./myproject` is a *CLI argument*.
 * `--size` is an optional *CLI option*.
 
@@ -176,9 +160,15 @@ A *CLI option* like `--size` doesn't depend on the order like a *CLI argument*.
 
 So, if you put the `--size` *before* the *CLI argument*, it still works:
 
-```bash
-ls --size ./myproject
+<div class="termy">
+
+```console
+$ ls --size ./myproject
+
+12 first-steps.md   4 intro.md
 ```
+
+</div>
 
 The main visual difference between a *CLI option* and and a *CLI argument* is that the *CLI option* has `--` prepended to the name, like in "`--size`".
 
@@ -205,15 +195,12 @@ Now add a `--formal` *CLI option*:
 
 Here `formal` is a `bool` that is `False` by default.
 
-If you get the help:
+<div class="termy">
 
-```bash
-python main.py --help
-```
+```console
+// Get the help
+$ python main.py --help
 
-it shows:
-
-```
 Usage: main.py [OPTIONS] NAME LASTNAME
 
 Options:
@@ -221,50 +208,36 @@ Options:
   --help                  Show this message and exit.
 ```
 
+</div>
+
 !!! tip
     Notice that it automatically creates a `--formal` and a `--no-formal` because it detected that `formal` is a `bool`.
 
 Now call it normally:
 
-```bash
-python main.py Camila Gutiérrez
-```
+<div class="termy">
 
-it still shows:
+```console
+$ python main.py Camila Gutiérrez
 
-```
 Hello Camila Gutiérrez
-```
 
-But if you pass `--formal`:
+// But if you pass --formal
+$ python main.py Camila Gutiérrez --formal
 
-```bash
-python main.py Camila Gutiérrez --formal
-```
+Good day Ms. Camila Gutiérrez.
 
-it shows:
+// And as --formal is a CLI option you can put it anywhere in this command
+$ python main.py Camila --formal Gutiérrez
 
-```
+Good day Ms. Camila Gutiérrez.
+
+$ python main.py --formal Camila Gutiérrez
+
 Good day Ms. Camila Gutiérrez.
 ```
 
-And as `formal` is a *CLI option*, you can put it anywhere in this command:
-
-```bash
-python main.py Camila --formal Gutiérrez
-```
-
-and:
-
-```bash
-python main.py --formal Camila Gutiérrez
-```
-
-both still show:
-
-```
-Good day Ms. Camila Gutiérrez.
-```
+</div>
 
 ## A *CLI option* with a value
 
@@ -276,15 +249,11 @@ To convert the `lastname` from a *CLI argument* to a *CLI option*, give it a def
 
 As `lastname` now has a default value of `""` (an empty string) it is no longer required in the function, and **Typer** will now by default make it an optional *CLI option*.
 
-If you get the help:
+<div class="termy">
 
-```bash
-python main.py --help
-```
+```console
+$ python main.py --help
 
-it now shows:
-
-```
 Usage: main.py [OPTIONS] NAME
 
 Options:
@@ -293,49 +262,45 @@ Options:
   --help                  Show this message and exit.
 ```
 
+</div>
+
 !!! tip
     Notice the `--lastname`, and notice that it takes a textual value.
 
     A *CLI option* with a value like `--lastname` (contrary to a *CLI option* without a value, a `bool` flag, like `--formal` or `--size`) takes as its value whatever is at the *right side* of the *CLI option*.
 
-If you call it without a `--lastname`:
+<div class="termy">
 
-```bash
-python main.py Camila
-```
+```console
+// Call it without a --lastname
+$ python main.py Camila
 
-it shows:
-
-```
 Hello Camila
-```
 
-and you can pass the `--lastname`:
+// Pass the --lastname
+$ python main.py Camila --lastname Gutiérrez
 
-```bash
-python main.py Camila --lastname Gutiérrez
-```
-
-and it shows:
-
-```
 Hello Camila Gutiérrez
 ```
+
+</div>
 
 !!! tip
     Notice that "`Gutiérrez`" is at the right side of `--lastname`. A *CLI option* with a value takes as its value whatever is at the *right side*.
 
 And as `--lastname` is now a *CLI option* that doesn't depend on the order, you can pass it before the name:
 
-```bash
-python main.py --lastname Gutiérrez Camila
-```
+<div class="termy">
 
-and it will still work normally:
+```console
+$ python main.py --lastname Gutiérrez Camila
 
-```
+// and it will still work normally
+
 Hello Camila Gutiérrez
 ```
+
+</div>
 
 ## Arguments, options, parameters, optional, required
 

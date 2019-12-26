@@ -30,11 +30,11 @@ class Termynal {
     constructor(container = '#termynal', options = {}) {
         this.container = (typeof container === 'string') ? document.querySelector(container) : container;
         this.pfx = `data-${options.prefix || 'ty'}`;
-        this.startDelay = options.startDelay
+        this.originalStartDelay = this.startDelay = options.startDelay
             || parseFloat(this.container.getAttribute(`${this.pfx}-startDelay`)) || 600;
-        this.typeDelay = options.typeDelay
+        this.originalTypeDelay = this.typeDelay = options.typeDelay
             || parseFloat(this.container.getAttribute(`${this.pfx}-typeDelay`)) || 90;
-        this.lineDelay = options.lineDelay
+        this.originalLineDelay = this.lineDelay = options.lineDelay
             || parseFloat(this.container.getAttribute(`${this.pfx}-lineDelay`)) || 1500;
         this.progressLength = options.progressLength
             || parseFloat(this.container.getAttribute(`${this.pfx}-progressLength`)) || 40;
@@ -45,16 +45,33 @@ class Termynal {
         this.cursor = options.cursor
             || this.container.getAttribute(`${this.pfx}-cursor`) || '▋';
         this.lineData = this.lineDataToElements(options.lineData || []);
+        this.loadLines()
         if (!options.noInit) this.init()
+    }
+
+    loadLines() {
+        // Load all the lines and create the container so that the size is fixed
+        // Otherwise it would be changing and the user viewport would be constantly
+        // moving as she/he scrolls
+        const finish = this.generateFinish()
+        finish.style.visibility = 'hidden'
+        this.container.appendChild(finish)
+        // Appends dynamically loaded lines to existing line elements.
+        this.lines = [...this.container.querySelectorAll(`[${this.pfx}]`)].concat(this.lineData);
+        for (let line of this.lines) {
+            line.style.visibility = 'hidden'
+            this.container.appendChild(line)
+        }
+        const restart = this.generateRestart()
+        restart.style.visibility = 'hidden'
+        this.container.appendChild(restart)
+        this.container.setAttribute('data-termynal', '');
     }
 
     /**
      * Initialise the widget, get lines, clear container and start animation.
      */
     init() {
-        // Appends dynamically loaded lines to existing line elements.
-        this.lines = [...this.container.querySelectorAll(`[${this.pfx}]`)].concat(this.lineData);
-
         /** 
          * Calculates width and height of Termynal container.
          * If container is empty and lines are dynamically loaded, defaults to browser `auto` or CSS.
@@ -67,6 +84,9 @@ class Termynal {
 
         this.container.setAttribute('data-termynal', '');
         this.container.innerHTML = '';
+        for (let line of this.lines) {
+            line.style.visibility = 'visible'
+        }
         this.start();
     }
 
@@ -74,6 +94,7 @@ class Termynal {
      * Start the animation and rener the lines depending on their data attributes.
      */
     async start() {
+        this.addFinish()
         await this._wait(this.startDelay);
 
         for (let line of this.lines) {
@@ -98,6 +119,49 @@ class Termynal {
 
             line.removeAttribute(`${this.pfx}-cursor`);
         }
+        this.addRestart()
+        this.finishElement.style.visibility = 'hidden'
+        this.lineDelay = this.originalLineDelay
+        this.typeDelay = this.originalTypeDelay
+        this.startDelay = this.originalStartDelay
+    }
+
+    generateRestart() {
+        const restart = document.createElement('a')
+        restart.onclick = (e) => {
+            e.preventDefault()
+            this.container.innerHTML = ''
+            this.init()
+        }
+        restart.href = '#'
+        restart.setAttribute('data-terminal-control', '')
+        restart.innerHTML = "restart \u27f3"  // Refresh emoji
+        return restart
+    }
+    
+    generateFinish() {
+        const finish = document.createElement('a')
+        finish.onclick = (e) => {
+            e.preventDefault()
+            this.lineDelay = 0
+            this.typeDelay = 0
+            this.startDelay = 0
+        }
+        finish.href = '#'
+        finish.setAttribute('data-terminal-control', '')
+        finish.innerHTML = "fast \u2b95"  // Fast emoji arrow
+        this.finishElement = finish
+        return finish
+    }
+
+    addRestart() {
+        const restart = this.generateRestart()
+        this.container.appendChild(restart)
+    }
+
+    addFinish() {
+        const finish = this.generateFinish()
+        this.container.appendChild(finish)
     }
 
     /**
@@ -106,11 +170,11 @@ class Termynal {
      */
     async type(line) {
         const chars = [...line.textContent];
-        const delay = line.getAttribute(`${this.pfx}-typeDelay`) || this.typeDelay;
         line.textContent = '';
         this.container.appendChild(line);
 
         for (let char of chars) {
+            const delay = line.getAttribute(`${this.pfx}-typeDelay`) || this.typeDelay;
             await this._wait(delay);
             line.textContent += char;
         }
