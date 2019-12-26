@@ -1,5 +1,7 @@
 ## Latest changes
 
+* Add custom automatic [Termynal](https://github.com/tiangolo/termynal) for docs.
+
 ## 0.0.4
 
 * Update short descriptions and assets.
