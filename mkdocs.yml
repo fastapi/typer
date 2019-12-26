@@ -21,7 +21,7 @@ nav:
     - Typer: 'index.md'
     - Features: 'features.md'
     - Tutorial - User Guide:
-        - Tutorial - User Guide - Intro: 'tutorial/intro.md'
+        - Tutorial - User Guide - Intro: 'tutorial/index.md'
         - First Steps: 'tutorial/first-steps.md'
     - Alternatives, Inspiration and Comparisons: 'alternatives.md'
     - Help Typer - Get Help: 'help-typer.md'
