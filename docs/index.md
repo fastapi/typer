@@ -44,9 +44,13 @@ Typer stands on the shoulders of a giant. Its only internal dependency is <a hre
 
 ## Installation
 
-```bash
-pip install typer
+<div class="termy">
+```console
+$ pip install typer
+---> 100%
+Successfully installed typer
 ```
+</div>
 
 ## Example
 
@@ -70,45 +74,33 @@ if __name__ == "__main__":
 
 Run your application:
 
-```bash
-python main.py
-```
+<div class="termy">
+```console
+// Run your application
+$ python main.py
 
-you will get a response like:
-
-```
+// You get a nice error, you are missing NAME
 Usage: main.py [OPTIONS] NAME
 Try "main.py --help" for help.
 
 Error: Missing argument "NAME".
-```
 
-Now pass the `NAME` *argument*:
+// You get a --help for free
+$ python main.py --help
 
-```bash
-python main.py Camila
-```
-
-You will get a response like:
-
-```
-Hello Camila
-```
-
-And you automatically get a `--help` command:
-
-```bash
-python main.py --help
-```
-
-shows:
-
-```
 Usage: main.py [OPTIONS] NAME
 
 Options:
   --help  Show this message and exit.
+
+// Now pass the NAME argument
+$ python main.py Camila
+
+Hello Camila
+
+// It works! 🎉
 ```
+</div>
 
 ## Example upgrade
 
@@ -154,15 +146,11 @@ And that will:
 
 ### Run the upgraded example
 
-Get the main `--help`:
+<div class="termy">
+```console
+// Check the --help
+$ python main.py --help
 
-```bash
-python main.py --help
-```
-
-shows:
-
-```
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
 
 Options:
@@ -171,80 +159,49 @@ Options:
 Commands:
   goodbye
   hello
-```
 
-You have 2 sub-commands (the 2 functions), `goodbye` and `hello`.
+// You have 2 sub-commands (the 2 functions): goodbye and hello
 
-Now get the help for `hello`:
+// Now get the --help for hello
 
-```bash
-python main.py hello --help
-```
+$ python main.py hello --help
 
-shows:
-
-```
 Usage: main.py hello [OPTIONS] NAME
 
 Options:
   --help  Show this message and exit.
-```
 
-And now get the help for `goodbye`:
+// And now get the --help for goodbye
 
-```bash
-python main.py goodbye --help
-```
+$ python main.py goodbye --help
 
-shows:
-
-```
 Usage: main.py goodbye [OPTIONS] NAME
 
 Options:
   --formal / --no-formal
   --help                  Show this message and exit.
-```
 
-Notice how it automatically creates a `--formal` and `--no-formal` for your `bool` *option*.
+// Automatic --formal and --no-formal for the bool option 🎉
 
----
+// And if you use it with the hello command
 
-And of course, if you use it, it does what you expect:
+$ python main.py hello Camila
 
-```bash
-python main.py hello Camila
-```
-
-shows:
-
-```
 Hello Camila
-```
 
-Then:
+// And with the goodbye command
 
-```bash
-python main.py goodbye Camila
-```
+$ python main.py goodbye Camila
 
-shows:
-
-```
 Bye Camila!
-```
 
-And:
+// And with --formal
 
-```bash
-python main.py goodbye --formal Camila
-```
+$ python main.py goodbye --formal Camila
 
-shows:
-
-```
 Goodbye Ms. Camila. Have a good day.
 ```
+</div>
 
 ### Recap
 
