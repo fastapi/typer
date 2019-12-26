@@ -53,3 +53,11 @@ extra:
           link: 'https://medium.com/@tiangolo'
         - type: 'globe'
           link: 'https://tiangolo.com'
+
+extra_css:
+    - 'css/termynal.css'
+    - 'css/custom.css'
+
+extra_javascript:
+    - 'js/termynal.js'
+    - 'js/custom.js'
