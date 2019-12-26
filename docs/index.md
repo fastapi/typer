@@ -45,11 +45,13 @@ Typer stands on the shoulders of a giant. Its only internal dependency is <a hre
 ## Installation
 
 <div class="termy">
+
 ```console
 $ pip install typer
 ---> 100%
 Successfully installed typer
 ```
+
 </div>
 
 ## Example
@@ -75,6 +77,7 @@ if __name__ == "__main__":
 Run your application:
 
 <div class="termy">
+
 ```console
 // Run your application
 $ python main.py
@@ -100,6 +103,7 @@ Hello Camila
 
 // It works! 🎉
 ```
+
 </div>
 
 ## Example upgrade
@@ -147,6 +151,7 @@ And that will:
 ### Run the upgraded example
 
 <div class="termy">
+
 ```console
 // Check the --help
 $ python main.py --help
@@ -201,6 +206,7 @@ $ python main.py goodbye --formal Camila
 
 Goodbye Ms. Camila. Have a good day.
 ```
+
 </div>
 
 ### Recap
