@@ -8,7 +8,6 @@ class CliRunner(ClickCliRunner):
     def invoke(  # type: ignore
         self,
         app: Typer,
-        cli: Typer,
         args: Optional[Union[str, Iterable[str]]] = None,
         input: Optional[Union[bytes, Text, IO[Any]]] = None,
         env: Optional[Mapping[str, str]] = None,
