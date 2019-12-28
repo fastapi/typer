@@ -243,12 +243,10 @@ class Termynal {
                 attrs += ` class=${line[prop]} `
                 continue
             }
-            attrs += this.pfx;
-
             if (prop === 'type') {
-                attrs += `="${line[prop]}" `
+                attrs += `${this.pfx}="${line[prop]}" `
             } else if (prop !== 'value') {
-                attrs += `-${prop}="${line[prop]}" `
+                attrs += `${this.pfx}-${prop}="${line[prop]}" `
             }
         }
 

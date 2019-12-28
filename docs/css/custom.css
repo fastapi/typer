@@ -1,4 +1,9 @@
 .termynal-comment {
-    color: #999;
+    color: #4a968f;
     font-style: italic;
+    display: block;
+}
+
+.termy {
+    white-space: pre-wrap;
 }

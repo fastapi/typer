@@ -6,6 +6,7 @@ document.querySelectorAll(".use-termynal").forEach(node => {
 });
 const progressLiteralStart = "---> 100%";
 const promptLiteralStart = "$ ";
+const customPromptLiteralStart = "# ";
 const termynalActivateClass = "termy";
 let termynals = [];
 
@@ -29,8 +30,8 @@ function createTermynals() {
                     if (isBlankSpace) {
                         dataValue["delay"] = 0;
                     }
-                    if (buffer.length > 1 && buffer[buffer.length - 1] === "") {
-                        // The last single <br> won't have effect
+                    if (buffer[buffer.length - 1] === "") {
+                        // A last single <br> won't have effect
                         // so put an additional one
                         buffer.push("");
                     }
@@ -55,11 +56,24 @@ function createTermynals() {
                     });
                 } else if (line.startsWith("// ")) {
                     saveBuffer();
-                    const value = line.replace("// ", "").trimEnd();
+                    const value = "💬 " + line.replace("// ", "").trimEnd();
                     useLines.push({
                         value: value,
                         class: "termynal-comment",
                         delay: 0
+                    });
+                } else if (line.startsWith(customPromptLiteralStart)) {
+                    saveBuffer();
+                    const promptStart = line.indexOf(promptLiteralStart);
+                    if (promptStart === -1) {
+                        console.error("Custom prompt found but no end delimiter", line)
+                    }
+                    const prompt = line.slice(0, promptStart).replace(customPromptLiteralStart, "")
+                    let value = line.slice(promptStart + promptLiteralStart.length);
+                    useLines.push({
+                        type: "input",
+                        value: value,
+                        prompt: prompt
                     });
                 } else {
                     buffer.push(line);
