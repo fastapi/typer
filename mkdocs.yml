@@ -1,5 +1,5 @@
 site_name: Typer
-site_description: Typer, create easy to use command line applications. With code easy to write.
+site_description: Typer, build great CLIs. Easy to code. Based on Python type hints.
 site_url: https://typer.tiangolo.com/
 
 theme:
