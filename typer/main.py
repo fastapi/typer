@@ -259,28 +259,67 @@ def get_group_name(typer_info: TyperInfo) -> Optional[str]:
     return None
 
 
+def solve_typer_info_help(typer_info: TyperInfo) -> str:
+    # Priority 1a: Value was set in app.add_typer()
+    if not isinstance(typer_info.help, DefaultPlaceholder):
+        return inspect.cleandoc(typer_info.help or "")
+    # Priority 1b: Value was set in app.add_typer(), in callback docstring
+    if typer_info.callback:
+        doc = inspect.getdoc(typer_info.callback)
+        if doc:
+            return doc
+    try:
+        # Priority 2a: Value was set in @subapp.callback()
+        doc = typer_info.typer_instance.registered_callback.help
+        if not isinstance(doc, DefaultPlaceholder):
+            return inspect.cleandoc(doc or "")
+        # Priority 2b: Value was set in @subapp.callback(), in callback docstring
+        doc = inspect.getdoc(typer_info.typer_instance.registered_callback.callback)
+        if doc:
+            return doc
+    except AttributeError:
+        pass
+    try:
+        # Priority 3a: Value set in subapp = typer.Typer()
+        instance_value = typer_info.typer_instance.info.help
+        if not isinstance(instance_value, DefaultPlaceholder):
+            return inspect.cleandoc(instance_value or "")
+        doc = inspect.getdoc(typer_info.typer_instance.callback)
+        if doc:
+            return doc
+    except AttributeError:
+        pass
+    # Value not set, use the default
+    return typer_info.help.value
+
+
 def solve_typer_info_defaults(typer_info: TyperInfo) -> TyperInfo:
-    values = {}
+    values: Dict[str, Any] = {}
+    values["help"] = solve_typer_info_help(typer_info)
     name = None
     for name, value in typer_info.__dict__.items():
         # Priority 1: Value was set in app.add_typer()
         if not isinstance(value, DefaultPlaceholder):
             values[name] = value
             continue
-        if typer_info.typer_instance:
-            if typer_info.typer_instance.registered_callback:
-                callback_value = getattr(
-                    typer_info.typer_instance.registered_callback, name
-                )
-                # Priority 2: Value was set in @subapp.callback()
-                if not isinstance(callback_value, DefaultPlaceholder):
-                    values[name] = callback_value
-                    continue
-            instance_value = getattr(typer_info.typer_instance.info, name)
-            # Priority 3: Value set in subapp = typer.Typer()
+        # Priority 2: Value was set in @subapp.callback()
+        try:
+            callback_value = getattr(
+                typer_info.typer_instance.registered_callback, name  # type: ignore
+            )
+            if not isinstance(callback_value, DefaultPlaceholder):
+                values[name] = callback_value
+                continue
+        except AttributeError:
+            pass
+        # Priority 3: Value set in subapp = typer.Typer()
+        try:
+            instance_value = getattr(typer_info.typer_instance.info, name)  # type: ignore
             if not isinstance(instance_value, DefaultPlaceholder):
                 values[name] = instance_value
                 continue
+        except AttributeError:
+            pass
         # Value not set, use the default
         values[name] = value.value
     if values["name"] is None:
@@ -359,6 +398,11 @@ def get_params_convertors_ctx_param_name_from_function(
 def get_command_from_info(command_info: CommandInfo) -> click.Command:
     assert command_info.callback, "A command must have a callback function"
     name = command_info.name or get_command_name(command_info.callback.__name__)
+    use_help = command_info.help
+    if use_help is None:
+        use_help = inspect.getdoc(command_info.callback)
+    else:
+        use_help = inspect.cleandoc(use_help)
     (
         params,
         convertors,
@@ -375,7 +419,7 @@ def get_command_from_info(command_info: CommandInfo) -> click.Command:
             context_param_name=context_param_name,
         ),
         params=params,  # type: ignore
-        help=command_info.help,
+        help=use_help,
         epilog=command_info.epilog,
         short_help=command_info.short_help,
         options_metavar=command_info.options_metavar,
