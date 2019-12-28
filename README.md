@@ -34,7 +34,7 @@ The key features are:
 * **Easy to use**: It's easy to use for the final users. Automatic help commands, and (optional) automatic completion for all shells.
 * **Short**: Minimize code duplication. Multiple features from each parameter declaration. Fewer bugs.
 * **Start simple**: The simplest example adds only 2 lines of code to your app: **1 import, 1 function call**.
-* **Grow large**: Grow in complexity as much as you want, create arbitrarily complex trees of commands and groups sub-commands, with options and arguments.
+* **Grow large**: Grow in complexity as much as you want, create arbitrarily complex trees of commands and groups subcommands, with options and arguments.
 
 ## Requirements
 
@@ -94,7 +94,11 @@ $ python main.py --help
 Usage: main.py [OPTIONS] NAME
 
 Options:
-  --help  Show this message and exit.
+  --install-completion  Install completion for the current shell.
+  --show-completion     Show completion for the current shell, to copy it or customize the installation.
+  --help                Show this message and exit.
+
+// You get a ✨ auto completion ✨ for free, installed with --install-completion
 
 // Now pass the NAME argument
 $ python main.py Camila
@@ -112,11 +116,11 @@ This was the simplest example possible.
 
 Now let's see one a bit more complex.
 
-### An example with two sub-commands
+### An example with two subcommands
 
 Modify the file `main.py`.
 
-Create a `typer.Typer()` app, and create two sub-commands with their parameters.
+Create a `typer.Typer()` app, and create two subcommands with their parameters.
 
 ```Python hl_lines="3  6  11  20"
 import typer
@@ -145,7 +149,7 @@ And that will:
 
 * Explicitly create a `typer.Typer` app.
     * The previous `typer.run` actually creates one implicitly for you.
-* Add two sub-commands with `@app.command()`.
+* Add two subcommands with `@app.command()`.
 * Execute the `app()` itself, as if it was a function (instead of `typer.run`).
 
 ### Run the upgraded example
@@ -159,13 +163,15 @@ $ python main.py --help
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
 
 Options:
-  --help  Show this message and exit.
+  --install-completion  Install completion for the current shell.
+  --show-completion     Show completion for the current shell, to copy it or customize the installation.
+  --help                Show this message and exit.
 
 Commands:
   goodbye
   hello
 
-// You have 2 sub-commands (the 2 functions): goodbye and hello
+// You have 2 subcommands (the 2 functions): goodbye and hello
 
 // Now get the --help for hello
 
@@ -231,7 +237,7 @@ or for a `bool` flag:
 force: bool
 ```
 
-And similarly for **files**, **paths**, **enums** (choices), etc. And there are tools to create **groups of sub-commands**, add metadata, extra **validation**, etc.
+And similarly for **files**, **paths**, **enums** (choices), etc. And there are tools to create **groups of subcommands**, add metadata, extra **validation**, etc.
 
 **You get**: great editor support, including **completion** and **type checks** everywhere.
 

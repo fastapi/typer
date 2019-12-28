@@ -43,15 +43,18 @@ But by default, it all **"just works"**.
 The resulting CLI apps created with **Typer** have the nice features of many "pro" command line programs you probably already love.
 
 * Automatic help commands and options.
-* Automatic command and sub-command structure handling (you will see more about sub-commands in the Tutorial - User Guide).
-* Automatic autocompletion for the CLI app in all operating systems, in all the shells (Bash, Zsh, Fish, PowerShell), so that the final user of your app can just hit <kbd>TAB</kbd> and get the options of sub-commands. *
+* Automatic command and subcommand structure handling (you will see more about subcommands in the Tutorial - User Guide).
+* Automatic autocompletion for the CLI app in all operating systems, in all the shells (Bash, Zsh, Fish, PowerShell), so that the final user of your app can just hit <kbd>TAB</kbd> and get the available options or subcommands. *
 
 !!! note "* Autocompletion"
     For the autocompletion to work on all shells you also need to add the dependency `click-completion`.
 
     Just that. And **Typer** does the rest.
     
-    If **Typer** detects `click-completion` installed, it will automatically create a command to install completion for the user's shell.
+    If **Typer** detects `click-completion` installed, it will automatically create 2 *CLI options*:
+
+    * `--install-completion`: Install completion for the current shell.
+    * `--show-completion`: Show completion for the current shell, to copy it or customize the installation.    
 
     Then you can tell the user to run that command and the rest will just work.
 
