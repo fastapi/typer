@@ -2,10 +2,7 @@
 
 __version__ = "0.0.4"
 
-from click.exceptions import (  # noqa
-    Abort,
-    Exit,
-)
+from click.exceptions import Abort, Exit  # noqa
 from click.termui import (  # noqa
     clear,
     confirm,
