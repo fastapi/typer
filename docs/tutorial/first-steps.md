@@ -22,7 +22,7 @@ Hello World
 // Now check the --help
 $ python main.py --help
 
-Usage: tryit.py [OPTIONS]
+Usage: main.py [OPTIONS]
 
 Options:
   --install-completion  Install completion for the current shell.
@@ -174,16 +174,28 @@ $ ls --size ./myproject
 
 The main visual difference between a *CLI option* and and a *CLI argument* is that the *CLI option* has `--` prepended to the name, like in "`--size`".
 
-A *CLI option* doesn't depend on the order because it has a predefined name (here it's `--size`). This is because the CLI app is looking specifically for a literal `--size` parameter or "flag", with that specific "name" (here the specific name is "`--size`"). The CLI app will check if you typed it or not, it will be actively looking for `--size` even if you didn't type it (to check if it's there or not).
+A *CLI option* doesn't depend on the order because it has a predefined name (here it's `--size`). This is because the CLI app is looking specifically for a literal `--size` parameter (also known as "flag" or "switch"), with that specific "name" (here the specific name is "`--size`"). The CLI app will check if you typed it or not, it will be actively looking for `--size` even if you didn't type it (to check if it's there or not).
 
-In contrast, the CLI app is not actively looking for the *CLI argument* with a text "`./myproject`", it has no way to know if you would type `./myproject` or `./mysuperawesomeproject` or anything else. It's just waiting to get whatever you give it. The only way to know that you refer to a specific *CLI argument* is because of the order. The same way that it knows that the first *CLI argument* was the `name` and the second was the `lastname`, but if you mixed the order, it wouldn't be able to handle it.
+In contrast, the CLI app is not actively looking for the *CLI argument* with a text "`./myproject`", it has no way to know if you would type `./myproject` or `./my-super-awesome-project` or anything else. It's just waiting to get whatever you give it. The only way to know that you refer to a specific *CLI argument* is because of the order. The same way that it knows that the first *CLI argument* was the `name` and the second was the `lastname`, but if you mixed the order, it wouldn't be able to handle it.
 
 Instead, with a *CLI option*, the order doesn't matter.
 
 Also, by default, a *CLI option* is *optional* (not *required*).
 
+So, by default:
+
+* A *CLI argument* is **required**
+* A *CLI option* is **optional**
+
+But the *required* and *optional* defaults can be changed.
+
+So, the main and **most important** difference is that:
+
+* *CLI options* **start with `--`** and don't depend on the order
+* *CLI arguments* depend on the **sequence order**
+
 !!! tip
-    In this example above the *CLI option* `--size` is just a "flag", it's a boolean value, `True` or `False`.
+    In this example above the *CLI option* `--size` is just a "flag" or "switch" that will contain a boolean value, `True` or `False`, depending on if it was added to the command or not.
 
     This one doesn't receive any values. But *CLI options* can also receive values like *CLI arguments*. You'll see how later.
 
@@ -319,7 +331,7 @@ Now see it with the `--help` option:
 ```console
 $ python main.py --help
 
-Usage: tutorial006.py [OPTIONS] NAME
+Usage: main.py [OPTIONS] NAME
 
   Say hi to NAME, optionally with a --lastname.
 
@@ -394,11 +406,11 @@ And a parameter like `name`, that doesn't have a default value, is considered *r
 
 ### In CLIs
 
-When talking about command line interfaces/applications, the words "argument" and "parameter" are commonly used to refer to that data passed to a CLI app, those parameters.
+When talking about command line interfaces/applications, the words **"argument"** and **"parameter"** are commonly used to refer to that data passed to a CLI app, those parameters.
 
-But those words don't imply anything about the data being required, needing to be passed in a certain order, nor having a flag like `--lastname`.
+But those words **don't imply** anything about the data being required, needing to be passed in a certain order, nor having a flag like `--lastname`.
 
-The parameters that come with a flag like `--lastname` and a value (or  when the flag itself is the value, like `--formal`) are commonly optional, not required. So, when talking about CLIs it's common to call them *optional arguments* or *optional parameters*.
+The parameters that come with a name like `--lastname` (and optionally a value) are commonly optional, not required. So, when talking about CLIs it's common to call them **optional arguments** or **optional parameters**. Sometimes these *optional parameters* that start with `--` are also called a **flag** or a **switch**.
 
 In reality, the parameters that require an order can be made *optional* too. And the ones that come with a flag (like `--lastname`) can be *required* too.
 
@@ -408,6 +420,6 @@ To try and make it a bit easier, we'll normally use the words "parameter" or "ar
 
 We'll use ***CLI argument*** to refer to those *CLI parameters* that depend on an order. That are **required** by default.
 
-And we'll use ***CLI option*** to refer to those *CLI parameters* that depend on a flag (like `--lastname`). That are **optional** by default.
+And we'll use ***CLI option*** to refer to those *CLI parameters* that depend on a name that starts with `--` (like `--lastname`). That are **optional** by default.
 
 We will use ***CLI parameter*** to refer to both, *CLI arguments* and *CLI options*.

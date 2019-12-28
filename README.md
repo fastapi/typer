@@ -98,7 +98,7 @@ Options:
   --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 
-// You get a ✨ auto completion ✨ for free, installed with --install-completion
+// You get ✨ auto completion ✨ for free, installed with --install-completion
 
 // Now pass the NAME argument
 $ python main.py Camila
