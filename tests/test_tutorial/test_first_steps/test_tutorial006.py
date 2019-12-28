@@ -3,7 +3,7 @@ import subprocess
 import typer
 from typer.testing import CliRunner
 
-from first_steps import tutorial005 as mod
+from first_steps import tutorial006 as mod
 
 runner = CliRunner()
 
@@ -14,8 +14,8 @@ app.command()(mod.main)
 def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "--lastname TEXT" in result.output
-    assert "--formal / --no-formal" in result.output
+    assert "Say hi to NAME, optionally with a --lastname." in result.output
+    assert "If --formal is used, say hi very formally." in result.output
 
 
 def test_1():

@@ -22,10 +22,12 @@ Hello World
 // Now check the --help
 $ python main.py --help
 
-Usage: main.py [OPTIONS]
+Usage: tryit.py [OPTIONS]
 
 Options:
-  --help  Show this message and exit.
+  --install-completion  Install completion for the current shell.
+  --show-completion     Show completion for the current shell, to copy it or customize the installation.
+  --help                Show this message and exit.
 ```
 
 </div>
@@ -301,6 +303,44 @@ Hello Camila Gutiérrez
 ```
 
 </div>
+
+## Document your CLI app
+
+If you add a <abbr title="a multi-line string as the first expression inside a function (not assigned to any variable) used for documentation">docstring</abbr> to your function it will be used in the help text:
+
+```Python hl_lines="5 6 7 8 9"
+{!./src/first_steps/tutorial006.py!}
+```
+
+Now see it with the `--help` option:
+
+<div class="termy">
+
+```console
+$ python main.py --help
+
+Usage: tutorial006.py [OPTIONS] NAME
+
+  Say hi to NAME, optionally with a --lastname.
+
+  If --formal is used, say hi very formally.
+
+Options:
+  --lastname TEXT
+  --formal / --no-formal
+  --install-completion    Install completion for the current shell.
+  --show-completion       Show completion for the current shell, to copy it or customize the installation.
+  --help                  Show this message and exit.
+```
+
+</div>
+
+!!! tip
+    You should document the *CLI arguments* in the docstring.
+
+    There is another place to document the *CLI options* that will show up next to them in the help text as with `--install-completion` or `--help`, you will learn that later in the tutorial.
+
+    But *CLI arguments* are normally used for the most necessary things, so you should document them here in the *docstring*.
 
 ## Arguments, options, parameters, optional, required
 

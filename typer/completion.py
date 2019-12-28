@@ -1,3 +1,4 @@
+import sys
 from typing import Any
 
 import click
@@ -14,14 +15,14 @@ def install_callback(ctx: click.Context, param: click.Parameter, value: Any) -> 
         return value
     shell, path = click_completion.core.install()
     click.echo(f"{shell} completion installed in {path}")
-    exit(0)
+    sys.exit(0)
 
 
 def show_callback(ctx: click.Context, param: click.Parameter, value: Any) -> Any:
     if not value or ctx.resilient_parsing:
         return value
     click.echo(click_completion.core.get_code())
-    exit(0)
+    sys.exit(0)
 
 
 # Create a fake command function to extract the completion parameters

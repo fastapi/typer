@@ -39,6 +39,7 @@ Documentation = "https://typer.tiangolo.com/"
 test = [
     "pytest >=4.0.0",
     "pytest-cov",
+    "coverage",
     "mypy",
     "black",
     "isort"
