@@ -4,14 +4,7 @@ __version__ = "0.0.4"
 
 from click.exceptions import (  # noqa
     Abort,
-    BadArgumentUsage,
-    BadOptionUsage,
-    BadParameter,
-    ClickException,
-    FileError,
-    MissingParameter,
-    NoSuchOption,
-    UsageError,
+    Exit,
 )
 from click.termui import (  # noqa
     clear,
@@ -33,7 +26,6 @@ from click.utils import (  # noqa
     format_filename,
     get_app_dir,
     get_binary_stream,
-    get_os_args,
     get_text_stream,
     open_file,
 )
