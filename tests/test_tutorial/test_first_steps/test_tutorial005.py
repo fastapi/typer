@@ -44,7 +44,7 @@ def test_formal_1():
 
 def test_script():
     result = subprocess.run(
-        ["coverage", "run", "--parallel-mode", mod.__file__, "--help"],
+        ["coverage", "run", mod.__file__, "--help"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
