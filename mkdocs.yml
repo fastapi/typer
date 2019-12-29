@@ -24,6 +24,7 @@ nav:
         - Tutorial - User Guide - Intro: 'tutorial/index.md'
         - First Steps: 'tutorial/first-steps.md'
         - CLI Options: 'tutorial/options.md'
+        - CLI Arguments: 'tutorial/arguments.md'
     - Alternatives, Inspiration and Comparisons: 'alternatives.md'
     - Help Typer - Get Help: 'help-typer.md'
     - Development - Contributing: 'contributing.md'

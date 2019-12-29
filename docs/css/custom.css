@@ -4,6 +4,6 @@
     display: block;
 }
 
-.termy {
+.termy [data-termynal] {
     white-space: pre-wrap;
 }
