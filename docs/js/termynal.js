@@ -135,7 +135,7 @@ class Termynal {
         }
         restart.href = '#'
         restart.setAttribute('data-terminal-control', '')
-        restart.innerHTML = "restart \u27f3"  // Refresh emoji
+        restart.innerHTML = "restart ↻"
         return restart
     }
     
@@ -149,7 +149,7 @@ class Termynal {
         }
         finish.href = '#'
         finish.setAttribute('data-terminal-control', '')
-        finish.innerHTML = "fast \u2b95"  // Fast emoji arrow
+        finish.innerHTML = "fast →"
         this.finishElement = finish
         return finish
     }
