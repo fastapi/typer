@@ -14,7 +14,8 @@ def install_callback(ctx: click.Context, param: click.Parameter, value: Any) -> 
     if not value or ctx.resilient_parsing:
         return value
     shell, path = click_completion.core.install()
-    click.echo(f"{shell} completion installed in {path}")
+    click.secho(f"{shell} completion installed in {path}.", fg="green")
+    click.echo("Completion will take effect once you restart the terminal.")
     sys.exit(0)
 
 

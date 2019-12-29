@@ -14,7 +14,7 @@ from typing import (
 
 import click
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from .main import Typer  # noqa
 
 

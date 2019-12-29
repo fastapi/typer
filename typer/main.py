@@ -28,7 +28,7 @@ from .models import (
 try:
     import click_completion
     from .completion import _install_completion_placeholder_function
-except ImportError:
+except ImportError:  # pragma: no cover
     click_completion = None
 
 
