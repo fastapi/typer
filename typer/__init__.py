@@ -1,6 +1,6 @@
 """Typer, build great CLIs. Easy to code. Based on Python type hints."""
 
-__version__ = "0.0.5"
+__version__ = "0.0.6"
 
 from click.exceptions import Abort, Exit  # noqa
 from click.termui import (  # noqa
