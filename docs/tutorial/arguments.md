@@ -13,7 +13,7 @@ But you can change that.
 
 In fact, it's very common to have **optional** *CLI arguments*, it's way more common than having **required** *CLI options*.
 
-As an example of how it could be useful, let's see how the `ls` command works.
+As an example of how it could be useful, let's see how the `ls` CLI program works.
 
 <div class="termy">
 
@@ -158,7 +158,7 @@ Hello Camila
 </div>
 
 !!! tip
-    Notice that "`Camila`" here is an optional *CLI argument*, not a *CLI option*, because we didn't use something like "`--name Camila`", we just passed "`Camila`" directly to the program/command.
+    Notice that "`Camila`" here is an optional *CLI argument*, not a *CLI option*, because we didn't use something like "`--name Camila`", we just passed "`Camila`" directly to the program.
 
 ## An optional *CLI argument* with a default
 
@@ -194,7 +194,7 @@ They are normally required and, when present, they are normally the main subject
 
 For that reason, Typer (actually Click underneath) doesn't attempt to automatically document *CLI arguments*.
 
-And you should document them as part of the command documentation, normally in a <abbr title="a multi-line string as the first expression inside a function (not assigned to any variable) used for documentation">docstring</abbr>.
+And you should document them as part of the CLI app documentation, normally in a <abbr title="a multi-line string as the first expression inside a function (not assigned to any variable) used for documentation">docstring</abbr>.
 
 Check the last example from the <a href="https://typer.tiangolo.com/tutorial/first-steps/#document-your-cli-app" target="_blank">First Steps</a>:
 
@@ -202,7 +202,7 @@ Check the last example from the <a href="https://typer.tiangolo.com/tutorial/fir
 {!./src/first_steps/tutorial006.py!}
 ```
 
-Here the *CLI argument* `NAME` is documented as part of the command help text.
+Here the *CLI argument* `NAME` is documented as part of the help text.
 
 You should document your *CLI arguments* the same way.
 

@@ -31,7 +31,7 @@ Typer is library to build <abbr title="command line interface, programs executed
 The key features are:
 
 * **Intuitive to write**: Great editor support. <abbr title="also known as auto-complete, autocompletion, IntelliSense">Completion</abbr> everywhere. Less time debugging. Designed to be easy to use and learn. Less time reading docs.
-* **Easy to use**: It's easy to use for the final users. Automatic help commands, and (optional) automatic completion for all shells.
+* **Easy to use**: It's easy to use for the final users. Automatic help, and (optional) automatic completion for all shells.
 * **Short**: Minimize code duplication. Multiple features from each parameter declaration. Fewer bugs.
 * **Start simple**: The simplest example adds only 2 lines of code to your app: **1 import, 1 function call**.
 * **Grow large**: Grow in complexity as much as you want, create arbitrarily complex trees of commands and groups subcommands, with options and arguments.

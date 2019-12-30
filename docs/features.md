@@ -42,7 +42,7 @@ But by default, it all **"just works"**.
 
 The resulting CLI apps created with **Typer** have the nice features of many "pro" command line programs you probably already love.
 
-* Automatic help commands and options.
+* Automatic help options for the main CLI program and all the its subcommands.
 * Automatic command and subcommand structure handling (you will see more about subcommands in the Tutorial - User Guide).
 * Automatic autocompletion for the CLI app in all operating systems, in all the shells (Bash, Zsh, Fish, PowerShell), so that the final user of your app can just hit <kbd>TAB</kbd> and get the available options or subcommands. *
 
