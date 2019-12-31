@@ -11,17 +11,18 @@ import click
 from .models import (
     AnyType,
     ArgumentInfo,
-    BinaryFileRead,
-    BinaryFileWrite,
     CommandFunctionType,
     CommandInfo,
     Default,
     DefaultPlaceholder,
+    FileBinaryRead,
+    FileBinaryWrite,
+    FileText,
+    FileTextWrite,
     NoneType,
     OptionInfo,
     ParameterInfo,
     Required,
-    TextFile,
     TyperInfo,
 )
 
@@ -241,7 +242,7 @@ def get_command(typer_instance: Typer) -> click.Command:
             click_command.params.append(click_install_param)
             click_command.params.append(click_show_param)
         return click_command
-    assert False, "Could not get a command for this Typer instance"
+    assert False, "Could not get a command for this Typer instance"  # pragma no cover
 
 
 def get_group_name(typer_info: TyperInfo) -> Optional[str]:
@@ -526,7 +527,15 @@ def get_click_type(
             allow_dash=parameter_info.allow_dash,
             path_type=parameter_info.path_type,
         )
-    elif lenient_issubclass(annotation, TextFile):
+    elif lenient_issubclass(annotation, FileTextWrite):
+        return click.File(
+            mode=parameter_info.mode or "w",
+            encoding=parameter_info.encoding,
+            errors=parameter_info.errors,
+            lazy=parameter_info.lazy,
+            atomic=parameter_info.atomic,
+        )
+    elif lenient_issubclass(annotation, FileText):
         return click.File(
             mode=parameter_info.mode or "r",
             encoding=parameter_info.encoding,
@@ -534,7 +543,7 @@ def get_click_type(
             lazy=parameter_info.lazy,
             atomic=parameter_info.atomic,
         )
-    elif lenient_issubclass(annotation, BinaryFileRead):
+    elif lenient_issubclass(annotation, FileBinaryRead):
         return click.File(
             mode=parameter_info.mode or "rb",
             encoding=parameter_info.encoding,
@@ -542,7 +551,7 @@ def get_click_type(
             lazy=parameter_info.lazy,
             atomic=parameter_info.atomic,
         )
-    elif lenient_issubclass(annotation, BinaryFileWrite):
+    elif lenient_issubclass(annotation, FileBinaryWrite):
         return click.File(
             mode=parameter_info.mode or "wb",
             encoding=parameter_info.encoding,
@@ -555,7 +564,7 @@ def get_click_type(
             [item.value for item in annotation],
             case_sensitive=parameter_info.case_sensitive,
         )
-    raise RuntimeError(f"Type not yet supported: {annotation}")
+    raise RuntimeError(f"Type not yet supported: {annotation}")  # pragma no cover
 
 
 def lenient_issubclass(
@@ -705,7 +714,7 @@ def get_click_param(
             ),
             convertor,
         )
-    assert False, "A click.Parameter should be returned"
+    assert False, "A click.Parameter should be returned"  # pragma no cover
 
 
 def run(function: Callable) -> Any:

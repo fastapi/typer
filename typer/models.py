@@ -29,15 +29,19 @@ class Context(click.Context):
     pass
 
 
-class TextFile(io.TextIOWrapper):
+class FileText(io.TextIOWrapper):
     pass
 
 
-class BinaryFileRead(io.BufferedReader):
+class FileTextWrite(FileText):
     pass
 
 
-class BinaryFileWrite(io.BufferedWriter):
+class FileBinaryRead(io.BufferedReader):
+    pass
+
+
+class FileBinaryWrite(io.BufferedWriter):
     pass
 
 

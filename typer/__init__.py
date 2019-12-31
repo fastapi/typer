@@ -28,5 +28,11 @@ from click.utils import (  # noqa
 )
 
 from .main import Typer, run  # noqa
-from .models import BinaryFileRead, BinaryFileWrite, Context, TextFile  # noqa
+from .models import (  # noqa
+    Context,
+    FileBinaryRead,
+    FileBinaryWrite,
+    FileText,
+    FileTextWrite,
+)
 from .params import Argument, Option  # noqa
