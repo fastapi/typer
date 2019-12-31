@@ -30,7 +30,9 @@ def test_show_completion():
 
 def test_install_completion():
     bash_completion_path: Path = Path.home() / ".bash_completion"
-    text = bash_completion_path.read_text()
+    text = ""
+    if bash_completion_path.is_file():
+        text = bash_completion_path.read_text()
     result = subprocess.run(
         [
             "bash",
