@@ -45,5 +45,7 @@ def test_install_completion():
         env={**os.environ, "SHELL": "/bin/bash"},
     )
     new_text = bash_completion_path.read_text()
-    assert "_TUTORIAL001.PY_COMPLETE=complete-bash" in new_text
     bash_completion_path.write_text(text)
+    assert "_TUTORIAL001.PY_COMPLETE=complete-bash" in new_text
+    assert "completion installed in" in result.stdout
+    assert "Completion will take effect once you restart the terminal." in result.stdout
