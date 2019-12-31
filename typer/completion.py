@@ -12,7 +12,7 @@ click_completion.init()
 
 def install_callback(ctx: click.Context, param: click.Parameter, value: Any) -> Any:
     if not value or ctx.resilient_parsing:
-        return value
+        return value  # pragma no cover
     shell, path = click_completion.core.install()
     click.secho(f"{shell} completion installed in {path}.", fg="green")
     click.echo("Completion will take effect once you restart the terminal.")
@@ -21,7 +21,7 @@ def install_callback(ctx: click.Context, param: click.Parameter, value: Any) -> 
 
 def show_callback(ctx: click.Context, param: click.Parameter, value: Any) -> Any:
     if not value or ctx.resilient_parsing:
-        return value
+        return value  # pragma no cover
     click.echo(click_completion.core.get_code())
     sys.exit(0)
 
@@ -45,4 +45,4 @@ def _install_completion_placeholder_function(
         help="Show completion for the current shell, to copy it or customize the installation.",
     ),
 ) -> Any:
-    pass
+    pass  # pragma no cover
