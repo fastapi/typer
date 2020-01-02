@@ -1,6 +1,6 @@
 ## Latest changes
 
-* Add docs for [Progress Bars](). PR [#23](https://github.com/tiangolo/typer/pull/23).
+* Add docs for [Progress Bars](https://typer.tiangolo.com/tutorial/progressbar/). PR [#23](https://github.com/tiangolo/typer/pull/23).
 * Add docs for [Asking with Interactive Prompts](). PR [#22](https://github.com/tiangolo/typer/pull/22).
 * Update docs for path *CLI option*. PR [#21](https://github.com/tiangolo/typer/pull/21).
 * Add colors module and docs for [Printing and Colors](https://typer.tiangolo.com/tutorial/printing/) and for [Terminating](https://typer.tiangolo.com/tutorial/terminating/), including tests. PR [#20](https://github.com/tiangolo/typer/pull/20).
