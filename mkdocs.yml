@@ -47,6 +47,7 @@ nav:
             - Enum - Choices: 'tutorial/parameter-types/enum.md'
             - Path: 'tutorial/parameter-types/path.md'
             - File: 'tutorial/parameter-types/file.md'
+        - Ask with Prompt: 'tutorial/prompt.md'
     - Alternatives, Inspiration and Comparisons: 'alternatives.md'
     - Help Typer - Get Help: 'help-typer.md'
     - Development - Contributing: 'contributing.md'
