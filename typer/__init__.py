@@ -36,3 +36,4 @@ from .models import (  # noqa
     FileTextWrite,
 )
 from .params import Argument, Option  # noqa
+from . import colors  # noqa
