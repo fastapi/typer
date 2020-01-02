@@ -23,6 +23,8 @@ nav:
     - Tutorial - User Guide:
         - Tutorial - User Guide - Intro: 'tutorial/index.md'
         - First Steps: 'tutorial/first-steps.md'
+        - Printing and Colors: 'tutorial/printing.md'
+        - Terminating: 'tutorial/terminating.md'
         - CLI Arguments: 'tutorial/arguments.md'
         - CLI Options:
             - CLI Options Intro: 'tutorial/options/index.md'

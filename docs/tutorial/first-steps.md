@@ -6,6 +6,9 @@ The simplest Typer file could look like this:
 {!./src/first_steps/tutorial001.py!}
 ```
 
+!!! tip
+    You will learn more about `typer.echo()` later in the docs.
+
 Copy that to a file `main.py`.
 
 Test it:
