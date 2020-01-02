@@ -49,6 +49,7 @@ nav:
             - File: 'tutorial/parameter-types/file.md'
         - Ask with Prompt: 'tutorial/prompt.md'
         - Progress Bar: 'tutorial/progressbar.md'
+        - CLI Application Directory: 'tutorial/app-dir.md'
     - Alternatives, Inspiration and Comparisons: 'alternatives.md'
     - Help Typer - Get Help: 'help-typer.md'
     - Development - Contributing: 'contributing.md'
