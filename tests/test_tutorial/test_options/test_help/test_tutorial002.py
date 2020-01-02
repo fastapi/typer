@@ -3,7 +3,7 @@ import subprocess
 import typer
 from typer.testing import CliRunner
 
-from options import tutorial002 as mod
+from options.help import tutorial002 as mod
 
 runner = CliRunner()
 
@@ -11,23 +11,17 @@ app = typer.Typer()
 app.command()(mod.main)
 
 
-def test_1():
-    result = runner.invoke(app, ["Camila"])
-    assert result.exit_code != 0
-    assert 'Error: Missing option "--lastname".' in result.output
-
-
-def test_option_lastname():
-    result = runner.invoke(app, ["Camila", "--lastname", "Gutiérrez"])
+def test_call():
+    result = runner.invoke(app)
     assert result.exit_code == 0
-    assert "Hello Camila Gutiérrez" in result.output
+    assert "Hello Wade Wilson" in result.output
 
 
 def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "--lastname TEXT" in result.output
-    assert "[required]" in result.output
+    assert "--fullname TEXT" in result.output
+    assert "[default: Wade Wilson]" in result.output
 
 
 def test_script():

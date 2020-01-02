@@ -1,5 +1,5 @@
 import subprocess
-from commands import tutorial002 as mod
+from commands.name import tutorial001 as mod
 
 from typer.testing import CliRunner
 
@@ -11,22 +11,21 @@ runner = CliRunner()
 def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "[OPTIONS] COMMAND [ARGS]..." in result.output
     assert "Commands:" in result.output
     assert "create" in result.output
     assert "delete" in result.output
 
 
 def test_create():
-    result = runner.invoke(app, ["create"])
+    result = runner.invoke(app, ["create", "Camila"])
     assert result.exit_code == 0
-    assert "Creating user: Hiro Hamada" in result.output
+    assert "Creating user: Camila" in result.output
 
 
 def test_delete():
-    result = runner.invoke(app, ["delete"])
+    result = runner.invoke(app, ["delete", "Camila"])
     assert result.exit_code == 0
-    assert "Deleting user: Hiro Hamada" in result.output
+    assert "Deleting user: Camila" in result.output
 
 
 def test_script():

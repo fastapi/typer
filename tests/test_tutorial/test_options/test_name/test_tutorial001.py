@@ -1,21 +1,25 @@
 import subprocess
-from commands import tutorial001 as mod
 
+import typer
 from typer.testing import CliRunner
 
-app = mod.app
+from options.name import tutorial001 as mod
 
 runner = CliRunner()
 
-
-def test_no_arg():
-    result = runner.invoke(app)
-    assert result.exit_code != 0
-    assert 'Error: Missing argument "NAME".' in result.output
+app = typer.Typer()
+app.command()(mod.main)
 
 
-def test_arg():
-    result = runner.invoke(app, ["Camila"])
+def test_option_help():
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "--name TEXT" in result.output
+    assert "--user-name" not in result.output
+
+
+def test_call():
+    result = runner.invoke(app, ["--name", "Camila"])
     assert result.exit_code == 0
     assert "Hello Camila" in result.output
 

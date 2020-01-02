@@ -3,7 +3,7 @@ import subprocess
 import typer
 from typer.testing import CliRunner
 
-from options import tutorial006 as mod
+from options.name import tutorial003 as mod
 
 runner = CliRunner()
 
@@ -11,17 +11,18 @@ app = typer.Typer()
 app.command()(mod.main)
 
 
-def test_call():
-    result = runner.invoke(app)
-    assert result.exit_code == 0
-    assert "Hello Wade Wilson" in result.output
-
-
-def test_help():
+def test_option_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "--fullname TEXT" in result.output
-    assert "[default: Wade Wilson]" in result.output
+    assert "-n TEXT" in result.output
+    assert "--user-name" not in result.output
+    assert "--name" not in result.output
+
+
+def test_call():
+    result = runner.invoke(app, ["-n", "Camila"])
+    assert result.exit_code == 0
+    assert "Hello Camila" in result.output
 
 
 def test_script():

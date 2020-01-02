@@ -23,9 +23,20 @@ nav:
     - Tutorial - User Guide:
         - Tutorial - User Guide - Intro: 'tutorial/index.md'
         - First Steps: 'tutorial/first-steps.md'
-        - CLI Options: 'tutorial/options.md'
         - CLI Arguments: 'tutorial/arguments.md'
-        - Commands: 'tutorial/commands.md'
+        - CLI Options:
+            - CLI Options Intro: 'tutorial/options/index.md'
+            - CLI Options with Help: 'tutorial/options/help.md'
+            - Required CLI Options: 'tutorial/options/required.md'
+            - CLI Option Prompt: 'tutorial/options/prompt.md'
+            - CLI Option Name: 'tutorial/options/name.md'
+        - Commands:
+            - Commands Intro: 'tutorial/commands/index.md'
+            - Command CLI Arguments: 'tutorial/commands/arguments.md'
+            - Command CLI Options: 'tutorial/commands/options.md'
+            - Command Help: 'tutorial/commands/help.md'
+            - Custom Command Name: 'tutorial/commands/name.md'
+            - One or Multiple Commands: 'tutorial/commands/one-or-multiple.md'
         - CLI Parameter Types:
             - CLI Parameter Types Intro: 'tutorial/parameter-types/index.md'
             - Number: 'tutorial/parameter-types/number.md'
