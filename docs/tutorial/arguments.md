@@ -1,4 +1,4 @@
-The same way that you have `typer.Option()` to help you define things for *CLI options*, there's also the equivalent `typer.Argument()` for *CLI arguments*.
+Let's see how to configure *CLI arguments* with `typer.Argument()`.
 
 ## Optional *CLI arguments*
 
@@ -63,19 +63,14 @@ And then we changed it to:
 name: str = typer.Argument(...)
 ```
 
-The same as with `typer.Option()`, there is a `typer.Argument()`.
+But now as `typer.Argument()` is the "default value" of the function's parameter, it would mean that "it is no longer required" (in Python terms).
 
-And now as `typer.Argument()` is the "default value" of the function's parameter, in Python terms, it would mean that "it is no longer required" (in Python terms).
+As we no longer have the Python function default value (or its absence) to tell if something is required or not and what is the default value, the first parameter to `typer.Argument()` serves the same purpose of defining that default value, or making it required.
 
-As we no longer have the Python function default value (or its absence) to tell it if something is required or not and what is the default value, the first parameter to `typer.Argument()` serves the same purpose of defining that default value, or making it required.
-
-To make it *required*, we pass `...` as that first parameter to the function.
+To make it *required*, we pass `...` as the first function argument passed to `typer.Argument(...)`.
 
 !!! info
     If you hadn't seen that `...` before: it is a a special single value, it is <a href="https://docs.python.org/3/library/constants.html#Ellipsis" target="_blank">part of Python and is called "Ellipsis"</a>.
-
-!!! tip
-    This works exactly the same way `typer.Option()` does.
 
 All we did there achieves the same thing as before, a **required** *CLI argument*:
 
@@ -150,7 +145,7 @@ $ python main.py
 Hello World!
 
 // With one optional CLI argument
-$ python main.py
+$ python main.py Camila
 
 Hello Camila
 ```

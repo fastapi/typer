@@ -106,7 +106,7 @@ def Option(
 def Argument(
     # Parameter
     default: Optional[Any],
-    *param_decls: str,
+    *,
     callback: Optional[Callable[[click.Context, click.Parameter, str], Any]] = None,
     metavar: Optional[str] = None,
     expose_value: bool = True,
@@ -142,7 +142,9 @@ def Argument(
     return ArgumentInfo(
         # Parameter
         default=default,
-        param_decls=param_decls,
+        # Arguments can only have one param declaration
+        # it will be generated from the param name
+        param_decls=None,
         callback=callback,
         metavar=metavar,
         expose_value=expose_value,

@@ -1,31 +1,33 @@
 import subprocess
-from commands import tutorial006 as mod
 
+import typer
 from typer.testing import CliRunner
 
-app = mod.app
+from options.name import tutorial002 as mod
 
 runner = CliRunner()
 
+app = typer.Typer()
+app.command()(mod.main)
 
-def test_help():
+
+def test_option_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "Commands:" in result.output
-    assert "create" in result.output
-    assert "delete" in result.output
+    assert "-n, --name TEXT" in result.output
+    assert "--user-name" not in result.output
 
 
-def test_create():
-    result = runner.invoke(app, ["create", "Camila"])
+def test_call():
+    result = runner.invoke(app, ["-n", "Camila"])
     assert result.exit_code == 0
-    assert "Creating user: Camila" in result.output
+    assert "Hello Camila" in result.output
 
 
-def test_delete():
-    result = runner.invoke(app, ["delete", "Camila"])
+def test_call_long():
+    result = runner.invoke(app, ["--name", "Camila"])
     assert result.exit_code == 0
-    assert "Deleting user: Camila" in result.output
+    assert "Hello Camila" in result.output
 
 
 def test_script():

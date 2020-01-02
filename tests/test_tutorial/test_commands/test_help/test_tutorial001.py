@@ -1,5 +1,5 @@
 import subprocess
-from commands import tutorial005 as mod
+from commands.help import tutorial001 as mod
 
 from typer.testing import CliRunner
 

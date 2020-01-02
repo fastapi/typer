@@ -3,7 +3,7 @@ import subprocess
 import typer
 from typer.testing import CliRunner
 
-from options import tutorial003 as mod
+from options.prompt import tutorial002 as mod
 
 runner = CliRunner()
 
@@ -20,7 +20,7 @@ def test_option_lastname():
 def test_option_lastname_prompt():
     result = runner.invoke(app, ["Camila"], input="Gutiérrez")
     assert result.exit_code == 0
-    assert "Lastname: " in result.output
+    assert "Please tell me your last name: " in result.output
     assert "Hello Camila Gutiérrez" in result.output
 
 
