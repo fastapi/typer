@@ -14,6 +14,13 @@ app.command()(mod.main)
 config_file = Path("./config.txt")
 
 
+def test_no_path():
+    result = runner.invoke(app)
+    assert result.exit_code == 1
+    assert "No config file" in result.output
+    assert "Aborted!" in result.output
+
+
 def test_not_exists():
     if config_file.exists():  # pragma no cover
         config_file.unlink()

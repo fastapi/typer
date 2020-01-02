@@ -3,7 +3,10 @@ from pathlib import Path
 import typer
 
 
-def main(config: Path = typer.Option(...)):
+def main(config: Path = typer.Option(None)):
+    if config is None:
+        typer.echo("No config file")
+        raise typer.Abort()
     if config.is_file():
         text = config.read_text()
         typer.echo(f"Config file contents: {text}")
