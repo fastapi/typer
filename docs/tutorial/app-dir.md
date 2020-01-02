@@ -33,3 +33,11 @@ If the first element is a `Path` object the next ones (after the `/`) can be `st
 And it will create a new `Path` object from that.
 
 If you want a quick guide on using `Path()` you can check <a href="https://realpython.com/python-pathlib/" target="_blank">this post on Real Python</a> or <a href="https://treyhunner.com/2018/12/why-you-should-be-using-pathlib/" target="_blank">this post by Trey Hunner</a>.
+
+In the code above, we are also explicitly declaring `config_path` as having type `Path` to help the editor provide completion and type checks:
+
+```Python
+config_path: Path = Path(app_dir) / "config.json"
+```
+
+Otherwise it could think it's a sub-type (a `PurePath`) and stop providing completion for some methods.
