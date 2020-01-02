@@ -27,6 +27,7 @@ from click.utils import (  # noqa
     open_file,
 )
 
+from . import colors  # noqa
 from .main import Typer, run  # noqa
 from .models import (  # noqa
     Context,
@@ -36,4 +37,3 @@ from .models import (  # noqa
     FileTextWrite,
 )
 from .params import Argument, Option  # noqa
-from . import colors  # noqa
