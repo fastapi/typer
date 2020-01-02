@@ -13,6 +13,13 @@ Check it:
 <div class="termy">
 
 ```console
+// No config
+$ python main.py
+
+No config file
+Aborted!
+
+// Pass a config that doesn't exist
 $ python main.py --config config.txt
 
 The config doesn't exist
@@ -42,7 +49,10 @@ You can perform several validations for `Path` *CLI parameters*:
 * `dir_okay`: controls if a directory is a possible value.
 * `writable`: if true, a writable check is performed.
 * `readable`: if true, a readable check is performed.
-* `resolve_path`: if this is true, then the path is fully resolved before the value is passed onwards. This means that it’s absolute and symlinks are resolved. It will not expand a tilde-prefix, as this is supposed to be done by the shell only.
+* `resolve_path`: if this is true, then the path is fully resolved before the value is passed onwards. This means that it’s absolute and <abbr title="symbolic links, also known as shortcuts. Links in a file system that point to other location. For example, some applications when installed create symlinks in the desktop to launch them.">symlinks</abbr> are resolved.
+
+!!! note "Technical Details"
+    It will not expand a tilde-prefix (something with `~`, like `~/Documents/`), as this is supposed to be done by the shell only.
 
 !!! tip
     All these parameters come directly from <a href="https://click.palletsprojects.com/en/7.x/parameters/#parameter-types" target="_blank">Click</a>.
