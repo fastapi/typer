@@ -691,8 +691,6 @@ def get_click_param(
         )
     elif isinstance(parameter_info, ArgumentInfo):
         param_decls = [param.name]
-        if parameter_info.param_decls:
-            param_decls.extend(parameter_info.param_decls)
         nargs = None
         if is_list:
             nargs = -1
