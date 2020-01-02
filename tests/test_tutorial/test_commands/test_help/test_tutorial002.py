@@ -26,7 +26,7 @@ def test_help_create():
     assert "Some internal utility function to create." not in result.output
 
 
-def test_help_create():
+def test_help_delete():
     result = runner.invoke(app, ["delete", "--help"])
     assert result.exit_code == 0
     assert "Delete a user with USERNAME." in result.output
