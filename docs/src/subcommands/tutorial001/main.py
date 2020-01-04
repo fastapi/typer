@@ -1,6 +1,7 @@
 import typer
 
-from . import items, users
+import items
+import users
 
 app = typer.Typer()
 app.add_typer(users.app, name="users")
