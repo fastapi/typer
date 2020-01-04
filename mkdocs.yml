@@ -47,6 +47,10 @@ nav:
             - Enum - Choices: 'tutorial/parameter-types/enum.md'
             - Path: 'tutorial/parameter-types/path.md'
             - File: 'tutorial/parameter-types/file.md'
+        - SubCommands:
+            - SubCommands Intro: 'tutorial/subcommands/index.md'
+            - Add Typer: 'tutorial/subcommands/add-typer.md'
+            - SubCommands in a Single File: 'tutorial/subcommands/single-file.md'
         - Ask with Prompt: 'tutorial/prompt.md'
         - Progress Bar: 'tutorial/progressbar.md'
         - CLI Application Directory: 'tutorial/app-dir.md'
