@@ -1,7 +1,7 @@
 You might have noticed that if you create a single command, as in the first example:
 
 ```Python hl_lines="3  6  12"
-{!./src/commands/tutorial001.py!}
+{!./src/commands/index/tutorial001.py!}
 ```
 
 **Typer** is smart enough to create a CLI application with that single function as the main CLI application, not as a command/subcommand:
@@ -41,7 +41,7 @@ Options:
 But if you add multiple commands, **Typer** will create one *CLI command* for each one of them:
 
 ```Python hl_lines="6  11"
-{!./src/commands/tutorial002.py!}
+{!./src/commands/index/tutorial002.py!}
 ```
 
 Here we have 2 commands `create` and `delete`:
@@ -75,17 +75,77 @@ Deleting user: Hiro Hamada
 
 </div>
 
-!!! tip
-    This is **Typer**'s behavior by default, but you could still create a CLI application with one single command, like:
+## One command and one callback
 
-    ```
-    $ python main.py main
-    ```
+If you want to create a CLI app with one single command but you still want it to be a command/subcommand you can just add a callback:
 
-    instead of just:
+```Python hl_lines="11 12 13"
+{!./src/commands/one_or_multiple/tutorial001.py!}
+```
 
-    ```
-    $ python main.py
-    ```
+And now your CLI program will have a single command.
 
-    You will learn more about this in the section about application Callbacks.
+Check it:
+
+<div class="termy">
+
+```console
+// Check the help
+$ python main.py --help
+
+// Notice the single command create
+Usage: main.py [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  --install-completion  Install completion for the current shell.
+  --show-completion     Show completion for the current shell, to copy it or customize the installation.
+  --help                Show this message and exit.
+
+Commands:
+  create
+
+// Try it
+$ python main.py create
+
+Creating user: Hiro Hamada
+```
+
+</div>
+
+## Using the callback to document
+
+Now that you are using a callback just to have a single command, you might as well use it to add documentation for your app:
+
+```Python hl_lines="11 12 13 14 15 16 17"
+{!./src/commands/one_or_multiple/tutorial002.py!}
+```
+
+And now the docstring from the callback will be used as the help text:
+
+<div class="termy">
+
+```console
+$ python main.py --help
+
+// Notice the help text from the docstring
+Usage: main.py [OPTIONS] COMMAND [ARGS]...
+
+  Creates a single user Hiro Hamada.
+
+  In the next version it will create 5 users more.
+
+Options:
+  --install-completion  Install completion for the current shell.
+  --show-completion     Show completion for the current shell, to copy it or customize the installation.
+  --help                Show this message and exit.
+
+Commands:
+  create
+
+// And it still works the same, the callback does nothing
+$ python main.py create
+
+Creating user: Hiro Hamada
+```
+
+</div>
