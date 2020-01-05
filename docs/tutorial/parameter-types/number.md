@@ -98,3 +98,51 @@ ID is 5
 ```
 
 </div>
+
+## Counter *CLI options*
+
+You can make a *CLI option* work as a counter with the `counter` parameter:
+
+```Python hl_lines="4"
+{!./src/parameter_types/number/tutorial003.py!}
+```
+
+It means that the *CLI option* will be like a boolean flag, e.g. `--verbose`.
+
+And the value you receive in the function will be the amount of times that `--verbose` was added:
+
+<div class="termy">
+
+```console
+// Check it
+$ python main.py
+
+Verbose level is 0
+
+// Now use one --verbose
+$ python main.py --verbose
+
+Verbose level is 1
+
+// Now 3 --verbose
+$ python main.py --verbose --verbose --verbose
+
+Verbose level is 3
+
+// And with the short name
+$ python main.py -v
+
+Verbose level is 1
+
+// And with the short name 3 times
+$ python main.py -v -v -v
+
+Verbose level is 3
+
+// As short names can be put together, this also works
+$ python main.py -vvv
+
+Verbose level is 3
+```
+
+</div>
