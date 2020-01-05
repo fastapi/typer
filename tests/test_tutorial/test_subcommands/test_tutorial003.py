@@ -3,7 +3,7 @@ import subprocess
 import pytest
 from typer.testing import CliRunner
 
-from subcommands import tutorial001
+from subcommands import tutorial003
 
 runner = CliRunner()
 
@@ -11,8 +11,8 @@ runner = CliRunner()
 @pytest.fixture()
 def mod(monkeypatch):
     with monkeypatch.context() as m:
-        monkeypatch.syspath_prepend(list(tutorial001.__path__)[0])
-        from subcommands.tutorial001 import main
+        m.syspath_prepend(list(tutorial003.__path__)[0])
+        from subcommands.tutorial003 import main
 
         return main
 
@@ -29,6 +29,7 @@ def test_help(app):
     assert "Commands:" in result.output
     assert "items" in result.output
     assert "users" in result.output
+    assert "lands" in result.output
 
 
 def test_help_items(app):
@@ -81,10 +82,61 @@ def test_users_delete(app):
     assert "Deleting user: Camila" in result.output
 
 
-def test_scripts(mod):
-    from subcommands.tutorial001 import items, users
+def test_help_lands(app):
+    result = runner.invoke(app, ["lands", "--help"])
+    assert result.exit_code == 0
+    assert "lands [OPTIONS] COMMAND [ARGS]..." in result.output
+    assert "Commands:" in result.output
+    assert "reigns" in result.output
+    assert "towns" in result.output
 
-    for module in [mod, items, users]:
+
+def test_help_lands_reigns(app):
+    result = runner.invoke(app, ["lands", "reigns", "--help"])
+    assert result.exit_code == 0
+    assert "lands reigns [OPTIONS] COMMAND [ARGS]..." in result.output
+    assert "Commands:" in result.output
+    assert "conquer" in result.output
+    assert "destroy" in result.output
+
+
+def test_lands_reigns_conquer(app):
+    result = runner.invoke(app, ["lands", "reigns", "conquer", "Gondor"])
+    assert result.exit_code == 0
+    assert "Conquering reign: Gondor" in result.output
+
+
+def test_lands_reigns_destroy(app):
+    result = runner.invoke(app, ["lands", "reigns", "destroy", "Mordor"])
+    assert result.exit_code == 0
+    assert "Destroying reign: Mordor" in result.output
+
+
+def test_help_lands_towns(app):
+    result = runner.invoke(app, ["lands", "towns", "--help"])
+    assert result.exit_code == 0
+    assert "lands towns [OPTIONS] COMMAND [ARGS]..." in result.output
+    assert "Commands:" in result.output
+    assert "burn" in result.output
+    assert "found" in result.output
+
+
+def test_lands_towns_found(app):
+    result = runner.invoke(app, ["lands", "towns", "found", "Cartagena"])
+    assert result.exit_code == 0
+    assert "Founding town: Cartagena" in result.output
+
+
+def test_lands_towns_burn(app):
+    result = runner.invoke(app, ["lands", "towns", "burn", "New Asgard"])
+    assert result.exit_code == 0
+    assert "Burning town: New Asgard" in result.output
+
+
+def test_scripts(mod):
+    from subcommands.tutorial003 import items, lands, reigns, towns, users
+
+    for module in [mod, items, lands, reigns, towns, users]:
         result = subprocess.run(
             ["coverage", "run", module.__file__, "--help"],
             stdout=subprocess.PIPE,
