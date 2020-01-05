@@ -226,6 +226,7 @@ def get_command(typer_instance: Typer) -> click.Command:
         click_install_param, click_show_param = get_install_completion_arguments()
     if (
         typer_instance.registered_callback
+        or typer_instance.info.callback
         or typer_instance.registered_groups
         or len(typer_instance.registered_commands) > 1
     ):
