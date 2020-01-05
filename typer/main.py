@@ -462,6 +462,13 @@ def generate_enum_convertor(enum: Type[Enum]) -> Callable:
     return convertor
 
 
+def generate_iter_convertor(convertor: Callable[[Any], Any]) -> Callable:
+    def internal_convertor(value: Any) -> List[Any]:
+        return [convertor(v) for v in value]
+
+    return internal_convertor
+
+
 def get_callback(
     *,
     callback: Optional[Callable] = None,
@@ -630,15 +637,15 @@ def get_click_param(
         # Handle Tuples and Lists
         if lenient_issubclass(origin, List):
             main_type = main_type.__args__[0]
-            assert (
-                "__origin__" not in main_type
+            assert not getattr(
+                main_type, "__origin__", None
             ), "List types with complex sub-types are not currently supported"
             is_list = True
         elif lenient_issubclass(origin, Tuple):  # type: ignore
             types = []
-            for type_ in origin.__args__:
-                assert (
-                    "__origin__" not in type_
+            for type_ in main_type.__args__:
+                assert not getattr(
+                    type_, "__origin__", None
                 ), "Tuple types with complex sub-types are not currently supported"
                 types.append(
                     get_click_type(annotation=type_, parameter_info=parameter_info)
@@ -653,6 +660,9 @@ def get_click_param(
         convertor = param_path_convertor
     if lenient_issubclass(main_type, Enum):
         convertor = generate_enum_convertor(main_type)
+    if convertor and is_list:
+        convertor = generate_iter_convertor(convertor)
+        # TODO: handle recursive conversion for tuples
     if isinstance(parameter_info, OptionInfo):
         if main_type is bool and not (parameter_info.is_flag is False):
             is_flag = True
