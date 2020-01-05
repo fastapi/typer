@@ -87,13 +87,23 @@ $ python main.py Camila
 Hello Camila
 
 // Here "Camila" is the CLI argument
+
+// To pass a name with spaces for the same CLI argument, use quotes
+$ python main.py "Camila Gutiérrez"
+
+Hello Camila Gutiérrez
 ```
 
 </div>
 
+!!! tip
+    If you need to pass a single value that contains spaces to a *CLI argument*, use quotes (`"`) around it.
+
 ## Two CLI arguments
 
-Now extend that to have 2 arguments, `name` and `lastname`:
+Now let's say we want to have the name and last name separated.
+
+So, extend that to have 2 arguments, `name` and `lastname`:
 
 ```Python hl_lines="4 5"
 {!./src/first_steps/tutorial003.py!}
