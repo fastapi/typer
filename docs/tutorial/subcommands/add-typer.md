@@ -1,4 +1,4 @@
-We'll start with the core ideas.
+We'll start with the core idea.
 
 To add a `typer.Typer()` app inside of another.
 
@@ -165,3 +165,5 @@ And you can do that with any levels of commands that you want.
 Do you need sub-sub-sub-subcommands? Go ahead, create all the `typer.Typer()`s you need and put them together with `app.add_typer()`.
 
 In the next sections we'll update this with more features, but you already have the core idea.
+
+This way, in the same spirit of Click, **Typer** applications are composable, each `typer.Typer()` can be a *CLI app* by itself, but it can also be added as a command group to another Typer app.
