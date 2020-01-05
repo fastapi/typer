@@ -261,33 +261,44 @@ def get_group_name(typer_info: TyperInfo) -> Optional[str]:
 
 
 def solve_typer_info_help(typer_info: TyperInfo) -> str:
-    # Priority 1a: Value was set in app.add_typer()
+    # Priority 1: Explicit value was set in app.add_typer()
     if not isinstance(typer_info.help, DefaultPlaceholder):
         return inspect.cleandoc(typer_info.help or "")
-    # Priority 1b: Value was set in app.add_typer(), in callback docstring
+    # Priority 2: Explicit value was set in sub_app.callback()
+    try:
+        callback_help = typer_info.typer_instance.registered_callback.help
+        if not isinstance(callback_help, DefaultPlaceholder):
+            return inspect.cleandoc(callback_help or "")
+    except AttributeError:
+        pass
+    # Priority 3: Explicit value was set in sub_app = typer.Typer()
+    try:
+        instance_help = typer_info.typer_instance.info.help
+        if not isinstance(instance_help, DefaultPlaceholder):
+            return inspect.cleandoc(instance_help or "")
+    except AttributeError:
+        pass
+    # Priority 4: Implicit inference from callback docstring in app.add_typer()
     if typer_info.callback:
         doc = inspect.getdoc(typer_info.callback)
         if doc:
             return doc
+    # Priority 5: Implicit inference from callback docstring in @app.callback()
     try:
-        # Priority 2a: Value was set in @subapp.callback()
-        doc = typer_info.typer_instance.registered_callback.help
-        if not isinstance(doc, DefaultPlaceholder):
-            return inspect.cleandoc(doc or "")
-        # Priority 2b: Value was set in @subapp.callback(), in callback docstring
-        doc = inspect.getdoc(typer_info.typer_instance.registered_callback.callback)
-        if doc:
-            return doc
+        callback = typer_info.typer_instance.registered_callback.callback
+        if not isinstance(callback, DefaultPlaceholder):
+            doc = inspect.getdoc(callback or "")
+            if doc:
+                return doc
     except AttributeError:
         pass
+    # Priority 6: Implicit inference from callback docstring in typer.Typer()
     try:
-        # Priority 3a: Value set in subapp = typer.Typer()
-        instance_value = typer_info.typer_instance.info.help
-        if not isinstance(instance_value, DefaultPlaceholder):
-            return inspect.cleandoc(instance_value or "")
-        doc = inspect.getdoc(typer_info.typer_instance.callback)
-        if doc:
-            return doc
+        instance_callback = typer_info.typer_instance.info.callback
+        if not isinstance(instance_callback, DefaultPlaceholder):
+            doc = inspect.getdoc(instance_callback)
+            if doc:
+                return doc
     except AttributeError:
         pass
     # Value not set, use the default
@@ -296,7 +307,6 @@ def solve_typer_info_help(typer_info: TyperInfo) -> str:
 
 def solve_typer_info_defaults(typer_info: TyperInfo) -> TyperInfo:
     values: Dict[str, Any] = {}
-    values["help"] = solve_typer_info_help(typer_info)
     name = None
     for name, value in typer_info.__dict__.items():
         # Priority 1: Value was set in app.add_typer()
@@ -325,6 +335,7 @@ def solve_typer_info_defaults(typer_info: TyperInfo) -> TyperInfo:
         values[name] = value.value
     if values["name"] is None:
         values["name"] = get_group_name(typer_info)
+    values["help"] = solve_typer_info_help(typer_info)
     return TyperInfo(**values)
 
 

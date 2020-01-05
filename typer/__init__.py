@@ -2,8 +2,8 @@
 
 __version__ = "0.0.7"
 
-from click.exceptions import Abort, Exit  # noqa
-from click.termui import (  # noqa
+from click.exceptions import Abort, Exit
+from click.termui import (
     clear,
     confirm,
     echo_via_pager,
@@ -18,7 +18,7 @@ from click.termui import (  # noqa
     style,
     unstyle,
 )
-from click.utils import (  # noqa
+from click.utils import (
     echo,
     format_filename,
     get_app_dir,
@@ -27,13 +27,7 @@ from click.utils import (  # noqa
     open_file,
 )
 
-from . import colors  # noqa
-from .main import Typer, run  # noqa
-from .models import (  # noqa
-    Context,
-    FileBinaryRead,
-    FileBinaryWrite,
-    FileText,
-    FileTextWrite,
-)
-from .params import Argument, Option  # noqa
+from . import colors
+from .main import Typer, run
+from .models import Context, FileBinaryRead, FileBinaryWrite, FileText, FileTextWrite
+from .params import Argument, Option

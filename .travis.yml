@@ -16,7 +16,7 @@ matrix:
 
 install:
     - pip install flit
-    - flit install --symlink
+    - flit install --deps=develop --symlink
 
 script:
     - bash scripts/test.sh
