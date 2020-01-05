@@ -307,7 +307,6 @@ def solve_typer_info_help(typer_info: TyperInfo) -> str:
 
 def solve_typer_info_defaults(typer_info: TyperInfo) -> TyperInfo:
     values: Dict[str, Any] = {}
-    values["help"] = solve_typer_info_help(typer_info)
     name = None
     for name, value in typer_info.__dict__.items():
         # Priority 1: Value was set in app.add_typer()
@@ -336,6 +335,7 @@ def solve_typer_info_defaults(typer_info: TyperInfo) -> TyperInfo:
         values[name] = value.value
     if values["name"] is None:
         values["name"] = get_group_name(typer_info)
+    values["help"] = solve_typer_info_help(typer_info)
     return TyperInfo(**values)
 
 
