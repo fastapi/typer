@@ -40,6 +40,8 @@ test = [
     "pytest >=4.0.0",
     "pytest-cov",
     "coverage",
+    "pytest-xdist",
+    "pytest-sugar",
     "mypy",
     "black",
     "isort"
