@@ -243,7 +243,7 @@ And similarly for **files**, **paths**, **enums** (choices), etc. And there are 
 
 **Your users get**: automatic **`--help`**, (optional) **autocompletion** in their terminal (Bash, Zsh, Fish, PowerShell).
 
-For a more complete example including more features, see the <a href="https://typer.tiangolo.com/tutorial/intro/">Tutorial - User Guide</a>.
+For a more complete example including more features, see the <a href="https://typer.tiangolo.com/tutorial/">Tutorial - User Guide</a>.
 
 ## Optional Dependencies
 
