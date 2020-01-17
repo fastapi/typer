@@ -7,3 +7,7 @@
 .termy [data-termynal] {
     white-space: pre-wrap;
 }
+
+a.external-link::after {
+    content: " [↪]";
+}

@@ -51,7 +51,7 @@ Creating user: Camila
 
 If a callback was added when creating the `typer.Typer()` app, it's possible to override it with a new one using `@app.callback()`.
 
-This is the same information you saw on the section about <a href="https://typer.tiangolo.com/tutorial/commands/callback/" target="_blank">Commands - Typer Callback</a>, and it applies the same for sub-Typer apps:
+This is the same information you saw on the section about <a href="https://typer.tiangolo.com/tutorial/commands/callback/" class="external-link" target="_blank">Commands - Typer Callback</a>, and it applies the same for sub-Typer apps:
 
 ```Python hl_lines="6 7  10  14 15 16"
 {!./src/subcommands/callback_override/tutorial003.py!}

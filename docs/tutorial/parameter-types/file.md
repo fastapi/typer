@@ -5,7 +5,7 @@ Apart from `Path` *CLI parameters* you can also declare some types of "files".
 
     You can read and write data with `Path` the same way.
 
-The difference is that these types will give you a Python <a href="https://docs.python.org/3/glossary.html#term-file-object" target="_blank">file-like object</a> instead of a Python <a href="https://docs.python.org/3/library/pathlib.html#basic-use" target="_blank">Path</a>.
+The difference is that these types will give you a Python <a href="https://docs.python.org/3/glossary.html#term-file-object" class="external-link" target="_blank">file-like object</a> instead of a Python <a href="https://docs.python.org/3/library/pathlib.html#basic-use" class="external-link" target="_blank">Path</a>.
 
 A "file-like object" is the same type of object returned by `open()` as in:
 
@@ -168,7 +168,7 @@ $ ls ./binary.dat
 
 You can use several configuration parameters for these types (classes) in `typer.Option()` and `typer.Argument()`:
 
-* `mode`: controls the "<a href="https://docs.python.org/3/library/functions.html#open" target="_blank">mode</a>" to open the file with.
+* `mode`: controls the "<a href="https://docs.python.org/3/library/functions.html#open" class="external-link" target="_blank">mode</a>" to open the file with.
     * It's automatically set for you by using the classes above.
     * Read more about it below.
 * `encoding`: to force a specific encoding, e.g. `"utf-8"`.
@@ -178,7 +178,7 @@ You can use several configuration parameters for these types (classes) in `typer
 
 ## Advanced `mode`
 
-By default, **Typer** will configure the <a href="https://docs.python.org/3/library/functions.html#open" target="_blank">`mode`</a> for you:
+By default, **Typer** will configure the <a href="https://docs.python.org/3/library/functions.html#open" class="external-link" target="_blank">`mode`</a> for you:
 
 * `typer.FileText`: `mode="r"`, to read text.
 * `typer.FileTextWrite`: `mode="w"`, to write text.

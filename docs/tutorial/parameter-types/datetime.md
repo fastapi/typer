@@ -1,4 +1,4 @@
-You can specify a *CLI parameter* as a Python <a href="https://docs.python.org/3/library/datetime.html" target="_blank">`datetime`</a>.
+You can specify a *CLI parameter* as a Python <a href="https://docs.python.org/3/library/datetime.html" class="external-link" target="_blank">`datetime`</a>.
 
 Your function will receive a standard Python `datetime` object, and again, your editor will give you completion, etc.
 
@@ -42,7 +42,7 @@ Error: Invalid value for "[%Y-%m-%d|%Y-%m-%dT%H:%M:%S|%Y-%m-%d %H:%M:%S]": inval
 
 You can also customize the formats received for the `datetime` with the `formats` parameter.
 
-`formats` receives a list of strings with the date formats that would be passed to <a href="https://docs.python.org/3/library/datetime.html#datetime.date.strftime" target="_blank">datetime.strptime()</a>.
+`formats` receives a list of strings with the date formats that would be passed to <a href="https://docs.python.org/3/library/datetime.html#datetime.date.strftime" class="external-link" target="_blank">datetime.strptime()</a>.
 
 For example, let's imagine that you want to accept an ISO formatted datetime, but for some strange reason, you also want to accept a format with:
 

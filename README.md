@@ -40,7 +40,7 @@ The key features are:
 
 Python 3.6+
 
-Typer stands on the shoulders of a giant. Its only internal dependency is <a href="https://click.palletsprojects.com/" target="_blank">Click</a>.
+Typer stands on the shoulders of a giant. Its only internal dependency is <a href="https://click.palletsprojects.com/" class="external-link" target="_blank">Click</a>.
 
 ## Installation
 
@@ -247,14 +247,14 @@ For a more complete example including more features, see the <a href="https://ty
 
 ## Optional Dependencies
 
-Typer uses <a href="https://click.palletsprojects.com/" target="_blank">Click</a> internally. That's the only dependency.
+Typer uses <a href="https://click.palletsprojects.com/" class="external-link" target="_blank">Click</a> internally. That's the only dependency.
 
 But you can also install extras:
 
-* <a href="https://pypi.org/project/colorama/" target="_blank"><code>colorama</code></a>: and Click will automatically use it to make sure your terminal's colors always work correctly, even in Windows.
+* <a href="https://pypi.org/project/colorama/" class="external-link" target="_blank"><code>colorama</code></a>: and Click will automatically use it to make sure your terminal's colors always work correctly, even in Windows.
     * Then you can use any tool you want to output your terminal's colors in all the systems, including the integrated `typer.style()` and `typer.secho()` (provided by Click).
-    * Or any other tool, e.g. <a href="https://pypi.org/project/wasabi/" target="_blank"><code>wasabi</code></a>, <a href="https://github.com/erikrose/blessings" target="_blank"><code>blessings</code></a>.
-* <a href="https://github.com/click-contrib/click-completion" target="_blank"><code>click-completion</code></a>: and Typer will automatically configure it to provide completion for all the shells, including installation commands.
+    * Or any other tool, e.g. <a href="https://pypi.org/project/wasabi/" class="external-link" target="_blank"><code>wasabi</code></a>, <a href="https://github.com/erikrose/blessings" class="external-link" target="_blank"><code>blessings</code></a>.
+* <a href="https://github.com/click-contrib/click-completion" class="external-link" target="_blank"><code>click-completion</code></a>: and Typer will automatically configure it to provide completion for all the shells, including installation commands.
 
 You can install `typer` with `colorama` and `click-completion` with `pip install typer[all]`.
 
@@ -264,9 +264,9 @@ Click has many plug-ins available that you can use. And there are many tools tha
 
 For example:
 
-* <a href="https://github.com/click-contrib/click-spinner" target="_blank"><code>click-spinner</code></a>: to show the user that you are loading data. A Click plug-in.
-    * There are several other Click plug-ins at <a href="https://github.com/click-contrib" target="_blank">click-contrib</a> that you can explore.
-* <a href="https://pypi.org/project/tabulate/" target="_blank"><code>tabulate</code></a>: to automatically display tabular data nicely. Independent of Click or typer.
+* <a href="https://github.com/click-contrib/click-spinner" class="external-link" target="_blank"><code>click-spinner</code></a>: to show the user that you are loading data. A Click plug-in.
+    * There are several other Click plug-ins at <a href="https://github.com/click-contrib" class="external-link" target="_blank">click-contrib</a> that you can explore.
+* <a href="https://pypi.org/project/tabulate/" class="external-link" target="_blank"><code>tabulate</code></a>: to automatically display tabular data nicely. Independent of Click or typer.
 * etc... you can re-use many of the great available tools for building CLIs.
 
 ## License

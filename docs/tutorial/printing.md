@@ -7,7 +7,7 @@ You can use `typer.echo()` to print to the screen:
 The reason to use `typer.echo()` instead of just `print()` is that it applies some error corrections in case the terminal is misconfigured, and it will properly output color if it's supported.
 
 !!! info
-    `typer.echo()` comes directly from Click, you can read more about it in <a href="https://click.palletsprojects.com/en/7.x/quickstart/#echoing" target="_blank">Click's docs</a>.
+    `typer.echo()` comes directly from Click, you can read more about it in <a href="https://click.palletsprojects.com/en/7.x/quickstart/#echoing" class="external-link" target="_blank">Click's docs</a>.
 
 Check it:
 
@@ -24,7 +24,7 @@ Hello World
 ## Color
 
 !!! info
-    For colors to work correctly on Windows you need to also install <a href="https://pypi.org/project/colorama/" target="_blank">`colorama`</a>.
+    For colors to work correctly on Windows you need to also install <a href="https://pypi.org/project/colorama/" class="external-link" target="_blank">`colorama`</a>.
 
     You don't need to call `colorama.init()`. Typer (actually Click) will handle it underneath.
 
@@ -65,7 +65,7 @@ You can pass these function arguments to `typer.style()`:
 * `reset`: by default a reset-all code is added at the end of the string which means that styles do not carry over.  This can be disabled to compose styles.
 
 !!! info
-    You can read more about it in <a href="https://click.palletsprojects.com/en/7.x/api/#click.style" target="_blank">Click's docs about `style()`</a>
+    You can read more about it in <a href="https://click.palletsprojects.com/en/7.x/api/#click.style" class="external-link" target="_blank">Click's docs about `style()`</a>
 
 ## `typer.secho()` - style and print
 
