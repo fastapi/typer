@@ -1,5 +1,7 @@
 ## Latest changes
 
+* Tweak external links' format. PR [#36](https://github.com/tiangolo/typer/pull/36).
+
 ## 0.0.8
 
 * Update docs and add latest changes to MkDocs/website. PR [#33](https://github.com/tiangolo/typer/pull/33).
