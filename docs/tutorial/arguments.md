@@ -35,7 +35,7 @@ __init__.py  test_tutorial
 
 ### An alternative *CLI argument* declaration
 
-In the <a href="https://typer.tiangolo.com/tutorial/first-steps/#add-a-cli-argument" target="_blank">First Steps</a> you saw how to add a *CLI argument*:
+In the <a href="https://typer.tiangolo.com/tutorial/first-steps/#add-a-cli-argument" class="external-link" target="_blank">First Steps</a> you saw how to add a *CLI argument*:
 
 ```Python hl_lines="4"
 {!./src/first_steps/tutorial002.py!}
@@ -70,7 +70,7 @@ As we no longer have the Python function default value (or its absence) to tell 
 To make it *required*, we pass `...` as the first function argument passed to `typer.Argument(...)`.
 
 !!! info
-    If you hadn't seen that `...` before: it is a a special single value, it is <a href="https://docs.python.org/3/library/constants.html#Ellipsis" target="_blank">part of Python and is called "Ellipsis"</a>.
+    If you hadn't seen that `...` before: it is a a special single value, it is <a href="https://docs.python.org/3/library/constants.html#Ellipsis" class="external-link" target="_blank">part of Python and is called "Ellipsis"</a>.
 
 All we did there achieves the same thing as before, a **required** *CLI argument*:
 
@@ -191,7 +191,7 @@ For that reason, Typer (actually Click underneath) doesn't attempt to automatica
 
 And you should document them as part of the CLI app documentation, normally in a <abbr title="a multi-line string as the first expression inside a function (not assigned to any variable) used for documentation">docstring</abbr>.
 
-Check the last example from the <a href="https://typer.tiangolo.com/tutorial/first-steps/#document-your-cli-app" target="_blank">First Steps</a>:
+Check the last example from the <a href="https://typer.tiangolo.com/tutorial/first-steps/#document-your-cli-app" class="external-link" target="_blank">First Steps</a>:
 
 ```Python hl_lines="5 6 7 8 9"
 {!./src/first_steps/tutorial006.py!}

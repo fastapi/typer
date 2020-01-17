@@ -20,11 +20,11 @@ You will rarely need to come back to the docs.
 
 Here's how your editor might help you:
 
-* in <a href="https://code.visualstudio.com/" target="_blank">Visual Studio Code</a>:
+* in <a href="https://code.visualstudio.com/" class="external-link" target="_blank">Visual Studio Code</a>:
 
 ![editor support](img/vscode-completion.png)
 
-* in <a href="https://www.jetbrains.com/pycharm/" target="_blank">PyCharm</a>:
+* in <a href="https://www.jetbrains.com/pycharm/" class="external-link" target="_blank">PyCharm</a>:
 
 ![editor support](img/pycharm-completion.png)
 
@@ -60,7 +60,7 @@ The resulting CLI apps created with **Typer** have the nice features of many "pr
 
 ## The power of Click
 
-<a href="https://click.palletsprojects.com" target="_blank">Click</a> is one of the most popular tools for building CLIs in Python.
+<a href="https://click.palletsprojects.com" class="external-link" target="_blank">Click</a> is one of the most popular tools for building CLIs in Python.
 
 **Typer** is based on it, so you get all its benefits, plug-ins, robustness, etc.
 

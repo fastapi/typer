@@ -84,7 +84,7 @@ Processed 100 user IDs.
 
 ### About the function with `yield`
 
-If you hadn't seen something like that `yield` above, that's a "<a href="https://docs.python.org/3/glossary.html#term-generator" target="_blank">generator</a>".
+If you hadn't seen something like that `yield` above, that's a "<a href="https://docs.python.org/3/glossary.html#term-generator" class="external-link" target="_blank">generator</a>".
 
 You can iterate over that function with a `for` and at each iteration it will give you the value at `yield`.
 
