@@ -11,17 +11,17 @@ runner = CliRunner()
 app = typer.Typer()
 app.command()(mod.main)
 
-config_file = Path("./config.txt")
 
-
-def test_no_path():
+def test_no_path(tmpdir):
+    Path(tmpdir) / "config.txt"
     result = runner.invoke(app)
     assert result.exit_code == 1
     assert "No config file" in result.output
     assert "Aborted!" in result.output
 
 
-def test_not_exists():
+def test_not_exists(tmpdir):
+    config_file = Path(tmpdir) / "config.txt"
     if config_file.exists():  # pragma no cover
         config_file.unlink()
     result = runner.invoke(app, ["--config", f"{config_file}"])
@@ -29,7 +29,8 @@ def test_not_exists():
     assert "The config doesn't exist" in result.output
 
 
-def test_exists():
+def test_exists(tmpdir):
+    config_file = Path(tmpdir) / "config.txt"
     config_file.write_text("some settings")
     result = runner.invoke(app, ["--config", f"{config_file}"])
     config_file.unlink()

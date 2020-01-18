@@ -11,10 +11,9 @@ runner = CliRunner()
 app = typer.Typer()
 app.command()(mod.main)
 
-config_file = Path("./config.txt")
 
-
-def test_main():
+def test_main(tmpdir):
+    config_file = Path(tmpdir) / "config.txt"
     config_file.write_text("some settings\nsome more settings")
     result = runner.invoke(app, ["--config", f"{config_file}"])
     config_file.unlink()

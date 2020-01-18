@@ -11,10 +11,9 @@ runner = CliRunner()
 app = typer.Typer()
 app.command()(mod.main)
 
-binary_file = Path("./config.txt")
 
-
-def test_main():
+def test_main(tmpdir):
+    binary_file = Path(tmpdir) / "config.txt"
     binary_file.write_bytes(b"la cig\xc3\xbce\xc3\xb1a trae al ni\xc3\xb1o")
     result = runner.invoke(app, ["--file", f"{binary_file}"])
     binary_file.unlink()
