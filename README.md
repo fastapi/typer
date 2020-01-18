@@ -26,7 +26,7 @@
 
 Typer is library to build <abbr title="command line interface, programs executed from a terminal">CLI</abbr> applications that users will love using and developers will love creating. Based on Python 3.6+ type hints.
 
-**Typer** is <a href="https://fastapi.tiangolo.com" target="_blank">FastAPI</a>'s little sibling. And it's intended to be the FastAPI of CLIs.
+**Typer** is <a href="https://fastapi.tiangolo.com" class="external-link" target="_blank">FastAPI</a>'s little sibling. And it's intended to be the FastAPI of CLIs.
 
 The key features are:
 
@@ -243,7 +243,7 @@ And similarly for **files**, **paths**, **enums** (choices), etc. And there are 
 
 **Your users get**: automatic **`--help`**, (optional) **autocompletion** in their terminal (Bash, Zsh, Fish, PowerShell).
 
-For a more complete example including more features, see the <a href="https://typer.tiangolo.com/tutorial/intro/">Tutorial - User Guide</a>.
+For a more complete example including more features, see the <a href="https://typer.tiangolo.com/tutorial/">Tutorial - User Guide</a>.
 
 ## Optional Dependencies
 

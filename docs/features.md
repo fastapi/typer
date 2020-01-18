@@ -1,6 +1,6 @@
 ## Design based on **FastAPI**
 
-**Typer** is <a href="https://fastapi.tiangolo.com" target="_blank">FastAPI</a>'s little sibling.
+**Typer** is <a href="https://fastapi.tiangolo.com" class="external-link" target="_blank">FastAPI</a>'s little sibling.
 
 It follows the same design and ideas. If you know FastAPI, you already know **Typer**... more or less.
 
@@ -8,9 +8,9 @@ It follows the same design and ideas. If you know FastAPI, you already know **Ty
 
 It's all based on standard **Python 3.6 type** declarations. No new syntax to learn. Just standard modern Python.
 
-If you need a 2 minute refresher of how to use Python types (even if you don't use FastAPI or Typer), check the FastAPI tutorial section: <a href="https://fastapi.tiangolo.com/python-types/" target="_blank">Python types intro</a>.
+If you need a 2 minute refresher of how to use Python types (even if you don't use FastAPI or Typer), check the FastAPI tutorial section: <a href="https://fastapi.tiangolo.com/python-types/" class="external-link" target="_blank">Python types intro</a>.
 
-You will also see a 20 seconds refresher on the section [Tutorial - User Guide: First Steps](tutorial/first-steps.md).
+You will also see a 20 seconds refresher on the section [Tutorial - User Guide: First Steps](tutorial/first-steps.md){.internal-link target=_blank}.
 
 ## Editor support
 

@@ -35,7 +35,7 @@ __init__.py  test_tutorial
 
 ### An alternative *CLI argument* declaration
 
-In the <a href="https://typer.tiangolo.com/tutorial/first-steps/#add-a-cli-argument" class="external-link" target="_blank">First Steps</a> you saw how to add a *CLI argument*:
+In the [First Steps](first-steps.md#add-a-cli-argument){.internal-link target=_blank} you saw how to add a *CLI argument*:
 
 ```Python hl_lines="4"
 {!./src/first_steps/tutorial002.py!}
@@ -191,7 +191,7 @@ For that reason, Typer (actually Click underneath) doesn't attempt to automatica
 
 And you should document them as part of the CLI app documentation, normally in a <abbr title="a multi-line string as the first expression inside a function (not assigned to any variable) used for documentation">docstring</abbr>.
 
-Check the last example from the <a href="https://typer.tiangolo.com/tutorial/first-steps/#document-your-cli-app" class="external-link" target="_blank">First Steps</a>:
+Check the last example from the [First Steps](first-steps.md#document-your-cli-app){.internal-link target=_blank}:
 
 ```Python hl_lines="5 6 7 8 9"
 {!./src/first_steps/tutorial006.py!}
