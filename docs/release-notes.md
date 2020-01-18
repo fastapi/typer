@@ -1,5 +1,6 @@
 ## Latest changes
 
+* Update format for internal links. PR [#38](https://github.com/tiangolo/typer/pull/38).
 * Tweak external links' format. PR [#36](https://github.com/tiangolo/typer/pull/36).
 
 ## 0.0.8
