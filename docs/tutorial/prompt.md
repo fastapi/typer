@@ -1,4 +1,4 @@
-When you need to ask the user for info interactively you should normally use <a href="https://typer.tiangolo.com/tutorial/options/prompt/" class="external-link" target="_blank">*CLI Option*s with Prompt</a>, because they allow using the CLI program in a non-interactive way (for example, a Bash script could use it).
+When you need to ask the user for info interactively you should normally use [*CLI Option*s with Prompt](options/prompt.md){.internal-link target=_blank}, because they allow using the CLI program in a non-interactive way (for example, a Bash script could use it).
 
 But if you absolutely need to ask for interactive information without using a *CLI option*, you can use `typer.prompt()`:
 
@@ -22,7 +22,7 @@ Hello Camila
 
 ## Confirm
 
-There's also an alternative to ask for confirmation. Again, if possible, you should use a <a href="https://typer.tiangolo.com/tutorial/options/prompt/" class="external-link" target="_blank">*CLI Option* with a confirmation prompt</a>:
+There's also an alternative to ask for confirmation. Again, if possible, you should use a [*CLI Option* with a confirmation prompt](options/prompt.md){.internal-link target=_blank}:
 
 ```Python hl_lines="5"
 {!./src/prompt/tutorial002.py!}

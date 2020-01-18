@@ -1,4 +1,4 @@
-First, you might want to see the basic ways to <a href="https://typer.tiangolo.com/help-typer/" target="_blank">help Typer and get help</a>.
+First, you might want to see the basic ways to [help Typer and get help](help-typer.md){.internal-link target=_blank}.
 
 Coming soon...
 
