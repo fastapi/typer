@@ -454,7 +454,10 @@ def generate_enum_convertor(enum: Type[Enum]) -> Callable:
 
     def convertor(value: Any) -> Any:
         if value is not None:
-            low = str(value).lower()
+            if isinstance(value, Enum):
+                low = str(value.value).lower()
+            else:
+                low = str(value).lower()
             if low in lower_val_map:
                 key = lower_val_map[low]
                 return enum(key)

@@ -32,6 +32,12 @@ def test_invalid():
     )
 
 
+def test_no_options_is_default():
+    result = runner.invoke(app, [])
+    assert result.exit_code == 0
+    assert "Training neural network of type: simple" in result.output
+
+
 def test_script():
     result = subprocess.run(
         ["coverage", "run", mod.__file__, "--help"],
