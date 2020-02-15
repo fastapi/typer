@@ -1,5 +1,6 @@
 ## Latest changes
 
+* Update CI to run docs deployment in GitHub actions. PR [#50](https://github.com/tiangolo/typer/pull/50).
 * Update format for internal links. PR [#38](https://github.com/tiangolo/typer/pull/38).
 * Tweak external links' format. PR [#36](https://github.com/tiangolo/typer/pull/36).
 
