@@ -1,5 +1,7 @@
 ## Latest changes
 
+## 0.0.9
+
 * Add support for PEP 561, to allow `mypy` to type check applications built with **Typer**. PR [#58](https://github.com/tiangolo/typer/pull/58).
 * Upgrade deploy docs to Netlify GitHub action. PR [#57](https://github.com/tiangolo/typer/pull/57).
 * Add support for Mermaid JS for visualizations. PR [#56](https://github.com/tiangolo/typer/pull/56).
