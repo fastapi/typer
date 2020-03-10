@@ -13,7 +13,6 @@ class CliRunner(ClickCliRunner):
         env: Optional[Mapping[str, str]] = None,
         catch_exceptions: bool = True,
         color: bool = False,
-        mix_stderr: bool = False,
         **extra: Any,
     ) -> Result:
         use_cli = _get_command(app)
@@ -24,6 +23,5 @@ class CliRunner(ClickCliRunner):
             env=env,
             catch_exceptions=catch_exceptions,
             color=color,
-            mix_stderr=mix_stderr,
             **extra,
         )

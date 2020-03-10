@@ -141,6 +141,7 @@ class Typer:
         short_help: Optional[str] = None,
         options_metavar: str = "[OPTIONS]",
         add_help_option: bool = True,
+        no_args_is_help: bool = False,
         hidden: bool = False,
         deprecated: bool = False,
     ) -> Callable[[CommandFunctionType], CommandFunctionType]:
@@ -159,6 +160,7 @@ class Typer:
                     short_help=short_help,
                     options_metavar=options_metavar,
                     add_help_option=add_help_option,
+                    no_args_is_help=no_args_is_help,
                     hidden=hidden,
                     deprecated=deprecated,
                 )
@@ -437,6 +439,7 @@ def get_command_from_info(command_info: CommandInfo) -> click.Command:
         short_help=command_info.short_help,
         options_metavar=command_info.options_metavar,
         add_help_option=command_info.add_help_option,
+        no_args_is_help=command_info.no_args_is_help,
         hidden=command_info.hidden,
         deprecated=command_info.deprecated,
     )
