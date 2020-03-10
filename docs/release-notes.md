@@ -1,5 +1,7 @@
 ## Latest changes
 
+## 0.0.10
+
 * Add support for Click version 7.1.1. PR [#60](https://github.com/tiangolo/typer/pull/60).
 
 ## 0.0.9
