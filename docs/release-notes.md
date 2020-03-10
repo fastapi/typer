@@ -1,5 +1,7 @@
 ## Latest changes
 
+* Add support for Click version 7.1.1. PR [#60](https://github.com/tiangolo/typer/pull/60).
+
 ## 0.0.9
 
 * Add support for PEP 561, to allow `mypy` to type check applications built with **Typer**. PR [#58](https://github.com/tiangolo/typer/pull/58).
