@@ -82,7 +82,7 @@ $ python main.py
 Usage: main.py [OPTIONS] NAME
 Try "main.py --help" for help.
 
-Error: Missing argument "NAME".
+Error: Missing argument 'NAME'.
 ```
 
 </div>

@@ -32,7 +32,7 @@ $ python main.py Camila
 Usage: main.py [OPTIONS] NAME
 Try "main.py --help" for help.
 
-Error: Missing option "--lastname".
+Error: Missing option '--lastname'.
 
 // Now update it to pass the required --lastname CLI option
 $ python main.py Camila --lastname Gutiérrez

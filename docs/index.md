@@ -86,7 +86,7 @@ $ python main.py
 Usage: main.py [OPTIONS] NAME
 Try "main.py --help" for help.
 
-Error: Missing argument "NAME".
+Error: Missing argument 'NAME'.
 
 // You get a --help for free
 $ python main.py --help
