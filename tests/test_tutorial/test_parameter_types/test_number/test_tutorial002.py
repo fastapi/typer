@@ -15,7 +15,7 @@ def test_invalid_id():
     result = runner.invoke(app, ["1002"])
     assert result.exit_code != 0
     assert (
-        'Error: Invalid value for "ID": 1002 is not in the valid range of 0 to 1000.'
+        "Error: Invalid value for 'ID': 1002 is not in the valid range of 0 to 1000."
         in result.output
     )
 
