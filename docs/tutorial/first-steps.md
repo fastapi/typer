@@ -79,7 +79,7 @@ $ python main.py
 Usage: main.py [OPTIONS] NAME
 Try "main.py --help" for help.
 
-Error: Missing argument "NAME".
+Error: Missing argument 'NAME'.
 
 // Now pass that NAME CLI argument
 $ python main.py Camila
@@ -128,7 +128,7 @@ $ python main.py Camila
 Usage: main.py [OPTIONS] NAME LASTNAME
 Try "main.py --help" for help.
 
-Error: Missing argument "LASTNAME".
+Error: Missing argument 'LASTNAME'.
 
 // These 2 arguments are required, so, pass both:
 $ python main.py Camila Gutiérrez

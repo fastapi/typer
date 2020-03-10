@@ -38,7 +38,7 @@ $ python main.py 1002
 Usage: main.py [OPTIONS] ID
 Try "main.py --help" for help.
 
-Error: Invalid value for "ID": 1002 is not in the valid range of 0 to 1000.
+Error: Invalid value for 'ID': 1002 is not in the valid range of 0 to 1000.
 
 // Pass an invalid age
 $ python main.py 5 --age 15
@@ -46,7 +46,7 @@ $ python main.py 5 --age 15
 Usage: main.py [OPTIONS] ID
 Try "main.py --help" for help.
 
-Error: Invalid value for "--age": 15 is smaller than the minimum valid value 18.
+Error: Invalid value for '--age': 15 is smaller than the minimum valid value 18.
 
 // Pass an invalid score
 $ python main.py 5 --age 20 --score 100.5
@@ -54,7 +54,7 @@ $ python main.py 5 --age 20 --score 100.5
 Usage: main.py [OPTIONS] ID
 Try "main.py --help" for help.
 
-Error: Invalid value for "--score": 100.5 is bigger than the maximum valid value 100.
+Error: Invalid value for '--score': 100.5 is bigger than the maximum valid value 100.
 
 // But as we didn't specify a minimum score, this is accepted
 $ python main.py 5 --age 20 --score -5
@@ -87,7 +87,7 @@ $ python main.py 1002
 Usage: main.py [OPTIONS] ID
 Try "main.py --help" for help.
 
-Error: Invalid value for "ID": 1002 is not in the valid range of 0 to 1000.
+Error: Invalid value for 'ID': 1002 is not in the valid range of 0 to 1000.
 
 // But --rank and --score use clamp
 $ python main.py 5 --rank 11 --score -5

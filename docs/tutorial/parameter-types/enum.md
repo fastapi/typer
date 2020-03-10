@@ -36,7 +36,7 @@ $ python main.py --network capsule
 Usage: main.py [OPTIONS]
 Try "main.py --help" for help.
 
-Error: Invalid value for "--network": invalid choice: capsule. (choose from simple, conv, lstm)
+Error: Invalid value for '--network': invalid choice: capsule. (choose from simple, conv, lstm)
 ```
 
 </div>

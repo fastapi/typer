@@ -88,6 +88,7 @@ class CommandInfo:
         short_help: Optional[str] = None,
         options_metavar: str = "[OPTIONS]",
         add_help_option: bool = True,
+        no_args_is_help: bool = False,
         hidden: bool = False,
         deprecated: bool = False,
     ):
@@ -100,6 +101,7 @@ class CommandInfo:
         self.short_help = short_help
         self.options_metavar = options_metavar
         self.add_help_option = add_help_option
+        self.no_args_is_help = no_args_is_help
         self.hidden = hidden
         self.deprecated = deprecated
 
