@@ -57,9 +57,9 @@ You can learn a lot more by running some examples and playing around with them t
 
 ---
 
-## Install Typer
+## Install **Typer**
 
-The first step is to install Typer.
+The first step is to install **Typer**.
 
 For the tutorial, you might want to install it with all the optional dependencies and features:
 

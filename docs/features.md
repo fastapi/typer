@@ -44,19 +44,19 @@ The resulting CLI apps created with **Typer** have the nice features of many "pr
 
 * Automatic help options for the main CLI program and all the its subcommands.
 * Automatic command and subcommand structure handling (you will see more about subcommands in the Tutorial - User Guide).
-* Automatic autocompletion for the CLI app in all operating systems, in all the shells (Bash, Zsh, Fish, PowerShell), so that the final user of your app can just hit <kbd>TAB</kbd> and get the available options or subcommands. *
+* Automatic completion for the CLI app in all operating systems, in all the shells (Bash, Zsh, Fish, PowerShell), so that the final user of your app can just hit <kbd>TAB</kbd> and get the available options or subcommands. *
 
-!!! note "* Autocompletion"
+!!! note "* Auto completion"
     For the autocompletion to work on all shells you also need to add the dependency `click-completion`.
 
-    Just that. And **Typer** does the rest.
-    
     If **Typer** detects `click-completion` installed, it will automatically create 2 *CLI options*:
 
     * `--install-completion`: Install completion for the current shell.
     * `--show-completion`: Show completion for the current shell, to copy it or customize the installation.    
 
     Then you can tell the user to run that command and the rest will just work.
+
+    It works when you create a package (installable with `pip`). Or when using [Typer CLI](typer-cli.md){.internal-link target=_blank}.
 
 ## The power of Click
 
