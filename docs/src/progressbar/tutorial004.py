@@ -9,7 +9,7 @@ def main():
         for batch in range(4):
             # Fake processing time
             time.sleep(1)
-            progress.update(2500)
+            progress.update(250)
     typer.echo(f"Processed {total} things in batches.")
 
 
