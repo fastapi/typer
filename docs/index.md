@@ -34,7 +34,7 @@ The key features are:
 * **Easy to use**: It's easy to use for the final users. Automatic help, and (optional) automatic completion for all shells.
 * **Short**: Minimize code duplication. Multiple features from each parameter declaration. Fewer bugs.
 * **Start simple**: The simplest example adds only 2 lines of code to your app: **1 import, 1 function call**.
-* **Grow large**: Grow in complexity as much as you want, create arbitrarily complex trees of commands and groups subcommands, with options and arguments.
+* **Grow large**: Grow in complexity as much as you want, create arbitrarily complex trees of commands and groups of subcommands, with options and arguments.
 
 ## Requirements
 
@@ -98,7 +98,7 @@ Options:
   --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 
-// You get ✨ auto completion ✨ for free, installed with --install-completion
+// When you create a package you get ✨ auto completion ✨ for free, installed with --install-completion
 
 // Now pass the NAME argument
 $ python main.py Camila
@@ -109,6 +109,8 @@ Hello Camila
 ```
 
 </div>
+
+**Note**: Auto completion works when you create a Python package and run it with `--install-completion` or when you use <a href="https://typer.tiangolo.com/typer-cli/" class="internal-link" target="_blank">Typer CLI</a>.
 
 ## Example upgrade
 
@@ -241,7 +243,7 @@ And similarly for **files**, **paths**, **enums** (choices), etc. And there are 
 
 **You get**: great editor support, including **completion** and **type checks** everywhere.
 
-**Your users get**: automatic **`--help`**, (optional) **autocompletion** in their terminal (Bash, Zsh, Fish, PowerShell).
+**Your users get**: automatic **`--help`**, (optional) **auto completion** in their terminal (Bash, Zsh, Fish, PowerShell) when they install your package or when using <a href="https://typer.tiangolo.com/typer-cli/" class="internal-link" target="_blank">Typer CLI</a>.
 
 For a more complete example including more features, see the <a href="https://typer.tiangolo.com/tutorial/">Tutorial - User Guide</a>.
 
@@ -267,6 +269,7 @@ For example:
 * <a href="https://github.com/click-contrib/click-spinner" class="external-link" target="_blank"><code>click-spinner</code></a>: to show the user that you are loading data. A Click plug-in.
     * There are several other Click plug-ins at <a href="https://github.com/click-contrib" class="external-link" target="_blank">click-contrib</a> that you can explore.
 * <a href="https://pypi.org/project/tabulate/" class="external-link" target="_blank"><code>tabulate</code></a>: to automatically display tabular data nicely. Independent of Click or typer.
+* <a href="https://github.com/tqdm/tqdm" class="external-link" target="_blank"><code>tqdm</code></a>: a fast, extensible progress bar, alternative to Typer's own `typer.progressbar()`.
 * etc... you can re-use many of the great available tools for building CLIs.
 
 ## License

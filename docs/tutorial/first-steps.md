@@ -436,3 +436,42 @@ We'll use ***CLI argument*** to refer to those *CLI parameters* that depend on a
 And we'll use ***CLI option*** to refer to those *CLI parameters* that depend on a name that starts with `--` (like `--lastname`). That are **optional** by default.
 
 We will use ***CLI parameter*** to refer to both, *CLI arguments* and *CLI options*.
+
+## **Typer CLI**
+
+Now that you know the basics of **Typer**, you might want to install and use [Typer CLI](../typer-cli.md){.internal-link target=_blank}.
+
+**Typer CLI** is a tool to run your **Typer** scripts giving you ✨ auto completion ✨ in your terminal.
+
+As an alternative to running with Python:
+
+<div class="termy">
+
+```console
+$ python main.py
+
+Hello World
+```
+
+</div>
+
+You can run with **Typer CLI**:
+
+<div class="termy">
+
+```console
+$ typer main.py run
+
+Hello World
+```
+
+</div>
+
+...and it will give you auto completion in your terminal when you hit <kbd>TAB</kbd> for all your code.
+
+So you can use it to have auto completion as you continue with the tutorial.
+
+!!! tip
+    Your CLI application built with **Typer** won't need [Typer CLI](../typer-cli.md){.internal-link target=_blank} to have auto completion once you create a Python package.
+
+    But for short scripts and for learning, before creating a Python package, it might be useful.

@@ -65,6 +65,7 @@ nav:
         - Progress Bar: 'tutorial/progressbar.md'
         - CLI Application Directory: 'tutorial/app-dir.md'
         - Launching Applications: 'tutorial/launch.md'
+    - Typer CLI - completion for small scripts: 'typer-cli.md'
     - Alternatives, Inspiration and Comparisons: 'alternatives.md'
     - Help Typer - Get Help: 'help-typer.md'
     - Development - Contributing: 'contributing.md'
