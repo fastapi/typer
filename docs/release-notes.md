@@ -1,5 +1,8 @@
 ## Latest changes
 
+* Add docs about [Alternatives, Inspiration and Comparisons](https://typer.tiangolo.com/alternatives/). PR [#62](https://github.com/tiangolo/typer/pull/62).
+* Add [Development - Contributing Guide](https://typer.tiangolo.com/contributing/). PR [#61](https://github.com/tiangolo/typer/pull/61).
+
 ## 0.0.10
 
 * Add support for Click version 7.1.1. PR [#60](https://github.com/tiangolo/typer/pull/60).
