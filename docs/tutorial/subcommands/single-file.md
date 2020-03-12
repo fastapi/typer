@@ -2,7 +2,7 @@ In some cases, it's possible that your application code needs to live on a singl
 
 You can still use the same ideas:
 
-```Python hl_lines=""
+```Python
 {!./src/subcommands/tutorial002/main.py!}
 ```
 

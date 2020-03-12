@@ -10,7 +10,7 @@ And each of those could have their own commands, like `create` and `delete`.
 
 Let's start with a file `reigns.py`:
 
-```Python hl_lines=""
+```Python
 {!./src/subcommands/tutorial003/reigns.py!}
 ```
 
@@ -49,7 +49,7 @@ Destroying reign: Mordor
 
 And now the equivalent for managing towns in `towns.py`:
 
-```Python hl_lines=""
+```Python
 {!./src/subcommands/tutorial003/towns.py!}
 ```
 
@@ -88,7 +88,7 @@ Burning town: Vizima
 
 Now let's put the `reigns` and `towns` together in the same *CLI program* in `lands.py`:
 
-```Python hl_lines=""
+```Python
 {!./src/subcommands/tutorial003/lands.py!}
 ```
 
@@ -244,37 +244,37 @@ Here are all the files if you want to review/copy them:
 
 `reigns.py`:
 
-```Python hl_lines=""
+```Python
 {!./src/subcommands/tutorial003/reigns.py!}
 ```
 
 `towns.py`:
 
-```Python hl_lines=""
+```Python
 {!./src/subcommands/tutorial003/towns.py!}
 ```
 
 `lands.py`:
 
-```Python hl_lines=""
+```Python
 {!./src/subcommands/tutorial003/lands.py!}
 ```
 
 `users.py`:
 
-```Python hl_lines=""
+```Python
 {!./src/subcommands/tutorial003/users.py!}
 ```
 
 `items.py`:
 
-```Python hl_lines=""
+```Python
 {!./src/subcommands/tutorial003/items.py!}
 ```
 
 `main.py`:
 
-```Python hl_lines=""
+```Python
 {!./src/subcommands/tutorial003/main.py!}
 ```
 
