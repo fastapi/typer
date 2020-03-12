@@ -8,7 +8,7 @@ Let's imagine that you are creating a *CLI program* to manage items in some dist
 
 It could be in an `items.py` file with this:
 
-```Python hl_lines=""
+```Python
 {!./src/subcommands/tutorial001/items.py!}
 ```
 
@@ -30,7 +30,7 @@ But then you realize that you also have to manage users from your *CLI app*.
 
 It could be a file `users.py` with something like:
 
-```Python hl_lines=""
+```Python
 {!./src/subcommands/tutorial001/users.py!}
 ```
 
