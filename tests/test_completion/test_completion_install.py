@@ -124,9 +124,7 @@ def test_completion_install_powershell():
             subprocess,
             "run",
             return_value=subprocess.CompletedProcess(
-                ["pwsh"],
-                returncode=0,
-                stdout=completion_path_bytes,
+                ["pwsh"], returncode=0, stdout=completion_path_bytes,
             ),
         ):
             result = runner.invoke(app, ["--install-completion"])
