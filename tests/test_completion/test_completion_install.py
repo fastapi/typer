@@ -130,6 +130,8 @@ def test_completion_install_powershell():
         ):
             result = runner.invoke(app, ["--install-completion"])
     install_script = "Register-ArgumentCompleter -Native -CommandName typer -ScriptBlock $scriptblock"
+    parent: Path = completion_path.parent
+    parent.mkdir(parents=True, exist_ok=True)
     completion_path.write_text(install_script)
     new_text = completion_path.read_text()
     completion_path.write_text(text)
