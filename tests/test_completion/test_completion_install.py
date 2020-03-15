@@ -112,6 +112,7 @@ app.command()(mod.main)
 
 def test_completion_install_powershell():
     completion_path: Path = Path.home() / f".config/powershell/Microsoft.PowerShell_profile.ps1"
+    completion_path_bytes = f"{completion_path}\n".encode("windows-1252")
     text = ""
     if completion_path.is_file():
         text = completion_path.read_text()
@@ -125,7 +126,7 @@ def test_completion_install_powershell():
             return_value=subprocess.CompletedProcess(
                 ["pwsh"],
                 returncode=0,
-                stdout=b"/home/user/.config/powershell/Microsoft.PowerShell_profile.ps1\n",
+                stdout=completion_path_bytes,
             ),
         ):
             result = runner.invoke(app, ["--install-completion"])
