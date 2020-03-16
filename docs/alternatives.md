@@ -63,6 +63,17 @@ It was built with some great ideas and design using the features available in th
 
     As someone pointed out: <em><a href="https://twitter.com/fishnets88/status/1210126833745838080" class="external-link" target="_blank">"Nice to see it is built on Click but adds the type stuff. Me gusta!"</a></em>
 
+### <a href="https://github.com/click-contrib/click-completion" class="external-link" target="_blank">`click-completion`</a>
+
+`click-completion` is a plug-in for Click. It was created to extend completion support for shells when Click only had support for Bash completion.
+
+Previous versions of **Typer** had deep integrations with `click-completion` and used it as an optional dependency. But now all the completion logic is implemented internally in **Typer** itself, the internal logic was heavily inspired and using some parts of `click-completion`.
+
+And now **Typer** improved it to have new features, tests, some bug fixes (for issues in plain `click-completion` and Click), and better support for shells, including modern versions of PowerShell (e.g. the default versions that come with Windows 10).
+
+!!! check "Inspired **Typer** to"
+    Provide auto completion for all the shells.
+
 ### <a href="https://fastapi.tiangolo.com/" class="external-link" target="_blank">FastAPI</a>
 
 I created **FastAPI** to provide an easy way to build APIs with autocompletion for everything in the code (and some other <a href="https://fastapi.tiangolo.com/features/" class="external-link" target="_blank">features</a>).
