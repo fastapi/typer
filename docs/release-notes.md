@@ -1,5 +1,19 @@
 ## Latest changes
 
+* Re-implement completion system:
+    * Remove optional dependency `click-completion` (with its sub-dependencies, like Jinja).
+    * Add optional dependency `shellingham` to auto detect shell to install (it was used by `click-completion`).
+    * Completion now doesn't require a third party library.
+        * If `shellingham` is not installed/added as a dependency, `--install-completion` and `--show-completion` take a value with the name of the shell.
+    * Fix support for user provided completion in *CLI Parameters*.
+    * Fix completion for files in Bash, Zsh, and Fish.
+    * Add support for modern versions of PowerShell, 5, 6, and 7 (e.g. in Windows 10).
+    * Add support for `pwsh` (PowerShell Core).
+        * PowerShell support includes help strings for commands and *CLI Parameters*.
+    * Several bug fixes.
+    * Tests for the completion logic/code.
+    * Tested in all the shells in Linux and Windows.
+    * PR [#66](https://github.com/tiangolo/typer/pull/66).
 * Fix format in docs with highlighted lines. PR [#65](https://github.com/tiangolo/typer/pull/65).
 * Add docs about [Typer CLI - completion for small scripts](https://typer.tiangolo.com/typer-cli/). PR [#64](https://github.com/tiangolo/typer/pull/64).
 * Add docs about [Alternatives, Inspiration and Comparisons](https://typer.tiangolo.com/alternatives/). PR [#62](https://github.com/tiangolo/typer/pull/62).
