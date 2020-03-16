@@ -1,5 +1,7 @@
 ## Latest changes
 
+## 0.0.11
+
 * Re-implement completion system:
     * Remove optional dependency `click-completion` (with its sub-dependencies, like Jinja).
     * Add optional dependency `shellingham` to auto detect shell to install (it was used by `click-completion`).
