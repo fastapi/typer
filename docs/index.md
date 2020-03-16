@@ -31,7 +31,7 @@ Typer is library to build <abbr title="command line interface, programs executed
 The key features are:
 
 * **Intuitive to write**: Great editor support. <abbr title="also known as auto-complete, autocompletion, IntelliSense">Completion</abbr> everywhere. Less time debugging. Designed to be easy to use and learn. Less time reading docs.
-* **Easy to use**: It's easy to use for the final users. Automatic help, and (optional) automatic completion for all shells.
+* **Easy to use**: It's easy to use for the final users. Automatic help, and automatic completion for all shells.
 * **Short**: Minimize code duplication. Multiple features from each parameter declaration. Fewer bugs.
 * **Start simple**: The simplest example adds only 2 lines of code to your app: **1 import, 1 function call**.
 * **Grow large**: Grow in complexity as much as you want, create arbitrarily complex trees of commands and groups of subcommands, with options and arguments.
@@ -243,7 +243,7 @@ And similarly for **files**, **paths**, **enums** (choices), etc. And there are 
 
 **You get**: great editor support, including **completion** and **type checks** everywhere.
 
-**Your users get**: automatic **`--help`**, (optional) **auto completion** in their terminal (Bash, Zsh, Fish, PowerShell) when they install your package or when using <a href="https://typer.tiangolo.com/typer-cli/" class="internal-link" target="_blank">Typer CLI</a>.
+**Your users get**: automatic **`--help`**, **auto completion** in their terminal (Bash, Zsh, Fish, PowerShell) when they install your package or when using <a href="https://typer.tiangolo.com/typer-cli/" class="internal-link" target="_blank">Typer CLI</a>.
 
 For a more complete example including more features, see the <a href="https://typer.tiangolo.com/tutorial/">Tutorial - User Guide</a>.
 
@@ -256,9 +256,11 @@ But you can also install extras:
 * <a href="https://pypi.org/project/colorama/" class="external-link" target="_blank"><code>colorama</code></a>: and Click will automatically use it to make sure your terminal's colors always work correctly, even in Windows.
     * Then you can use any tool you want to output your terminal's colors in all the systems, including the integrated `typer.style()` and `typer.secho()` (provided by Click).
     * Or any other tool, e.g. <a href="https://pypi.org/project/wasabi/" class="external-link" target="_blank"><code>wasabi</code></a>, <a href="https://github.com/erikrose/blessings" class="external-link" target="_blank"><code>blessings</code></a>.
-* <a href="https://github.com/click-contrib/click-completion" class="external-link" target="_blank"><code>click-completion</code></a>: and Typer will automatically configure it to provide completion for all the shells, including installation commands.
+* <a href="https://github.com/sarugaku/shellingham" class="external-link" target="_blank"><code>shellingham</code></a>: and Typer will automatically detect the current shell when installing completion.
+    * With `shellingham` you can just use `--install-completion`.
+    * Without `shellingham`, you have to pass a *CLI Option value* with the name of the shell to install completion, e.g. `--install-completion bash`.
 
-You can install `typer` with `colorama` and `click-completion` with `pip install typer[all]`.
+You can install `typer` with `colorama` and `shellingham` with `pip install typer[all]`.
 
 ## Other tools and plug-ins
 

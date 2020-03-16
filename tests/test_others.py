@@ -1,6 +1,9 @@
 from typing import Optional
+from unittest import mock
 
+import shellingham
 import typer
+import typer.completion
 from typer.main import solve_typer_info_defaults, solve_typer_info_help
 from typer.models import TyperInfo
 from typer.testing import CliRunner
@@ -49,3 +52,20 @@ def test_defaults_from_info():
     # Mainly for coverage/completeness
     value = solve_typer_info_defaults(TyperInfo())
     assert value
+
+
+def test_install_invalid_shell():
+    app = typer.Typer()
+
+    @app.command()
+    def main():
+        typer.echo("Hello World")
+
+    typer.completion.Shells
+    with mock.patch.object(
+        shellingham, "detect_shell", return_value=("xshell", "/usr/bin/xshell")
+    ):
+        result = runner.invoke(app, ["--install-completion"])
+        assert "Shell xshell is not supported." in result.stdout
+    result = runner.invoke(app)
+    assert "Hello World" in result.stdout

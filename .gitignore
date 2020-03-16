@@ -9,3 +9,4 @@ dist
 site
 .coverage
 htmlcov
+.pytest_cache

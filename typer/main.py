@@ -8,6 +8,7 @@ from uuid import UUID
 
 import click
 
+from .completion import get_completion_inspect_parameters
 from .models import (
     AnyType,
     ArgumentInfo,
@@ -26,16 +27,9 @@ from .models import (
     TyperInfo,
 )
 
-try:
-    import click_completion
-    from .completion import _install_completion_placeholder_function
-except ImportError:  # pragma: no cover
-    click_completion = None
-
 
 def get_install_completion_arguments() -> Tuple[click.Parameter, click.Parameter]:
-    signature = inspect.signature(_install_completion_placeholder_function)
-    install_param, show_param = signature.parameters.values()
+    install_param, show_param = get_completion_inspect_parameters()
     click_install_param, _ = get_click_param(install_param)
     click_show_param, _ = get_click_param(show_param)
     return click_install_param, click_show_param
@@ -223,8 +217,7 @@ def get_group(typer_instance: Typer) -> click.Command:
 
 
 def get_command(typer_instance: Typer) -> click.Command:
-    if typer_instance._add_completion and click_completion:
-        click_completion.init()
+    if typer_instance._add_completion:
         click_install_param, click_show_param = get_install_completion_arguments()
     if (
         typer_instance.registered_callback
@@ -234,14 +227,14 @@ def get_command(typer_instance: Typer) -> click.Command:
     ):
         # Create a Group
         click_command = get_group(typer_instance)
-        if typer_instance._add_completion and click_completion:
+        if typer_instance._add_completion:
             click_command.params.append(click_install_param)
             click_command.params.append(click_show_param)
         return click_command
     elif len(typer_instance.registered_commands) == 1:
         # Create a single Command
         click_command = get_command_from_info(typer_instance.registered_commands[0])
-        if typer_instance._add_completion and click_completion:
+        if typer_instance._add_completion:
             click_command.params.append(click_install_param)
             click_command.params.append(click_show_param)
         return click_command

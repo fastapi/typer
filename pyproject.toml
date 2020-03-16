@@ -37,7 +37,7 @@ Documentation = "https://typer.tiangolo.com/"
 
 [tool.flit.metadata.requires-extra]
 test = [
-    "click-completion",
+    "shellingham",
     "pytest >=4.4.0",
     "pytest-cov",
     "coverage",
@@ -54,5 +54,5 @@ doc = [
 ]
 all = [
     "colorama",
-    "click-completion"
+    "shellingham"
 ]

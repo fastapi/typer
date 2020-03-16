@@ -42,21 +42,31 @@ But by default, it all **"just works"**.
 
 The resulting CLI apps created with **Typer** have the nice features of many "pro" command line programs you probably already love.
 
-* Automatic help options for the main CLI program and all the its subcommands.
+* Automatic help options for the main CLI program and all its subcommands.
 * Automatic command and subcommand structure handling (you will see more about subcommands in the Tutorial - User Guide).
 * Automatic completion for the CLI app in all operating systems, in all the shells (Bash, Zsh, Fish, PowerShell), so that the final user of your app can just hit <kbd>TAB</kbd> and get the available options or subcommands. *
 
 !!! note "* Auto completion"
-    For the autocompletion to work on all shells you also need to add the dependency `click-completion`.
+    Auto completion works when you create a package (installable with `pip`). Or when using [Typer CLI](typer-cli.md){.internal-link target=_blank}.
 
-    If **Typer** detects `click-completion` installed, it will automatically create 2 *CLI options*:
+    If you also add `shellingham` as a dependency, **Typer** will use it to auto-detect the current shell when installing completion.
+
+    **Typer** will automatically create 2 *CLI options*:
 
     * `--install-completion`: Install completion for the current shell.
-    * `--show-completion`: Show completion for the current shell, to copy it or customize the installation.    
+    * `--show-completion`: Show completion for the current shell, to copy it or customize the installation.
 
-    Then you can tell the user to run that command and the rest will just work.
+    If you didn't add `shellingham` those *CLI Options* take a parameter with the name of the shell to install completion for, e.g.:
+    
+    * `--install-completion bash`.
+    * `--show-completion powershell`.
 
-    It works when you create a package (installable with `pip`). Or when using [Typer CLI](typer-cli.md){.internal-link target=_blank}.
+    Then you can tell the user to install completion after installing your CLI program and the rest will just work.
+
+!!! tip
+    **Typer**'s completion is implemented internally, it uses ideas and components from Click and ideas from `click-completion`, but it doesn't use `click-completion` internally.
+
+    Then it extends those ideas with features and bug fixes. For example, **Typer** programs also support modern versions of PowerShell (e.g. in Windows 10) among all the other shells.
 
 ## The power of Click
 
