@@ -139,15 +139,15 @@ $scriptblock = {
     $Env:_TYPER_COMPLETE_ARGS = $commandAst.ToString()
     $Env:_TYPER_COMPLETE_WORD_TO_COMPLETE = $wordToComplete
     %(prog_name)s | ForEach-Object {
-        $commandArray = $_.Split(":::")
+        $commandArray = $_ -Split ":::"
         $command = $commandArray[0]
         $helpString = $commandArray[1]
         [System.Management.Automation.CompletionResult]::new(
             $command, $command, 'ParameterValue', $helpString)
     }
-    Remove-Item Env:%(autocomplete_var)s
-    Remove-Item Env:_TYPER_COMPLETE_ARGS
-    Remove-Item Env:_TYPER_COMPLETE_WORD_TO_COMPLETE
+    $Env:%(autocomplete_var)s = ""
+    $Env:_TYPER_COMPLETE_ARGS = ""
+    $Env:_TYPER_COMPLETE_WORD_TO_COMPLETE = ""
 }
 Register-ArgumentCompleter -Native -CommandName %(prog_name)s -ScriptBlock $scriptblock
 """
