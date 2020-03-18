@@ -270,22 +270,12 @@ As a simple example, let's show it on the screen before completion.
 
 Because completion is based on the output printed by your program (handled internally by **Typer**), during completion we can't just print something else as we normally do.
 
-### "Standard Output" and "Standard Error"
-
-The way it works underneath is that the operating system treats what we print as if it was a "virtual file" called "standard output".
-
-But there's another "virtual file" called "standard error" that is normally only used for errors. But we can also "print" to "standard error". And both are shown on the terminal to the users.
-
-And because the completion system only reads from "standard output", printing to "standard error" won't break completion.
-
-!!! info
-    If you use PowerShell it's quite possible that what you print to "standard error" won't be shown in the terminal.
-
-    In PowerShell, to see "standard error" you would have to check the variable `$Error`.
-
-    But it will work normally in Bash, Zsh, and Fish.
-
 ### Printing to "standard error"
+
+!!! tip
+    If you need a refresher about what is "standard output" and "standard error" check the section in [Printing and Colors: "Standard Output" and "Standard Error"](../printing.md#standard-output-and-standard-error){.internal-link target=_blank}.
+
+The completion system only reads from "standard output", so, printing to "standard error" won't break completion. 🚀
 
 You can print to "standard error" with `typer.echo("some text", err=True)`.
 
