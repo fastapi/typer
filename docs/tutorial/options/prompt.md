@@ -24,7 +24,7 @@ Hello Camila Gutiérrez
 
 You can also set a custom prompt, passing the string that you want to use instead of just `True`:
 
-```Python hl_lines="6"
+```Python hl_lines="5"
 {!./src/options/prompt/tutorial002.py!}
 ```
 

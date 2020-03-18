@@ -40,7 +40,7 @@ You can create colored strings to output to the terminal with `typer.style()`, t
 ```
 
 !!! tip
-    The parameters `fg` and `bg` receive strings with the color names. You could simply pass `fg="green"` and `bg="red"`.
+    The parameters `fg` and `bg` receive strings with the color names for the "**f**ore**g**round" and "**b**ack**g**round" colors. You could simply pass `fg="green"` and `bg="red"`.
 
     But **Typer** provides them all as variables like `typer.colors.GREEN` just so you can use autocompletion while selecting them.
 
@@ -81,3 +81,60 @@ Check it:
 <span data-ty="input">python main.py Camila</span>
 <span style="color: magenta;" data-ty>Welcome here Camila</span>
 </div>
+
+## "Standard Output" and "Standard Error"
+
+The way printing works underneath is that the **operating system** (Linux, Windows, macOS) treats what we print as if our CLI program was **writing text** to a "**virtual file**" called "**standard output**".
+
+When our code "prints" things it is actually "writing" to this "virtual file" of "standard output".
+
+This might seem strange, but that's how the CLI program and the operating system interact with each other.
+
+And then the operating system **shows on the screen** whatever our CLI program "**wrote**" to that "**virtual file**" called "**standard output**".
+
+### Standard Error
+
+And there's another "**virtual file**" called "**standard error**" that is normally only used for errors.
+
+But we can also "print" to "standard error". And both are shown on the terminal to the users.
+
+!!! info
+    If you use PowerShell it's quite possible that what you print to "standard error" won't be shown in the terminal.
+
+    In PowerShell, to see "standard error" you would have to check the variable `$Error`.
+
+    But it will work normally in Bash, Zsh, and Fish.
+
+### Printing to "standard error"
+
+You can print to "standard error" with `typer.echo("some text", err=True)`.
+
+Using `err=True` tells **Typer** (actually Click) that the output should be shown in "standard error".
+
+```Python hl_lines="5"
+{!./src/printing/tutorial003.py!}
+```
+
+When you try it in the terminal, it will probably just look the same:
+
+<div class="termy">
+
+```console
+$ python main.py
+
+Here is something written to standard error
+```
+
+</div>
+
+### "Standard Input"
+
+As a final detail, when you type text in your keyboard to your terminal, the operating system also considers it another "**virtual file**" that you are writing text to.
+
+This virtual file is called "**standard input**".
+
+### What is this for
+
+Right now this probably seems quite useless 🤷‍♂.
+
+But understanding that will come handy in the future, for example for autocompletion and testing.

@@ -31,7 +31,11 @@ nav:
             - CLI Options with Help: 'tutorial/options/help.md'
             - Required CLI Options: 'tutorial/options/required.md'
             - CLI Option Prompt: 'tutorial/options/prompt.md'
+            - Password CLI Option and Confirmation Prompt: 'tutorial/options/password.md'
             - CLI Option Name: 'tutorial/options/name.md'
+            - CLI Option Callback and Context: 'tutorial/options/callback-and-context.md'
+            - Version CLI Option, is_eager: 'tutorial/options/version.md'
+            - CLI Option autocompletion: 'tutorial/options/autocompletion.md'
         - Commands:
             - Commands Intro: 'tutorial/commands/index.md'
             - Command CLI Arguments: 'tutorial/commands/arguments.md'
@@ -40,6 +44,7 @@ nav:
             - Custom Command Name: 'tutorial/commands/name.md'
             - Typer Callback: 'tutorial/commands/callback.md'
             - One or Multiple Commands: 'tutorial/commands/one-or-multiple.md'
+            - Using the Context: 'tutorial/commands/context.md'
         - CLI Parameter Types:
             - CLI Parameter Types Intro: 'tutorial/parameter-types/index.md'
             - Number: 'tutorial/parameter-types/number.md'
@@ -65,6 +70,7 @@ nav:
         - Progress Bar: 'tutorial/progressbar.md'
         - CLI Application Directory: 'tutorial/app-dir.md'
         - Launching Applications: 'tutorial/launch.md'
+        - Testing: 'tutorial/testing.md'
     - Typer CLI - completion for small scripts: 'typer-cli.md'
     - Alternatives, Inspiration and Comparisons: 'alternatives.md'
     - Help Typer - Get Help: 'help-typer.md'

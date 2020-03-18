@@ -6,7 +6,7 @@ When you declare a *CLI parameter* with some type **Typer** will convert the dat
 
 For example:
 
-```Python hl_lines="5"
+```Python hl_lines="4"
 {!./src/parameter_types/index/tutorial001.py!}
 ```
 

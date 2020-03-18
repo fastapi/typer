@@ -321,7 +321,9 @@ def solve_typer_info_defaults(typer_info: TyperInfo) -> TyperInfo:
             pass
         # Priority 3: Value set in subapp = typer.Typer()
         try:
-            instance_value = getattr(typer_info.typer_instance.info, name)  # type: ignore
+            instance_value = getattr(
+                typer_info.typer_instance.info, name  # type: ignore
+            )
             if not isinstance(instance_value, DefaultPlaceholder):
                 values[name] = instance_value
                 continue
@@ -698,12 +700,14 @@ def get_click_param(
                 # Parameter
                 required=required,
                 default=default_value,
-                callback=parameter_info.callback,
+                callback=get_param_callback(
+                    callback=parameter_info.callback, convertor=convertor
+                ),
                 metavar=parameter_info.metavar,
                 expose_value=parameter_info.expose_value,
                 is_eager=parameter_info.is_eager,
                 envvar=parameter_info.envvar,
-                autocompletion=parameter_info.autocompletion,
+                autocompletion=get_param_completion(parameter_info.autocompletion),
             ),
             convertor,
         )
@@ -721,16 +725,119 @@ def get_click_param(
                 nargs=nargs,
                 # Parameter
                 default=default_value,
-                callback=parameter_info.callback,
+                callback=get_param_callback(
+                    callback=parameter_info.callback, convertor=convertor
+                ),
                 metavar=parameter_info.metavar,
                 expose_value=parameter_info.expose_value,
                 is_eager=parameter_info.is_eager,
                 envvar=parameter_info.envvar,
-                autocompletion=parameter_info.autocompletion,
+                autocompletion=get_param_completion(parameter_info.autocompletion),
             ),
             convertor,
         )
     assert False, "A click.Parameter should be returned"  # pragma no cover
+
+
+def get_param_callback(
+    *, callback: Optional[Callable] = None, convertor: Optional[Callable] = None
+) -> Optional[Callable]:
+    if not callback:
+        return None
+    signature = inspect.signature(callback)
+    ctx_name = None
+    click_param_name = None
+    value_name = None
+    untyped_names: List[str] = []
+    for param_name, param_sig in signature.parameters.items():
+        if lenient_issubclass(param_sig.annotation, click.Context):
+            ctx_name = param_name
+        elif lenient_issubclass(param_sig.annotation, click.Parameter):
+            click_param_name = param_name
+        else:
+            untyped_names.append(param_name)
+    # Extract value param name first
+    if untyped_names:
+        value_name = untyped_names.pop()
+    # If context and Click param were not typed (old/Click callback style) extract them
+    if untyped_names:
+        if ctx_name is None:
+            ctx_name = untyped_names.pop(0)
+        if click_param_name is None:
+            if untyped_names:
+                click_param_name = untyped_names.pop(0)
+        if untyped_names:
+            raise click.ClickException(
+                "Too many CLI parameter callback function parameters"
+            )
+
+    def wrapper(ctx: click.Context, param: click.Parameter, value: Any) -> Any:
+        use_params: Dict[str, Any] = {}
+        if ctx_name:
+            use_params[ctx_name] = ctx
+        if click_param_name:
+            use_params[click_param_name] = param
+        if value_name:
+            if convertor:
+                use_value = convertor(value)
+            else:
+                use_value = value
+            use_params[value_name] = use_value
+        return callback(**use_params)  # type: ignore
+
+    update_wrapper(wrapper, callback)
+    return wrapper
+
+
+def get_param_completion(callback: Optional[Callable] = None) -> Optional[Callable]:
+    if not callback:
+        return None
+    signature = inspect.signature(callback)
+    ctx_name = None
+    args_name = None
+    incomplete_name = None
+    unassigned_params = [param for param in signature.parameters.values()]
+    for param_sig in unassigned_params[:]:
+        origin = getattr(param_sig.annotation, "__origin__", None)
+        if lenient_issubclass(param_sig.annotation, click.Context):
+            ctx_name = param_sig.name
+            unassigned_params.remove(param_sig)
+        elif lenient_issubclass(origin, List):
+            args_name = param_sig.name
+            unassigned_params.remove(param_sig)
+        elif lenient_issubclass(param_sig.annotation, str):
+            incomplete_name = param_sig.name
+            unassigned_params.remove(param_sig)
+    # If there are still unassigned parameters (not typed), extract by name
+    for param_sig in unassigned_params[:]:
+        if ctx_name is None and param_sig.name == "ctx":
+            ctx_name = param_sig.name
+            unassigned_params.remove(param_sig)
+        elif args_name is None and param_sig.name == "args":
+            args_name = param_sig.name
+            unassigned_params.remove(param_sig)
+        elif incomplete_name is None and param_sig.name == "incomplete":
+            incomplete_name = param_sig.name
+            unassigned_params.remove(param_sig)
+    # Extract value param name first
+    if unassigned_params:
+        show_params = " ".join([param.name for param in unassigned_params])
+        raise click.ClickException(
+            f"Invalid autocompletion callback parameters: {show_params}"
+        )
+
+    def wrapper(ctx: click.Context, args: List[str], incomplete: Optional[str]) -> Any:
+        use_params: Dict[str, Any] = {}
+        if ctx_name:
+            use_params[ctx_name] = ctx
+        if args_name:
+            use_params[args_name] = args
+        if incomplete_name:
+            use_params[incomplete_name] = incomplete
+        return callback(**use_params)  # type: ignore
+
+    update_wrapper(wrapper, callback)
+    return wrapper
 
 
 def run(function: Callable) -> Any:

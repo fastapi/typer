@@ -2,7 +2,7 @@
 
 __version__ = "0.0.11"
 
-from click.exceptions import Abort, Exit
+from click.exceptions import Abort, BadParameter, Exit
 from click.termui import (
     clear,
     confirm,
@@ -29,5 +29,12 @@ from click.utils import (
 
 from . import colors
 from .main import Typer, run
-from .models import Context, FileBinaryRead, FileBinaryWrite, FileText, FileTextWrite
+from .models import (
+    CallbackParam,
+    Context,
+    FileBinaryRead,
+    FileBinaryWrite,
+    FileText,
+    FileTextWrite,
+)
 from .params import Argument, Option

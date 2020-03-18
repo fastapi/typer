@@ -24,7 +24,7 @@ Hug is a library to create APIs and CLIs, it uses parameters in functions to dec
 It inspired a lot of the ideas in **FastAPI** and **Typer**.
 
 !!! check "Inspired **Typer** to"
-    Use function parameters to declare *CLI Arguments* and *CLI Options* as it simplifies a lot the development experience.
+    Use function parameters to declare *CLI arguments* and *CLI options* as it simplifies a lot the development experience.
 
 ### <a href="https://micheles.github.io/plac/" class="external-link" target="_blank">Plac</a>
 
@@ -50,7 +50,7 @@ Click is one of the most widely used libraries to create CLIs in Python.
 
 It's a very powerful tool and there are many CLIs built with it. It is what powers **Typer** underneath.
 
-It also uses functions with parameters for *CLI Arguments* and *CLI Options*, but the declaration of the specific *CLI Arguments*, *CLI Options*, types, etc, is done in decorators on top of the function. This requires some code repetition (e.g. a *CLI Option* name `--verbose` and a variable name `verbose`) and synchronization between two places related to the same information (the decorator and the parameter function).
+It also uses functions with parameters for *CLI arguments* and *CLI options*, but the declaration of the specific *CLI arguments*, *CLI options*, types, etc, is done in decorators on top of the function. This requires some code repetition (e.g. a *CLI Option* name `--verbose` and a variable name `verbose`) and synchronization between two places related to the same information (the decorator and the parameter function).
 
 It uses decorators on top of functions to modify the actual value of those functions, converting them to instances of a specific class. This is a clever trick, but code editors can't provide great support for autocompletion that way.
 
