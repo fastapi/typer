@@ -707,7 +707,7 @@ def get_click_param(
                 expose_value=parameter_info.expose_value,
                 is_eager=parameter_info.is_eager,
                 envvar=parameter_info.envvar,
-                autocompletion=parameter_info.autocompletion,
+                autocompletion=get_param_completion(parameter_info.autocompletion),
             ),
             convertor,
         )
@@ -732,7 +732,7 @@ def get_click_param(
                 expose_value=parameter_info.expose_value,
                 is_eager=parameter_info.is_eager,
                 envvar=parameter_info.envvar,
-                autocompletion=parameter_info.autocompletion,
+                autocompletion=get_param_completion(parameter_info.autocompletion),
             ),
             convertor,
         )
@@ -783,6 +783,57 @@ def get_param_callback(
             else:
                 use_value = value
             use_params[value_name] = use_value
+        return callback(**use_params)  # type: ignore
+
+    update_wrapper(wrapper, callback)
+    return wrapper
+
+
+def get_param_completion(callback: Optional[Callable] = None) -> Optional[Callable]:
+    if not callback:
+        return None
+    signature = inspect.signature(callback)
+    ctx_name = None
+    args_name = None
+    incomplete_name = None
+    unassigned_params = [param for param in signature.parameters.values()]
+    for param_sig in unassigned_params[:]:
+        origin = getattr(param_sig.annotation, "__origin__", None)
+        if lenient_issubclass(param_sig.annotation, click.Context):
+            ctx_name = param_sig.name
+            unassigned_params.remove(param_sig)
+        elif lenient_issubclass(origin, List):
+            args_name = param_sig.name
+            unassigned_params.remove(param_sig)
+        elif lenient_issubclass(param_sig.annotation, str):
+            incomplete_name = param_sig.name
+            unassigned_params.remove(param_sig)
+    # If there are still unassigned parameters (not typed), extract by name
+    for param_sig in unassigned_params[:]:
+        if ctx_name is None and param_sig.name == "ctx":
+            ctx_name = param_sig.name
+            unassigned_params.remove(param_sig)
+        elif args_name is None and param_sig.name == "args":
+            args_name = param_sig.name
+            unassigned_params.remove(param_sig)
+        elif incomplete_name is None and param_sig.name == "incomplete":
+            incomplete_name = param_sig.name
+            unassigned_params.remove(param_sig)
+    # Extract value param name first
+    if unassigned_params:
+        show_params = " ".join([param.name for param in unassigned_params])
+        raise click.ClickException(
+            f"Invalid autocompletion callback parameters: {show_params}"
+        )
+
+    def wrapper(ctx: click.Context, args: List[str], incomplete: Optional[str]) -> Any:
+        use_params: Dict[str, Any] = {}
+        if ctx_name:
+            use_params[ctx_name] = ctx
+        if args_name:
+            use_params[args_name] = args
+        if incomplete_name:
+            use_params[incomplete_name] = incomplete
         return callback(**use_params)  # type: ignore
 
     update_wrapper(wrapper, callback)
