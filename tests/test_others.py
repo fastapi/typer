@@ -148,6 +148,14 @@ def test_completion_untyped_parameters():
     assert '"Carlos":"The writer of scripts."' in result.stdout
     assert '"Sebastian":"The type hints guy."' in result.stdout
 
+    result = subprocess.run(
+        ["coverage", "run", str(file_path)],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        encoding="utf-8",
+    )
+    assert "Hello World" in result.stdout
+
 
 def test_completion_untyped_parameters_different_order_correct_names():
     file_path = Path(__file__).parent / "assets/completion_no_types_order.py"
@@ -169,6 +177,14 @@ def test_completion_untyped_parameters_different_order_correct_names():
     assert '"Camila":"The reader of books."' in result.stdout
     assert '"Carlos":"The writer of scripts."' in result.stdout
     assert '"Sebastian":"The type hints guy."' in result.stdout
+
+    result = subprocess.run(
+        ["coverage", "run", str(file_path)],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        encoding="utf-8",
+    )
+    assert "Hello World" in result.stdout
 
 
 def test_autocompletion_too_many_parameters():
