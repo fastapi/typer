@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Optional
 from unittest import mock
 
+import click
 import pytest
 import shellingham
 import typer
@@ -11,8 +12,6 @@ import typer.completion
 from typer.main import solve_typer_info_defaults, solve_typer_info_help
 from typer.models import TyperInfo
 from typer.testing import CliRunner
-
-import click.exceptions
 
 runner = CliRunner()
 
@@ -86,7 +85,7 @@ def test_callback_too_many_parameters():
     def main(name: str = typer.Option(..., callback=name_callback)):
         pass  # pragma: nocover
 
-    with pytest.raises(click.exceptions.ClickException) as exc_info:
+    with pytest.raises(click.ClickException) as exc_info:
         runner.invoke(app, ["--name", "Camila"])
     assert (
         exc_info.value.message == "Too many CLI parameter callback function parameters"
@@ -197,6 +196,6 @@ def test_autocompletion_too_many_parameters():
     def main(name: str = typer.Option(..., autocompletion=name_callback)):
         pass  # pragma: nocover
 
-    with pytest.raises(click.exceptions.ClickException) as exc_info:
+    with pytest.raises(click.ClickException) as exc_info:
         runner.invoke(app, ["--name", "Camila"])
     assert exc_info.value.message == "Invalid autocompletion callback parameters: val2"

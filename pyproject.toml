@@ -52,6 +52,10 @@ doc = [
     "mkdocs-material",
     "markdown-include"
 ]
+dev = [
+    "autoflake",
+    "flake8",
+]
 all = [
     "colorama",
     "shellingham"
