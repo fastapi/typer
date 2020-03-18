@@ -77,9 +77,14 @@ Aborted!
 !!! tip
     We don't have to check for `ctx.resilient_parsing` in the `name_callback()` for completion to work, because we are not using `typer.echo()`, instead we are raising a `typer.BadParameter`.
 
-    **Technical Details**: `typer.BadParameter` prints the error to "standard error", not to "standard output". And the completion system reads from "standard output".
+!!! note "Technical Details"
+    The way it works underneath is that the operating system treats what we print as if it was a "virtual file" called "standard output".
 
-    But here the error is not about completion, but about calling the program with `--version`.
+    But there's another "virtual file" called "standard error" that is normally only used for errors. But we can also "print" to "standard error". And both are shown on the terminal to the users.
+
+    And because the completion system only reads from "standard output", printing to "standard error" won't break completion.
+    
+    `typer.BadParameter` prints the error to "standard error", not to "standard output", so it doesn't break completion.
 
 ### Fix with `is_eager`
 
