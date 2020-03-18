@@ -78,13 +78,10 @@ Aborted!
     We don't have to check for `ctx.resilient_parsing` in the `name_callback()` for completion to work, because we are not using `typer.echo()`, instead we are raising a `typer.BadParameter`.
 
 !!! note "Technical Details"
-    The way it works underneath is that the operating system treats what we print as if it was a "virtual file" called "standard output".
+    `typer.BadParameter` prints the error to "standard error", not to "standard output", and because the completion system only reads from "standard output", it won't break completion.
 
-    But there's another "virtual file" called "standard error" that is normally only used for errors. But we can also "print" to "standard error". And both are shown on the terminal to the users.
-
-    And because the completion system only reads from "standard output", printing to "standard error" won't break completion.
-    
-    `typer.BadParameter` prints the error to "standard error", not to "standard output", so it doesn't break completion.
+!!! info
+    If you need a refresher about what is "standard output" and "standard error" check the section in [Printing and Colors: "Standard Output" and "Standard Error"](../printing.md#standard-output-and-standard-error){.internal-link target=_blank}.
 
 ### Fix with `is_eager`
 
