@@ -223,7 +223,7 @@ def get_installable_script(prog_name: str, complete_var: str, shell: str) -> str
     if shell == "bash":
         return f'eval "$({complete_var}=source_bash {prog_name})"'
     elif shell == "zsh":
-        return f'eval "$({complete_var}=source_szh {prog_name})"'
+        return f'eval "$({complete_var}=source_zsh {prog_name})"'
     elif shell == "fish":
         return f"eval (env {complete_var}=source_fish {prog_name})"
     elif shell in {"powershell", "pwsh"}:

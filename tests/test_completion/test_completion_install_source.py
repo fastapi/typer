@@ -34,7 +34,7 @@ def test_completion_install_source_zsh():
         },
     )
     assert (
-        'eval "$(_TUTORIAL001.PY_COMPLETE=source_szh tutorial001.py)"' in result.stdout
+        'eval "$(_TUTORIAL001.PY_COMPLETE=source_zsh tutorial001.py)"' in result.stdout
     )
 
 
