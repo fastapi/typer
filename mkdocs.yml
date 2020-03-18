@@ -32,6 +32,8 @@ nav:
             - Required CLI Options: 'tutorial/options/required.md'
             - CLI Option Prompt: 'tutorial/options/prompt.md'
             - CLI Option Name: 'tutorial/options/name.md'
+            - CLI Option Callback and Context: 'tutorial/options/callback-and-context.md'
+            - Version CLI Option, is_eager: 'tutorial/options/version.md'
         - Commands:
             - Commands Intro: 'tutorial/commands/index.md'
             - Command CLI Arguments: 'tutorial/commands/arguments.md'

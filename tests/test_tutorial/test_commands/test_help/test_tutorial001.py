@@ -77,21 +77,21 @@ def test_no_delete():
 
 
 def test_delete_all():
-    result = runner.invoke(app, ["delete-all",], input="y\n")
+    result = runner.invoke(app, ["delete-all"], input="y\n")
     assert result.exit_code == 0
     assert "Are you sure you want to delete ALL users? [y/N]:" in result.output
     assert "Deleting all users" in result.output
 
 
 def test_no_delete_all():
-    result = runner.invoke(app, ["delete-all",], input="n\n")
+    result = runner.invoke(app, ["delete-all"], input="n\n")
     assert result.exit_code == 0
     assert "Are you sure you want to delete ALL users? [y/N]:" in result.output
     assert "Operation cancelled" in result.output
 
 
 def test_init():
-    result = runner.invoke(app, ["init",])
+    result = runner.invoke(app, ["init"])
     assert result.exit_code == 0
     assert "Initializing user database" in result.output
 

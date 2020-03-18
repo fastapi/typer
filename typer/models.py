@@ -45,6 +45,10 @@ class FileBinaryWrite(io.BufferedWriter):
     pass
 
 
+class CallbackParam(click.Parameter):
+    pass
+
+
 class DefaultPlaceholder:
     """
     You shouldn't use this class directly.
@@ -82,7 +86,7 @@ class CommandInfo:
         *,
         cls: Optional[Type[click.Command]] = None,
         context_settings: Optional[Dict[Any, Any]] = None,
-        callback: Optional[Callable[..., Any]] = None,
+        callback: Optional[Callable] = None,
         help: Optional[str] = None,
         epilog: Optional[str] = None,
         short_help: Optional[str] = None,
@@ -120,7 +124,7 @@ class TyperInfo:
         result_callback: Optional[Callable] = Default(None),
         # Command
         context_settings: Optional[Dict[Any, Any]] = Default(None),
-        callback: Optional[Callable[..., Any]] = Default(None),
+        callback: Optional[Callable] = Default(None),
         help: Optional[str] = Default(None),
         epilog: Optional[str] = Default(None),
         short_help: Optional[str] = Default(None),
@@ -154,14 +158,12 @@ class ParameterInfo:
         *,
         default: Optional[Any] = None,
         param_decls: Optional[Sequence[str]] = None,
-        callback: Optional[Callable[[click.Context, click.Parameter, str], Any]] = None,
+        callback: Optional[Callable] = None,
         metavar: Optional[str] = None,
         expose_value: bool = True,
         is_eager: bool = False,
         envvar: Optional[Union[str, List[str]]] = None,
-        autocompletion: Optional[
-            Callable[[click.Context, List[str], str], List[str]]
-        ] = None,
+        autocompletion: Optional[Callable] = None,
         # Choice
         case_sensitive: bool = True,
         # Numbers
@@ -226,14 +228,12 @@ class OptionInfo(ParameterInfo):
         # ParameterInfo
         default: Optional[Any] = None,
         param_decls: Optional[Sequence[str]] = None,
-        callback: Optional[Callable[[click.Context, click.Parameter, str], Any]] = None,
+        callback: Optional[Callable] = None,
         metavar: Optional[str] = None,
         expose_value: bool = True,
         is_eager: bool = False,
         envvar: Optional[Union[str, List[str]]] = None,
-        autocompletion: Optional[
-            Callable[[click.Context, List[str], str], List[str]]
-        ] = None,
+        autocompletion: Optional[Callable] = None,
         # Option
         show_default: bool = False,
         prompt: Union[bool, str] = False,
@@ -325,14 +325,12 @@ class ArgumentInfo(ParameterInfo):
         # ParameterInfo
         default: Optional[Any] = None,
         param_decls: Optional[Sequence[str]] = None,
-        callback: Optional[Callable[[click.Context, click.Parameter, str], Any]] = None,
+        callback: Optional[Callable] = None,
         metavar: Optional[str] = None,
         expose_value: bool = True,
         is_eager: bool = False,
         envvar: Optional[Union[str, List[str]]] = None,
-        autocompletion: Optional[
-            Callable[[click.Context, List[str], str], List[str]]
-        ] = None,
+        autocompletion: Optional[Callable] = None,
         # Choice
         case_sensitive: bool = True,
         # Numbers

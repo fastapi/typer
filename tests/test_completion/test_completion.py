@@ -16,7 +16,7 @@ def test_show_completion():
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
-        env={**os.environ, "SHELL": "/bin/bash", "_TYPER_COMPLETE_TESTING": "True",},
+        env={**os.environ, "SHELL": "/bin/bash", "_TYPER_COMPLETE_TESTING": "True"},
     )
     assert "_TUTORIAL001.PY_COMPLETE=complete_bash" in result.stdout
 
@@ -35,7 +35,7 @@ def test_install_completion():
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
-        env={**os.environ, "SHELL": "/bin/bash", "_TYPER_COMPLETE_TESTING": "True",},
+        env={**os.environ, "SHELL": "/bin/bash", "_TYPER_COMPLETE_TESTING": "True"},
     )
     new_text = bash_completion_path.read_text()
     bash_completion_path.write_text(text)
