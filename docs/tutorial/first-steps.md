@@ -1,6 +1,6 @@
 ## The simplest example
 
-The simplest Typer file could look like this:
+The simplest **Typer** file could look like this:
 
 ```Python
 {!./src/first_steps/tutorial001.py!}
@@ -173,7 +173,7 @@ The program knows it has to show the size because it sees `--size`, not because 
 
 A *CLI option* like `--size` doesn't depend on the order like a *CLI argument*.
 
-So, if you put the `--size` *before* the *CLI argument*, it still works:
+So, if you put the `--size` *before* the *CLI argument*, it still works (in fact, that's the most common way of doing it):
 
 <div class="termy">
 
@@ -419,7 +419,7 @@ And a parameter like `name`, that doesn't have a default value, is considered *r
 
 ### In CLIs
 
-When talking about command line interfaces/applications, the words **"argument"** and **"parameter"** are commonly used to refer to that data passed to a CLI app, those parameters.
+When talking about command line interface applications, the words **"argument"** and **"parameter"** are commonly used to refer to that data passed to a CLI app, those parameters.
 
 But those words **don't imply** anything about the data being required, needing to be passed in a certain order, nor having a flag like `--lastname`.
 
@@ -431,7 +431,7 @@ In reality, the parameters that require an order can be made *optional* too. And
 
 To try and make it a bit easier, we'll normally use the words "parameter" or "argument" to refer to Python functions.
 
-We'll use ***CLI argument*** to refer to those *CLI parameters* that depend on an order. That are **required** by default.
+We'll use ***CLI argument*** to refer to those *CLI parameters* that depend on the specific order. That are **required** by default.
 
 And we'll use ***CLI option*** to refer to those *CLI parameters* that depend on a name that starts with `--` (like `--lastname`). That are **optional** by default.
 
@@ -469,7 +469,7 @@ Hello World
 
 ...and it will give you auto completion in your terminal when you hit <kbd>TAB</kbd> for all your code.
 
-So you can use it to have auto completion as you continue with the tutorial.
+So you can use it to have auto completion for your own scripts as you continue with the tutorial.
 
 !!! tip
     Your CLI application built with **Typer** won't need [Typer CLI](../typer-cli.md){.internal-link target=_blank} to have auto completion once you create a Python package.

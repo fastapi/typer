@@ -47,7 +47,7 @@ Now let's see an alternative way to create the same *CLI argument*:
 {!./src/arguments/tutorial001.py!}
 ```
 
-Before you had this function parameter:
+Before, you had this function parameter:
 
 ```Python
 name: str

@@ -1,4 +1,4 @@
-We have seen how to create a CLI program with possibly several *CLI Options* and *CLI Arguments*.
+We have seen how to create a CLI program with possibly several *CLI options* and *CLI arguments*.
 
 But **Typer** allows you to create CLI programs with several commands (also known as subcommands).
 
@@ -29,7 +29,7 @@ Another command of `git` is `git pull`, it also has some *CLI parameters*.
 It's like if the same big program `git` had several small programs inside.
 
 !!! tip
-    A command looks the same as a *CLI argument*, it's just some name without a preceding `--`. But commands have predefined name, and are used to group different sets of functionalities into the same CLI application.
+    A command looks the same as a *CLI argument*, it's just some name without a preceding `--`. But commands have a predefined name, and are used to group different sets of functionalities into the same CLI application.
 
 ## Command or subcommand
 
@@ -45,7 +45,7 @@ Here I'll use **CLI application** or **program** to refer to the program you are
 
 Before creating CLI applications with multiple commands/subcommands we need to understand how to create an explicit `typer.Typer()` application.
 
-In the *CLI Options* and *CLI Argument* tutorials you have seen how to create a single function and then pass that function to `typer.run()`.
+In the *CLI options* and *CLI argument* tutorials you have seen how to create a single function and then pass that function to `typer.run()`.
 
 For example:
 
@@ -167,6 +167,15 @@ Notice that the help text now shows the 2 commands: `create` and `delete`.
 
 !!! tip
     By default, the names of the commands are generated from the function name.
+
+## Click Group
+
+If you come from Click, a `typer.Typer` app with subcommands is more or less the equivalent of a <a href="https://click.palletsprojects.com/en/7.x/quickstart/#nesting-commands" class="external-link" target="_blank">Click Group</a>.
+
+!!! note "Technical Details"
+    A `typer.Typer` app is *not* a Click Group, but it provides the equivalent functionality. And it creates a Click Group when calling it.
+
+    It is not directly a Group because **Typer** doesn't modify the functions in your code to convert them to another type of object, it only registers them.
 
 ## Decorator Technical Details
 

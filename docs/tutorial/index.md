@@ -11,7 +11,7 @@ def type_example(name: str, formal: bool = False, intro: str = None):
     pass
 ```
 
-And your editor (and Typer) will know that:
+And your editor (and **Typer**) will know that:
 
 * `name` is of type `str` and is a required parameter.
 * `formal` is a `bool` and is by default `False`.
@@ -19,7 +19,7 @@ And your editor (and Typer) will know that:
 
 These type hints are what give you autocomplete in your editor and several other features.
 
-Typer is based on these type hints.
+**Typer** is based on these type hints.
 
 ## Intro
 
@@ -49,7 +49,7 @@ $ python main.py
 
 It is **HIGHLY encouraged** that you write or copy the code, edit it and run it locally.
 
-Using it in your editor is what really shows you the benefits of Typer, seeing how little code you have to write, all the type checks, autocompletion, etc.
+Using it in your editor is what really shows you the benefits of **Typer**, seeing how little code you have to write, all the type checks, autocompletion, etc.
 
 And running the examples is what will really help you understand what is going on.
 
@@ -68,9 +68,9 @@ For the tutorial, you might want to install it with all the optional dependencie
 ```console
 $ pip install typer[all]
 ---> 100%
-Successfully installed typer click colorama click-completion
+Successfully installed typer click colorama shellingham
 ```
 
 </div>
 
-...that also includes `colorama` and `click-completion`.
+...that also includes `colorama` and `shellingham`.

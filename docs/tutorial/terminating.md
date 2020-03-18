@@ -87,7 +87,7 @@ $ echo $?
 </div>
 
 !!! tip
-    The error code might be used by other programs (for example a Bash script) that execute with your CLI program.
+    The error code might be used by other programs (for example a Bash script) that execute your CLI program.
 
 ## Abort
 
