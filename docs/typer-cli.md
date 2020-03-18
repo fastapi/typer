@@ -272,7 +272,7 @@ Hello Camila
 
 ## Options
 
-You can specify one of the following **CLI Options**:
+You can specify one of the following **CLI options**:
 
 * `--app`: the name of the variable with a `Typer()` object to run as the main app.
 * `--func`: the name of the variable with a function that would be used with `typer.run()`.
