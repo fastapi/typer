@@ -24,9 +24,7 @@
 
 ---
 
-Typer is library to build <abbr title="command line interface, programs executed from a terminal">CLI</abbr> applications that users will love using and developers will love creating. Based on Python 3.6+ type hints.
-
-**Typer** is <a href="https://fastapi.tiangolo.com" class="external-link" target="_blank">FastAPI</a>'s little sibling. And it's intended to be the FastAPI of CLIs.
+Typer is library for building <abbr title="command line interface, programs executed from a terminal">CLI</abbr> applications that users will **love using** and developers will **love creating**. Based on Python 3.6+ type hints.
 
 The key features are:
 
@@ -36,11 +34,19 @@ The key features are:
 * **Start simple**: The simplest example adds only 2 lines of code to your app: **1 import, 1 function call**.
 * **Grow large**: Grow in complexity as much as you want, create arbitrarily complex trees of commands and groups of subcommands, with options and arguments.
 
+## FastAPI of CLIs
+
+<a href="https://fastapi.tiangolo.com" target="_blank"><img src="https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png" style="width: 20%;"></a>
+
+**Typer** is <a href="https://fastapi.tiangolo.com" class="external-link" target="_blank">FastAPI</a>'s little sibling.
+
+And it's intended to be the FastAPI of CLIs.
+
 ## Requirements
 
 Python 3.6+
 
-Typer stands on the shoulders of a giant. Its only internal dependency is <a href="https://click.palletsprojects.com/" class="external-link" target="_blank">Click</a>.
+**Typer** stands on the shoulders of a giant. Its only internal dependency is <a href="https://click.palletsprojects.com/" class="external-link" target="_blank">Click</a>.
 
 ## Installation
 
@@ -219,7 +225,7 @@ Goodbye Ms. Camila. Have a good day.
 
 ### Recap
 
-In summary, you declare **once** the types of parameters (*arguments* and *options*) as function parameters.
+In summary, you declare **once** the types of parameters (*CLI arguments* and *CLI options*) as function parameters.
 
 You do that with standard modern Python types.
 
@@ -258,7 +264,7 @@ But you can also install extras:
     * Or any other tool, e.g. <a href="https://pypi.org/project/wasabi/" class="external-link" target="_blank"><code>wasabi</code></a>, <a href="https://github.com/erikrose/blessings" class="external-link" target="_blank"><code>blessings</code></a>.
 * <a href="https://github.com/sarugaku/shellingham" class="external-link" target="_blank"><code>shellingham</code></a>: and Typer will automatically detect the current shell when installing completion.
     * With `shellingham` you can just use `--install-completion`.
-    * Without `shellingham`, you have to pass a *CLI Option value* with the name of the shell to install completion, e.g. `--install-completion bash`.
+    * Without `shellingham`, you have to pass the name of the shell to install completion for, e.g. `--install-completion bash`.
 
 You can install `typer` with `colorama` and `shellingham` with `pip install typer[all]`.
 
@@ -270,7 +276,7 @@ For example:
 
 * <a href="https://github.com/click-contrib/click-spinner" class="external-link" target="_blank"><code>click-spinner</code></a>: to show the user that you are loading data. A Click plug-in.
     * There are several other Click plug-ins at <a href="https://github.com/click-contrib" class="external-link" target="_blank">click-contrib</a> that you can explore.
-* <a href="https://pypi.org/project/tabulate/" class="external-link" target="_blank"><code>tabulate</code></a>: to automatically display tabular data nicely. Independent of Click or typer.
+* <a href="https://pypi.org/project/tabulate/" class="external-link" target="_blank"><code>tabulate</code></a>: to automatically display tabular data nicely. Independent of Click or Typer.
 * <a href="https://github.com/tqdm/tqdm" class="external-link" target="_blank"><code>tqdm</code></a>: a fast, extensible progress bar, alternative to Typer's own `typer.progressbar()`.
 * etc... you can re-use many of the great available tools for building CLIs.
 

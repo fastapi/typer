@@ -1,8 +1,10 @@
 ## Design based on **FastAPI**
 
+<a href="https://fastapi.tiangolo.com" target="_blank"><img src="https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png" style="width: 20%;"></a>
+
 **Typer** is <a href="https://fastapi.tiangolo.com" class="external-link" target="_blank">FastAPI</a>'s little sibling.
 
-It follows the same design and ideas. If you know FastAPI, you already know **Typer**... more or less.
+It follows the same design and ideas. If you know **FastAPI**, you already know **Typer**... more or less.
 
 ## Just Modern Python
 
@@ -56,7 +58,7 @@ The resulting CLI apps created with **Typer** have the nice features of many "pr
     * `--install-completion`: Install completion for the current shell.
     * `--show-completion`: Show completion for the current shell, to copy it or customize the installation.
 
-    If you didn't add `shellingham` those *CLI Options* take a parameter with the name of the shell to install completion for, e.g.:
+    If you didn't add `shellingham` those *CLI options* take a value with the name of the shell to install completion for, e.g.:
     
     * `--install-completion bash`.
     * `--show-completion powershell`.
@@ -64,7 +66,7 @@ The resulting CLI apps created with **Typer** have the nice features of many "pr
     Then you can tell the user to install completion after installing your CLI program and the rest will just work.
 
 !!! tip
-    **Typer**'s completion is implemented internally, it uses ideas and components from Click and ideas from `click-completion`, but it doesn't use `click-completion` internally.
+    **Typer**'s completion is implemented internally, it uses ideas and components from Click and ideas from `click-completion`, but it doesn't use `click-completion` and re-implements some of the relevant parts of Click.
 
     Then it extends those ideas with features and bug fixes. For example, **Typer** programs also support modern versions of PowerShell (e.g. in Windows 10) among all the other shells.
 
