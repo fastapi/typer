@@ -72,7 +72,7 @@ def test_completion_install_zsh():
     )
     new_text = completion_path.read_text()
     completion_path.write_text(text)
-    install_script = 'eval "$(_TUTORIAL001.PY_COMPLETE=source_szh tutorial001.py)"'
+    install_script = 'eval "$(_TUTORIAL001.PY_COMPLETE=source_zsh tutorial001.py)"'
     assert install_script not in text
     assert install_script in new_text
     assert "completion installed in" in result.stdout
@@ -124,7 +124,7 @@ def test_completion_install_powershell():
             subprocess,
             "run",
             return_value=subprocess.CompletedProcess(
-                ["pwsh"], returncode=0, stdout=completion_path_bytes,
+                ["pwsh"], returncode=0, stdout=completion_path_bytes
             ),
         ):
             result = runner.invoke(app, ["--install-completion"])
