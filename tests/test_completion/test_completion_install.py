@@ -83,7 +83,7 @@ def test_completion_install_fish():
     script_path = Path(mod.__file__)
     completion_path: Path = Path.home() / f".config/fish/completions/{script_path.name}.fish"
     text = ""
-    if completion_path.is_file():
+    if completion_path.is_file():  # pragma: nocover
         text = completion_path.read_text()
     result = subprocess.run(
         ["coverage", "run", mod.__file__, "--install-completion", "fish"],
@@ -114,7 +114,7 @@ def test_completion_install_powershell():
     completion_path: Path = Path.home() / f".config/powershell/Microsoft.PowerShell_profile.ps1"
     completion_path_bytes = f"{completion_path}\n".encode("windows-1252")
     text = ""
-    if completion_path.is_file():
+    if completion_path.is_file():  # pragma: nocover
         text = completion_path.read_text()
 
     with mock.patch.object(
