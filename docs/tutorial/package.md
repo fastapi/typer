@@ -1,11 +1,17 @@
+When you create a CLI program with **Typer** you probably want to create your own Python package.
+
+That's what allows your users to install it and have it as an independent program that they can use in their terminal.
+
+And that's also required for shell auto completion to work (unless you use your program through [Typer CLI](../typer-cli.md){.internal-link target=_blank}).
+
 Nowadays, there are several ways and tools to create Python packages (what you install with `pip install something`).
 
 You might even have your favorite already.
 
-Here's a very opinionated, short guide, showing one of the alternatives to create a Python package with a **Typer** app, from scratch.
+Here's a very opinionated, short guide, showing one of the alternative ways of creating a Python package with a **Typer** app, from scratch.
 
 !!! tip
-    If you already have a favorite way to create Python packages, feel free to skip this.
+    If you already have a favorite way of creating Python packages, feel free to skip this.
 
 ## Prerequisites
 
