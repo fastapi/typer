@@ -545,7 +545,7 @@ Loading portal gun
 
 ## Generate docs with **Typer CLI** (optional)
 
-You can install and use [Typer CLI](typer-cli.md){.internal-link target=_blank} to generate docs for your package.
+You can install and use [Typer CLI](../typer-cli.md){.internal-link target=_blank} to generate docs for your package.
 
 After installing it, you can use it to generate a new `README.md`:
 

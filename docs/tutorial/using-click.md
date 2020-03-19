@@ -185,6 +185,6 @@ Most of the functionality provided by decorators in Click has an alternative way
 For example, to access the context, you can just declare a function parameter of type `typer.Context`.
 
 !!! tip
-    You can read more about using the context in the docs: [Commands: Using the Context](./commands/using-the-context.md){.internal-link target=_blank}
+    You can read more about using the context in the docs: [Commands: Using the Context](commands/context.md){.internal-link target=_blank}
 
 But if you need to use something based on Click decorators, you can always generate a Click object using the methods described above, and use it as you would normally use Click.
