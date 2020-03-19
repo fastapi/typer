@@ -94,7 +94,7 @@ You can then install completion for it:
 ```console
 $ typer --install-completion
 
-zsh completion installed in /home/user/.bashrc.
+zsh completion installed in /home/user/.zshrc.
 Completion will take effect once you restart the terminal.
 ```
 
