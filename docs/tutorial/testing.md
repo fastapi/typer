@@ -92,7 +92,7 @@ collected 1 item
 
 ---> 100%
 
-test_main.py <span style="color: green;">.           [100%]</span>
+test_main.py <span style="color: green; white-space: pre;">.                                 [100%]</span>
 
 <span style="color: green;">================= 1 passed in 0.03s =================</span>
 ```
