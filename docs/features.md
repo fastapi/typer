@@ -78,12 +78,8 @@ The resulting CLI apps created with **Typer** have the nice features of many "pr
 
 But you can write simpler code with the benefits of modern Python.
 
-<!-- 
-
-TODO
-
-### Tested
+## Tested
 
 * 100% <abbr title="The amount of code that is automatically tested">test coverage</abbr>.
 * 100% <abbr title="Python type annotations, with this your editor and external tools can give you better support">type annotated</abbr> code base.
-* Used in production applications. -->
+* Used in production applications.
