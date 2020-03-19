@@ -1,5 +1,18 @@
 ## Latest changes
 
+* Add support for type-based callbacks and autocompletion functions, extra tests and docs:
+    * Extra tests, raising coverage to 100%.
+    * New docs: [Printing and Colors: "Standard Output" and "Standard Error"](https://typer.tiangolo.com/tutorial/printing/#standard-output-and-standard-error).
+    * New docs: [Password CLI Option and Confirmation Prompt](https://typer.tiangolo.com/tutorial/options/password/).
+    * Support for callbacks based on type annotations. New docs: [CLI Option Callback and Context](https://typer.tiangolo.com/tutorial/options/password/).
+    * New docs: [Version CLI Option, is_eager](https://typer.tiangolo.com/tutorial/options/version/).
+    * Support for autocompletion functions based on type annotations. New docs: [CLI Option autocompletion](https://typer.tiangolo.com/tutorial/options/autocompletion/).
+    * New docs: [Commands: Using the Context](https://typer.tiangolo.com/tutorial/commands/context/).
+    * New docs: [Testing](https://typer.tiangolo.com/tutorial/testing/).
+    * PR [#68](https://github.com/tiangolo/typer/pull/68).
+* Fix Zsh completion install script. PR [#69](https://github.com/tiangolo/typer/pull/69).
+* Fix typo in progressbar example. PR [#63](https://github.com/tiangolo/typer/pull/63) by [@ValentinCalomme](https://github.com/ValentinCalomme).
+
 ## 0.0.11
 
 * Re-implement completion system:
