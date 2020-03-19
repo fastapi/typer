@@ -1,5 +1,6 @@
 ## Latest changes
 
+* Add docs for [Using Click (with Typer)](https://typer.tiangolo.com/tutorial/using-click/). PR [#70](https://github.com/tiangolo/typer/pull/70).
 * Add support for type-based callbacks and autocompletion functions, extra tests and docs:
     * Extra tests, raising coverage to 100%.
     * New docs: [Printing and Colors: "Standard Output" and "Standard Error"](https://typer.tiangolo.com/tutorial/printing/#standard-output-and-standard-error).
