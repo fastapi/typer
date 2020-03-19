@@ -9,7 +9,7 @@
     * Extra tests, raising coverage to 100%.
     * New docs: [Printing and Colors: "Standard Output" and "Standard Error"](https://typer.tiangolo.com/tutorial/printing/#standard-output-and-standard-error).
     * New docs: [Password CLI Option and Confirmation Prompt](https://typer.tiangolo.com/tutorial/options/password/).
-    * Support for callbacks based on type annotations. New docs: [CLI Option Callback and Context](https://typer.tiangolo.com/tutorial/options/password/).
+    * Support for callbacks based on type annotations. New docs: [CLI Option Callback and Context](https://typer.tiangolo.com/tutorial/options/callback-and-context/).
     * New docs: [Version CLI Option, is_eager](https://typer.tiangolo.com/tutorial/options/version/).
     * Support for autocompletion functions based on type annotations. New docs: [CLI Option autocompletion](https://typer.tiangolo.com/tutorial/options/autocompletion/).
     * New docs: [Commands: Using the Context](https://typer.tiangolo.com/tutorial/commands/context/).
