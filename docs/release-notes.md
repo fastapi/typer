@@ -1,5 +1,7 @@
 ## Latest changes
 
+* Fix coverage instructions. PR [#72](https://github.com/tiangolo/typer/pull/72).
+* Add docs for [Building a Package](https://typer.tiangolo.com/tutorial/package/). PR [#71](https://github.com/tiangolo/typer/pull/71).
 * Add docs for [Using Click (with Typer)](https://typer.tiangolo.com/tutorial/using-click/). PR [#70](https://github.com/tiangolo/typer/pull/70).
 * Add support for type-based callbacks and autocompletion functions, extra tests and docs:
     * Extra tests, raising coverage to 100%.
