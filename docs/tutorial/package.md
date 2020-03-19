@@ -77,7 +77,7 @@ Package operations: 15 installs, 0 updates, 0 removals
   - Installing py (1.8.1)
   - Installing shellingham (1.3.2)
   - Installing wcwidth (0.1.8)
-  - Installing pytest (5.4.1)
+  - Installing pytest (5.3.5)
   - Installing typer (0.0.11)
 
 // Activate that new virtual environment

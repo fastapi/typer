@@ -38,11 +38,11 @@ Documentation = "https://typer.tiangolo.com/"
 [tool.flit.metadata.requires-extra]
 test = [
     "shellingham",
-    "pytest >=4.4.0",
+    "pytest >=4.4.0,<5.4.0",
     "pytest-cov",
     "coverage",
     "pytest-xdist",
-    "pytest-sugar",
+    "pytest-sugar",  # Broken with pytest 5.4.X until https://github.com/Teemu/pytest-sugar/pull/188 released
     "mypy",
     "black",
     "isort"
