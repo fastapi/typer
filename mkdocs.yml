@@ -71,6 +71,7 @@ nav:
         - CLI Application Directory: 'tutorial/app-dir.md'
         - Launching Applications: 'tutorial/launch.md'
         - Testing: 'tutorial/testing.md'
+        - Using Click: 'tutorial/using-click.md'
     - Typer CLI - completion for small scripts: 'typer-cli.md'
     - Alternatives, Inspiration and Comparisons: 'alternatives.md'
     - Help Typer - Get Help: 'help-typer.md'
