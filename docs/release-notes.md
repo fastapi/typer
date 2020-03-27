@@ -1,5 +1,7 @@
 ## Latest changes
 
+* Update coverage badge. PR [#78](https://github.com/tiangolo/typer/pull/78).
+
 ## 0.1.0
 
 * Fix coverage instructions. PR [#72](https://github.com/tiangolo/typer/pull/72).
