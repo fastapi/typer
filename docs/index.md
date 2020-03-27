@@ -9,7 +9,7 @@
     <img src="https://travis-ci.com/tiangolo/typer.svg?branch=master" alt="Build Status">
 </a>
 <a href="https://codecov.io/gh/tiangolo/typer" target="_blank">
-    <img src="https://codecov.io/gh/tiangolo/typer/branch/master/graph/badge.svg" alt="Coverage">
+    <img src="https://img.shields.io/codecov/c/github/tiangolo/typer" alt="Coverage">
 </a>
 <a href="https://pypi.org/project/typer" target="_blank">
     <img src="https://badge.fury.io/py/typer.svg" alt="Package version">
