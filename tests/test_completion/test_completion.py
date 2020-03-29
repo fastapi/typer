@@ -22,7 +22,7 @@ def test_show_completion():
 
 
 def test_install_completion():
-    bash_completion_path: Path = Path.home() / ".bash_completion"
+    bash_completion_path: Path = Path.home() / ".bashrc"
     text = ""
     if bash_completion_path.is_file():  # pragma: nocover
         text = bash_completion_path.read_text()

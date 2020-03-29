@@ -166,7 +166,7 @@ def install(
         shell, _ = shellingham.detect_shell()
     mode = None
     if shell == "bash":
-        path_obj = Path.home() / ".bash_completion"
+        path_obj = Path.home() / ".bashrc"
         mode = mode or "a"
     elif shell == "zsh":
         path_obj = Path.home() / ".zshrc"

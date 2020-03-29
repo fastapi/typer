@@ -30,7 +30,7 @@ def test_completion_install_no_shell():
 
 
 def test_completion_install_bash():
-    bash_completion_path: Path = Path.home() / ".bash_completion"
+    bash_completion_path: Path = Path.home() / ".bashrc"
     text = ""
     if bash_completion_path.is_file():
         text = bash_completion_path.read_text()

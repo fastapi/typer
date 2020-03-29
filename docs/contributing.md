@@ -8,9 +8,13 @@ If you already cloned the repository and you know that you need to deep dive in 
 
 You can create a virtual environment in a directory using Python's `venv` module:
 
+<div class="termy">
+
 ```console
 $ python -m venv env
 ```
+
+</div>
 
 That will create a directory `./env/` with the Python binaries and then you will be able to install packages for that isolated environment.
 
@@ -18,23 +22,37 @@ That will create a directory `./env/` with the Python binaries and then you will
 
 Activate the new environment with:
 
+<div class="termy">
+
 ```console
 $ source ./env/bin/activate
 ```
 
+</div>
+
 Or in Windows' PowerShell:
+
+<div class="termy">
 
 ```console
 $ .\env\Scripts\Activate.ps1
 ```
 
+</div>
+
 Or if you use Bash for Windows (e.g. <a href="https://gitforwindows.org/" class="external-link" target="_blank">Git Bash</a>):
+
+<div class="termy">
 
 ```console
 $ source ./env/Scripts/activate
 ```
 
+</div>
+
 To check it worked, use:
+
+<div class="termy">
 
 ```console
 $ which pip
@@ -42,15 +60,21 @@ $ which pip
 some/directory/typer/env/bin/pip
 ```
 
+</div>
+
 If it shows the `pip` binary at `env/bin/pip` then it worked. 🎉
 
 Or in Windows PowerShell:
+
+<div class="termy">
 
 ```console
 $ Get-Command pip
 
 some/directory/typer/env/bin/pip
 ```
+
+</div>
 
 !!! tip
     Every time you install a new package with `pip` under that environment, activate the environment again.
@@ -63,17 +87,41 @@ some/directory/typer/env/bin/pip
 
 After activating the environment as described above, install `flit`:
 
+<div class="termy">
+
 ```console
 $ pip install flit
+
+---> 100%
 ```
+
+</div>
 
 Now re-activate the environment to make sure you are using the `flit` you just installed (and not a global one).
 
 And now use `flit` to install the development dependencies:
 
+<div class="termy">
+
 ```console
 $ flit install --deps develop --symlink
+
+---> 100%
 ```
+
+</div>
+
+If you are on Windows, use `--pth-file` instead of `--symlink`:
+
+<div class="termy">
+
+```console
+$ flit install --deps develop --pth-file
+
+---> 100%
+```
+
+</div>
 
 It will install all the dependencies and your local Typer in your local environment.
 
@@ -89,25 +137,29 @@ That way, you don't have to "install" your local version to be able to test ever
 
 There is a script that you can run that will format and clean all your code:
 
+<div class="termy">
+
 ```console
 $ bash scripts/format.sh
 ```
 
+</div>
+
 It will also auto-sort all your imports.
 
-For it to sort them correctly, you need to have Typer installed locally in your environment, with the command in the section above:
-
-```console
-$ flit install --symlink
-```
+For it to sort them correctly, you need to have Typer installed locally in your environment, with the command in the section above using `--symlink` (or `--pth-file` on Windows).
 
 ### Format imports
 
 There is another script that formats all the imports and makes sure you don't have unused imports:
 
+<div class="termy">
+
 ```console
 $ bash scripts/format-imports.sh
 ```
+
+</div>
 
 As it runs one command after the other and modifies and reverts many files, it takes a bit longer to run, so it might be easier to use `scripts/format.sh` frequently and `scripts/format-imports.sh` only before committing.
 
@@ -137,9 +189,18 @@ This helps making sure that:
 
 During local development, there is a script that builds the site and checks for any changes, live-reloading:
 
+<div class="termy">
+
 ```console
 $ bash scripts/docs-live.sh
+
+<span style="color: green;">[INFO]</span>    -  Building documentation...
+<span style="color: green;">[INFO]</span>    -  Cleaning site directory
+<span style="color: green;">[INFO]</span>    -  Documentation built in 2.74 seconds
+<span style="color: green;">[INFO]</span>    -  Serving on http://127.0.0.1:8008
 ```
+
+</div>
 
 It will serve the documentation on `http://127.0.0.1:8008`.
 
@@ -149,9 +210,13 @@ That way, you can edit the documentation/source files and see the changes live.
 
 There is a script that you can run locally to test all the code and generate coverage reports in HTML:
 
+<div class="termy">
+
 ```console
 $ bash scripts/test-cov-html.sh
 ```
+
+</div>
 
 This command generates a directory `./htmlcov/`, if you open the file `./htmlcov/index.html` in your browser, you can explore interactively the regions of code that are covered by the tests, and notice if there is any region missing.
 
