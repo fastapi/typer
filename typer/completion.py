@@ -221,11 +221,11 @@ def install(
 
 def get_installable_script(prog_name: str, complete_var: str, shell: str) -> str:
     if shell == "bash":
-        return f'eval "$({complete_var}=source_bash {prog_name})"'
+        return f'eval "$({complete_var}=source_bash {prog_name} 2>/dev/null)"'
     elif shell == "zsh":
-        return f'eval "$({complete_var}=source_zsh {prog_name})"'
+        return f'eval "$({complete_var}=source_zsh {prog_name} 2>/dev/null)"'
     elif shell == "fish":
-        return f"eval (env {complete_var}=source_fish {prog_name})"
+        return f"eval (env {complete_var}=source_fish {prog_name} 2>/dev/null)"
     elif shell in {"powershell", "pwsh"}:
         return get_completion_script(prog_name, complete_var, shell)
     return ""
