@@ -1,5 +1,7 @@
 ## Latest changes
 
+* Fix completion evaluation for Bash and Zsh when the program is not installed/found. PR [#83](https://github.com/tiangolo/typer/pull/83).
+* Fix completion script for Fish. PR [#82](https://github.com/tiangolo/typer/pull/82).
 * Fix shell installation for Bash to `~/.bashrc` and update Windows development docs. PR [#81](https://github.com/tiangolo/typer/pull/81).
 * Update coverage badge. PR [#78](https://github.com/tiangolo/typer/pull/78).
 
