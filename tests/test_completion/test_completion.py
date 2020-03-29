@@ -39,7 +39,10 @@ def test_install_completion():
     )
     new_text = bash_completion_path.read_text()
     bash_completion_path.write_text(text)
-    assert 'eval "$(_TUTORIAL001.PY_COMPLETE=source_bash tutorial001.py)' in new_text
+    assert (
+        'eval "$(_TUTORIAL001.PY_COMPLETE=source_bash tutorial001.py 2>/dev/null)'
+        in new_text
+    )
     assert "completion installed in" in result.stdout
     assert "Completion will take effect once you restart the terminal." in result.stdout
 

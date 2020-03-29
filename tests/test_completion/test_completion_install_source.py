@@ -17,7 +17,8 @@ def test_completion_install_source_bash():
         },
     )
     assert (
-        'eval "$(_TUTORIAL001.PY_COMPLETE=source_bash tutorial001.py)"' in result.stdout
+        'eval "$(_TUTORIAL001.PY_COMPLETE=source_bash tutorial001.py 2>/dev/null)"'
+        in result.stdout
     )
 
 
@@ -34,7 +35,8 @@ def test_completion_install_source_zsh():
         },
     )
     assert (
-        'eval "$(_TUTORIAL001.PY_COMPLETE=source_zsh tutorial001.py)"' in result.stdout
+        'eval "$(_TUTORIAL001.PY_COMPLETE=source_zsh tutorial001.py 2>/dev/null)"'
+        in result.stdout
     )
 
 
@@ -51,7 +53,7 @@ def test_completion_install_source_fish():
         },
     )
     assert (
-        "eval (env _TUTORIAL001.PY_COMPLETE=source_fish tutorial001.py)"
+        "eval (env _TUTORIAL001.PY_COMPLETE=source_fish tutorial001.py 2>/dev/null)"
         in result.stdout
     )
 
