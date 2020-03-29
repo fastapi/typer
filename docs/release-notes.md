@@ -1,5 +1,6 @@
 ## Latest changes
 
+* Fix shell installation for Bash to `~/.bashrc` and update Windows development docs. PR [#81](https://github.com/tiangolo/typer/pull/81).
 * Update coverage badge. PR [#78](https://github.com/tiangolo/typer/pull/78).
 
 ## 0.1.0
