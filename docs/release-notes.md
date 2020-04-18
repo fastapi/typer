@@ -1,5 +1,7 @@
 ## Latest changes
 
+* Upgrade Makdocs-Material version, update contributing guide style. PR [#90](https://github.com/tiangolo/typer/pull/90).
+
 ## 0.1.1
 
 * Fix completion evaluation for Bash and Zsh when the program is not installed/found. PR [#83](https://github.com/tiangolo/typer/pull/83).
