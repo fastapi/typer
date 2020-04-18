@@ -12,7 +12,7 @@ let termynals = [];
 
 function createTermynals() {
     document
-        .querySelectorAll(`.${termynalActivateClass} .codehilite`)
+        .querySelectorAll(`.${termynalActivateClass} .highlight`)
         .forEach(node => {
             const text = node.textContent;
             const lines = text.split("\n");

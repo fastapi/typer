@@ -22,59 +22,65 @@ That will create a directory `./env/` with the Python binaries and then you will
 
 Activate the new environment with:
 
-<div class="termy">
+=== "Linux, macOS"
 
-```console
-$ source ./env/bin/activate
-```
+    <div class="termy">
 
-</div>
+    ```console
+    $ source ./env/bin/activate
+    ```
 
-Or in Windows' PowerShell:
+    </div>
 
-<div class="termy">
+=== "Windows PowerShell"
 
-```console
-$ .\env\Scripts\Activate.ps1
-```
+    <div class="termy">
 
-</div>
+    ```console
+    $ .\env\Scripts\Activate.ps1
+    ```
 
-Or if you use Bash for Windows (e.g. <a href="https://gitforwindows.org/" class="external-link" target="_blank">Git Bash</a>):
+    </div>
 
-<div class="termy">
+=== "Windows Bash"
 
-```console
-$ source ./env/Scripts/activate
-```
+    Or if you use Bash for Windows (e.g. <a href="https://gitforwindows.org/" class="external-link" target="_blank">Git Bash</a>):
 
-</div>
+    <div class="termy">
+
+    ```console
+    $ source ./env/Scripts/activate
+    ```
+
+    </div>
 
 To check it worked, use:
 
-<div class="termy">
+=== "Linux, macOS, Windows Bash"
 
-```console
-$ which pip
+    <div class="termy">
 
-some/directory/typer/env/bin/pip
-```
+    ```console
+    $ which pip
 
-</div>
+    some/directory/typer/env/bin/pip
+    ```
+
+    </div>
+
+=== "Windows PowerShell"
+
+    <div class="termy">
+
+    ```console
+    $ Get-Command pip
+
+    some/directory/typer/env/bin/pip
+    ```
+
+    </div>
 
 If it shows the `pip` binary at `env/bin/pip` then it worked. 🎉
-
-Or in Windows PowerShell:
-
-<div class="termy">
-
-```console
-$ Get-Command pip
-
-some/directory/typer/env/bin/pip
-```
-
-</div>
 
 !!! tip
     Every time you install a new package with `pip` under that environment, activate the environment again.
@@ -101,27 +107,31 @@ Now re-activate the environment to make sure you are using the `flit` you just i
 
 And now use `flit` to install the development dependencies:
 
-<div class="termy">
+=== "Linux, macOS"
 
-```console
-$ flit install --deps develop --symlink
+    <div class="termy">
 
----> 100%
-```
+    ```console
+    $ flit install --deps develop --symlink
 
-</div>
+    ---> 100%
+    ```
 
-If you are on Windows, use `--pth-file` instead of `--symlink`:
+    </div>
 
-<div class="termy">
+=== "Windows"
 
-```console
-$ flit install --deps develop --pth-file
+    If you are on Windows, use `--pth-file` instead of `--symlink`:
 
----> 100%
-```
+    <div class="termy">
 
-</div>
+    ```console
+    $ flit install --deps develop --pth-file
+
+    ---> 100%
+    ```
+
+    </div>
 
 It will install all the dependencies and your local Typer in your local environment.
 
@@ -129,7 +139,7 @@ It will install all the dependencies and your local Typer in your local environm
 
 If you create a Python file that imports and uses Typer, and run it with the Python from your local environment, it will use your local Typer source code.
 
-And if you update that local Typer source code, as it is installed with `--symlink`, when you run that Python file again, it will use the fresh version of Typer you just edited.
+And if you update that local Typer source code, as it is installed with `--symlink` (or `--pth-file` on Windows), when you run that Python file again, it will use the fresh version of Typer you just edited.
 
 That way, you don't have to "install" your local version to be able to test every change.
 
