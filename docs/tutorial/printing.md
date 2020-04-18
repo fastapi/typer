@@ -28,6 +28,8 @@ Hello World
 
     You don't need to call `colorama.init()`. Typer (actually Click) will handle it underneath.
 
+    And make sure you use `typer.echo()` instead of `print()`.
+
 !!! note "Technical Details"
     The way color works in terminals is by using some codes (ASCII codes) as part of the text.
 
