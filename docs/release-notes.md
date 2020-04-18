@@ -1,6 +1,7 @@
 ## Latest changes
 
-* Upgrade Makdocs-Material version, update contributing guide style. PR [#90](https://github.com/tiangolo/typer/pull/90).
+* Add note about `typer.echo()` and `print()` for colors in Windows. PR [#89](https://github.com/tiangolo/typer/pull/89).
+* Upgrade Mkdocs-Material version, update contributing guide style. PR [#90](https://github.com/tiangolo/typer/pull/90).
 
 ## 0.1.1
 
