@@ -105,8 +105,8 @@ extra:
           link: 'https://twitter.com/tiangolo'
         - icon: fontawesome/brands/linkedin
           link: 'https://www.linkedin.com/in/tiangolo'
-        - type: 'rss'
-          icon: fontawesome/brands/dev
+        - icon: fontawesome/brands/dev
+          link: 'https://dev.to/tiangolo'
         - icon: fontawesome/brands/medium
           link: 'https://medium.com/@tiangolo'
         - icon: fontawesome/solid/globe
