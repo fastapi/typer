@@ -38,7 +38,7 @@ Documentation = "https://typer.tiangolo.com/"
 [tool.flit.metadata.requires-extra]
 test = [
     "shellingham",
-    "pytest >=4.4.0",
+    "pytest >=4.4.0,< 5.4",
     "pytest-cov",
     "coverage",
     "pytest-xdist",

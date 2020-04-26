@@ -199,3 +199,26 @@ def test_autocompletion_too_many_parameters():
     with pytest.raises(click.ClickException) as exc_info:
         runner.invoke(app, ["--name", "Camila"])
     assert exc_info.value.message == "Invalid autocompletion callback parameters: val2"
+
+
+def test_forward_references():
+    app = typer.Typer()
+
+    @app.command()
+    def main(arg1, arg2: int, arg3: "int", arg4: bool = False, arg5: "bool" = False):
+        typer.echo(f"arg1: {type(arg1)} {arg1}")
+        typer.echo(f"arg2: {type(arg2)} {arg2}")
+        typer.echo(f"arg3: {type(arg3)} {arg3}")
+        typer.echo(f"arg4: {type(arg4)} {arg4}")
+        typer.echo(f"arg5: {type(arg5)} {arg5}")
+
+    result = runner.invoke(app, ["Hello", "2", "invalid"])
+    assert (
+        "Error: Invalid value for 'ARG3': invalid is not a valid integer"
+        in result.stdout
+    )
+    result = runner.invoke(app, ["Hello", "2", "3", "--arg4", "--arg5"])
+    assert (
+        "arg1: <class 'str'> Hello\narg2: <class 'int'> 2\narg3: <class 'int'> 3\narg4: <class 'bool'> True\narg5: <class 'bool'> True\n"
+        in result.stdout
+    )
