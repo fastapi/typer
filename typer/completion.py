@@ -1,4 +1,3 @@
-import inspect
 import os
 import re
 import subprocess
@@ -10,7 +9,9 @@ from typing import Any, Optional, Tuple
 import click
 import click._bashcomplete
 
+from .models import ParamMeta
 from .params import Option
+from .utils import get_params_from_function
 
 try:
     import shellingham
@@ -21,14 +22,16 @@ except ImportError:  # pragma: nocover
 _click_patched = False
 
 
-def get_completion_inspect_parameters() -> Tuple[inspect.Parameter, inspect.Parameter]:
+def get_completion_inspect_parameters() -> Tuple[ParamMeta, ParamMeta]:
     completion_init()
     test_disable_detection = os.getenv("_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION")
     if shellingham and not test_disable_detection:
-        signature = inspect.signature(_install_completion_placeholder_function)
+        parameters = get_params_from_function(_install_completion_placeholder_function)
     else:
-        signature = inspect.signature(_install_completion_no_auto_placeholder_function)
-    install_param, show_param = signature.parameters.values()
+        parameters = get_params_from_function(
+            _install_completion_no_auto_placeholder_function
+        )
+    install_param, show_param = parameters.values()
     return install_param, show_param
 
 
@@ -204,7 +207,7 @@ def install_bash(*, prog_name: str, complete_var: str, shell: str) -> Path:
         rc_content = rc_path.read_text()
     completion_init_lines = [f"source {completion_path}"]
     for line in completion_init_lines:
-        if line not in rc_content:
+        if line not in rc_content:  # pragma: nocover
             rc_content += f"\n{line}"
     rc_content += "\n"
     rc_path.write_text(rc_content)
@@ -231,7 +234,7 @@ def install_zsh(*, prog_name: str, complete_var: str, shell: str) -> Path:
         "fpath+=~/.zfunc",
     ]
     for line in completion_init_lines:
-        if line not in zshrc_content:
+        if line not in zshrc_content:  # pragma: nocover
             zshrc_content += f"\n{line}"
     zshrc_content += "\n"
     zshrc_path.write_text(zshrc_content)
