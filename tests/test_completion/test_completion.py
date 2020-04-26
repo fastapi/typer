@@ -42,7 +42,7 @@ def test_install_completion():
     assert "source" in new_text
     assert ".bash_completions/tutorial001.py.sh" in new_text
     assert "completion installed in" in result.stdout
-    assert "Completion will take effect once you restart the terminal." in result.stdout
+    assert "Completion will take effect once you restart the terminal" in result.stdout
 
 
 def test_completion_invalid_instruction():
