@@ -1,5 +1,7 @@
 ## Latest changes
 
+## 0.2.0
+
 * Add support for completion for commands/programs not available on startup.
     * This allows installing a Typer program/script in a virtual environment and still have completion globally installed.
     * PR [#92](https://github.com/tiangolo/typer/pull/92).
