@@ -47,13 +47,19 @@ def test_completion_install_bash():
     )
     new_text = bash_completion_path.read_text()
     bash_completion_path.write_text(text)
-    install_script = (
-        'eval "$(_TUTORIAL001.PY_COMPLETE=source_bash tutorial001.py 2>/dev/null)'
-    )
-    assert install_script not in text
-    assert install_script in new_text
+    install_source = ".bash_completions/tutorial001.py.sh"
+    assert install_source not in text
+    assert install_source in new_text
     assert "completion installed in" in result.stdout
-    assert "Completion will take effect once you restart the terminal." in result.stdout
+    assert "Completion will take effect once you restart the terminal" in result.stdout
+    install_source_path = Path.home() / install_source
+    assert install_source_path.is_file()
+    install_content = install_source_path.read_text()
+    install_source_path.unlink()
+    assert (
+        "complete -o default -F _tutorial001py_completion tutorial001.py"
+        in install_content
+    )
 
 
 def test_completion_install_zsh():
@@ -74,21 +80,20 @@ def test_completion_install_zsh():
     )
     new_text = completion_path.read_text()
     completion_path.write_text(text)
-    install_script = (
-        'eval "$(_TUTORIAL001.PY_COMPLETE=source_zsh tutorial001.py 2>/dev/null)"'
-    )
-    assert install_script not in text
-    assert install_script in new_text
+    zfunc_fragment = "fpath+=~/.zfunc"
+    assert zfunc_fragment in new_text
     assert "completion installed in" in result.stdout
-    assert "Completion will take effect once you restart the terminal." in result.stdout
+    assert "Completion will take effect once you restart the terminal" in result.stdout
+    install_source_path = Path.home() / ".zfunc/_tutorial001.py"
+    assert install_source_path.is_file()
+    install_content = install_source_path.read_text()
+    install_source_path.unlink()
+    assert "compdef _tutorial001py_completion tutorial001.py" in install_content
 
 
 def test_completion_install_fish():
     script_path = Path(mod.__file__)
     completion_path: Path = Path.home() / f".config/fish/completions/{script_path.name}.fish"
-    text = ""
-    if completion_path.is_file():  # pragma: nocover
-        text = completion_path.read_text()
     result = subprocess.run(
         ["coverage", "run", mod.__file__, "--install-completion", "fish"],
         stdout=subprocess.PIPE,
@@ -101,14 +106,10 @@ def test_completion_install_fish():
         },
     )
     new_text = completion_path.read_text()
-    completion_path.write_text(text)
-    install_script = (
-        "eval (env _TUTORIAL001.PY_COMPLETE=source_fish tutorial001.py 2>/dev/null)"
-    )
-    assert install_script not in text
-    assert install_script in new_text
+    completion_path.unlink()
+    assert "complete --command tutorial001.py" in new_text
     assert "completion installed in" in result.stdout
-    assert "Completion will take effect once you restart the terminal." in result.stdout
+    assert "Completion will take effect once you restart the terminal" in result.stdout
 
 
 runner = CliRunner()
@@ -143,4 +144,4 @@ def test_completion_install_powershell():
     assert install_script not in text
     assert install_script in new_text
     assert "completion installed in" in result.stdout
-    assert "Completion will take effect once you restart the terminal." in result.stdout
+    assert "Completion will take effect once you restart the terminal" in result.stdout
