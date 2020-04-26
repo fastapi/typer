@@ -1,3 +1,4 @@
+import inspect
 import io
 from typing import (
     TYPE_CHECKING,
@@ -388,3 +389,18 @@ class ArgumentInfo(ParameterInfo):
             allow_dash=allow_dash,
             path_type=path_type,
         )
+
+
+class ParamMeta:
+    empty = inspect.Parameter.empty
+
+    def __init__(
+        self,
+        *,
+        name: str,
+        default: Any = inspect.Parameter.empty,
+        annotation: Any = inspect.Parameter.empty,
+    ) -> None:
+        self.name = name
+        self.default = default
+        self.annotation = annotation

@@ -23,9 +23,11 @@ from .models import (
     NoneType,
     OptionInfo,
     ParameterInfo,
+    ParamMeta,
     Required,
     TyperInfo,
 )
+from .utils import get_params_from_function
 
 
 def get_install_completion_arguments() -> Tuple[click.Parameter, click.Parameter]:
@@ -393,8 +395,8 @@ def get_params_convertors_ctx_param_name_from_function(
     convertors = {}
     context_param_name = None
     if callback:
-        signature = inspect.signature(callback)
-        for param_name, param in signature.parameters.items():
+        parameters = get_params_from_function(callback)
+        for param_name, param in parameters.items():
             if lenient_issubclass(param.annotation, click.Context):
                 context_param_name = param_name
                 continue
@@ -476,9 +478,9 @@ def get_callback(
 ) -> Optional[Callable]:
     if not callback:
         return None
-    signature = inspect.signature(callback)
+    parameters = get_params_from_function(callback)
     use_params: Dict[str, Any] = {}
-    for param_name, param_sig in signature.parameters.items():
+    for param_name in parameters:
         use_params[param_name] = None
     for param in params:
         use_params[param.name] = param.default
@@ -591,7 +593,7 @@ def lenient_issubclass(
 
 
 def get_click_param(
-    param: inspect.Parameter,
+    param: ParamMeta,
 ) -> Tuple[Union[click.Argument, click.Option], Any]:
     # First, find out what will be:
     # * ParamInfo (ArgumentInfo or OptionInfo)
@@ -744,12 +746,12 @@ def get_param_callback(
 ) -> Optional[Callable]:
     if not callback:
         return None
-    signature = inspect.signature(callback)
+    parameters = get_params_from_function(callback)
     ctx_name = None
     click_param_name = None
     value_name = None
     untyped_names: List[str] = []
-    for param_name, param_sig in signature.parameters.items():
+    for param_name, param_sig in parameters.items():
         if lenient_issubclass(param_sig.annotation, click.Context):
             ctx_name = param_name
         elif lenient_issubclass(param_sig.annotation, click.Parameter):
@@ -792,11 +794,11 @@ def get_param_callback(
 def get_param_completion(callback: Optional[Callable] = None) -> Optional[Callable]:
     if not callback:
         return None
-    signature = inspect.signature(callback)
+    parameters = get_params_from_function(callback)
     ctx_name = None
     args_name = None
     incomplete_name = None
-    unassigned_params = [param for param in signature.parameters.values()]
+    unassigned_params = [param for param in parameters.values()]
     for param_sig in unassigned_params[:]:
         origin = getattr(param_sig.annotation, "__origin__", None)
         if lenient_issubclass(param_sig.annotation, click.Context):
