@@ -8,7 +8,7 @@
     <img src="https://travis-ci.com/tiangolo/typer-cli.svg?branch=master" alt="Build Status">
 </a>
 <a href="https://codecov.io/gh/tiangolo/typer-cli" target="_blank">
-    <img src="https://codecov.io/gh/tiangolo/typer-cli/branch/master/graph/badge.svg" alt="Coverage">
+    <img src="https://img.shields.io/codecov/c/github/tiangolo/typer-cli" alt="Coverage">
 </a>
 <a href="https://pypi.org/project/typer-cli" target="_blank">
     <img src="https://badge.fury.io/py/typer-cli.svg" alt="Package version">
