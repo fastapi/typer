@@ -1,5 +1,8 @@
 ## Latest changes
 
+* Add support for completion for commands/programs not available on startup.
+    * This allows installing a Typer program/script in a virtual environment and still have completion globally installed.
+    * PR [#92](https://github.com/tiangolo/typer/pull/92).
 * Add note about `typer.echo()` and `print()` for colors in Windows. PR [#89](https://github.com/tiangolo/typer/pull/89).
 * Upgrade Mkdocs-Material version, update contributing guide style. PR [#90](https://github.com/tiangolo/typer/pull/90).
 
