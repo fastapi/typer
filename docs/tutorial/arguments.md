@@ -203,6 +203,6 @@ You should document your *CLI arguments* the same way.
 
 ## Other uses
 
-`typer.Argument()` has several other users. For data validation, to enable other features, etc.
+`typer.Argument()` has several other use cases. Such as for data validation, to enable other features, etc.
 
-But you will see about that later in the docs.
+You will see about these use cases later in the docs.
