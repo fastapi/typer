@@ -262,7 +262,7 @@ You can also get the raw *CLI parameters*, just a `list` of `str` with everythin
 For example, something like `["typer", "main.py", "run", "--name"]`.
 
 !!! tip
-    This would be for advanced scenarios, in most use cases you would be better of using the context.
+    This would be for advanced scenarios, in most use cases you would be better off using the context.
 
     But it's still possible if you need it.
 
