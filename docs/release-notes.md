@@ -1,5 +1,7 @@
 ## Latest changes
 
+* Update GitHub Action issue-manager. PR [#114](https://github.com/tiangolo/typer/pull/114).
+
 ## 0.2.1
 
 * Add support for forward references (types declared inside of strings). PR [#93](https://github.com/tiangolo/typer/pull/93).
