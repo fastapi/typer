@@ -1,5 +1,5 @@
+import datetime
 import inspect
-from datetime import datetime
 from enum import Enum
 from functools import update_wrapper
 from pathlib import Path
@@ -528,7 +528,7 @@ def get_click_type(
         return click.BOOL
     elif annotation == UUID:
         return click.UUID
-    elif annotation == datetime:
+    elif annotation == datetime.datetime or annotation == datetime.date:
         return click.DateTime(formats=parameter_info.formats)
     elif (
         annotation == Path
