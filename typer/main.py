@@ -209,8 +209,8 @@ class Typer:
             )
         )
 
-    def __call__(self) -> Any:
-        return get_command(self)()
+    def __call__(self, *args: Any, **kwargs: Any) -> Any:
+        return get_command(self)(*args, **kwargs)
 
 
 def get_group(typer_instance: Typer) -> click.Command:
