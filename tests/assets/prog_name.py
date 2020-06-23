@@ -4,7 +4,7 @@ app = typer.Typer()
 
 
 @app.command()
-def main(i: int):
+def main(i: int):  # pragma: no cover
     pass
 
 
