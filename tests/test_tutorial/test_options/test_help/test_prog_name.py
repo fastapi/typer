@@ -3,7 +3,7 @@ import subprocess
 
 def test_custom_prog_name():
     result = subprocess.run(
-        ["python", "prog_name.py", "--help"],
+        ["python", "tests/test_tutorial/test_options/test_help/prog_name.py", "--help"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
