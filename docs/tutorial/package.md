@@ -425,6 +425,163 @@ shoot  -- Shoot the portal gun
 
 </div>
 
+## Support `python -m` (optional)
+
+You may have seen that you can call many Python modules as scripts with `python -m some-module`.
+
+For example, one way to call `pip` is:
+
+<div class="termy">
+
+```console
+$ pip install fastapi
+```
+
+</div>
+
+But you can also call Python with the `-m` *CLI Option* and pass a module for it to execute as if it was a script, like:
+
+<div class="termy">
+
+```console
+$ python -m pip install fastapi
+```
+
+</div>
+
+Here we pass `pip` as the value for `-m`, so, Python will execute the module `pip` as if it was a script. And then it will pass the rest of the *CLI Parameters* (`install fastapi`) to it.
+
+These two are more or less equivalent, the `install fastapi` will be passed to `pip`.
+
+!!! tip
+    In the case of `pip`, in many occasions it's actually recommended that you run it with `python -m`, because if you create a virtual environment with its own `python`, that will ensure that you use the `pip` from *that* environment.
+
+### Add a `__main__.py`
+
+You can support that same style of calling the package/module for your own package, simply by adding a file `__main__.py`.
+
+Python will look for that file and execute it.
+
+The file would live right beside `__init__.py`:
+
+``` hl_lines="7"
+.
+├── poetry.lock
+├── pyproject.toml
+├── README.rst
+├── rick_portal_gun
+│   ├── __init__.py
+│   └── __main__.py
+└── tests
+    ├── __init__.py
+    └── test_rick_portal_gun.py
+```
+
+No other file has to import it, you don't have to reference it in your `pyproject.toml` or anything else, it just works by default, as it is standard Python behavior.
+
+Then in that file you can execute your **Typer** program:
+
+```Python
+from .main import app
+app()
+```
+
+Now, after installing your package, if you call it with `python -m` it will work (for the main part):
+
+<div class="termy">
+
+```console
+$ python -m rick_portal_gun
+
+Usage: __main__.py [OPTIONS] COMMAND [ARGS]...
+
+  Awesome Portal Gun
+
+Options:
+  --install-completion  Install completion for the current shell.
+  --show-completion     Show completion for the current shell, to copy it or customize the installation.
+
+  --help                Show this message and exit.
+
+Commands:
+  load   Load the portal gun
+  shoot  Shoot the portal gun
+```
+
+</div>
+
+!!! tip
+    Notice that you have to pass the importable version of the package name, so `rick_portal_gun` instead of `rick-portal-gun`.
+
+That works! 🚀 Sort of... 🤔
+
+See the `__main__.py` in the help instead of `rick-portal-gun`? We'll fix that next.
+
+### Set a program name in `__main__.py`
+
+We are setting the program name in the file `pyproject.toml` in the line like:
+
+```TOML
+[tool.poetry.scripts]
+rick-portal-gun = "rick_portal_gun.main:app"
+```
+
+But when Python runs our package as a script with `python -m`, it doesn't have the information of the program name.
+
+So, to fix the help text to use the correct program name when called with `python -m`, we can pass it to the app in `__main__.py`:
+
+```Python
+from .main import app
+app(prog_name="rick-portal-gun")
+```
+
+!!! tip
+    You can pass all the arguments and keyword arguments you could pass to a Click application, including `prog_name`.
+
+<div class="termy">
+
+```console
+$ python -m rick_portal_gun
+
+Usage: rick-portal-gun [OPTIONS] COMMAND [ARGS]...
+
+  Awesome Portal Gun
+
+Options:
+  --install-completion  Install completion for the current shell.
+  --show-completion     Show completion for the current shell, to copy it or customize the installation.
+
+  --help                Show this message and exit.
+
+Commands:
+  load   Load the portal gun
+  shoot  Shoot the portal gun
+```
+
+</div>
+
+Great! That works correctly! 🎉 ✅
+
+Notice that now it uses `rick-portal-gun` instead of `__main__.py` in the help.
+
+### Autocompletion and `python -m`
+
+Have in mind that TAB completion (shell auto-completion) won't work when using `python -m`.
+
+Auto-completion depends on the name of the program called, it's tied to each specific program name.
+
+So, to have shell completion for `rick-portal-gun` you would have to call it directly:
+
+<div class="termy">
+
+```console
+$ rick-portal-gun [TAB][TAB]
+```
+
+</div>
+
+But you can still support `python -m` for the cases where it's useful.
+
 ## Publish to PyPI (optional)
 
 You can publish that new package to <a href="https://pypi.org/" class="external-link" target="_blank">PyPI</a> to make it public, so others can install it easily.
