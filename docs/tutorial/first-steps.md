@@ -75,7 +75,6 @@ Update the previous example with an argument `name`:
 $ python main.py
 
 // If you run it without the argument, it shows a nice error
-
 Usage: main.py [OPTIONS] NAME
 Try "main.py --help" for help.
 
@@ -341,7 +340,6 @@ And as `--lastname` is now a *CLI option* that doesn't depend on the order, you 
 $ python main.py --lastname Gutiérrez Camila
 
 // and it will still work normally
-
 Hello Camila Gutiérrez
 ```
 

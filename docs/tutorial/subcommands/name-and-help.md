@@ -253,7 +253,6 @@ Check it:
 $ python main.py --help
 
 // Check the command new-users and its help text
-
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
 
 Options:

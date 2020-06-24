@@ -24,7 +24,6 @@ And it will be used in the automatic `--help` option:
 $ python main.py --help
 
 // Check the section with Arguments below 🚀
-
 Usage: main.py [OPTIONS] NAME
 
 Arguments:
@@ -54,7 +53,6 @@ And the `--help` option will combine all the information:
 $ python main.py --help
 
 // Notice that we have the help text from the docstring and also the Arguments 📝
-
 Usage: main.py [OPTIONS] NAME
 
   Say hi to NAME very gently, like Dirk.
@@ -86,7 +84,6 @@ It will show that default value in the help text:
 $ python main.py --help
 
 // Notice the [default: World] 🔍
-
 Usage: main.py [OPTIONS] [NAME]
 
   Say hi to NAME very gently, like Dirk.
@@ -116,7 +113,6 @@ And then it won't show the default value:
 $ python main.py --help
 
 // Notice the there's no [default: World] now 🔥
-
 Usage: main.py [OPTIONS] [NAME]
 
   Say hi to NAME very gently, like Dirk.
@@ -233,7 +229,6 @@ Check it:
 $ python main.py --help
 
 // Notice there's no Arguments section at all 🔥
-
 Usage: main.py [OPTIONS] [NAME]
 
   Say hi to NAME very gently, like Dirk.

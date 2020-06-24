@@ -21,11 +21,9 @@ Check it:
 
 ```console
 // Check the help
-
 $ python main.py --help
 
 // Notice the [default: Wade Wilson] ✨
-
 Usage: main.py [OPTIONS] [NAME]
 
 Arguments:
@@ -67,7 +65,6 @@ Check it:
 
 ```console
 // Check the help
-
 $ python main.py --help
 
 Usage: main.py [OPTIONS] [NAME]
@@ -81,7 +78,6 @@ Options:
   --help                Show this message and exit.
 
 // Try it several times, it will use a random default each time
-
 $ python main.py
 
 Hello Deadpool
@@ -95,7 +91,6 @@ $ python main.py
 Hello Rick
 
 // Now pass a value for the CLI argument
-
 $ python main.py Camila
 
 Hello Camila
