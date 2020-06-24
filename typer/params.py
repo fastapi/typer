@@ -109,6 +109,11 @@ def Argument(
     is_eager: bool = False,
     envvar: Optional[Union[str, List[str]]] = None,
     autocompletion: Optional[Callable] = None,
+    # TyperArgument
+    show_default: Union[bool, str] = False,
+    show_choices: bool = True,
+    show_envvar: bool = False,
+    help: Optional[str] = None,
     # Choice
     case_sensitive: bool = True,
     # Numbers
@@ -145,6 +150,11 @@ def Argument(
         is_eager=is_eager,
         envvar=envvar,
         autocompletion=autocompletion,
+        # TyperArgument
+        show_default=show_default,
+        show_choices=show_choices,
+        show_envvar=show_envvar,
+        help=help,
         # Choice
         case_sensitive=case_sensitive,
         # Numbers
