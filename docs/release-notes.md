@@ -1,5 +1,24 @@
 ## Latest changes
 
+* Add support for `help` parameter in *CLI arguments*:
+    * As `help` in *CLI arguments* is not supported by Click, there are two new internal classes (Click sub-classes) to support it:
+        * `typer.core.TyperArgument`
+        * `typer.core.TyperCommand`
+    * This includes a new auto-generated help text section `Arguments` for *CLI arguments*, showing defaults, required arguments, etc.
+    * It's also possible to disable it and keep the previous behavior, not showing automatic help for *CLI arguments* (Click's default) using the `hidden` parameter.
+    * Now `show_default` is `True` by default.
+    * And now `show_envvar` is `True` by default.
+    * So, default values and env vars are shown in the help text by default, without having to manually enable them, for both *CLI arguments* and *CLI options*.
+    * New docs:
+        * [CLI Arguments Intro](https://typer.tiangolo.com/tutorial/arguments/).
+        * [Optional CLI Arguments](https://typer.tiangolo.com/tutorial/arguments/optional/).
+        * [CLI Arguments with Default](https://typer.tiangolo.com/tutorial/arguments/default/).
+        * [CLI Arguments with Help](https://typer.tiangolo.com/tutorial/arguments/help/).
+        * [CLI Arguments with Environment Variables](https://typer.tiangolo.com/tutorial/arguments/envvar/).
+        * [CLI Arguments: Other uses](https://typer.tiangolo.com/tutorial/arguments/other-uses/).
+        * [CLI arguments with tuples](https://typer.tiangolo.com/tutorial/multiple-values/arguments-with-multiple-values/#cli-arguments-with-tuples).
+    * Lot's of tests for all the new examples in the new docs, keeping coverage at 100%.
+    * PR [#123](https://github.com/tiangolo/typer/pull/123).
 * Add docs for calling packages with `python -m some_package` using `__main__.py`: [Building a Package: Support `python -m`](https://typer.tiangolo.com/tutorial/package/#support-python-m-optional). PR [#121](https://github.com/tiangolo/typer/pull/121).
 * Add support for `*args` and `**kwargs` when calling the Typer app, just like in Click. PR [#120](https://github.com/tiangolo/typer/pull/120) by [@teymour-aldridge](https://github.com/teymour-aldridge).
 * Fix typos in README and main docs [#103](https://github.com/tiangolo/typer/pull/103) by [@mrcartoonster](https://github.com/mrcartoonster).
