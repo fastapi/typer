@@ -31,7 +31,7 @@ __init__.py  test_tutorial
 
 ### An alternative *CLI argument* declaration
 
-In the [First Steps](first-steps.md#add-a-cli-argument){.internal-link target=_blank} you saw how to add a *CLI argument*:
+In the [First Steps](../first-steps.md#add-a-cli-argument){.internal-link target=_blank} you saw how to add a *CLI argument*:
 
 ```Python hl_lines="4"
 {!./src/first_steps/tutorial002.py!}
