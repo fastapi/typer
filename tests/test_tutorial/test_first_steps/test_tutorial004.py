@@ -11,6 +11,15 @@ app = typer.Typer()
 app.command()(mod.main)
 
 
+def test_help():
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "Arguments:" in result.output
+    assert "NAME  [required]" in result.output
+    assert "LASTNAME  [required]" in result.output
+    assert "--formal / --no-formal" in result.output
+
+
 def test_1():
     result = runner.invoke(app, ["Camila", "Gutiérrez"])
     assert result.exit_code == 0
