@@ -32,6 +32,7 @@ nav:
             - Optional CLI Arguments: 'tutorial/arguments/optional.md'
             - CLI Arguments with Default: 'tutorial/arguments/default.md'
             - CLI Arguments with Help: 'tutorial/arguments/help.md'
+            - CLI Arguments with Environment Variables: 'tutorial/arguments/envvar.md'
             - Other uses: 'tutorial/arguments/other-uses.md'
         - CLI Options:
             - CLI Options Intro: 'tutorial/options/index.md'
