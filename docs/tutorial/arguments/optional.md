@@ -1,7 +1,3 @@
-Let's see how to configure *CLI arguments* with `typer.Argument()`.
-
-## Optional *CLI arguments*
-
 We said before that *by default*:
 
 * *CLI options* are **optional**
@@ -35,7 +31,7 @@ __init__.py  test_tutorial
 
 ### An alternative *CLI argument* declaration
 
-In the [First Steps](first-steps.md#add-a-cli-argument){.internal-link target=_blank} you saw how to add a *CLI argument*:
+In the [First Steps](../first-steps.md#add-a-cli-argument){.internal-link target=_blank} you saw how to add a *CLI argument*:
 
 ```Python hl_lines="4"
 {!./src/first_steps/tutorial002.py!}
@@ -44,7 +40,7 @@ In the [First Steps](first-steps.md#add-a-cli-argument){.internal-link target=_b
 Now let's see an alternative way to create the same *CLI argument*:
 
 ```Python hl_lines="4"
-{!./src/arguments/tutorial001.py!}
+{!./src/arguments/optional/tutorial001.py!}
 ```
 
 Before, you had this function parameter:
@@ -70,7 +66,7 @@ As we no longer have the Python function default value (or its absence) to tell 
 To make it *required*, we pass `...` as the first function argument passed to `typer.Argument(...)`.
 
 !!! info
-    If you hadn't seen that `...` before: it is a a special single value, it is <a href="https://docs.python.org/3/library/constants.html#Ellipsis" class="external-link" target="_blank">part of Python and is called "Ellipsis"</a>.
+    If you hadn't seen that `...` before: it is a special single value, it is <a href="https://docs.python.org/3/library/constants.html#Ellipsis" class="external-link" target="_blank">part of Python and is called "Ellipsis"</a>.
 
 All we did there achieves the same thing as before, a **required** *CLI argument*:
 
@@ -97,19 +93,22 @@ Now, finally what we came for, an optional *CLI argument*.
 
 To make a *CLI argument* optional, use `typer.Argument()` and pass a different "default" as the first parameter to `typer.Argument()`, for example `None`:
 
-```Python hl_lines="4"
-{!./src/arguments/tutorial002.py!}
+```Python hl_lines="6"
+{!./src/arguments/optional/tutorial002.py!}
 ```
 
 Now we have:
 
 ```Python
-name: str = typer.Argument(None)
+name: Optional[str] = typer.Argument(None)
 ```
 
 Because we are using `typer.Argument()` **Typer** will know that this is a *CLI argument* (no matter if *required* or *optional*).
 
 And because the first parameter passed to `typer.Argument(None)` (the new "default" value) is `None`, **Typer** knows that this is an **optional** *CLI argument*, if no value is provided when calling it in the command line, it will have that default value of `None`.
+
+!!! tip
+    By using `Optional` your editor will be able to know that the value *could* be `None`, and will be able to warn you if you do something assuming it is a `str` that would break if it was `None`.
 
 Check the help:
 
@@ -120,6 +119,9 @@ Check the help:
 $ python main.py --help
 
 Usage: main.py [OPTIONS] [NAME]
+
+Arguments:
+  [NAME]
 
 Options:
   --install-completion  Install completion for the current shell.
@@ -154,55 +156,3 @@ Hello Camila
 
 !!! tip
     Notice that "`Camila`" here is an optional *CLI argument*, not a *CLI option*, because we didn't use something like "`--name Camila`", we just passed "`Camila`" directly to the program.
-
-## An optional *CLI argument* with a default
-
-We can also make a *CLI argument* have a default value other than `None`:
-
-```Python hl_lines="4"
-{!./src/arguments/tutorial003.py!}
-```
-
-And test it:
-
-<div class="termy">
-
-```console
-// With no optional CLI argument
-$ python main.py
-
-Hello Wade Wilson
-
-// With one CLI argument
-$ python main.py Camila
-
-Hello Camila
-```
-
-</div>
-
-## About *CLI arguments* help
-
-*CLI arguments* are commonly used for the most necessary things in a program.
-
-They are normally required and, when present, they are normally the main subject of whatever the command is doing.
-
-For that reason, Typer (actually Click underneath) doesn't attempt to automatically document *CLI arguments*.
-
-And you should document them as part of the CLI app documentation, normally in a <abbr title="a multi-line string as the first expression inside a function (not assigned to any variable) used for documentation">docstring</abbr>.
-
-Check the last example from the [First Steps](first-steps.md#document-your-cli-app){.internal-link target=_blank}:
-
-```Python hl_lines="5 6 7 8 9"
-{!./src/first_steps/tutorial006.py!}
-```
-
-Here the *CLI argument* `NAME` is documented as part of the help text.
-
-You should document your *CLI arguments* the same way.
-
-## Other uses
-
-`typer.Argument()` has several other use cases. Such as for data validation, to enable other features, etc.
-
-You will see about these use cases later in the docs.

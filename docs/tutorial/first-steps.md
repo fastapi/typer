@@ -75,7 +75,6 @@ Update the previous example with an argument `name`:
 $ python main.py
 
 // If you run it without the argument, it shows a nice error
-
 Usage: main.py [OPTIONS] NAME
 Try "main.py --help" for help.
 
@@ -117,8 +116,14 @@ $ python main.py --help
 
 Usage: main.py [OPTIONS] NAME LASTNAME
 
+Arguments:
+  NAME      [required]
+  LASTNAME  [required]
+
 Options:
-  --help  Show this message and exit.
+  --install-completion  Install completion for the current shell.
+  --show-completion     Show completion for the current shell, to copy it or customize the installation.
+  --help                Show this message and exit.
 
 // There are now 2 CLI arguments, name and lastname
 
@@ -230,8 +235,14 @@ $ python main.py --help
 
 Usage: main.py [OPTIONS] NAME LASTNAME
 
+Arguments:
+  NAME      [required]
+  LASTNAME  [required]
+
 Options:
-  --formal / --no-formal
+  --formal / --no-formal  [default: False]
+  --install-completion    Install completion for the current shell.
+  --show-completion       Show completion for the current shell, to copy it or customize the installation.
   --help                  Show this message and exit.
 ```
 
@@ -283,9 +294,14 @@ $ python main.py --help
 
 Usage: main.py [OPTIONS] NAME
 
+Arguments:
+  NAME  [required]
+
 Options:
-  --lastname TEXT
-  --formal / --no-formal
+  --lastname TEXT         [default: ]
+  --formal / --no-formal  [default: False]
+  --install-completion    Install completion for the current shell.
+  --show-completion       Show completion for the current shell, to copy it or customize the installation.
   --help                  Show this message and exit.
 ```
 
@@ -323,7 +339,6 @@ And as `--lastname` is now a *CLI option* that doesn't depend on the order, you 
 $ python main.py --lastname Gutiérrez Camila
 
 // and it will still work normally
-
 Hello Camila Gutiérrez
 ```
 
@@ -350,9 +365,12 @@ Usage: main.py [OPTIONS] NAME
 
   If --formal is used, say hi very formally.
 
+Arguments:
+  NAME  [required]
+
 Options:
-  --lastname TEXT
-  --formal / --no-formal
+  --lastname TEXT         [default: ]
+  --formal / --no-formal  [default: False]
   --install-completion    Install completion for the current shell.
   --show-completion       Show completion for the current shell, to copy it or customize the installation.
   --help                  Show this message and exit.
@@ -361,11 +379,7 @@ Options:
 </div>
 
 !!! tip
-    You should document the *CLI arguments* in the docstring.
-
-    There is another place to document the *CLI options* that will show up next to them in the help text as with `--install-completion` or `--help`, you will learn that later in the tutorial.
-
-    But *CLI arguments* are normally used for the most necessary things, so you should document them here in the *docstring*.
+    There is another place to document the specific *CLI options* and *CLI arguments* that will show up next to them in the help text as with `--install-completion` or `--help`, you will learn that later in the tutorial.
 
 ## Arguments, options, parameters, optional, required
 

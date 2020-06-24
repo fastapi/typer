@@ -28,7 +28,7 @@ def test_invalid():
     result = runner.invoke(app, ["july-19-1989"])
     assert result.exit_code != 0
     assert (
-        "Error: Invalid value for '[%Y-%m-%d|%Y-%m-%dT%H:%M:%S|%Y-%m-%d %H:%M:%S]': invalid datetime format: july-19-1989. (choose from %Y-%m-%d, %Y-%m-%dT%H:%M:%S, %Y-%m-%d %H:%M:%S)"
+        "Error: Invalid value for 'BIRTH:[%Y-%m-%d|%Y-%m-%dT%H:%M:%S|%Y-%m-%d %H:%M:%S]': invalid datetime format: july-19-1989. (choose from %Y-%m-%d, %Y-%m-%dT%H:%M:%S, %Y-%m-%d %H:%M:%S)"
         in result.output
     )
 

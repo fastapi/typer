@@ -27,7 +27,13 @@ nav:
         - First Steps: 'tutorial/first-steps.md'
         - Printing and Colors: 'tutorial/printing.md'
         - Terminating: 'tutorial/terminating.md'
-        - CLI Arguments: 'tutorial/arguments.md'
+        - CLI Arguments:
+            - CLI Arguments Intro: 'tutorial/arguments/index.md'
+            - Optional CLI Arguments: 'tutorial/arguments/optional.md'
+            - CLI Arguments with Default: 'tutorial/arguments/default.md'
+            - CLI Arguments with Help: 'tutorial/arguments/help.md'
+            - CLI Arguments with Environment Variables: 'tutorial/arguments/envvar.md'
+            - Other uses: 'tutorial/arguments/other-uses.md'
         - CLI Options:
             - CLI Options Intro: 'tutorial/options/index.md'
             - CLI Options with Help: 'tutorial/options/help.md'

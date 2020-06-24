@@ -7,7 +7,9 @@ You can also check the <a href="https://mypy.readthedocs.io/en/latest/cheat_shee
 In short (very short), you can declare a function with parameters like:
 
 ```Python
-def type_example(name: str, formal: bool = False, intro: str = None):
+from typing import Optional
+
+def type_example(name: str, formal: bool = False, intro: Optional[str] = None):
     pass
 ```
 
@@ -15,7 +17,7 @@ And your editor (and **Typer**) will know that:
 
 * `name` is of type `str` and is a required parameter.
 * `formal` is a `bool` and is by default `False`.
-* `intro` is a `str`, and by default is `None`, so it's optional.
+* `intro` is an optional `str`, by default is `None`.
 
 These type hints are what give you autocomplete in your editor and several other features.
 

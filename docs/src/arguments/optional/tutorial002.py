@@ -1,7 +1,9 @@
+from typing import Optional
+
 import typer
 
 
-def main(name: str = typer.Argument(None)):
+def main(name: Optional[str] = typer.Argument(None)):
     if name is None:
         typer.echo("Hello World!")
     else:

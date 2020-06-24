@@ -165,6 +165,12 @@ class ParameterInfo:
         is_eager: bool = False,
         envvar: Optional[Union[str, List[str]]] = None,
         autocompletion: Optional[Callable] = None,
+        # TyperArgument
+        show_default: Union[bool, str] = True,
+        show_choices: bool = True,
+        show_envvar: bool = True,
+        help: Optional[str] = None,
+        hidden: bool = False,
         # Choice
         case_sensitive: bool = True,
         # Numbers
@@ -197,6 +203,12 @@ class ParameterInfo:
         self.is_eager = is_eager
         self.envvar = envvar
         self.autocompletion = autocompletion
+        # TyperArgument
+        self.show_default = show_default
+        self.show_choices = show_choices
+        self.show_envvar = show_envvar
+        self.help = help
+        self.hidden = hidden
         # Choice
         self.case_sensitive = case_sensitive
         # Numbers
@@ -236,7 +248,7 @@ class OptionInfo(ParameterInfo):
         envvar: Optional[Union[str, List[str]]] = None,
         autocompletion: Optional[Callable] = None,
         # Option
-        show_default: bool = False,
+        show_default: bool = True,
         prompt: Union[bool, str] = False,
         confirmation_prompt: bool = False,
         hide_input: bool = False,
@@ -247,7 +259,7 @@ class OptionInfo(ParameterInfo):
         help: Optional[str] = None,
         hidden: bool = False,
         show_choices: bool = True,
-        show_envvar: bool = False,
+        show_envvar: bool = True,
         # Choice
         case_sensitive: bool = True,
         # Numbers
@@ -281,6 +293,12 @@ class OptionInfo(ParameterInfo):
             is_eager=is_eager,
             envvar=envvar,
             autocompletion=autocompletion,
+            # TyperArgument
+            show_default=show_default,
+            show_choices=show_choices,
+            show_envvar=show_envvar,
+            help=help,
+            hidden=hidden,
             # Choice
             case_sensitive=case_sensitive,
             # Numbers
@@ -305,7 +323,6 @@ class OptionInfo(ParameterInfo):
             allow_dash=allow_dash,
             path_type=path_type,
         )
-        self.show_default = show_default
         self.prompt = prompt
         self.confirmation_prompt = confirmation_prompt
         self.hide_input = hide_input
@@ -313,10 +330,6 @@ class OptionInfo(ParameterInfo):
         self.flag_value = flag_value
         self.count = count
         self.allow_from_autoenv = allow_from_autoenv
-        self.help = help
-        self.hidden = hidden
-        self.show_choices = show_choices
-        self.show_envvar = show_envvar
 
 
 class ArgumentInfo(ParameterInfo):
@@ -332,6 +345,12 @@ class ArgumentInfo(ParameterInfo):
         is_eager: bool = False,
         envvar: Optional[Union[str, List[str]]] = None,
         autocompletion: Optional[Callable] = None,
+        # TyperArgument
+        show_default: Union[bool, str] = True,
+        show_choices: bool = True,
+        show_envvar: bool = True,
+        help: Optional[str] = None,
+        hidden: bool = False,
         # Choice
         case_sensitive: bool = True,
         # Numbers
@@ -365,6 +384,12 @@ class ArgumentInfo(ParameterInfo):
             is_eager=is_eager,
             envvar=envvar,
             autocompletion=autocompletion,
+            # TyperArgument
+            show_default=show_default,
+            show_choices=show_choices,
+            show_envvar=show_envvar,
+            help=help,
+            hidden=hidden,
             # Choice
             case_sensitive=case_sensitive,
             # Numbers

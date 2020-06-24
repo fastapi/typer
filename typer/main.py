@@ -9,6 +9,7 @@ from uuid import UUID
 import click
 
 from .completion import get_completion_inspect_parameters
+from .core import TyperArgument, TyperCommand
 from .models import (
     AnyType,
     ArgumentInfo,
@@ -142,7 +143,7 @@ class Typer:
         deprecated: bool = False,
     ) -> Callable[[CommandFunctionType], CommandFunctionType]:
         if cls is None:
-            cls = click.Command
+            cls = TyperCommand
 
         def decorator(f: CommandFunctionType) -> CommandFunctionType:
             self.registered_commands.append(
@@ -420,7 +421,7 @@ def get_command_from_info(command_info: CommandInfo) -> click.Command:
         convertors,
         context_param_name,
     ) = get_params_convertors_ctx_param_name_from_function(command_info.callback)
-    cls = command_info.cls or click.Command
+    cls = command_info.cls or TyperCommand
     command = cls(  # type: ignore
         name=name,
         context_settings=command_info.context_settings,
@@ -685,7 +686,7 @@ def get_click_param(
             click.Option(
                 # Option
                 param_decls=param_decls,
-                show_default=parameter_info.show_default,
+                show_default=parameter_info.show_default,  # type: ignore
                 prompt=parameter_info.prompt,
                 confirmation_prompt=parameter_info.confirmation_prompt,
                 hide_input=parameter_info.hide_input,
@@ -719,12 +720,18 @@ def get_click_param(
         if is_list:
             nargs = -1
         return (
-            click.Argument(
+            TyperArgument(
                 # Argument
                 param_decls=param_decls,
                 type=parameter_type,
                 required=required,
                 nargs=nargs,
+                # TyperArgument
+                show_default=parameter_info.show_default,
+                show_choices=parameter_info.show_choices,
+                show_envvar=parameter_info.show_envvar,
+                help=parameter_info.help,
+                hidden=parameter_info.hidden,
                 # Parameter
                 default=default_value,
                 callback=get_param_callback(

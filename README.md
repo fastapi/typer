@@ -99,6 +99,9 @@ $ python main.py --help
 
 Usage: main.py [OPTIONS] NAME
 
+Arguments:
+  NAME  [required]
+
 Options:
   --install-completion  Install completion for the current shell.
   --show-completion     Show completion for the current shell, to copy it or customize the installation.
@@ -187,6 +190,9 @@ $ python main.py hello --help
 
 Usage: main.py hello [OPTIONS] NAME
 
+Arguments:
+  NAME  [required]
+
 Options:
   --help  Show this message and exit.
 
@@ -196,8 +202,11 @@ $ python main.py goodbye --help
 
 Usage: main.py goodbye [OPTIONS] NAME
 
+Arguments:
+  NAME  [required]
+
 Options:
-  --formal / --no-formal
+  --formal / --no-formal  [default: False]
   --help                  Show this message and exit.
 
 // Automatic --formal and --no-formal for the bool option 🎉

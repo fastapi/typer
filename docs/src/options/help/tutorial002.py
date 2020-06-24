@@ -1,7 +1,7 @@
 import typer
 
 
-def main(fullname: str = typer.Option("Wade Wilson", show_default=True)):
+def main(fullname: str = typer.Option("Wade Wilson", show_default=False)):
     typer.echo(f"Hello {fullname}")
 
 

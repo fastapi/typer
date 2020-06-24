@@ -3,7 +3,7 @@ import subprocess
 import typer
 from typer.testing import CliRunner
 
-from arguments import tutorial003 as mod
+from arguments.help import tutorial003 as mod
 
 runner = CliRunner()
 
@@ -15,12 +15,11 @@ def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     assert "[OPTIONS] [NAME]" in result.output
-
-
-def test_call_no_arg():
-    result = runner.invoke(app)
-    assert result.exit_code == 0
-    assert "Hello Wade Wilson" in result.output
+    assert "Say hi to NAME very gently, like Dirk." in result.output
+    assert "Arguments:" in result.output
+    assert "NAME" in result.output
+    assert "Who to greet" in result.output
+    assert "[default: World]" in result.output
 
 
 def test_call_arg():
