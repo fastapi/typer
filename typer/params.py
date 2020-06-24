@@ -25,7 +25,7 @@ def Option(
     help: Optional[str] = None,
     hidden: bool = False,
     show_choices: bool = True,
-    show_envvar: bool = False,
+    show_envvar: bool = True,
     # Choice
     case_sensitive: bool = True,
     # Numbers
@@ -112,7 +112,7 @@ def Argument(
     # TyperArgument
     show_default: Union[bool, str] = True,
     show_choices: bool = True,
-    show_envvar: bool = False,
+    show_envvar: bool = True,
     help: Optional[str] = None,
     hidden: bool = False,
     # Choice
