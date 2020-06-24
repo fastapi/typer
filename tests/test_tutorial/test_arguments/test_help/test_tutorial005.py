@@ -3,7 +3,7 @@ import subprocess
 import typer
 from typer.testing import CliRunner
 
-from arguments import tutorial001 as mod
+from arguments.help import tutorial005 as mod
 
 runner = CliRunner()
 
@@ -11,10 +11,13 @@ app = typer.Typer()
 app.command()(mod.main)
 
 
-def test_call_no_arg():
-    result = runner.invoke(app)
-    assert result.exit_code != 0
-    assert "Error: Missing argument 'NAME'." in result.output
+def test_help():
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "[OPTIONS] [NAME]" in result.output
+    assert "Arguments:" in result.output
+    assert "Who to greet" in result.output
+    assert "[default: (Deadpoolio the amazing's name)]" in result.output
 
 
 def test_call_arg():
