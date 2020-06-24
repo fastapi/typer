@@ -1,5 +1,7 @@
 ## Latest changes
 
+## 0.3.0
+
 * Add support for `help` parameter in *CLI arguments*:
     * As `help` in *CLI arguments* is not supported by Click, there are two new internal classes (Click sub-classes) to support it:
         * `typer.core.TyperArgument`
