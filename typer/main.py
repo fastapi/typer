@@ -731,6 +731,7 @@ def get_click_param(
                 show_choices=parameter_info.show_choices,
                 show_envvar=parameter_info.show_envvar,
                 help=parameter_info.help,
+                hidden=parameter_info.hidden,
                 # Parameter
                 default=default_value,
                 callback=get_param_callback(

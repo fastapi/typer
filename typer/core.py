@@ -21,15 +21,17 @@ class TyperArgument(click.core.Argument):
         envvar: Optional[Union[str, List[str]]] = None,
         autocompletion: Optional[Callable] = None,
         # TyperArgument
-        show_default: Union[bool, str] = False,
+        show_default: Union[bool, str] = True,
         show_choices: bool = True,
         show_envvar: bool = False,
         help: Optional[str] = None,
+        hidden: bool = False,
     ):
         self.help = help
         self.show_default = show_default
         self.show_choices = show_choices
         self.show_envvar = show_envvar
+        self.hidden = hidden
         super().__init__(
             param_decls=param_decls,
             type=type,
@@ -44,9 +46,11 @@ class TyperArgument(click.core.Argument):
             autocompletion=autocompletion,
         )
 
-    def get_help_record(self, ctx: click.Context) -> Tuple[str, str]:
+    def get_help_record(self, ctx: click.Context) -> Optional[Tuple[str, str]]:  # type: ignore
         # Modified version of click.core.Option.get_help_record()
         # to support Arguments
+        if self.hidden:
+            return None
         name = self.make_metavar()
         help = self.help or ""
         extra = []
