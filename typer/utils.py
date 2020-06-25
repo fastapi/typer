@@ -1,4 +1,6 @@
+import asyncio
 import inspect
+import sys
 from typing import Callable, Dict, get_type_hints
 
 from .models import ParamMeta
@@ -16,3 +18,31 @@ def get_params_from_function(func: Callable) -> Dict[str, ParamMeta]:
             name=param.name, default=param.default, annotation=annotation
         )
     return params
+
+
+def aio_run(aw):
+    """Run an async/awaitable function (Polyfill asyncio.run)
+
+    Examples:
+        >>> async def add(a, b):
+        ...     return a + b
+        ...
+        >>> aio.run(add(1, 4))
+        5
+
+    """
+    if sys.version_info >= (3, 7):
+        return asyncio.run(aw)
+
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    try:
+        return loop.run_until_complete(aw)
+    finally:
+        loop.close()
+        asyncio.set_event_loop(None)
+
+
+def is_async(obj) -> bool:
+    """Return True if function/obj is is async/awaitable"""
+    return asyncio.iscoroutinefunction(obj) or asyncio.iscoroutine(obj)
