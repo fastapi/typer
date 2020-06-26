@@ -1,9 +1,11 @@
 import asyncio
 import inspect
 import sys
-from typing import Callable, Dict, get_type_hints
+from typing import Awaitable, Callable, Dict, TypeVar, get_type_hints
 
 from .models import ParamMeta
+
+_T = TypeVar("_T")
 
 
 def get_params_from_function(func: Callable) -> Dict[str, ParamMeta]:
@@ -20,7 +22,7 @@ def get_params_from_function(func: Callable) -> Dict[str, ParamMeta]:
     return params
 
 
-def aio_run(aw):
+def aio_run(aw: Awaitable[_T]) -> _T:
     """Run an async/awaitable function (Polyfill asyncio.run)
 
     Examples:
@@ -43,6 +45,6 @@ def aio_run(aw):
         asyncio.set_event_loop(None)
 
 
-def is_async(obj) -> bool:
+def is_async(obj: Callable) -> bool:
     """Return True if function/obj is is async/awaitable"""
     return asyncio.iscoroutinefunction(obj) or asyncio.iscoroutine(obj)

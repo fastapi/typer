@@ -500,8 +500,8 @@ def get_callback(
             use_params[context_param_name] = click.get_current_context()
         return callback(**use_params)  # type: ignore
 
-    def wrapper_async(*args, **kwargs):
-        return aio_run(callback(*args, **kwargs))
+    def wrapper_async(*args: Any, **kwargs: Any) -> Any:
+        return aio_run(callback(*args, **kwargs))  # type: ignore
 
     update_wrapper(wrapper, callback)
 
@@ -805,8 +805,8 @@ def get_param_callback(
             use_params[value_name] = use_value
         return callback(**use_params)  # type: ignore
 
-    def wrapper_async(*args, **kwargs):
-        return aio_run(callback(*args, **kwargs))
+    def wrapper_async(*args: Any, **kwargs: Any) -> Any:
+        return aio_run(callback(*args, **kwargs))  # type: ignore
 
     update_wrapper(wrapper, callback)
 
@@ -866,8 +866,8 @@ def get_param_completion(callback: Optional[Callable] = None) -> Optional[Callab
 
     update_wrapper(wrapper, callback)
 
-    def wrapper_async(*args, **kwargs):
-        return aio_run(callback(*args, **kwargs))
+    def wrapper_async(*args: Any, **kwargs: Any) -> Any:
+        return aio_run(callback(*args, **kwargs))  # type: ignore
 
     if is_async(callback):
         update_wrapper(wrapper_async, callback)
