@@ -1,9 +1,10 @@
 from pathlib import Path
+from typing import Optional
 
 import typer
 
 
-def main(config: Path = typer.Option(None)):
+def main(config: Optional[Path] = typer.Option(None)):
     if config is None:
         typer.echo("No config file")
         raise typer.Abort()

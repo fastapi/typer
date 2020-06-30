@@ -6,7 +6,7 @@ It would show the version of your CLI program and then it would terminate it. Ev
 
 Let's see a first version of how it could look like:
 
-```Python hl_lines="6 7 8 9  14"
+```Python hl_lines="8 9 10 11  16"
 {!../docs_src/options/version/tutorial001.py!}
 ```
 

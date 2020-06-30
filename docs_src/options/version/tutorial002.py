@@ -1,4 +1,5 @@
 import typer
+from typing import Optional
 
 __version__ = "0.1.0"
 
@@ -16,7 +17,7 @@ def name_callback(name: str):
 
 def main(
     name: str = typer.Option(..., callback=name_callback),
-    version: bool = typer.Option(None, "--version", callback=version_callback),
+    version: Optional[bool] = typer.Option(None, "--version", callback=version_callback),
 ):
     typer.echo(f"Hello {name}")
 

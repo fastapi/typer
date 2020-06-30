@@ -3,14 +3,14 @@ By default **Typer** will create a *CLI option* name from the function parameter
 So, if you have a function with:
 
 ```Python
-def main(user_name: str = None):
+def main(user_name: Optional[str] = None):
     pass
 ```
 
 or
 
 ```Python
-def main(user_name: str = typer.Option(None)):
+def main(user_name: Optional[str] = typer.Option(None)):
     pass
 ```
 

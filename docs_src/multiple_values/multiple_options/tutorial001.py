@@ -1,9 +1,9 @@
-from typing import List
+from typing import List, Optional
 
 import typer
 
 
-def main(user: List[str] = typer.Option(None)):
+def main(user: Optional[List[str]] = typer.Option(None)):
     if not user:
         typer.echo("No provided users")
         raise typer.Abort()

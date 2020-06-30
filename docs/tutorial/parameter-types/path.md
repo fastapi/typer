@@ -2,7 +2,7 @@ You can declare a *CLI parameter* to be a standard Python <a href="https://docs.
 
 This is what you would do for directory paths, file paths, etc:
 
-```Python hl_lines="1  6"
+```Python hl_lines="1  7"
 {!../docs_src/parameter_types/path/tutorial001.py!}
 ```
 

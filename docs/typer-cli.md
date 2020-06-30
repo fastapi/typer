@@ -105,13 +105,15 @@ Completion will take effect once you restart the terminal.
 Let's say you have a script that uses **Typer** in `my_custom_script.py`:
 
 ```Python
+from typing import Optional
+
 import typer
 
 app = typer.Typer()
 
 
 @app.command()
-def hello(name: str = None):
+def hello(name: Optional[str] = None):
     if name:
         typer.echo(f"Hello {name}")
     else:
@@ -119,7 +121,7 @@ def hello(name: str = None):
 
 
 @app.command()
-def bye(name: str = None):
+def bye(name: Optional[str] = None):
     if name:
         typer.echo(f"Bye {name}")
     else:
