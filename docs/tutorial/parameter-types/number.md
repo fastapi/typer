@@ -18,9 +18,12 @@ $ python main.py --help
 // Notice the extra RANGE in the help text for --age and --score
 Usage: main.py [OPTIONS] ID
 
+Arguments:
+  ID  [required]
+
 Options:
-  --age INTEGER RANGE
-  --score FLOAT RANGE
+  --age INTEGER RANGE   [default: 20]
+  --score FLOAT RANGE   [default: 0]
   --install-completion  Install completion for the current shell.
   --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.

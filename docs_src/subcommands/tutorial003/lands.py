@@ -1,7 +1,6 @@
-import typer
-
 import reigns
 import towns
+import typer
 
 app = typer.Typer()
 app.add_typer(reigns.app, name="reigns")
