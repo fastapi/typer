@@ -183,7 +183,7 @@ Many of the tutorials have blocks of code.
 
 In most of the cases, these blocks of code are actual complete applications that can be run as is.
 
-In fact, those blocks of code are not written inside the Markdown, they are Python files in the `./docs/src/` directory.
+In fact, those blocks of code are not written inside the Markdown, they are Python files in the `./docs_src/` directory.
 
 And those Python files are included/injected in the documentation when generating the site.
 
@@ -229,13 +229,3 @@ $ bash scripts/test-cov-html.sh
 </div>
 
 This command generates a directory `./htmlcov/`, if you open the file `./htmlcov/index.html` in your browser, you can explore interactively the regions of code that are covered by the tests, and notice if there is any region missing.
-
-### Tests in your editor
-
-If you want to use the integrated tests in your editor add `./docs/src` to your `PYTHONPATH` variable.
-
-For example, in VS Code you can create a file `.env` with:
-
-```env
-PYTHONPATH=./docs/src
-```

@@ -2,7 +2,7 @@ import subprocess
 
 from click.testing import CliRunner
 
-from using_click import tutorial003 as mod
+from docs_src.using_click import tutorial003 as mod
 
 runner = CliRunner()
 

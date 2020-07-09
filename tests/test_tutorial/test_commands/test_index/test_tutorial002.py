@@ -1,7 +1,8 @@
 import subprocess
-from commands.index import tutorial002 as mod
 
 from typer.testing import CliRunner
+
+from docs_src.commands.index import tutorial002 as mod
 
 app = mod.app
 

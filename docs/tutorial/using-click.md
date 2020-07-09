@@ -24,7 +24,7 @@ A `Command` can have its own *CLI arguments* and *CLI options*, and it has a fun
 For example, in this Click app:
 
 ```Python hl_lines="7  14"
-{!./src/using_click/tutorial001.py!}
+{!../docs_src/using_click/tutorial001.py!}
 ```
 
 The original `hello` variable is converted by Click from a function to a `Command` object. And the original `hello` function is used by that `Command` internally, but it is no longer named `hello` (as `hello` is now a Click `Command`).
@@ -42,7 +42,7 @@ And a `Group` can also have a function that it calls, right before calling the f
 For example:
 
 ```Python hl_lines="5  19 20"
-{!./src/using_click/tutorial002.py!}
+{!../docs_src/using_click/tutorial002.py!}
 ```
 
 The `cli` variable is converted by Click from a function to a `Group` object. And the original `cli` function is used by that `Group` internally.
@@ -80,7 +80,7 @@ You can use it directly, and use the Click object with other Click applications.
 For example, you could have a **Typer** app, generate a Click `Group` from it, and then include other Click apps in it:
 
 ```Python hl_lines="15 16  29  31  34"
-{!./src/using_click/tutorial003.py!}
+{!../docs_src/using_click/tutorial003.py!}
 ```
 
 Notice that we add a callback that does nothing (only document the CLI program), to make sure **Typer** creates a Click `Group`. That way we can add sub-commands to that Click `Group`.
@@ -129,7 +129,7 @@ Hello Camila!
 The same way, you can do the contrary and include a **Typer** sub app in a bigger Click app:
 
 ```Python hl_lines="31  33  36"
-{!./src/using_click/tutorial004.py!}
+{!../docs_src/using_click/tutorial004.py!}
 ```
 
 Notice that we don't have to add a callback or more commands, we can just create a **Typer** app that generates a single Click `Command`, as we don't need to include anything under the Typer app.

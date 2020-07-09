@@ -4,7 +4,7 @@ import subprocess
 import typer
 from typer.testing import CliRunner
 
-from options.callback import tutorial003 as mod
+from docs_src.options.callback import tutorial003 as mod
 
 runner = CliRunner()
 

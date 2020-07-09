@@ -60,3 +60,12 @@ all = [
     "colorama",
     "shellingham"
 ]
+
+[tool.isort]
+profile = "black"
+known_third_party = ["typer", "click"]
+skip_glob = [
+    "docs_src/subcommands/tutorial001/main.py",
+    "docs_src/subcommands/tutorial003/lands.py",
+    "docs_src/subcommands/tutorial003/main.py",
+    ]

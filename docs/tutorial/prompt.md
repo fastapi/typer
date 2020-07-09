@@ -3,7 +3,7 @@ When you need to ask the user for info interactively you should normally use [*C
 But if you absolutely need to ask for interactive information without using a *CLI option*, you can use `typer.prompt()`:
 
 ```Python hl_lines="5"
-{!./src/prompt/tutorial001.py!}
+{!../docs_src/prompt/tutorial001.py!}
 ```
 
 Check it:
@@ -25,7 +25,7 @@ Hello Camila
 There's also an alternative to ask for confirmation. Again, if possible, you should use a [*CLI Option* with a confirmation prompt](options/prompt.md){.internal-link target=_blank}:
 
 ```Python hl_lines="5"
-{!./src/prompt/tutorial002.py!}
+{!../docs_src/prompt/tutorial002.py!}
 ```
 
 Check it:
@@ -55,7 +55,7 @@ Aborted!
 As it's very common to abort if the user doesn't confirm, there's an integrated parameter `abort` that does it automatically:
 
 ```Python hl_lines="5"
-{!./src/prompt/tutorial003.py!}
+{!../docs_src/prompt/tutorial003.py!}
 ```
 
 <div class="termy">

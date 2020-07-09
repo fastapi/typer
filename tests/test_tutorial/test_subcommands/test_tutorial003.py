@@ -3,7 +3,7 @@ import subprocess
 import pytest
 from typer.testing import CliRunner
 
-from subcommands import tutorial003
+from docs_src.subcommands import tutorial003
 
 runner = CliRunner()
 
@@ -12,7 +12,7 @@ runner = CliRunner()
 def mod(monkeypatch):
     with monkeypatch.context() as m:
         m.syspath_prepend(list(tutorial003.__path__)[0])
-        from subcommands.tutorial003 import main
+        from docs_src.subcommands.tutorial003 import main
 
         return main
 
@@ -134,7 +134,7 @@ def test_lands_towns_burn(app):
 
 
 def test_scripts(mod):
-    from subcommands.tutorial003 import items, lands, reigns, towns, users
+    from docs_src.subcommands.tutorial003 import items, lands, reigns, towns, users
 
     for module in [mod, items, lands, reigns, towns, users]:
         result = subprocess.run(

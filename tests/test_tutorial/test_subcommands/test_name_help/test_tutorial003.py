@@ -2,7 +2,7 @@ import subprocess
 
 from typer.testing import CliRunner
 
-from subcommands.name_help import tutorial003 as mod
+from docs_src.subcommands.name_help import tutorial003 as mod
 
 runner = CliRunner()
 

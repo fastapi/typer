@@ -3,7 +3,7 @@ If you are executing an operation that can take some time, you can inform it to 
 For this, you can use `typer.progressbar()`:
 
 ```Python hl_lines="8"
-{!./src/progressbar/tutorial001.py!}
+{!../docs_src/progressbar/tutorial001.py!}
 ```
 
 You use `typer.progressbar()` with a `with` statement, as in:
@@ -65,7 +65,7 @@ The progress bar is generated from the length of the iterable (e.g. the list of 
 But if the length is not available (for example, with something that fetches a new user from a web API each time) you can pass an explicit `length` to `typer.progressbar()`.
 
 ```Python hl_lines="14"
-{!./src/progressbar/tutorial002.py!}
+{!../docs_src/progressbar/tutorial002.py!}
 ```
 
 Check it:
@@ -109,7 +109,7 @@ would print each of the "user IDs" (here it's just the numbers from `0` to `99`)
 You can also set a `label`:
 
 ```Python hl_lines="8"
-{!./src/progressbar/tutorial003.py!}
+{!../docs_src/progressbar/tutorial003.py!}
 ```
 
 Check it:
@@ -127,7 +127,7 @@ If you need to manually iterate over something and update the progress bar irreg
 And then calling the `.update()` method in the object from the `with` statement:
 
 ```Python hl_lines="8  12"
-{!./src/progressbar/tutorial004.py!}
+{!../docs_src/progressbar/tutorial004.py!}
 ```
 
 Check it:

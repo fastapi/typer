@@ -7,7 +7,7 @@ When you declare a *CLI parameter* with some type **Typer** will convert the dat
 For example:
 
 ```Python hl_lines="4"
-{!./src/parameter_types/index/tutorial001.py!}
+{!../docs_src/parameter_types/index/tutorial001.py!}
 ```
 
 In this example, the value received for the *CLI argument* `NAME` will be treated as `str`.

@@ -17,7 +17,7 @@ That will tell **Typer** that it's still a *CLI option*, but it doesn't have a d
 Let's make `--lastname` a required *CLI option*:
 
 ```Python hl_lines="4"
-{!./src/options/required/tutorial001.py!}
+{!../docs_src/options/required/tutorial001.py!}
 ```
 
 And test it:

@@ -3,7 +3,7 @@ You already saw how to add a help text for *CLI arguments* with the `help` param
 Let's now do the same for *CLI options*:
 
 ```Python hl_lines="6 7"
-{!./src/options/help/tutorial001.py!}
+{!../docs_src/options/help/tutorial001.py!}
 ```
 
 We are replacing the default values we had before with `typer.Option()`.
@@ -67,7 +67,7 @@ Options:
 You can tell Typer to not show the default value in the help text with `show_default=False`:
 
 ```Python hl_lines="4"
-{!./src/options/help/tutorial002.py!}
+{!../docs_src/options/help/tutorial002.py!}
 ```
 
 And it will no longer show the default value in the help text:

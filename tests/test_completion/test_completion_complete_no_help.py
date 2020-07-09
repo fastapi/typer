@@ -1,6 +1,7 @@
 import os
 import subprocess
-from commands.index import tutorial002 as mod
+
+from docs_src.commands.index import tutorial002 as mod
 
 
 def test_completion_complete_subcommand_zsh():

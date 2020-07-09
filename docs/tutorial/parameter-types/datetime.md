@@ -3,7 +3,7 @@ You can specify a *CLI parameter* as a Python <a href="https://docs.python.org/3
 Your function will receive a standard Python `datetime` object, and again, your editor will give you completion, etc.
 
 ```Python hl_lines="1  6 7 8"
-{!./src/parameter_types/datetime/tutorial001.py!}
+{!../docs_src/parameter_types/datetime/tutorial001.py!}
 ```
 
 By default, it will expect a datetime in ISO format in the input.
@@ -54,7 +54,7 @@ For example, let's imagine that you want to accept an ISO formatted datetime, bu
 ...It's a crazy example, but let's say you also needed that strange format:
 
 ```Python hl_lines="8"
-{!./src/parameter_types/datetime/tutorial002.py!}
+{!../docs_src/parameter_types/datetime/tutorial002.py!}
 ```
 
 !!! tip

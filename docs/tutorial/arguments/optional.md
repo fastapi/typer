@@ -34,13 +34,13 @@ __init__.py  test_tutorial
 In the [First Steps](../first-steps.md#add-a-cli-argument){.internal-link target=_blank} you saw how to add a *CLI argument*:
 
 ```Python hl_lines="4"
-{!./src/first_steps/tutorial002.py!}
+{!../docs_src/first_steps/tutorial002.py!}
 ```
 
 Now let's see an alternative way to create the same *CLI argument*:
 
 ```Python hl_lines="4"
-{!./src/arguments/optional/tutorial001.py!}
+{!../docs_src/arguments/optional/tutorial001.py!}
 ```
 
 Before, you had this function parameter:
@@ -94,7 +94,7 @@ Now, finally what we came for, an optional *CLI argument*.
 To make a *CLI argument* optional, use `typer.Argument()` and pass a different "default" as the first parameter to `typer.Argument()`, for example `None`:
 
 ```Python hl_lines="6"
-{!./src/arguments/optional/tutorial002.py!}
+{!../docs_src/arguments/optional/tutorial002.py!}
 ```
 
 Now we have:

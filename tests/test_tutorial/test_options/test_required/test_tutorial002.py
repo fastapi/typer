@@ -3,7 +3,7 @@ import subprocess
 import typer
 from typer.testing import CliRunner
 
-from options.required import tutorial001 as mod
+from docs_src.options.required import tutorial001 as mod
 
 runner = CliRunner()
 

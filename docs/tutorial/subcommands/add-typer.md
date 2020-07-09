@@ -9,7 +9,7 @@ Let's imagine that you are creating a *CLI program* to manage items in some dist
 It could be in an `items.py` file with this:
 
 ```Python
-{!./src/subcommands/tutorial001/items.py!}
+{!../docs_src/subcommands/tutorial001/items.py!}
 ```
 
 And you would use it like:
@@ -31,7 +31,7 @@ But then you realize that you also have to manage users from your *CLI app*.
 It could be a file `users.py` with something like:
 
 ```Python
-{!./src/subcommands/tutorial001/users.py!}
+{!../docs_src/subcommands/tutorial001/users.py!}
 ```
 
 And you would use it like:
@@ -57,7 +57,7 @@ In this case, as with `git remote`, we can put them together as subcommands in a
 Now create a `main.py` with:
 
 ```Python hl_lines="3 4  7 8"
-{!./src/subcommands/tutorial001/main.py!}
+{!../docs_src/subcommands/tutorial001/main.py!}
 ```
 
 Here's what we do in `main.py`:
