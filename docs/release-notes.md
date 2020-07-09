@@ -1,5 +1,7 @@
 ## Latest changes
 
+* Upgrade Isort to version 5.x.x. PR [#137](https://github.com/tiangolo/typer/pull/137).
+
 ## 0.3.0
 
 * Add support for `help` parameter in *CLI arguments*:
