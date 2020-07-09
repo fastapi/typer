@@ -297,7 +297,7 @@ When your run a script with the **Typer CLI** (the `typer` command) it will use 
 For example, you could have a script like:
 
 ```Python
-{!./src/commands/help/tutorial001.py!}
+{!../docs_src/commands/help/tutorial001.py!}
 ```
 
 ### Generate docs with Typer CLI

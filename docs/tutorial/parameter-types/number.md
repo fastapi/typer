@@ -1,7 +1,7 @@
 You can define numeric validations with `max` and `min` values for `int` and `float` *CLI parameters*:
 
 ```Python hl_lines="5 6 7"
-{!./src/parameter_types/number/tutorial001.py!}
+{!../docs_src/parameter_types/number/tutorial001.py!}
 ```
 
 *CLI arguments* and *CLI options* can both use these validations.
@@ -73,7 +73,7 @@ You might want to, instead of showing an error, use the closest minimum or maxim
 You can do it with the `clamp` parameter:
 
 ```Python hl_lines="5 6 7"
-{!./src/parameter_types/number/tutorial002.py!}
+{!../docs_src/parameter_types/number/tutorial002.py!}
 ```
 
 And then, when you pass data that is out of the valid range, it will be "clamped", the closest valid value will be used:
@@ -104,7 +104,7 @@ ID is 5
 You can make a *CLI option* work as a counter with the `counter` parameter:
 
 ```Python hl_lines="4"
-{!./src/parameter_types/number/tutorial003.py!}
+{!../docs_src/parameter_types/number/tutorial003.py!}
 ```
 
 It means that the *CLI option* will be like a boolean flag, e.g. `--verbose`.

@@ -3,7 +3,7 @@ Commands can also have their own *CLI options*.
 In fact, each command can have different *CLI arguments* and *CLI options*:
 
 ```Python hl_lines="7  13 14  24  33"
-{!./src/commands/options/tutorial001.py!}
+{!../docs_src/commands/options/tutorial001.py!}
 ```
 
 Here we have multiple commands, with different *CLI parameters*:

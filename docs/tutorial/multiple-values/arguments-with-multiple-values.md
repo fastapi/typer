@@ -3,7 +3,7 @@
 You can define the type of a *CLI argument* using `typing.List`.
 
 ```Python hl_lines="7"
-{!./src/multiple_values/arguments_with_multiple_values/tutorial001.py!}
+{!../docs_src/multiple_values/arguments_with_multiple_values/tutorial001.py!}
 ```
 
 And then you can pass it as many *CLI arguments* of that type as you want:
@@ -32,7 +32,7 @@ woohoo!
 If you want a specific number of values and types, you can use a tuple, and it can even have default values:
 
 ```Python hl_lines="7 8"
-{!./src/multiple_values/arguments_with_multiple_values/tutorial002.py!}
+{!../docs_src/multiple_values/arguments_with_multiple_values/tutorial002.py!}
 ```
 
 Check it:

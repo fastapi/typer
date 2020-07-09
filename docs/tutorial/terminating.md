@@ -11,7 +11,7 @@ This doesn't have to mean that there's an error, just that nothing else needs to
 In that case, you can raise a `typer.Exit()` exception:
 
 ```Python hl_lines="9"
-{!./src/terminating/tutorial001.py!}
+{!../docs_src/terminating/tutorial001.py!}
 ```
 
 There are several things to see in this example.
@@ -54,7 +54,7 @@ The user already exists
 You can pass a `code` with a number other than `0` to tell the terminal that there was an error in the execution of the program:
 
 ```Python hl_lines="7"
-{!./src/terminating/tutorial002.py!}
+{!../docs_src/terminating/tutorial002.py!}
 ```
 
 Check it:
@@ -96,7 +96,7 @@ There's a special exception that you can use to "abort" a program.
 It works more or less the same as `typer.Exit()` but will print `"Aborted!"` to the screen and can be useful in certain cases later to make it explicit that the execution was aborted:
 
 ```Python hl_lines="7"
-{!./src/terminating/tutorial003.py!}
+{!../docs_src/terminating/tutorial003.py!}
 ```
 
 Check it:

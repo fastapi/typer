@@ -7,7 +7,7 @@ It would show the version of your CLI program and then it would terminate it. Ev
 Let's see a first version of how it could look like:
 
 ```Python hl_lines="6 7 8 9  14"
-{!./src/options/version/tutorial001.py!}
+{!../docs_src/options/version/tutorial001.py!}
 ```
 
 !!! tip
@@ -58,7 +58,7 @@ Awesome CLI Version: 0.1.0
 But now let's say that the `--name` *CLI option* that we declared before `--version` is required, and it has a callback that could exit the program:
 
 ```Python hl_lines="12 13 14  18"
-{!./src/options/version/tutorial002.py!}
+{!../docs_src/options/version/tutorial002.py!}
 ```
 
 Then our CLI program could not work as expected in some cases as it is *right now*, because if we use `--version` after `--name` then the callback for `--name` will be processed before and we can get its error:
@@ -90,7 +90,7 @@ For those cases, we can mark a *CLI parameter* (a *CLI option* or *CLI argument*
 That will tell **Typer** (actually Click) that it should process this *CLI parameter* before the others:
 
 ```Python hl_lines="21"
-{!./src/options/version/tutorial003.py!}
+{!../docs_src/options/version/tutorial003.py!}
 ```
 
 Check it:

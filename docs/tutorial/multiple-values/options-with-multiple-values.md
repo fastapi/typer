@@ -5,7 +5,7 @@ You can set the number of values and types to anything you want, but it has to b
 For this, use the standard Python `typing.Tuple`:
 
 ```Python hl_lines="1  6"
-{!./src/multiple_values/options_with_multiple_values/tutorial001.py!}
+{!../docs_src/multiple_values/options_with_multiple_values/tutorial001.py!}
 ```
 
 Each of the internal types defines the type of each value in the tuple.

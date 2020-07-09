@@ -9,7 +9,7 @@ Let's say that we want a `--force` *CLI option* only, we want to discard `--no-f
 We can do that by specifying the exact name we want:
 
 ```Python hl_lines="4"
-{!./src/parameter_types/bool/tutorial001.py!}
+{!../docs_src/parameter_types/bool/tutorial001.py!}
 ```
 
 Now there's only a `--force` *CLI option*:
@@ -61,7 +61,7 @@ We might want to instead have `--accept` and `--reject`.
 We can do that by passing a single `str` with the 2 names for the `bool` *CLI option* separated by `/`:
 
 ```Python hl_lines="4"
-{!./src/parameter_types/bool/tutorial002.py!}
+{!../docs_src/parameter_types/bool/tutorial002.py!}
 ```
 
 Check it:
@@ -106,7 +106,7 @@ The same way, you can declare short versions of the names for these *CLI options
 For example, let's say we want `-f` for `--force` and `-F` for `--no-force`:
 
 ```Python hl_lines="4"
-{!./src/parameter_types/bool/tutorial003.py!}
+{!../docs_src/parameter_types/bool/tutorial003.py!}
 ```
 
 Check it:
@@ -146,7 +146,7 @@ If you want to (although it might not be a good idea), you can declare only *CLI
 To do that, use a space and a single `/` and pass the negative name after:
 
 ```Python hl_lines="4"
-{!./src/parameter_types/bool/tutorial004.py!}
+{!../docs_src/parameter_types/bool/tutorial004.py!}
 ```
 
 !!! tip

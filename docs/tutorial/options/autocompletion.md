@@ -15,7 +15,7 @@ To check it quickly without creating a new Python package, install [Typer CLI](.
 Then let's create small example script:
 
 ```Python
-{!./src/options/autocompletion/tutorial001.py!}
+{!../docs_src/options/autocompletion/tutorial001.py!}
 ```
 
 And let's try it with **Typer CLI** to get completion:
@@ -51,7 +51,7 @@ Right now we get completion for the *CLI option* names, but not for the values.
 We can provide completion for the values creating an `autocompletion` function, similar to the `callback` functions from [CLI Option Callback and Context](./callback-and-context.md){.internal-link target=_blank}:
 
 ```Python hl_lines="4 5  10"
-{!./src/options/autocompletion/tutorial002.py!}
+{!../docs_src/options/autocompletion/tutorial002.py!}
 ```
 
 We return a `list` of strings from the `complete_name()` function.
@@ -82,7 +82,7 @@ Modify the `complete_name()` function to receive a parameter of type `str`, it w
 Then we can check and return only the values that start with the incomplete value from the command line:
 
 ```Python hl_lines="6 7 8 9 10 11"
-{!./src/options/autocompletion/tutorial003.py!}
+{!../docs_src/options/autocompletion/tutorial003.py!}
 ```
 
 Now let's try it:
@@ -120,7 +120,7 @@ In the `complete_name()` function, instead of providing one `str` per completion
 So, in the end, we return a `list` of `tuples` of `str`:
 
 ```Python hl_lines="3 4 5 6 7  10 11 12 13 14 15 16"
-{!./src/options/autocompletion/tutorial004.py!}
+{!../docs_src/options/autocompletion/tutorial004.py!}
 ```
 
 !!! tip
@@ -157,7 +157,7 @@ Instead of creating and returning a list with values (`str` or `tuple`), we can 
 That way our function will be a <a href="https://docs.python.org/3.8/glossary.html#index-19" class="external-link" target="_blank">generator</a> that **Typer** (actually Click) can iterate:
 
 ```Python hl_lines="10 11 12 13"
-{!./src/options/autocompletion/tutorial005.py!}
+{!../docs_src/options/autocompletion/tutorial005.py!}
 ```
 
 That simplifies our code a bit and works the same.
@@ -186,7 +186,7 @@ So, we will allow multiple `--name` *CLI options*.
 For this we use a `List` of `str`:
 
 ```Python hl_lines="6 7 8"
-{!./src/options/autocompletion/tutorial006.py!}
+{!../docs_src/options/autocompletion/tutorial006.py!}
 ```
 
 And then we can use it like:
@@ -213,7 +213,7 @@ But you can access the context by declaring a function parameter of type `typer.
 And from that context you can get the current values for each parameter.
 
 ```Python hl_lines="12 13  15"
-{!./src/options/autocompletion/tutorial007.py!}
+{!../docs_src/options/autocompletion/tutorial007.py!}
 ```
 
 We are getting the `names` already provided with `--name` in the command line before this completion was triggered.
@@ -282,7 +282,7 @@ You can print to "standard error" with `typer.echo("some text", err=True)`.
 Using `err=True` tells **Typer** (actually Click) that the output should be shown in "standard error".
 
 ```Python hl_lines="12 13"
-{!./src/options/autocompletion/tutorial008.py!}
+{!../docs_src/options/autocompletion/tutorial008.py!}
 ```
 
 We get all the *CLI parameters* as a raw `list` of `str` by declaring a parameter with type `List[str]`, here it's named `args`.
@@ -320,7 +320,7 @@ Sebastian  -- The type hints guy.
 Of course, you can declare everything if you need it, the context, the raw *CLI parameters*, and the incomplete `str`:
 
 ```Python hl_lines="12"
-{!./src/options/autocompletion/tutorial009.py!}
+{!../docs_src/options/autocompletion/tutorial009.py!}
 ```
 
 Check it:

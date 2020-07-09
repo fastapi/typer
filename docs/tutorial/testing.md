@@ -3,7 +3,7 @@ Testing **Typer** applications is very easy with <a href="https://docs.pytest.or
 Let's say you have an application `app/main.py` with:
 
 ```Python
-{!./src/testing/app01/main.py!}
+{!../docs_src/testing/app01/main.py!}
 ```
 
 So, you would use it like:
@@ -34,7 +34,7 @@ Import `CliRunner` and create a `runner` object.
 This runner is what will "invoke" or "call" your command line application.
 
 ```Python hl_lines="1  5"
-{!./src/testing/app01/test_main.py!}
+{!../docs_src/testing/app01/test_main.py!}
 ```
 
 !!! tip
@@ -51,7 +51,7 @@ The first parameter to `runner.invoke()` is a `Typer` app.
 The second parameter is a `list` of `str`, with all the text you would pass in the command line, right as you would pass it:
 
 ```Python hl_lines="8 9"
-{!./src/testing/app01/test_main.py!}
+{!../docs_src/testing/app01/test_main.py!}
 ```
 
 !!! tip
@@ -62,7 +62,7 @@ The second parameter is a `list` of `str`, with all the text you would pass in t
 Then, inside of the test function, add `assert` statements to ensure that everything in the result of the call is as it should be.
 
 ```Python hl_lines="10 11 12"
-{!./src/testing/app01/test_main.py!}
+{!../docs_src/testing/app01/test_main.py!}
 ```
 
 Here we are checking that the exit code is 0, as it is for programs that exit without errors.
@@ -104,7 +104,7 @@ test_main.py <span style="color: green; white-space: pre;">.                    
 If you have a CLI with prompts, like:
 
 ```Python hl_lines="7"
-{!./src/testing/app02/main.py!}
+{!../docs_src/testing/app02/main.py!}
 ```
 
 That you would use like:
@@ -133,7 +133,7 @@ When you hit the <kbd>ENTER</kbd> key after typing the email, that is just a "ne
 So, if you use `input="camila@example.com\n"` it means: "type `camila@example.com` in the terminal, then hit the <kbd>ENTER</kbd> key":
 
 ```Python hl_lines="9"
-{!./src/testing/app02/test_main.py!}
+{!../docs_src/testing/app02/test_main.py!}
 ```
 
 ## Test a function
@@ -141,13 +141,13 @@ So, if you use `input="camila@example.com\n"` it means: "type `camila@example.co
 If you have a script and you never created an explicit `typer.Typer` app, like:
 
 ```Python hl_lines="9"
-{!./src/testing/app03/main.py!}
+{!../docs_src/testing/app03/main.py!}
 ```
 
 ...you can still test it, by creating an app during testing:
 
 ```Python hl_lines="6 7  13"
-{!./src/testing/app03/test_main.py!}
+{!../docs_src/testing/app03/test_main.py!}
 ```
 
 Of course, if you are testing that script, it's probably easier/cleaner to just create the explicit `typer.Typer` app in `main.py` instead of creating it just during the test.

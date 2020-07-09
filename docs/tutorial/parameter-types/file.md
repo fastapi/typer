@@ -43,7 +43,7 @@ content = b"la cig\xc3\xbce\xc3\xb1a trae al ni\xc3\xb1o"
 You will get all the correct editor support, attributes, methods, etc for the file-like object:
 
 ```Python hl_lines="4"
-{!./src/parameter_types/file/tutorial001.py!}
+{!../docs_src/parameter_types/file/tutorial001.py!}
 ```
 
 Check it:
@@ -72,7 +72,7 @@ Config line: some more settings
 For writing text, you can use `typer.FileTextWrite`:
 
 ```Python hl_lines="4 5"
-{!./src/parameter_types/file/tutorial002.py!}
+{!../docs_src/parameter_types/file/tutorial002.py!}
 ```
 
 This would be for writing human text, like:
@@ -115,7 +115,7 @@ You will receive `bytes` from it.
 It's useful for reading binary files like images:
 
 ```Python hl_lines="4"
-{!./src/parameter_types/file/tutorial003.py!}
+{!../docs_src/parameter_types/file/tutorial003.py!}
 ```
 
 Check it:
@@ -146,7 +146,7 @@ Have in mind that you have to pass `bytes` to its `.write()` method, not `str`.
 If you have a `str`, you have to encode it first to get `bytes`.
 
 ```Python hl_lines="4"
-{!./src/parameter_types/file/tutorial004.py!}
+{!../docs_src/parameter_types/file/tutorial004.py!}
 ```
 
 <div class="termy">
@@ -198,7 +198,7 @@ You can override the `mode` from the defaults above.
 For example, you could use `mode="a"` to write "appending" to the same file:
 
 ```Python hl_lines="4"
-{!./src/parameter_types/file/tutorial005.py!}
+{!../docs_src/parameter_types/file/tutorial005.py!}
 ```
 
 !!! tip

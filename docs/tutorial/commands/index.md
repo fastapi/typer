@@ -50,7 +50,7 @@ In the *CLI options* and *CLI argument* tutorials you have seen how to create a 
 For example:
 
 ```Python hl_lines="9"
-{!./src/first_steps/tutorial002.py!}
+{!../docs_src/first_steps/tutorial002.py!}
 ```
 
 But that is actually a shortcut. Under the hood, **Typer** converts that to a CLI application with `typer.Typer()` and executes it. All that inside of `typer.run()`.
@@ -58,7 +58,7 @@ But that is actually a shortcut. Under the hood, **Typer** converts that to a CL
 There's also a more explicit way to achieve the same:
 
 ```Python hl_lines="3  6  12"
-{!./src/commands/index/tutorial001.py!}
+{!../docs_src/commands/index/tutorial001.py!}
 ```
 
 When you use `typer.run()`, **Typer** is doing more or less the same as above, it will:
@@ -127,7 +127,7 @@ We'll have a command to `create` users and another command to `delete` them.
 To begin, let's say it can only create and delete one single predefined user:
 
 ```Python hl_lines="6  11"
-{!./src/commands/index/tutorial002.py!}
+{!../docs_src/commands/index/tutorial002.py!}
 ```
 
 Now we have a CLI application with 2 commands, `create` and `delete`:

@@ -1,7 +1,7 @@
 You can use `typer.echo()` to print to the screen:
 
 ```Python hl_lines="5"
-{!./src/first_steps/tutorial001.py!}
+{!../docs_src/first_steps/tutorial001.py!}
 ```
 
 The reason to use `typer.echo()` instead of just `print()` is that it applies some error corrections in case the terminal is misconfigured, and it will properly output color if it's supported.
@@ -38,7 +38,7 @@ Hello World
 You can create colored strings to output to the terminal with `typer.style()`, that gives you `str`s that you can then pass to `typer.echo()`:
 
 ```Python hl_lines="7  9"
-{!./src/printing/tutorial001.py!}
+{!../docs_src/printing/tutorial001.py!}
 ```
 
 !!! tip
@@ -74,7 +74,7 @@ You can pass these function arguments to `typer.style()`:
 There's a shorter form to style and print at the same time with `typer.secho()` it's like `typer.echo()` but also adds style like `typer.style()`:
 
 ```Python hl_lines="5"
-{!./src/printing/tutorial002.py!}
+{!../docs_src/printing/tutorial002.py!}
 ```
 
 Check it:
@@ -114,7 +114,7 @@ You can print to "standard error" with `typer.echo("some text", err=True)`.
 Using `err=True` tells **Typer** (actually Click) that the output should be shown in "standard error".
 
 ```Python hl_lines="5"
-{!./src/printing/tutorial003.py!}
+{!../docs_src/printing/tutorial003.py!}
 ```
 
 When you try it in the terminal, it will probably just look the same:

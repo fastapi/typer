@@ -3,7 +3,7 @@ The same as before, you can add help for the commands in the docstrings and the 
 And the `typer.Typer()` application receives a parameter `help` that you can pass with the main help text for your CLI program:
 
 ```Python hl_lines="3  8 9 10  20  23 24 25 26 27  39  42 43 44 45 46  55 56 57"
-{!./src/commands/help/tutorial001.py!}
+{!../docs_src/commands/help/tutorial001.py!}
 ```
 
 Check it:
@@ -90,7 +90,7 @@ Options:
 You will probably be better adding the help text as a docstring to your functions, but if for some reason you wanted to overwrite it, you can use the `help` function argument passed to `@app.command()`:
 
 ```Python hl_lines="6  14"
-{!./src/commands/help/tutorial002.py!}
+{!../docs_src/commands/help/tutorial002.py!}
 ```
 
 Check it:

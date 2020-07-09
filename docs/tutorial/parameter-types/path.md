@@ -3,7 +3,7 @@ You can declare a *CLI parameter* to be a standard Python <a href="https://docs.
 This is what you would do for directory paths, file paths, etc:
 
 ```Python hl_lines="1  6"
-{!./src/parameter_types/path/tutorial001.py!}
+{!../docs_src/parameter_types/path/tutorial001.py!}
 ```
 
 And again, as you receive a standard Python `Path` object the same as the type annotation, your editor will give you autocompletion for all its attributes and methods.
@@ -60,7 +60,7 @@ You can perform several validations for `Path` *CLI parameters*:
 For example:
 
 ```Python hl_lines="9 10 11 12 13 14"
-{!./src/parameter_types/path/tutorial002.py!}
+{!../docs_src/parameter_types/path/tutorial002.py!}
 ```
 
 Check it:

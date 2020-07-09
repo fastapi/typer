@@ -3,7 +3,7 @@ In the *First Steps* section you saw how to add help for a CLI app/command by ad
 Here's how that last example looked like:
 
 ```Python
-{!./src/first_steps/tutorial006.py!}
+{!../docs_src/first_steps/tutorial006.py!}
 ```
 
 Now that you also know how to use `typer.Argument()`, let's use it to add documentation specific for a *CLI argument*.
@@ -13,7 +13,7 @@ Now that you also know how to use `typer.Argument()`, let's use it to add docume
 You can use the `help` parameter to add a help text for a *CLI argument*:
 
 ```Python hl_lines="4"
-{!../docs/src/arguments/help/tutorial001.py!}
+{!../docs_src/arguments/help/tutorial001.py!}
 ```
 
 And it will be used in the automatic `--help` option:
@@ -42,7 +42,7 @@ Options:
 And of course, you can also combine that `help` with the <abbr title="a multi-line string as the first expression inside a function (not assigned to any variable) used for documentation">docstring</abbr>:
 
 ```Python hl_lines="4 5 6 7"
-{!../docs/src/arguments/help/tutorial002.py!}
+{!../docs_src/arguments/help/tutorial002.py!}
 ```
 
 And the `--help` option will combine all the information:
@@ -73,7 +73,7 @@ Options:
 If you have a *CLI argument* with a default value, like `"World"`:
 
 ```Python hl_lines="4"
-{!../docs/src/arguments/help/tutorial003.py!}
+{!../docs_src/arguments/help/tutorial003.py!}
 ```
 
 It will show that default value in the help text:
@@ -102,7 +102,7 @@ Options:
 But you can disable that if you want to, with `show_default=False`:
 
 ```Python hl_lines="4"
-{!../docs/src/arguments/help/tutorial004.py!}
+{!../docs_src/arguments/help/tutorial004.py!}
 ```
 
 And then it won't show the default value:
@@ -139,7 +139,7 @@ Options:
 You can use the same `show_default` to pass a custom string (instead of a `bool`) to customize the default value to be shown in the help text:
 
 ```Python hl_lines="6"
-{!../docs/src/arguments/help/tutorial005.py!}
+{!../docs_src/arguments/help/tutorial005.py!}
 ```
 
 And it will be used in the help text:
@@ -188,7 +188,7 @@ But you can customize it with the `metavar` parameter for `typer.Argument()`.
 For example, let's say you don't want to have the default of `NAME`, you want to have `username`, in lowercase, and you really want ✨ emojis ✨ everywhere:
 
 ```Python hl_lines="4"
-{!../docs/src/arguments/help/tutorial006.py!}
+{!../docs_src/arguments/help/tutorial006.py!}
 ```
 
 Now the generated help text will have `✨username✨` instead of `NAME`:
@@ -218,7 +218,7 @@ If you want, you can make a *CLI argument* **not** show up in the `Arguments` se
 You will probably not want to do this normally, but it's possible:
 
 ```Python hl_lines="4"
-{!../docs/src/arguments/help/tutorial007.py!}
+{!../docs_src/arguments/help/tutorial007.py!}
 ```
 
 Check it:

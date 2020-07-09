@@ -5,7 +5,7 @@ For example, let's say you want to accept several users in a single execution.
 For this, use the standard Python `typing.List` to declare it as a `list` of `str`:
 
 ```Python hl_lines="1  6"
-{!./src/multiple_values/multiple_options/tutorial001.py!}
+{!../docs_src/multiple_values/multiple_options/tutorial001.py!}
 ```
 
 You will receive the values as you declared them, as a `list` of `str`.
@@ -40,7 +40,7 @@ Processing user: Morty
 The same way, you can use other types and they will be converted by **Typer** to their declared type:
 
 ```Python hl_lines="6"
-{!./src/multiple_values/multiple_options/tutorial002.py!}
+{!../docs_src/multiple_values/multiple_options/tutorial002.py!}
 ```
 
 Check it:
