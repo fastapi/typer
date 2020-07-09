@@ -60,3 +60,7 @@ all = [
     "colorama",
     "shellingham"
 ]
+
+[tool.isort]
+profile = "black"
+known_third_party = ["typer", "click"]
