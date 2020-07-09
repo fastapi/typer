@@ -1,5 +1,6 @@
 ## Latest changes
 
+* Add Dependabot. PR [#136](https://github.com/tiangolo/typer/pull/136).
 * Upgrade Isort to version 5.x.x. PR [#137](https://github.com/tiangolo/typer/pull/137).
 
 ## 0.3.0
