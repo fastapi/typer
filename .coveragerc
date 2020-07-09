@@ -3,6 +3,6 @@
 source =
     typer
     tests
-    docs/src
+    docs_src
 
 parallel = True
