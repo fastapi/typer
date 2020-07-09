@@ -1,7 +1,8 @@
 import subprocess
-from commands.callback import tutorial003 as mod
 
 from typer.testing import CliRunner
+
+from docs_src.commands.callback import tutorial003 as mod
 
 app = mod.app
 

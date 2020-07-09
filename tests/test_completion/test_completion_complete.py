@@ -1,6 +1,7 @@
 import os
 import subprocess
-from commands.help import tutorial001 as mod
+
+from docs_src.commands.help import tutorial001 as mod
 
 
 def test_completion_complete_subcommand_bash():

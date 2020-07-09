@@ -3,7 +3,7 @@ import subprocess
 import pytest
 from typer.testing import CliRunner
 
-from subcommands import tutorial001
+from docs_src.subcommands import tutorial001
 
 runner = CliRunner()
 
@@ -12,7 +12,7 @@ runner = CliRunner()
 def mod(monkeypatch):
     with monkeypatch.context() as m:
         monkeypatch.syspath_prepend(list(tutorial001.__path__)[0])
-        from subcommands.tutorial001 import main
+        from docs_src.subcommands.tutorial001 import main
 
         return main
 
@@ -82,7 +82,7 @@ def test_users_delete(app):
 
 
 def test_scripts(mod):
-    from subcommands.tutorial001 import items, users
+    from docs_src.subcommands.tutorial001 import items, users
 
     for module in [mod, items, users]:
         result = subprocess.run(

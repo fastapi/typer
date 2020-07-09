@@ -1,7 +1,7 @@
 import subprocess
 
-from testing.app02 import main as mod
-from testing.app02.test_main import test_app
+from docs_src.testing.app02 import main as mod
+from docs_src.testing.app02.test_main import test_app
 
 
 def test_app02():
