@@ -1,5 +1,6 @@
 ## Latest changes
 
+* Add GitHub Actions, move from Travis. PR [#144](https://github.com/tiangolo/typer/pull/144).
 * Pin dependencies. PR [#138](https://github.com/tiangolo/typer/pull/138).
 * Add Dependabot. PR [#136](https://github.com/tiangolo/typer/pull/136).
 * Upgrade Isort to version 5.x.x. PR [#137](https://github.com/tiangolo/typer/pull/137).
