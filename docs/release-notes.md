@@ -1,5 +1,7 @@
 ## Latest changes
 
+* Update badges and remove Travis, now that GitHub Actions is the main CI. PR [#145](https://github.com/tiangolo/typer/pull/145).
+
 ## 0.3.1
 
 * Add GitHub Actions, move from Travis. PR [#144](https://github.com/tiangolo/typer/pull/144).
