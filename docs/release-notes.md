@@ -1,5 +1,7 @@
 ## Latest changes
 
+## 0.3.1
+
 * Add GitHub Actions, move from Travis. PR [#144](https://github.com/tiangolo/typer/pull/144).
 * Pin dependencies. PR [#138](https://github.com/tiangolo/typer/pull/138).
 * Add Dependabot. PR [#136](https://github.com/tiangolo/typer/pull/136).
