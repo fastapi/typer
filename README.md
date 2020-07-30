@@ -166,6 +166,27 @@ And that will:
 * Add two subcommands with `@app.command()`.
 * Execute the `app()` itself, as if it was a function (instead of `typer.run`).
 
+Alternatively, you can simply do
+
+```Python hl_lines="3  6  11  20"
+import typer
+
+
+def hello(name: str):
+    typer.echo(f"Hello {name}")
+
+
+def goodbye(name: str, formal: bool = False):
+    if formal:
+        typer.echo(f"Goodbye Ms. {name}. Have a good day.")
+    else:
+        typer.echo(f"Bye {name}!")
+
+
+if __name__ == "__main__":
+    typer.run(hello, goodbye)
+```
+
 ### Run the upgraded example
 
 <div class="termy">

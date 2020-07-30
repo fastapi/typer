@@ -849,7 +849,8 @@ def get_param_completion(callback: Optional[Callable] = None) -> Optional[Callab
     return wrapper
 
 
-def run(function: Callable) -> Any:
+def run(*function: List[Callable]) -> Any:
     app = Typer()
-    app.command()(function)
+    for fun in function:
+        app.command()(fun)
     app()
