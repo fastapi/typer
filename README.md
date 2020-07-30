@@ -280,6 +280,17 @@ But you can also install extras:
 
 You can install `typer` with `colorama` and `shellingham` with `pip install typer[all]`.
 
+## Develop install
+
+You can develop install using `flit`:
+
+```Bash
+    pip install flit
+    flit install --pth-file
+```
+
+This is analagous to `python setup.py develop`.
+
 ## Other tools and plug-ins
 
 Click has many plug-ins available that you can use. And there are many tools that help with command line applications that you can use as well, even if they are not related to Typer or Click.
