@@ -451,7 +451,7 @@ def param_path_convertor(value: Optional[str] = None) -> Optional[Path]:
 
 
 def generate_enum_convertor(enum: Type[Enum]) -> Callable:
-    lower_val_map = {str(val.value).lower(): val for val in enum}
+    lower_val_map = {str(val.name).lower(): val for val in enum}
 
     def convertor(value: Any) -> Any:
         if value is not None:
@@ -581,7 +581,7 @@ def get_click_type(
         )
     elif lenient_issubclass(annotation, Enum):
         return click.Choice(
-            [item.value for item in annotation],
+            [item.name for item in annotation],
             case_sensitive=parameter_info.case_sensitive,
         )
     raise RuntimeError(f"Type not yet supported: {annotation}")  # pragma no cover
