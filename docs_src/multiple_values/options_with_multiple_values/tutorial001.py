@@ -1,9 +1,9 @@
-from typing import Tuple, Optional
+from typing import Tuple
 
 import typer
 
 
-def main(user: Optional[Tuple[str, int, bool]] = typer.Option((None, None, None))):
+def main(user: Tuple[str, int, bool] = typer.Option((None, None, None))):
     username, coins, is_wizard = user
     if not username:
         typer.echo("No user provided")
