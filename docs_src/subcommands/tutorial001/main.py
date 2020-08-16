@@ -1,5 +1,6 @@
-import items
 import typer
+
+import items
 import users
 
 app = typer.Typer()
