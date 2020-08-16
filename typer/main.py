@@ -48,10 +48,10 @@ class Typer:
         no_args_is_help: Optional[bool] = Default(None),
         subcommand_metavar: Optional[str] = Default(None),
         chain: bool = Default(False),
-        result_callback: Optional[Callable] = Default(None),
+        result_callback: Optional[Callable[..., Any]] = Default(None),
         # Command
         context_settings: Optional[Dict[Any, Any]] = Default(None),
-        callback: Optional[Callable] = Default(None),
+        callback: Optional[Callable[..., Any]] = Default(None),
         help: Optional[str] = Default(None),
         epilog: Optional[str] = Default(None),
         short_help: Optional[str] = Default(None),
@@ -93,7 +93,7 @@ class Typer:
         no_args_is_help: Optional[bool] = Default(None),
         subcommand_metavar: Optional[str] = Default(None),
         chain: bool = Default(False),
-        result_callback: Optional[Callable] = Default(None),
+        result_callback: Optional[Callable[..., Any]] = Default(None),
         # Command
         context_settings: Optional[Dict[Any, Any]] = Default(None),
         help: Optional[str] = Default(None),
@@ -176,10 +176,10 @@ class Typer:
         no_args_is_help: Optional[bool] = Default(None),
         subcommand_metavar: Optional[str] = Default(None),
         chain: bool = Default(False),
-        result_callback: Optional[Callable] = Default(None),
+        result_callback: Optional[Callable[..., Any]] = Default(None),
         # Command
         context_settings: Optional[Dict[Any, Any]] = Default(None),
-        callback: Optional[Callable] = Default(None),
+        callback: Optional[Callable[..., Any]] = Default(None),
         help: Optional[str] = Default(None),
         epilog: Optional[str] = Default(None),
         short_help: Optional[str] = Default(None),
@@ -450,7 +450,7 @@ def param_path_convertor(value: Optional[str] = None) -> Optional[Path]:
     return None
 
 
-def generate_enum_convertor(enum: Type[Enum]) -> Callable:
+def generate_enum_convertor(enum: Type[Enum]) -> Callable[..., Any]:
     lower_val_map = {str(val.value).lower(): val for val in enum}
 
     def convertor(value: Any) -> Any:
@@ -463,7 +463,7 @@ def generate_enum_convertor(enum: Type[Enum]) -> Callable:
     return convertor
 
 
-def generate_iter_convertor(convertor: Callable[[Any], Any]) -> Callable:
+def generate_iter_convertor(convertor: Callable[[Any], Any]) -> Callable[..., Any]:
     def internal_convertor(value: Any) -> List[Any]:
         return [convertor(v) for v in value]
 
@@ -472,11 +472,11 @@ def generate_iter_convertor(convertor: Callable[[Any], Any]) -> Callable:
 
 def get_callback(
     *,
-    callback: Optional[Callable] = None,
+    callback: Optional[Callable[..., Any]] = None,
     params: Sequence[click.Parameter] = [],
     convertors: Dict[str, Callable[[str], Any]] = {},
-    context_param_name: str = None,
-) -> Optional[Callable]:
+    context_param_name: Optional[str] = None,
+) -> Optional[Callable[..., Any]]:
     if not callback:
         return None
     parameters = get_params_from_function(callback)
@@ -629,7 +629,7 @@ def get_click_param(
         if origin is Union:
             types = []
             for type_ in main_type.__args__:
-                if type_ is NoneType:  # type: ignore
+                if type_ is NoneType:
                     continue
                 types.append(type_)
             assert len(types) == 1, "Typer Currently doesn't support Union types"
@@ -749,8 +749,10 @@ def get_click_param(
 
 
 def get_param_callback(
-    *, callback: Optional[Callable] = None, convertor: Optional[Callable] = None
-) -> Optional[Callable]:
+    *,
+    callback: Optional[Callable[..., Any]] = None,
+    convertor: Optional[Callable[..., Any]] = None,
+) -> Optional[Callable[..., Any]]:
     if not callback:
         return None
     parameters = get_params_from_function(callback)
@@ -798,7 +800,9 @@ def get_param_callback(
     return wrapper
 
 
-def get_param_completion(callback: Optional[Callable] = None) -> Optional[Callable]:
+def get_param_completion(
+    callback: Optional[Callable[..., Any]] = None
+) -> Optional[Callable[..., Any]]:
     if not callback:
         return None
     parameters = get_params_from_function(callback)
@@ -849,7 +853,7 @@ def get_param_completion(callback: Optional[Callable] = None) -> Optional[Callab
     return wrapper
 
 
-def run(function: Callable) -> Any:
+def run(function: Callable[..., Any]) -> Any:
     app = Typer()
     app.command()(function)
     app()
