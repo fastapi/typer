@@ -1,5 +1,7 @@
 ## Latest changes
 
+## 0.3.2
+
 ### Features
 
 * Add support for `mypy --strict`. Original PR [#147](https://github.com/tiangolo/typer/pull/147) by [@victorphoenix3](https://github.com/victorphoenix3).
