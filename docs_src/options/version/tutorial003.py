@@ -1,5 +1,6 @@
-import typer
 from typing import Optional
+
+import typer
 
 __version__ = "0.1.0"
 
