@@ -7,12 +7,12 @@ def Option(
     # Parameter
     default: Optional[Any],
     *param_decls: str,
-    callback: Optional[Callable] = None,
+    callback: Optional[Callable[..., Any]] = None,
     metavar: Optional[str] = None,
     expose_value: bool = True,
     is_eager: bool = False,
     envvar: Optional[Union[str, List[str]]] = None,
-    autocompletion: Optional[Callable] = None,
+    autocompletion: Optional[Callable[..., Any]] = None,
     # Option
     show_default: bool = True,
     prompt: Union[bool, str] = False,
@@ -35,7 +35,7 @@ def Option(
     # DateTime
     formats: Optional[Union[List[str]]] = None,
     # File
-    mode: str = None,
+    mode: Optional[str] = None,
     encoding: Optional[str] = None,
     errors: Optional[str] = "strict",
     lazy: Optional[bool] = None,
@@ -103,12 +103,12 @@ def Argument(
     # Parameter
     default: Optional[Any],
     *,
-    callback: Optional[Callable] = None,
+    callback: Optional[Callable[..., Any]] = None,
     metavar: Optional[str] = None,
     expose_value: bool = True,
     is_eager: bool = False,
     envvar: Optional[Union[str, List[str]]] = None,
-    autocompletion: Optional[Callable] = None,
+    autocompletion: Optional[Callable[..., Any]] = None,
     # TyperArgument
     show_default: Union[bool, str] = True,
     show_choices: bool = True,
@@ -124,7 +124,7 @@ def Argument(
     # DateTime
     formats: Optional[Union[List[str]]] = None,
     # File
-    mode: str = None,
+    mode: Optional[str] = None,
     encoding: Optional[str] = None,
     errors: Optional[str] = "strict",
     lazy: Optional[bool] = None,

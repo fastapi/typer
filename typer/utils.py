@@ -1,10 +1,10 @@
 import inspect
-from typing import Callable, Dict, get_type_hints
+from typing import Any, Callable, Dict, get_type_hints
 
 from .models import ParamMeta
 
 
-def get_params_from_function(func: Callable) -> Dict[str, ParamMeta]:
+def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
     signature = inspect.signature(func)
     type_hints = get_type_hints(func)
     params = {}

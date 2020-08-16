@@ -87,7 +87,7 @@ class CommandInfo:
         *,
         cls: Optional[Type[click.Command]] = None,
         context_settings: Optional[Dict[Any, Any]] = None,
-        callback: Optional[Callable] = None,
+        callback: Optional[Callable[..., Any]] = None,
         help: Optional[str] = None,
         epilog: Optional[str] = None,
         short_help: Optional[str] = None,
@@ -122,10 +122,10 @@ class TyperInfo:
         no_args_is_help: Optional[bool] = Default(None),
         subcommand_metavar: Optional[str] = Default(None),
         chain: bool = Default(False),
-        result_callback: Optional[Callable] = Default(None),
+        result_callback: Optional[Callable[..., Any]] = Default(None),
         # Command
         context_settings: Optional[Dict[Any, Any]] = Default(None),
-        callback: Optional[Callable] = Default(None),
+        callback: Optional[Callable[..., Any]] = Default(None),
         help: Optional[str] = Default(None),
         epilog: Optional[str] = Default(None),
         short_help: Optional[str] = Default(None),
@@ -159,12 +159,12 @@ class ParameterInfo:
         *,
         default: Optional[Any] = None,
         param_decls: Optional[Sequence[str]] = None,
-        callback: Optional[Callable] = None,
+        callback: Optional[Callable[..., Any]] = None,
         metavar: Optional[str] = None,
         expose_value: bool = True,
         is_eager: bool = False,
         envvar: Optional[Union[str, List[str]]] = None,
-        autocompletion: Optional[Callable] = None,
+        autocompletion: Optional[Callable[..., Any]] = None,
         # TyperArgument
         show_default: Union[bool, str] = True,
         show_choices: bool = True,
@@ -180,7 +180,7 @@ class ParameterInfo:
         # DateTime
         formats: Optional[Union[List[str]]] = None,
         # File
-        mode: str = None,
+        mode: Optional[str] = None,
         encoding: Optional[str] = None,
         errors: Optional[str] = "strict",
         lazy: Optional[bool] = None,
@@ -241,12 +241,12 @@ class OptionInfo(ParameterInfo):
         # ParameterInfo
         default: Optional[Any] = None,
         param_decls: Optional[Sequence[str]] = None,
-        callback: Optional[Callable] = None,
+        callback: Optional[Callable[..., Any]] = None,
         metavar: Optional[str] = None,
         expose_value: bool = True,
         is_eager: bool = False,
         envvar: Optional[Union[str, List[str]]] = None,
-        autocompletion: Optional[Callable] = None,
+        autocompletion: Optional[Callable[..., Any]] = None,
         # Option
         show_default: bool = True,
         prompt: Union[bool, str] = False,
@@ -269,7 +269,7 @@ class OptionInfo(ParameterInfo):
         # DateTime
         formats: Optional[Union[List[str]]] = None,
         # File
-        mode: str = None,
+        mode: Optional[str] = None,
         encoding: Optional[str] = None,
         errors: Optional[str] = "strict",
         lazy: Optional[bool] = None,
@@ -339,12 +339,12 @@ class ArgumentInfo(ParameterInfo):
         # ParameterInfo
         default: Optional[Any] = None,
         param_decls: Optional[Sequence[str]] = None,
-        callback: Optional[Callable] = None,
+        callback: Optional[Callable[..., Any]] = None,
         metavar: Optional[str] = None,
         expose_value: bool = True,
         is_eager: bool = False,
         envvar: Optional[Union[str, List[str]]] = None,
-        autocompletion: Optional[Callable] = None,
+        autocompletion: Optional[Callable[..., Any]] = None,
         # TyperArgument
         show_default: Union[bool, str] = True,
         show_choices: bool = True,
@@ -360,7 +360,7 @@ class ArgumentInfo(ParameterInfo):
         # DateTime
         formats: Optional[Union[List[str]]] = None,
         # File
-        mode: str = None,
+        mode: Optional[str] = None,
         encoding: Optional[str] = None,
         errors: Optional[str] = "strict",
         lazy: Optional[bool] = None,
