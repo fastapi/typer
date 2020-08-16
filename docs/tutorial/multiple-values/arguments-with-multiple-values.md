@@ -46,7 +46,7 @@ $ python main.py --help
 Usage: main.py [OPTIONS] [NAMES]...
 
 Arguments:
-  [NAMES]...  [default: Harry, Hermione, Ron]
+  [NAMES]...  Select 3 characters to play with  [default: Harry, Hermione, Ron]
 
 Options:
   --install-completion  Install completion for the current shell.
