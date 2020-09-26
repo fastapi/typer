@@ -30,10 +30,8 @@ def test_completion_install_no_shell():
 
 
 def test_completion_install_bash():
-    bash_completion_path: Path = Path.home() / ".bashrc"
-    text = ""
-    if bash_completion_path.is_file():
-        text = bash_completion_path.read_text()
+    script_path = Path(mod.__file__)
+    completion_path: Path = Path.home() / f".local/share/bash-completion/completions/{script_path.name}.bash"
     result = subprocess.run(
         ["coverage", "run", mod.__file__, "--install-completion", "bash"],
         stdout=subprocess.PIPE,
@@ -45,21 +43,11 @@ def test_completion_install_bash():
             "_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION": "True",
         },
     )
-    new_text = bash_completion_path.read_text()
-    bash_completion_path.write_text(text)
-    install_source = ".bash_completions/tutorial001.py.sh"
-    assert install_source not in text
-    assert install_source in new_text
+    new_text = completion_path.read_text()
+    completion_path.unlink()
+    assert "complete -o default -F _tutorial001py_completion tutorial001.py" in new_text
     assert "completion installed in" in result.stdout
     assert "Completion will take effect once you restart the terminal" in result.stdout
-    install_source_path = Path.home() / install_source
-    assert install_source_path.is_file()
-    install_content = install_source_path.read_text()
-    install_source_path.unlink()
-    assert (
-        "complete -o default -F _tutorial001py_completion tutorial001.py"
-        in install_content
-    )
 
 
 def test_completion_install_zsh():
