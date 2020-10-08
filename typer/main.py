@@ -1,4 +1,6 @@
 import inspect
+import sys
+import typing
 from datetime import datetime
 from enum import Enum
 from functools import update_wrapper
@@ -582,6 +584,11 @@ def get_click_type(
     elif lenient_issubclass(annotation, Enum):
         return click.Choice(
             [item.value for item in annotation],
+            case_sensitive=parameter_info.case_sensitive,
+        )
+    elif sys.version_info >= (3, 8) and typing.get_origin(annotation) == typing.Literal:
+        return click.Choice(
+            tuple(typing.get_args(annotation)),
             case_sensitive=parameter_info.case_sensitive,
         )
     raise RuntimeError(f"Type not yet supported: {annotation}")  # pragma no cover
