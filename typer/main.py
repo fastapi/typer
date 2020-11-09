@@ -1,3 +1,4 @@
+import asyncio
 import inspect
 from datetime import datetime
 from enum import Enum
@@ -211,7 +212,11 @@ class Typer:
         )
 
     def __call__(self, *args: Any, **kwargs: Any) -> Any:
-        return get_command(self)(*args, **kwargs)
+        command = get_command(self)
+        if asyncio.iscoroutinefunction(command):
+            return asyncio.run(command)
+        else:
+            return command(*args, **kwargs)
 
 
 def get_group(typer_instance: Typer) -> click.Command:
