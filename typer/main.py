@@ -580,8 +580,12 @@ def get_click_type(
             atomic=parameter_info.atomic,
         )
     elif lenient_issubclass(annotation, Enum):
+        annotation_values = [item.value for item in annotation]
+        if not all(isinstance(val, str) for val in annotation_values):
+            raise RuntimeError(f"Enum Type is only supported if all values are string: {annotation}") # pragma no cover
+
         return click.Choice(
-            [item.value for item in annotation],
+            annotation_values,
             case_sensitive=parameter_info.case_sensitive,
         )
     raise RuntimeError(f"Type not yet supported: {annotation}")  # pragma no cover
