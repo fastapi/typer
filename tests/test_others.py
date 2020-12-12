@@ -1,7 +1,6 @@
 import os
 import subprocess
 from pathlib import Path
-from typing import Optional
 from unittest import mock
 
 import click
@@ -14,37 +13,6 @@ from typer.models import TyperInfo
 from typer.testing import CliRunner
 
 runner = CliRunner()
-
-
-def test_optional():
-    app = typer.Typer()
-
-    @app.command()
-    def opt(user: Optional[str] = None):
-        if user:
-            typer.echo(f"User: {user}")
-        else:
-            typer.echo("No user")
-
-    result = runner.invoke(app)
-    assert result.exit_code == 0
-    assert "No user" in result.output
-
-    result = runner.invoke(app, ["--user", "Camila"])
-    assert result.exit_code == 0
-    assert "User: Camila" in result.output
-
-
-def test_no_type():
-    app = typer.Typer()
-
-    @app.command()
-    def no_type(user):
-        typer.echo(f"User: {user}")
-
-    result = runner.invoke(app, ["Camila"])
-    assert result.exit_code == 0
-    assert "User: Camila" in result.output
 
 
 def test_help_from_info():
