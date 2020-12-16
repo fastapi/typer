@@ -239,4 +239,4 @@ def test_logger_handler():
         logger.info(f"Hello {arg1}")
 
     result = runner.invoke(app, ["foo"])
-    assert 'Hello foo' in result.stdout
+    assert "Hello foo" in result.stdout
