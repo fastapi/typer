@@ -228,13 +228,15 @@ def test_forward_references():
 
 def test_logger_handler():
     app = typer.Typer()
-    
+
     @app.command()
     def main(arg1: str):
+        formatter = logging.Formatter("%(message)")
         handler = TyperLoggerHandler()
-        logger = logging.getLogger('typer')
+        handler.setFormatter(formatter)
+        logger = logging.getLogger("typer")
         logger.addHandler(handler)
-        logger.info(f'Hello {arg1}')
+        logger.info(f"Hello {arg1}")
 
     result = runner.invoke(app, ["foo"])
     assert 'Hello foo' in result.stdout
