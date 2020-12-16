@@ -1,8 +1,8 @@
 import inspect
 import logging
+from typing import Any, Callable, Dict, get_type_hints
 
 from click.utils import echo as echo
-from typing import Any, Callable, Dict, get_type_hints
 
 from .models import ParamMeta
 
@@ -13,7 +13,7 @@ class TyperLoggerHandler(logging.Handler):
     def emit(self, record: logging.LogRecord) -> None:
         echo(self.format(record))
 
-        
+
 def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
     signature = inspect.signature(func)
     type_hints = get_type_hints(func)
