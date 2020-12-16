@@ -1,3 +1,4 @@
+import logging
 import os
 import subprocess
 from pathlib import Path
@@ -12,6 +13,7 @@ import typer.completion
 from typer.main import solve_typer_info_defaults, solve_typer_info_help
 from typer.models import TyperInfo
 from typer.testing import CliRunner
+from typer.utils import TyperLoggerHandler
 
 runner = CliRunner()
 
@@ -222,3 +224,17 @@ def test_forward_references():
         "arg1: <class 'str'> Hello\narg2: <class 'int'> 2\narg3: <class 'int'> 3\narg4: <class 'bool'> True\narg5: <class 'bool'> True\n"
         in result.stdout
     )
+
+
+def test_logger_handler():
+    app = typer.Typer()
+    
+    @app.command()
+    def main(arg1: str):
+        handler = TyperLoggerHandler()
+        logger = logging.getLogger('typer')
+        logger.addHandler(handler)
+        logger.info(f'Hello {arg1}')
+
+    result = runner.invoke(app, ["foo"])
+    assert 'Hello foo' in result.stdout
