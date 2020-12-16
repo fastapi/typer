@@ -236,6 +236,7 @@ def test_logger_handler():
         handler.setFormatter(formatter)
         logger = logging.getLogger("typer")
         logger.addHandler(handler)
+        logger.setLevel(logging.INFO)
         logger.info(f"Hello {arg1}")
 
     result = runner.invoke(app, ["foo"])
