@@ -231,13 +231,13 @@ def test_logger_handler():
 
     @app.command()
     def main(arg1: str):
-        formatter = logging.Formatter("%(message)")
+        formatter = logging.Formatter("%(levelname)s:%(name)s:%(message)s")
         handler = TyperLoggerHandler()
         handler.setFormatter(formatter)
         logger = logging.getLogger("typer")
         logger.addHandler(handler)
         logger.setLevel(logging.INFO)
-        logger.info(f"Hello {arg1}")
+        logger.info(f"INFO:typer:Hello {arg1}")
 
     result = runner.invoke(app, ["foo"])
     assert "Hello foo" in result.stdout
