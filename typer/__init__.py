@@ -3,8 +3,14 @@
 __version__ = "0.3.2"
 
 from click.exceptions import Abort as Abort
+from click.exceptions import BadArgumentUsage as BadArgumentUsage
+from click.exceptions import BadOptionUsage as BadOptionUsage
 from click.exceptions import BadParameter as BadParameter
+from click.exceptions import ClickException as TyperException
 from click.exceptions import Exit as Exit
+from click.exceptions import FileError as FileError
+from click.exceptions import NoSuchOption as NoSuchOption
+from click.exceptions import UsageError as UsageError
 from click.termui import clear as clear
 from click.termui import confirm as confirm
 from click.termui import echo_via_pager as echo_via_pager
