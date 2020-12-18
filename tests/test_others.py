@@ -228,8 +228,8 @@ def test_context_settings_inheritance_single_command():
     app = typer.Typer(context_settings=dict(help_option_names=["-h", "--help"]))
 
     @app.command()
-    def main(name: str = typer.Argument("Camila")):
-        typer.echo(f"{name} wrote this test.")
+    def main(name: str):
+        pass  # pragma: nocover
 
     result = runner.invoke(app, ["main", "-h"])
     assert "Show this message and exit." in result.stdout
