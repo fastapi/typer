@@ -238,7 +238,9 @@ def get_command(typer_instance: Typer) -> click.Command:
         # Create a single Command
         single_command = typer_instance.registered_commands[0]
 
-        if not single_command.context_settings and typer_instance.info.context_settings:
+        if not single_command.context_settings and not isinstance(
+            typer_instance.info.context_settings, DefaultPlaceholder
+        ):
             single_command.context_settings = typer_instance.info.context_settings
 
         click_command = get_command_from_info(single_command)
