@@ -237,7 +237,7 @@ def test_logger_handler():
         logger = logging.getLogger("typer")
         logger.addHandler(handler)
         logger.setLevel(logging.INFO)
-        logger.info(f"INFO:typer:Hello {arg1}")
+        logger.info(f"Hello {arg1}")
 
     result = runner.invoke(app, ["foo"])
-    assert "Hello foo" in result.stdout
+    assert "INFO:typer:Hello foo" in result.stdout
