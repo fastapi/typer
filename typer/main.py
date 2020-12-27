@@ -28,7 +28,7 @@ from .models import (
     Required,
     TyperInfo,
 )
-from .utils import get_params_from_function
+from .utils import aio_run, get_params_from_function, is_async
 
 
 def get_install_completion_arguments() -> Tuple[click.Parameter, click.Parameter]:
@@ -211,6 +211,10 @@ class Typer:
         )
 
     def __call__(self, *args: Any, **kwargs: Any) -> Any:
+        cmd = get_command(self)
+        print(cmd, is_async(cmd))
+        if is_async(cmd):
+            return aio_run(cmd(*args, **kwargs))
         return get_command(self)(*args, **kwargs)
 
 
@@ -496,7 +500,14 @@ def get_callback(
             use_params[context_param_name] = click.get_current_context()
         return callback(**use_params)  # type: ignore
 
+    def wrapper_async(*args: Any, **kwargs: Any) -> Any:
+        return aio_run(callback(*args, **kwargs))  # type: ignore
+
     update_wrapper(wrapper, callback)
+
+    if is_async(callback):
+        update_wrapper(wrapper_async, callback)
+        return wrapper_async
     return wrapper
 
 
@@ -796,7 +807,14 @@ def get_param_callback(
             use_params[value_name] = use_value
         return callback(**use_params)  # type: ignore
 
+    def wrapper_async(*args: Any, **kwargs: Any) -> Any:
+        return aio_run(callback(*args, **kwargs))  # type: ignore
+
     update_wrapper(wrapper, callback)
+
+    if is_async(callback):
+        update_wrapper(wrapper_async, callback)
+        return wrapper_async
     return wrapper
 
 
@@ -849,7 +867,14 @@ def get_param_completion(
             use_params[incomplete_name] = incomplete
         return callback(**use_params)  # type: ignore
 
+    def wrapper_async(*args: Any, **kwargs: Any) -> Any:
+        return aio_run(callback(*args, **kwargs))  # type: ignore
+
     update_wrapper(wrapper, callback)
+
+    if is_async(callback):
+        update_wrapper(wrapper_async, callback)
+        return wrapper_async
     return wrapper
 
 
