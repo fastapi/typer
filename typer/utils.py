@@ -43,6 +43,6 @@ def aio_run(aw: Awaitable[_T]) -> _T:
         asyncio.set_event_loop(None)
 
 
-def is_async(obj: Callable) -> bool:
+def is_async(obj: Callable[..., Any]) -> bool:
     """Return True if function/obj is is async/awaitable"""
     return asyncio.iscoroutinefunction(obj) or asyncio.iscoroutine(obj)
