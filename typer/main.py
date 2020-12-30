@@ -212,7 +212,6 @@ class Typer:
 
     def __call__(self, *args: Any, **kwargs: Any) -> Any:
         cmd = get_command(self)
-        print(cmd, is_async(cmd))
         if is_async(cmd):
             return aio_run(cmd(*args, **kwargs))
         return get_command(self)(*args, **kwargs)
