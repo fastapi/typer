@@ -614,6 +614,9 @@ def get_click_param(
     else:
         default_value = param.default
         parameter_info = OptionInfo()
+    # Click expects a str for DateTime input so convert default value to ISO string
+    if isinstance(default_value, datetime):
+        default_value = default_value.isoformat()        
     annotation: Any = Any
     if not param.annotation == param.empty:
         annotation = param.annotation
