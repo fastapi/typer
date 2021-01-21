@@ -66,3 +66,32 @@ Training neural network of type: lstm
 ```
 
 </div>
+
+
+### Using Enum names instead of values
+
+Some times you want to accept `Enum` names from command line and convert 
+that into `Enum` values in command handler. You can enable this with 
+`names=True` parameter:
+
+```Python hl_lines="14"
+{!../docs_src/parameter_types/enum/tutorial003.py!}
+```
+
+And then the names of the `Enum` will be used instead of values:
+
+<div class="termy">
+
+```console
+$ python main.py --log-level debug
+
+Log level set to DEBUG
+```
+
+</div>
+
+If `IntEnum` type is given, then enum names are used implicitly.
+
+```Python hl_lines="14"
+{!../docs_src/parameter_types/enum/tutorial004.py!}
+```
