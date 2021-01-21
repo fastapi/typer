@@ -1,5 +1,5 @@
-import logging
 import enum
+import logging
 
 import typer
 
