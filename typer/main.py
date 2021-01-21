@@ -596,10 +596,7 @@ def get_click_type(
             choices = [item.name for item in annotation]
         else:
             choices = [item.value for item in annotation]
-        return click.Choice(
-            choices,
-            case_sensitive=parameter_info.case_sensitive,
-        )
+        return click.Choice(choices, case_sensitive=parameter_info.case_sensitive)
     raise RuntimeError(f"Type not yet supported: {annotation}")  # pragma no cover
 
 

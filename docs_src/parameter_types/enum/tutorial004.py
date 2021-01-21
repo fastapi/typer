@@ -10,9 +10,7 @@ class Access(enum.IntEnum):
     open = 4
 
 
-def main(
-        access: Access = typer.Option(Access.private)
-):
+def main(access: Access = typer.Option(Access.private)):
     typer.echo(f"Access level: {access.name}")
 
 
