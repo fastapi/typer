@@ -230,7 +230,6 @@ def install_zsh(*, prog_name: str, complete_var: str, shell: str) -> Path:
     completion_init_lines = [
         "autoload -Uz compinit",
         "compinit",
-        "zstyle ':completion:*' menu select",
         "fpath+=~/.zfunc",
     ]
     for line in completion_init_lines:
