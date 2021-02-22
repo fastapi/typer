@@ -231,7 +231,8 @@ def install_zsh(*, prog_name: str, complete_var: str, shell: str) -> Path:
         zshrc_content += f"\nautoload -Uz compinit"
     if "fpath+=~/.zfunc" not in zshrc_content:  # pragma: nocover
         zshrc_content += f"\nfpath+=~/.zfunc\ncompinit"
-    zshrc_content = f"{zshrc_content.rstrip('\n')}"
+    if zshrc_content[-1] != "\n":
+        zshrc_content += "\n"
     zshrc_path.write_text(zshrc_content)
     # Install completion under ~/.zfunc/
     path_obj = Path.home() / f".zfunc/_{prog_name}"
