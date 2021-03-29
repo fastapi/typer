@@ -446,7 +446,7 @@ def get_command_from_info(command_info: CommandInfo) -> click.Command:
 
 def param_path_convertor(value: Optional[str] = None) -> Optional[Path]:
     if value is not None:
-        return Path(value)
+        return Path(value).expanduser()
     return None
 
 
