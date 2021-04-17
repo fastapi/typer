@@ -121,6 +121,9 @@ def test_completion_install_powershell():
         Path.home() / f".config/powershell/Microsoft.PowerShell_profile.ps1"
     )
     completion_path: Path = Path.home() / f".config/powershell/main_complete.ps1"
+    parent: Path = completion_path.parent
+    parent.mkdir(parents=True, exist_ok=True)
+    profile_path.touch(exist_ok=True)
 
     def stash(p: Path):
         text = ""
@@ -147,8 +150,6 @@ def test_completion_install_powershell():
     install_script = (
         "Register-ArgumentCompleter -Native -CommandName main -ScriptBlock $scriptblock"
     )
-    parent: Path = completion_path.parent
-    parent.mkdir(parents=True, exist_ok=True)
     source_script = f"{profile_text}\n& {completion_path}"
 
     assert source_script not in profile_text
