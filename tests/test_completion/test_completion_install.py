@@ -95,7 +95,9 @@ def test_completion_install_zsh():
 
 def test_completion_install_fish():
     script_path = Path(mod.__file__)
-    completion_path: Path = Path.home() / f".config/fish/completions/{script_path.name}.fish"
+    completion_path: Path = (
+        Path.home() / f".config/fish/completions/{script_path.name}.fish"
+    )
     result = subprocess.run(
         ["coverage", "run", mod.__file__, "--install-completion", "fish"],
         stdout=subprocess.PIPE,
@@ -115,7 +117,9 @@ def test_completion_install_fish():
 
 
 def test_completion_install_powershell():
-    profile_path: Path = Path.home() / f".config/powershell/Microsoft.PowerShell_profile.ps1"
+    profile_path: Path = (
+        Path.home() / f".config/powershell/Microsoft.PowerShell_profile.ps1"
+    )
     completion_path: Path = Path.home() / f".config/powershell/main_complete.ps1"
 
     def stash(p: Path):
@@ -123,6 +127,7 @@ def test_completion_install_powershell():
         if p.is_file():  # pragma: nocover
             text = p.read_text()
         return text, lambda: p.write_text(text)
+
     completion_text, completion_pop = stash(completion_path)
     profile_text, profile_pop = stash(profile_path)
 
@@ -133,11 +138,15 @@ def test_completion_install_powershell():
             subprocess,
             "run",
             return_value=subprocess.CompletedProcess(
-                ["pwsh"], returncode=0, stdout=f"{profile_path}\n".encode("windows-1252")
+                ["pwsh"],
+                returncode=0,
+                stdout=f"{profile_path}\n".encode("windows-1252"),
             ),
         ):
             result = runner.invoke(app, ["--install-completion"])
-    install_script = "Register-ArgumentCompleter -Native -CommandName main -ScriptBlock $scriptblock"
+    install_script = (
+        "Register-ArgumentCompleter -Native -CommandName main -ScriptBlock $scriptblock"
+    )
     parent: Path = completion_path.parent
     parent.mkdir(parents=True, exist_ok=True)
     source_script = f"{profile_text}\n& {completion_path}"
