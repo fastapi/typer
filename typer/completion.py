@@ -308,7 +308,7 @@ def install_powershell(*, prog_name: str, complete_var: str, shell: str) -> Path
     if path_obj.is_file():
         content = path_obj.read_text()
     if source_script not in content:
-        content += f"\n& {completion_script_path}"
+        content += f"\n{source_script}"
     path_obj.write_text(content)
 
     return completion_script_path
