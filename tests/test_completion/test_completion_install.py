@@ -114,17 +114,17 @@ def test_completion_install_fish():
     assert "Completion will take effect once you restart the terminal" in result.stdout
 
 
-runner = CliRunner()
-app = typer.Typer()
-app.command()(mod.main)
-
-
 def test_completion_install_powershell():
-    completion_path: Path = Path.home() / f".config/powershell/Microsoft.PowerShell_profile.ps1"
-    completion_path_bytes = f"{completion_path}\n".encode("windows-1252")
-    text = ""
-    if completion_path.is_file():  # pragma: nocover
-        text = completion_path.read_text()
+    profile_path: Path = Path.home() / f".config/powershell/Microsoft.PowerShell_profile.ps1"
+    completion_path: Path = Path.home() / f".config/powershell/main_complete.ps1"
+
+    def stash(p: Path):
+        text = ""
+        if p.is_file():  # pragma: nocover
+            text = p.read_text()
+        return text, lambda: p.write_text(text)
+    completion_text, completion_pop = stash(completion_path)
+    profile_text, profile_pop = stash(profile_path)
 
     with mock.patch.object(
         shellingham, "detect_shell", return_value=("pwsh", "/usr/bin/pwsh")
@@ -133,17 +133,23 @@ def test_completion_install_powershell():
             subprocess,
             "run",
             return_value=subprocess.CompletedProcess(
-                ["pwsh"], returncode=0, stdout=completion_path_bytes
+                ["pwsh"], returncode=0, stdout=f"{profile_path}\n".encode("windows-1252")
             ),
         ):
             result = runner.invoke(app, ["--install-completion"])
-    install_script = "Register-ArgumentCompleter -Native -CommandName mocked-typer-testing-app -ScriptBlock $scriptblock"
+    install_script = "Register-ArgumentCompleter -Native -CommandName main -ScriptBlock $scriptblock"
     parent: Path = completion_path.parent
     parent.mkdir(parents=True, exist_ok=True)
-    completion_path.write_text(install_script)
-    new_text = completion_path.read_text()
-    completion_path.write_text(text)
-    assert install_script not in text
-    assert install_script in new_text
+    source_script = f"{profile_text}\n& {completion_path}"
+
+    assert source_script not in profile_text
+    assert install_script not in completion_text
+
+    assert source_script in profile_path.read_text()
+    assert install_script in completion_path.read_text()
+
+    completion_pop()
+    profile_pop()
+
     assert "completion installed in" in result.stdout
     assert "Completion will take effect once you restart the terminal" in result.stdout

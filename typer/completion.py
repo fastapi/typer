@@ -291,15 +291,27 @@ def install_powershell(*, prog_name: str, complete_var: str, shell: str) -> Path
             except UnicodeDecodeError:
                 click.echo("Couldn't decode the path automatically", err=True)
                 raise click.exceptions.Exit(1)
+
     path_obj = Path(path_str.strip())
     parent_dir: Path = path_obj.parent
     parent_dir.mkdir(parents=True, exist_ok=True)
+
+    completion_script_path = parent_dir / f"{prog_name}_complete.ps1"
     script_content = get_completion_script(
         prog_name=prog_name, complete_var=complete_var, shell=shell
     )
-    with path_obj.open(mode="a") as f:
+    with completion_script_path.open(mode="a") as f:
         f.write(f"{script_content}\n")
-    return path_obj
+
+    source_script = f"& {completion_script_path}"
+    content = ""
+    if path_obj.is_file():
+        content = path_obj.read_text()
+    if source_script not in content:
+        content += f"\n& {completion_script_path}"
+    path_obj.write_text(content)
+
+    return completion_script_path
 
 
 def do_bash_complete(cli: click.Command, prog_name: str) -> bool:
