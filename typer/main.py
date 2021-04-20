@@ -610,7 +610,10 @@ def get_click_param(
             default_value = parameter_info.default
     elif param.default == Required or param.default == param.empty:
         required = True
-        parameter_info = ArgumentInfo()
+        if param.kind == inspect.Parameter.KEYWORD_ONLY:
+            parameter_info = OptionInfo()
+        else:
+            parameter_info = ArgumentInfo()
     else:
         default_value = param.default
         parameter_info = OptionInfo()

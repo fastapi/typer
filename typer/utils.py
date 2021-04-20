@@ -13,6 +13,9 @@ def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
         if param.name in type_hints:
             annotation = type_hints[param.name]
         params[param.name] = ParamMeta(
-            name=param.name, default=param.default, annotation=annotation
+            name=param.name,
+            default=param.default,
+            annotation=annotation,
+            kind=param.kind,
         )
     return params

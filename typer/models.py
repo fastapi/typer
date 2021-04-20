@@ -425,7 +425,9 @@ class ParamMeta:
         name: str,
         default: Any = inspect.Parameter.empty,
         annotation: Any = inspect.Parameter.empty,
+        kind: inspect._ParameterKind = inspect.Parameter.POSITIONAL_OR_KEYWORD,
     ) -> None:
         self.name = name
         self.default = default
         self.annotation = annotation
+        self.kind = kind
