@@ -282,16 +282,20 @@ def install_powershell(*, prog_name: str, complete_var: str, shell: str) -> Path
     if isinstance(result.stdout, str):  # pragma: nocover
         path_str = result.stdout
     if isinstance(result.stdout, bytes):
-        try:
-            # PowerShell would be predominant in Windows
-            path_str = result.stdout.decode("windows-1252")
-        except UnicodeDecodeError:  # pragma: nocover
+        path_obj = None
+        for encoding in ("windows-1252", "cp850", "utf8"):
             try:
-                path_str = result.stdout.decode("utf8")
+                path_str = result.stdout.decode(encoding).strip()
+                if os.path.exists(path_str):
+                    path_obj = Path(path_str.strip())
+                    break
             except UnicodeDecodeError:
-                click.echo("Couldn't decode the path automatically", err=True)
-                raise click.exceptions.Exit(1)
-    path_obj = Path(path_str.strip())
+                pass
+
+    if path_obj is None:
+        click.echo("Couldn't decode the path automatically", err=True)
+        raise click.exceptions.Exit(1)
+
     parent_dir: Path = path_obj.parent
     parent_dir.mkdir(parents=True, exist_ok=True)
     script_content = get_completion_script(
