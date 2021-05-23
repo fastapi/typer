@@ -853,7 +853,7 @@ def get_param_completion(
     return wrapper
 
 
-def run(function: Callable[..., Any]) -> Any:
+def run(function: Callable[..., Any]) -> None:
     app = Typer()
     app.command()(function)
     app()
