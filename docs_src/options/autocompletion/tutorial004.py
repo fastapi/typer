@@ -8,11 +8,11 @@ valid_completion_items = [
 
 
 def complete_name(incomplete: str):
-    completion = []
-    for name, help_text in valid_completion_items:
-        if name.startswith(incomplete):
-            completion_item = (name, help_text)
-            completion.append(completion_item)
+    completion = [
+        (name, help_text)
+        for name, help_text in valid_completion_items
+        if name.startswith(incomplete)
+    ]
     return completion
 
 
