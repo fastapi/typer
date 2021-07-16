@@ -347,9 +347,11 @@ def get_group_from_info(group_info: TyperInfo) -> click.Command:
     commands: Dict[str, click.Command] = {}
     for command_info in group_info.typer_instance.registered_commands:
         command = get_command_from_info(command_info=command_info)
+        assert command.name is not None, "command name cannot be None"
         commands[command.name] = command
     for sub_group_info in group_info.typer_instance.registered_groups:
         sub_group = get_group_from_info(sub_group_info)
+        assert sub_group.name is not None, "sub_group name cannot be None"
         commands[sub_group.name] = sub_group
     solved_info = solve_typer_info_defaults(group_info)
     (
@@ -358,6 +360,9 @@ def get_group_from_info(group_info: TyperInfo) -> click.Command:
         context_param_name,
     ) = get_params_convertors_ctx_param_name_from_function(solved_info.callback)
     cls = solved_info.cls or click.Group
+    assert (
+        solved_info.no_args_is_help is not None
+    ), "solved_info.no_args_is_help cannot be None."
     group = cls(  # type: ignore
         name=solved_info.name or "",
         commands=commands,
@@ -422,7 +427,7 @@ def get_command_from_info(command_info: CommandInfo) -> click.Command:
         context_param_name,
     ) = get_params_convertors_ctx_param_name_from_function(command_info.callback)
     cls = command_info.cls or TyperCommand
-    command = cls(  # type: ignore
+    command = cls(
         name=name,
         context_settings=command_info.context_settings,
         callback=get_callback(
@@ -484,6 +489,7 @@ def get_callback(
     for param_name in parameters:
         use_params[param_name] = None
     for param in params:
+        assert param.name is not None, "param.name cannot be None."
         use_params[param.name] = param.default
 
     def wrapper(**kwargs: Any) -> Any:
@@ -503,6 +509,7 @@ def get_callback(
 def get_click_type(
     *, annotation: Any, parameter_info: ParameterInfo
 ) -> click.ParamType:
+    assert parameter_info.atomic is not None, "parameter_info.atomic cannot be None."
     if annotation == str:
         return click.STRING
     elif annotation == int:
@@ -537,7 +544,7 @@ def get_click_type(
         or parameter_info.path_type
         or parameter_info.resolve_path
     ):
-        return click.Path(  # type: ignore
+        return click.Path(
             exists=parameter_info.exists,
             file_okay=parameter_info.file_okay,
             dir_okay=parameter_info.dir_okay,

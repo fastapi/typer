@@ -18,9 +18,10 @@ class CliRunner(ClickCliRunner):
         **extra: Any,
     ) -> Result:
         use_cli = _get_command(app)
+        # FIXME: type ignore?
         return super().invoke(
             use_cli,
-            args=args,
+            args=args,  # type: ignore
             input=input,
             env=env,
             catch_exceptions=catch_exceptions,

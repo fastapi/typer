@@ -46,7 +46,7 @@ class TyperArgument(click.core.Argument):
             autocompletion=autocompletion,
         )
 
-    def get_help_record(self, ctx: click.Context) -> Optional[Tuple[str, str]]:  # type: ignore
+    def get_help_record(self, ctx: click.Context) -> Optional[Tuple[str, str]]:
         # Modified version of click.core.Option.get_help_record()
         # to support Arguments
         if self.hidden:
@@ -64,7 +64,7 @@ class TyperArgument(click.core.Argument):
                     else envvar
                 )
                 extra.append(f"env var: {var_str}")
-        if self.default is not None and (self.show_default or ctx.show_default):  # type: ignore
+        if self.default is not None and (self.show_default or ctx.show_default):
             if isinstance(self.show_default, str):
                 default_string = f"({self.show_default})"
             elif isinstance(self.default, (list, tuple)):
@@ -72,7 +72,8 @@ class TyperArgument(click.core.Argument):
             elif inspect.isfunction(self.default):
                 default_string = "(dynamic)"
             else:
-                default_string = self.default
+                # FIXME?
+                default_string = self.default  # type: ignore
             extra.append(f"default: {default_string}")
         if self.required:
             extra.append("required")
@@ -86,6 +87,7 @@ class TyperArgument(click.core.Argument):
         # to include Argument name
         if self.metavar is not None:
             return self.metavar
+        assert self.name is not None, "self.name cannot be None"
         var = self.name.upper()
         if not self.required:
             var = "[{}]".format(var)
