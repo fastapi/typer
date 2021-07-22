@@ -584,6 +584,8 @@ def get_click_type(
             [item.value for item in annotation],
             case_sensitive=parameter_info.case_sensitive,
         )
+    elif isinstance(annotation, click.ParamType):
+        return annotation
     raise RuntimeError(f"Type not yet supported: {annotation}")  # pragma no cover
 
 
