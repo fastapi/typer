@@ -31,7 +31,7 @@ Hello World
     And make sure you use `typer.echo()` instead of `print()`.
 
 !!! note "Technical Details"
-    The way color works in terminals is by using some codes (ASCII codes) as part of the text.
+    The way color works in terminals is by using some codes (ANSI escape sequences) as part of the text.
 
     So, a colored text is still just a `str`.
 
