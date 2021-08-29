@@ -121,7 +121,7 @@ class TyperInfo:
         name: Optional[str] = Default(None),
         cls: Optional[Type[click.Command]] = Default(None),
         invoke_without_command: bool = Default(False),
-        no_args_is_help: Optional[bool] = Default(None),
+        no_args_is_help: bool = Default(False),
         subcommand_metavar: Optional[str] = Default(None),
         chain: bool = Default(False),
         result_callback: Optional[Callable[..., Any]] = Default(None),
@@ -192,7 +192,7 @@ class ParameterInfo:
         encoding: Optional[str] = None,
         errors: Optional[str] = "strict",
         lazy: Optional[bool] = None,
-        atomic: Optional[bool] = False,
+        atomic: bool = False,
         # Path
         exists: bool = False,
         file_okay: bool = True,
@@ -289,7 +289,7 @@ class OptionInfo(ParameterInfo):
         encoding: Optional[str] = None,
         errors: Optional[str] = "strict",
         lazy: Optional[bool] = None,
-        atomic: Optional[bool] = False,
+        atomic: bool = False,
         # Path
         exists: bool = False,
         file_okay: bool = True,
@@ -388,7 +388,7 @@ class ArgumentInfo(ParameterInfo):
         encoding: Optional[str] = None,
         errors: Optional[str] = "strict",
         lazy: Optional[bool] = None,
-        atomic: Optional[bool] = False,
+        atomic: bool = False,
         # Path
         exists: bool = False,
         file_okay: bool = True,

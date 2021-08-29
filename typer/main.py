@@ -45,7 +45,7 @@ class Typer:
         name: Optional[str] = Default(None),
         cls: Optional[Type[click.Command]] = Default(None),
         invoke_without_command: bool = Default(False),
-        no_args_is_help: Optional[bool] = Default(None),
+        no_args_is_help: bool = Default(False),
         subcommand_metavar: Optional[str] = Default(None),
         chain: bool = Default(False),
         result_callback: Optional[Callable[..., Any]] = Default(None),
@@ -90,7 +90,7 @@ class Typer:
         *,
         cls: Optional[Type[click.Command]] = Default(None),
         invoke_without_command: bool = Default(False),
-        no_args_is_help: Optional[bool] = Default(None),
+        no_args_is_help: bool = Default(False),
         subcommand_metavar: Optional[str] = Default(None),
         chain: bool = Default(False),
         result_callback: Optional[Callable[..., Any]] = Default(None),
@@ -173,7 +173,7 @@ class Typer:
         name: Optional[str] = Default(None),
         cls: Optional[Type[click.Command]] = Default(None),
         invoke_without_command: bool = Default(False),
-        no_args_is_help: Optional[bool] = Default(None),
+        no_args_is_help: bool = Default(False),
         subcommand_metavar: Optional[str] = Default(None),
         chain: bool = Default(False),
         result_callback: Optional[Callable[..., Any]] = Default(None),
@@ -347,10 +347,12 @@ def get_group_from_info(group_info: TyperInfo) -> click.Command:
     commands: Dict[str, click.Command] = {}
     for command_info in group_info.typer_instance.registered_commands:
         command = get_command_from_info(command_info=command_info)
-        commands[command.name] = command
+        if command.name:
+            commands[command.name] = command
     for sub_group_info in group_info.typer_instance.registered_groups:
         sub_group = get_group_from_info(sub_group_info)
-        commands[sub_group.name] = sub_group
+        if sub_group.name:
+            commands[sub_group.name] = sub_group
     solved_info = solve_typer_info_defaults(group_info)
     (
         params,
@@ -422,7 +424,7 @@ def get_command_from_info(command_info: CommandInfo) -> click.Command:
         context_param_name,
     ) = get_params_convertors_ctx_param_name_from_function(command_info.callback)
     cls = command_info.cls or TyperCommand
-    command = cls(  # type: ignore
+    command = cls(
         name=name,
         context_settings=command_info.context_settings,
         callback=get_callback(
@@ -484,7 +486,8 @@ def get_callback(
     for param_name in parameters:
         use_params[param_name] = None
     for param in params:
-        use_params[param.name] = param.default
+        if param.name:
+            use_params[param.name] = param.default
 
     def wrapper(**kwargs: Any) -> Any:
         for k, v in kwargs.items():
@@ -537,7 +540,7 @@ def get_click_type(
         or parameter_info.path_type
         or parameter_info.resolve_path
     ):
-        return click.Path(  # type: ignore
+        return click.Path(
             exists=parameter_info.exists,
             file_okay=parameter_info.file_okay,
             dir_okay=parameter_info.dir_okay,

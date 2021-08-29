@@ -4,6 +4,7 @@ import sys
 from typing import Any, Dict, List, Tuple
 
 import click
+import click.parser
 import click.shell_completion
 
 from ._completion_shared import (
@@ -32,7 +33,7 @@ class BashComplete(click.shell_completion.BashComplete):
         }
 
     def get_completion_args(self) -> Tuple[List[str], str]:
-        cwords = click.shell_completion.split_arg_string(os.environ["COMP_WORDS"])
+        cwords = click.parser.split_arg_string(os.environ["COMP_WORDS"])
         cword = int(os.environ["COMP_CWORD"])
         args = cwords[1:cword]
 

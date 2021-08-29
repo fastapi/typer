@@ -51,7 +51,7 @@ def Option(
     encoding: Optional[str] = None,
     errors: Optional[str] = "strict",
     lazy: Optional[bool] = None,
-    atomic: Optional[bool] = False,
+    atomic: bool = False,
     # Path
     exists: bool = False,
     file_okay: bool = True,
@@ -148,7 +148,7 @@ def Argument(
     encoding: Optional[str] = None,
     errors: Optional[str] = "strict",
     lazy: Optional[bool] = None,
-    atomic: Optional[bool] = False,
+    atomic: bool = False,
     # Path
     exists: bool = False,
     file_okay: bool = True,

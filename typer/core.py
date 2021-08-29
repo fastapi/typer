@@ -50,7 +50,7 @@ def _typer_param_setup_autocompletion_compat(
     autocompletion: Optional[
         Callable[[click.Context, List[str], str], List[Union[Tuple[str, str], str]]]
     ] = None,
-):
+) -> None:
     if autocompletion is not None and self._custom_shell_complete is None:
         import warnings
 
@@ -139,7 +139,7 @@ class TyperArgument(click.core.Argument):
                 self, autocompletion=autocompletion
             )
 
-    def get_help_record(self, ctx: click.Context) -> Optional[Tuple[str, str]]:  # type: ignore
+    def get_help_record(self, ctx: click.Context) -> Optional[Tuple[str, str]]:
         # Modified version of click.core.Option.get_help_record()
         # to support Arguments
         if self.hidden:
@@ -157,7 +157,7 @@ class TyperArgument(click.core.Argument):
                     else envvar
                 )
                 extra.append(f"env var: {var_str}")
-        if self.default is not None and (self.show_default or ctx.show_default):  # type: ignore
+        if self.default is not None and (self.show_default or ctx.show_default):
             if isinstance(self.show_default, str):
                 default_string = f"({self.show_default})"
             elif isinstance(self.default, (list, tuple)):
@@ -165,7 +165,7 @@ class TyperArgument(click.core.Argument):
             elif inspect.isfunction(self.default):
                 default_string = "(dynamic)"
             else:
-                default_string = self.default
+                default_string = str(self.default)
             extra.append(f"default: {default_string}")
         if self.required:
             extra.append("required")
@@ -179,7 +179,7 @@ class TyperArgument(click.core.Argument):
         # to include Argument name
         if self.metavar is not None:
             return self.metavar
-        var = self.name.upper()
+        var = (self.name or "").upper()
         if not self.required:
             var = "[{}]".format(var)
         type_var = self.type.get_metavar(self)
