@@ -27,7 +27,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License"
     ]
 requires = [
-    "click >= 7.1.1, <7.2.0"
+    "click >= 7.1.1, <9.0.0"
 ]
 description-file = "README.md"
 requires-python = ">=3.6"
@@ -43,7 +43,7 @@ test = [
     "coverage >=5.2,<6.0",
     "pytest-xdist >=1.32.0,<2.0.0",
     "pytest-sugar >=0.9.4,<0.10.0",
-    "mypy ==0.782",
+    "mypy ==0.910",
     "black >=19.10b0,<20.0b0",
     "isort >=5.0.6,<6.0.0"
 ]
