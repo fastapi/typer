@@ -26,7 +26,11 @@ def test_completion_install_no_shell():
             "_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION": "True",
         },
     )
-    assert "Error: --install-completion option requires an argument" in result.stderr
+    # TODO: when deprecating Click 7, remove second option
+    assert (
+        "Error: Option '--install-completion' requires an argument" in result.stderr
+        or "Error: --install-completion option requires an argument" in result.stderr
+    )
 
 
 def test_completion_install_bash():

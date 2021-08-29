@@ -16,7 +16,11 @@ def test_completion_show_no_shell():
             "_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION": "True",
         },
     )
-    assert "Error: --show-completion option requires an argument" in result.stderr
+    # TODO: when deprecating Click 7, remove second option
+    assert (
+        "Error: Option '--show-completion' requires an argument" in result.stderr
+        or "Error: --show-completion option requires an argument" in result.stderr
+    )
 
 
 def test_completion_show_bash():
