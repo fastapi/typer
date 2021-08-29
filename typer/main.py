@@ -9,7 +9,7 @@ from uuid import UUID
 import click
 
 from .completion import get_completion_inspect_parameters
-from .core import TyperArgument, TyperCommand
+from .core import TyperArgument, TyperCommand, TyperGroup, TyperOption
 from .models import (
     AnyType,
     ArgumentInfo,
@@ -357,7 +357,7 @@ def get_group_from_info(group_info: TyperInfo) -> click.Command:
         convertors,
         context_param_name,
     ) = get_params_convertors_ctx_param_name_from_function(solved_info.callback)
-    cls = solved_info.cls or click.Group
+    cls = solved_info.cls or TyperGroup
     group = cls(  # type: ignore
         name=solved_info.name or "",
         commands=commands,
@@ -683,12 +683,13 @@ def get_click_param(
         else:
             param_decls.append(default_option_declaration)
         return (
-            click.Option(
+            TyperOption(
                 # Option
                 param_decls=param_decls,
-                show_default=parameter_info.show_default,  # type: ignore
+                show_default=parameter_info.show_default,
                 prompt=parameter_info.prompt,
                 confirmation_prompt=parameter_info.confirmation_prompt,
+                prompt_required=parameter_info.prompt_required,
                 hide_input=parameter_info.hide_input,
                 is_flag=is_flag,
                 flag_value=parameter_info.flag_value,
@@ -710,6 +711,7 @@ def get_click_param(
                 expose_value=parameter_info.expose_value,
                 is_eager=parameter_info.is_eager,
                 envvar=parameter_info.envvar,
+                shell_complete=parameter_info.shell_complete,
                 autocompletion=get_param_completion(parameter_info.autocompletion),
             ),
             convertor,

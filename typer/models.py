@@ -16,6 +16,8 @@ from typing import (
 import click
 
 if TYPE_CHECKING:  # pragma: no cover
+    import click.shell_completion
+
     from .main import Typer  # noqa
 
 
@@ -164,6 +166,12 @@ class ParameterInfo:
         expose_value: bool = True,
         is_eager: bool = False,
         envvar: Optional[Union[str, List[str]]] = None,
+        shell_complete: Optional[
+            Callable[
+                [click.Context, click.Parameter, str],
+                Union[List["click.shell_completion.CompletionItem"], List[str]],
+            ]
+        ] = None,
         autocompletion: Optional[Callable[..., Any]] = None,
         # TyperArgument
         show_default: Union[bool, str] = True,
@@ -202,6 +210,7 @@ class ParameterInfo:
         self.expose_value = expose_value
         self.is_eager = is_eager
         self.envvar = envvar
+        self.shell_complete = shell_complete
         self.autocompletion = autocompletion
         # TyperArgument
         self.show_default = show_default
@@ -246,11 +255,18 @@ class OptionInfo(ParameterInfo):
         expose_value: bool = True,
         is_eager: bool = False,
         envvar: Optional[Union[str, List[str]]] = None,
+        shell_complete: Optional[
+            Callable[
+                [click.Context, click.Parameter, str],
+                Union[List["click.shell_completion.CompletionItem"], List[str]],
+            ]
+        ] = None,
         autocompletion: Optional[Callable[..., Any]] = None,
         # Option
         show_default: bool = True,
         prompt: Union[bool, str] = False,
         confirmation_prompt: bool = False,
+        prompt_required: bool = True,
         hide_input: bool = False,
         is_flag: Optional[bool] = None,
         flag_value: Optional[Any] = None,
@@ -292,6 +308,7 @@ class OptionInfo(ParameterInfo):
             expose_value=expose_value,
             is_eager=is_eager,
             envvar=envvar,
+            shell_complete=shell_complete,
             autocompletion=autocompletion,
             # TyperArgument
             show_default=show_default,
@@ -325,6 +342,7 @@ class OptionInfo(ParameterInfo):
         )
         self.prompt = prompt
         self.confirmation_prompt = confirmation_prompt
+        self.prompt_required = prompt_required
         self.hide_input = hide_input
         self.is_flag = is_flag
         self.flag_value = flag_value
@@ -344,6 +362,12 @@ class ArgumentInfo(ParameterInfo):
         expose_value: bool = True,
         is_eager: bool = False,
         envvar: Optional[Union[str, List[str]]] = None,
+        shell_complete: Optional[
+            Callable[
+                [click.Context, click.Parameter, str],
+                Union[List["click.shell_completion.CompletionItem"], List[str]],
+            ]
+        ] = None,
         autocompletion: Optional[Callable[..., Any]] = None,
         # TyperArgument
         show_default: Union[bool, str] = True,
@@ -383,6 +407,7 @@ class ArgumentInfo(ParameterInfo):
             expose_value=expose_value,
             is_eager=is_eager,
             envvar=envvar,
+            shell_complete=shell_complete,
             autocompletion=autocompletion,
             # TyperArgument
             show_default=show_default,
