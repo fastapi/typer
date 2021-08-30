@@ -27,10 +27,10 @@ jobs:
       - name: Install Click 7
         if: matrix.click-7
         run: pip install "click<8.0.0"
-      - name: Test
-        run: bash scripts/test.sh
       - name: Lint
         if: ${{ matrix.python-version != '3.6' && matrix.click-7 == true }}
         run: bash scripts/lint.sh
+      - name: Test
+        run: bash scripts/test.sh
       - name: Upload coverage
         uses: codecov/codecov-action@v1
