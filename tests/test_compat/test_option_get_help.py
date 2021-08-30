@@ -37,4 +37,5 @@ def test_completion():
             "_TYPER_COMPLETE_TESTING": "True",
         },
     )
-    assert "Jonny" in result.stdout
+    # TODO: when deprecating Click 7, remove second option
+    assert "Jonny" in result.stdout or "_files" in result.stdout
