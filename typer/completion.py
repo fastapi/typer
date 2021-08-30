@@ -6,8 +6,8 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Optional, Tuple
 
-from . import _click7 as click
-from ._click7 import _bashcomplete as click_bashcomplete
+from . import click7 as click
+from .click7 import _bashcomplete as click_bashcomplete
 
 from .models import ParamMeta
 from .params import Option

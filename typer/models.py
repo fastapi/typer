@@ -13,7 +13,7 @@ from typing import (
     Union,
 )
 
-from . import _click7 as click
+from . import click7 as click
 
 if TYPE_CHECKING:  # pragma: no cover
     from .main import Typer  # noqa

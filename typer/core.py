@@ -1,7 +1,8 @@
 import inspect
 from typing import Any, Callable, List, Optional, Tuple, Union
 
-from ._click7 import core as click_core
+from . import click7 as click
+from .click7 import core as click_core
 
 
 class TyperArgument(click_core.Argument):
