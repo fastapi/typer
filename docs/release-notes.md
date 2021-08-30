@@ -1,5 +1,6 @@
 ## Latest Changes
 
+* ✨ Add support for Click 8 while keeping compatibility with Click 7. PR [#317](https://github.com/tiangolo/typer/pull/317) by [@tiangolo](https://github.com/tiangolo).
 ## 0.3.2
 
 ### Features
