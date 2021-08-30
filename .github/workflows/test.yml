@@ -28,7 +28,7 @@ jobs:
         if: matrix.click-7
         run: pip install "click<8.0.0"
       - name: Lint
-        if: ${{ matrix.python-version != '3.6' && matrix.click-7 == true }}
+        if: ${{ matrix.python-version != '3.6' && matrix.click-7 == false }}
         run: bash scripts/lint.sh
       - name: Test
         run: bash scripts/test.sh
