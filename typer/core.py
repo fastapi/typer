@@ -1,10 +1,10 @@
 import inspect
 from typing import Any, Callable, List, Optional, Tuple, Union
 
-import click.core
+from ._click7 import core as click_core
 
 
-class TyperArgument(click.core.Argument):
+class TyperArgument(click_core.Argument):
     def __init__(
         self,
         *,

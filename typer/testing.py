@@ -1,7 +1,7 @@
 from typing import IO, Any, Iterable, Mapping, Optional, Text, Union
 
-from click.testing import CliRunner as ClickCliRunner  # noqa
-from click.testing import Result
+from ._click7.testing import CliRunner as ClickCliRunner  # noqa
+from ._click7.testing import Result
 from typer.main import Typer
 from typer.main import get_command as _get_command
 

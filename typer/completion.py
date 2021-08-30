@@ -6,8 +6,8 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Optional, Tuple
 
-import click
-import click._bashcomplete
+from . import _click7 as click
+from ._click7 import _bashcomplete as click_bashcomplete
 
 from .models import ParamMeta
 from .params import Option
@@ -311,7 +311,7 @@ def do_bash_complete(cli: click.Command, prog_name: str) -> bool:
     except IndexError:
         incomplete = ""
 
-    for item in click._bashcomplete.get_choices(cli, prog_name, args, incomplete):
+    for item in click_bashcomplete.get_choices(cli, prog_name, args, incomplete):
         click.echo(item[0])
     return True
 
@@ -335,7 +335,7 @@ def do_zsh_complete(cli: click.Command, prog_name: str) -> bool:
         )
 
     res = []
-    for item, help in click._bashcomplete.get_choices(cli, prog_name, args, incomplete):
+    for item, help in click_bashcomplete.get_choices(cli, prog_name, args, incomplete):
         if help:
             res.append(f'"{escape(item)}":"{escape(help)}"')
         else:
@@ -359,7 +359,7 @@ def do_fish_complete(cli: click.Command, prog_name: str) -> bool:
     else:
         incomplete = ""
     show_args = []
-    for item, help in click._bashcomplete.get_choices(cli, prog_name, args, incomplete):
+    for item, help in click_bashcomplete.get_choices(cli, prog_name, args, incomplete):
         if help:
             formatted_help = re.sub(r"\s", " ", help)
             show_args.append(f"{item}\t{formatted_help}")
@@ -384,7 +384,7 @@ def do_powershell_complete(cli: click.Command, prog_name: str) -> bool:
     incomplete = os.getenv("_TYPER_COMPLETE_WORD_TO_COMPLETE", "")
     cwords = click.parser.split_arg_string(completion_args)
     args = cwords[1:]
-    for item, help in click._bashcomplete.get_choices(cli, prog_name, args, incomplete):
+    for item, help in click_bashcomplete.get_choices(cli, prog_name, args, incomplete):
         click.echo(f"{item}:::{help or ' '}")
 
     return True
@@ -412,7 +412,7 @@ _completion_scripts = {
 
 
 def get_completion_script(*, prog_name: str, complete_var: str, shell: str) -> str:
-    cf_name = click._bashcomplete._invalid_ident_char_re.sub(
+    cf_name = click_bashcomplete._invalid_ident_char_re.sub(
         "", prog_name.replace("-", "_")
     )
     script = _completion_scripts.get(shell)
@@ -463,7 +463,7 @@ def completion_init() -> None:
             return result
 
         if testing:
-            click._bashcomplete.bashcomplete = testing_handle_shell_complete
+            click_bashcomplete.bashcomplete = testing_handle_shell_complete
         else:
-            click._bashcomplete.bashcomplete = handle_shell_complete
+            click_bashcomplete.bashcomplete = handle_shell_complete
         _click_patched = True

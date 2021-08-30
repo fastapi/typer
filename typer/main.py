@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, Union
 from uuid import UUID
 
-import click
+from . import _click7 as click
 
 from .completion import get_completion_inspect_parameters
 from .core import TyperArgument, TyperCommand
