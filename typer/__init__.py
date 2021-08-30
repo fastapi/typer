@@ -1,6 +1,6 @@
 """Typer, build great CLIs. Easy to code. Based on Python type hints."""
 
-__version__ = "0.3.2"
+__version__ = "0.4.0"
 
 from click.exceptions import Abort as Abort
 from click.exceptions import BadParameter as BadParameter
