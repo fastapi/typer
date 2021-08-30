@@ -26,9 +26,7 @@ classifiers = [
     "Programming Language :: Python :: 3.8",
     "License :: OSI Approved :: MIT License"
     ]
-requires = [
-    "click >= 7.1.1, <7.2.0"
-]
+requires = []
 description-file = "README.md"
 requires-python = ">=3.6"
 
@@ -63,7 +61,7 @@ all = [
 
 [tool.isort]
 profile = "black"
-known_third_party = ["typer", "click"]
+known_third_party = ["typer"]
 skip_glob = [
     "docs_src/subcommands/tutorial001/main.py",
     "docs_src/subcommands/tutorial003/lands.py",
