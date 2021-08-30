@@ -1,5 +1,6 @@
 ## Latest Changes
 
+* 👷 Update publish GitHub action. PR [#325](https://github.com/tiangolo/typer/pull/325) by [@tiangolo](https://github.com/tiangolo).
 
 ## 0.4.0
 
