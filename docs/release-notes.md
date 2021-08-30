@@ -1,4 +1,4 @@
-## Latest changes
+## Latest Changes
 
 ## 0.3.2
 
