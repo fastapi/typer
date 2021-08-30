@@ -1,6 +1,11 @@
-from typing import Any, Callable, List, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, Callable, List, Optional, Type, Union
+
+import click
 
 from .models import ArgumentInfo, OptionInfo
+
+if TYPE_CHECKING:  # pragma: no cover
+    import click.shell_completion
 
 
 def Option(
@@ -12,11 +17,18 @@ def Option(
     expose_value: bool = True,
     is_eager: bool = False,
     envvar: Optional[Union[str, List[str]]] = None,
+    shell_complete: Optional[
+        Callable[
+            [click.Context, click.Parameter, str],
+            Union[List["click.shell_completion.CompletionItem"], List[str]],
+        ]
+    ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
     # Option
     show_default: bool = True,
     prompt: Union[bool, str] = False,
     confirmation_prompt: bool = False,
+    prompt_required: bool = True,
     hide_input: bool = False,
     is_flag: Optional[bool] = None,
     flag_value: Optional[Any] = None,
@@ -39,7 +51,7 @@ def Option(
     encoding: Optional[str] = None,
     errors: Optional[str] = "strict",
     lazy: Optional[bool] = None,
-    atomic: Optional[bool] = False,
+    atomic: bool = False,
     # Path
     exists: bool = False,
     file_okay: bool = True,
@@ -59,11 +71,13 @@ def Option(
         expose_value=expose_value,
         is_eager=is_eager,
         envvar=envvar,
+        shell_complete=shell_complete,
         autocompletion=autocompletion,
         # Option
         show_default=show_default,
         prompt=prompt,
         confirmation_prompt=confirmation_prompt,
+        prompt_required=prompt_required,
         hide_input=hide_input,
         is_flag=is_flag,
         flag_value=flag_value,
@@ -108,6 +122,12 @@ def Argument(
     expose_value: bool = True,
     is_eager: bool = False,
     envvar: Optional[Union[str, List[str]]] = None,
+    shell_complete: Optional[
+        Callable[
+            [click.Context, click.Parameter, str],
+            Union[List["click.shell_completion.CompletionItem"], List[str]],
+        ]
+    ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
     # TyperArgument
     show_default: Union[bool, str] = True,
@@ -128,7 +148,7 @@ def Argument(
     encoding: Optional[str] = None,
     errors: Optional[str] = "strict",
     lazy: Optional[bool] = None,
-    atomic: Optional[bool] = False,
+    atomic: bool = False,
     # Path
     exists: bool = False,
     file_okay: bool = True,
@@ -150,6 +170,7 @@ def Argument(
         expose_value=expose_value,
         is_eager=is_eager,
         envvar=envvar,
+        shell_complete=shell_complete,
         autocompletion=autocompletion,
         # TyperArgument
         show_default=show_default,

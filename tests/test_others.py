@@ -141,11 +141,14 @@ def test_completion_untyped_parameters():
         },
     )
     assert "info name is: completion_no_types.py" in result.stderr
-    assert "args is: ['--name', 'Sebastian', '--name']" in result.stderr
+    # TODO: when deprecating Click 7, remove second option
+    assert (
+        "args is: []" in result.stderr
+        or "args is: ['--name', 'Sebastian', '--name']" in result.stderr
+    )
     assert "incomplete is: Ca" in result.stderr
     assert '"Camila":"The reader of books."' in result.stdout
     assert '"Carlos":"The writer of scripts."' in result.stdout
-    assert '"Sebastian":"The type hints guy."' in result.stdout
 
     result = subprocess.run(
         ["coverage", "run", str(file_path)],
@@ -171,11 +174,14 @@ def test_completion_untyped_parameters_different_order_correct_names():
         },
     )
     assert "info name is: completion_no_types_order.py" in result.stderr
-    assert "args is: ['--name', 'Sebastian', '--name']" in result.stderr
+    # TODO: when deprecating Click 7, remove second option
+    assert (
+        "args is: []" in result.stderr
+        or "args is: ['--name', 'Sebastian', '--name']" in result.stderr
+    )
     assert "incomplete is: Ca" in result.stderr
     assert '"Camila":"The reader of books."' in result.stdout
     assert '"Carlos":"The writer of scripts."' in result.stdout
-    assert '"Sebastian":"The type hints guy."' in result.stdout
 
     result = subprocess.run(
         ["coverage", "run", str(file_path)],
@@ -213,8 +219,12 @@ def test_forward_references():
         typer.echo(f"arg5: {type(arg5)} {arg5}")
 
     result = runner.invoke(app, ["Hello", "2", "invalid"])
+    # TODO: when deprecating Click 7, remove second option
+
     assert (
-        "Error: Invalid value for 'ARG3': invalid is not a valid integer"
+        "Error: Invalid value for 'ARG3': 'invalid' is not a valid integer"
+        in result.stdout
+        or "Error: Invalid value for 'ARG3': invalid is not a valid integer"
         in result.stdout
     )
     result = runner.invoke(app, ["Hello", "2", "3", "--arg4", "--arg5"])

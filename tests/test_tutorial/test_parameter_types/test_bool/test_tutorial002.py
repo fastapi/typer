@@ -39,7 +39,12 @@ def test_reject():
 def test_invalid_no_accept():
     result = runner.invoke(app, ["--no-accept"])
     assert result.exit_code != 0
-    assert "Error: no such option: --no-accept" in result.output
+    # TODO: when deprecating Click 7, remove second option
+
+    assert (
+        "Error: No such option: --no-accept" in result.output
+        or "Error: no such option: --no-accept" in result.output
+    )
 
 
 def test_script():
