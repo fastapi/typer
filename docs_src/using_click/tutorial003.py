@@ -1,4 +1,4 @@
-import click
+from typer import _click7 as click
 import typer
 
 app = typer.Typer()

@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Optional
 from unittest import mock
 
-import click
+from typer import click7 as click
 import pytest
 import shellingham
 import typer
