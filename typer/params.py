@@ -44,7 +44,7 @@ def Option(
     min: Optional[Union[int, float]] = None,
     max: Optional[Union[int, float]] = None,
     clamp: bool = False,
-    # DateTime
+    # Date & DateTime
     formats: Optional[Union[List[str]]] = None,
     # File
     mode: Optional[str] = None,
@@ -93,7 +93,7 @@ def Option(
         min=min,
         max=max,
         clamp=clamp,
-        # DateTime
+        # Date & DateTime
         formats=formats,
         # File
         mode=mode,
@@ -141,7 +141,7 @@ def Argument(
     min: Optional[Union[int, float]] = None,
     max: Optional[Union[int, float]] = None,
     clamp: bool = False,
-    # DateTime
+    # Date & DateTime
     formats: Optional[Union[List[str]]] = None,
     # File
     mode: Optional[str] = None,
@@ -184,7 +184,7 @@ def Argument(
         min=min,
         max=max,
         clamp=clamp,
-        # DateTime
+        # Date & DateTime
         formats=formats,
         # File
         mode=mode,

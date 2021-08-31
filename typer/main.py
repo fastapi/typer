@@ -1,5 +1,5 @@
 import inspect
-from datetime import datetime
+from datetime import date, datetime
 from enum import Enum
 from functools import update_wrapper
 from pathlib import Path
@@ -8,6 +8,7 @@ from uuid import UUID
 
 import click
 
+from . import extra_click_types
 from .completion import get_completion_inspect_parameters
 from .core import TyperArgument, TyperCommand, TyperGroup, TyperOption
 from .models import (
@@ -534,6 +535,8 @@ def get_click_type(
         return click.UUID
     elif annotation == datetime:
         return click.DateTime(formats=parameter_info.formats)
+    elif annotation == date:
+        return extra_click_types.Date(formats=parameter_info.formats)
     elif (
         annotation == Path
         or parameter_info.allow_dash

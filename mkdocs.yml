@@ -59,6 +59,7 @@ nav:
             - Boolean CLI Options: 'tutorial/parameter-types/bool.md'
             - UUID: 'tutorial/parameter-types/uuid.md'
             - DateTime: 'tutorial/parameter-types/datetime.md'
+            - Date: 'tutorial/parameter-types/date.md'
             - Enum - Choices: 'tutorial/parameter-types/enum.md'
             - Path: 'tutorial/parameter-types/path.md'
             - File: 'tutorial/parameter-types/file.md'
