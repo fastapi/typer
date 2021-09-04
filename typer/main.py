@@ -7,6 +7,7 @@ from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, U
 from uuid import UUID
 
 import click
+import pydantic
 
 from .completion import get_completion_inspect_parameters
 from .core import TyperArgument, TyperCommand, TyperGroup, TyperOption
@@ -465,6 +466,17 @@ def generate_enum_convertor(enum: Type[Enum]) -> Callable[..., Any]:
     return convertor
 
 
+def generate_pydantic_convertor(model: Type[pydantic.BaseModel]) -> Callable[..., Any]:
+    def convertor(value: Any) -> Any:
+        values_dict: Dict[str, Any] = {}
+        counter = 0
+        for ix, field in model.__fields__.items():
+            values_dict[field.alias] = value[counter]
+            counter += 1
+        return model(**values_dict)
+    return convertor
+
+
 def generate_iter_convertor(convertor: Callable[[Any], Any]) -> Callable[..., Any]:
     def internal_convertor(value: Any) -> List[Any]:
         return [convertor(v) for v in value]
@@ -656,14 +668,36 @@ def get_click_param(
                 )
             parameter_type = tuple(types)
     if parameter_type is None:
-        parameter_type = get_click_type(
-            annotation=main_type, parameter_info=parameter_info
-        )
+        if lenient_issubclass(main_type, pydantic.BaseModel):
+            if len(main_type.__fields__) == 1:
+                # click issue workaround - Tuple of single element raises exception
+                field = next(iter(main_type.__fields__.values()))
+                parameter_type = get_click_type(
+                    annotation=field.type_, parameter_info=parameter_info
+                )
+            else:
+                types = []
+                for _, field in main_type.__fields__.items():
+                    assert not getattr(
+                        type_, "__origin__", None
+                    ), "Tuple types with complex sub-types are not currently supported"
+                    types.append(
+                        get_click_type(
+                            annotation=field.type_, parameter_info=parameter_info
+                        )
+                    )
+                parameter_type = tuple(types)
+        else:
+            parameter_type = get_click_type(
+                annotation=main_type, parameter_info=parameter_info
+            )
     convertor = None
     if lenient_issubclass(main_type, Path):
         convertor = param_path_convertor
     if lenient_issubclass(main_type, Enum):
         convertor = generate_enum_convertor(main_type)
+    if lenient_issubclass(main_type, pydantic.BaseModel):
+        convertor = generate_pydantic_convertor(main_type)
     if convertor and is_list:
         convertor = generate_iter_convertor(convertor)
         # TODO: handle recursive conversion for tuples
