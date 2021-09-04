@@ -232,3 +232,40 @@ def test_forward_references():
         "arg1: <class 'str'> Hello\narg2: <class 'int'> 2\narg3: <class 'int'> 3\narg4: <class 'bool'> True\narg5: <class 'bool'> True\n"
         in result.stdout
     )
+
+
+def test_pydantic_two_options():
+    import pydantic
+    app = typer.Typer()
+
+    class Argument(pydantic.BaseModel):
+        field1: str
+        field2: int
+
+    @app.command()
+    def main(arg1: Argument = typer.Option(...), arg2: Argument = typer.Option(...)):
+        typer.echo(f"Argument1: {arg1.dict()}")
+        typer.echo(f"Argument2: {arg2.dict()}")
+
+    result = runner.invoke(app, ["--arg1", "arg1.field1", "42", "--arg2", "arg2.field1", "4242"])
+    assert result.exit_code == 0
+    assert "Argument1: {'field1': 'arg1.field1', 'field2': 42}" in result.output
+    assert "Argument2: {'field1': 'arg2.field1', 'field2': 4242}" in result.output
+
+
+def test_pydantic_two_options_single_field():
+    import pydantic
+    app = typer.Typer()
+
+    class Argument(pydantic.BaseModel):
+        field1: str
+
+    @app.command()
+    def main(arg1: Argument = typer.Option(...), arg2: Argument = typer.Option(...)):
+        typer.echo(f"Argument1: {arg1.dict()}")
+        typer.echo(f"Argument2: {arg2.dict()}")
+
+    result = runner.invoke(app, ["--arg1", "arg1.field1", "--arg2", "arg2.field1"])
+    assert result.exit_code == 0
+    assert "Argument1: {'field1': 'arg1.field1'}" in result.output
+    assert "Argument2: {'field1': 'arg2.field1'}" in result.output

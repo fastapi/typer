@@ -27,7 +27,8 @@ classifiers = [
     "License :: OSI Approved :: MIT License"
     ]
 requires = [
-    "click >= 7.1.1, <9.0.0"
+    "click >= 7.1.1, <9.0.0",
+    "pydantic == 1.8.2"
 ]
 description-file = "README.md"
 requires-python = ">=3.6"
