@@ -468,17 +468,21 @@ def generate_enum_convertor(enum: Type[Enum]) -> Callable[..., Any]:
 
 def generate_pydantic_convertor(model: Type[pydantic.BaseModel]) -> Callable[..., Any]:
     def convertor(value: Any) -> Any:
-        if len(model.__fields__) == 1:
-            # click issue workaround - Tuple of single element raises exception
-            field = next(iter(model.__fields__.values()))
-            return model(**{field.alias: value})
+        import io
+        if isinstance(value, io.TextIOWrapper):
+            return model.parse_raw(value.read())
         else:
-            values_dict: Dict[str, Any] = {}
-            counter = 0
-            for ix, field in model.__fields__.items():
-                values_dict[field.alias] = value[counter]
-                counter += 1
-            return model(**values_dict)
+            if len(model.__fields__) == 1:
+                # click issue workaround - Tuple of single element raises exception
+                field = next(iter(model.__fields__.values()))
+                return model(**{field.alias: value})
+            else:
+                values_dict: Dict[str, Any] = {}
+                counter = 0
+                for ix, field in model.__fields__.items():
+                    values_dict[field.alias] = value[counter]
+                    counter += 1
+                return model(**values_dict)
     return convertor
 
 
@@ -682,16 +686,22 @@ def get_click_param(
                     annotation=type_, parameter_info=parameter_info
                 )
             else:
-                types = []
-                for _, field in main_type.__fields__.items():
-                    type_ = field.type_
-                    assert not getattr(
-                        type_, "__origin__", None
-                    ), "Tuple types with complex sub-types are not currently supported"
-                    types.append(
-                        get_click_type(annotation=type_, parameter_info=parameter_info)
+                try:
+                    types = []
+                    for _, field in main_type.__fields__.items():
+                        type_ = field.type_
+                        assert not getattr(
+                            type_, "__origin__", None
+                        ), "Tuple types with complex sub-types are not currently supported"
+                        types.append(
+                            get_click_type(annotation=type_, parameter_info=parameter_info)
+                        )
+                    parameter_type = tuple(types)
+                except RuntimeError as e:
+                    # Fallback to ASCII file when childs are not supported
+                    parameter_type = click.File(
+                        mode="r",
                     )
-                parameter_type = tuple(types)
         else:
             parameter_type = get_click_type(
                 annotation=main_type, parameter_info=parameter_info

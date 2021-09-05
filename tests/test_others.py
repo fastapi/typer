@@ -5,6 +5,7 @@ from typing import Optional
 from unittest import mock
 
 import click
+from pydantic.types import Json
 import pytest
 import shellingham
 import typer
@@ -269,3 +270,38 @@ def test_pydantic_two_options_single_field():
     assert result.exit_code == 0
     assert "Argument1: {'field1': 'arg1.field1'}" in result.output
     assert "Argument2: {'field1': 'arg2.field1'}" in result.output
+
+def test_pydantic_embedded():
+    import json
+    import tempfile
+    import os
+
+    import pydantic
+
+    app = typer.Typer()
+
+    class AnotherArgument(pydantic.BaseModel):
+        field1: str
+        field2: int
+
+    class Argument(pydantic.BaseModel):
+        field1: str
+        field2: AnotherArgument
+
+    @app.command()
+    def main(arg1: Argument = typer.Option(...), arg2: AnotherArgument = typer.Option(...)):
+        typer.echo(f"Argument1: {arg1.dict()}")
+        typer.echo(f"Argument2: {arg2.dict()}")
+
+    model = Argument(field1="field1", field2=AnotherArgument(field1="field2.field1", field2=42))
+
+    fd, path = tempfile.mkstemp()
+    try:
+        with open(fd, "w") as f:
+            json.dump(model.dict(), f)
+        result = runner.invoke(app, ["--arg1", path, "--arg2", "arg2.field1", "4242"])
+        assert result.exit_code == 0
+        assert f"Argument1: {model.dict()}" in result.output
+        assert "Argument2: {'field1': 'arg2.field1', 'field2': 4242}" in result.output
+    finally:
+        os.remove(path)
