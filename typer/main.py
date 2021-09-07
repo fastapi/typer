@@ -469,6 +469,7 @@ def generate_enum_convertor(enum: Type[Enum]) -> Callable[..., Any]:
 def generate_pydantic_convertor(model: Type[pydantic.BaseModel]) -> Callable[..., Any]:
     def convertor(value: Any) -> Any:
         import io
+
         if isinstance(value, io.TextIOWrapper):
             return model.parse_raw(value.read())
         else:
@@ -483,6 +484,7 @@ def generate_pydantic_convertor(model: Type[pydantic.BaseModel]) -> Callable[...
                     values_dict[field.alias] = value[counter]
                     counter += 1
                 return model(**values_dict)
+
     return convertor
 
 
@@ -678,6 +680,7 @@ def get_click_param(
             parameter_type = tuple(types)
     if parameter_type is None:
         if lenient_issubclass(main_type, pydantic.BaseModel):
+
             if len(main_type.__fields__) == 1:
                 # click issue workaround - Tuple of single element raises exception
                 field = next(iter(main_type.__fields__.values()))
@@ -685,18 +688,23 @@ def get_click_param(
                 parameter_type = get_click_type(
                     annotation=type_, parameter_info=parameter_info
                 )
+                if parameter_info.help == "":
+                    parameter_info.help = f"<{field.alias} - {parameter_type} - '{field.field_info.description}'>"
             else:
                 try:
                     types = []
+                    help = []
                     for _, field in main_type.__fields__.items():
                         type_ = field.type_
                         assert not getattr(
                             type_, "__origin__", None
-                        ), "Tuple types with complex sub-types are not currently supported"
-                        types.append(
-                            get_click_type(annotation=type_, parameter_info=parameter_info)
-                        )
+                        ), "pydantic models with complex sub-types are not currently supported"
+                        click_type = get_click_type(annotation=type_, parameter_info=parameter_info)
+                        types.append(click_type)
+                        help.append(f"<{field.alias} - {click_type} - '{field.field_info.description}'>")
                     parameter_type = tuple(types)
+                    if parameter_info.help == "":
+                        parameter_info.help = ", \n\n".join(help)
                 except RuntimeError as e:
                     # Fallback to ASCII file when childs are not supported
                     parameter_type = click.File(
