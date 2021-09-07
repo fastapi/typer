@@ -689,7 +689,7 @@ def get_click_param(
                     annotation=type_, parameter_info=parameter_info
                 )
                 if parameter_info.help == "":
-                    parameter_info.help = f"<{field.alias} - {parameter_type} - '{field.field_info.description}'>"
+                    parameter_info.help = f"<{field.alias} - {parameter_type.name.upper()} - '{field.field_info.description}'>"
             else:
                 try:
                     types = []
@@ -701,7 +701,7 @@ def get_click_param(
                         ), "pydantic models with complex sub-types are not currently supported"
                         click_type = get_click_type(annotation=type_, parameter_info=parameter_info)
                         types.append(click_type)
-                        help.append(f"<{field.alias} - {click_type} - '{field.field_info.description}'>")
+                        help.append(f"<{field.alias} - {click_type.name.upper()} - '{field.field_info.description}'>")
                     parameter_type = tuple(types)
                     if parameter_info.help == "":
                         parameter_info.help = ", \n\n".join(help)
