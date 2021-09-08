@@ -710,6 +710,8 @@ def get_click_param(
                     parameter_type = click.File(
                         mode="r",
                     )
+                    import yaml
+                    parameter_info.help = "\n\n".join(yaml.dump(main_type.schema()["properties"]).splitlines())
         else:
             parameter_type = get_click_type(
                 annotation=main_type, parameter_info=parameter_info
