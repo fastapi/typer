@@ -5,6 +5,7 @@ from functools import update_wrapper, wraps
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, Union
 from uuid import UUID
+from asyncio import run
 
 import click
 
