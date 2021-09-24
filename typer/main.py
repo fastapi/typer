@@ -1,7 +1,7 @@
 import inspect
 from datetime import datetime
 from enum import Enum
-from functools import update_wrapper
+from functools import update_wrapper, wraps
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, Union
 from uuid import UUID
@@ -165,7 +165,33 @@ class Typer:
             return f
 
         return decorator
+    
 
+    def async_command(self, *args: Any, **kwargs: Any) -> Callable[[CommandFunctionType], CommandFunctionType]:
+        """Same arguments as command but works with async functions."""
+        
+        def decorator(async_func: CommandFunctionType) -> CommandFunctionType:
+            # Now we make a function that turns the async
+            # function into a synchronous function.
+            # By wrapping async_func we preserve the
+            # meta characteristics typer needs to create
+            # a good interface, such as the description and 
+            # argument type hints
+            @wraps(async_func)
+            def sync_func(*_args, **_kwargs):
+                return run(async_func(*_args, **_kwargs))
+
+            # Now use app.command as normal to register the
+            # synchronous function
+            self.command(*args, **kwargs)(sync_func)
+
+            # We return the async function unmodifed, 
+            # so its library functionality is preserved
+            return async_func
+
+        return decorator
+
+    
     def add_typer(
         self,
         typer_instance: "Typer",
