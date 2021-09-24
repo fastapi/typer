@@ -5,7 +5,6 @@ from functools import update_wrapper, wraps
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, Union
 from uuid import UUID
-from asyncio import run
 
 import click
 
@@ -168,9 +167,14 @@ class Typer:
         return decorator
     
 
-    def async_command(self, *args: Any, **kwargs: Any) -> Callable[[CommandFunctionType], CommandFunctionType]:
+    def async_command(self, *args: Any, backend=None, **kwargs: Any) -> Callable[[CommandFunctionType], CommandFunctionType]:
         """Same arguments as command but works with async functions."""
-        
+        # Dynamically import either anyio or asyncio
+        if backend is not None:
+            from anyio import run
+        else:
+            from asyncio import run
+ 
         def decorator(async_func: CommandFunctionType) -> CommandFunctionType:
             # Now we make a function that turns the async
             # function into a synchronous function.
@@ -180,9 +184,11 @@ class Typer:
             # argument type hints
             @wraps(async_func)
             def sync_func(*_args, **_kwargs):
+                if backend is not None:
+                    return run(async_func(*_args, **_kwargs), backend=backend)
                 return run(async_func(*_args, **_kwargs))
 
-            # Now use app.command as normal to register the
+            # Now use self.command as normal to register the
             # synchronous function
             self.command(*args, **kwargs)(sync_func)
 
