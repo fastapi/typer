@@ -5,6 +5,7 @@ from functools import update_wrapper, wraps
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, Union
 from uuid import UUID
+import asyncio
 
 import click
 
@@ -14,6 +15,7 @@ from .models import (
     AnyType,
     ArgumentInfo,
     CommandFunctionType,
+    AsyncCommandFunctionType,
     CommandInfo,
     Default,
     DefaultPlaceholder,
@@ -165,40 +167,61 @@ class Typer:
             return f
 
         return decorator
-    
 
-    def async_command(self, *args: Any, backend=None, **kwargs: Any) -> Callable[[CommandFunctionType], CommandFunctionType]:
+
+    def async_command(
+        self,
+        name: Optional[str] = None,
+        *,
+        run_func: Callable[[AsyncCommandFunctionType, Tuple[Any, ...], Dict[str, Any]], Any] = lambda f, args, kwargs: asyncio.run(f(*args, **kwargs)),
+        cls: Optional[Type[click.Command]] = None,
+        context_settings: Optional[Dict[Any, Any]] = None,
+        help: Optional[str] = None,
+        epilog: Optional[str] = None,
+        short_help: Optional[str] = None,
+        options_metavar: str = "[OPTIONS]",
+        add_help_option: bool = True,
+        no_args_is_help: bool = False,
+        hidden: bool = False,
+        deprecated: bool = False,
+    ) -> Callable[[AsyncCommandFunctionType], AsyncCommandFunctionType]:
         """Same arguments as command but works with async functions."""
         # Dynamically import either anyio or asyncio
-        if backend is not None:
-            from anyio import run
-        else:
-            from asyncio import run
- 
-        def decorator(async_func: CommandFunctionType) -> CommandFunctionType:
+
+        def decorator(async_func: AsyncCommandFunctionType) -> AsyncCommandFunctionType:
             # Now we make a function that turns the async
             # function into a synchronous function.
             # By wrapping async_func we preserve the
             # meta characteristics typer needs to create
-            # a good interface, such as the description and 
+            # a good interface, such as the description and
             # argument type hints
             @wraps(async_func)
-            def sync_func(*_args, **_kwargs):
-                if backend is not None:
-                    return run(async_func(*_args, **_kwargs), backend=backend)
-                return run(async_func(*_args, **_kwargs))
+            def sync_func(*args: Any, **kwargs: Any) -> Any:
+                return run_func(async_func, args, kwargs)
 
             # Now use self.command as normal to register the
             # synchronous function
-            self.command(*args, **kwargs)(sync_func)
+            self.command(
+                name=name,
+                cls=cls,
+                context_settings=context_settings,
+                help=help,
+                epilog=epilog,
+                short_help=short_help,
+                options_metavar=options_metavar,
+                add_help_option=add_help_option,
+                no_args_is_help=no_args_is_help,
+                hidden=hidden,
+                deprecated=deprecated
+            )(sync_func)
 
-            # We return the async function unmodifed, 
+            # We return the async function unmodifed,
             # so its library functionality is preserved
             return async_func
 
         return decorator
 
-    
+
     def add_typer(
         self,
         typer_instance: "Typer",

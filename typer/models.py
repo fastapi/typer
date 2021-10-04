@@ -8,6 +8,7 @@ from typing import (
     List,
     Optional,
     Sequence,
+    Coroutine,
     Type,
     TypeVar,
     Union,
@@ -70,7 +71,7 @@ class DefaultPlaceholder:
 DefaultType = TypeVar("DefaultType")
 
 CommandFunctionType = TypeVar("CommandFunctionType", bound=Callable[..., Any])
-
+AsyncCommandFunctionType = TypeVar("AsyncCommandFunctionType", bound=Callable[..., Coroutine[None, None, Any]])
 
 def Default(value: DefaultType) -> DefaultType:
     """
