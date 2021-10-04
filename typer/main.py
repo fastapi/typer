@@ -28,6 +28,7 @@ from .models import (
     ParameterInfo,
     ParamMeta,
     Required,
+    RunFunction,
     TyperInfo,
 )
 from .utils import get_params_from_function
@@ -173,7 +174,7 @@ class Typer:
         self,
         name: Optional[str] = None,
         *,
-        run_func: Callable[[AsyncCommandFunctionType, Tuple[Any, ...], Dict[str, Any]], Any] = lambda f, args, kwargs: asyncio.run(f(*args, **kwargs)),
+        run_func: RunFunction = lambda f, *args, **kwargs: asyncio.run(f(*args, **kwargs)),
         cls: Optional[Type[click.Command]] = None,
         context_settings: Optional[Dict[Any, Any]] = None,
         help: Optional[str] = None,
@@ -197,7 +198,7 @@ class Typer:
             # argument type hints
             @wraps(async_func)
             def sync_func(*args: Any, **kwargs: Any) -> Any:
-                return run_func(async_func, args, kwargs)
+                return run_func(async_func, *args, **kwargs)
 
             # Now use self.command as normal to register the
             # synchronous function

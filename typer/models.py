@@ -12,6 +12,7 @@ from typing import (
     Type,
     TypeVar,
     Union,
+    Protocol
 )
 
 import click
@@ -72,6 +73,18 @@ DefaultType = TypeVar("DefaultType")
 
 CommandFunctionType = TypeVar("CommandFunctionType", bound=Callable[..., Any])
 AsyncCommandFunctionType = TypeVar("AsyncCommandFunctionType", bound=Callable[..., Coroutine[None, None, Any]])
+
+class RunFunction(Protocol):
+    """
+    Defines a run function as the following.
+
+    Examples:
+        asyncio: `run_func = lambda f, *args, **kwargs: asyncio.run(f(*args, **kwargs))`
+        anyio: `run_func = lambda f, *args, **kwargs: anyio.run(f, *args, **kwargs)`
+        trio: `run_func = lambda f, *args, **kwargs: trio.run(f, *args, **kwargs)`
+    """
+    def __call__(self, f: AsyncCommandFunctionType, *args: Any, **kwargs: Any) -> Any: ...
+
 
 def Default(value: DefaultType) -> DefaultType:
     """
