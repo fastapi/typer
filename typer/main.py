@@ -627,7 +627,15 @@ def get_click_param(
     parameter_type: Any = None
     is_flag = None
     origin = getattr(main_type, "__origin__", None)
-    if origin is not None:
+    if parameter_info.param_type:
+        assert not lenient_issubclass(
+            parameter_info.param_type, click.ParamType
+        ), "Please initialize a Click ParamType before using it."
+        assert isinstance(
+            parameter_info.param_type, click.ParamType
+        ), "param_type must be a `click.ParamType`."
+        parameter_type = parameter_info.param_type
+    if parameter_type is None and origin is not None:
         # Handle Optional[SomeType]
         if origin is Union:
             types = []
