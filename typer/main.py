@@ -680,7 +680,6 @@ def get_click_param(
             parameter_type = tuple(types)
     if parameter_type is None:
         if lenient_issubclass(main_type, pydantic.BaseModel):
-
             if len(main_type.__fields__) == 1:
                 # click issue workaround - Tuple of single element raises exception
                 field = next(iter(main_type.__fields__.values()))
@@ -690,18 +689,26 @@ def get_click_param(
                 )
                 if parameter_info.help == "":
                     parameter_info.help = f"<{field.alias} - {parameter_type.name.upper()} - '{field.field_info.description}'>"
+                # param.name = field.alias
             else:
                 try:
                     types = []
                     help = []
                     for _, field in main_type.__fields__.items():
-                        type_ = field.type_
+                        if field.shape > 1:
+                            type_ = list
+                        else:
+                            type_ = field.type_
                         assert not getattr(
                             type_, "__origin__", None
                         ), "pydantic models with complex sub-types are not currently supported"
-                        click_type = get_click_type(annotation=type_, parameter_info=parameter_info)
+                        click_type = get_click_type(
+                            annotation=type_, parameter_info=parameter_info
+                        )
                         types.append(click_type)
-                        help.append(f"<{field.alias} - {click_type.name.upper()} - '{field.field_info.description}'>")
+                        help.append(
+                            f"<{field.alias} - {click_type.name.upper()} - '{field.field_info.description}'>"
+                        )
                     parameter_type = tuple(types)
                     if parameter_info.help == "":
                         parameter_info.help = ", \n\n".join(help)
@@ -711,7 +718,11 @@ def get_click_param(
                         mode="r",
                     )
                     import yaml
-                    parameter_info.help = "\n\n".join(yaml.dump(main_type.schema()["properties"]).splitlines())
+
+                    param.name = "Filepath"
+                    parameter_info.help = "\n\n".join(
+                        yaml.dump(main_type.schema()["properties"]).splitlines()
+                    )
         else:
             parameter_type = get_click_type(
                 annotation=main_type, parameter_info=parameter_info
