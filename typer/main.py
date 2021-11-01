@@ -719,7 +719,6 @@ def get_click_param(
                     )
                     import yaml
 
-                    param.name = "Filepath"
                     parameter_info.help = "\n\n".join(
                         yaml.dump(main_type.schema()["properties"]).splitlines()
                     )
