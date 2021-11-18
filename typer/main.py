@@ -1,9 +1,20 @@
 import inspect
 from datetime import datetime
 from enum import Enum
-from functools import update_wrapper
+from functools import update_wrapper, wraps
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, Union
+from typing import (
+    Any,
+    Callable,
+    Coroutine,
+    Dict,
+    List,
+    Optional,
+    Sequence,
+    Tuple,
+    Type,
+    Union,
+)
 from uuid import UUID
 
 import click
@@ -26,9 +37,30 @@ from .models import (
     ParameterInfo,
     ParamMeta,
     Required,
+    SyncCommandFunctionType,
     TyperInfo,
 )
 from .utils import get_params_from_function
+
+try:
+    import anyio
+
+    def run_as_sync(f: Callable[[], Coroutine[Any, Any, Any]], backend: str) -> Any:
+        return anyio.run(f, backend=backend)
+
+
+except ImportError:
+    import asyncio
+
+    anyio = None  # type: ignore
+
+    def run_as_sync(f: Callable[[], Coroutine[Any, Any, Any]], backend: str) -> Any:
+        if backend != "asyncio":
+            raise ValueError(
+                "Async backends other than asyncio require 'anyio' to be installed"
+            )
+
+        return asyncio.run(f())
 
 
 def get_install_completion_arguments() -> Tuple[click.Parameter, click.Parameter]:
@@ -60,6 +92,7 @@ class Typer:
         hidden: bool = Default(False),
         deprecated: bool = Default(False),
         add_completion: bool = True,
+        anyio_backend: str = "asyncio",
     ):
         self._add_completion = add_completion
         self.info = TyperInfo(
@@ -83,6 +116,27 @@ class Typer:
         self.registered_groups: List[TyperInfo] = []
         self.registered_commands: List[CommandInfo] = []
         self.registered_callback: Optional[TyperInfo] = None
+        self.anyio_backend = anyio_backend
+
+    def convert_to_sync_command_function(
+        self, f: CommandFunctionType
+    ) -> SyncCommandFunctionType:
+        if inspect.iscoroutinefunction(f):
+
+            @wraps(f)
+            def run_sync(*args: Any, **kwargs: Any) -> Any:
+                return run_as_sync(
+                    lambda: f(*args, **kwargs), backend=self.anyio_backend,  # type: ignore
+                )
+
+        elif inspect.iscoroutinefunction(f):
+            raise TypeError(
+                "Async functions are only supported when anyio is available"
+            )
+        else:
+            run_sync = f
+
+        return run_sync  # type: ignore
 
     def callback(
         self,
@@ -114,7 +168,7 @@ class Typer:
                 chain=chain,
                 result_callback=result_callback,
                 context_settings=context_settings,
-                callback=f,
+                callback=self.convert_to_sync_command_function(f),
                 help=help,
                 epilog=epilog,
                 short_help=short_help,
@@ -151,7 +205,7 @@ class Typer:
                     name=name,
                     cls=cls,
                     context_settings=context_settings,
-                    callback=f,
+                    callback=self.convert_to_sync_command_function(f),
                     help=help,
                     epilog=epilog,
                     short_help=short_help,
