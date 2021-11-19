@@ -71,12 +71,19 @@ class DefaultPlaceholder:
 DefaultType = TypeVar("DefaultType")
 
 
+AsyncCommandFunctionType = TypeVar(
+    "AsyncCommandFunctionType", bound=Callable[..., Coroutine[Any, Any, Any]]
+)
+
 SyncCommandFunctionType = TypeVar("SyncCommandFunctionType", bound=Callable[..., Any])
 
 
 CommandFunctionType = TypeVar(
     "CommandFunctionType", Callable[..., Any], Callable[..., Coroutine[Any, Any, Any]],
 )
+
+
+AsyncRunner = Callable[[Coroutine[Any, Any, Any]], Any]
 
 
 def Default(value: DefaultType) -> DefaultType:

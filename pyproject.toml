@@ -45,7 +45,8 @@ test = [
     "pytest-sugar >=0.9.4,<0.10.0",
     "mypy ==0.910",
     "black >=19.10b0,<20.0b0",
-    "isort >=5.0.6,<6.0.0"
+    "isort >=5.0.6,<6.0.0",
+    "anyio[trio] >= 3.0.0, < 4"
 ]
 doc = [
     "mkdocs >=1.1.2,<2.0.0",
@@ -62,6 +63,9 @@ all = [
 ]
 aynio = [
     "anyio >= 3.0.0, < 4",
+]
+trio = [
+    "anyio[trio] >= 3.0.0, < 4",
 ]
 
 [tool.isort]

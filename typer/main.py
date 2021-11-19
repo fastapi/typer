@@ -24,6 +24,7 @@ from .core import TyperArgument, TyperCommand, TyperGroup, TyperOption
 from .models import (
     AnyType,
     ArgumentInfo,
+    AsyncRunner,
     CommandFunctionType,
     CommandInfo,
     Default,
@@ -45,8 +46,19 @@ from .utils import get_params_from_function
 try:
     import anyio
 
-    def run_as_sync(f: Callable[[], Coroutine[Any, Any, Any]], backend: str) -> Any:
-        return anyio.run(f, backend=backend)
+    def run_as_sync(coroutine: Coroutine[Any, Any, Any]) -> Any:
+        """
+        When using anyio we try to predict the appropriate backend assuming that
+        alternative async engines are not mixed and only installed on demand.
+        """
+
+        try:
+            import trio  # just used to determine if trio is installed
+
+            backend = "trio"
+        except ImportError:
+            backend = "asyncio"
+        return anyio.run(lambda: coroutine, backend=backend)
 
 
 except ImportError:
@@ -54,13 +66,8 @@ except ImportError:
 
     anyio = None  # type: ignore
 
-    def run_as_sync(f: Callable[[], Coroutine[Any, Any, Any]], backend: str) -> Any:
-        if backend != "asyncio":
-            raise ValueError(
-                "Async backends other than asyncio require 'anyio' to be installed"
-            )
-
-        return asyncio.run(f())
+    def run_as_sync(coroutine: Coroutine[Any, Any, Any]) -> Any:
+        return asyncio.run(coroutine)
 
 
 def get_install_completion_arguments() -> Tuple[click.Parameter, click.Parameter]:
@@ -92,7 +99,7 @@ class Typer:
         hidden: bool = Default(False),
         deprecated: bool = Default(False),
         add_completion: bool = True,
-        anyio_backend: str = "asyncio",
+        async_runner: AsyncRunner = run_as_sync,
     ):
         self._add_completion = add_completion
         self.info = TyperInfo(
@@ -116,27 +123,22 @@ class Typer:
         self.registered_groups: List[TyperInfo] = []
         self.registered_commands: List[CommandInfo] = []
         self.registered_callback: Optional[TyperInfo] = None
-        self.anyio_backend = anyio_backend
+        self.async_runner = async_runner
 
-    def convert_to_sync_command_function(
-        self, f: CommandFunctionType
+    def to_sync(
+        self, f: CommandFunctionType, async_runner: Optional[AsyncRunner]
     ) -> SyncCommandFunctionType:
         if inspect.iscoroutinefunction(f):
+            run_sync: AsyncRunner = async_runner or self.async_runner
 
             @wraps(f)
-            def run_sync(*args: Any, **kwargs: Any) -> Any:
-                return run_as_sync(
-                    lambda: f(*args, **kwargs), backend=self.anyio_backend,  # type: ignore
-                )
+            def execute(*args: Any, **kwargs: Any) -> Any:
+                return run_sync(f(*args, **kwargs))
 
-        elif inspect.iscoroutinefunction(f):
-            raise TypeError(
-                "Async functions are only supported when anyio is available"
-            )
         else:
-            run_sync = f
+            execute = f
 
-        return run_sync  # type: ignore
+        return execute  # type: ignore
 
     def callback(
         self,
@@ -148,6 +150,7 @@ class Typer:
         subcommand_metavar: Optional[str] = Default(None),
         chain: bool = Default(False),
         result_callback: Optional[Callable[..., Any]] = Default(None),
+        async_runner: Optional[AsyncRunner] = None,
         # Command
         context_settings: Optional[Dict[Any, Any]] = Default(None),
         help: Optional[str] = Default(None),
@@ -168,7 +171,7 @@ class Typer:
                 chain=chain,
                 result_callback=result_callback,
                 context_settings=context_settings,
-                callback=self.convert_to_sync_command_function(f),
+                callback=self.to_sync(f, async_runner),
                 help=help,
                 epilog=epilog,
                 short_help=short_help,
@@ -195,6 +198,7 @@ class Typer:
         no_args_is_help: bool = False,
         hidden: bool = False,
         deprecated: bool = False,
+        async_runner: Optional[AsyncRunner] = None,
     ) -> Callable[[CommandFunctionType], CommandFunctionType]:
         if cls is None:
             cls = TyperCommand
@@ -205,7 +209,7 @@ class Typer:
                     name=name,
                     cls=cls,
                     context_settings=context_settings,
-                    callback=self.convert_to_sync_command_function(f),
+                    callback=self.to_sync(f, async_runner),
                     help=help,
                     epilog=epilog,
                     short_help=short_help,
