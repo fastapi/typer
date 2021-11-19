@@ -64,9 +64,6 @@ all = [
 anyio = [
     "anyio >= 3.0.0, < 4",
 ]
-trio = [
-    "anyio[trio] >= 3.0.0, < 4",
-]
 
 [tool.isort]
 profile = "black"
