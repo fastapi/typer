@@ -1,5 +1,5 @@
-import typer
 import trio
+import typer
 
 app = typer.Typer()
 

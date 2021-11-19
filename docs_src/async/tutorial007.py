@@ -1,6 +1,7 @@
-import typer
-import trio
 import asyncio
+
+import trio
+import typer
 
 app = typer.Typer()
 

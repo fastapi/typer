@@ -1,7 +1,7 @@
-import typer
-import trio
-import anyio
 import asyncio
+
+import anyio
+import typer
 
 app = typer.Typer(async_runner=lambda c: anyio.run(c, backend="asyncio"))
 
