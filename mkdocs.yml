@@ -80,6 +80,7 @@ nav:
         - Launching Applications: 'tutorial/launch.md'
         - Testing: 'tutorial/testing.md'
         - Using Click: 'tutorial/using-click.md'
+        - Async support: 'tutorial/async.md'
         - Building a Package: 'tutorial/package.md'
     - Typer CLI - completion for small scripts: 'typer-cli.md'
     - Alternatives, Inspiration and Comparisons: 'alternatives.md'

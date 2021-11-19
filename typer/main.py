@@ -916,7 +916,7 @@ def get_param_completion(
     return wrapper
 
 
-def run(function: Callable[..., Any]) -> Any:
+def run(function: Union[Callable[..., Any], Callable[..., Coroutine[Any, Any, Any]]]) -> Any:
     app = Typer()
     app.command()(function)
     app()

@@ -14,6 +14,10 @@ If you need a 2 minute refresher of how to use Python types (even if you don't u
 
 You will also see a 20 seconds refresher on the section [Tutorial - User Guide: First Steps](tutorial/first-steps.md){.internal-link target=_blank}.
 
+## Async support
+
+Supports **asyncio** out of the box. [AnyIO](https://github.com/agronholm/anyio) is available as extra dependency for automatic support of [Trio](https://github.com/python-trio/trio).
+
 ## Editor support
 
 **Typer** was designed to be easy and intuitive to use, to ensure the best development experience. With autocompletion everywhere.
