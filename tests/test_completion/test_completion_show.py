@@ -1,10 +1,16 @@
 import os
 import subprocess
 
-from docs_src.first_steps import tutorial001 as mod
+import pytest
+
+from docs_src.first_steps import tutorial001 as sync_mod
+from docs_src.asynchronous import tutorial001 as async_mod
+
+mod_params = ("mod", (sync_mod, async_mod))
 
 
-def test_completion_show_no_shell():
+@pytest.mark.parametrize(*mod_params)
+def test_completion_show_no_shell(mod):
     result = subprocess.run(
         ["coverage", "run", mod.__file__, "--show-completion"],
         stdout=subprocess.PIPE,
@@ -23,7 +29,8 @@ def test_completion_show_no_shell():
     )
 
 
-def test_completion_show_bash():
+@pytest.mark.parametrize(*mod_params)
+def test_completion_show_bash(mod):
     result = subprocess.run(
         ["coverage", "run", mod.__file__, "--show-completion", "bash"],
         stdout=subprocess.PIPE,
@@ -41,7 +48,8 @@ def test_completion_show_bash():
     )
 
 
-def test_completion_source_zsh():
+@pytest.mark.parametrize(*mod_params)
+def test_completion_source_zsh(mod):
     result = subprocess.run(
         ["coverage", "run", mod.__file__, "--show-completion", "zsh"],
         stdout=subprocess.PIPE,
@@ -56,7 +64,8 @@ def test_completion_source_zsh():
     assert "compdef _tutorial001py_completion tutorial001.py" in result.stdout
 
 
-def test_completion_source_fish():
+@pytest.mark.parametrize(*mod_params)
+def test_completion_source_fish(mod):
     result = subprocess.run(
         ["coverage", "run", mod.__file__, "--show-completion", "fish"],
         stdout=subprocess.PIPE,
@@ -71,7 +80,8 @@ def test_completion_source_fish():
     assert "complete --command tutorial001.py --no-files" in result.stdout
 
 
-def test_completion_source_powershell():
+@pytest.mark.parametrize(*mod_params)
+def test_completion_source_powershell(mod):
     result = subprocess.run(
         ["coverage", "run", mod.__file__, "--show-completion", "powershell"],
         stdout=subprocess.PIPE,
@@ -89,7 +99,8 @@ def test_completion_source_powershell():
     )
 
 
-def test_completion_source_pwsh():
+@pytest.mark.parametrize(*mod_params)
+def test_completion_source_pwsh(mod):
     result = subprocess.run(
         ["coverage", "run", mod.__file__, "--show-completion", "pwsh"],
         stdout=subprocess.PIPE,

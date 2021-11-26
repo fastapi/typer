@@ -3,10 +3,16 @@ import subprocess
 import sys
 from pathlib import Path
 
-from docs_src.first_steps import tutorial001 as mod
+import pytest
+
+from docs_src.asynchronous import tutorial001 as async_mod
+from docs_src.first_steps import tutorial001 as sync_mod
+
+mod_params = ("mod", (sync_mod, async_mod))
 
 
-def test_show_completion():
+@pytest.mark.parametrize(*mod_params)
+def test_show_completion(bashrc_lock, mod):
     result = subprocess.run(
         [
             "bash",
@@ -21,7 +27,8 @@ def test_show_completion():
     assert "_TUTORIAL001.PY_COMPLETE=complete_bash" in result.stdout
 
 
-def test_install_completion():
+@pytest.mark.parametrize(*mod_params)
+def test_install_completion(bashrc_lock, mod):
     bash_completion_path: Path = Path.home() / ".bashrc"
     text = ""
     if bash_completion_path.is_file():  # pragma: nocover
@@ -45,7 +52,8 @@ def test_install_completion():
     assert "Completion will take effect once you restart the terminal" in result.stdout
 
 
-def test_completion_invalid_instruction():
+@pytest.mark.parametrize(*mod_params)
+def test_completion_invalid_instruction(bashrc_lock, mod):
     result = subprocess.run(
         ["coverage", "run", mod.__file__],
         stdout=subprocess.PIPE,
@@ -61,7 +69,8 @@ def test_completion_invalid_instruction():
     assert "Invalid completion instruction." in result.stderr
 
 
-def test_completion_source_bash():
+@pytest.mark.parametrize(*mod_params)
+def test_completion_source_bash(bashrc_lock, mod):
     result = subprocess.run(
         ["coverage", "run", mod.__file__],
         stdout=subprocess.PIPE,
@@ -79,7 +88,8 @@ def test_completion_source_bash():
     )
 
 
-def test_completion_source_invalid_shell():
+@pytest.mark.parametrize(*mod_params)
+def test_completion_source_invalid_shell(bashrc_lock, mod):
     result = subprocess.run(
         ["coverage", "run", mod.__file__],
         stdout=subprocess.PIPE,
@@ -94,7 +104,8 @@ def test_completion_source_invalid_shell():
     assert "Shell xxx not supported." in result.stderr
 
 
-def test_completion_source_invalid_instruction():
+@pytest.mark.parametrize(*mod_params)
+def test_completion_source_invalid_instruction(bashrc_lock, mod):
     result = subprocess.run(
         ["coverage", "run", mod.__file__],
         stdout=subprocess.PIPE,
@@ -109,7 +120,8 @@ def test_completion_source_invalid_instruction():
     assert 'Completion instruction "explode" not supported.' in result.stderr
 
 
-def test_completion_source_zsh():
+@pytest.mark.parametrize(*mod_params)
+def test_completion_source_zsh(bashrc_lock, mod):
     result = subprocess.run(
         ["coverage", "run", mod.__file__],
         stdout=subprocess.PIPE,
@@ -124,7 +136,8 @@ def test_completion_source_zsh():
     assert "compdef _tutorial001py_completion tutorial001.py" in result.stdout
 
 
-def test_completion_source_fish():
+@pytest.mark.parametrize(*mod_params)
+def test_completion_source_fish(bashrc_lock, mod):
     result = subprocess.run(
         ["coverage", "run", mod.__file__],
         stdout=subprocess.PIPE,
@@ -139,7 +152,8 @@ def test_completion_source_fish():
     assert "complete --command tutorial001.py --no-files" in result.stdout
 
 
-def test_completion_source_powershell():
+@pytest.mark.parametrize(*mod_params)
+def test_completion_source_powershell(bashrc_lock, mod):
     result = subprocess.run(
         ["coverage", "run", mod.__file__],
         stdout=subprocess.PIPE,
@@ -157,7 +171,8 @@ def test_completion_source_powershell():
     )
 
 
-def test_completion_source_pwsh():
+@pytest.mark.parametrize(*mod_params)
+def test_completion_source_pwsh(bashrc_lock, mod):
     result = subprocess.run(
         ["coverage", "run", mod.__file__],
         stdout=subprocess.PIPE,

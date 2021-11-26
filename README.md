@@ -277,6 +277,8 @@ But you can also install extras:
 * <a href="https://github.com/sarugaku/shellingham" class="external-link" target="_blank"><code>shellingham</code></a>: and Typer will automatically detect the current shell when installing completion.
     * With `shellingham` you can just use `--install-completion`.
     * Without `shellingham`, you have to pass the name of the shell to install completion for, e.g. `--install-completion bash`.
+* <a href="https://github.com/agronholm/anyio" class="external-link" target="_blank"><code>anyio</code></a>: and Typer will automatically detect the appropriate engine to run asynchronous code.
+    * With <a href="https://github.com/python-trio/trio" class="external-link" target="_blank"><code>Trio</code></a> installed alongside Typer, Typer will use Trio to run asynchronous code by default.
 
 You can install `typer` with `colorama` and `shellingham` with `pip install typer[all]`.
 
