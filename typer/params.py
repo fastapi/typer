@@ -25,7 +25,7 @@ def Option(
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
     # Option
-    show_default: Union[bool, str, Callable[..., Union[bool, str]]] = True,
+    show_default: Union[bool, str, Callable[[], Union[bool, str]]] = True,
     prompt: Union[bool, str] = False,
     confirmation_prompt: bool = False,
     prompt_required: bool = True,
@@ -130,7 +130,7 @@ def Argument(
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
     # TyperArgument
-    show_default: Union[bool, str, Callable[..., Union[bool, str]]] = True,
+    show_default: Union[bool, str, Callable[[], Union[bool, str]]] = True,
     show_choices: bool = True,
     show_envvar: bool = True,
     help: Optional[str] = None,

@@ -106,7 +106,7 @@ class TyperArgument(click.core.Argument):
         ] = None,
         autocompletion: Optional[Callable[..., Any]] = None,
         # TyperArgument
-        show_default: Union[bool, str, Callable[..., Union[bool, str]]] = True,
+        show_default: Union[bool, str, Callable[[], Union[bool, str]]] = True,
         show_choices: bool = True,
         show_envvar: bool = True,
         help: Optional[str] = None,
@@ -224,7 +224,7 @@ class TyperOption(click.core.Option):
         ] = None,
         autocompletion: Optional[Callable[..., Any]] = None,
         # Option
-        show_default: Union[bool, str, Callable[..., Union[bool, str]]] = False,
+        show_default: Union[bool, str, Callable[[], Union[bool, str]]] = False,
         prompt: Union[bool, str] = False,
         confirmation_prompt: Union[bool, str] = False,
         prompt_required: bool = True,
