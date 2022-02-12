@@ -82,7 +82,6 @@ def _typer_param_setup_autocompletion_compat(
 
         self._custom_shell_complete = compat_autocompletion
 
-
 class TyperArgument(click.core.Argument):
     def __init__(
         self,
@@ -106,7 +105,7 @@ class TyperArgument(click.core.Argument):
         ] = None,
         autocompletion: Optional[Callable[..., Any]] = None,
         # TyperArgument
-        show_default: Union[bool, str] = True,
+        show_default: Union[bool, str, Callable[..., Union[bool, str]]] = True,
         show_choices: bool = True,
         show_envvar: bool = True,
         help: Optional[str] = None,
@@ -157,9 +156,11 @@ class TyperArgument(click.core.Argument):
                     else envvar
                 )
                 extra.append(f"env var: {var_str}")
-        if self.default is not None and (self.show_default or ctx.show_default):
-            if isinstance(self.show_default, str):
-                default_string = f"({self.show_default})"
+
+        show_default = self.show_default() if inspect.isfunction(self.show_default) else self.show_default
+        if self.default is not None and (show_default or ctx.show_default):
+            if isinstance(show_default, str):
+                default_string = f"({show_default})"
             elif isinstance(self.default, (list, tuple)):
                 default_string = ", ".join(str(d) for d in self.default)
             elif inspect.isfunction(self.default):
@@ -218,7 +219,7 @@ class TyperOption(click.core.Option):
         ] = None,
         autocompletion: Optional[Callable[..., Any]] = None,
         # Option
-        show_default: Union[bool, str] = False,
+        show_default: Union[bool, str, Callable[..., Union[bool, str]]] = False,
         prompt: Union[bool, str] = False,
         confirmation_prompt: Union[bool, str] = False,
         prompt_required: bool = True,
@@ -334,13 +335,15 @@ class TyperOption(click.core.Option):
         finally:
             ctx.resilient_parsing = resilient
 
-        show_default_is_str = isinstance(self.show_default, str)
+
+        show_default = self.show_default() if inspect.isfunction(self.show_default) else self.show_default
+        show_default_is_str = isinstance(show_default, str)
 
         if show_default_is_str or (
-            default_value is not None and (self.show_default or ctx.show_default)
+            default_value is not None and (show_default or ctx.show_default)
         ):
             if show_default_is_str:
-                default_string = f"({self.show_default})"
+                default_string = f"{show_default})"
             elif isinstance(default_value, (list, tuple)):
                 default_string = ", ".join(str(d) for d in default_value)
             elif callable(default_value):

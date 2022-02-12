@@ -174,7 +174,7 @@ class ParameterInfo:
         ] = None,
         autocompletion: Optional[Callable[..., Any]] = None,
         # TyperArgument
-        show_default: Union[bool, str] = True,
+        show_default: Union[bool, str, Callable[..., Union[bool, str]]] = True,
         show_choices: bool = True,
         show_envvar: bool = True,
         help: Optional[str] = None,
@@ -263,7 +263,7 @@ class OptionInfo(ParameterInfo):
         ] = None,
         autocompletion: Optional[Callable[..., Any]] = None,
         # Option
-        show_default: bool = True,
+        show_default: Union[bool, str, Callable[..., Union[bool, str]]] = True,
         prompt: Union[bool, str] = False,
         confirmation_prompt: bool = False,
         prompt_required: bool = True,
@@ -370,7 +370,7 @@ class ArgumentInfo(ParameterInfo):
         ] = None,
         autocompletion: Optional[Callable[..., Any]] = None,
         # TyperArgument
-        show_default: Union[bool, str] = True,
+        show_default: Union[bool, str, Callable[..., Union[bool, str]]] = True,
         show_choices: bool = True,
         show_envvar: bool = True,
         help: Optional[str] = None,
