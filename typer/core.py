@@ -347,7 +347,7 @@ class TyperOption(click.core.Option):
             elif isinstance(default_value, (list, tuple)):
                 default_string = ", ".join(str(d) for d in default_value)
             elif callable(default_value):
-                default_string = _("(dynamic)")
+                default_string = "(dynamic)"
             elif self.is_bool_flag and self.secondary_opts:
                 # For boolean flags that have distinct True/False opts,
                 # use the opt without prefix instead of the value.
