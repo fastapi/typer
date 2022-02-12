@@ -160,7 +160,7 @@ class TyperArgument(click.core.Argument):
         show_default = self.show_default() if inspect.isfunction(self.show_default) else self.show_default
         if self.default is not None and (show_default or ctx.show_default):
             if isinstance(show_default, str):
-                default_string = f"({show_default})"
+                default_string = show_default
             elif isinstance(self.default, (list, tuple)):
                 default_string = ", ".join(str(d) for d in self.default)
             elif inspect.isfunction(self.default):
@@ -343,7 +343,7 @@ class TyperOption(click.core.Option):
             default_value is not None and (show_default or ctx.show_default)
         ):
             if show_default_is_str:
-                default_string = f"{show_default})"
+                default_string = show_default
             elif isinstance(default_value, (list, tuple)):
                 default_string = ", ".join(str(d) for d in default_value)
             elif callable(default_value):
