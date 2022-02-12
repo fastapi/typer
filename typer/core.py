@@ -82,6 +82,7 @@ def _typer_param_setup_autocompletion_compat(
 
         self._custom_shell_complete = compat_autocompletion
 
+
 class TyperArgument(click.core.Argument):
     def __init__(
         self,
@@ -157,7 +158,11 @@ class TyperArgument(click.core.Argument):
                 )
                 extra.append(f"env var: {var_str}")
 
-        show_default = self.show_default() if inspect.isfunction(self.show_default) else self.show_default
+        show_default = (
+            self.show_default()
+            if inspect.isfunction(self.show_default)
+            else self.show_default
+        )
         if self.default is not None and (show_default or ctx.show_default):
             if isinstance(show_default, str):
                 default_string = show_default
@@ -335,8 +340,11 @@ class TyperOption(click.core.Option):
         finally:
             ctx.resilient_parsing = resilient
 
-
-        show_default = self.show_default() if inspect.isfunction(self.show_default) else self.show_default
+        show_default = (
+            self.show_default()
+            if inspect.isfunction(self.show_default)
+            else self.show_default
+        )
         show_default_is_str = isinstance(show_default, str)
 
         if show_default_is_str or (
