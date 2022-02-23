@@ -96,8 +96,11 @@ def do_fish_complete(cli: click.Command, prog_name: str) -> bool:
 def do_powershell_complete(cli: click.Command, prog_name: str) -> bool:
     completion_args = os.getenv("_TYPER_COMPLETE_ARGS", "")
     incomplete = os.getenv("_TYPER_COMPLETE_WORD_TO_COMPLETE", "")
+    cursor = os.getenv("_TYPER_CURSOR_POSITION")
+    if cursor:
+        completion_args = completion_args[:int(cursor)]
     cwords = click.parser.split_arg_string(completion_args)
-    args = cwords[1:]
+    args = cwords[1:-1] if incomplete else cwords[1:] 
     for item, help in click._bashcomplete.get_choices(cli, prog_name, args, incomplete):
         click.echo(f"{item}:::{help or ' '}")
 
