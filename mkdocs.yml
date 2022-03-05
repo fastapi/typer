@@ -4,6 +4,7 @@ site_url: https://typer.tiangolo.com/
 
 theme:
   name: material
+  custom_dir: docs/overrides
   palette:
     primary: black
     accent: teal
