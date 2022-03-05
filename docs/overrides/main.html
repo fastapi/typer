@@ -3,7 +3,7 @@
 {{ super() }}
 <script src="https://cdn.jsdelivr.net/npm/qabot@0.4"></script>
 <script>
-  // This prevents the global search interfere with qa-bot internal text input.
+  // This prevents the global search from interfering with qa-bot's internal text input.
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('qa-bot').forEach((x) => {
       x.addEventListener('keydown', (event) => {
@@ -16,11 +16,11 @@
     server="https://tiangolo-typer.docsqa.jina.ai" 
     theme="infer" 
     title="Typer Bot"
-    description="A library for building CLI applications"
+    description="Typer, build great CLIs. Easy to code. Based on Python type hints."
     style="font-size: 0.8rem"
 >
     <dl>
-        <dt>You can ask questions about Typer. Try</dt>
+        <dt>You can ask questions about Typer. Try:</dt>
         <dd>How can I terminate a program?</dd>
         <dd>How to launch applications?</dd>
         <dd>How to add help to CLI argument?</dd>
