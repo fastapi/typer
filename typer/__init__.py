@@ -2,6 +2,8 @@
 
 __version__ = "0.4.0"
 
+from shutil import get_terminal_size as get_terminal_size
+
 from click.exceptions import Abort as Abort
 from click.exceptions import BadParameter as BadParameter
 from click.exceptions import Exit as Exit
@@ -9,7 +11,6 @@ from click.termui import clear as clear
 from click.termui import confirm as confirm
 from click.termui import echo_via_pager as echo_via_pager
 from click.termui import edit as edit
-from click.termui import get_terminal_size as get_terminal_size
 from click.termui import getchar as getchar
 from click.termui import launch as launch
 from click.termui import pause as pause
