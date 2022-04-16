@@ -1,5 +1,6 @@
 ## Latest Changes
 
+* ⬆️ Upgrade Codecov GitHub Action. PR [#383](https://github.com/tiangolo/typer/pull/383) by [@tiangolo](https://github.com/tiangolo).
 ## 0.4.1
 
 ### Fixes
