@@ -28,7 +28,8 @@ def test_completion():
     assert '"Camila":"The reader of books."' in result.stdout
     assert '"Carlos":"The writer of scripts."' in result.stdout
     assert '"Sebastian":"The type hints guy."' in result.stdout
-    assert "['--name']" in result.stderr
+    # TODO: when deprecating Click 7, remove second option
+    assert "[]" in result.stderr or "['--name']" in result.stderr
 
 
 def test_1():

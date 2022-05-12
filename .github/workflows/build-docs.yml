@@ -1,0 +1,72 @@
+name: Build Docs
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [opened, synchronize]
+  workflow_dispatch:
+    inputs:
+      debug_enabled:
+        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
+        required: false
+        default: false
+jobs:
+  build-docs:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.7"
+      # Allow debugging with tmate
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled }}
+        with:
+          limit-access-to-actor: true
+      - uses: actions/cache@v2
+        id: cache
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ runner.os }}-python-docs-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml') }}-v01
+      - name: Install Flit
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: python3.7 -m pip install flit
+      - name: Install docs extras
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: python3.7 -m flit install --extras doc
+      - name: Install Material for MkDocs Insiders
+        if: ( github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false ) && steps.cache.outputs.cache-hit != 'true'
+        run: python3.7 -m pip install git+https://${{ secrets.ACTIONS_TOKEN }}@github.com/squidfunk/mkdocs-material-insiders.git
+      - uses: actions/cache@v2
+        with:
+          key: mkdocs-cards-${{ github.ref }}-v1
+          path: .cache
+      - name: Build Docs
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == true
+        run: python3.7 -m mkdocs build
+      - name: Build Docs with Insiders
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false
+        run: python3.7 -m mkdocs build --config-file mkdocs.insiders.yml
+      - name: Zip docs
+        run: bash ./scripts/zip-docs.sh
+      - uses: actions/upload-artifact@v2
+        with:
+          name: docs-zip
+          path: ./docs.zip
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v1.1.5
+        with:
+          publish-dir: './site'
+          production-branch: master
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          enable-commit-comment: false
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
