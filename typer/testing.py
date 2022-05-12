@@ -1,4 +1,4 @@
-from typing import IO, Any, Mapping, Optional, Sequence, Text, Union
+from typing import IO, Any, Mapping, Optional, Sequence, Union
 
 from click.testing import CliRunner as ClickCliRunner  # noqa
 from click.testing import Result
@@ -11,7 +11,7 @@ class CliRunner(ClickCliRunner):
         self,
         app: Typer,
         args: Optional[Union[str, Sequence[str]]] = None,
-        input: Optional[Union[bytes, Text, IO[Any]]] = None,
+        input: Optional[Union[bytes, str, IO[Any]]] = None,
         env: Optional[Mapping[str, str]] = None,
         catch_exceptions: bool = True,
         color: bool = False,
