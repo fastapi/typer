@@ -283,7 +283,7 @@ class TyperOption(click.core.Option):
 
         any_prefix_is_slash = False
 
-        def _write_opts(opts: Sequence[str]) -> str:
+        def _write_opts(opts: List[str]) -> str:
             nonlocal any_prefix_is_slash
 
             rv, any_slashes = click.formatting.join_options(opts)
