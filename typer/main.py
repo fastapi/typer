@@ -9,7 +9,7 @@ from uuid import UUID
 import click
 
 from .completion import get_completion_inspect_parameters
-from .core import TyperArgument, TyperCommand
+from .core import TyperArgument, TyperCommand, TyperGroup, TyperOption
 from .models import (
     AnyType,
     ArgumentInfo,
@@ -45,7 +45,7 @@ class Typer:
         name: Optional[str] = Default(None),
         cls: Optional[Type[click.Command]] = Default(None),
         invoke_without_command: bool = Default(False),
-        no_args_is_help: Optional[bool] = Default(None),
+        no_args_is_help: bool = Default(False),
         subcommand_metavar: Optional[str] = Default(None),
         chain: bool = Default(False),
         result_callback: Optional[Callable[..., Any]] = Default(None),
@@ -90,7 +90,7 @@ class Typer:
         *,
         cls: Optional[Type[click.Command]] = Default(None),
         invoke_without_command: bool = Default(False),
-        no_args_is_help: Optional[bool] = Default(None),
+        no_args_is_help: bool = Default(False),
         subcommand_metavar: Optional[str] = Default(None),
         chain: bool = Default(False),
         result_callback: Optional[Callable[..., Any]] = Default(None),
@@ -173,7 +173,7 @@ class Typer:
         name: Optional[str] = Default(None),
         cls: Optional[Type[click.Command]] = Default(None),
         invoke_without_command: bool = Default(False),
-        no_args_is_help: Optional[bool] = Default(None),
+        no_args_is_help: bool = Default(False),
         subcommand_metavar: Optional[str] = Default(None),
         chain: bool = Default(False),
         result_callback: Optional[Callable[..., Any]] = Default(None),
@@ -347,17 +347,19 @@ def get_group_from_info(group_info: TyperInfo) -> click.Command:
     commands: Dict[str, click.Command] = {}
     for command_info in group_info.typer_instance.registered_commands:
         command = get_command_from_info(command_info=command_info)
-        commands[command.name] = command
+        if command.name:
+            commands[command.name] = command
     for sub_group_info in group_info.typer_instance.registered_groups:
         sub_group = get_group_from_info(sub_group_info)
-        commands[sub_group.name] = sub_group
+        if sub_group.name:
+            commands[sub_group.name] = sub_group
     solved_info = solve_typer_info_defaults(group_info)
     (
         params,
         convertors,
         context_param_name,
     ) = get_params_convertors_ctx_param_name_from_function(solved_info.callback)
-    cls = solved_info.cls or click.Group
+    cls = solved_info.cls or TyperGroup
     group = cls(  # type: ignore
         name=solved_info.name or "",
         commands=commands,
@@ -422,7 +424,7 @@ def get_command_from_info(command_info: CommandInfo) -> click.Command:
         context_param_name,
     ) = get_params_convertors_ctx_param_name_from_function(command_info.callback)
     cls = command_info.cls or TyperCommand
-    command = cls(  # type: ignore
+    command = cls(
         name=name,
         context_settings=command_info.context_settings,
         callback=get_callback(
@@ -484,7 +486,8 @@ def get_callback(
     for param_name in parameters:
         use_params[param_name] = None
     for param in params:
-        use_params[param.name] = param.default
+        if param.name:
+            use_params[param.name] = param.default
 
     def wrapper(**kwargs: Any) -> Any:
         for k, v in kwargs.items():
@@ -537,7 +540,7 @@ def get_click_type(
         or parameter_info.path_type
         or parameter_info.resolve_path
     ):
-        return click.Path(  # type: ignore
+        return click.Path(
             exists=parameter_info.exists,
             file_okay=parameter_info.file_okay,
             dir_okay=parameter_info.dir_okay,
@@ -683,12 +686,13 @@ def get_click_param(
         else:
             param_decls.append(default_option_declaration)
         return (
-            click.Option(
+            TyperOption(
                 # Option
                 param_decls=param_decls,
-                show_default=parameter_info.show_default,  # type: ignore
+                show_default=parameter_info.show_default,
                 prompt=parameter_info.prompt,
                 confirmation_prompt=parameter_info.confirmation_prompt,
+                prompt_required=parameter_info.prompt_required,
                 hide_input=parameter_info.hide_input,
                 is_flag=is_flag,
                 flag_value=parameter_info.flag_value,
@@ -710,6 +714,7 @@ def get_click_param(
                 expose_value=parameter_info.expose_value,
                 is_eager=parameter_info.is_eager,
                 envvar=parameter_info.envvar,
+                shell_complete=parameter_info.shell_complete,
                 autocompletion=get_param_completion(parameter_info.autocompletion),
             ),
             convertor,
