@@ -22,7 +22,12 @@ def test_prompt_not_equal():
         app, input="Old Project\nNew Spice\nOld Project\nOld Project\n"
     )
     assert result.exit_code == 0
-    assert "Error: the two entered values do not match" in result.output
+    # TODO: when deprecating Click 7, remove second option
+
+    assert (
+        "Error: The two entered values do not match" in result.output
+        or "Error: the two entered values do not match" in result.output
+    )
     assert "Deleting project Old Project" in result.output
 
 
