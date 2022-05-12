@@ -49,7 +49,11 @@ def test_delete_verbose():
 def test_wrong_verbose():
     result = runner.invoke(app, ["delete", "--verbose", "Camila"])
     assert result.exit_code != 0
-    assert "Error: no such option: --verbose" in result.output
+    # TODO: when deprecating Click 7, remove second option
+    assert (
+        "Error: No such option: --verbose" in result.output
+        or "Error: no such option: --verbose" in result.output
+    )
 
 
 def test_script():

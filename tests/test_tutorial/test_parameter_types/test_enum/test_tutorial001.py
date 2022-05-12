@@ -26,8 +26,12 @@ def test_main():
 def test_invalid():
     result = runner.invoke(app, ["--network", "capsule"])
     assert result.exit_code != 0
+    # TODO: when deprecating Click 7, remove second option
+
     assert (
-        "Error: Invalid value for '--network': invalid choice: capsule. (choose from simple, conv, lstm)"
+        "Error: Invalid value for '--network': 'capsule' is not one of 'simple', 'conv', 'lstm'"
+        in result.output
+        or "Error: Invalid value for '--network': invalid choice: capsule. (choose from simple, conv, lstm)"
         in result.output
     )
 

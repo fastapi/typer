@@ -402,7 +402,7 @@ are called "Python function parameters" or "Python function arguments".
     It's quite technical... and somewhat pedantic.
 
     One refers to the variable name in a function *declaration*. Like:
-    
+
     ```
     def bring_person(name: str, lastname: str = ""):
         pass

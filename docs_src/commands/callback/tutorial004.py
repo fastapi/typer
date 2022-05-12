@@ -9,7 +9,7 @@ def callback():
     Manage users CLI app.
 
     Use it with the create command.
-    
+
     A new user with the given NAME will be created.
     """
 
