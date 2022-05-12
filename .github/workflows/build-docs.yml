@@ -52,7 +52,7 @@ jobs:
         if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == true
         run: python3.7 -m mkdocs build
       - name: Build Docs with Insiders
-        if: github.event_name != 'pull_request' or github.event.pull_request.head.repo.fork != false
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork != false
         run: python3.7 -m mkdocs build --config-file mkdocs.insiders.yml
       - name: Zip docs
         run: bash ./scripts/zip-docs.sh
