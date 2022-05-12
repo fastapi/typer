@@ -34,7 +34,7 @@ Here you are passing the string `"--name"` as the second positional argument to 
 
 !!! info
     "<a href="https://docs.python.org/3.8/glossary.html#term-argument" class="external-link" target="_blank">Positional</a>" means that it's not a function argument with a keyword name.
-    
+
     For example `show_default=True` is a keyword argument. "`show_default`" is the keyword.
 
     But in `"--name"` there's no `option_name="--name"` or something similar, it's just the string value `"--name"` that goes in `typer.Option()` after the `...` value passed in the first position.
