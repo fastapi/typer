@@ -2,15 +2,10 @@ from enum import Enum
 
 import typer
 
-NeuralNetwork = Enum(
-    "NeuralNetwork",
-    {k: k for k in ["simple", "conv", "lstm"]}
-)
+NeuralNetwork = Enum("NeuralNetwork", {k: k for k in ["simple", "conv", "lstm"]})
 
 
-def main(
-    network: NeuralNetwork = typer.Option("simple", case_sensitive=False)
-):
+def main(network: NeuralNetwork = typer.Option("simple", case_sensitive=False)):
     typer.echo(f"Training neural network of type: {network.value}")
 
 
