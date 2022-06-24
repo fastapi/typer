@@ -1,3 +1,4 @@
+import os
 import subprocess
 
 import pytest
@@ -84,11 +85,15 @@ def test_users_delete(app):
 def test_scripts(mod):
     from docs_src.subcommands.tutorial001 import items, users
 
+    env = os.environ.copy()
+    env["PYTHONPATH"] = ":".join(list(tutorial001.__path__))
+
     for module in [mod, items, users]:
         result = subprocess.run(
             ["coverage", "run", module.__file__, "--help"],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             encoding="utf-8",
+            env=env,
         )
         assert "Usage" in result.stdout
