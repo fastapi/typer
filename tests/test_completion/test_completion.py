@@ -47,7 +47,7 @@ def test_install_completion():
 
 def test_completion_invalid_instruction():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__],
+        [sys.executable, "-m", "coverage", "run", mod.__file__],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -63,7 +63,7 @@ def test_completion_invalid_instruction():
 
 def test_completion_source_bash():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__],
+        [sys.executable, "-m", "coverage", "run", mod.__file__],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -81,7 +81,7 @@ def test_completion_source_bash():
 
 def test_completion_source_invalid_shell():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__],
+        [sys.executable, "-m", "coverage", "run", mod.__file__],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -96,7 +96,7 @@ def test_completion_source_invalid_shell():
 
 def test_completion_source_invalid_instruction():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__],
+        [sys.executable, "-m", "coverage", "run", mod.__file__],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -111,7 +111,7 @@ def test_completion_source_invalid_instruction():
 
 def test_completion_source_zsh():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__],
+        [sys.executable, "-m", "coverage", "run", mod.__file__],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -126,7 +126,7 @@ def test_completion_source_zsh():
 
 def test_completion_source_fish():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__],
+        [sys.executable, "-m", "coverage", "run", mod.__file__],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -141,7 +141,7 @@ def test_completion_source_fish():
 
 def test_completion_source_powershell():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__],
+        [sys.executable, "-m", "coverage", "run", mod.__file__],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -159,7 +159,7 @@ def test_completion_source_powershell():
 
 def test_completion_source_pwsh():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__],
+        [sys.executable, "-m", "coverage", "run", mod.__file__],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
