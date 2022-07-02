@@ -47,7 +47,8 @@ class SomeEnum(Enum):
 
 
 @pytest.mark.parametrize(
-    "type_annotation", [List[Path], List[SomeEnum], List[str]],
+    "type_annotation",
+    [List[Path], List[SomeEnum], List[str]],
 )
 def test_list_parameters_convert_to_lists(type_annotation):
     # Lists containing objects that are converted by Click (i.e. not Path or Enum)
