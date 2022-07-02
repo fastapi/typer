@@ -232,3 +232,14 @@ def test_forward_references():
         "arg1: <class 'str'> Hello\narg2: <class 'int'> 2\narg3: <class 'int'> 3\narg4: <class 'bool'> True\narg5: <class 'bool'> True\n"
         in result.stdout
     )
+
+
+def test_context_settings_inheritance_single_command():
+    app = typer.Typer(context_settings=dict(help_option_names=["-h", "--help"]))
+
+    @app.command()
+    def main(name: str):
+        pass  # pragma: nocover
+
+    result = runner.invoke(app, ["main", "-h"])
+    assert "Show this message and exit." in result.stdout

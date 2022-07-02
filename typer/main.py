@@ -236,7 +236,14 @@ def get_command(typer_instance: Typer) -> click.Command:
         return click_command
     elif len(typer_instance.registered_commands) == 1:
         # Create a single Command
-        click_command = get_command_from_info(typer_instance.registered_commands[0])
+        single_command = typer_instance.registered_commands[0]
+
+        if not single_command.context_settings and not isinstance(
+            typer_instance.info.context_settings, DefaultPlaceholder
+        ):
+            single_command.context_settings = typer_instance.info.context_settings
+
+        click_command = get_command_from_info(single_command)
         if typer_instance._add_completion:
             click_command.params.append(click_install_param)
             click_command.params.append(click_show_param)
