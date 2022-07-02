@@ -190,7 +190,7 @@ $ ls --size ./myproject
 
 </div>
 
-The main visual difference between a *CLI option* and and a *CLI argument* is that the *CLI option* has `--` prepended to the name, like in "`--size`".
+The main visual difference between a *CLI option* and a *CLI argument* is that the *CLI option* has `--` prepended to the name, like in "`--size`".
 
 A *CLI option* doesn't depend on the order because it has a predefined name (here it's `--size`). This is because the CLI app is looking specifically for a literal `--size` parameter (also known as "flag" or "switch"), with that specific "name" (here the specific name is "`--size`"). The CLI app will check if you typed it or not, it will be actively looking for `--size` even if you didn't type it (to check if it's there or not).
 
@@ -402,7 +402,7 @@ are called "Python function parameters" or "Python function arguments".
     It's quite technical... and somewhat pedantic.
 
     One refers to the variable name in a function *declaration*. Like:
-    
+
     ```
     def bring_person(name: str, lastname: str = ""):
         pass

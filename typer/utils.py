@@ -1,6 +1,8 @@
 import inspect
 from typing import Any, Callable, Dict, get_type_hints
 
+import click
+
 from .models import ParamMeta
 
 
@@ -16,3 +18,7 @@ def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
             name=param.name, default=param.default, annotation=annotation
         )
     return params
+
+
+def _get_click_major() -> int:
+    return int(click.__version__.split(".")[0])

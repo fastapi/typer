@@ -129,7 +129,7 @@ Here is something written to standard error
 
 </div>
 
-### "Standard Input"
+## "Standard Input"
 
 As a final detail, when you type text in your keyboard to your terminal, the operating system also considers it another "**virtual file**" that you are writing text to.
 
