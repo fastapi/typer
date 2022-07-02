@@ -1,6 +1,8 @@
 ## Latest Changes
 
 
+## 0.4.2
+
 ### Fixes
 
 * 🐛 Fix type conversion for `List` and `Tuple` and their internal types. PR [#143](https://github.com/tiangolo/typer/pull/143) by [@hellowhistler](https://github.com/hellowhistler).
