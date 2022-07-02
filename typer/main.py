@@ -693,7 +693,7 @@ def get_click_param(
         parameter_type = get_click_type(
             annotation=main_type, parameter_info=parameter_info
         )
-    convertor: Optional[Callable[[Any], Any]] = determine_type_convertor(main_type)
+    convertor = determine_type_convertor(main_type)
     if is_list:
         convertor = generate_list_convertor(convertor)
     if is_tuple:
