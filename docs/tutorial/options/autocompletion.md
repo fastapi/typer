@@ -222,7 +222,7 @@ If there's no `--name` in the command line, it will be `None`, so we use `or []`
 
 Then, when we have a completion candidate, we check if each `name` was already provided with `--name` by checking if it's in that list of `names` with `name not in names`.
 
-And then we `yield` each item that has not being used yet.
+And then we `yield` each item that has not been used yet.
 
 Check it:
 

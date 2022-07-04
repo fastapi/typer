@@ -32,8 +32,13 @@ def test_params():
 def test_invalid():
     result = runner.invoke(app, ["Camila", "--age", "15.3"])
     assert result.exit_code != 0
+    # TODO: when deprecating Click 7, remove second option
+
     assert (
-        "Error: Invalid value for '--age': 15.3 is not a valid integer" in result.output
+        "Error: Invalid value for '--age': '15.3' is not a valid integer"
+        in result.output
+        or "Error: Invalid value for '--age': 15.3 is not a valid integer"
+        in result.output
     )
 
 
