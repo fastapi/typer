@@ -1,5 +1,6 @@
 ## Latest Changes
 
+* ✏ Fix typo, "ASCII codes" to "ANSI escape sequences". PR [#308](https://github.com/tiangolo/typer/pull/308) by [@septatrix](https://github.com/septatrix).
 
 ## 0.4.2
 
