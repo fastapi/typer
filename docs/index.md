@@ -271,6 +271,7 @@ Typer uses <a href="https://click.palletsprojects.com/" class="external-link" ta
 
 But you can also install extras:
 
+* <a href="https://rich.readthedocs.io/en/stable/index.html" class="external-link" target="_blank">Rich</a>: and Typer will show nicely formatted errors automatically.
 * <a href="https://pypi.org/project/colorama/" class="external-link" target="_blank"><code>colorama</code></a>: and Click will automatically use it to make sure your terminal's colors always work correctly, even in Windows.
     * Then you can use any tool you want to output your terminal's colors in all the systems, including the integrated `typer.style()` and `typer.secho()` (provided by Click).
     * Or any other tool, e.g. <a href="https://pypi.org/project/wasabi/" class="external-link" target="_blank"><code>wasabi</code></a>, <a href="https://github.com/erikrose/blessings" class="external-link" target="_blank"><code>blessings</code></a>.
