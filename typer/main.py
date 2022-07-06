@@ -279,7 +279,7 @@ class Typer:
         try:
             return get_command(self)(*args, **kwargs)
         except Exception as e:
-            # Set a custom attirbute to tell the hook to show nice exceptions for user
+            # Set a custom attribute to tell the hook to show nice exceptions for user
             # code. An alternative/first implementation was a custom exception with
             # raise custom_exc from e
             # but that means the last error shown is the custom exception, not the
