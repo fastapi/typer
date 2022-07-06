@@ -236,7 +236,14 @@ def get_command(typer_instance: Typer) -> click.Command:
         return click_command
     elif len(typer_instance.registered_commands) == 1:
         # Create a single Command
-        click_command = get_command_from_info(typer_instance.registered_commands[0])
+        single_command = typer_instance.registered_commands[0]
+
+        if not single_command.context_settings and not isinstance(
+            typer_instance.info.context_settings, DefaultPlaceholder
+        ):
+            single_command.context_settings = typer_instance.info.context_settings
+
+        click_command = get_command_from_info(single_command)
         if typer_instance._add_completion:
             click_command.params.append(click_install_param)
             click_command.params.append(click_show_param)
@@ -446,13 +453,22 @@ def get_command_from_info(command_info: CommandInfo) -> click.Command:
     return command
 
 
+def determine_type_convertor(type_: Any) -> Optional[Callable[[Any], Any]]:
+    convertor: Optional[Callable[[Any], Any]] = None
+    if lenient_issubclass(type_, Path):
+        convertor = param_path_convertor
+    if lenient_issubclass(type_, Enum):
+        convertor = generate_enum_convertor(type_)
+    return convertor
+
+
 def param_path_convertor(value: Optional[str] = None) -> Optional[Path]:
     if value is not None:
         return Path(value)
     return None
 
 
-def generate_enum_convertor(enum: Type[Enum]) -> Callable[..., Any]:
+def generate_enum_convertor(enum: Type[Enum]) -> Callable[[Any], Any]:
     lower_val_map = {str(val.value).lower(): val for val in enum}
 
     def convertor(value: Any) -> Any:
@@ -465,9 +481,25 @@ def generate_enum_convertor(enum: Type[Enum]) -> Callable[..., Any]:
     return convertor
 
 
-def generate_iter_convertor(convertor: Callable[[Any], Any]) -> Callable[..., Any]:
-    def internal_convertor(value: Any) -> List[Any]:
-        return [convertor(v) for v in value]
+def generate_list_convertor(
+    convertor: Optional[Callable[[Any], Any]]
+) -> Callable[[Sequence[Any]], List[Any]]:
+    def internal_convertor(value: Sequence[Any]) -> List[Any]:
+        return [convertor(v) if convertor else v for v in value]
+
+    return internal_convertor
+
+
+def generate_tuple_convertor(
+    types: Sequence[Any],
+) -> Callable[[Tuple[Any, ...]], Tuple[Any, ...]]:
+    convertors = [determine_type_convertor(type_) for type_ in types]
+
+    def internal_convertor(param_args: Tuple[Any, ...]) -> Tuple[Any, ...]:
+        return tuple(
+            convertor(arg) if convertor else arg
+            for (convertor, arg) in zip(convertors, param_args)
+        )
 
     return internal_convertor
 
@@ -624,6 +656,7 @@ def get_click_param(
         annotation = str
     main_type = annotation
     is_list = False
+    is_tuple = False
     parameter_type: Any = None
     is_flag = None
     origin = getattr(main_type, "__origin__", None)
@@ -655,18 +688,16 @@ def get_click_param(
                     get_click_type(annotation=type_, parameter_info=parameter_info)
                 )
             parameter_type = tuple(types)
+            is_tuple = True
     if parameter_type is None:
         parameter_type = get_click_type(
             annotation=main_type, parameter_info=parameter_info
         )
-    convertor = None
-    if lenient_issubclass(main_type, Path):
-        convertor = param_path_convertor
-    if lenient_issubclass(main_type, Enum):
-        convertor = generate_enum_convertor(main_type)
-    if convertor and is_list:
-        convertor = generate_iter_convertor(convertor)
-        # TODO: handle recursive conversion for tuples
+    convertor = determine_type_convertor(main_type)
+    if is_list:
+        convertor = generate_list_convertor(convertor)
+    if is_tuple:
+        convertor = generate_tuple_convertor(main_type.__args__)
     if isinstance(parameter_info, OptionInfo):
         if main_type is bool and not (parameter_info.is_flag is False):
             is_flag = True

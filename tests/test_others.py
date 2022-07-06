@@ -1,7 +1,6 @@
 import os
 import subprocess
 from pathlib import Path
-from typing import Optional
 from unittest import mock
 
 import click
@@ -14,37 +13,6 @@ from typer.models import TyperInfo
 from typer.testing import CliRunner
 
 runner = CliRunner()
-
-
-def test_optional():
-    app = typer.Typer()
-
-    @app.command()
-    def opt(user: Optional[str] = None):
-        if user:
-            typer.echo(f"User: {user}")
-        else:
-            typer.echo("No user")
-
-    result = runner.invoke(app)
-    assert result.exit_code == 0
-    assert "No user" in result.output
-
-    result = runner.invoke(app, ["--user", "Camila"])
-    assert result.exit_code == 0
-    assert "User: Camila" in result.output
-
-
-def test_no_type():
-    app = typer.Typer()
-
-    @app.command()
-    def no_type(user):
-        typer.echo(f"User: {user}")
-
-    result = runner.invoke(app, ["Camila"])
-    assert result.exit_code == 0
-    assert "User: Camila" in result.output
 
 
 def test_help_from_info():
@@ -232,3 +200,14 @@ def test_forward_references():
         "arg1: <class 'str'> Hello\narg2: <class 'int'> 2\narg3: <class 'int'> 3\narg4: <class 'bool'> True\narg5: <class 'bool'> True\n"
         in result.stdout
     )
+
+
+def test_context_settings_inheritance_single_command():
+    app = typer.Typer(context_settings=dict(help_option_names=["-h", "--help"]))
+
+    @app.command()
+    def main(name: str):
+        pass  # pragma: nocover
+
+    result = runner.invoke(app, ["main", "-h"])
+    assert "Show this message and exit." in result.stdout
