@@ -1,6 +1,8 @@
 ## Latest Changes
 
 
+## 0.5.0
+
 ### Features
 
 * ✨ Add pretty error tracebacks for user errors and support for Rich. PR [#412](https://github.com/tiangolo/typer/pull/412) by [@tiangolo](https://github.com/tiangolo).
