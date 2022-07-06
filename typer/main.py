@@ -42,8 +42,8 @@ try:
 
     console_stderr = Console(stderr=True)
 
-except ImportError:
-    rich = None
+except ImportError:  # pragma: nocover
+    rich = None  # type: ignore
 
 _original_except_hook = sys.excepthook
 
