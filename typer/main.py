@@ -46,12 +46,13 @@ except ImportError:  # pragma: nocover
     rich = None  # type: ignore
 
 _original_except_hook = sys.excepthook
+_typer_developer_exception_attr_name = "__typer_developer_exception__"
 
 
 def except_hook(
     exc_type: Type[BaseException], exc_value: BaseException, tb: TracebackType
 ) -> None:
-    if not getattr(exc_value, "__typer_developer_exception__", None):
+    if not getattr(exc_value, _typer_developer_exception_attr_name, None):
         _original_except_hook(exc_type, exc_value, tb)
         return
     typer_path = os.path.dirname(__file__)
@@ -284,7 +285,7 @@ class Typer:
             # but that means the last error shown is the custom exception, not the
             # actual error. This trick improves developer experience by showing the
             # actual error last.
-            setattr(e, "__typer_developer_exception__", True)
+            setattr(e, _typer_developer_exception_attr_name, True)
             raise e
 
 
