@@ -70,9 +70,9 @@ For the tutorial, you might want to install it with all the optional dependencie
 ```console
 $ pip install typer[all]
 ---> 100%
-Successfully installed typer click colorama shellingham
+Successfully installed typer click colorama shellingham rich
 ```
 
 </div>
 
-...that also includes `colorama` and `shellingham`.
+...that also includes `colorama`, `shellingham`, and `rich`.

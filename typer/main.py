@@ -1,8 +1,13 @@
 import inspect
+import os
+import sys
+import traceback
 from datetime import datetime
 from enum import Enum
 from functools import update_wrapper
 from pathlib import Path
+from traceback import FrameSummary, StackSummary
+from types import TracebackType
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, Union
 from uuid import UUID
 
@@ -29,6 +34,64 @@ from .models import (
     TyperInfo,
 )
 from .utils import get_params_from_function
+
+try:
+    import rich
+    from rich.console import Console
+    from rich.traceback import Traceback
+
+    console_stderr = Console(stderr=True)
+
+except ImportError:  # pragma: nocover
+    rich = None  # type: ignore
+
+_original_except_hook = sys.excepthook
+_typer_developer_exception_attr_name = "__typer_developer_exception__"
+
+
+def except_hook(
+    exc_type: Type[BaseException], exc_value: BaseException, tb: TracebackType
+) -> None:
+    if not getattr(exc_value, _typer_developer_exception_attr_name, None):
+        _original_except_hook(exc_type, exc_value, tb)
+        return
+    typer_path = os.path.dirname(__file__)
+    click_path = os.path.dirname(click.__file__)
+    supress_internal_dir_names = [typer_path, click_path]
+    exc = exc_value
+    if rich:
+        rich_tb = Traceback.from_exception(
+            type(exc),
+            exc,
+            exc.__traceback__,
+            show_locals=True,
+            suppress=supress_internal_dir_names,
+        )
+        console_stderr.print(rich_tb)
+        return
+    tb_exc = traceback.TracebackException.from_exception(exc)
+    stack: List[FrameSummary] = []
+    for frame in tb_exc.stack:
+        if any(
+            [frame.filename.startswith(path) for path in supress_internal_dir_names]
+        ):
+            # Hide the line for internal libraries, Typer and Click
+            stack.append(
+                traceback.FrameSummary(
+                    filename=frame.filename,
+                    lineno=frame.lineno,
+                    name=frame.name,
+                    line="",
+                )
+            )
+        else:
+            stack.append(frame)
+    # Type ignore ref: https://github.com/python/typeshed/pull/8244
+    final_stack_summary = StackSummary.from_list(stack)  # type: ignore
+    tb_exc.stack = final_stack_summary
+    for line in tb_exc.format():
+        print(line, file=sys.stderr)
+    return
 
 
 def get_install_completion_arguments() -> Tuple[click.Parameter, click.Parameter]:
@@ -211,7 +274,19 @@ class Typer:
         )
 
     def __call__(self, *args: Any, **kwargs: Any) -> Any:
-        return get_command(self)(*args, **kwargs)
+        if sys.excepthook != except_hook:
+            sys.excepthook = except_hook
+        try:
+            return get_command(self)(*args, **kwargs)
+        except Exception as e:
+            # Set a custom attribute to tell the hook to show nice exceptions for user
+            # code. An alternative/first implementation was a custom exception with
+            # raise custom_exc from e
+            # but that means the last error shown is the custom exception, not the
+            # actual error. This trick improves developer experience by showing the
+            # actual error last.
+            setattr(e, _typer_developer_exception_attr_name, True)
+            raise e
 
 
 def get_group(typer_instance: Typer) -> click.Command:
