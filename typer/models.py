@@ -454,3 +454,16 @@ class ParamMeta:
         self.name = name
         self.default = default
         self.annotation = annotation
+
+
+class DeveloperExceptionConfig:
+    def __init__(
+        self,
+        *,
+        pretty_errors_enable: bool = True,
+        pretty_errors_show_locals: bool = True,
+        pretty_errors_short: bool = True,
+    ) -> None:
+        self.pretty_errors_enable = pretty_errors_enable
+        self.pretty_errors_show_locals = pretty_errors_show_locals
+        self.pretty_errors_short = pretty_errors_short
