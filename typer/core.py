@@ -23,6 +23,14 @@ import click.types
 
 from .utils import _get_click_major
 
+try:
+    import rich
+
+    from . import rich_utils
+
+except ImportError:  # pragma: nocover
+    rich = None  # type: ignore
+
 if TYPE_CHECKING:  # pragma: no cover
     import click.shell_completion
 
@@ -271,6 +279,59 @@ class TyperOption(click.core.Option):
                 self, autocompletion=autocompletion
             )
 
+    def _get_default_string(
+        self,
+        *,
+        ctx: click.Context,
+        show_default_is_str: bool,
+        default_value: Union[List[Any], Tuple[Any, ...], str, Callable[..., Any], Any],
+    ) -> str:
+        # Extracted from click.core.Option.get_help_record() to be reused by
+        # rich_utils avoiding RegEx hacks
+        if show_default_is_str:
+            default_string = f"({self.show_default})"
+        elif isinstance(default_value, (list, tuple)):
+            default_string = ", ".join(str(d) for d in default_value)
+        elif callable(default_value):
+            default_string = _("(dynamic)")
+        elif self.is_bool_flag and self.secondary_opts:
+            # For boolean flags that have distinct True/False opts,
+            # use the opt without prefix instead of the value.
+            # Typer override, original commented
+            # default_string = click.parser.split_opt(
+            #     (self.opts if self.default else self.secondary_opts)[0]
+            # )[1]
+            if self.default:
+                if self.opts:
+                    default_string = click.parser.split_opt(self.opts[0])[1]
+                else:
+                    default_string = str(default_value)
+            else:
+                default_string = click.parser.split_opt(self.secondary_opts[0])[1]
+            # Typer override end
+        elif self.is_bool_flag and not self.secondary_opts and not default_value:
+            default_string = ""
+        else:
+            default_string = str(default_value)
+        return default_string
+
+    def _extract_default(
+        self, *, ctx: click.Context
+    ) -> Optional[Union[Any, Callable[[], Any]]]:
+        # Extracted from click.core.Option.get_help_record() to be reused by
+        # rich_utils avoiding RegEx hacks
+        # Temporarily enable resilient parsing to avoid type casting
+        # failing for the default. Might be possible to extend this to
+        # help formatting in general.
+        resilient = ctx.resilient_parsing
+        ctx.resilient_parsing = True
+
+        try:
+            default_value = self.get_default(ctx, call=False)
+        finally:
+            ctx.resilient_parsing = resilient
+        return default_value
+
     def get_help_record(self, ctx: click.Context) -> Optional[Tuple[str, str]]:
         # Click 7.x was not breaking this use case, so in that case, re-use its logic
         if _get_click_major() < 8:
@@ -323,48 +384,24 @@ class TyperOption(click.core.Option):
                 )
                 extra.append(_("env var: {var}").format(var=var_str))
 
-        # Temporarily enable resilient parsing to avoid type casting
-        # failing for the default. Might be possible to extend this to
-        # help formatting in general.
-        resilient = ctx.resilient_parsing
-        ctx.resilient_parsing = True
-
-        try:
-            default_value = self.get_default(ctx, call=False)
-        finally:
-            ctx.resilient_parsing = resilient
+        # Typer override:
+        # Extracted to _extract_default() to allow re-using it in rich_utils
+        default_value = self._extract_default(ctx=ctx)
+        # Typer override end
 
         show_default_is_str = isinstance(self.show_default, str)
 
         if show_default_is_str or (
             default_value is not None and (self.show_default or ctx.show_default)
         ):
-            if show_default_is_str:
-                default_string = f"({self.show_default})"
-            elif isinstance(default_value, (list, tuple)):
-                default_string = ", ".join(str(d) for d in default_value)
-            elif callable(default_value):
-                default_string = _("(dynamic)")
-            elif self.is_bool_flag and self.secondary_opts:
-                # For boolean flags that have distinct True/False opts,
-                # use the opt without prefix instead of the value.
-                # Typer override, original commented
-                # default_string = click.parser.split_opt(
-                #     (self.opts if self.default else self.secondary_opts)[0]
-                # )[1]
-                if self.default:
-                    if self.opts:
-                        default_string = click.parser.split_opt(self.opts[0])[1]
-                    else:
-                        default_string = str(default_value)
-                else:
-                    default_string = click.parser.split_opt(self.secondary_opts[0])[1]
-                # Typer override end
-            elif self.is_bool_flag and not self.secondary_opts and not default_value:
-                default_string = ""
-            else:
-                default_string = str(default_value)
-
+            # Typer override:
+            # Extracted to _get_default_str() to allow re-using it in rich_utils
+            default_string = self._get_default_string(
+                ctx=ctx,
+                show_default_is_str=show_default_is_str,
+                default_value=default_value,
+            )
+            # Typer override end
             if default_string:
                 extra.append(_("default: {default}").format(default=default_string))
 
@@ -451,6 +488,51 @@ class TyperCommand(click.core.Command):
             self, ctx_args=ctx_args, prog_name=prog_name, complete_var=complete_var
         )
 
+    def main(
+        self,
+        args: Optional[Sequence[str]] = None,
+        prog_name: Optional[str] = None,
+        complete_var: Optional[str] = None,
+        standalone_mode: bool = True,
+        windows_expand_args: bool = True,
+        **extra: Any,
+    ) -> Any:
+        if not rich:
+            return super().main(
+                args=args,
+                prog_name=prog_name,
+                complete_var=complete_var,
+                standalone_mode=standalone_mode,
+                windows_expand_args=windows_expand_args,
+                **extra,
+            )
+        try:
+            rv = super().main(
+                args=args,
+                prog_name=prog_name,
+                complete_var=complete_var,
+                standalone_mode=False,
+                windows_expand_args=windows_expand_args,
+                **extra,
+            )
+            if not standalone_mode:
+                return rv
+        except click.ClickException as e:
+            if not standalone_mode:
+                raise
+            rich_utils.rich_format_error(e)
+            sys.exit(e.exit_code)
+        except click.exceptions.Abort:
+            if not standalone_mode:
+                raise
+            rich_utils.rich_abort_error()
+            sys.exit(1)
+
+    def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
+        if not rich:
+            return super().format_help(ctx, formatter)
+        return rich_utils.rich_format_help(self, ctx, formatter)
+
 
 class TyperGroup(click.core.Group):
     def format_options(
@@ -468,3 +550,48 @@ class TyperGroup(click.core.Group):
         _typer_main_shell_completion(
             self, ctx_args=ctx_args, prog_name=prog_name, complete_var=complete_var
         )
+
+    def main(
+        self,
+        args: Optional[Sequence[str]] = None,
+        prog_name: Optional[str] = None,
+        complete_var: Optional[str] = None,
+        standalone_mode: bool = True,
+        windows_expand_args: bool = True,
+        **extra: Any,
+    ) -> Any:
+        if not rich:
+            return super().main(
+                args=args,
+                prog_name=prog_name,
+                complete_var=complete_var,
+                standalone_mode=standalone_mode,
+                windows_expand_args=windows_expand_args,
+                **extra,
+            )
+        try:
+            rv = super().main(
+                args=args,
+                prog_name=prog_name,
+                complete_var=complete_var,
+                standalone_mode=False,
+                windows_expand_args=windows_expand_args,
+                **extra,
+            )
+            if not standalone_mode:
+                return rv
+        except click.ClickException as e:
+            if not standalone_mode:
+                raise
+            rich_utils.rich_format_error(e)
+            sys.exit(e.exit_code)
+        except click.exceptions.Abort:
+            if not standalone_mode:
+                raise
+            rich_utils.rich_abort_error()
+            sys.exit(1)
+
+    def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
+        if not rich:
+            return super().format_help(ctx, formatter)
+        return rich_utils.rich_format_help(self, ctx, formatter)
