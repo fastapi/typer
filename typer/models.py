@@ -18,7 +18,8 @@ import click
 if TYPE_CHECKING:  # pragma: no cover
     import click.shell_completion
 
-    from .main import Typer  # noqa
+    from .core import TyperCommand, TyperGroup
+    from .main import Typer
 
 
 NoneType = type(None)
@@ -87,7 +88,7 @@ class CommandInfo:
         self,
         name: Optional[str] = None,
         *,
-        cls: Optional[Type[click.Command]] = None,
+        cls: Optional[Type["TyperCommand"]] = None,
         context_settings: Optional[Dict[Any, Any]] = None,
         callback: Optional[Callable[..., Any]] = None,
         help: Optional[str] = None,
@@ -119,7 +120,7 @@ class TyperInfo:
         typer_instance: Optional["Typer"] = Default(None),
         *,
         name: Optional[str] = Default(None),
-        cls: Optional[Type[click.Command]] = Default(None),
+        cls: Optional[Type["TyperGroup"]] = Default(None),
         invoke_without_command: bool = Default(False),
         no_args_is_help: bool = Default(False),
         subcommand_metavar: Optional[str] = Default(None),
@@ -186,7 +187,7 @@ class ParameterInfo:
         max: Optional[Union[int, float]] = None,
         clamp: bool = False,
         # DateTime
-        formats: Optional[Union[List[str]]] = None,
+        formats: Optional[List[str]] = None,
         # File
         mode: Optional[str] = None,
         encoding: Optional[str] = None,
@@ -283,7 +284,7 @@ class OptionInfo(ParameterInfo):
         max: Optional[Union[int, float]] = None,
         clamp: bool = False,
         # DateTime
-        formats: Optional[Union[List[str]]] = None,
+        formats: Optional[List[str]] = None,
         # File
         mode: Optional[str] = None,
         encoding: Optional[str] = None,
@@ -382,7 +383,7 @@ class ArgumentInfo(ParameterInfo):
         max: Optional[Union[int, float]] = None,
         clamp: bool = False,
         # DateTime
-        formats: Optional[Union[List[str]]] = None,
+        formats: Optional[List[str]] = None,
         # File
         mode: Optional[str] = None,
         encoding: Optional[str] = None,
