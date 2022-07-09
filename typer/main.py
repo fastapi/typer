@@ -111,7 +111,7 @@ class Typer:
         self,
         *,
         name: Optional[str] = Default(None),
-        cls: Optional[Type[click.Command]] = Default(None),
+        cls: Optional[Type[TyperGroup]] = Default(None),
         invoke_without_command: bool = Default(False),
         no_args_is_help: bool = Default(False),
         subcommand_metavar: Optional[str] = Default(None),
@@ -128,11 +128,16 @@ class Typer:
         hidden: bool = Default(False),
         deprecated: bool = Default(False),
         add_completion: bool = True,
+        # Rich settings
+        rich_markdown_enable: bool = False,
+        rich_markup_enable: bool = False,
         pretty_errors_enable: bool = True,
         pretty_errors_show_locals: bool = True,
         pretty_errors_short: bool = True,
     ):
         self._add_completion = add_completion
+        self.rich_markdown_enable = rich_markdown_enable
+        self.rich_markup_enable = rich_markup_enable
         self.pretty_errors_enable = pretty_errors_enable
         self.pretty_errors_show_locals = pretty_errors_show_locals
         self.pretty_errors_short = pretty_errors_short
@@ -162,7 +167,7 @@ class Typer:
         self,
         name: Optional[str] = Default(None),
         *,
-        cls: Optional[Type[click.Command]] = Default(None),
+        cls: Optional[Type[TyperGroup]] = Default(None),
         invoke_without_command: bool = Default(False),
         no_args_is_help: bool = Default(False),
         subcommand_metavar: Optional[str] = Default(None),
@@ -205,7 +210,7 @@ class Typer:
         self,
         name: Optional[str] = None,
         *,
-        cls: Optional[Type[click.Command]] = None,
+        cls: Optional[Type[TyperCommand]] = None,
         context_settings: Optional[Dict[Any, Any]] = None,
         help: Optional[str] = None,
         epilog: Optional[str] = None,
@@ -245,7 +250,7 @@ class Typer:
         typer_instance: "Typer",
         *,
         name: Optional[str] = Default(None),
-        cls: Optional[Type[click.Command]] = Default(None),
+        cls: Optional[Type[TyperGroup]] = Default(None),
         invoke_without_command: bool = Default(False),
         no_args_is_help: bool = Default(False),
         subcommand_metavar: Optional[str] = Default(None),
@@ -312,6 +317,8 @@ def get_group(typer_instance: Typer) -> click.Command:
     group = get_group_from_info(
         TyperInfo(typer_instance),
         pretty_errors_short=typer_instance.pretty_errors_short,
+        rich_markdown_enable=typer_instance.rich_markdown_enable,
+        rich_markup_enable=typer_instance.rich_markup_enable,
     )
     return group
 
@@ -341,7 +348,10 @@ def get_command(typer_instance: Typer) -> click.Command:
             single_command.context_settings = typer_instance.info.context_settings
 
         click_command = get_command_from_info(
-            single_command, pretty_errors_short=typer_instance.pretty_errors_short
+            single_command,
+            pretty_errors_short=typer_instance.pretty_errors_short,
+            rich_markdown_enable=typer_instance.rich_markdown_enable,
+            rich_markup_enable=typer_instance.rich_markup_enable,
         )
         if typer_instance._add_completion:
             click_command.params.append(click_install_param)
@@ -447,7 +457,11 @@ def solve_typer_info_defaults(typer_info: TyperInfo) -> TyperInfo:
 
 
 def get_group_from_info(
-    group_info: TyperInfo, *, pretty_errors_short: bool
+    group_info: TyperInfo,
+    *,
+    pretty_errors_short: bool,
+    rich_markdown_enable: bool,
+    rich_markup_enable: bool,
 ) -> click.Command:
     assert (
         group_info.typer_instance
@@ -455,13 +469,19 @@ def get_group_from_info(
     commands: Dict[str, click.Command] = {}
     for command_info in group_info.typer_instance.registered_commands:
         command = get_command_from_info(
-            command_info=command_info, pretty_errors_short=pretty_errors_short
+            command_info=command_info,
+            pretty_errors_short=pretty_errors_short,
+            rich_markdown_enable=rich_markdown_enable,
+            rich_markup_enable=rich_markup_enable,
         )
         if command.name:
             commands[command.name] = command
     for sub_group_info in group_info.typer_instance.registered_groups:
         sub_group = get_group_from_info(
-            sub_group_info, pretty_errors_short=pretty_errors_short
+            sub_group_info,
+            pretty_errors_short=pretty_errors_short,
+            rich_markdown_enable=rich_markdown_enable,
+            rich_markup_enable=rich_markup_enable,
         )
         if sub_group.name:
             commands[sub_group.name] = sub_group
@@ -472,7 +492,8 @@ def get_group_from_info(
         context_param_name,
     ) = get_params_convertors_ctx_param_name_from_function(solved_info.callback)
     cls = solved_info.cls or TyperGroup
-    group = cls(  # type: ignore
+    assert issubclass(cls, TyperGroup)
+    group = cls(
         name=solved_info.name or "",
         commands=commands,
         invoke_without_command=solved_info.invoke_without_command,
@@ -488,7 +509,7 @@ def get_group_from_info(
             context_param_name=context_param_name,
             pretty_errors_short=pretty_errors_short,
         ),
-        params=params,  # type: ignore
+        params=params,
         help=solved_info.help,
         epilog=solved_info.epilog,
         short_help=solved_info.short_help,
@@ -496,6 +517,8 @@ def get_group_from_info(
         add_help_option=solved_info.add_help_option,
         hidden=solved_info.hidden,
         deprecated=solved_info.deprecated,
+        rich_markdown_enable=rich_markdown_enable,
+        rich_markup_enable=rich_markup_enable,
     )
     return group
 
@@ -524,7 +547,11 @@ def get_params_convertors_ctx_param_name_from_function(
 
 
 def get_command_from_info(
-    command_info: CommandInfo, *, pretty_errors_short: bool
+    command_info: CommandInfo,
+    *,
+    pretty_errors_short: bool,
+    rich_markdown_enable: bool,
+    rich_markup_enable: bool,
 ) -> click.Command:
     assert command_info.callback, "A command must have a callback function"
     name = command_info.name or get_command_name(command_info.callback.__name__)
@@ -558,6 +585,8 @@ def get_command_from_info(
         no_args_is_help=command_info.no_args_is_help,
         hidden=command_info.hidden,
         deprecated=command_info.deprecated,
+        rich_markdown_enable=rich_markdown_enable,
+        rich_markup_enable=rich_markup_enable,
     )
     return command
 

@@ -473,6 +473,41 @@ def _typer_main_shell_completion(
 
 
 class TyperCommand(click.core.Command):
+    def __init__(
+        self,
+        name: Optional[str],
+        *,
+        context_settings: Optional[Dict[str, Any]] = None,
+        callback: Optional[Callable[..., Any]] = None,
+        params: Optional[List[click.Parameter]] = None,
+        help: Optional[str] = None,
+        epilog: Optional[str] = None,
+        short_help: Optional[str] = None,
+        options_metavar: Optional[str] = "[OPTIONS]",
+        add_help_option: bool = True,
+        no_args_is_help: bool = False,
+        hidden: bool = False,
+        deprecated: bool = False,
+        rich_markdown_enable: bool,
+        rich_markup_enable: bool,
+    ) -> None:
+        super().__init__(
+            name=name,
+            context_settings=context_settings,
+            callback=callback,
+            params=params,
+            help=help,
+            epilog=epilog,
+            short_help=short_help,
+            options_metavar=options_metavar,
+            add_help_option=add_help_option,
+            no_args_is_help=no_args_is_help,
+            hidden=hidden,
+            deprecated=deprecated,
+        )
+        self.rich_markdown_enable = rich_markdown_enable
+        self.rich_markup_enable = rich_markup_enable
+
     def format_options(
         self, ctx: click.Context, formatter: click.HelpFormatter
     ) -> None:
@@ -531,10 +566,30 @@ class TyperCommand(click.core.Command):
     def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
         if not rich:
             return super().format_help(ctx, formatter)
-        return rich_utils.rich_format_help(self, ctx, formatter)
+        return rich_utils.rich_format_help(
+            obj=self,
+            ctx=ctx,
+            rich_markdown_enable=self.rich_markdown_enable,
+            rich_markup_enable=self.rich_markup_enable,
+        )
 
 
 class TyperGroup(click.core.Group):
+    def __init__(
+        self,
+        *,
+        name: Optional[str] = None,
+        commands: Optional[
+            Union[Dict[str, click.Command], Sequence[click.Command]]
+        ] = None,
+        rich_markdown_enable: bool,
+        rich_markup_enable: bool,
+        **attrs: Any,
+    ) -> None:
+        super().__init__(name=name, commands=commands, **attrs)
+        self.rich_markdown_enable = rich_markdown_enable
+        self.rich_markup_enable = rich_markup_enable
+
     def format_options(
         self, ctx: click.Context, formatter: click.HelpFormatter
     ) -> None:
@@ -594,4 +649,9 @@ class TyperGroup(click.core.Group):
     def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
         if not rich:
             return super().format_help(ctx, formatter)
-        return rich_utils.rich_format_help(self, ctx, formatter)
+        return rich_utils.rich_format_help(
+            obj=self,
+            ctx=ctx,
+            rich_markdown_enable=self.rich_markdown_enable,
+            rich_markup_enable=self.rich_markup_enable,
+        )
