@@ -28,10 +28,7 @@ else:
 STYLE_OPTION = "bold cyan"
 STYLE_SWITCH = "bold green"
 STYLE_METAVAR = "bold yellow"
-STYLE_METAVAR_APPEND = "dim yellow"
 STYLE_METAVAR_SEPARATOR = "dim"
-STYLE_HEADER_TEXT = ""
-STYLE_FOOTER_TEXT = ""
 STYLE_USAGE = "yellow"
 STYLE_USAGE_COMMAND = "bold"
 STYLE_DEPRECATED = "red"
@@ -76,39 +73,23 @@ FORCE_TERMINAL = (
 )
 
 # Fixed strings
-HEADER_TEXT: Optional[str] = None
-FOOTER_TEXT: Optional[str] = None
 DEPRECATED_STRING = "(Deprecated) "
 DEFAULT_STRING = "[default: {}]"
 ENVVAR_STRING = "[env var: {}]"
 REQUIRED_SHORT_STRING = "*"
 REQUIRED_LONG_STRING = "[required]"
 RANGE_STRING = " [{}]"
-APPEND_METAVARS_HELP_STRING = "({})"
 ARGUMENTS_PANEL_TITLE = "Arguments"
 OPTIONS_PANEL_TITLE = "Options"
 COMMANDS_PANEL_TITLE = "Commands"
 ERRORS_PANEL_TITLE = "Error"
-ERRORS_SUGGESTION: Optional[
-    str
-] = None  # Default: Try 'cmd -h' for help. Set to False to disable.
-ERRORS_EPILOGUE: Optional[str] = None
 ABORTED_TEXT = "Aborted."
 
 # Behaviours
-SHOW_ARGUMENTS = False  # Show positional arguments
-SHOW_METAVARS_COLUMN = True  # Show a column with the option metavar (eg. INTEGER)
-APPEND_METAVARS_HELP = False  # Append metavar (eg. [TEXT]) after the help text
-GROUP_ARGUMENTS_OPTIONS = False  # Show arguments with options instead of in own panel
-OPTION_ENVVAR_FIRST = False  # Show env vars before option help text instead of avert
-USE_MARKDOWN = False  # Parse help strings as markdown
-USE_MARKDOWN_EMOJI = True  # Parse emoji codes in markdown :smile:
-USE_RICH_MARKUP = False  # Parse help strings for rich markup (eg. [red]my text[/])
 # Define sorted groups of panels to display subcommands
 COMMAND_GROUPS: Dict[str, List[Dict[str, Union[str, List[str]]]]] = {}
 # Define sorted groups of panels to display options and arguments
 OPTION_GROUPS: Dict[str, List[Dict[str, Union[str, Sequence[str]]]]] = {}
-USE_CLICK_SHORT_HELP = False  # Use click's default function to truncate help text
 
 
 # Rich regex highlighter
@@ -144,30 +125,24 @@ def _get_rich_console() -> Console:
     )
 
 
-def _make_rich_rext(text: str, style: str = "") -> Union[Markdown, Text]:
+def _make_rich_rext(
+    *, text: str, style: str = "", rich_markdown_enable: bool, rich_markup_enable: bool
+) -> Union[Markdown, Text]:
     """Take a string, remove indentations, and return styled text.
 
     By default, return the text as a Rich Text with the request style.
-    If USE_RICH_MARKUP is True, also parse the text for Rich markup strings.
-    If USE_MARKDOWN is True, parse as Markdown.
+    If `rich_markdown_enable` is `True`, also parse the text for Rich markup strings.
+    If `rich_markup_enable` is `True`, parse as Markdown.
 
-    Only one of USE_MARKDOWN or USE_RICH_MARKUP can be True.
-    If both are True, USE_MARKDOWN takes precedence.
-
-    Args:
-        text (str): Text to style
-        style (str): Rich style to apply
-
-    Returns:
-        MarkdownElement or Text: Styled text object
+    Only one of `rich_markdown_enable` or `rich_markup_enable` can be True.
+    If both are True, `rich_markdown_enable` takes precedence.
     """
     # Remove indentations from input text
     text = inspect.cleandoc(text)
-    if USE_MARKDOWN:
-        if USE_MARKDOWN_EMOJI:
-            text = Emoji.replace(text)
+    if rich_markdown_enable:
+        text = Emoji.replace(text)
         return Markdown(text, style=style)
-    if USE_RICH_MARKUP:
+    if rich_markup_enable:
         return highlighter(Text.from_markup(text, style=style))
     else:
         return highlighter(Text(text, style=style))
@@ -175,19 +150,16 @@ def _make_rich_rext(text: str, style: str = "") -> Union[Markdown, Text]:
 
 @group()
 def _get_help_text(
-    obj: Union[click.Command, click.Group]
+    *,
+    obj: Union[click.Command, click.Group],
+    rich_markdown_enable: bool,
+    rich_markup_enable: bool,
 ) -> Iterable[Union[Markdown, Text]]:
     """Build primary help text for a click command or group.
 
     Returns the prose help text for a command or group, rendered either as a
     Rich Text object or as Markdown.
     If the command is marked as depreciated, the depreciated string will be prepended.
-
-    Args:
-        obj (click.Command or click.Group): Command or group to build help text for
-
-    Yields:
-        Text or Markdown: Multiple styled objects (depreciated, usage)
     """
     # Prepend deprecated status
     if obj.deprecated:
@@ -202,14 +174,19 @@ def _get_help_text(
     # Get the first paragraph
     first_line = help_text.split("\n\n")[0]
     # Remove single linebreaks
-    if not USE_MARKDOWN and not first_line.startswith("\b"):
+    if not rich_markdown_enable and not first_line.startswith("\b"):
         first_line = first_line.replace("\n", " ")
-    yield _make_rich_rext(first_line.strip(), STYLE_HELPTEXT_FIRST_LINE)
+    yield _make_rich_rext(
+        text=first_line.strip(),
+        style=STYLE_HELPTEXT_FIRST_LINE,
+        rich_markdown_enable=rich_markdown_enable,
+        rich_markup_enable=rich_markup_enable,
+    )
 
     # Get remaining lines, remove single line breaks and format as dim
     remaining_paragraphs = help_text.split("\n\n")[1:]
     if len(remaining_paragraphs) > 0:
-        if not USE_MARKDOWN:
+        if not rich_markup_enable:
             # Remove single linebreaks
             remaining_paragraphs = [
                 x.replace("\n", " ").strip()
@@ -223,11 +200,20 @@ def _get_help_text(
             # Join with double linebreaks if markdown
             remaining_lines = "\n\n".join(remaining_paragraphs)
 
-        yield _make_rich_rext(remaining_lines, STYLE_HELPTEXT)
+        yield _make_rich_rext(
+            text=remaining_lines,
+            style=STYLE_HELPTEXT,
+            rich_markdown_enable=rich_markdown_enable,
+            rich_markup_enable=rich_markup_enable,
+        )
 
 
 def _get_parameter_help(
-    param: Union[click.Option, click.Argument, click.Parameter], ctx: click.Context
+    *,
+    param: Union[click.Option, click.Argument, click.Parameter],
+    ctx: click.Context,
+    rich_markdown_enable: bool,
+    rich_markup_enable: bool,
 ) -> Columns:
     """Build primary help text for a click option or argument.
 
@@ -235,15 +221,6 @@ def _get_parameter_help(
     as a Rich Text object or as Markdown.
     Additional elements are appended to show the default and required status if
     applicable.
-
-    Args:
-        param (click.Option or click.Argument): Option or argument to build help text
-            for
-        ctx (click.Context): Click Context object
-
-    Returns:
-        Columns: A columns element with multiple styled objects (help, default,
-            required)
     """
     # import here to avoid cyclic imports
     from .core import TyperOption
@@ -267,50 +244,32 @@ def _get_parameter_help(
             envvar if isinstance(envvar, str) else ", ".join(str(d) for d in envvar)
         )
 
-    # Environment variable BEFORE help text
-    if getattr(param, "show_envvar", None) and OPTION_ENVVAR_FIRST:
-        items.append(Text(ENVVAR_STRING.format(var_str), style=STYLE_OPTION_ENVVAR))
-
     # Main help text
     help_value: Union[str, None] = getattr(param, "help", None)
     if help_value:
         paragraphs = help_value.split("\n\n")
         # Remove single linebreaks
-        if not USE_MARKDOWN:
+        if not rich_markdown_enable:
             paragraphs = [
                 x.replace("\n", " ").strip()
                 if not x.startswith("\b")
                 else "{}\n".format(x.strip("\b\n"))
                 for x in paragraphs
             ]
-        items.append(_make_rich_rext("\n".join(paragraphs).strip(), STYLE_OPTION_HELP))
-
-    # Append metavar if requested
-    if APPEND_METAVARS_HELP:
-        metavar_str = param.make_metavar()
-        # Do it ourselves if this is a positional argument
-        if (
-            isinstance(param, click.Argument)
-            and param.name
-            and metavar_str == param.name.upper()
-        ):
-            metavar_str = param.type.name.upper()
-            metavar_str = param.type.name.upper()
-        # Skip booleans
-        if metavar_str != "BOOLEAN":
-            metavar_str = metavar_str.replace("[", "").replace("]", "")
-            items.append(
-                Text(
-                    APPEND_METAVARS_HELP_STRING.format(metavar_str),
-                    style=STYLE_METAVAR_APPEND,
-                    overflow="fold",
-                )
+        items.append(
+            _make_rich_rext(
+                text="\n".join(paragraphs).strip(),
+                style=STYLE_OPTION_HELP,
+                rich_markdown_enable=rich_markdown_enable,
+                rich_markup_enable=rich_markup_enable,
             )
+        )
 
     # Environment variable AFTER help text
-    if getattr(param, "show_envvar", None) and not OPTION_ENVVAR_FIRST:
-        items.append(Text(ENVVAR_STRING.format(envvar), style=STYLE_OPTION_ENVVAR))
+    if getattr(param, "show_envvar", None):
+        items.append(Text(ENVVAR_STRING.format(var_str), style=STYLE_OPTION_ENVVAR))
 
+    # Default value
     if isinstance(param, TyperOption):
         if param.show_default:
             show_default_is_str = isinstance(param.show_default, str)
@@ -336,7 +295,9 @@ def _get_parameter_help(
     return Columns(items)
 
 
-def _make_command_help(help_text: str) -> Union[Text, Markdown]:
+def _make_command_help(
+    *, help_text: str, rich_markdown_enable: bool, rich_markup_enable: bool
+) -> Union[Text, Markdown]:
     """Build cli help text for a click group command.
 
     That is, when calling help on groups with multiple subcommands
@@ -345,26 +306,27 @@ def _make_command_help(help_text: str) -> Union[Text, Markdown]:
     Returns the first paragraph of help text for a command, rendered either as a
     Rich Text object or as Markdown.
     Ignores single newlines as paragraph markers, looks for double only.
-
-    Args:
-        help_text (str): Help text
-
-    Returns:
-        Text or Markdown: Styled object
     """
     paragraphs = inspect.cleandoc(help_text).split("\n\n")
     # Remove single linebreaks
-    if not USE_MARKDOWN and not paragraphs[0].startswith("\b"):
+    if not rich_markup_enable and not paragraphs[0].startswith("\b"):
         paragraphs[0] = paragraphs[0].replace("\n", " ")
     elif paragraphs[0].startswith("\b"):
         paragraphs[0] = paragraphs[0].replace("\b\n", "")
-    return _make_rich_rext(paragraphs[0].strip(), STYLE_OPTION_HELP)
+    return _make_rich_rext(
+        text=paragraphs[0].strip(),
+        style=STYLE_OPTION_HELP,
+        rich_markdown_enable=rich_markdown_enable,
+        rich_markup_enable=rich_markup_enable,
+    )
 
 
 def rich_format_help(
+    *,
     obj: Union[click.Command, click.Group],
     ctx: click.Context,
-    formatter: click.HelpFormatter,
+    rich_markdown_enable: bool,
+    rich_markup_enable: bool,
 ) -> None:
     """Print nicely formatted help text using rich.
 
@@ -373,18 +335,8 @@ def rich_format_help(
 
     Replacement for the click function format_help().
     Takes a command or group and builds the help text output.
-
-    Args:
-        obj (click.Command or click.Group): Command or group to build help text for
-        ctx (click.Context): Click Context object
-        formatter (click.HelpFormatter): Click HelpFormatter object
     """
     console = _get_rich_console()
-    # Header text if we have it
-    if HEADER_TEXT:
-        console.print(
-            Padding(_make_rich_rext(HEADER_TEXT, STYLE_HEADER_TEXT), (1, 1, 0, 1))
-        )
 
     # Print usage
     console.print(
@@ -397,7 +349,14 @@ def rich_format_help(
         # Print with some padding
         console.print(
             Padding(
-                Align(_get_help_text(obj), pad=False),
+                Align(
+                    _get_help_text(
+                        obj=obj,
+                        rich_markdown_enable=rich_markdown_enable,
+                        rich_markup_enable=rich_markup_enable,
+                    ),
+                    pad=False,
+                ),
                 (0, 1, 1, 1),
             )
         )
@@ -410,12 +369,6 @@ def rich_format_help(
 
     for param in obj.get_params(ctx):
 
-        # Skip positional arguments - they don't have opts or helptext and are covered
-        # in usage, see:
-        # https://click.palletsprojects.com/en/8.0.x/documentation/#documenting-arguments
-        if isinstance(param, click.Argument) and not SHOW_ARGUMENTS:
-            continue
-
         # Skip if option is hidden
         if getattr(param, "hidden", False):
             continue
@@ -427,15 +380,14 @@ def rich_format_help(
 
         # No break, no mention - add to the default group
         else:
-            if isinstance(param, click.Argument) and not GROUP_ARGUMENTS_OPTIONS:
+            if isinstance(param, click.Argument):
                 argument_group_options.append(param.opts[0])
             else:
-                list_of_option_groups = option_groups[-1]["options"]
-                assert isinstance(list_of_option_groups, list)
+                list_of_option_groups: List = option_groups[-1]["options"]  # type: ignore
                 list_of_option_groups.append(param.opts[0])
 
     # If we're not grouping arguments and we got some, prepend before default options
-    if len(argument_group_options) > 0:
+    if argument_group_options:
         extra_option_group = {
             "name": ARGUMENTS_PANEL_TITLE,
             "options": argument_group_options,
@@ -524,12 +476,13 @@ def rich_format_help(
                 highlighter(highlighter(",".join(opt_long_strs))),
                 highlighter(highlighter(",".join(opt_short_strs))),
                 metavar_highlighter(metavar),
-                _get_parameter_help(param, ctx),
+                _get_parameter_help(
+                    param=param,
+                    ctx=ctx,
+                    rich_markdown_enable=rich_markdown_enable,
+                    rich_markup_enable=rich_markup_enable,
+                ),
             ]
-
-            # Remove metavar if specified in config
-            if not SHOW_METAVARS_COLUMN:
-                rows.pop(3)
 
             options_rows.append(rows)
 
@@ -618,13 +571,16 @@ def rich_format_help(
                     continue
                 if cmd.hidden:
                     continue
-                # Use the truncated short text as with vanilla text if requested
-                if USE_CLICK_SHORT_HELP:
-                    helptext = cmd.get_short_help_str()
-                else:
-                    # Use short_help function argument if used, or the full help
-                    helptext = cmd.short_help or cmd.help or ""
-                commands_table.add_row(command, _make_command_help(helptext))
+                # Use short_help function argument if used, or the full help
+                helptext = cmd.short_help or cmd.help or ""
+                commands_table.add_row(
+                    command,
+                    _make_command_help(
+                        help_text=helptext,
+                        rich_markdown_enable=rich_markdown_enable,
+                        rich_markup_enable=rich_markup_enable,
+                    ),
+                )
             if commands_table.row_count > 0:
                 title = cmd_group.get("name", COMMANDS_PANEL_TITLE)
                 console.print(
@@ -643,33 +599,19 @@ def rich_format_help(
         epilogue = "\n".join([x.replace("\n", " ").strip() for x in lines])
         console.print(Padding(Align(highlighter(epilogue), pad=False), 1))
 
-    # Footer text if we have it
-    if FOOTER_TEXT:
-        console.print(
-            Padding(_make_rich_rext(FOOTER_TEXT, STYLE_FOOTER_TEXT), (1, 1, 0, 1))
-        )
-
 
 def rich_format_error(self: click.ClickException) -> None:
     """Print richly formatted click errors.
 
     Called by custom exception handler to print richly formatted click errors.
     Mimics original click.ClickException.echo() function but with rich formatting.
-
-    Args:
-        click.ClickException: Click exception to format.
     """
     console = _get_rich_console()
     ctx: Union[click.Context, None] = getattr(self, "ctx", None)
     if ctx is not None:
         console.print(ctx.get_usage())
-    if ERRORS_SUGGESTION:
-        console.print(ERRORS_SUGGESTION, style=STYLE_ERRORS_SUGGESTION)
-    elif (
-        ERRORS_SUGGESTION is None
-        and ctx is not None
-        and ctx.command.get_help_option(ctx) is not None
-    ):
+
+    if ctx is not None and ctx.command.get_help_option(ctx) is not None:
         console.print(
             "Try [blue]'{command} {option}'[/] for help.".format(
                 command=ctx.command_path, option=ctx.help_option_names[0]
@@ -685,8 +627,6 @@ def rich_format_error(self: click.ClickException) -> None:
             title_align=ALIGN_ERRORS_PANEL,
         )
     )
-    if ERRORS_EPILOGUE:
-        console.print(ERRORS_EPILOGUE)
 
 
 def rich_abort_error() -> None:
