@@ -23,6 +23,11 @@ import click.types
 
 from .utils import _get_click_major
 
+if sys.version_info >= (3, 8):
+    from typing import Literal
+else:
+    from typing_extensions import Literal
+
 try:
     import rich
 
@@ -34,6 +39,7 @@ except ImportError:  # pragma: nocover
 if TYPE_CHECKING:  # pragma: no cover
     import click.shell_completion
 
+MarkupMode = Literal["markdown", "rich", None]
 
 # TODO: when deprecating Click 7, remove this
 def _typer_param_shell_complete(
@@ -488,8 +494,7 @@ class TyperCommand(click.core.Command):
         no_args_is_help: bool = False,
         hidden: bool = False,
         deprecated: bool = False,
-        rich_markdown_enable: bool,
-        rich_markup_enable: bool,
+        rich_markup_mode: MarkupMode = None,
     ) -> None:
         super().__init__(
             name=name,
@@ -505,8 +510,7 @@ class TyperCommand(click.core.Command):
             hidden=hidden,
             deprecated=deprecated,
         )
-        self.rich_markdown_enable = rich_markdown_enable
-        self.rich_markup_enable = rich_markup_enable
+        self.rich_markup_mode: MarkupMode = rich_markup_mode
 
     def format_options(
         self, ctx: click.Context, formatter: click.HelpFormatter
@@ -569,8 +573,7 @@ class TyperCommand(click.core.Command):
         return rich_utils.rich_format_help(
             obj=self,
             ctx=ctx,
-            rich_markdown_enable=self.rich_markdown_enable,
-            rich_markup_enable=self.rich_markup_enable,
+            markup_mode=self.rich_markup_mode,
         )
 
 
@@ -582,13 +585,11 @@ class TyperGroup(click.core.Group):
         commands: Optional[
             Union[Dict[str, click.Command], Sequence[click.Command]]
         ] = None,
-        rich_markdown_enable: bool,
-        rich_markup_enable: bool,
+        rich_markup_mode: MarkupMode = None,
         **attrs: Any,
     ) -> None:
         super().__init__(name=name, commands=commands, **attrs)
-        self.rich_markdown_enable = rich_markdown_enable
-        self.rich_markup_enable = rich_markup_enable
+        self.rich_markup_mode: MarkupMode = rich_markup_mode
 
     def format_options(
         self, ctx: click.Context, formatter: click.HelpFormatter
@@ -652,6 +653,5 @@ class TyperGroup(click.core.Group):
         return rich_utils.rich_format_help(
             obj=self,
             ctx=ctx,
-            rich_markdown_enable=self.rich_markdown_enable,
-            rich_markup_enable=self.rich_markup_enable,
+            markup_mode=self.rich_markup_mode,
         )

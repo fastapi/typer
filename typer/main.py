@@ -14,7 +14,7 @@ from uuid import UUID
 import click
 
 from .completion import get_completion_inspect_parameters
-from .core import TyperArgument, TyperCommand, TyperGroup, TyperOption
+from .core import MarkupMode, TyperArgument, TyperCommand, TyperGroup, TyperOption
 from .models import (
     AnyType,
     ArgumentInfo,
@@ -129,15 +129,13 @@ class Typer:
         deprecated: bool = Default(False),
         add_completion: bool = True,
         # Rich settings
-        rich_markdown_enable: bool = False,
-        rich_markup_enable: bool = False,
+        rich_markup_mode: MarkupMode = None,
         pretty_errors_enable: bool = True,
         pretty_errors_show_locals: bool = True,
         pretty_errors_short: bool = True,
     ):
         self._add_completion = add_completion
-        self.rich_markdown_enable = rich_markdown_enable
-        self.rich_markup_enable = rich_markup_enable
+        self.rich_markup_mode: MarkupMode = rich_markup_mode
         self.pretty_errors_enable = pretty_errors_enable
         self.pretty_errors_show_locals = pretty_errors_show_locals
         self.pretty_errors_short = pretty_errors_short
@@ -317,8 +315,7 @@ def get_group(typer_instance: Typer) -> click.Command:
     group = get_group_from_info(
         TyperInfo(typer_instance),
         pretty_errors_short=typer_instance.pretty_errors_short,
-        rich_markdown_enable=typer_instance.rich_markdown_enable,
-        rich_markup_enable=typer_instance.rich_markup_enable,
+        rich_markup_mode=typer_instance.rich_markup_mode,
     )
     return group
 
@@ -350,8 +347,7 @@ def get_command(typer_instance: Typer) -> click.Command:
         click_command = get_command_from_info(
             single_command,
             pretty_errors_short=typer_instance.pretty_errors_short,
-            rich_markdown_enable=typer_instance.rich_markdown_enable,
-            rich_markup_enable=typer_instance.rich_markup_enable,
+            rich_markup_mode=typer_instance.rich_markup_mode,
         )
         if typer_instance._add_completion:
             click_command.params.append(click_install_param)
@@ -460,8 +456,7 @@ def get_group_from_info(
     group_info: TyperInfo,
     *,
     pretty_errors_short: bool,
-    rich_markdown_enable: bool,
-    rich_markup_enable: bool,
+    rich_markup_mode: MarkupMode,
 ) -> click.Command:
     assert (
         group_info.typer_instance
@@ -471,8 +466,7 @@ def get_group_from_info(
         command = get_command_from_info(
             command_info=command_info,
             pretty_errors_short=pretty_errors_short,
-            rich_markdown_enable=rich_markdown_enable,
-            rich_markup_enable=rich_markup_enable,
+            rich_markup_mode=rich_markup_mode,
         )
         if command.name:
             commands[command.name] = command
@@ -480,8 +474,7 @@ def get_group_from_info(
         sub_group = get_group_from_info(
             sub_group_info,
             pretty_errors_short=pretty_errors_short,
-            rich_markdown_enable=rich_markdown_enable,
-            rich_markup_enable=rich_markup_enable,
+            rich_markup_mode=rich_markup_mode,
         )
         if sub_group.name:
             commands[sub_group.name] = sub_group
@@ -517,8 +510,7 @@ def get_group_from_info(
         add_help_option=solved_info.add_help_option,
         hidden=solved_info.hidden,
         deprecated=solved_info.deprecated,
-        rich_markdown_enable=rich_markdown_enable,
-        rich_markup_enable=rich_markup_enable,
+        rich_markup_mode=rich_markup_mode,
     )
     return group
 
@@ -550,8 +542,7 @@ def get_command_from_info(
     command_info: CommandInfo,
     *,
     pretty_errors_short: bool,
-    rich_markdown_enable: bool,
-    rich_markup_enable: bool,
+    rich_markup_mode: MarkupMode,
 ) -> click.Command:
     assert command_info.callback, "A command must have a callback function"
     name = command_info.name or get_command_name(command_info.callback.__name__)
@@ -585,8 +576,7 @@ def get_command_from_info(
         no_args_is_help=command_info.no_args_is_help,
         hidden=command_info.hidden,
         deprecated=command_info.deprecated,
-        rich_markdown_enable=rich_markdown_enable,
-        rich_markup_enable=rich_markup_enable,
+        rich_markup_mode=rich_markup_mode,
     )
     return command
 

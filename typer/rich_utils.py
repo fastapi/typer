@@ -91,6 +91,10 @@ COMMAND_GROUPS: Dict[str, List[Dict[str, Union[str, List[str]]]]] = {}
 # Define sorted groups of panels to display options and arguments
 OPTION_GROUPS: Dict[str, List[Dict[str, Union[str, Sequence[str]]]]] = {}
 
+MARKUP_MODE_MARKDOWN = "markdown"
+MARKUP_MODE_RICH = "rich"
+
+MarkupMode = Literal["markdown", "rich", None]
 
 # Rich regex highlighter
 class OptionHighlighter(RegexHighlighter):
@@ -126,7 +130,7 @@ def _get_rich_console() -> Console:
 
 
 def _make_rich_rext(
-    *, text: str, style: str = "", rich_markdown_enable: bool, rich_markup_enable: bool
+    *, text: str, style: str = "", markup_mode: MarkupMode
 ) -> Union[Markdown, Text]:
     """Take a string, remove indentations, and return styled text.
 
@@ -139,10 +143,10 @@ def _make_rich_rext(
     """
     # Remove indentations from input text
     text = inspect.cleandoc(text)
-    if rich_markdown_enable:
+    if markup_mode == MARKUP_MODE_MARKDOWN:
         text = Emoji.replace(text)
         return Markdown(text, style=style)
-    if rich_markup_enable:
+    if markup_mode == MARKUP_MODE_RICH:
         return highlighter(Text.from_markup(text, style=style))
     else:
         return highlighter(Text(text, style=style))
@@ -152,8 +156,7 @@ def _make_rich_rext(
 def _get_help_text(
     *,
     obj: Union[click.Command, click.Group],
-    rich_markdown_enable: bool,
-    rich_markup_enable: bool,
+    markup_mode: MarkupMode,
 ) -> Iterable[Union[Markdown, Text]]:
     """Build primary help text for a click command or group.
 
@@ -174,19 +177,18 @@ def _get_help_text(
     # Get the first paragraph
     first_line = help_text.split("\n\n")[0]
     # Remove single linebreaks
-    if not rich_markdown_enable and not first_line.startswith("\b"):
+    if markup_mode != MARKUP_MODE_MARKDOWN and not first_line.startswith("\b"):
         first_line = first_line.replace("\n", " ")
     yield _make_rich_rext(
         text=first_line.strip(),
         style=STYLE_HELPTEXT_FIRST_LINE,
-        rich_markdown_enable=rich_markdown_enable,
-        rich_markup_enable=rich_markup_enable,
+        markup_mode=markup_mode,
     )
 
     # Get remaining lines, remove single line breaks and format as dim
     remaining_paragraphs = help_text.split("\n\n")[1:]
     if len(remaining_paragraphs) > 0:
-        if not rich_markup_enable:
+        if markup_mode != MARKUP_MODE_RICH:
             # Remove single linebreaks
             remaining_paragraphs = [
                 x.replace("\n", " ").strip()
@@ -203,8 +205,7 @@ def _get_help_text(
         yield _make_rich_rext(
             text=remaining_lines,
             style=STYLE_HELPTEXT,
-            rich_markdown_enable=rich_markdown_enable,
-            rich_markup_enable=rich_markup_enable,
+            markup_mode=markup_mode,
         )
 
 
@@ -212,8 +213,7 @@ def _get_parameter_help(
     *,
     param: Union[click.Option, click.Argument, click.Parameter],
     ctx: click.Context,
-    rich_markdown_enable: bool,
-    rich_markup_enable: bool,
+    markup_mode: MarkupMode,
 ) -> Columns:
     """Build primary help text for a click option or argument.
 
@@ -249,7 +249,7 @@ def _get_parameter_help(
     if help_value:
         paragraphs = help_value.split("\n\n")
         # Remove single linebreaks
-        if not rich_markdown_enable:
+        if markup_mode != MARKUP_MODE_MARKDOWN:
             paragraphs = [
                 x.replace("\n", " ").strip()
                 if not x.startswith("\b")
@@ -260,8 +260,7 @@ def _get_parameter_help(
             _make_rich_rext(
                 text="\n".join(paragraphs).strip(),
                 style=STYLE_OPTION_HELP,
-                rich_markdown_enable=rich_markdown_enable,
-                rich_markup_enable=rich_markup_enable,
+                markup_mode=markup_mode,
             )
         )
 
@@ -296,7 +295,9 @@ def _get_parameter_help(
 
 
 def _make_command_help(
-    *, help_text: str, rich_markdown_enable: bool, rich_markup_enable: bool
+    *,
+    help_text: str,
+    markup_mode: MarkupMode,
 ) -> Union[Text, Markdown]:
     """Build cli help text for a click group command.
 
@@ -309,15 +310,14 @@ def _make_command_help(
     """
     paragraphs = inspect.cleandoc(help_text).split("\n\n")
     # Remove single linebreaks
-    if not rich_markup_enable and not paragraphs[0].startswith("\b"):
+    if markup_mode != MARKUP_MODE_RICH and not paragraphs[0].startswith("\b"):
         paragraphs[0] = paragraphs[0].replace("\n", " ")
     elif paragraphs[0].startswith("\b"):
         paragraphs[0] = paragraphs[0].replace("\b\n", "")
     return _make_rich_rext(
         text=paragraphs[0].strip(),
         style=STYLE_OPTION_HELP,
-        rich_markdown_enable=rich_markdown_enable,
-        rich_markup_enable=rich_markup_enable,
+        markup_mode=markup_mode,
     )
 
 
@@ -325,8 +325,7 @@ def rich_format_help(
     *,
     obj: Union[click.Command, click.Group],
     ctx: click.Context,
-    rich_markdown_enable: bool,
-    rich_markup_enable: bool,
+    markup_mode: MarkupMode,
 ) -> None:
     """Print nicely formatted help text using rich.
 
@@ -352,8 +351,7 @@ def rich_format_help(
                 Align(
                     _get_help_text(
                         obj=obj,
-                        rich_markdown_enable=rich_markdown_enable,
-                        rich_markup_enable=rich_markup_enable,
+                        markup_mode=markup_mode,
                     ),
                     pad=False,
                 ),
@@ -479,8 +477,7 @@ def rich_format_help(
                 _get_parameter_help(
                     param=param,
                     ctx=ctx,
-                    rich_markdown_enable=rich_markdown_enable,
-                    rich_markup_enable=rich_markup_enable,
+                    markup_mode=markup_mode,
                 ),
             ]
 
@@ -577,8 +574,7 @@ def rich_format_help(
                     command,
                     _make_command_help(
                         help_text=helptext,
-                        rich_markdown_enable=rich_markdown_enable,
-                        rich_markup_enable=rich_markup_enable,
+                        markup_mode=markup_mode,
                     ),
                 )
             if commands_table.row_count > 0:
