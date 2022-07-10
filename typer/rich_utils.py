@@ -2,14 +2,15 @@
 
 import inspect
 import sys
+from collections import defaultdict
 from os import getenv
-from typing import Any, Dict, Iterable, List, Optional, Sequence, Union
+from typing import Any, DefaultDict, Dict, Iterable, List, Optional, Union
 
 import click
 from rich import box
 from rich.align import Align
 from rich.columns import Columns
-from rich.console import Console, group
+from rich.console import Console, RenderableType, group
 from rich.emoji import Emoji
 from rich.highlighter import RegexHighlighter
 from rich.markdown import Markdown
@@ -85,16 +86,12 @@ COMMANDS_PANEL_TITLE = "Commands"
 ERRORS_PANEL_TITLE = "Error"
 ABORTED_TEXT = "Aborted."
 
-# Behaviours
-# Define sorted groups of panels to display subcommands
-COMMAND_GROUPS: Dict[str, List[Dict[str, Union[str, List[str]]]]] = {}
-# Define sorted groups of panels to display options and arguments
-OPTION_GROUPS: Dict[str, List[Dict[str, Union[str, Sequence[str]]]]] = {}
-
 MARKUP_MODE_MARKDOWN = "markdown"
 MARKUP_MODE_RICH = "rich"
+_RICH_HELP_PANEL_NAME = "rich_help_panel"
 
 MarkupMode = Literal["markdown", "rich", None]
+
 
 # Rich regex highlighter
 class OptionHighlighter(RegexHighlighter):
@@ -223,7 +220,7 @@ def _get_parameter_help(
     applicable.
     """
     # import here to avoid cyclic imports
-    from .core import TyperOption
+    from .core import TyperArgument, TyperOption
 
     items: List[Union[Text, Markdown]] = []
 
@@ -265,11 +262,12 @@ def _get_parameter_help(
         )
 
     # Environment variable AFTER help text
-    if getattr(param, "show_envvar", None):
+    if envvar and getattr(param, "show_envvar", None):
         items.append(Text(ENVVAR_STRING.format(var_str), style=STYLE_OPTION_ENVVAR))
 
     # Default value
-    if isinstance(param, TyperOption):
+    # This uses Typer's specific param._get_default_string
+    if isinstance(param, (TyperOption, TyperArgument)):
         if param.show_default:
             show_default_is_str = isinstance(param.show_default, str)
             default_value = param._extract_default(ctx=ctx)
@@ -278,12 +276,13 @@ def _get_parameter_help(
                 show_default_is_str=show_default_is_str,
                 default_value=default_value,
             )
-            items.append(
-                Text(
-                    DEFAULT_STRING.format(default_str),
-                    style=STYLE_OPTION_DEFAULT,
+            if default_str:
+                items.append(
+                    Text(
+                        DEFAULT_STRING.format(default_str),
+                        style=STYLE_OPTION_DEFAULT,
+                    )
                 )
-            )
 
     # Required?
     if param.required:
@@ -319,6 +318,139 @@ def _make_command_help(
         style=STYLE_OPTION_HELP,
         markup_mode=markup_mode,
     )
+
+
+def _print_options_panel(
+    *,
+    name: str,
+    params: Union[List[click.Option], List[click.Argument]],
+    ctx: click.Context,
+    markup_mode: MarkupMode,
+    console: Console,
+) -> None:
+    options_rows: List[List[RenderableType]] = []
+    required_rows: List[Union[str, Text]] = []
+    for param in params:
+        # opt = param.opts[0]
+        # for opt in option_group.get("options", []):
+
+        # Get the param
+        # for param in obj.get_params(ctx):
+        #     if any([opt in param.opts]):
+        #         break
+        # # Skip if option is not listed in this group
+        # else:
+        #     continue
+
+        # Short and long form
+        opt_long_strs = []
+        opt_short_strs = []
+        for idx, opt in enumerate(param.opts):
+            opt_str = opt
+            try:
+                opt_str += " / " + param.secondary_opts[idx]
+            except IndexError:
+                pass
+            if "--" in opt:
+                opt_long_strs.append(opt_str)
+            else:
+                opt_short_strs.append(opt_str)
+
+        # Column for a metavar, if we have one
+        metavar = Text(style=STYLE_METAVAR, overflow="fold")
+        metavar_str = param.make_metavar()
+
+        # Do it ourselves if this is a positional argument
+        if (
+            isinstance(param, click.Argument)
+            and param.name
+            and metavar_str == param.name.upper()
+        ):
+            metavar_str = param.type.name.upper()
+
+        # Skip booleans and choices (handled above)
+        if metavar_str != "BOOLEAN":
+            metavar.append(metavar_str)
+
+        # Range - from
+        # https://github.com/pallets/click/blob/c63c70dabd3f86ca68678b4f00951f78f52d0270/src/click/core.py#L2698-L2706  # noqa: E501
+        try:
+            # skip count with default range type
+            if (
+                isinstance(param.type, click.types._NumberRangeBase)
+                and isinstance(param, click.Option)
+                and not (param.count and param.type.min == 0 and param.type.max is None)
+            ):
+                range_str = param.type._describe_range()
+                if range_str:
+                    metavar.append(RANGE_STRING.format(range_str))
+        except AttributeError:
+            # click.types._NumberRangeBase is only in Click 8x onwards
+            pass
+
+        # Required asterisk
+        required: Union[str, Text] = ""
+        if param.required:
+            required = Text(REQUIRED_SHORT_STRING, style=STYLE_REQUIRED_SHORT)
+
+        # Highlighter to make [ | ] and <> dim
+        class MetavarHighlighter(RegexHighlighter):
+            highlights = [
+                r"^(?P<metavar_sep>(\[|<))",
+                r"(?P<metavar_sep>\|)",
+                r"(?P<metavar_sep>(\]|>)$)",
+            ]
+
+        metavar_highlighter = MetavarHighlighter()
+
+        required_rows.append(required)
+        options_rows.append(
+            [
+                highlighter(highlighter(",".join(opt_long_strs))),
+                highlighter(highlighter(",".join(opt_short_strs))),
+                metavar_highlighter(metavar),
+                _get_parameter_help(
+                    param=param,
+                    ctx=ctx,
+                    markup_mode=markup_mode,
+                ),
+            ]
+        )
+    rows_with_required: List[List[RenderableType]] = []
+    if any(required_rows):
+        for required, row in zip(required_rows, options_rows):
+            rows_with_required.append([required, *row])
+    else:
+        rows_with_required = options_rows
+    if options_rows:
+        t_styles: Dict[str, Any] = {
+            "show_lines": STYLE_OPTIONS_TABLE_SHOW_LINES,
+            "leading": STYLE_OPTIONS_TABLE_LEADING,
+            "box": STYLE_OPTIONS_TABLE_BOX,
+            "border_style": STYLE_OPTIONS_TABLE_BORDER_STYLE,
+            "row_styles": STYLE_OPTIONS_TABLE_ROW_STYLES,
+            "pad_edge": STYLE_OPTIONS_TABLE_PAD_EDGE,
+            "padding": STYLE_OPTIONS_TABLE_PADDING,
+        }
+        box_style = getattr(box, t_styles.pop("box"), None)
+
+        options_table = Table(
+            highlight=True,
+            show_header=False,
+            expand=True,
+            box=box_style,
+            **t_styles,
+        )
+        for row in rows_with_required:
+            options_table.add_row(*row)
+        console.print(
+            Panel(
+                options_table,
+                border_style=STYLE_OPTIONS_PANEL_BORDER,
+                title=name,
+                title_align=ALIGN_OPTIONS_PANEL,
+            )
+        )
 
 
 def rich_format_help(
@@ -358,186 +490,76 @@ def rich_format_help(
                 (0, 1, 1, 1),
             )
         )
-
-    # Look through OPTION_GROUPS for this command
-    # stick anything unmatched into a default group at the end
-    option_groups = OPTION_GROUPS.get(ctx.command_path, []).copy()
-    option_groups.append({"options": []})
-    argument_group_options = []
-
+    panel_to_arguments: DefaultDict[str, List[click.Argument]] = defaultdict(list)
+    panel_to_options: DefaultDict[str, List[click.Option]] = defaultdict(list)
     for param in obj.get_params(ctx):
 
         # Skip if option is hidden
         if getattr(param, "hidden", False):
             continue
-
-        # Already mentioned in a config option group
-        for option_group in option_groups:
-            if any([opt in option_group.get("options", []) for opt in param.opts]):
-                break
-
-        # No break, no mention - add to the default group
-        else:
-            if isinstance(param, click.Argument):
-                argument_group_options.append(param.opts[0])
-            else:
-                list_of_option_groups: List = option_groups[-1]["options"]  # type: ignore
-                list_of_option_groups.append(param.opts[0])
-
-    # If we're not grouping arguments and we got some, prepend before default options
-    if argument_group_options:
-        extra_option_group = {
-            "name": ARGUMENTS_PANEL_TITLE,
-            "options": argument_group_options,
-        }
-        option_groups.insert(len(option_groups) - 1, extra_option_group)
-
-    # Print each option group panel
-    for option_group in option_groups:
-
-        options_rows = []
-        for opt in option_group.get("options", []):
-
-            # Get the param
-            for param in obj.get_params(ctx):
-                if any([opt in param.opts]):
-                    break
-            # Skip if option is not listed in this group
-            else:
-                continue
-
-            # Short and long form
-            opt_long_strs = []
-            opt_short_strs = []
-            for idx, opt in enumerate(param.opts):
-                opt_str = opt
-                try:
-                    opt_str += "/" + param.secondary_opts[idx]
-                except IndexError:
-                    pass
-                if "--" in opt:
-                    opt_long_strs.append(opt_str)
-                else:
-                    opt_short_strs.append(opt_str)
-
-            # Column for a metavar, if we have one
-            metavar = Text(style=STYLE_METAVAR, overflow="fold")
-            metavar_str = param.make_metavar()
-
-            # Do it ourselves if this is a positional argument
-            if (
-                isinstance(param, click.Argument)
-                and param.name
-                and metavar_str == param.name.upper()
-            ):
-                metavar_str = param.type.name.upper()
-
-            # Skip booleans and choices (handled above)
-            if metavar_str != "BOOLEAN":
-                metavar.append(metavar_str)
-
-            # Range - from
-            # https://github.com/pallets/click/blob/c63c70dabd3f86ca68678b4f00951f78f52d0270/src/click/core.py#L2698-L2706  # noqa: E501
-            try:
-                # skip count with default range type
-                if (
-                    isinstance(param.type, click.types._NumberRangeBase)
-                    and isinstance(param, click.Option)
-                    and not (
-                        param.count and param.type.min == 0 and param.type.max is None
-                    )
-                ):
-                    range_str = param.type._describe_range()
-                    if range_str:
-                        metavar.append(RANGE_STRING.format(range_str))
-            except AttributeError:
-                # click.types._NumberRangeBase is only in Click 8x onwards
-                pass
-
-            # Required asterisk
-            required: Union[str, Text] = ""
-            if param.required:
-                required = Text(REQUIRED_SHORT_STRING, style=STYLE_REQUIRED_SHORT)
-
-            # Highlighter to make [ | ] and <> dim
-            class MetavarHighlighter(RegexHighlighter):
-                highlights = [
-                    r"^(?P<metavar_sep>(\[|<))",
-                    r"(?P<metavar_sep>\|)",
-                    r"(?P<metavar_sep>(\]|>)$)",
-                ]
-
-            metavar_highlighter = MetavarHighlighter()
-
-            rows = [
-                required,
-                highlighter(highlighter(",".join(opt_long_strs))),
-                highlighter(highlighter(",".join(opt_short_strs))),
-                metavar_highlighter(metavar),
-                _get_parameter_help(
-                    param=param,
-                    ctx=ctx,
-                    markup_mode=markup_mode,
-                ),
-            ]
-
-            options_rows.append(rows)
-
-        if len(options_rows) > 0:
-            t_styles: Dict[str, Any] = {
-                "show_lines": STYLE_OPTIONS_TABLE_SHOW_LINES,
-                "leading": STYLE_OPTIONS_TABLE_LEADING,
-                "box": STYLE_OPTIONS_TABLE_BOX,
-                "border_style": STYLE_OPTIONS_TABLE_BORDER_STYLE,
-                "row_styles": STYLE_OPTIONS_TABLE_ROW_STYLES,
-                "pad_edge": STYLE_OPTIONS_TABLE_PAD_EDGE,
-                "padding": STYLE_OPTIONS_TABLE_PADDING,
-            }
-            t_styles.update(option_group.get("table_styles", {}))  # type: ignore
-            box_style = getattr(box, t_styles.pop("box"), None)
-
-            options_table = Table(
-                highlight=True,
-                show_header=False,
-                expand=True,
-                box=box_style,
-                **t_styles,
+        if isinstance(param, click.Argument):
+            panel_name = (
+                getattr(param, _RICH_HELP_PANEL_NAME, None) or ARGUMENTS_PANEL_TITLE
             )
-            # Strip the required column if none are required
-            if all([x[0] == "" for x in options_rows]):
-                options_rows = [x[1:] for x in options_rows]
-            for row in options_rows:
-                options_table.add_row(*row)
-            console.print(
-                Panel(
-                    options_table,
-                    border_style=STYLE_OPTIONS_PANEL_BORDER,
-                    title=option_group.get("name", OPTIONS_PANEL_TITLE),  # type: ignore
-                    title_align=ALIGN_OPTIONS_PANEL,
-                )
+            panel_to_arguments[panel_name].append(param)
+        elif isinstance(param, click.Option):
+            panel_name = (
+                getattr(param, _RICH_HELP_PANEL_NAME, None) or OPTIONS_PANEL_TITLE
             )
+            panel_to_options[panel_name].append(param)
+    default_arguments = panel_to_arguments.get(ARGUMENTS_PANEL_TITLE, [])
+    _print_options_panel(
+        name=ARGUMENTS_PANEL_TITLE,
+        params=default_arguments,
+        ctx=ctx,
+        markup_mode=markup_mode,
+        console=console,
+    )
+    for panel_name, arguments in panel_to_arguments.items():
+        if panel_name == ARGUMENTS_PANEL_TITLE:
+            # Already printed above
+            continue
+        _print_options_panel(
+            name=panel_name,
+            params=arguments,
+            ctx=ctx,
+            markup_mode=markup_mode,
+            console=console,
+        )
+    default_options = panel_to_options.get(OPTIONS_PANEL_TITLE, [])
+    _print_options_panel(
+        name=OPTIONS_PANEL_TITLE,
+        params=default_options,
+        ctx=ctx,
+        markup_mode=markup_mode,
+        console=console,
+    )
+    for panel_name, options in panel_to_options.items():
+        if panel_name == OPTIONS_PANEL_TITLE:
+            # Already printed above
+            continue
+        _print_options_panel(
+            name=panel_name,
+            params=options,
+            ctx=ctx,
+            markup_mode=markup_mode,
+            console=console,
+        )
 
-    #
-    # Groups only:
-    # List click command groups
-    #
-    # if hasattr(obj, "list_commands"):
     if isinstance(obj, click.MultiCommand):
-        # Look through COMMAND_GROUPS for this command
-        # stick anything unmatched into a default group at the end
-        cmd_groups = COMMAND_GROUPS.get(ctx.command_path, []).copy()
-        cmd_groups.append({"commands": []})
-        for command in obj.list_commands(ctx):
-            for cmd_group in cmd_groups:
-                if command in cmd_group.get("commands", []):
-                    break
-            else:
-                commands: List[str] = cmd_groups[-1]["commands"]  # type: ignore
-                commands.append(command)
+        panel_to_commands: DefaultDict[str, List[click.Command]] = defaultdict(list)
+        for command_name in obj.list_commands(ctx):
+            command = obj.get_command(ctx, command_name)
+            if command and not command.hidden:
+                panel_name = (
+                    getattr(command, _RICH_HELP_PANEL_NAME, None)
+                    or COMMANDS_PANEL_TITLE
+                )
+                panel_to_commands[panel_name].append(command)
 
         # Print each command group panel
-        for cmd_group in cmd_groups:
-            t_styles = {
+        for panel_name, commands in panel_to_commands.items():
+            t_styles: Dict[str, Any] = {
                 "show_lines": STYLE_COMMANDS_TABLE_SHOW_LINES,
                 "leading": STYLE_COMMANDS_TABLE_LEADING,
                 "box": STYLE_COMMANDS_TABLE_BOX,
@@ -546,7 +568,6 @@ def rich_format_help(
                 "pad_edge": STYLE_COMMANDS_TABLE_PAD_EDGE,
                 "padding": STYLE_COMMANDS_TABLE_PADDING,
             }
-            t_styles.update(cmd_group.get("table_styles", {}))  # type: ignore
             box_style = getattr(box, t_styles.pop("box"), None)
 
             commands_table = Table(
@@ -559,31 +580,21 @@ def rich_format_help(
             # Define formatting in first column, as commands don't match highlighter
             # regex
             commands_table.add_column(style="bold cyan", no_wrap=True)
-            for command in cmd_group.get("commands", []):
-                # Skip if command does not exist
-                if command not in obj.list_commands(ctx):
-                    continue
-                cmd = obj.get_command(ctx, command)
-                if not cmd:
-                    continue
-                if cmd.hidden:
-                    continue
-                # Use short_help function argument if used, or the full help
-                helptext = cmd.short_help or cmd.help or ""
+            for command in commands:
+                helptext = command.short_help or command.help or ""
                 commands_table.add_row(
-                    command,
+                    command.name,
                     _make_command_help(
                         help_text=helptext,
                         markup_mode=markup_mode,
                     ),
                 )
-            if commands_table.row_count > 0:
-                title = cmd_group.get("name", COMMANDS_PANEL_TITLE)
+            if commands_table.row_count:
                 console.print(
                     Panel(
                         commands_table,
                         border_style=STYLE_COMMANDS_PANEL_BORDER,
-                        title=title,  # type: ignore
+                        title=panel_name,
                         title_align=ALIGN_COMMANDS_PANEL,
                     )
                 )
