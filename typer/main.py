@@ -130,12 +130,14 @@ class Typer:
         add_completion: bool = True,
         # Rich settings
         rich_markup_mode: MarkupMode = None,
+        rich_help_panel: Union[str, None] = Default(None),
         pretty_errors_enable: bool = True,
         pretty_errors_show_locals: bool = True,
         pretty_errors_short: bool = True,
     ):
         self._add_completion = add_completion
         self.rich_markup_mode: MarkupMode = rich_markup_mode
+        self.rich_help_panel = rich_help_panel
         self.pretty_errors_enable = pretty_errors_enable
         self.pretty_errors_show_locals = pretty_errors_show_locals
         self.pretty_errors_short = pretty_errors_short
@@ -180,6 +182,8 @@ class Typer:
         add_help_option: bool = Default(True),
         hidden: bool = Default(False),
         deprecated: bool = Default(False),
+        # Rich settings
+        rich_help_panel: Union[str, None] = Default(None),
     ) -> Callable[[CommandFunctionType], CommandFunctionType]:
         def decorator(f: CommandFunctionType) -> CommandFunctionType:
             self.registered_callback = TyperInfo(
@@ -199,6 +203,7 @@ class Typer:
                 add_help_option=add_help_option,
                 hidden=hidden,
                 deprecated=deprecated,
+                rich_help_panel=rich_help_panel,
             )
             return f
 
@@ -264,6 +269,8 @@ class Typer:
         add_help_option: bool = Default(True),
         hidden: bool = Default(False),
         deprecated: bool = Default(False),
+        # Rich settings
+        rich_help_panel: Union[str, None] = Default(None),
     ) -> None:
         self.registered_groups.append(
             TyperInfo(
@@ -284,6 +291,7 @@ class Typer:
                 add_help_option=add_help_option,
                 hidden=hidden,
                 deprecated=deprecated,
+                rich_help_panel=rich_help_panel,
             )
         )
 

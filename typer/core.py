@@ -1,4 +1,3 @@
-import inspect
 import os
 import sys
 from gettext import gettext as _
@@ -40,6 +39,7 @@ if TYPE_CHECKING:  # pragma: no cover
     import click.shell_completion
 
 MarkupMode = Literal["markdown", "rich", None]
+
 
 # TODO: when deprecating Click 7, remove this
 def _typer_param_shell_complete(
@@ -97,6 +97,66 @@ def _typer_param_setup_autocompletion_compat(
         self._custom_shell_complete = compat_autocompletion
 
 
+def _get_default_string(
+    obj: Union["TyperArgument", "TyperOption"],
+    *,
+    ctx: click.Context,
+    show_default_is_str: bool,
+    default_value: Union[List[Any], Tuple[Any, ...], str, Callable[..., Any], Any],
+) -> str:
+    # Extracted from click.core.Option.get_help_record() to be reused by
+    # rich_utils avoiding RegEx hacks
+    if show_default_is_str:
+        default_string = f"({obj.show_default})"
+    elif isinstance(default_value, (list, tuple)):
+        default_string = ", ".join(str(d) for d in default_value)
+    elif callable(default_value):
+        default_string = _("(dynamic)")
+    elif isinstance(obj, TyperOption) and obj.is_bool_flag and obj.secondary_opts:
+        # For boolean flags that have distinct True/False opts,
+        # use the opt without prefix instead of the value.
+        # Typer override, original commented
+        # default_string = click.parser.split_opt(
+        #     (self.opts if self.default else self.secondary_opts)[0]
+        # )[1]
+        if obj.default:
+            if obj.opts:
+                default_string = click.parser.split_opt(obj.opts[0])[1]
+            else:
+                default_string = str(default_value)
+        else:
+            default_string = click.parser.split_opt(obj.secondary_opts[0])[1]
+        # Typer override end
+    elif (
+        isinstance(obj, TyperOption)
+        and obj.is_bool_flag
+        and not obj.secondary_opts
+        and not default_value
+    ):
+        default_string = ""
+    else:
+        default_string = str(default_value)
+    return default_string
+
+
+def _extract_default(
+    obj: Union["TyperArgument", "TyperOption"], *, ctx: click.Context
+) -> Optional[Union[Any, Callable[[], Any]]]:
+    # Extracted from click.core.Option.get_help_record() to be reused by
+    # rich_utils avoiding RegEx hacks
+    # Temporarily enable resilient parsing to avoid type casting
+    # failing for the default. Might be possible to extend this to
+    # help formatting in general.
+    resilient = ctx.resilient_parsing
+    ctx.resilient_parsing = True
+
+    try:
+        default_value = obj.get_default(ctx, call=False)
+    finally:
+        ctx.resilient_parsing = resilient
+    return default_value
+
+
 class TyperArgument(click.core.Argument):
     def __init__(
         self,
@@ -125,12 +185,15 @@ class TyperArgument(click.core.Argument):
         show_envvar: bool = True,
         help: Optional[str] = None,
         hidden: bool = False,
+        # Rich settings
+        rich_help_panel: Union[str, None] = None,
     ):
         self.help = help
         self.show_default = show_default
         self.show_choices = show_choices
         self.show_envvar = show_envvar
         self.hidden = hidden
+        self.rich_help_panel = rich_help_panel
         kwargs: Dict[str, Any] = {
             "param_decls": param_decls,
             "type": type,
@@ -153,6 +216,25 @@ class TyperArgument(click.core.Argument):
                 self, autocompletion=autocompletion
             )
 
+    def _get_default_string(
+        self,
+        *,
+        ctx: click.Context,
+        show_default_is_str: bool,
+        default_value: Union[List[Any], Tuple[Any, ...], str, Callable[..., Any], Any],
+    ) -> str:
+        return _get_default_string(
+            self,
+            ctx=ctx,
+            show_default_is_str=show_default_is_str,
+            default_value=default_value,
+        )
+
+    def _extract_default(
+        self, *, ctx: click.Context
+    ) -> Optional[Union[Any, Callable[[], Any]]]:
+        return _extract_default(self, ctx=ctx)
+
     def get_help_record(self, ctx: click.Context) -> Optional[Tuple[str, str]]:
         # Modified version of click.core.Option.get_help_record()
         # to support Arguments
@@ -171,16 +253,27 @@ class TyperArgument(click.core.Argument):
                     else envvar
                 )
                 extra.append(f"env var: {var_str}")
-        if self.default is not None and (self.show_default or ctx.show_default):
-            if isinstance(self.show_default, str):
-                default_string = f"({self.show_default})"
-            elif isinstance(self.default, (list, tuple)):
-                default_string = ", ".join(str(d) for d in self.default)
-            elif inspect.isfunction(self.default):
-                default_string = "(dynamic)"
-            else:
-                default_string = str(self.default)
-            extra.append(f"default: {default_string}")
+
+        # Typer override:
+        # Extracted to _extract_default() to allow re-using it in rich_utils
+        default_value = self._extract_default(ctx=ctx)
+        # Typer override end
+
+        show_default_is_str = isinstance(self.show_default, str)
+
+        if show_default_is_str or (
+            default_value is not None and (self.show_default or ctx.show_default)
+        ):
+            # Typer override:
+            # Extracted to _get_default_string() to allow re-using it in rich_utils
+            default_string = self._get_default_string(
+                ctx=ctx,
+                show_default_is_str=show_default_is_str,
+                default_value=default_value,
+            )
+            # Typer override end
+            if default_string:
+                extra.append(_("default: {default}").format(default=default_string))
         if self.required:
             extra.append("required")
         if extra:
@@ -246,6 +339,8 @@ class TyperOption(click.core.Option):
         hidden: bool = False,
         show_choices: bool = True,
         show_envvar: bool = False,
+        # Rich settings
+        rich_help_panel: Union[str, None] = None,
     ):
         # TODO: when deprecating Click 7, remove custom kwargs with prompt_required
         # and call super().__init__() directly
@@ -284,6 +379,7 @@ class TyperOption(click.core.Option):
             _typer_param_setup_autocompletion_compat(
                 self, autocompletion=autocompletion
             )
+        self.rich_help_pael = rich_help_panel
 
     def _get_default_string(
         self,
@@ -292,51 +388,17 @@ class TyperOption(click.core.Option):
         show_default_is_str: bool,
         default_value: Union[List[Any], Tuple[Any, ...], str, Callable[..., Any], Any],
     ) -> str:
-        # Extracted from click.core.Option.get_help_record() to be reused by
-        # rich_utils avoiding RegEx hacks
-        if show_default_is_str:
-            default_string = f"({self.show_default})"
-        elif isinstance(default_value, (list, tuple)):
-            default_string = ", ".join(str(d) for d in default_value)
-        elif callable(default_value):
-            default_string = _("(dynamic)")
-        elif self.is_bool_flag and self.secondary_opts:
-            # For boolean flags that have distinct True/False opts,
-            # use the opt without prefix instead of the value.
-            # Typer override, original commented
-            # default_string = click.parser.split_opt(
-            #     (self.opts if self.default else self.secondary_opts)[0]
-            # )[1]
-            if self.default:
-                if self.opts:
-                    default_string = click.parser.split_opt(self.opts[0])[1]
-                else:
-                    default_string = str(default_value)
-            else:
-                default_string = click.parser.split_opt(self.secondary_opts[0])[1]
-            # Typer override end
-        elif self.is_bool_flag and not self.secondary_opts and not default_value:
-            default_string = ""
-        else:
-            default_string = str(default_value)
-        return default_string
+        return _get_default_string(
+            self,
+            ctx=ctx,
+            show_default_is_str=show_default_is_str,
+            default_value=default_value,
+        )
 
     def _extract_default(
         self, *, ctx: click.Context
     ) -> Optional[Union[Any, Callable[[], Any]]]:
-        # Extracted from click.core.Option.get_help_record() to be reused by
-        # rich_utils avoiding RegEx hacks
-        # Temporarily enable resilient parsing to avoid type casting
-        # failing for the default. Might be possible to extend this to
-        # help formatting in general.
-        resilient = ctx.resilient_parsing
-        ctx.resilient_parsing = True
-
-        try:
-            default_value = self.get_default(ctx, call=False)
-        finally:
-            ctx.resilient_parsing = resilient
-        return default_value
+        return _extract_default(self, ctx=ctx)
 
     def get_help_record(self, ctx: click.Context) -> Optional[Tuple[str, str]]:
         # Click 7.x was not breaking this use case, so in that case, re-use its logic
@@ -401,7 +463,7 @@ class TyperOption(click.core.Option):
             default_value is not None and (self.show_default or ctx.show_default)
         ):
             # Typer override:
-            # Extracted to _get_default_str() to allow re-using it in rich_utils
+            # Extracted to _get_default_string() to allow re-using it in rich_utils
             default_string = self._get_default_string(
                 ctx=ctx,
                 show_default_is_str=show_default_is_str,
@@ -494,7 +556,9 @@ class TyperCommand(click.core.Command):
         no_args_is_help: bool = False,
         hidden: bool = False,
         deprecated: bool = False,
+        # Rich settings
         rich_markup_mode: MarkupMode = None,
+        rich_help_panel: Union[str, None] = None,
     ) -> None:
         super().__init__(
             name=name,
@@ -511,6 +575,7 @@ class TyperCommand(click.core.Command):
             deprecated=deprecated,
         )
         self.rich_markup_mode: MarkupMode = rich_markup_mode
+        self.rich_help_panel = rich_help_panel
 
     def format_options(
         self, ctx: click.Context, formatter: click.HelpFormatter
@@ -585,11 +650,14 @@ class TyperGroup(click.core.Group):
         commands: Optional[
             Union[Dict[str, click.Command], Sequence[click.Command]]
         ] = None,
+        # Rich settings
         rich_markup_mode: MarkupMode = None,
+        rich_help_panel: Union[str, None] = None,
         **attrs: Any,
     ) -> None:
         super().__init__(name=name, commands=commands, **attrs)
         self.rich_markup_mode: MarkupMode = rich_markup_mode
+        self.rich_help_panel = rich_help_panel
 
     def format_options(
         self, ctx: click.Context, formatter: click.HelpFormatter
