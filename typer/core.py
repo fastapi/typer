@@ -179,7 +179,8 @@ def _main(
     if args is None:
         args = sys.argv[1:]
 
-        if os.name == "nt" and windows_expand_args:
+        # Covered in Click tests
+        if os.name == "nt" and windows_expand_args:  # pragma: no cover
             args = click.utils._expand_args(args)
     else:
         args = list(args)

@@ -1,6 +1,7 @@
 import subprocess
 
 import typer
+import typer.core
 from typer.testing import CliRunner
 
 from docs_src.options.required import tutorial001 as mod
@@ -29,6 +30,17 @@ def test_help():
     assert "--lastname" in result.output
     assert "TEXT" in result.output
     assert "[required]" in result.output
+
+
+def test_help_no_rich():
+    rich = typer.core.rich
+    typer.core.rich = None
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "--lastname" in result.output
+    assert "TEXT" in result.output
+    assert "[required]" in result.output
+    typer.core.rich = rich
 
 
 def test_script():

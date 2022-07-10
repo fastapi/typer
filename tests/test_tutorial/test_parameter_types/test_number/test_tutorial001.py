@@ -1,6 +1,7 @@
 import subprocess
 
 import typer
+import typer.core
 from typer.testing import CliRunner
 
 from docs_src.parameter_types.number import tutorial001 as mod
@@ -18,6 +19,18 @@ def test_help():
     assert "INTEGER RANGE" in result.output
     assert "--score" in result.output
     assert "FLOAT RANGE" in result.output
+
+
+def test_help_no_rich():
+    rich = typer.core.rich
+    typer.core.rich = None
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "--age" in result.output
+    assert "INTEGER RANGE" in result.output
+    assert "--score" in result.output
+    assert "FLOAT RANGE" in result.output
+    typer.core.rich = rich
 
 
 def test_params():

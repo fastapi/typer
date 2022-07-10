@@ -1,5 +1,6 @@
 import subprocess
 
+import typer.core
 from typer.testing import CliRunner
 
 from docs_src.commands.callback import tutorial001 as mod
@@ -15,6 +16,17 @@ def test_help():
     assert "Manage users in the awesome CLI app." in result.output
     assert "--verbose" in result.output
     assert "--no-verbose" in result.output
+
+
+def test_help_no_rich():
+    rich = typer.core.rich
+    typer.core.rich = None
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "Manage users in the awesome CLI app." in result.output
+    assert "--verbose" in result.output
+    assert "--no-verbose" in result.output
+    typer.core.rich = rich
 
 
 def test_create():

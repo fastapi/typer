@@ -387,7 +387,7 @@ def _print_options_panel(
                 range_str = param.type._describe_range()
                 if range_str:
                     metavar.append(RANGE_STRING.format(range_str))
-        except AttributeError:
+        except AttributeError:  # pragma: no cover
             # click.types._NumberRangeBase is only in Click 8x onwards
             pass
 
