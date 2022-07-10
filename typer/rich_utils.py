@@ -28,6 +28,8 @@ else:
 # Default styles
 STYLE_OPTION = "bold cyan"
 STYLE_SWITCH = "bold green"
+STYLE_NEGATIVE_OPTION = "bold magenta"
+STYLE_NEGATIVE_SWITCH = "bold red"
 STYLE_METAVAR = "bold yellow"
 STYLE_METAVAR_SEPARATOR = "dim"
 STYLE_USAGE = "yellow"
@@ -105,7 +107,15 @@ class OptionHighlighter(RegexHighlighter):
     ]
 
 
+class NegativeOptionHighlighter(RegexHighlighter):
+    highlights = [
+        r"(^|\W)(?P<negative_switch>\-\w+)(?![a-zA-Z0-9])",
+        r"(^|\W)(?P<negative_option>\-\-[\w\-]+)(?![a-zA-Z0-9])",
+    ]
+
+
 highlighter = OptionHighlighter()
+negative_highlighter = NegativeOptionHighlighter()
 
 
 def _get_rich_console() -> Console:
@@ -114,6 +124,8 @@ def _get_rich_console() -> Console:
             {
                 "option": STYLE_OPTION,
                 "switch": STYLE_SWITCH,
+                "negative_option": STYLE_NEGATIVE_OPTION,
+                "negative_switch": STYLE_NEGATIVE_SWITCH,
                 "metavar": STYLE_METAVAR,
                 "metavar_sep": STYLE_METAVAR_SEPARATOR,
                 "usage": STYLE_USAGE,
@@ -331,30 +343,21 @@ def _print_options_panel(
     options_rows: List[List[RenderableType]] = []
     required_rows: List[Union[str, Text]] = []
     for param in params:
-        # opt = param.opts[0]
-        # for opt in option_group.get("options", []):
-
-        # Get the param
-        # for param in obj.get_params(ctx):
-        #     if any([opt in param.opts]):
-        #         break
-        # # Skip if option is not listed in this group
-        # else:
-        #     continue
-
         # Short and long form
         opt_long_strs = []
         opt_short_strs = []
-        for idx, opt in enumerate(param.opts):
-            opt_str = opt
-            try:
-                opt_str += " / " + param.secondary_opts[idx]
-            except IndexError:
-                pass
-            if "--" in opt:
+        secondary_opt_long_strs = []
+        secondary_opt_short_strs = []
+        for opt_str in param.opts:
+            if "--" in opt_str:
                 opt_long_strs.append(opt_str)
             else:
                 opt_short_strs.append(opt_str)
+        for opt_str in param.secondary_opts:
+            if "--" in opt_str:
+                secondary_opt_long_strs.append(opt_str)
+            else:
+                secondary_opt_short_strs.append(opt_str)
 
         # Column for a metavar, if we have one
         metavar = Text(style=STYLE_METAVAR, overflow="fold")
@@ -406,8 +409,10 @@ def _print_options_panel(
         required_rows.append(required)
         options_rows.append(
             [
-                highlighter(highlighter(",".join(opt_long_strs))),
-                highlighter(highlighter(",".join(opt_short_strs))),
+                highlighter(",".join(opt_long_strs)),
+                highlighter(",".join(opt_short_strs)),
+                negative_highlighter(",".join(secondary_opt_long_strs)),
+                negative_highlighter(",".join(secondary_opt_short_strs)),
                 metavar_highlighter(metavar),
                 _get_parameter_help(
                     param=param,
