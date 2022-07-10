@@ -163,12 +163,12 @@ class TyperArgument(click.core.Argument):
             elif isinstance(self.default, (list, tuple)):
                 default_string = ", ".join(str(d) for d in self.default)
             elif inspect.isfunction(self.default):
-                default_string = "(dynamic)"
+                default_string = _("(dynamic)")
             else:
                 default_string = str(self.default)
-            extra.append(f"default: {default_string}")
+            extra.append(_(f"default: {default_string}"))
         if self.required:
-            extra.append("required")
+            extra.append(_("required"))
         if extra:
             extra_str = ";".join(extra)
             help = f"{help}  [{extra_str}]" if help else f"[{extra_str}]"
@@ -407,10 +407,10 @@ def _typer_format_options(
     # with formatter.section(_("Options")):
     #     ...
     if args:
-        with formatter.section("Arguments"):
+        with formatter.section(_("Arguments")):
             formatter.write_dl(args)
     if opts:
-        with formatter.section("Options"):
+        with formatter.section(_("Options")):
             formatter.write_dl(opts)
 
 
