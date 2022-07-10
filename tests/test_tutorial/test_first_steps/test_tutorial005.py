@@ -19,7 +19,8 @@ def test_help():
     assert "[required]" in result.output
     assert "--lastname" in result.output
     assert "TEXT" in result.output
-    assert "--formal / --no-formal" in result.output
+    assert "--formal" in result.output
+    assert "--no-formal" in result.output
 
 
 def test_1():

@@ -14,7 +14,8 @@ app.command()(mod.main)
 def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "--accept / --reject" in result.output
+    assert "--accept" in result.output
+    assert "--reject" in result.output
     assert "--no-accept" not in result.output
 
 

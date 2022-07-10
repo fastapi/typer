@@ -13,7 +13,8 @@ def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     assert "Manage users in the awesome CLI app." in result.output
-    assert "--verbose / --no-verbose" in result.output
+    assert "--verbose" in result.output
+    assert "--no-verbose" in result.output
 
 
 def test_create():
