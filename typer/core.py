@@ -1,3 +1,4 @@
+import errno
 import os
 import sys
 from gettext import gettext as _
@@ -9,16 +10,19 @@ from typing import (
     List,
     Optional,
     Sequence,
+    TextIO,
     Tuple,
     Union,
     cast,
 )
 
 import click
+import click._unicodefun
 import click.core
 import click.formatting
 import click.parser
 import click.types
+import click.utils
 
 from .utils import _get_click_major
 
@@ -155,6 +159,94 @@ def _extract_default(
     finally:
         ctx.resilient_parsing = resilient
     return default_value
+
+
+def _main(
+    self: click.Command,
+    *,
+    args: Optional[Sequence[str]] = None,
+    prog_name: Optional[str] = None,
+    complete_var: Optional[str] = None,
+    standalone_mode: bool = True,
+    windows_expand_args: bool = True,
+    **extra: Any,
+) -> Any:
+    # Typer override, duplicated from click.main() to handle custom rich exceptions
+    # Verify that the environment is configured correctly, or reject
+    # further execution to avoid a broken script.
+    click._unicodefun._verify_python_env()
+
+    if args is None:
+        args = sys.argv[1:]
+
+        if os.name == "nt" and windows_expand_args:
+            args = click.utils._expand_args(args)
+    else:
+        args = list(args)
+
+    if prog_name is None:
+        prog_name = click.utils._detect_program_name()
+
+    # Process shell completion requests and exit early.
+    self._main_shell_completion(extra, prog_name, complete_var)
+
+    try:
+        try:
+            with self.make_context(prog_name, args, **extra) as ctx:
+                rv = self.invoke(ctx)
+                if not standalone_mode:
+                    return rv
+                # it's not safe to `ctx.exit(rv)` here!
+                # note that `rv` may actually contain data like "1" which
+                # has obvious effects
+                # more subtle case: `rv=[None, None]` can come out of
+                # chained commands which all returned `None` -- so it's not
+                # even always obvious that `rv` indicates success/failure
+                # by its truthiness/falsiness
+                ctx.exit()
+        except (EOFError, KeyboardInterrupt):
+            click.echo(file=sys.stderr)
+            raise click.Abort()
+        except click.ClickException as e:
+            if not standalone_mode:
+                raise
+            # Typer override
+            if rich:
+                rich_utils.rich_format_error(e)
+            else:
+                e.show()
+            # Typer override end
+            sys.exit(e.exit_code)
+        except OSError as e:
+            if e.errno == errno.EPIPE:
+                sys.stdout = cast(TextIO, click.utils.PacifyFlushWrapper(sys.stdout))
+                sys.stderr = cast(TextIO, click.utils.PacifyFlushWrapper(sys.stderr))
+                sys.exit(1)
+            else:
+                raise
+    except click.exceptions.Exit as e:
+        if standalone_mode:
+            sys.exit(e.exit_code)
+        else:
+            # in non-standalone mode, return the exit code
+            # note that this is only reached if `self.invoke` above raises
+            # an Exit explicitly -- thus bypassing the check there which
+            # would return its result
+            # the results of non-standalone execution may therefore be
+            # somewhat ambiguous: if there are codepaths which lead to
+            # `ctx.exit(1)` and to `return 1`, the caller won't be able to
+            # tell the difference between the two
+            return e.exit_code
+    except click.Abort:
+        if not standalone_mode:
+            raise
+        # Typer override
+        if rich:
+            rich_utils.rich_abort_error()
+        else:
+            click.echo(_("Aborted!"), file=sys.stderr)
+        # Typer override end
+        sys.exit(1)
 
 
 class TyperArgument(click.core.Argument):
@@ -601,36 +693,15 @@ class TyperCommand(click.core.Command):
         windows_expand_args: bool = True,
         **extra: Any,
     ) -> Any:
-        if not rich:
-            return super().main(
-                args=args,
-                prog_name=prog_name,
-                complete_var=complete_var,
-                standalone_mode=standalone_mode,
-                windows_expand_args=windows_expand_args,
-                **extra,
-            )
-        try:
-            rv = super().main(
-                args=args,
-                prog_name=prog_name,
-                complete_var=complete_var,
-                standalone_mode=False,
-                windows_expand_args=windows_expand_args,
-                **extra,
-            )
-            if not standalone_mode:
-                return rv
-        except click.ClickException as e:
-            if not standalone_mode:
-                raise
-            rich_utils.rich_format_error(e)
-            sys.exit(e.exit_code)
-        except click.exceptions.Abort:
-            if not standalone_mode:
-                raise
-            rich_utils.rich_abort_error()
-            sys.exit(1)
+        return _main(
+            self,
+            args=args,
+            prog_name=prog_name,
+            complete_var=complete_var,
+            standalone_mode=standalone_mode,
+            windows_expand_args=windows_expand_args,
+            **extra,
+        )
 
     def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
         if not rich:
@@ -684,36 +755,15 @@ class TyperGroup(click.core.Group):
         windows_expand_args: bool = True,
         **extra: Any,
     ) -> Any:
-        if not rich:
-            return super().main(
-                args=args,
-                prog_name=prog_name,
-                complete_var=complete_var,
-                standalone_mode=standalone_mode,
-                windows_expand_args=windows_expand_args,
-                **extra,
-            )
-        try:
-            rv = super().main(
-                args=args,
-                prog_name=prog_name,
-                complete_var=complete_var,
-                standalone_mode=False,
-                windows_expand_args=windows_expand_args,
-                **extra,
-            )
-            if not standalone_mode:
-                return rv
-        except click.ClickException as e:
-            if not standalone_mode:
-                raise
-            rich_utils.rich_format_error(e)
-            sys.exit(e.exit_code)
-        except click.exceptions.Abort:
-            if not standalone_mode:
-                raise
-            rich_utils.rich_abort_error()
-            sys.exit(1)
+        return _main(
+            self,
+            args=args,
+            prog_name=prog_name,
+            complete_var=complete_var,
+            standalone_mode=standalone_mode,
+            windows_expand_args=windows_expand_args,
+            **extra,
+        )
 
     def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
         if not rich:
