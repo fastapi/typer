@@ -42,8 +42,8 @@ def test_invalid_no_accept():
     # TODO: when deprecating Click 7, remove second option
 
     assert (
-        "Error: No such option: --no-accept" in result.output
-        or "Error: no such option: --no-accept" in result.output
+        "No such option: --no-accept" in result.output
+        or "no such option: --no-accept" in result.output
     )
 
 

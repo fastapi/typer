@@ -190,10 +190,8 @@ def test_forward_references():
     # TODO: when deprecating Click 7, remove second option
 
     assert (
-        "Error: Invalid value for 'ARG3': 'invalid' is not a valid integer"
-        in result.stdout
-        or "Error: Invalid value for 'ARG3': invalid is not a valid integer"
-        in result.stdout
+        "Invalid value for 'ARG3': 'invalid' is not a valid integer" in result.stdout
+        or "Invalid value for 'ARG3': invalid is not a valid integer" in result.stdout
     )
     result = runner.invoke(app, ["Hello", "2", "3", "--arg4", "--arg5"])
     assert (

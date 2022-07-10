@@ -14,7 +14,7 @@ app.command()(mod.main)
 def test_1():
     result = runner.invoke(app, ["Camila"])
     assert result.exit_code != 0
-    assert "Error: Missing option '--lastname'." in result.output
+    assert "Missing option '--lastname'." in result.output
 
 
 def test_option_lastname():
@@ -26,7 +26,8 @@ def test_option_lastname():
 def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "--lastname TEXT" in result.output
+    assert "--lastname" in result.output
+    assert "TEXT" in result.output
     assert "[required]" in result.output
 
 

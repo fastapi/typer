@@ -14,7 +14,7 @@ def test_main():
     result = runner.invoke(app)
     assert result.exit_code != 0
     assert "No user provided" in result.output
-    assert "Aborted!" in result.output
+    assert "Aborted" in result.output
 
 
 def test_user_1():
@@ -37,8 +37,8 @@ def test_invalid_user():
     # TODO: when deprecating Click 7, remove second option
 
     assert (
-        "Error: Option '--user' requires 3 arguments" in result.output
-        or "Error: --user option requires 3 arguments" in result.output
+        "Option '--user' requires 3 arguments" in result.output
+        or "--user option requires 3 arguments" in result.output
     )
 
 

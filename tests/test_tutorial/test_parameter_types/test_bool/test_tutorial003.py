@@ -14,7 +14,10 @@ app.command()(mod.main)
 def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "-f, --force / -F, --no-force" in result.output
+    assert "-f" in result.output
+    assert "--force" in result.output
+    assert "-F" in result.output
+    assert "--no-force" in result.output
 
 
 def test_force():

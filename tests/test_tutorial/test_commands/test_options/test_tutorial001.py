@@ -12,7 +12,7 @@ runner = CliRunner()
 def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "Commands:" in result.output
+    assert "Commands" in result.output
     assert "create" in result.output
     assert "delete" in result.output
     assert "delete-all" in result.output

@@ -12,7 +12,7 @@ app = mod.app
 def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "Commands:" in result.output
+    assert "Commands" in result.output
     assert "exp-users" in result.output
     assert "Explicit help." in result.output
 

@@ -51,8 +51,8 @@ def test_wrong_verbose():
     assert result.exit_code != 0
     # TODO: when deprecating Click 7, remove second option
     assert (
-        "Error: No such option: --verbose" in result.output
-        or "Error: no such option: --verbose" in result.output
+        "No such option: --verbose" in result.output
+        or "no such option: --verbose" in result.output
     )
 
 

@@ -24,9 +24,9 @@ def test_invalid_uuid():
     # TODO: when deprecating Click 7, remove second option
 
     assert (
-        "Error: Invalid value for 'USER_ID': '7479706572-72756c6573' is not a valid UUID"
+        "Invalid value for 'USER_ID': '7479706572-72756c6573' is not a valid UUID"
         in result.output
-        or "Error: Invalid value for 'USER_ID': 7479706572-72756c6573 is not a valid UUID value"
+        or "Invalid value for 'USER_ID': 7479706572-72756c6573 is not a valid UUID value"
         in result.output
     )
 

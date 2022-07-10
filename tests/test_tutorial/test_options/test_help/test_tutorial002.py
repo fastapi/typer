@@ -20,7 +20,8 @@ def test_call():
 def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "--fullname TEXT" in result.output
+    assert "--fullname" in result.output
+    assert "TEXT" in result.output
     assert "[default: Wade Wilson]" not in result.output
 
 

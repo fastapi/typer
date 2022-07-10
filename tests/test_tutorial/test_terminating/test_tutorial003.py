@@ -21,7 +21,7 @@ def test_root():
     result = runner.invoke(app, ["root"])
     assert result.exit_code == 1
     assert "The root user is reserved" in result.output
-    assert "Aborted!" in result.output
+    assert "Aborted" in result.output
 
 
 def test_script():
