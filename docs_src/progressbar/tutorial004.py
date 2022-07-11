@@ -10,7 +10,7 @@ def main():
             # Fake processing time
             time.sleep(1)
             progress.update(250)
-    typer.echo(f"Processed {total} things in batches.")
+    print(f"Processed {total} things in batches.")
 
 
 if __name__ == "__main__":
