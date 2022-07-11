@@ -68,11 +68,11 @@ For the tutorial, you might want to install it with all the optional dependencie
 <div class="termy">
 
 ```console
-$ pip install typer[all]
+$ pip install "typer[all]"
 ---> 100%
-Successfully installed typer click colorama shellingham rich
+Successfully installed typer click shellingham rich
 ```
 
 </div>
 
-...that also includes `colorama`, `shellingham`, and `rich`.
+...that also includes `rich` and `shellingham`.
