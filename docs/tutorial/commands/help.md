@@ -118,3 +118,145 @@ Commands:
 ```
 
 </div>
+
+## Docstring with Markdown and Markup
+
+If you have **Rich** installed as described in [Printing and Colors](../printing.md){.internal-link target=_blank}, you can configure your app to enable using rich text in the docstring with the parameter `rich_markup_mode`.
+
+!!! info
+    By default, `rich_markup_mode` is `None`, which disables any rich text formatting for the docstring.
+
+### Rich Markup
+
+If you set `rich_markup_mode="rich"` when creating the `typer.Typer()` app, you will be able to use <a href="https://rich.readthedocs.io/en/stable/markup.html" class="external-link" target="_blank">Rich Console Markup</a> in the docstring, and even in the help for the arguments and options:
+
+```Python hl_lines="3  9  13-15  20  22  24"
+{!../docs_src/commands/help/tutorial003.py!}
+```
+
+With that, you can use <a href="https://rich.readthedocs.io/en/stable/markup.html" class="external-link" target="_blank">Rich Console Markup</a> to format the text in the docstring for the command `create`, make the word "`create`" bold and green, and even use an <a href="https://rich.readthedocs.io/en/stable/markup.html#emoji" class="external-link" target="_blank">emoji</a>.
+
+You can also use markup in the help for the `username` CLI Argument.
+
+And the same as before, the help text overwritten for the command `delete` can also use Rich Markup, the same in the CLI Argument and CLI Option.
+
+If you run the program and check the help, you will see that **Typer** uses **Rich** internally to format the help.
+
+Check the help for the `create` command:
+
+<div class="termy">
+
+```console
+$ python main.py create --help
+
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>tutorial003.py create [OPTIONS] USERNAME                     </b>
+<b>                                                                     </b>
+ <font color="#A6E22E"><b>Create</b></font> a new <i>shinny</i> user. ✨
+ This requires a <font color="#A5A5A1"><u style="text-decoration-style:single">username</u></font><font color="#A5A5A1">.                                           </font>
+
+<font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>TEXT</b></font>  The username to be <font color="#A6E22E">created</font>               │
+<font color="#A5A5A1">│                          [default: None]                          │</font>
+<font color="#A5A5A1">│                          </font><font color="#A6194C">[required]                </font>               │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+<font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>          Show this message and exit.                       │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+```
+
+</div>
+
+And check the help for the `delete` command:
+
+<div class="termy">
+
+```console
+$ python main.py delete --help
+
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>tutorial003.py delete [OPTIONS] USERNAME                     </b>
+<b>                                                                     </b>
+ <font color="#F92672"><b>Delete</b></font> a user with <i>USERNAME</i>.
+
+<font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>TEXT</b></font>  The username to be <font color="#F92672">deleted</font>               │
+<font color="#A5A5A1">│                          [default: None]                          │</font>
+<font color="#A5A5A1">│                          </font><font color="#A6194C">[required]                </font>               │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+<font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--force</b></font>    <font color="#AE81FF"><b>--no-force</b></font>      Force the <font color="#F92672"><b>deletion</b></font> 💥                  │
+<font color="#A5A5A1">│                            [default: no-force]                    │</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                     Show this message and exit.            │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+```
+
+</div>
+
+
+### Rich Markown
+
+If you set `rich_markup_mode="markdown"` when creating the `typer.Typer()` app, you will be able to use Markdown in the docstring:
+
+```Python hl_lines="3  7  9-14  19  21-22"
+{!../docs_src/commands/help/tutorial004.py!}
+```
+
+With that, you can use Markdown to format the text in the docstring for the command `create`, make the word "`create`" bold, show a list of items, and even use an <a href="https://rich.readthedocs.io/en/stable/markup.html#emoji" class="external-link" target="_blank">emoji</a>.
+
+And the same as before, the help text overwritten for the command `delete` can also use Markdown.
+
+Check the help for the `create` command:
+
+<div class="termy">
+
+```console
+$ python main.py create --help
+
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>tutorial004.py create [OPTIONS] USERNAME                     </b>
+<b>                                                                     </b>
+ <b>Create</b> a new <i>shinny</i> user. ✨
+
+ <font color="#F4BF75"><b> • </b></font><font color="#A5A5A1">Create a username                                                </font>
+ <font color="#F4BF75"><b> • </b></font><font color="#A5A5A1">Show that the username is created                                </font>
+
+ <font color="#F4BF75">───────────────────────────────────────────────────────────────────</font>
+ Learn more at the <font color="#44919F">Typer docs website</font>
+
+<font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>TEXT</b></font>  The username to be <b>created</b>               │
+<font color="#A5A5A1">│                          [default: None]                          │</font>
+<font color="#A5A5A1">│                          </font><font color="#A6194C">[required]                              </font> │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+<font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>          Show this message and exit.                       │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+```
+
+</div>
+
+And the same for the `delete` command:
+
+<div class="termy">
+
+```console
+$ python main.py delete --help
+
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>tutorial004.py delete [OPTIONS] USERNAME                     </b>
+<b>                                                                     </b>
+ <b>Delete</b> a user with <i>USERNAME</i>.
+
+<font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>TEXT</b></font>  The username to be <b>deleted</b>               │
+<font color="#A5A5A1">│                          [default: None]                          │</font>
+<font color="#A5A5A1">│                          </font><font color="#A6194C">[required]                              </font> │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+<font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--force</b></font>    <font color="#AE81FF"><b>--no-force</b></font>      Force the <b>deletion</b> 💥                  │
+<font color="#A5A5A1">│                            [default: no-force]                    │</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                     Show this message and exit.            │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+```
+
+</div>
+
+!!! info
+    Notice that in Markdown you cannot define colors. For colors you might prefer to use Rich markup.
