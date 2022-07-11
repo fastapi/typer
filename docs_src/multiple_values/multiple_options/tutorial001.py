@@ -5,10 +5,10 @@ import typer
 
 def main(user: Optional[List[str]] = typer.Option(None)):
     if not user:
-        typer.echo("No provided users")
+        print("No provided users")
         raise typer.Abort()
     for u in user:
-        typer.echo(f"Processing user: {u}")
+        print(f"Processing user: {u}")
 
 
 if __name__ == "__main__":
