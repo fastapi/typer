@@ -1,5 +1,6 @@
 ## Latest Changes
 
+* 🐛 Fix setting `FORCE_TERMINAL` with colors. PR [#423](https://github.com/tiangolo/typer/pull/423) by [@tiangolo](https://github.com/tiangolo).
 ## 0.6.0
 
 This release adds deep integrations with [Rich](https://rich.readthedocs.io/en/stable/). ✨
