@@ -119,7 +119,7 @@ highlighter = OptionHighlighter()
 negative_highlighter = NegativeOptionHighlighter()
 
 
-def _get_rich_console() -> Console:
+def _get_rich_console(stderr=False) -> Console:
     return Console(
         theme=Theme(
             {
@@ -130,12 +130,13 @@ def _get_rich_console() -> Console:
                 "metavar": STYLE_METAVAR,
                 "metavar_sep": STYLE_METAVAR_SEPARATOR,
                 "usage": STYLE_USAGE,
-            }
+            },
         ),
         highlighter=highlighter,
         color_system=COLOR_SYSTEM,
         force_terminal=FORCE_TERMINAL,
         width=MAX_WIDTH,
+        stderr=stderr,
     )
 
 
@@ -666,7 +667,7 @@ def rich_format_error(self: click.ClickException) -> None:
     Called by custom exception handler to print richly formatted click errors.
     Mimics original click.ClickException.echo() function but with rich formatting.
     """
-    console = _get_rich_console()
+    console = _get_rich_console(stderr=True)
     ctx: Union[click.Context, None] = getattr(self, "ctx", None)
     if ctx is not None:
         console.print(ctx.get_usage())
@@ -691,5 +692,5 @@ def rich_format_error(self: click.ClickException) -> None:
 
 def rich_abort_error() -> None:
     """Print richly formatted abort error."""
-    console = _get_rich_console()
+    console = _get_rich_console(stderr=True)
     console.print(ABORTED_TEXT, style=STYLE_ABORTED)
