@@ -1,5 +1,7 @@
 ## Latest Changes
 
+## 0.6.0
+
 This relase adds deep integrations with [Rich](https://rich.readthedocs.io/en/stable/). ✨
 
 `rich` is an optional dependency, you can install it directly or it will be included when you install with:
