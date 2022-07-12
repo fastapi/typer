@@ -119,6 +119,64 @@ Commands:
 
 </div>
 
+## Deprecate a Command
+
+There could be cases where you have a command in your app that you need to deprecate, so that your users stop using it, even while it's still supported for a while.
+
+You can mark it with the parameter `deprecated=True`:
+
+```Python hl_lines="14"
+{!../docs_src/commands/help/tutorial003.py!}
+```
+
+And when you show the `--help` option you will see it's marked as "`deprecated`":
+
+<div class="termy">
+
+```console
+$ python main.py --help
+
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] COMMAND [ARGS]...                  </b>
+<b>                                                                     </b>
+<font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--install-completion</b></font>          Install completion for the current  │
+<font color="#A5A5A1">│                               shell.                              │</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--show-completion</b></font>             Show completion for the current     │
+<font color="#A5A5A1">│                               shell, to copy it or customize the  │</font>
+<font color="#A5A5A1">│                               installation.                       │</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                        Show this message and exit.         │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+<font color="#A5A5A1">╭─ Commands ────────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>create       </b></font> Create a user.                                      │
+<font color="#A5A5A1">│ </font><font color="#6B9F98"><b>delete       </b></font> Delete a user.              <font color="#F92672">(deprecated)           </font> │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+```
+
+</div>
+
+And if you check the `--help` for the deprecated command (in this example, the command `delete`), it also shows it as deprecated:
+
+<div class="termy">
+
+```console
+$ python main.py delete --help
+
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py delete [OPTIONS] USERNAME                    </b>
+<b>                                                                     </b>
+ <font color="#F92672">(deprecated) </font>
+ Delete a user.
+ This is deprecated and will stop being supported soon.
+
+<font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>TEXT</b></font>  [default: None] <font color="#A6194C">[required]</font>               │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+<font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>          Show this message and exit.                       │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+```
+
+</div>
+
 ## Rich Markdown and Markup
 
 If you have **Rich** installed as described in [Printing and Colors](../printing.md){.internal-link target=_blank}, you can configure your app to enable markup text with the parameter `rich_markup_mode`.
@@ -133,7 +191,7 @@ Then you can use more formatting in the docstrings and the `help` parameter for 
 If you set `rich_markup_mode="rich"` when creating the `typer.Typer()` app, you will be able to use <a href="https://rich.readthedocs.io/en/stable/markup.html" class="external-link" target="_blank">Rich Console Markup</a> in the docstring, and even in the help for the *CLI arguments* and options:
 
 ```Python hl_lines="3  9  13-15  20  22  24"
-{!../docs_src/commands/help/tutorial003.py!}
+{!../docs_src/commands/help/tutorial004.py!}
 ```
 
 With that, you can use <a href="https://rich.readthedocs.io/en/stable/markup.html" class="external-link" target="_blank">Rich Console Markup</a> to format the text in the docstring for the command `create`, make the word "`create`" bold and green, and even use an <a href="https://rich.readthedocs.io/en/stable/markup.html#emoji" class="external-link" target="_blank">emoji</a>.
@@ -198,7 +256,7 @@ $ python main.py delete --help
 If you set `rich_markup_mode="markdown"` when creating the `typer.Typer()` app, you will be able to use Markdown in the docstring:
 
 ```Python hl_lines="3  7  9-17  22  24-25"
-{!../docs_src/commands/help/tutorial004.py!}
+{!../docs_src/commands/help/tutorial005.py!}
 ```
 
 With that, you can use Markdown to format the text in the docstring for the command `create`, make the word "`create`" bold, show a list of items, and even use an <a href="https://rich.readthedocs.io/en/stable/markup.html#emoji" class="external-link" target="_blank">emoji</a>.
@@ -273,7 +331,7 @@ If you installed <a href="https://rich.readthedocs.io/" class="external-link" ta
 To set the panel for a command you can pass the argument `rich_help_panel` with the name of the panel you want to use:
 
 ```Python hl_lines="22  30  38  46"
-{!../docs_src/commands/help/tutorial005.py!}
+{!../docs_src/commands/help/tutorial006.py!}
 ```
 
 Commands without a panel will be shown in the default panel `Commands`, and the rest will be shown in the next panels:
@@ -316,7 +374,7 @@ The same way, you can configure the panels for *CLI arguments* and *CLI options*
 And of course, in the same application you can also set the `rich_help_panel` for commands.
 
 ```Python hl_lines="12  16  21  30"
-{!../docs_src/commands/help/tutorial006.py!}
+{!../docs_src/commands/help/tutorial007.py!}
 ```
 
 Then if you run the application you will see all the *CLI parameters* in their respective panels.
