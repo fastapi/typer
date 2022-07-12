@@ -9,36 +9,45 @@ app = mod.app
 runner = CliRunner()
 
 
-def test_main_help():
+def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     assert "create" in result.output
-    assert "Create a new user. ✨" in result.output
+    assert "Create a new shinny user. ✨" in result.output
     assert "delete" in result.output
-    assert "Delete a user. 🔥" in result.output
-    assert "Utils and Configs" in result.output
-    assert "config" in result.output
-    assert "Configure the system. 🔧" in result.output
-    assert "Synchronize the system or something fancy like that. ♻" in result.output
-    assert "Help and Others" in result.output
-    assert "Get help with the system. ❓" in result.output
-    assert "Report an issue. 🐛" in result.output
+    assert "Delete a user with USERNAME." in result.output
+    assert "Some internal utility function to create." not in result.output
+    assert "Some internal utility function to delete." not in result.output
 
 
-def test_call():
-    # Mainly for coverage
-    result = runner.invoke(app, ["create", "Morty"])
+def test_help_create():
+    result = runner.invoke(app, ["create", "--help"])
     assert result.exit_code == 0
-    result = runner.invoke(app, ["delete", "Morty"])
+    assert "Create a new shinny user. ✨" in result.output
+    assert "The username to be created" in result.output
+    assert "Learn more at the Typer docs website" in result.output
+    assert "Some internal utility function to create." not in result.output
+
+
+def test_help_delete():
+    result = runner.invoke(app, ["delete", "--help"])
     assert result.exit_code == 0
-    result = runner.invoke(app, ["config", "Morty"])
+    assert "Delete a user with USERNAME." in result.output
+    assert "The username to be deleted" in result.output
+    assert "Force the deletion 💥" in result.output
+    assert "Some internal utility function to delete." not in result.output
+
+
+def test_create():
+    result = runner.invoke(app, ["create", "Camila"])
     assert result.exit_code == 0
-    result = runner.invoke(app, ["sync"])
+    assert "Creating user: Camila" in result.output
+
+
+def test_delete():
+    result = runner.invoke(app, ["delete", "Camila"])
     assert result.exit_code == 0
-    result = runner.invoke(app, ["help"])
-    assert result.exit_code == 0
-    result = runner.invoke(app, ["report"])
-    assert result.exit_code == 0
+    assert "Deleting user: Camila" in result.output
 
 
 def test_script():

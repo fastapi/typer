@@ -25,7 +25,6 @@ def test_help_create():
     assert result.exit_code == 0
     assert "Create a new shinny user. ✨" in result.output
     assert "The username to be created" in result.output
-    assert "Learn more at the Typer docs website" in result.output
     assert "Some internal utility function to create." not in result.output
 
 
