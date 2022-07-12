@@ -1,5 +1,6 @@
 ## Latest Changes
 
+* 📝 Add docs for using Rich with Typer. PR [#421](https://github.com/tiangolo/typer/pull/421) by [@tiangolo](https://github.com/tiangolo).
 * ⬆️ Upgrade codecov GitHub Action. PR [#420](https://github.com/tiangolo/typer/pull/420) by [@tiangolo](https://github.com/tiangolo).
 * ✨ Richify, add integrations with Rich everywhere. PR [#419](https://github.com/tiangolo/typer/pull/419) by [@tiangolo](https://github.com/tiangolo).
 * ✨ Allow configuring pretty errors when creating the Typer instance. PR [#416](https://github.com/tiangolo/typer/pull/416) by [@tiangolo](https://github.com/tiangolo).
