@@ -79,10 +79,6 @@ FORCE_TERMINAL = (
 if _TYPER_FORCE_DISABLE_TERMINAL:
     FORCE_TERMINAL = False
 
-print(FORCE_TERMINAL)
-
-print(FORCE_TERMINAL)
-
 # Fixed strings
 DEPRECATED_STRING = "(deprecated) "
 DEFAULT_STRING = "[default: {}]"
