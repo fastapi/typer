@@ -119,7 +119,7 @@ highlighter = OptionHighlighter()
 negative_highlighter = NegativeOptionHighlighter()
 
 
-def _get_rich_console(stderr=False) -> Console:
+def _get_rich_console(stderr: bool = False) -> Console:
     return Console(
         theme=Theme(
             {
