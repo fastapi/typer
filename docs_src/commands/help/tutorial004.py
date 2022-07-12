@@ -1,28 +1,28 @@
 import typer
 
-app = typer.Typer(rich_markup_mode="markdown")
+app = typer.Typer(rich_markup_mode="rich")
 
 
 @app.command()
-def create(username: str = typer.Argument(..., help="The username to be **created**")):
+def create(
+    username: str = typer.Argument(
+        ..., help="The username to be [green]created[/green]"
+    )
+):
     """
-    **Create** a new *shinny* user. :sparkles:
+    [bold green]Create[/bold green] a new [italic]shinny[/italic] user. :sparkles:
 
-    * Create a username
-
-    * Show that the username is created
-
-    ---
-
-    Learn more at the [Typer docs website](https://typer.tiangolo.com)
+    This requires a [underline]username[/underline].
     """
     print(f"Creating user: {username}")
 
 
-@app.command(help="**Delete** a user with *USERNAME*.")
+@app.command(help="[bold red]Delete[/bold red] a user with [italic]USERNAME[/italic].")
 def delete(
-    username: str = typer.Argument(..., help="The username to be **deleted**"),
-    force: bool = typer.Option(False, help="Force the **deletion** :boom:"),
+    username: str = typer.Argument(..., help="The username to be [red]deleted[/red]"),
+    force: bool = typer.Option(
+        False, help="Force the [bold red]deletion[/bold red] :boom:"
+    ),
 ):
     """
     Some internal utility function to delete.

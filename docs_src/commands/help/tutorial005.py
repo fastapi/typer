@@ -1,54 +1,33 @@
 import typer
 
-app = typer.Typer(rich_markup_mode="rich")
+app = typer.Typer(rich_markup_mode="markdown")
 
 
 @app.command()
-def create(username: str):
+def create(username: str = typer.Argument(..., help="The username to be **created**")):
     """
-    [green]Create[/green] a new user. :sparkles:
+    **Create** a new *shinny* user. :sparkles:
+
+    * Create a username
+
+    * Show that the username is created
+
+    ---
+
+    Learn more at the [Typer docs website](https://typer.tiangolo.com)
     """
     print(f"Creating user: {username}")
 
 
-@app.command()
-def delete(username: str):
+@app.command(help="**Delete** a user with *USERNAME*.")
+def delete(
+    username: str = typer.Argument(..., help="The username to be **deleted**"),
+    force: bool = typer.Option(False, help="Force the **deletion** :boom:"),
+):
     """
-    [red]Delete[/red] a user. :fire:
+    Some internal utility function to delete.
     """
     print(f"Deleting user: {username}")
-
-
-@app.command(rich_help_panel="Utils and Configs")
-def config(configuration: str):
-    """
-    [blue]Configure[/blue] the system. :wrench:
-    """
-    print(f"Configuring the system with: {configuration}")
-
-
-@app.command(rich_help_panel="Utils and Configs")
-def sync():
-    """
-    [blue]Synchronize[/blue] the system or something fancy like that. :recycle:
-    """
-    print("Syncing the system")
-
-
-@app.command(rich_help_panel="Help and Others")
-def help():
-    """
-    Get [yellow]help[/yellow] with the system. :question:
-    """
-    print("Opening help portal...")
-
-
-@app.command(rich_help_panel="Help and Others")
-def report():
-    """
-    [yellow]Report[/yellow] an issue. :bug:
-    """
-    print("Please open a new issue online, not a direct message")
 
 
 if __name__ == "__main__":

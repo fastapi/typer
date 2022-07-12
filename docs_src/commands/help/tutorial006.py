@@ -1,30 +1,22 @@
-from typing import Union
-
 import typer
 
 app = typer.Typer(rich_markup_mode="rich")
 
 
 @app.command()
-def create(
-    username: str = typer.Argument(..., help="The username to create"),
-    lastname: str = typer.Argument(
-        "", help="The last name of the new user", rich_help_panel="Secondary Arguments"
-    ),
-    force: bool = typer.Option(False, help="Force the creation of the user"),
-    age: Union[int, None] = typer.Option(
-        None, help="The age of the new user", rich_help_panel="Additional Data"
-    ),
-    favorite_color: Union[str, None] = typer.Option(
-        None,
-        help="The favorite color of the new user",
-        rich_help_panel="Additional Data",
-    ),
-):
+def create(username: str):
     """
     [green]Create[/green] a new user. :sparkles:
     """
     print(f"Creating user: {username}")
+
+
+@app.command()
+def delete(username: str):
+    """
+    [red]Delete[/red] a user. :fire:
+    """
+    print(f"Deleting user: {username}")
 
 
 @app.command(rich_help_panel="Utils and Configs")
@@ -33,6 +25,30 @@ def config(configuration: str):
     [blue]Configure[/blue] the system. :wrench:
     """
     print(f"Configuring the system with: {configuration}")
+
+
+@app.command(rich_help_panel="Utils and Configs")
+def sync():
+    """
+    [blue]Synchronize[/blue] the system or something fancy like that. :recycle:
+    """
+    print("Syncing the system")
+
+
+@app.command(rich_help_panel="Help and Others")
+def help():
+    """
+    Get [yellow]help[/yellow] with the system. :question:
+    """
+    print("Opening help portal...")
+
+
+@app.command(rich_help_panel="Help and Others")
+def report():
+    """
+    [yellow]Report[/yellow] an issue. :bug:
+    """
+    print("Please open a new issue online, not a direct message")
 
 
 if __name__ == "__main__":

@@ -1,31 +1,22 @@
 import typer
 
-app = typer.Typer(rich_markup_mode="rich")
+app = typer.Typer()
 
 
 @app.command()
-def create(
-    username: str = typer.Argument(
-        ..., help="The username to be [green]created[/green]"
-    )
-):
+def create(username: str):
     """
-    [bold green]Create[/bold green] a new [italic]shinny[/italic] user. :sparkles:
-
-    This requires a [underline]username[/underline].
+    Create a user.
     """
     print(f"Creating user: {username}")
 
 
-@app.command(help="[bold red]Delete[/bold red] a user with [italic]USERNAME[/italic].")
-def delete(
-    username: str = typer.Argument(..., help="The username to be [red]deleted[/red]"),
-    force: bool = typer.Option(
-        False, help="Force the [bold red]deletion[/bold red] :boom:"
-    ),
-):
+@app.command(deprecated=True)
+def delete(username: str):
     """
-    Some internal utility function to delete.
+    Delete a user.
+
+    This is deprecated and will stop being supported soon.
     """
     print(f"Deleting user: {username}")
 
