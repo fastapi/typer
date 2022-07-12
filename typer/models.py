@@ -99,6 +99,8 @@ class CommandInfo:
         no_args_is_help: bool = False,
         hidden: bool = False,
         deprecated: bool = False,
+        # Rich settings
+        rich_help_panel: Union[str, None] = None,
     ):
         self.name = name
         self.cls = cls
@@ -112,6 +114,8 @@ class CommandInfo:
         self.no_args_is_help = no_args_is_help
         self.hidden = hidden
         self.deprecated = deprecated
+        # Rich settings
+        self.rich_help_panel = rich_help_panel
 
 
 class TyperInfo:

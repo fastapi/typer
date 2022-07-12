@@ -61,6 +61,8 @@ def Option(
     resolve_path: bool = False,
     allow_dash: bool = False,
     path_type: Union[None, Type[str], Type[bytes]] = None,
+    # Rich settings
+    rich_help_panel: Union[str, None] = None,
 ) -> Any:
     return OptionInfo(
         # Parameter
@@ -110,6 +112,8 @@ def Option(
         resolve_path=resolve_path,
         allow_dash=allow_dash,
         path_type=path_type,
+        # Rich settings
+        rich_help_panel=rich_help_panel,
     )
 
 
@@ -158,6 +162,8 @@ def Argument(
     resolve_path: bool = False,
     allow_dash: bool = False,
     path_type: Union[None, Type[str], Type[bytes]] = None,
+    # Rich settings
+    rich_help_panel: Union[str, None] = None,
 ) -> Any:
     return ArgumentInfo(
         # Parameter
@@ -201,4 +207,6 @@ def Argument(
         resolve_path=resolve_path,
         allow_dash=allow_dash,
         path_type=path_type,
+        # Rich settings
+        rich_help_panel=rich_help_panel,
     )

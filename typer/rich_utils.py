@@ -458,6 +458,55 @@ def _print_options_panel(
         )
 
 
+def _print_commands_panel(
+    *,
+    name: str,
+    commands: List[click.Command],
+    ctx: click.Context,
+    markup_mode: MarkupMode,
+    console: Console,
+) -> None:
+    t_styles: Dict[str, Any] = {
+        "show_lines": STYLE_COMMANDS_TABLE_SHOW_LINES,
+        "leading": STYLE_COMMANDS_TABLE_LEADING,
+        "box": STYLE_COMMANDS_TABLE_BOX,
+        "border_style": STYLE_COMMANDS_TABLE_BORDER_STYLE,
+        "row_styles": STYLE_COMMANDS_TABLE_ROW_STYLES,
+        "pad_edge": STYLE_COMMANDS_TABLE_PAD_EDGE,
+        "padding": STYLE_COMMANDS_TABLE_PADDING,
+    }
+    box_style = getattr(box, t_styles.pop("box"), None)
+
+    commands_table = Table(
+        highlight=False,
+        show_header=False,
+        expand=True,
+        box=box_style,
+        **t_styles,
+    )
+    # Define formatting in first column, as commands don't match highlighter
+    # regex
+    commands_table.add_column(style="bold cyan", no_wrap=True)
+    for command in commands:
+        helptext = command.short_help or command.help or ""
+        commands_table.add_row(
+            command.name,
+            _make_command_help(
+                help_text=helptext,
+                markup_mode=markup_mode,
+            ),
+        )
+    if commands_table.row_count:
+        console.print(
+            Panel(
+                commands_table,
+                border_style=STYLE_COMMANDS_PANEL_BORDER,
+                title=name,
+                title_align=ALIGN_COMMANDS_PANEL,
+            )
+        )
+
+
 def rich_format_help(
     *,
     obj: Union[click.Command, click.Group],
@@ -563,46 +612,25 @@ def rich_format_help(
                 panel_to_commands[panel_name].append(command)
 
         # Print each command group panel
+        default_commands = panel_to_commands.get(COMMANDS_PANEL_TITLE, [])
+        _print_commands_panel(
+            name=COMMANDS_PANEL_TITLE,
+            commands=default_commands,
+            ctx=ctx,
+            markup_mode=markup_mode,
+            console=console,
+        )
         for panel_name, commands in panel_to_commands.items():
-            t_styles: Dict[str, Any] = {
-                "show_lines": STYLE_COMMANDS_TABLE_SHOW_LINES,
-                "leading": STYLE_COMMANDS_TABLE_LEADING,
-                "box": STYLE_COMMANDS_TABLE_BOX,
-                "border_style": STYLE_COMMANDS_TABLE_BORDER_STYLE,
-                "row_styles": STYLE_COMMANDS_TABLE_ROW_STYLES,
-                "pad_edge": STYLE_COMMANDS_TABLE_PAD_EDGE,
-                "padding": STYLE_COMMANDS_TABLE_PADDING,
-            }
-            box_style = getattr(box, t_styles.pop("box"), None)
-
-            commands_table = Table(
-                highlight=False,
-                show_header=False,
-                expand=True,
-                box=box_style,
-                **t_styles,
+            if panel_name == COMMANDS_PANEL_TITLE:
+                # Already printed above
+                continue
+            _print_commands_panel(
+                name=panel_name,
+                commands=commands,
+                ctx=ctx,
+                markup_mode=markup_mode,
+                console=console,
             )
-            # Define formatting in first column, as commands don't match highlighter
-            # regex
-            commands_table.add_column(style="bold cyan", no_wrap=True)
-            for command in commands:
-                helptext = command.short_help or command.help or ""
-                commands_table.add_row(
-                    command.name,
-                    _make_command_help(
-                        help_text=helptext,
-                        markup_mode=markup_mode,
-                    ),
-                )
-            if commands_table.row_count:
-                console.print(
-                    Panel(
-                        commands_table,
-                        border_style=STYLE_COMMANDS_PANEL_BORDER,
-                        title=panel_name,
-                        title_align=ALIGN_COMMANDS_PANEL,
-                    )
-                )
 
     # Epilogue if we have it
     if obj.epilog:

@@ -223,6 +223,8 @@ class Typer:
         no_args_is_help: bool = False,
         hidden: bool = False,
         deprecated: bool = False,
+        # Rich settings
+        rich_help_panel: Union[str, None] = Default(None),
     ) -> Callable[[CommandFunctionType], CommandFunctionType]:
         if cls is None:
             cls = TyperCommand
@@ -242,6 +244,8 @@ class Typer:
                     no_args_is_help=no_args_is_help,
                     hidden=hidden,
                     deprecated=deprecated,
+                    # Rich settings
+                    rich_help_panel=rich_help_panel,
                 )
             )
             return f
@@ -519,6 +523,8 @@ def get_group_from_info(
         hidden=solved_info.hidden,
         deprecated=solved_info.deprecated,
         rich_markup_mode=rich_markup_mode,
+        # Rich settings
+        rich_help_panel=solved_info.rich_help_panel,
     )
     return group
 
@@ -585,6 +591,8 @@ def get_command_from_info(
         hidden=command_info.hidden,
         deprecated=command_info.deprecated,
         rich_markup_mode=rich_markup_mode,
+        # Rich settings
+        rich_help_panel=command_info.rich_help_panel,
     )
     return command
 
@@ -885,6 +893,8 @@ def get_click_param(
                 envvar=parameter_info.envvar,
                 shell_complete=parameter_info.shell_complete,
                 autocompletion=get_param_completion(parameter_info.autocompletion),
+                # Rich settings
+                rich_help_panel=parameter_info.rich_help_panel,
             ),
             convertor,
         )
@@ -916,6 +926,8 @@ def get_click_param(
                 is_eager=parameter_info.is_eager,
                 envvar=parameter_info.envvar,
                 autocompletion=get_param_completion(parameter_info.autocompletion),
+                # Rich settings
+                rich_help_panel=parameter_info.rich_help_panel,
             ),
             convertor,
         )
