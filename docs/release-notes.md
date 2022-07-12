@@ -1,10 +1,42 @@
 ## Latest Changes
 
-* ✨ Refactor and document handling pretty exceptions. PR [#422](https://github.com/tiangolo/typer/pull/422) by [@tiangolo](https://github.com/tiangolo).
-* 📝 Add docs for using Rich with Typer. PR [#421](https://github.com/tiangolo/typer/pull/421) by [@tiangolo](https://github.com/tiangolo).
-* ⬆️ Upgrade codecov GitHub Action. PR [#420](https://github.com/tiangolo/typer/pull/420) by [@tiangolo](https://github.com/tiangolo).
+This relase adds deep integrations with [Rich](https://rich.readthedocs.io/en/stable/). ✨
+
+`rich` is an optional dependency, you can install it directly or it will be included when you install with:
+
+```console
+$ pip install "typer[all]"
+```
+
+If Rich is available, it will be used to show the content from `--help` options, validation errors, and even errors in your app (exception tracebacks).
+
+There are new options to group commands, *CLI arguments*, and *CLI options*, support for [Rich Console Markup](https://rich.readthedocs.io/en/stable/markup.html), and more! 🎉
+
+### Features
+
 * ✨ Richify, add integrations with Rich everywhere. PR [#419](https://github.com/tiangolo/typer/pull/419) by [@tiangolo](https://github.com/tiangolo).
+    * Recommend Rich as the main information displaying tool, new docs: [Printing and Colors](https://typer.tiangolo.com/tutorial/printing/).
+    * For most use cases not using Rich, use plain `print()` instead of `typer.echo()` in the docs, to simplify the concepts and avoid confusions. New docs: [Printing and Colors - typer Echo](https://typer.tiangolo.com/tutorial/printing/#typer-echo).
+    * Define help panels for *CLI arguments*, new docs: [CLI Arguments with Help - CLI Argument help panels](https://typer.tiangolo.com/tutorial/arguments/help/#cli-argument-help-panels).
+    * Define help panels for *CLI options*, new docs: [CLI Options with Help - CLI Options help panels](https://typer.tiangolo.com/tutorial/options/help/#cli-options-help-panels).
+    * New docs for deprecating commands: [Commands - Command Help - Deprecate a Command](https://typer.tiangolo.com/tutorial/commands/help/#deprecate-a-command).
+    * Support for Rich Markdown in docstrings, *CLI parameters* `help`, and `epilog` with the new parameter `typer.Typer(rich_markup_mode="markdown")`, new docs: [Commands - Command Help - Rich Markdown and Markup](https://typer.tiangolo.com/tutorial/commands/help/#rich-markdown-and-markup).
+    * Support for Rich Markup (different from Markdown) in docstrings, *CLI parameters* `help`, and `epilog` with the new parameter `typer.Typer(rich_markup_mode="rich")`, new docs: [Commands - Command Help - Rich Markdown and Markup](https://typer.tiangolo.com/tutorial/commands/help/#rich-markdown-and-markup).
+    * Define help panels for *commands*, new docs: [Commands - Command Help - Help Panels](https://typer.tiangolo.com/tutorial/commands/help/#help-panels).
+    * New docs for setting an `epilog`, with support for Rich Markdown and Console Markup, new docs: [Commands - Command Help - Epilog](https://typer.tiangolo.com/tutorial/commands/help/#epilog).
+* ✨ Refactor and document handling pretty exceptions. PR [#422](https://github.com/tiangolo/typer/pull/422) by [@tiangolo](https://github.com/tiangolo).
+    * Add support for customizing pretty short errors, new docs: [Exceptions and Errors](https://typer.tiangolo.com/tutorial/exceptions/).
 * ✨ Allow configuring pretty errors when creating the Typer instance. PR [#416](https://github.com/tiangolo/typer/pull/416) by [@tiangolo](https://github.com/tiangolo).
+
+### Docs
+
+* 📝 Add docs for using Rich with Typer. PR [#421](https://github.com/tiangolo/typer/pull/421) by [@tiangolo](https://github.com/tiangolo).
+    * Add new docs: [Ask with Prompt - Prompt with Rich](https://typer.tiangolo.com/tutorial/prompt/#prompt-with-rich).
+    * Add new docs to handle progress bars and spinners with Rich: [Progress Par](https://typer.tiangolo.com/tutorial/progressbar/).
+
+### Internal
+
+* ⬆️ Upgrade codecov GitHub Action. PR [#420](https://github.com/tiangolo/typer/pull/420) by [@tiangolo](https://github.com/tiangolo).
 
 ## 0.5.0
 
