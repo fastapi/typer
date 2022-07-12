@@ -472,7 +472,7 @@ class TyperOption(click.core.Option):
             _typer_param_setup_autocompletion_compat(
                 self, autocompletion=autocompletion
             )
-        self.rich_help_pael = rich_help_panel
+        self.rich_help_panel = rich_help_panel
 
     def _get_default_string(
         self,
