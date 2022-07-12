@@ -56,7 +56,12 @@ def except_hook(
     exception_config: Union[DeveloperExceptionConfig, None] = getattr(
         exc_value, _typer_developer_exception_attr_name, None
     )
-    if not exception_config or not exception_config.pretty_errors_enable:
+    standard_traceback = os.getenv("_TYPER_STANDARD_TRACEBACK")
+    if (
+        standard_traceback
+        or not exception_config
+        or not exception_config.pretty_errors_enable
+    ):
         _original_except_hook(exc_type, exc_value, tb)
         return
     typer_path = os.path.dirname(__file__)
