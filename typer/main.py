@@ -60,7 +60,7 @@ def except_hook(
     if (
         standard_traceback
         or not exception_config
-        or not exception_config.pretty_errors_enable
+        or not exception_config.pretty_exceptions_enable
     ):
         _original_except_hook(exc_type, exc_value, tb)
         return
@@ -73,7 +73,7 @@ def except_hook(
             type(exc),
             exc,
             exc.__traceback__,
-            show_locals=exception_config.pretty_errors_show_locals,
+            show_locals=exception_config.pretty_exceptions_show_locals,
             suppress=supress_internal_dir_names,
         )
         console_stderr.print(rich_tb)
@@ -84,7 +84,7 @@ def except_hook(
         if any(
             [frame.filename.startswith(path) for path in supress_internal_dir_names]
         ):
-            if not exception_config.pretty_errors_short:
+            if not exception_config.pretty_exceptions_short:
                 # Hide the line for internal libraries, Typer and Click
                 stack.append(
                     traceback.FrameSummary(
@@ -136,16 +136,16 @@ class Typer:
         # Rich settings
         rich_markup_mode: MarkupMode = None,
         rich_help_panel: Union[str, None] = Default(None),
-        pretty_errors_enable: bool = True,
-        pretty_errors_show_locals: bool = True,
-        pretty_errors_short: bool = True,
+        pretty_exceptions_enable: bool = True,
+        pretty_exceptions_show_locals: bool = True,
+        pretty_exceptions_short: bool = True,
     ):
         self._add_completion = add_completion
         self.rich_markup_mode: MarkupMode = rich_markup_mode
         self.rich_help_panel = rich_help_panel
-        self.pretty_errors_enable = pretty_errors_enable
-        self.pretty_errors_show_locals = pretty_errors_show_locals
-        self.pretty_errors_short = pretty_errors_short
+        self.pretty_exceptions_enable = pretty_exceptions_enable
+        self.pretty_exceptions_show_locals = pretty_exceptions_show_locals
+        self.pretty_exceptions_short = pretty_exceptions_short
         self.info = TyperInfo(
             name=name,
             cls=cls,
@@ -320,9 +320,9 @@ class Typer:
                 e,
                 _typer_developer_exception_attr_name,
                 DeveloperExceptionConfig(
-                    pretty_errors_enable=self.pretty_errors_enable,
-                    pretty_errors_show_locals=self.pretty_errors_show_locals,
-                    pretty_errors_short=self.pretty_errors_short,
+                    pretty_exceptions_enable=self.pretty_exceptions_enable,
+                    pretty_exceptions_show_locals=self.pretty_exceptions_show_locals,
+                    pretty_exceptions_short=self.pretty_exceptions_short,
                 ),
             )
             raise e
@@ -331,7 +331,7 @@ class Typer:
 def get_group(typer_instance: Typer) -> click.Command:
     group = get_group_from_info(
         TyperInfo(typer_instance),
-        pretty_errors_short=typer_instance.pretty_errors_short,
+        pretty_exceptions_short=typer_instance.pretty_exceptions_short,
         rich_markup_mode=typer_instance.rich_markup_mode,
     )
     return group
@@ -363,7 +363,7 @@ def get_command(typer_instance: Typer) -> click.Command:
 
         click_command = get_command_from_info(
             single_command,
-            pretty_errors_short=typer_instance.pretty_errors_short,
+            pretty_exceptions_short=typer_instance.pretty_exceptions_short,
             rich_markup_mode=typer_instance.rich_markup_mode,
         )
         if typer_instance._add_completion:
@@ -472,7 +472,7 @@ def solve_typer_info_defaults(typer_info: TyperInfo) -> TyperInfo:
 def get_group_from_info(
     group_info: TyperInfo,
     *,
-    pretty_errors_short: bool,
+    pretty_exceptions_short: bool,
     rich_markup_mode: MarkupMode,
 ) -> click.Command:
     assert (
@@ -482,7 +482,7 @@ def get_group_from_info(
     for command_info in group_info.typer_instance.registered_commands:
         command = get_command_from_info(
             command_info=command_info,
-            pretty_errors_short=pretty_errors_short,
+            pretty_exceptions_short=pretty_exceptions_short,
             rich_markup_mode=rich_markup_mode,
         )
         if command.name:
@@ -490,7 +490,7 @@ def get_group_from_info(
     for sub_group_info in group_info.typer_instance.registered_groups:
         sub_group = get_group_from_info(
             sub_group_info,
-            pretty_errors_short=pretty_errors_short,
+            pretty_exceptions_short=pretty_exceptions_short,
             rich_markup_mode=rich_markup_mode,
         )
         if sub_group.name:
@@ -517,7 +517,7 @@ def get_group_from_info(
             params=params,
             convertors=convertors,
             context_param_name=context_param_name,
-            pretty_errors_short=pretty_errors_short,
+            pretty_exceptions_short=pretty_exceptions_short,
         ),
         params=params,
         help=solved_info.help,
@@ -560,7 +560,7 @@ def get_params_convertors_ctx_param_name_from_function(
 def get_command_from_info(
     command_info: CommandInfo,
     *,
-    pretty_errors_short: bool,
+    pretty_exceptions_short: bool,
     rich_markup_mode: MarkupMode,
 ) -> click.Command:
     assert command_info.callback, "A command must have a callback function"
@@ -584,7 +584,7 @@ def get_command_from_info(
             params=params,
             convertors=convertors,
             context_param_name=context_param_name,
-            pretty_errors_short=pretty_errors_short,
+            pretty_exceptions_short=pretty_exceptions_short,
         ),
         params=params,  # type: ignore
         help=use_help,
@@ -659,7 +659,7 @@ def get_callback(
     params: Sequence[click.Parameter] = [],
     convertors: Dict[str, Callable[[str], Any]] = {},
     context_param_name: Optional[str] = None,
-    pretty_errors_short: bool,
+    pretty_exceptions_short: bool,
 ) -> Optional[Callable[..., Any]]:
     if not callback:
         return None
@@ -672,7 +672,7 @@ def get_callback(
             use_params[param.name] = param.default
 
     def wrapper(**kwargs: Any) -> Any:
-        _rich_traceback_guard = pretty_errors_short  # noqa: F841
+        _rich_traceback_guard = pretty_exceptions_short  # noqa: F841
         for k, v in kwargs.items():
             if k in convertors:
                 use_params[k] = convertors[k](v)
