@@ -6,9 +6,9 @@ def main(
     rank: int = typer.Option(0, max=10, clamp=True),
     score: float = typer.Option(0, min=0, max=100, clamp=True),
 ):
-    typer.echo(f"ID is {id}")
-    typer.echo(f"--rank is {rank}")
-    typer.echo(f"--score is {score}")
+    print(f"ID is {id}")
+    print(f"--rank is {rank}")
+    print(f"--score is {score}")
 
 
 if __name__ == "__main__":

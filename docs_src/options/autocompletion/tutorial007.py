@@ -22,7 +22,7 @@ def main(
     )
 ):
     for n in name:
-        typer.echo(f"Hello {n}")
+        print(f"Hello {n}")
 
 
 if __name__ == "__main__":

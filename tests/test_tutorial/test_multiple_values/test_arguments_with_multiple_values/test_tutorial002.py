@@ -14,7 +14,7 @@ def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     assert "[OPTIONS] [NAMES]..." in result.output
-    assert "Arguments:" in result.output
+    assert "Arguments" in result.output
     assert "[default: Harry, Hermione, Ron]" in result.output
 
 
@@ -32,8 +32,8 @@ def test_invalid_args():
     # TODO: when deprecating Click 7, remove second option
 
     assert (
-        "Error: Argument 'names' takes 3 values" in result.stdout
-        or "Error: argument names takes 3 values" in result.stdout
+        "Argument 'names' takes 3 values" in result.stdout
+        or "argument names takes 3 values" in result.stdout
     )
 
 

@@ -14,10 +14,13 @@ app.command()(mod.main)
 def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "Arguments:" in result.output
-    assert "NAME  [required]" in result.output
-    assert "LASTNAME  [required]" in result.output
-    assert "--formal / --no-formal" in result.output
+    assert "Arguments" in result.output
+    assert "NAME" in result.output
+    assert "[required]" in result.output
+    assert "LASTNAME" in result.output
+    assert "[required]" in result.output
+    assert "--formal" in result.output
+    assert "--no-formal" in result.output
 
 
 def test_1():

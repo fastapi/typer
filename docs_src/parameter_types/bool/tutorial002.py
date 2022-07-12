@@ -5,11 +5,11 @@ import typer
 
 def main(accept: Optional[bool] = typer.Option(None, "--accept/--reject")):
     if accept is None:
-        typer.echo("I don't know what you want yet")
+        print("I don't know what you want yet")
     elif accept:
-        typer.echo("Accepting!")
+        print("Accepting!")
     else:
-        typer.echo("Rejecting!")
+        print("Rejecting!")
 
 
 if __name__ == "__main__":

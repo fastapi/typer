@@ -21,7 +21,7 @@ def test_1():
 def test_2():
     result = runner.invoke(app, ["--name", "rick"])
     assert result.exit_code != 0
-    assert "Error: Invalid value for '--name': Only Camila is allowed" in result.output
+    assert "Invalid value for '--name': Only Camila is allowed" in result.output
 
 
 def test_3():

@@ -41,7 +41,8 @@ def test_option():
 def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "--project-name TEXT" in result.output
+    assert "--project-name" in result.output
+    assert "TEXT" in result.output
     assert "[required]" in result.output
 
 

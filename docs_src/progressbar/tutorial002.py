@@ -16,7 +16,7 @@ def main():
             # Fake processing time
             time.sleep(0.01)
             total += 1
-    typer.echo(f"Processed {total} user IDs.")
+    print(f"Processed {total} user IDs.")
 
 
 if __name__ == "__main__":
