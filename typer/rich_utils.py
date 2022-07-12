@@ -656,7 +656,8 @@ def rich_format_help(
         # Remove single linebreaks, replace double with single
         lines = obj.epilog.split("\n\n")
         epilogue = "\n".join([x.replace("\n", " ").strip() for x in lines])
-        console.print(Padding(Align(highlighter(epilogue), pad=False), 1))
+        epilogue_text = _make_rich_rext(text=epilogue, markup_mode=markup_mode)
+        console.print(Padding(Align(epilogue_text, pad=False), 1))
 
 
 def rich_format_error(self: click.ClickException) -> None:
