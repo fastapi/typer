@@ -17,6 +17,12 @@ def test_call():
     assert "Hello World" in result.output
 
 
+def test_formal():
+    result = runner.invoke(app, ["World", "--formal"])
+    assert result.exit_code == 0
+    assert "Good day Ms. World" in result.output
+
+
 def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
