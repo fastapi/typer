@@ -206,7 +206,7 @@ def _main(
         self._main_shell_completion(extra, prog_name, complete_var)
     else:
         completion_init()
-        from click.core import _bashcomplete
+        from click.core import _bashcomplete  # type: ignore
 
         _bashcomplete(self, prog_name, complete_var)
 
