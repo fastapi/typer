@@ -71,12 +71,17 @@ COLOR_SYSTEM: Optional[
     Literal["auto", "standard", "256", "truecolor", "windows"]
 ] = "auto"  # Set to None to disable colors
 _TYPER_FORCE_DISABLE_TERMINAL = getenv("_TYPER_FORCE_DISABLE_TERMINAL")
-FORCE_TERMINAL = bool(
-    not _TYPER_FORCE_DISABLE_TERMINAL
-    and getenv("GITHUB_ACTIONS")
-    or getenv("FORCE_COLOR")
-    or getenv("PY_COLORS")
+FORCE_TERMINAL = (
+    True
+    if getenv("GITHUB_ACTIONS") or getenv("FORCE_COLOR") or getenv("PY_COLORS")
+    else None
 )
+if _TYPER_FORCE_DISABLE_TERMINAL:
+    FORCE_TERMINAL = False
+
+print(FORCE_TERMINAL)
+
+print(FORCE_TERMINAL)
 
 # Fixed strings
 DEPRECATED_STRING = "(deprecated) "
