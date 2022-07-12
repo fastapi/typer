@@ -119,16 +119,18 @@ Commands:
 
 </div>
 
-## Docstring with Markdown and Markup
+## Rich Markdown and Markup
 
-If you have **Rich** installed as described in [Printing and Colors](../printing.md){.internal-link target=_blank}, you can configure your app to enable using rich text in the docstring with the parameter `rich_markup_mode`.
+If you have **Rich** installed as described in [Printing and Colors](../printing.md){.internal-link target=_blank}, you can configure your app to enable markup text with the parameter `rich_markup_mode`.
+
+Then you can use more formatting in the docstrings and the `help` parameter for *CLI arguments* and *CLI options*. You will see more about it below. 👇
 
 !!! info
-    By default, `rich_markup_mode` is `None`, which disables any rich text formatting for the docstring.
+    By default, `rich_markup_mode` is `None`, which disables any rich text formatting.
 
 ### Rich Markup
 
-If you set `rich_markup_mode="rich"` when creating the `typer.Typer()` app, you will be able to use <a href="https://rich.readthedocs.io/en/stable/markup.html" class="external-link" target="_blank">Rich Console Markup</a> in the docstring, and even in the help for the arguments and options:
+If you set `rich_markup_mode="rich"` when creating the `typer.Typer()` app, you will be able to use <a href="https://rich.readthedocs.io/en/stable/markup.html" class="external-link" target="_blank">Rich Console Markup</a> in the docstring, and even in the help for the *CLI arguments* and options:
 
 ```Python hl_lines="3  9  13-15  20  22  24"
 {!../docs_src/commands/help/tutorial003.py!}
@@ -149,7 +151,7 @@ Check the help for the `create` command:
 ```console
 $ python main.py create --help
 
-<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>tutorial003.py create [OPTIONS] USERNAME                     </b>
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py create [OPTIONS] USERNAME                     </b>
 <b>                                                                     </b>
  <font color="#A6E22E"><b>Create</b></font> a new <i>shinny</i> user. ✨
  This requires a <font color="#A5A5A1"><u style="text-decoration-style:single">username</u></font><font color="#A5A5A1">.                                           </font>
@@ -173,7 +175,7 @@ And check the help for the `delete` command:
 ```console
 $ python main.py delete --help
 
-<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>tutorial003.py delete [OPTIONS] USERNAME                     </b>
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py delete [OPTIONS] USERNAME                     </b>
 <b>                                                                     </b>
  <font color="#F92672"><b>Delete</b></font> a user with <i>USERNAME</i>.
 
@@ -191,12 +193,11 @@ $ python main.py delete --help
 
 </div>
 
-
 ### Rich Markown
 
 If you set `rich_markup_mode="markdown"` when creating the `typer.Typer()` app, you will be able to use Markdown in the docstring:
 
-```Python hl_lines="3  7  9-14  19  21-22"
+```Python hl_lines="3  7  9-17  22  24-25"
 {!../docs_src/commands/help/tutorial004.py!}
 ```
 
@@ -211,7 +212,7 @@ Check the help for the `create` command:
 ```console
 $ python main.py create --help
 
-<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>tutorial004.py create [OPTIONS] USERNAME                     </b>
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py create [OPTIONS] USERNAME                     </b>
 <b>                                                                     </b>
  <b>Create</b> a new <i>shinny</i> user. ✨
 
@@ -240,7 +241,7 @@ And the same for the `delete` command:
 ```console
 $ python main.py delete --help
 
-<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>tutorial004.py delete [OPTIONS] USERNAME                     </b>
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py delete [OPTIONS] USERNAME                     </b>
 <b>                                                                     </b>
  <b>Delete</b> a user with <i>USERNAME</i>.
 
@@ -260,3 +261,132 @@ $ python main.py delete --help
 
 !!! info
     Notice that in Markdown you cannot define colors. For colors you might prefer to use Rich markup.
+
+## Help Panels
+
+If you have many commands or CLI parameters, you might want to show their documentation in different panels when using the `--help` option.
+
+If you installed <a href="https://rich.readthedocs.io/" class="external-link" target="_blank">Rich</a> as described in [Printing and Colors](../printing.md){.internal-link target=_blank}, you can configure the panel to use for each command or CLI parameter.
+
+### Help Panels for Commands
+
+To set the panel for a command you can pass the argument `rich_help_panel` with the name of the panel you want to use:
+
+```Python hl_lines="22  30  38  46"
+{!../docs_src/commands/help/tutorial005.py!}
+```
+
+Commands without a panel will be shown in the default panel `Commands`, and the rest will be shown in the next panels:
+
+<div class="termy">
+
+```console
+$ python main.py --help
+
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] COMMAND [ARGS]...                   </b>
+<b>                                                                     </b>
+<font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--install-completion</b></font>          Install completion for the current  │
+<font color="#A5A5A1">│                               shell.                              │</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--show-completion</b></font>             Show completion for the current     │
+<font color="#A5A5A1">│                               shell, to copy it or customize the  │</font>
+<font color="#A5A5A1">│                               installation.                       │</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                        Show this message and exit.         │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+<font color="#A5A5A1">╭─ Commands ────────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>create          </b></font> <font color="#A6E22E">Create</font> a new user. ✨                            │
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>delete          </b></font> <font color="#F92672">Delete</font> a user. 🔥                                │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+<font color="#A5A5A1">╭─ Utils and Configs ───────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>config  </b></font> <font color="#66D9EF">Configure</font> the system. 🔧                                 │
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>sync    </b></font> <font color="#66D9EF">Synchronize</font> the system or something fancy like that. ♻   │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+<font color="#A5A5A1">╭─ Help and Others ─────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>help         </b></font> Get <font color="#F4BF75">help</font> with the system. ❓                        │
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>report       </b></font> <font color="#F4BF75">Report</font> an issue. 🐛                                 │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+```
+
+</div>
+
+### Help Panels for CLI Parameters
+
+The same way, you can configure the panels for *CLI arguments* and *CLI options* with `rich_help_panel`.
+
+And of course, in the same application you can also set the `rich_help_panel` for commands.
+
+```Python hl_lines="12  16  21  30"
+{!../docs_src/commands/help/tutorial006.py!}
+```
+
+Then if you run the application you will see all the *CLI parameters* in their respective panels.
+
+* First the ***CLI arguments*** that don't have a panel name set in a **default** one named "`Arguments`".
+* Next the ***CLI arguments*** with a **custom panel**. In this example named "`Secondary Arguments`".
+* After that, the ***CLI options*** that don't have a panel in a **default** one named "`Options`".
+* And finally, the ***CLI options*** with a **custom panel** set. In this example named "`Additional Data`".
+
+You can check the `--help` option for the command `create`:
+
+<div class="termy">
+
+```console
+$ python main.py create --help
+
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py create [OPTIONS] USERNAME [LASTNAME]          </b>
+<b>                                                                     </b>
+ <font color="#A6E22E">Create</font> a new user. ✨
+
+<font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>TEXT</b></font>  The username to create [default: None]   │
+<font color="#A5A5A1">│                          </font><font color="#A6194C">[required]            </font>                   │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+<font color="#A5A5A1">╭─ Secondary Arguments ─────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│   lastname      </font><font color="#A37F4E"><b>[LASTNAME]</b></font>  The last name of the new user         │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+<font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--force</b></font>    <font color="#AE81FF"><b>--no-force</b></font>      Force the creation of the user         │
+<font color="#A5A5A1">│                            [default: no-force]                    │</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                     Show this message and exit.            │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+<font color="#A5A5A1">╭─ Additional Data ─────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--age</b></font>                   <font color="#F4BF75"><b>INTEGER</b></font>  The age of the new user          │
+<font color="#A5A5A1">│                                  [default: None]                  │</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--favorite-color</b></font>        <font color="#F4BF75"><b>TEXT   </b></font>  The favorite color of the new    │
+<font color="#A5A5A1">│                                  user                             │</font>
+<font color="#A5A5A1">│                                  [default: None]                  │</font>
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+```
+
+</div>
+
+And of course, the `rich_help_panel` can be used in the same way for commands in the same application.
+
+And those panels will be shown when you use the main `--help` option.
+
+<div class="termy">
+
+```console
+$ python main.py --help
+
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] COMMAND [ARGS]...                   </b>
+<b>                                                                     </b>
+<font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--install-completion</b></font>          Install completion for the current  │
+<font color="#A5A5A1">│                               shell.                              │</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--show-completion</b></font>             Show completion for the current     │
+<font color="#A5A5A1">│                               shell, to copy it or customize the  │</font>
+<font color="#A5A5A1">│                               installation.                       │</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                        Show this message and exit.         │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+<font color="#A5A5A1">╭─ Commands ────────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>create          </b></font> <font color="#A6E22E">Create</font> a new user. ✨                            │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+<font color="#A5A5A1">╭─ Utils and Configs ───────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>config         </b></font> <font color="#66D9EF">Configure</font> the system. 🔧                          │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+```
+
+</div>
+
+You can see the custom panel for the commands for "`Utils and Configs`".
