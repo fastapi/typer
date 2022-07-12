@@ -71,7 +71,7 @@ COLOR_SYSTEM: Optional[
     Literal["auto", "standard", "256", "truecolor", "windows"]
 ] = "auto"  # Set to None to disable colors
 _TYPER_FORCE_DISABLE_TERMINAL = getenv("_TYPER_FORCE_DISABLE_TERMINAL")
-FORCE_TERMINAL = (
+FORCE_TERMINAL = bool(
     not _TYPER_FORCE_DISABLE_TERMINAL
     and getenv("GITHUB_ACTIONS")
     or getenv("FORCE_COLOR")
@@ -200,7 +200,7 @@ def _get_help_text(
 
     # Get remaining lines, remove single line breaks and format as dim
     remaining_paragraphs = help_text.split("\n\n")[1:]
-    if len(remaining_paragraphs) > 0:
+    if remaining_paragraphs:
         if markup_mode != MARKUP_MODE_RICH:
             # Remove single linebreaks
             remaining_paragraphs = [
@@ -466,7 +466,6 @@ def _print_commands_panel(
     *,
     name: str,
     commands: List[click.Command],
-    ctx: click.Context,
     markup_mode: MarkupMode,
     console: Console,
 ) -> None:
@@ -638,7 +637,6 @@ def rich_format_help(
         _print_commands_panel(
             name=COMMANDS_PANEL_TITLE,
             commands=default_commands,
-            ctx=ctx,
             markup_mode=markup_mode,
             console=console,
         )
@@ -649,7 +647,6 @@ def rich_format_help(
             _print_commands_panel(
                 name=panel_name,
                 commands=commands,
-                ctx=ctx,
                 markup_mode=markup_mode,
                 console=console,
             )
@@ -676,9 +673,7 @@ def rich_format_error(self: click.ClickException) -> None:
 
     if ctx is not None and ctx.command.get_help_option(ctx) is not None:
         console.print(
-            "Try [blue]'{command} {option}'[/] for help.".format(
-                command=ctx.command_path, option=ctx.help_option_names[0]
-            ),
+            f"Try [blue]'{ctx.command_path} {ctx.help_option_names[0]}'[/] for help.",
             style=STYLE_ERRORS_SUGGESTION,
         )
 
