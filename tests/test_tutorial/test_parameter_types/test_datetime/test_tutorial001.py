@@ -36,9 +36,9 @@ def test_invalid():
         "'july-19-1989' does not match the formats" in result.output
         or "invalid datetime format: july-19-1989. (choose from" in result.output
     )
-    assert "'%Y-%m-%d', " in result.output
-    assert "'%Y-%m-%dT%H:%M:%S'," in result.output
-    assert "'%Y-%m-%d %H:%M:%S'" in result.output
+    assert "%Y-%m-%d" in result.output
+    assert "%Y-%m-%dT%H:%M:%S" in result.output
+    assert "%Y-%m-%d %H:%M:%S" in result.output
 
 
 def test_script():

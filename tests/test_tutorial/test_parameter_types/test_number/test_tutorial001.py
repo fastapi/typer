@@ -75,7 +75,7 @@ def test_invalid_score():
     assert (
         "Invalid value for '--score': 100.5 is not in the range x<=100."
         in result.output
-        or "Invalid value for '--score': 100.5 is bigger than the maximum valid value 100."
+        or "Invalid value for '--score': 100.5 is bigger than the maximum valid value"
         in result.output
     )
 

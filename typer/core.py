@@ -1,4 +1,5 @@
 import errno
+import inspect
 import os
 import sys
 from gettext import gettext as _
@@ -17,14 +18,14 @@ from typing import (
 )
 
 import click
-import click._unicodefun
 import click.core
 import click.formatting
 import click.parser
 import click.types
 import click.utils
+from typer.completion import completion_init
 
-from .utils import _get_click_major
+from ._compat_utils import _get_click_major
 
 if sys.version_info >= (3, 8):
     from typing import Literal
@@ -40,7 +41,8 @@ except ImportError:  # pragma: nocover
     rich = None  # type: ignore
 
 if TYPE_CHECKING:  # pragma: no cover
-    import click.shell_completion
+    if _get_click_major() == 7:
+        import click.shell_completion
 
 MarkupMode = Literal["markdown", "rich", None]
 
@@ -143,7 +145,7 @@ def _get_default_string(
     return default_string
 
 
-def _extract_default(
+def _extract_default_help_str(
     obj: Union["TyperArgument", "TyperOption"], *, ctx: click.Context
 ) -> Optional[Union[Any, Callable[[], Any]]]:
     # Extracted from click.core.Option.get_help_record() to be reused by
@@ -155,7 +157,13 @@ def _extract_default(
     ctx.resilient_parsing = True
 
     try:
-        default_value = obj.get_default(ctx, call=False)
+        if _get_click_major() > 7:
+            default_value = obj.get_default(ctx, call=False)
+        else:
+            if inspect.isfunction(obj.default):
+                default_value = "(dynamic)"
+            else:
+                default_value = obj.default
     finally:
         ctx.resilient_parsing = resilient
     return default_value
@@ -174,8 +182,6 @@ def _main(
     # Typer override, duplicated from click.main() to handle custom rich exceptions
     # Verify that the environment is configured correctly, or reject
     # further execution to avoid a broken script.
-    click._unicodefun._verify_python_env()
-
     if args is None:
         args = sys.argv[1:]
 
@@ -186,10 +192,23 @@ def _main(
         args = list(args)
 
     if prog_name is None:
-        prog_name = click.utils._detect_program_name()
+        if _get_click_major() > 7:
+            prog_name = click.utils._detect_program_name()
+        else:
+            from click.utils import make_str
+
+            prog_name = make_str(
+                os.path.basename(sys.argv[0] if sys.argv else __file__)
+            )
 
     # Process shell completion requests and exit early.
-    self._main_shell_completion(extra, prog_name, complete_var)
+    if _get_click_major() > 7:
+        self._main_shell_completion(extra, prog_name, complete_var)
+    else:
+        completion_init()
+        from click.core import _bashcomplete
+
+        _bashcomplete(self, prog_name, complete_var)
 
     try:
         try:
@@ -323,10 +342,10 @@ class TyperArgument(click.core.Argument):
             default_value=default_value,
         )
 
-    def _extract_default(
+    def _extract_default_help_str(
         self, *, ctx: click.Context
     ) -> Optional[Union[Any, Callable[[], Any]]]:
-        return _extract_default(self, ctx=ctx)
+        return _extract_default_help_str(self, ctx=ctx)
 
     def get_help_record(self, ctx: click.Context) -> Optional[Tuple[str, str]]:
         # Modified version of click.core.Option.get_help_record()
@@ -348,8 +367,8 @@ class TyperArgument(click.core.Argument):
                 extra.append(f"env var: {var_str}")
 
         # Typer override:
-        # Extracted to _extract_default() to allow re-using it in rich_utils
-        default_value = self._extract_default(ctx=ctx)
+        # Extracted to _extract_default_help_str() to allow re-using it in rich_utils
+        default_value = self._extract_default_help_str(ctx=ctx)
         # Typer override end
 
         show_default_is_str = isinstance(self.show_default, str)
@@ -488,10 +507,10 @@ class TyperOption(click.core.Option):
             default_value=default_value,
         )
 
-    def _extract_default(
+    def _extract_default_help_str(
         self, *, ctx: click.Context
     ) -> Optional[Union[Any, Callable[[], Any]]]:
-        return _extract_default(self, ctx=ctx)
+        return _extract_default_help_str(self, ctx=ctx)
 
     def get_help_record(self, ctx: click.Context) -> Optional[Tuple[str, str]]:
         # Click 7.x was not breaking this use case, so in that case, re-use its logic
@@ -547,7 +566,7 @@ class TyperOption(click.core.Option):
 
         # Typer override:
         # Extracted to _extract_default() to allow re-using it in rich_utils
-        default_value = self._extract_default(ctx=ctx)
+        default_value = self._extract_default_help_str(ctx=ctx)
         # Typer override end
 
         show_default_is_str = isinstance(self.show_default, str)

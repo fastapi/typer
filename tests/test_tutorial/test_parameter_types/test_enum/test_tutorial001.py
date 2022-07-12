@@ -34,9 +34,9 @@ def test_invalid():
         or "Invalid value for '--network': invalid choice: capsule. (choose from"
         in result.output
     )
-    assert "'simple'," in result.output
-    assert "'conv'," in result.output
-    assert "'lstm'" in result.output
+    assert "simple" in result.output
+    assert "conv" in result.output
+    assert "lstm" in result.output
 
 
 def test_script():
