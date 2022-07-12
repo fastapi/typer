@@ -448,3 +448,39 @@ $ python main.py --help
 </div>
 
 You can see the custom panel for the commands for "`Utils and Configs`".
+
+## Epilog
+
+If you need, you can also add an epilog section to the help of your commands:
+
+```Python hl_lines="6"
+{!../docs_src/commands/help/tutorial008.py!}
+```
+
+And when you check the `--help` option it will look like:
+
+<div class="termy">
+
+```console
+$ python main.py --help
+
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] USERNAME                            </b>
+<b>                                                                     </b>
+ <font color="#A6E22E">Create</font> a new user. ✨
+
+<font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>TEXT</b></font>  [default: None] <font color="#A6194C">[required]</font>               │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+<font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--install-completion</b></font>          Install completion for the current  │
+<font color="#A5A5A1">│                               shell.                              │</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--show-completion</b></font>             Show completion for the current     │
+<font color="#A5A5A1">│                               shell, to copy it or customize the  │</font>
+<font color="#A5A5A1">│                               installation.                       │</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                        Show this message and exit.         │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+
+ Made with ❤ in <font color="#66D9EF">Venus</font>
+```
+
+</div>
