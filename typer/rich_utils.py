@@ -35,6 +35,7 @@ STYLE_METAVAR_SEPARATOR = "dim"
 STYLE_USAGE = "yellow"
 STYLE_USAGE_COMMAND = "bold"
 STYLE_DEPRECATED = "red"
+STYLE_DEPRECATED_COMMAND = "dim"
 STYLE_HELPTEXT_FIRST_LINE = ""
 STYLE_HELPTEXT = "dim"
 STYLE_OPTION_HELP = ""
@@ -76,7 +77,7 @@ FORCE_TERMINAL = (
 )
 
 # Fixed strings
-DEPRECATED_STRING = "(Deprecated) "
+DEPRECATED_STRING = "(deprecated) "
 DEFAULT_STRING = "[default: {}]"
 ENVVAR_STRING = "[env var: {}]"
 REQUIRED_SHORT_STRING = "*"
@@ -171,7 +172,7 @@ def _get_help_text(
 
     Returns the prose help text for a command or group, rendered either as a
     Rich Text object or as Markdown.
-    If the command is marked as depreciated, the depreciated string will be prepended.
+    If the command is marked as deprecated, the deprecated string will be prepended.
     """
     # Prepend deprecated status
     if obj.deprecated:
@@ -487,15 +488,33 @@ def _print_commands_panel(
     # Define formatting in first column, as commands don't match highlighter
     # regex
     commands_table.add_column(style="bold cyan", no_wrap=True)
+    rows: List[List[Union[RenderableType, None]]] = []
+    deprecated_rows: List[Union[RenderableType, None]] = []
     for command in commands:
         helptext = command.short_help or command.help or ""
-        commands_table.add_row(
-            command.name,
-            _make_command_help(
-                help_text=helptext,
-                markup_mode=markup_mode,
-            ),
+        command_name = command.name or ""
+        if command.deprecated:
+            command_name_text = Text(f"{command_name}", style=STYLE_DEPRECATED_COMMAND)
+            deprecated_rows.append(Text(DEPRECATED_STRING, style=STYLE_DEPRECATED))
+        else:
+            command_name_text = Text(command_name)
+            deprecated_rows.append(None)
+        rows.append(
+            [
+                command_name_text,
+                _make_command_help(
+                    help_text=helptext,
+                    markup_mode=markup_mode,
+                ),
+            ]
         )
+    rows_with_deprecated = rows
+    if any(deprecated_rows):
+        rows_with_deprecated = []
+        for row, deprecated_text in zip(rows, deprecated_rows):
+            rows_with_deprecated.append([*row, deprecated_text])
+    for row in rows_with_deprecated:
+        commands_table.add_row(*row)
     if commands_table.row_count:
         console.print(
             Panel(
