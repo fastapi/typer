@@ -19,7 +19,7 @@ repos:
         - --py3-plus
         - --keep-runtime-typing
         # This file is more readable without yield from
-        exclude: ^docs_src/progressbar/tutorial002\.py
+        exclude: ^docs_src/progressbar/tutorial004\.py
 -   repo: https://github.com/myint/autoflake
     rev: v1.4
     hooks:
