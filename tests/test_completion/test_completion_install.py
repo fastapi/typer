@@ -28,8 +28,8 @@ def test_completion_install_no_shell():
     )
     # TODO: when deprecating Click 7, remove second option
     assert (
-        "Error: Option '--install-completion' requires an argument" in result.stderr
-        or "Error: --install-completion option requires an argument" in result.stderr
+        "Option '--install-completion' requires an argument" in result.stderr
+        or "--install-completion option requires an argument" in result.stderr
     )
 
 
