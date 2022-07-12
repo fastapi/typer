@@ -79,6 +79,7 @@ nav:
       - Testing: tutorial/testing.md
       - Using Click: tutorial/using-click.md
       - Building a Package: tutorial/package.md
+      - tutorial/exceptions.md
   - Typer CLI - completion for small scripts: typer-cli.md
   - Alternatives, Inspiration and Comparisons: alternatives.md
   - Help Typer - Get Help: help-typer.md

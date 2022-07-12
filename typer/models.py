@@ -483,10 +483,10 @@ class DeveloperExceptionConfig:
     def __init__(
         self,
         *,
-        pretty_errors_enable: bool = True,
-        pretty_errors_show_locals: bool = True,
-        pretty_errors_short: bool = True,
+        pretty_exceptions_enable: bool = True,
+        pretty_exceptions_show_locals: bool = True,
+        pretty_exceptions_short: bool = True,
     ) -> None:
-        self.pretty_errors_enable = pretty_errors_enable
-        self.pretty_errors_show_locals = pretty_errors_show_locals
-        self.pretty_errors_short = pretty_errors_short
+        self.pretty_exceptions_enable = pretty_exceptions_enable
+        self.pretty_exceptions_show_locals = pretty_exceptions_show_locals
+        self.pretty_exceptions_short = pretty_exceptions_short
