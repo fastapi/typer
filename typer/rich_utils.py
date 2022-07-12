@@ -72,7 +72,8 @@ COLOR_SYSTEM: Optional[
 ] = "auto"  # Set to None to disable colors
 FORCE_TERMINAL = (
     True
-    if getenv("GITHUB_ACTIONS") or getenv("FORCE_COLOR") or getenv("PY_COLORS")
+    # if getenv("GITHUB_ACTIONS") or getenv("FORCE_COLOR") or getenv("PY_COLORS")
+    if getenv("FORCE_COLOR") or getenv("PY_COLORS")
     else None
 )
 
