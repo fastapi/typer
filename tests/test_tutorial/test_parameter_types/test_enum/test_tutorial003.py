@@ -28,7 +28,7 @@ def app(mod):
 def test_help(app):
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "--network [simple|conv|lstm]" in result.output
+    assert "--network [simple|conv|lstm]" in result.output.replace("  ", "")
 
 
 def test_main(app):
@@ -41,9 +41,13 @@ def test_invalid(app):
     result = runner.invoke(app, ["--network", "capsule"])
     assert result.exit_code != 0
     assert (
-        "Error: Invalid value for '--network': invalid choice: capsule. (choose from simple, conv, lstm)"
+        "Invalid value for '--network': invalid choice: capsule. (choose from"
         in result.output
+        or "Invalid value for '--network': 'capsule' is not one of" in result.output
     )
+    assert "simple" in result.output
+    assert "conv" in result.output
+    assert "lstm" in result.output
 
 
 def test_script(mod):
