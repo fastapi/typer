@@ -502,7 +502,7 @@ def get_group_from_info(
         context_param_name,
     ) = get_params_convertors_ctx_param_name_from_function(solved_info.callback)
     cls = solved_info.cls or TyperGroup
-    assert issubclass(cls, TyperGroup)
+    assert issubclass(cls, TyperGroup), f"{cls} should be a subclass of {TyperGroup}"
     group = cls(
         name=solved_info.name or "",
         commands=commands,
