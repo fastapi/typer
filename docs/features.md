@@ -59,7 +59,7 @@ The resulting CLI apps created with **Typer** have the nice features of many "pr
     * `--show-completion`: Show completion for the current shell, to copy it or customize the installation.
 
     If you didn't add `shellingham` those *CLI options* take a value with the name of the shell to install completion for, e.g.:
-    
+
     * `--install-completion bash`.
     * `--show-completion powershell`.
 

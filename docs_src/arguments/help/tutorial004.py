@@ -5,7 +5,7 @@ def main(name: str = typer.Argument("World", help="Who to greet", show_default=F
     """
     Say hi to NAME very gently, like Dirk.
     """
-    typer.echo(f"Hello {name}")
+    print(f"Hello {name}")
 
 
 if __name__ == "__main__":

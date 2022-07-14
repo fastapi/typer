@@ -35,7 +35,8 @@ def test_help_delete():
     assert result.exit_code == 0
     assert "delete [OPTIONS] USERNAME" in result.output
     assert "Delete a user with USERNAME." in result.output
-    assert "--force / --no-force" in result.output
+    assert "--force" in result.output
+    assert "--no-force" in result.output
     assert "Force deletion without confirmation." in result.output
 
 
@@ -46,7 +47,8 @@ def test_help_delete_all():
     assert "Delete ALL users in the database." in result.output
     assert "If --force is not used, will ask for confirmation." in result.output
     assert "[required]" in result.output
-    assert "--force / --no-force" in result.output
+    assert "--force" in result.output
+    assert "--no-force" in result.output
     assert "Force deletion without confirmation." in result.output
 
 
@@ -66,28 +68,44 @@ def test_create():
 def test_delete():
     result = runner.invoke(app, ["delete", "Camila"], input="y\n")
     assert result.exit_code == 0
-    assert "Are you sure you want to delete the user? [y/N]:" in result.output
+    # TODO: when deprecating Click 7, remove second option
+    assert (
+        "Are you sure you want to delete the user? [y/n]:" in result.output
+        or "Are you sure you want to delete the user? [y/N]:" in result.output
+    )
     assert "Deleting user: Camila" in result.output
 
 
 def test_no_delete():
     result = runner.invoke(app, ["delete", "Camila"], input="n\n")
     assert result.exit_code == 0
-    assert "Are you sure you want to delete the user? [y/N]:" in result.output
+    # TODO: when deprecating Click 7, remove second option
+    assert (
+        "Are you sure you want to delete the user? [y/n]:" in result.output
+        or "Are you sure you want to delete the user? [y/N]:" in result.output
+    )
     assert "Operation cancelled" in result.output
 
 
 def test_delete_all():
     result = runner.invoke(app, ["delete-all"], input="y\n")
     assert result.exit_code == 0
-    assert "Are you sure you want to delete ALL users? [y/N]:" in result.output
+    # TODO: when deprecating Click 7, remove second option
+    assert (
+        "Are you sure you want to delete ALL users? [y/n]:" in result.output
+        or "Are you sure you want to delete ALL users? [y/N]:" in result.output
+    )
     assert "Deleting all users" in result.output
 
 
 def test_no_delete_all():
     result = runner.invoke(app, ["delete-all"], input="n\n")
     assert result.exit_code == 0
-    assert "Are you sure you want to delete ALL users? [y/N]:" in result.output
+    # TODO: when deprecating Click 7, remove second option
+    assert (
+        "Are you sure you want to delete ALL users? [y/n]:" in result.output
+        or "Are you sure you want to delete ALL users? [y/N]:" in result.output
+    )
     assert "Operation cancelled" in result.output
 
 

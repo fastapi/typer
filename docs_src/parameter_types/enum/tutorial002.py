@@ -12,7 +12,7 @@ class NeuralNetwork(str, Enum):
 def main(
     network: NeuralNetwork = typer.Option(NeuralNetwork.simple, case_sensitive=False)
 ):
-    typer.echo(f"Training neural network of type: {network.value}")
+    print(f"Training neural network of type: {network.value}")
 
 
 if __name__ == "__main__":
