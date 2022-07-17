@@ -328,7 +328,7 @@ class Typer:
             raise e
 
 
-def get_group(typer_instance: Typer) -> click.Command:
+def get_group(typer_instance: Typer) -> TyperGroup:
     group = get_group_from_info(
         TyperInfo(typer_instance),
         pretty_exceptions_short=typer_instance.pretty_exceptions_short,
@@ -347,7 +347,7 @@ def get_command(typer_instance: Typer) -> click.Command:
         or len(typer_instance.registered_commands) > 1
     ):
         # Create a Group
-        click_command = get_group(typer_instance)
+        click_command: click.Command = get_group(typer_instance)
         if typer_instance._add_completion:
             click_command.params.append(click_install_param)
             click_command.params.append(click_show_param)
@@ -474,7 +474,7 @@ def get_group_from_info(
     *,
     pretty_exceptions_short: bool,
     rich_markup_mode: MarkupMode,
-) -> click.Command:
+) -> TyperGroup:
     assert (
         group_info.typer_instance
     ), "A Typer instance is needed to generate a Click Group"
