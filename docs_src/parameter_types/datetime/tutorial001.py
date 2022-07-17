@@ -4,8 +4,8 @@ import typer
 
 
 def main(birth: datetime):
-    typer.echo(f"Interesting day to be born: {birth}")
-    typer.echo(f"Birth hour: {birth.hour}")
+    print(f"Interesting day to be born: {birth}")
+    print(f"Birth hour: {birth.hour}")
 
 
 if __name__ == "__main__":

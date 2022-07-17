@@ -12,7 +12,7 @@ app = mod.app
 def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "Commands:" in result.output
+    assert "Commands" in result.output
     assert "users" in result.output
     assert "Manage users in the app." in result.output
 

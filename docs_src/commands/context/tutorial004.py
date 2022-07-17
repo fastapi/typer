@@ -8,7 +8,7 @@ app = typer.Typer()
 )
 def main(ctx: typer.Context):
     for extra_arg in ctx.args:
-        typer.echo(f"Got extra arg: {extra_arg}")
+        print(f"Got extra arg: {extra_arg}")
 
 
 if __name__ == "__main__":

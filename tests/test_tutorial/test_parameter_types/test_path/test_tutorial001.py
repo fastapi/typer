@@ -17,7 +17,7 @@ def test_no_path(tmpdir):
     result = runner.invoke(app)
     assert result.exit_code == 1
     assert "No config file" in result.output
-    assert "Aborted!" in result.output
+    assert "Aborted" in result.output
 
 
 def test_not_exists(tmpdir):

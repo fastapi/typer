@@ -11,9 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v2
         with:
-          python-version: "3.6"
+          python-version: "3.7"
       - name: Install Flit
         run: pip install flit
       - name: Install Dependencies

@@ -23,7 +23,7 @@ def test_no_confirm():
     assert result.exit_code == 1
     assert "Are you sure you want to delete it? [y/N]:" in result.output
     assert "Not deleting" in result.output
-    assert "Aborted!" in result.output
+    assert "Aborted" in result.output
 
 
 def test_script():

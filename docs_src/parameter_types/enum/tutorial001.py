@@ -10,7 +10,7 @@ class NeuralNetwork(str, Enum):
 
 
 def main(network: NeuralNetwork = NeuralNetwork.simple):
-    typer.echo(f"Training neural network of type: {network.value}")
+    print(f"Training neural network of type: {network.value}")
 
 
 if __name__ == "__main__":
