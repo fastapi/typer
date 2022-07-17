@@ -12,9 +12,9 @@ def main(
     If --formal is used, say hi very formally.
     """
     if formal:
-        typer.echo(f"Good day Ms. {name} {lastname}.")
+        print(f"Good day Ms. {name} {lastname}.")
     else:
-        typer.echo(f"Hello {name} {lastname}")
+        print(f"Hello {name} {lastname}")
 
 
 if __name__ == "__main__":

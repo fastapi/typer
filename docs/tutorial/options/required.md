@@ -10,7 +10,7 @@ But if you really want, you can change that.
 To make a *CLI option* required, pass `...` to `typer.Option()`.
 
 !!! info
-    If you hadn't seen that `...` before: it is a a special single value, it is <a href="https://docs.python.org/3/library/constants.html#Ellipsis" class="external-link" target="_blank">part of Python and is called "Ellipsis"</a>.
+    If you hadn't seen that `...` before: it is a special single value, it is <a href="https://docs.python.org/3/library/constants.html#Ellipsis" class="external-link" target="_blank">part of Python and is called "Ellipsis"</a>.
 
 That will tell **Typer** that it's still a *CLI option*, but it doesn't have a default value, and it's required.
 

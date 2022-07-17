@@ -99,17 +99,7 @@ $ python main.py
 // Notice we have both subcommands, top and hello
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
 
-  Typer app, including Click subapp
-
-Options:
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
-
-  --help                Show this message and exit.
-
-Commands:
-  hello  Simple program that greets NAME for a total of COUNT times.
-  top    Top level command, form Typer
+Error: Missing command.
 
 // Call the Typer part
 $ python main.py top

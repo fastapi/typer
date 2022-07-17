@@ -1,6 +1,7 @@
 from typing import List
 
 import typer
+from rich.console import Console
 
 valid_completion_items = [
     ("Camila", "The reader of books."),
@@ -8,9 +9,11 @@ valid_completion_items = [
     ("Sebastian", "The type hints guy."),
 ]
 
+err_console = Console(stderr=True)
+
 
 def complete_name(ctx: typer.Context, args: List[str], incomplete: str):
-    typer.echo(f"{args}", err=True)
+    err_console.print(f"{args}")
     names = ctx.params.get("name") or []
     for name, help_text in valid_completion_items:
         if name.startswith(incomplete) and name not in names:
@@ -23,7 +26,7 @@ def main(
     )
 ):
     for n in name:
-        typer.echo(f"Hello {n}")
+        print(f"Hello {n}")
 
 
 if __name__ == "__main__":

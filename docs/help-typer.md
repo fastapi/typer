@@ -87,6 +87,20 @@ You can <a href="https://github.com/tiangolo/typer" class="external-link" target
 * To fix an existing issue/bug.
 * To add a new feature.
 
+## Sponsor the author
+
+You can also financially support the author (me) through <a href="https://github.com/sponsors/tiangolo" class="external-link" target="_blank">GitHub sponsors</a>.
+
+There you could buy me a coffee ☕️ to say thanks. 😄
+
+## Sponsor the tools that power Typer
+
+As you have seen in the documentation, Typer is built on top of Click.
+
+You can also sponsor:
+
+* Pallets Project (Click maintainers)<a href="https://palletsprojects.com/donate" class="external-link" target="_blank">via the PSF</a> or <a href="https://tidelift.com/subscription/pkg/pypi-click" class="external-link" target="_blank">via Tidelift</a>
+
 ---
 
-Thanks!
+Thanks! 🚀

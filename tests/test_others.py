@@ -1,7 +1,6 @@
 import os
 import subprocess
 from pathlib import Path
-from typing import Optional
 from unittest import mock
 
 import click
@@ -14,37 +13,6 @@ from typer.models import TyperInfo
 from typer.testing import CliRunner
 
 runner = CliRunner()
-
-
-def test_optional():
-    app = typer.Typer()
-
-    @app.command()
-    def opt(user: Optional[str] = None):
-        if user:
-            typer.echo(f"User: {user}")
-        else:
-            typer.echo("No user")
-
-    result = runner.invoke(app)
-    assert result.exit_code == 0
-    assert "No user" in result.output
-
-    result = runner.invoke(app, ["--user", "Camila"])
-    assert result.exit_code == 0
-    assert "User: Camila" in result.output
-
-
-def test_no_type():
-    app = typer.Typer()
-
-    @app.command()
-    def no_type(user):
-        typer.echo(f"User: {user}")
-
-    result = runner.invoke(app, ["Camila"])
-    assert result.exit_code == 0
-    assert "User: Camila" in result.output
 
 
 def test_help_from_info():
@@ -64,7 +32,7 @@ def test_install_invalid_shell():
 
     @app.command()
     def main():
-        typer.echo("Hello World")
+        print("Hello World")
 
     with mock.patch.object(
         shellingham, "detect_shell", return_value=("xshell", "/usr/bin/xshell")
@@ -96,12 +64,12 @@ def test_callback_2_untyped_parameters():
     app = typer.Typer()
 
     def name_callback(ctx, value):
-        typer.echo(f"info name is: {ctx.info_name}")
-        typer.echo(f"value is: {value}")
+        print(f"info name is: {ctx.info_name}")
+        print(f"value is: {value}")
 
     @app.command()
     def main(name: str = typer.Option(..., callback=name_callback)):
-        typer.echo("Hello World")
+        print("Hello World")
 
     result = runner.invoke(app, ["--name", "Camila"])
     assert "info name is: main" in result.stdout
@@ -112,13 +80,13 @@ def test_callback_3_untyped_parameters():
     app = typer.Typer()
 
     def name_callback(ctx, param, value):
-        typer.echo(f"info name is: {ctx.info_name}")
-        typer.echo(f"param name is: {param.name}")
-        typer.echo(f"value is: {value}")
+        print(f"info name is: {ctx.info_name}")
+        print(f"param name is: {param.name}")
+        print(f"value is: {value}")
 
     @app.command()
     def main(name: str = typer.Option(..., callback=name_callback)):
-        typer.echo("Hello World")
+        print("Hello World")
 
     result = runner.invoke(app, ["--name", "Camila"])
     assert "info name is: main" in result.stdout
@@ -141,11 +109,14 @@ def test_completion_untyped_parameters():
         },
     )
     assert "info name is: completion_no_types.py" in result.stderr
-    assert "args is: ['--name', 'Sebastian', '--name']" in result.stderr
+    # TODO: when deprecating Click 7, remove second option
+    assert (
+        "args is: []" in result.stderr
+        or "args is: ['--name', 'Sebastian', '--name']" in result.stderr
+    )
     assert "incomplete is: Ca" in result.stderr
     assert '"Camila":"The reader of books."' in result.stdout
     assert '"Carlos":"The writer of scripts."' in result.stdout
-    assert '"Sebastian":"The type hints guy."' in result.stdout
 
     result = subprocess.run(
         ["coverage", "run", str(file_path)],
@@ -171,11 +142,14 @@ def test_completion_untyped_parameters_different_order_correct_names():
         },
     )
     assert "info name is: completion_no_types_order.py" in result.stderr
-    assert "args is: ['--name', 'Sebastian', '--name']" in result.stderr
+    # TODO: when deprecating Click 7, remove second option
+    assert (
+        "args is: []" in result.stderr
+        or "args is: ['--name', 'Sebastian', '--name']" in result.stderr
+    )
     assert "incomplete is: Ca" in result.stderr
     assert '"Camila":"The reader of books."' in result.stdout
     assert '"Carlos":"The writer of scripts."' in result.stdout
-    assert '"Sebastian":"The type hints guy."' in result.stdout
 
     result = subprocess.run(
         ["coverage", "run", str(file_path)],
@@ -206,19 +180,32 @@ def test_forward_references():
 
     @app.command()
     def main(arg1, arg2: int, arg3: "int", arg4: bool = False, arg5: "bool" = False):
-        typer.echo(f"arg1: {type(arg1)} {arg1}")
-        typer.echo(f"arg2: {type(arg2)} {arg2}")
-        typer.echo(f"arg3: {type(arg3)} {arg3}")
-        typer.echo(f"arg4: {type(arg4)} {arg4}")
-        typer.echo(f"arg5: {type(arg5)} {arg5}")
+        print(f"arg1: {type(arg1)} {arg1}")
+        print(f"arg2: {type(arg2)} {arg2}")
+        print(f"arg3: {type(arg3)} {arg3}")
+        print(f"arg4: {type(arg4)} {arg4}")
+        print(f"arg5: {type(arg5)} {arg5}")
 
     result = runner.invoke(app, ["Hello", "2", "invalid"])
+    # TODO: when deprecating Click 7, remove second option
+
     assert (
-        "Error: Invalid value for 'ARG3': invalid is not a valid integer"
-        in result.stdout
+        "Invalid value for 'ARG3': 'invalid' is not a valid integer" in result.stdout
+        or "Invalid value for 'ARG3': invalid is not a valid integer" in result.stdout
     )
     result = runner.invoke(app, ["Hello", "2", "3", "--arg4", "--arg5"])
     assert (
         "arg1: <class 'str'> Hello\narg2: <class 'int'> 2\narg3: <class 'int'> 3\narg4: <class 'bool'> True\narg5: <class 'bool'> True\n"
         in result.stdout
     )
+
+
+def test_context_settings_inheritance_single_command():
+    app = typer.Typer(context_settings=dict(help_option_names=["-h", "--help"]))
+
+    @app.command()
+    def main(name: str):
+        pass  # pragma: nocover
+
+    result = runner.invoke(app, ["main", "-h"])
+    assert "Show this message and exit." in result.stdout

@@ -5,12 +5,12 @@ app = typer.Typer()
 
 @app.command()
 def conquer(name: str):
-    typer.echo(f"Conquering reign: {name}")
+    print(f"Conquering reign: {name}")
 
 
 @app.command()
 def destroy(name: str):
-    typer.echo(f"Destroying reign: {name}")
+    print(f"Destroying reign: {name}")
 
 
 if __name__ == "__main__":

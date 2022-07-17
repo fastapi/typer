@@ -106,7 +106,7 @@ def test_completion_source_invalid_instruction():
             "_TYPER_COMPLETE_TESTING": "True",
         },
     )
-    assert "Hello World" in result.stdout
+    assert 'Completion instruction "explode" not supported.' in result.stderr
 
 
 def test_completion_source_zsh():

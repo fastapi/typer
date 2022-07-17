@@ -8,7 +8,7 @@ def create(username: str):
     """
     Some internal utility function to create.
     """
-    typer.echo(f"Creating user: {username}")
+    print(f"Creating user: {username}")
 
 
 @app.command(help="Delete a user with USERNAME.")
@@ -16,7 +16,7 @@ def delete(username: str):
     """
     Some internal utility function to delete.
     """
-    typer.echo(f"Deleting user: {username}")
+    print(f"Deleting user: {username}")
 
 
 if __name__ == "__main__":
