@@ -432,14 +432,14 @@ are called "Python function parameters" or "Python function arguments".
 
     It's quite technical... and somewhat pedantic.
 
-    One refers to the variable name in a function *declaration*. Like:
+    *Parameter* refers to the variable name in a function *declaration*. Like:
 
     ```
     def bring_person(name: str, lastname: str = ""):
         pass
     ```
 
-    The other refers to the value passed when *calling* a function. Like:
+    *Argument* refers to the value passed when *calling* a function. Like:
 
     ```
     person = bring_person("Camila", lastname="Gutiérrez")
