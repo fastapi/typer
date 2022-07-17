@@ -1,5 +1,6 @@
 ## Latest Changes
 
+* ✏ Fix broken plac link. PR [#275](https://github.com/tiangolo/typer/pull/275) by [@mgielda](https://github.com/mgielda).
 
 ## 0.6.1
 
