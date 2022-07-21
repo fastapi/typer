@@ -1,8 +1,9 @@
 import typer
+from rich import print
 
 
-def main(name: str):
-    typer.secho(f"Welcome here {name}", fg=typer.colors.MAGENTA)
+def main():
+    print("[bold red]Alert![/bold red] [green]Portal gun[/green] shooting! :boom:")
 
 
 if __name__ == "__main__":

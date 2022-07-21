@@ -15,9 +15,9 @@ def test_optional():
     @app.command()
     def opt(user: Optional[str] = None):
         if user:
-            typer.echo(f"User: {user}")
+            print(f"User: {user}")
         else:
-            typer.echo("No user")
+            print("No user")
 
     result = runner.invoke(app)
     assert result.exit_code == 0
@@ -33,7 +33,7 @@ def test_no_type():
 
     @app.command()
     def no_type(user):
-        typer.echo(f"User: {user}")
+        print(f"User: {user}")
 
     result = runner.invoke(app, ["Camila"])
     assert result.exit_code == 0

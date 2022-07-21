@@ -14,7 +14,8 @@ app.command()(mod.main)
 def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "/ -d, --demo" in result.output
+    assert "-d" in result.output
+    assert "--demo" in result.output
 
 
 def test_main():

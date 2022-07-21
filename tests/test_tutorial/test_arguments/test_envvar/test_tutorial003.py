@@ -15,9 +15,9 @@ def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     assert "[OPTIONS] [NAME]" in result.output
-    assert "Arguments:" in result.output
-    assert "[env var: AWESOME_NAME;default: World]" not in result.output
-    assert "[default: World]" in result.output
+    assert "Arguments" in result.output
+    assert "env var: AWESOME_NAME" not in result.output
+    assert "default: World" in result.output
 
 
 def test_call_arg():

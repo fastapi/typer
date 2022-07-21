@@ -36,8 +36,8 @@ def test_invalid_no_force():
     # TODO: when deprecating Click 7, remove second option
 
     assert (
-        "Error: No such option: --no-force" in result.output
-        or "Error: no such option: --no-force" in result.output
+        "No such option: --no-force" in result.output
+        or "no such option: --no-force" in result.output
     )
 
 

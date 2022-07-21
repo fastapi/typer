@@ -1,6 +1,7 @@
 import subprocess
 
 import typer
+import typer.core
 from typer.testing import CliRunner
 
 from docs_src.parameter_types.bool import tutorial002 as mod
@@ -14,8 +15,20 @@ app.command()(mod.main)
 def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "--accept / --reject" in result.output
+    assert "--accept" in result.output
+    assert "--reject" in result.output
     assert "--no-accept" not in result.output
+
+
+def test_help_no_rich():
+    rich = typer.core.rich
+    typer.core.rich = None
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "--accept" in result.output
+    assert "--reject" in result.output
+    assert "--no-accept" not in result.output
+    typer.core.rich = rich
 
 
 def test_main():
@@ -42,8 +55,8 @@ def test_invalid_no_accept():
     # TODO: when deprecating Click 7, remove second option
 
     assert (
-        "Error: No such option: --no-accept" in result.output
-        or "Error: no such option: --no-accept" in result.output
+        "No such option: --no-accept" in result.output
+        or "no such option: --no-accept" in result.output
     )
 
 

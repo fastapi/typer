@@ -14,8 +14,10 @@ app.command()(mod.main)
 def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "--age INTEGER" in result.output
-    assert "--height-meters FLOAT" in result.output
+    assert "--age" in result.output
+    assert "INTEGER" in result.output
+    assert "--height-meters" in result.output
+    assert "FLOAT" in result.output
 
 
 def test_params():
@@ -35,10 +37,8 @@ def test_invalid():
     # TODO: when deprecating Click 7, remove second option
 
     assert (
-        "Error: Invalid value for '--age': '15.3' is not a valid integer"
-        in result.output
-        or "Error: Invalid value for '--age': 15.3 is not a valid integer"
-        in result.output
+        "Invalid value for '--age': '15.3' is not a valid integer" in result.output
+        or "Invalid value for '--age': 15.3 is not a valid integer" in result.output
     )
 
 

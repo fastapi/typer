@@ -14,7 +14,7 @@ def test_help():
     assert result.exit_code == 0
     assert "Creates a single user Hiro Hamada." in result.output
     assert "In the next version it will create 5 users more." in result.output
-    assert "Commands:" in result.output
+    assert "Commands" in result.output
     assert "create" in result.output
 
 

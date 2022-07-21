@@ -10,7 +10,7 @@ runner = CliRunner()
 def test_cli():
     result = runner.invoke(mod.typer_click_object, [])
     # TODO: when deprecating Click 7, remove second option
-    assert "Error: Missing command" in result.stdout or "Usage" in result.stdout
+    assert "Missing command" in result.stdout or "Usage" in result.stdout
 
 
 def test_typer():

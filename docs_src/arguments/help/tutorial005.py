@@ -6,7 +6,7 @@ def main(
         "Wade Wilson", help="Who to greet", show_default="Deadpoolio the amazing's name"
     )
 ):
-    typer.echo(f"Hello {name}")
+    print(f"Hello {name}")
 
 
 if __name__ == "__main__":
