@@ -15,6 +15,7 @@ import click
 
 from .completion import get_completion_inspect_parameters
 from .core import MarkupMode, TyperArgument, TyperCommand, TyperGroup, TyperOption
+from .docstring_automation import get_help_from_docstring, get_param_help_from_docstring
 from .models import (
     AnyType,
     ArgumentInfo,
@@ -408,14 +409,14 @@ def solve_typer_info_help(typer_info: TyperInfo) -> str:
         pass
     # Priority 4: Implicit inference from callback docstring in app.add_typer()
     if typer_info.callback:
-        doc = inspect.getdoc(typer_info.callback)
+        doc = get_help_from_docstring(typer_info.callback)
         if doc:
             return doc
     # Priority 5: Implicit inference from callback docstring in @app.callback()
     try:
         callback = typer_info.typer_instance.registered_callback.callback
         if not isinstance(callback, DefaultPlaceholder):
-            doc = inspect.getdoc(callback or "")
+            doc = get_help_from_docstring(callback or "")
             if doc:
                 return doc
     except AttributeError:
@@ -424,7 +425,7 @@ def solve_typer_info_help(typer_info: TyperInfo) -> str:
     try:
         instance_callback = typer_info.typer_instance.info.callback
         if not isinstance(instance_callback, DefaultPlaceholder):
-            doc = inspect.getdoc(instance_callback)
+            doc = get_help_from_docstring(instance_callback)
             if doc:
                 return doc
     except AttributeError:
@@ -551,6 +552,10 @@ def get_params_convertors_ctx_param_name_from_function(
                 context_param_name = param_name
                 continue
             click_param, convertor = get_click_param(param)
+            if not click_param.help:  # type: ignore
+                click_param.help = get_param_help_from_docstring(  # type: ignore
+                    param=click_param, command=callback
+                )
             if convertor:
                 convertors[param_name] = convertor
             params.append(click_param)
@@ -567,7 +572,7 @@ def get_command_from_info(
     name = command_info.name or get_command_name(command_info.callback.__name__)
     use_help = command_info.help
     if use_help is None:
-        use_help = inspect.getdoc(command_info.callback)
+        use_help = get_help_from_docstring(command_info.callback)
     else:
         use_help = inspect.cleandoc(use_help)
     (
