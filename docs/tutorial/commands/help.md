@@ -251,7 +251,7 @@ $ python main.py delete --help
 
 </div>
 
-### Rich Markown
+### Rich Markdown
 
 If you set `rich_markup_mode="markdown"` when creating the `typer.Typer()` app, you will be able to use Markdown in the docstring:
 
