@@ -151,7 +151,7 @@ To do that, use a space and a single `/` and pass the negative name after:
 
 !!! tip
     Have in mind that it's a string with a preceding space and then a `/`.
-    
+
     So, it's `" /-S"` not `"/-S"`.
 
 Check it:

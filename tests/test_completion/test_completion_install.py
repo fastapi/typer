@@ -31,8 +31,8 @@ def test_completion_install_no_shell(mod):
     )
     # TODO: when deprecating Click 7, remove second option
     assert (
-        "Error: Option '--install-completion' requires an argument" in result.stderr
-        or "Error: --install-completion option requires an argument" in result.stderr
+        "Option '--install-completion' requires an argument" in result.stderr
+        or "--install-completion option requires an argument" in result.stderr
     )
 
 
@@ -105,7 +105,9 @@ def test_completion_install_zsh(zshrc_lock, mod):
 @pytest.mark.parametrize(*mod_params)
 def test_completion_install_fish(fish_config_lock, mod):
     script_path = Path(mod.__file__)
-    completion_path: Path = Path.home() / f".config/fish/completions/{script_path.name}.fish"
+    completion_path: Path = (
+        Path.home() / f".config/fish/completions/{script_path.name}.fish"
+    )
     result = subprocess.run(
         ["coverage", "run", mod.__file__, "--install-completion", "fish"],
         stdout=subprocess.PIPE,

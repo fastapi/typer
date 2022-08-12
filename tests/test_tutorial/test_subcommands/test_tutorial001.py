@@ -26,7 +26,7 @@ def test_help(app):
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     assert "[OPTIONS] COMMAND [ARGS]..." in result.output
-    assert "Commands:" in result.output
+    assert "Commands" in result.output
     assert "items" in result.output
     assert "users" in result.output
 
@@ -35,7 +35,7 @@ def test_help_items(app):
     result = runner.invoke(app, ["items", "--help"])
     assert result.exit_code == 0
     assert "[OPTIONS] COMMAND [ARGS]..." in result.output
-    assert "Commands:" in result.output
+    assert "Commands" in result.output
     assert "create" in result.output
     assert "delete" in result.output
     assert "sell" in result.output
@@ -63,7 +63,7 @@ def test_help_users(app):
     result = runner.invoke(app, ["users", "--help"])
     assert result.exit_code == 0
     assert "[OPTIONS] COMMAND [ARGS]..." in result.output
-    assert "Commands:" in result.output
+    assert "Commands" in result.output
     assert "create" in result.output
     assert "delete" in result.output
     assert "sell" not in result.output

@@ -222,7 +222,7 @@ If there's no `--name` in the command line, it will be `None`, so we use `or []`
 
 Then, when we have a completion candidate, we check if each `name` was already provided with `--name` by checking if it's in that list of `names` with `name not in names`.
 
-And then we `yield` each item that has not being used yet.
+And then we `yield` each item that has not been used yet.
 
 Check it:
 
@@ -277,13 +277,16 @@ Because completion is based on the output printed by your program (handled inter
 
 The completion system only reads from "standard output", so, printing to "standard error" won't break completion. 🚀
 
-You can print to "standard error" with `typer.echo("some text", err=True)`.
+You can print to "standard error" with a **Rich** `Console(stderr=True)`.
 
-Using `err=True` tells **Typer** (actually Click) that the output should be shown in "standard error".
+Using `stderr=True` tells **Rich** that the output should be shown in "standard error".
 
-```Python hl_lines="12 13"
+```Python hl_lines="12  15-16"
 {!../docs_src/options/autocompletion/tutorial008.py!}
 ```
+
+!!! info
+    If you can't install and use Rich, you can also use `print(lastname, file=sys.stderr)` or `typer.echo("some text", err=True)` instead.
 
 We get all the *CLI parameters* as a raw `list` of `str` by declaring a parameter with type `List[str]`, here it's named `args`.
 
@@ -319,7 +322,7 @@ Sebastian  -- The type hints guy.
 
 Of course, you can declare everything if you need it, the context, the raw *CLI parameters*, and the incomplete `str`:
 
-```Python hl_lines="12"
+```Python hl_lines="15"
 {!../docs_src/options/autocompletion/tutorial009.py!}
 ```
 

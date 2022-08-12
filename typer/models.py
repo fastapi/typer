@@ -16,10 +16,14 @@ from typing import (
 
 import click
 
-if TYPE_CHECKING:  # pragma: no cover
-    import click.shell_completion
+from ._compat_utils import _get_click_major
 
-    from .main import Typer  # noqa
+if TYPE_CHECKING:  # pragma: no cover
+    if _get_click_major() > 7:
+        import click.shell_completion
+
+    from .core import TyperCommand, TyperGroup
+    from .main import Typer
 
 
 NoneType = type(None)
@@ -101,7 +105,7 @@ class CommandInfo:
         self,
         name: Optional[str] = None,
         *,
-        cls: Optional[Type[click.Command]] = None,
+        cls: Optional[Type["TyperCommand"]] = None,
         context_settings: Optional[Dict[Any, Any]] = None,
         callback: Optional[Callable[..., Any]] = None,
         help: Optional[str] = None,
@@ -112,6 +116,8 @@ class CommandInfo:
         no_args_is_help: bool = False,
         hidden: bool = False,
         deprecated: bool = False,
+        # Rich settings
+        rich_help_panel: Union[str, None] = None,
     ):
         self.name = name
         self.cls = cls
@@ -125,6 +131,8 @@ class CommandInfo:
         self.no_args_is_help = no_args_is_help
         self.hidden = hidden
         self.deprecated = deprecated
+        # Rich settings
+        self.rich_help_panel = rich_help_panel
 
 
 class TyperInfo:
@@ -133,7 +141,7 @@ class TyperInfo:
         typer_instance: Optional["Typer"] = Default(None),
         *,
         name: Optional[str] = Default(None),
-        cls: Optional[Type[click.Command]] = Default(None),
+        cls: Optional[Type["TyperGroup"]] = Default(None),
         invoke_without_command: bool = Default(False),
         no_args_is_help: bool = Default(False),
         subcommand_metavar: Optional[str] = Default(None),
@@ -149,6 +157,8 @@ class TyperInfo:
         add_help_option: bool = Default(True),
         hidden: bool = Default(False),
         deprecated: bool = Default(False),
+        # Rich settings
+        rich_help_panel: Union[str, None] = Default(None),
     ):
         self.typer_instance = typer_instance
         self.name = name
@@ -167,6 +177,7 @@ class TyperInfo:
         self.add_help_option = add_help_option
         self.hidden = hidden
         self.deprecated = deprecated
+        self.rich_help_panel = rich_help_panel
 
 
 class ParameterInfo:
@@ -200,7 +211,7 @@ class ParameterInfo:
         max: Optional[Union[int, float]] = None,
         clamp: bool = False,
         # DateTime
-        formats: Optional[Union[List[str]]] = None,
+        formats: Optional[List[str]] = None,
         # File
         mode: Optional[str] = None,
         encoding: Optional[str] = None,
@@ -216,6 +227,8 @@ class ParameterInfo:
         resolve_path: bool = False,
         allow_dash: bool = False,
         path_type: Union[None, Type[str], Type[bytes]] = None,
+        # Rich settings
+        rich_help_panel: Union[str, None] = None,
     ):
         self.default = default
         self.param_decls = param_decls
@@ -255,6 +268,8 @@ class ParameterInfo:
         self.resolve_path = resolve_path
         self.allow_dash = allow_dash
         self.path_type = path_type
+        # Rich settings
+        self.rich_help_panel = rich_help_panel
 
 
 class OptionInfo(ParameterInfo):
@@ -297,7 +312,7 @@ class OptionInfo(ParameterInfo):
         max: Optional[Union[int, float]] = None,
         clamp: bool = False,
         # DateTime
-        formats: Optional[Union[List[str]]] = None,
+        formats: Optional[List[str]] = None,
         # File
         mode: Optional[str] = None,
         encoding: Optional[str] = None,
@@ -313,6 +328,8 @@ class OptionInfo(ParameterInfo):
         resolve_path: bool = False,
         allow_dash: bool = False,
         path_type: Union[None, Type[str], Type[bytes]] = None,
+        # Rich settings
+        rich_help_panel: Union[str, None] = None,
     ):
         super().__init__(
             default=default,
@@ -353,6 +370,8 @@ class OptionInfo(ParameterInfo):
             resolve_path=resolve_path,
             allow_dash=allow_dash,
             path_type=path_type,
+            # Rich settings
+            rich_help_panel=rich_help_panel,
         )
         self.prompt = prompt
         self.confirmation_prompt = confirmation_prompt
@@ -396,7 +415,7 @@ class ArgumentInfo(ParameterInfo):
         max: Optional[Union[int, float]] = None,
         clamp: bool = False,
         # DateTime
-        formats: Optional[Union[List[str]]] = None,
+        formats: Optional[List[str]] = None,
         # File
         mode: Optional[str] = None,
         encoding: Optional[str] = None,
@@ -412,6 +431,8 @@ class ArgumentInfo(ParameterInfo):
         resolve_path: bool = False,
         allow_dash: bool = False,
         path_type: Union[None, Type[str], Type[bytes]] = None,
+        # Rich settings
+        rich_help_panel: Union[str, None] = None,
     ):
         super().__init__(
             default=default,
@@ -452,6 +473,8 @@ class ArgumentInfo(ParameterInfo):
             resolve_path=resolve_path,
             allow_dash=allow_dash,
             path_type=path_type,
+            # Rich settings
+            rich_help_panel=rich_help_panel,
         )
 
 
@@ -468,3 +491,16 @@ class ParamMeta:
         self.name = name
         self.default = default
         self.annotation = annotation
+
+
+class DeveloperExceptionConfig:
+    def __init__(
+        self,
+        *,
+        pretty_exceptions_enable: bool = True,
+        pretty_exceptions_show_locals: bool = True,
+        pretty_exceptions_short: bool = True,
+    ) -> None:
+        self.pretty_exceptions_enable = pretty_exceptions_enable
+        self.pretty_exceptions_show_locals = pretty_exceptions_show_locals
+        self.pretty_exceptions_short = pretty_exceptions_short

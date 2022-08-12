@@ -142,7 +142,7 @@ def load():
 ```
 
 !!! tip
-    As we are creating an installable Python package, there's no need to add a section with `if __name__ == "__main__:`.
+    As we are creating an installable Python package, there's no need to add a section with `if __name__ == "__main__":`.
 
 ## Modify the README
 
