@@ -130,7 +130,9 @@ def test_completion_install_fish(fish_config_lock, mod):
 def test_completion_install_powershell(powershell_profile_lock, mod):
     app = typer.Typer()
     app.command()(mod.main)
-    completion_path: Path = Path.home() / f".config/powershell/Microsoft.PowerShell_profile.ps1"
+    completion_path: Path = (
+        Path.home() / f".config/powershell/Microsoft.PowerShell_profile.ps1"
+    )
     completion_path_bytes = f"{completion_path}\n".encode("windows-1252")
     text = ""
     if completion_path.is_file():  # pragma: nocover

@@ -66,7 +66,6 @@ try:
             backend = "asyncio"
         return anyio.run(lambda: coroutine, backend=backend)
 
-
 except ImportError:
     import asyncio
 
@@ -74,6 +73,7 @@ except ImportError:
 
     def run_as_sync(coroutine: Coroutine[Any, Any, Any]) -> Any:
         return asyncio.run(coroutine)
+
 
 try:
     import rich

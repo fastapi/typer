@@ -83,7 +83,9 @@ SyncCommandFunctionType = TypeVar("SyncCommandFunctionType", bound=Callable[...,
 
 
 CommandFunctionType = TypeVar(
-    "CommandFunctionType", Callable[..., Any], Callable[..., Coroutine[Any, Any, Any]],
+    "CommandFunctionType",
+    Callable[..., Any],
+    Callable[..., Coroutine[Any, Any, Any]],
 )
 
 

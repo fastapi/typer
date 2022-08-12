@@ -2,7 +2,9 @@ import os
 import subprocess
 
 import pytest
+
 from docs_src.commands.index import tutorial002 as sync_mod
+
 from .for_testing import commands_index_tutorial002_async as async_mod
 
 mod_params = ("mod", (sync_mod, async_mod))

@@ -3,8 +3,8 @@ import subprocess
 
 import pytest
 
-from docs_src.first_steps import tutorial001 as sync_mod
 from docs_src.asynchronous import tutorial001 as async_mod
+from docs_src.first_steps import tutorial001 as sync_mod
 
 mod_params = ("mod", (sync_mod, async_mod))
 

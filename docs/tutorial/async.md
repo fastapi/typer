@@ -2,7 +2,7 @@
 
 ## Engines
 
-Typer supports `asyncio` out of the box. <a href="https://github.com/python-trio/trio" class="external-link" target="_blank"><code>Trio</code></a> is supported through 
+Typer supports `asyncio` out of the box. <a href="https://github.com/python-trio/trio" class="external-link" target="_blank"><code>Trio</code></a> is supported through
 <a href="https://github.com/agronholm/anyio" class="external-link" target="_blank"><code>anyio</code></a>, which can be installed as optional dependency:
 
 <div class="termy">
