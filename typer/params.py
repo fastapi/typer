@@ -24,6 +24,9 @@ def Option(
         ]
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
+    # Custom type
+    parser: Optional[Callable[[str], Any]] = None,
+    click_type: Optional[click.ParamType] = None,
     # Option
     show_default: bool = True,
     prompt: Union[bool, str] = False,
@@ -75,6 +78,9 @@ def Option(
         envvar=envvar,
         shell_complete=shell_complete,
         autocompletion=autocompletion,
+        # Custom type
+        parser=parser,
+        click_type=click_type,
         # Option
         show_default=show_default,
         prompt=prompt,
@@ -133,6 +139,9 @@ def Argument(
         ]
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
+    # Custom type
+    parser: Optional[Callable[[str], Any]] = None,
+    click_type: Optional[click.ParamType] = None,
     # TyperArgument
     show_default: Union[bool, str] = True,
     show_choices: bool = True,
@@ -178,6 +187,9 @@ def Argument(
         envvar=envvar,
         shell_complete=shell_complete,
         autocompletion=autocompletion,
+        # Custom type
+        parser=parser,
+        click_type=click_type,
         # TyperArgument
         show_default=show_default,
         show_choices=show_choices,
