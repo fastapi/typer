@@ -689,7 +689,13 @@ def get_callback(
 def get_click_type(
     *, annotation: Any, parameter_info: ParameterInfo
 ) -> click.ParamType:
-    if annotation == str:
+    if parameter_info.click_type is not None:
+        return parameter_info.click_type
+
+    elif parameter_info.parser is not None:
+        return click.types.FuncParamType(parameter_info.parser)
+
+    elif annotation == str:
         return click.STRING
     elif annotation == int:
         if parameter_info.min is not None or parameter_info.max is not None:
@@ -770,6 +776,9 @@ def get_click_type(
             [item.value for item in annotation],
             case_sensitive=parameter_info.case_sensitive,
         )
+    elif callable(annotation):
+        return click.types.FuncParamType(annotation)
+
     raise RuntimeError(f"Type not yet supported: {annotation}")  # pragma no cover
 
 
