@@ -51,7 +51,7 @@ _typer_developer_exception_attr_name = "__typer_developer_exception__"
 
 
 def except_hook(
-    exc_type: Type[BaseException], exc_value: BaseException, tb: TracebackType
+    exc_type: Type[BaseException], exc_value: BaseException, tb: Optional[TracebackType]
 ) -> None:
     exception_config: Union[DeveloperExceptionConfig, None] = getattr(
         exc_value, _typer_developer_exception_attr_name, None
