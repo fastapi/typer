@@ -1,11 +1,19 @@
+"""Docstring parser for the following styles:
+
+- Numpy https://numpydoc.readthedocs.io/en/latest/format.html
+- Google https://google.github.io/styleguide/pyguide.html#381-docstrings
+- Sphinx https://thomas-cokelaer.info/tutorials/sphinx/docstring_python.html
+
+"""
+
 import inspect
 from typing import Any, Callable, List, Tuple, Union
 
 import click
 
-NUMPY = "NUMPY"  # Numpy style docstring
-GOOGLE = "GOOGLE"  # Google style docstring
-SPHINX = "SPHINX"  # reST (Sphinx) style docstring
+NUMPY = "NUMPY"
+GOOGLE = "GOOGLE"
+SPHINX = "SPHINX"
 NUMPY_PARAMS = "Parameters"
 GOOGLE_PARAMS = "Args:"
 SPHINX_PARAM = ":param"
@@ -14,10 +22,22 @@ SPHINX_RAISES = ":raises"
 DOCSTRING_SECTIONS = {
     NUMPY_PARAMS: True,
     "Returns": True,
+    "Yields": True,
+    "Receives": True,
     "Raises": True,
+    "Warns": True,
+    "Warnings": True,
+    "See Also": True,
+    "References": True,
+    "Notes": True,
+    "Examples": True,
+    "Attributes": True,
+    "Methods": True,
     GOOGLE_PARAMS: True,
     "Returns:": True,
+    "Yields:": True,
     "Raises:": True,
+    "Attributes:": True,
 }
 DOCSTRING_STYLES_PARAMS = {
     NUMPY: NUMPY_PARAMS,
@@ -111,7 +131,7 @@ def get_param_help_from_numpy_docstring(
             if help_message[-1] != ".":
                 help_message += "."
             break
-    return help_message
+    return help_message.strip()
 
 
 def get_param_help_from_google_docstring(
@@ -144,7 +164,7 @@ def get_param_help_from_google_docstring(
             if help_message[-1] != ".":
                 help_message += "."
             break
-    return help_message
+    return help_message.strip()
 
 
 def get_param_help_from_sphinx_docstring(
@@ -177,7 +197,7 @@ def get_param_help_from_sphinx_docstring(
             if help_message[-1] != ".":
                 help_message += "."
             break
-    return help_message
+    return help_message.strip()
 
 
 def get_param_help_from_docstring(
@@ -220,6 +240,7 @@ def get_param_help_from_docstring(
         ) = get_index_of_sphinx_param_section(docstring_lines)
     if not docstring_style:
         return ""
+
     get_help_message = {
         NUMPY: get_param_help_from_numpy_docstring,
         GOOGLE: get_param_help_from_google_docstring,
