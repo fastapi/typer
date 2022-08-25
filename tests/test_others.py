@@ -94,6 +94,31 @@ def test_callback_3_untyped_parameters():
     assert "value is: Camila" in result.stdout
 
 
+@pytest.mark.parametrize("args", [["--config", "file"], ["--name", "Camila Cabello"]])
+def test_callback_default_map(args):
+    app = typer.Typer()
+
+    def config_file_callback(ctx, param, value):
+        ctx.default_map = {"name": {"first": "Camila", "last": "Cabello"}}
+        return value
+
+    def name_callback(ctx, param, value):
+        if isinstance(value, dict):
+            return value
+        first, last = value.split()
+        return {"first": first, "last": last}
+
+    @app.command()
+    def main(
+        config: str = typer.Option("--config", callback=config_file_callback),
+        name: click.UNPROCESSED = typer.Option("--name", callback=name_callback),
+    ):
+        print(f"User: {name['first']} {name['last']}")
+
+    result = runner.invoke(app, args)
+    assert "User: Camila Cabello" in result.stdout
+
+
 def test_completion_untyped_parameters():
     file_path = Path(__file__).parent / "assets/completion_no_types.py"
     result = subprocess.run(
