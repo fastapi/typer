@@ -345,6 +345,7 @@ def get_command(typer_instance: Typer) -> click.Command:
         or typer_instance.info.callback
         or typer_instance.registered_groups
         or len(typer_instance.registered_commands) > 1
+        or typer_instance.info.no_args_is_help
     ):
         # Create a Group
         click_command: click.Command = get_group(typer_instance)
