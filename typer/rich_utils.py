@@ -64,6 +64,7 @@ STYLE_COMMANDS_TABLE_BORDER_STYLE = None
 STYLE_ERRORS_PANEL_BORDER = "red"
 ALIGN_ERRORS_PANEL: Literal["left", "center", "right"] = "left"
 STYLE_ERRORS_SUGGESTION = "dim"
+STYLE_ERRORS_SUGGESTION_COMMAND = "blue"
 STYLE_ABORTED = "red"
 _TERMINAL_WIDTH = getenv("TERMINAL_WIDTH")
 MAX_WIDTH = int(_TERMINAL_WIDTH) if _TERMINAL_WIDTH else None
@@ -673,8 +674,15 @@ def rich_format_error(self: click.ClickException) -> None:
         console.print(ctx.get_usage())
 
     if ctx is not None and ctx.command.get_help_option(ctx) is not None:
+        errors_suggestion = Text()
+        errors_suggestion.append("Try ")
+        errors_suggestion.append(
+            f"'{ctx.command_path} {ctx.help_option_names[0]}'",
+            style=STYLE_ERRORS_SUGGESTION_COMMAND,
+        )
+        errors_suggestion.append(" for help.")
         console.print(
-            f"Try [blue]'{ctx.command_path} {ctx.help_option_names[0]}'[/] for help.",
+            errors_suggestion,
             style=STYLE_ERRORS_SUGGESTION,
         )
 
