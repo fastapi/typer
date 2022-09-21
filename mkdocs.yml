@@ -71,6 +71,7 @@ nav:
           - Multiple Values Intro: tutorial/multiple-values/index.md
           - Multiple CLI Options: tutorial/multiple-values/multiple-options.md
           - CLI Options with Multiple Values: tutorial/multiple-values/options-with-multiple-values.md
+          - Multiple CLI Options with Multiple Values: tutorial/multiple-values/multiple-options-with-multiple-values.md
           - CLI Arguments with Multiple Values: tutorial/multiple-values/arguments-with-multiple-values.md
       - Ask with Prompt: tutorial/prompt.md
       - Progress Bar: tutorial/progressbar.md
