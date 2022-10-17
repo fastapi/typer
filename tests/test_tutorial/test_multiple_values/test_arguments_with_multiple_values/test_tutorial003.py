@@ -3,14 +3,16 @@ import subprocess
 import typer
 from typer.testing import CliRunner
 
-from docs_src.multiple_values.arguments_with_multiple_values import tutorial003 as mod
+from docs_src.multiple_values.arguments_with_multiple_values import (
+    tutorial003 as mod,
+)
 
 runner = CliRunner()
 app = typer.Typer()
 app.command()(mod.main)
 
 
-def test_help():
+def test_help() -> None:
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     assert "[OPTIONS] [NAMES]..." in result.output
@@ -18,7 +20,7 @@ def test_help():
     assert "[default: Harry, Hermione, Ron]" in result.output
 
 
-def test_defaults():
+def test_defaults() -> None:
     result = runner.invoke(app)
     assert result.exit_code == 0
     assert "Hello Harry" in result.output
@@ -26,7 +28,7 @@ def test_defaults():
     assert "Hello Ron" in result.output
 
 
-def test_invalid_args():
+def test_invalid_args() -> None:
     result = runner.invoke(app, ["Draco", "Hagrid"])
     assert result.exit_code != 0
     # TODO: when deprecating Click 7, remove second option
@@ -37,7 +39,7 @@ def test_invalid_args():
     )
 
 
-def test_valid_args():
+def test_valid_args() -> None:
     result = runner.invoke(app, ["Draco", "Hagrid", "Dobby"])
     assert result.exit_code == 0
     assert "Hello Draco" in result.stdout
@@ -45,7 +47,7 @@ def test_valid_args():
     assert "Hello Dobby" in result.stdout
 
 
-def test_script():
+def test_script() -> None:
     result = subprocess.run(
         ["coverage", "run", mod.__file__, "--help"],
         stdout=subprocess.PIPE,
