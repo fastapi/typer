@@ -8,7 +8,18 @@ from functools import update_wrapper
 from pathlib import Path
 from traceback import FrameSummary, StackSummary
 from types import TracebackType
-from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, Union
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    List,
+    Optional,
+    Sequence,
+    Set,
+    Tuple,
+    Type,
+    Union,
+)
 from uuid import UUID
 
 import click
@@ -639,6 +650,15 @@ def generate_list_convertor(
     return internal_convertor
 
 
+def generate_set_convertor(
+    convertor: Optional[Callable[[Any], Any]]
+) -> Callable[[Sequence[Any]], Set[Any]]:
+    def internal_convertor(value: Sequence[Any]) -> Set[Any]:
+        return {convertor(v) if convertor else v for v in value}
+
+    return internal_convertor
+
+
 def generate_tuple_convertor(
     types: Sequence[Any],
 ) -> Callable[[Tuple[Any, ...]], Tuple[Any, ...]]:
@@ -807,6 +827,7 @@ def get_click_param(
         annotation = str
     main_type = annotation
     is_list = False
+    is_set = False
     is_tuple = False
     parameter_type: Any = None
     is_flag = None
@@ -822,13 +843,19 @@ def get_click_param(
             assert len(types) == 1, "Typer Currently doesn't support Union types"
             main_type = types[0]
             origin = getattr(main_type, "__origin__", None)
-        # Handle Tuples and Lists
+        # Handle Tuples, Set and Lists
         if lenient_issubclass(origin, List):
             main_type = main_type.__args__[0]
             assert not getattr(
                 main_type, "__origin__", None
             ), "List types with complex sub-types are not currently supported"
             is_list = True
+        if lenient_issubclass(origin, Set):
+            main_type = main_type.__args__[0]
+            assert not getattr(
+                main_type, "__origin__", None
+            ), "Set types with complex sub-types are not currently supported"
+            is_set = True
         elif lenient_issubclass(origin, Tuple):  # type: ignore
             types = []
             for type_ in main_type.__args__:
@@ -847,6 +874,8 @@ def get_click_param(
     convertor = determine_type_convertor(main_type)
     if is_list:
         convertor = generate_list_convertor(convertor)
+    if is_set:
+        convertor = generate_set_convertor(convertor)
     if is_tuple:
         convertor = generate_tuple_convertor(main_type.__args__)
     if isinstance(parameter_info, OptionInfo):
@@ -878,7 +907,7 @@ def get_click_param(
                 hide_input=parameter_info.hide_input,
                 is_flag=is_flag,
                 flag_value=parameter_info.flag_value,
-                multiple=is_list,
+                multiple=is_list or is_set,
                 count=parameter_info.count,
                 allow_from_autoenv=parameter_info.allow_from_autoenv,
                 type=parameter_type,
@@ -906,7 +935,7 @@ def get_click_param(
     elif isinstance(parameter_info, ArgumentInfo):
         param_decls = [param.name]
         nargs = None
-        if is_list:
+        if is_list or is_set:
             nargs = -1
         return (
             TyperArgument(
