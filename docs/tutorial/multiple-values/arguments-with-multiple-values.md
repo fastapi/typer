@@ -27,6 +27,30 @@ woohoo!
 !!! info
     A `List` can only be used in the last command (if there are subcommands), as this will take anything to the right and assume it's part of the expected *CLI arguments*.
 
+## Only using unique values
+
+If you want to automatically remove duplicate values, you can use `typing.Set` instead of `typing.List`.
+
+```Python hl_lines="7"
+{!../docs_src/multiple_values/arguments_with_multiple_values/tutorial002.py!}
+```
+
+And you can see here that duplicates are removed:
+
+<div class="termy">
+
+```console
+// Even if we pass duplicate values
+$ python main.py ./foo.md ./bar.md ./foo.md ./bar.md ./foo.md woohoo!
+
+// Only unique values are left
+This file exists: foo.md
+woohoo!
+This file exists: bar.md
+woohoo!
+```
+</div>
+
 ## *CLI arguments* with tuples
 
 If you want a specific number of values and types, you can use a tuple, and it can even have default values:
