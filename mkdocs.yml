@@ -64,6 +64,7 @@ nav:
           - SubCommands - Command Groups - Intro: tutorial/subcommands/index.md
           - Add Typer: tutorial/subcommands/add-typer.md
           - SubCommands in a Single File: tutorial/subcommands/single-file.md
+          - Adding SubCommands to a Command: tutorial/subcommands/commands-with-subcommands.md
           - Nested SubCommands: tutorial/subcommands/nested-subcommands.md
           - Sub-Typer Callback Override: tutorial/subcommands/callback-override.md
           - SubCommand Name and Help: tutorial/subcommands/name-and-help.md
