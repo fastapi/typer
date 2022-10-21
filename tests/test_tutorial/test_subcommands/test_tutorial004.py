@@ -3,6 +3,8 @@ import subprocess
 import pytest
 from typer.testing import CliRunner
 
+from docs_src.subcommands import tutorial004
+
 runner = CliRunner()
 
 
@@ -10,7 +12,7 @@ runner = CliRunner()
 def mod(monkeypatch):
     with monkeypatch.context() as m:
         monkeypatch.syspath_prepend(list(tutorial004.__path__)[0])
-        from docs_src.subcommands.tutorial001 import main
+        from docs_src.subcommands.tutorial004 import main
 
         return main
 
@@ -39,7 +41,6 @@ def test_help_remote(app):
 def test_help_remote_add(app):
     result = runner.invoke(app, ["remote", "add", "--help"])
     assert result.exit_code == 0
-    assert "[OPTIONS] COMMAND [ARGS]..." in result.output
     assert "BRANCH" in result.output
     assert "URL" in result.output
 
@@ -47,13 +48,13 @@ def test_help_remote_add(app):
 def test_remote_call(app):
     result = runner.invoke(app, ["remote"])
     assert result.exit_code == 0
-    assert "This is the remote main command." in result.output
+    assert "This is the remote main command" in result.output
 
 
 def test_remote_add_call(app):
     result = runner.invoke(app, ["remote", "add", "branch", "url"])
     assert result.exit_code == 0
-    assert "Adding remote branch with url url." in result.output
+    assert "Adding remote branch with url url" in result.output
 
 
 def test_scripts(mod):
