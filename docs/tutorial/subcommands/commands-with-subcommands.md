@@ -6,10 +6,10 @@ The motivating example for the subcommand feature that we talked about in the
 [introduction of this tutorial](./index.md) was the `git remote` command.
 You can simply use `git remote` to list the current remote repositories, but you can
 also use `git remote add` to add a new remote repository.
-The command and the  sub-command are essentially independent, 
+The command and the  sub-command are essentially independent,
 but hierarchically grouped.
 
-If you recall the example from the [previous section](./single-file.md), there we 
+If you recall the example from the [previous section](./single-file.md), there we
 defined  a CLI with two commands, namely `users` and `items`, each with several
 sub-commands. If you simply wanted to run `python main.py users` as a "base command",
 this simply would not work, because we'd have to specify a sub-command, like `create`.
@@ -22,7 +22,7 @@ Let's say we create a file called `main.py` in which we store all our Typer code
 We want the Typer CLI to do the following:
 
 - We want a command called `remote` that we can call _without_ any sub-commands.
-- On top of that, we also want to define a sub-command to `remote` called `add` 
+- On top of that, we also want to define a sub-command to `remote` called `add`
   that has to be called with two mandatory arguments.
 
 Here's how you can create such an app with Typer.
@@ -39,7 +39,7 @@ or not.
 
 Specifically, we tell Typer to invoke the `remote` command even if no sub-command
 is specified by setting `invoke_without_command=True` in the `callback` decorator.
-Note that we have to use `callback` here, and not `command`, as you might have 
+Note that we have to use `callback` here, and not `command`, as you might have
 suspected.
 Also, in the body of `remote`, we catch the case where no sub-command was specified by
 checking if `ctx.invoked_subcommand` is `None`.
@@ -90,7 +90,7 @@ The `remote` command simply prints a message in this case, but you could make it
 whatever you want.
 
 In any case, next we want to run the `add` sub-command, which takes two arguments.
-This command is built to mimic the `git remote add` command as introduced at the 
+This command is built to mimic the `git remote add` command as introduced at the
 [beginning of this tutorial](./index.md).
 
 <div class="termy">
