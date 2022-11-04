@@ -11,9 +11,8 @@
 <a href="https://github.com/tiangolo/typer/actions?query=workflow%3APublish" target="_blank">
     <img src="https://github.com/tiangolo/typer/workflows/Publish/badge.svg" alt="Publish">
 </a>
-<a href="https://codecov.io/gh/tiangolo/typer" target="_blank">
-    <img src="https://img.shields.io/codecov/c/github/tiangolo/typer?color=%2334D058" alt="Coverage">
-</a>
+<a href="https://coverage-badge.samuelcolvin.workers.dev/redirect/tiangolo/typer" target="_blank">
+    <img src="https://coverage-badge.samuelcolvin.workers.dev/tiangolo/typer.svg" alt="Coverage">
 <a href="https://pypi.org/project/typer" target="_blank">
     <img src="https://img.shields.io/pypi/v/typer?color=%2334D058&label=pypi%20package" alt="Package version">
 </a>
