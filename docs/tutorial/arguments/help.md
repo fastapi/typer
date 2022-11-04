@@ -211,6 +211,56 @@ Options:
 
 </div>
 
+## *CLI Argument* help panels
+
+You might want to show the help information for *CLI arguments* in different panels when using the `--help` option.
+
+If you have installed Rich as described in the docs for [Printing and Colors](../printing.md){.internal-link target=_blank}, you can set the `rich_help_panel` parameter to the name of the panel where you want this *CLI argument* to be shown:
+
+```Python hl_lines="7  10"
+{!../docs_src/arguments/help/tutorial007.py!}
+```
+
+Then, if you check the `--help` option, you will see a default panel named "`Arguments`" for the *CLI arguments* that don't have a custom `rich_help_panel`.
+
+And next you will see other panels for the *CLI arguments* that have a custom panel set in the `rich_help_panel` parameter:
+
+<div class="termy">
+
+```console
+$ python main.py --help
+
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] NAME [LASTNAME] [AGE]               </b>
+<b>                                                                     </b>
+ Say hi to NAME very gently, like Dirk.
+
+<font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    name      <font color="#F4BF75"><b>TEXT</b></font>  Who to greet [default: None] <font color="#A6194C">[required]</font>      │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+<font color="#A5A5A1">╭─ Secondary Arguments ─────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│   lastname      </font><font color="#A37F4E"><b>[LASTNAME]</b></font>  The last name                         │
+<font color="#A5A5A1">│   age           </font><font color="#A37F4E"><b>[AGE]     </b></font>  The user&apos;s age                        │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+<font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--install-completion</b></font>          Install completion for the current  │
+<font color="#A5A5A1">│                               shell.                              │</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--show-completion</b></font>             Show completion for the current     │
+<font color="#A5A5A1">│                               shell, to copy it or customize the  │</font>
+<font color="#A5A5A1">│                               installation.                       │</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                        Show this message and exit.         │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+```
+
+</div>
+
+In this example we have a custom *CLI arguments* panel named "`Secondary Arguments`".
+
+## Help with style using Rich
+
+In a future section you will see how to use custom markup in the `help` for *CLI arguments* when reading about [Commands - Command Help](../commands/help.md#rich-markdown-and-markup){.internal-link target=_blank}.
+
+If you are in a hurry you can jump there, but otherwise, it would be better to continue reading here and following the tutorial in order.
+
 ## Hide a *CLI argument* from the help text
 
 If you want, you can make a *CLI argument* **not** show up in the `Arguments` section in the help text.
@@ -218,7 +268,7 @@ If you want, you can make a *CLI argument* **not** show up in the `Arguments` se
 You will probably not want to do this normally, but it's possible:
 
 ```Python hl_lines="4"
-{!../docs_src/arguments/help/tutorial007.py!}
+{!../docs_src/arguments/help/tutorial008.py!}
 ```
 
 Check it:

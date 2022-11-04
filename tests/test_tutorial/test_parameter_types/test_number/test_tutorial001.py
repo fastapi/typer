@@ -1,6 +1,7 @@
 import subprocess
 
 import typer
+import typer.core
 from typer.testing import CliRunner
 
 from docs_src.parameter_types.number import tutorial001 as mod
@@ -14,8 +15,22 @@ app.command()(mod.main)
 def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "--age INTEGER RANGE" in result.output
-    assert "--score FLOAT RANGE" in result.output
+    assert "--age" in result.output
+    assert "INTEGER RANGE" in result.output
+    assert "--score" in result.output
+    assert "FLOAT RANGE" in result.output
+
+
+def test_help_no_rich():
+    rich = typer.core.rich
+    typer.core.rich = None
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "--age" in result.output
+    assert "INTEGER RANGE" in result.output
+    assert "--score" in result.output
+    assert "FLOAT RANGE" in result.output
+    typer.core.rich = rich
 
 
 def test_params():
@@ -32,10 +47,10 @@ def test_invalid_id():
     # TODO: when deprecating Click 7, remove second option
     assert (
         (
-            "Error: Invalid value for 'ID': 1002 is not in the range 0<=x<=1000."
+            "Invalid value for 'ID': 1002 is not in the range 0<=x<=1000."
             in result.output
         )
-        or "Error: Invalid value for 'ID': 1002 is not in the valid range of 0 to 1000."
+        or "Invalid value for 'ID': 1002 is not in the valid range of 0 to 1000."
         in result.output
     )
 
@@ -46,9 +61,8 @@ def test_invalid_age():
     # TODO: when deprecating Click 7, remove second option
 
     assert (
-        "Error: Invalid value for '--age': 15 is not in the range x>=18"
-        in result.output
-        or "Error: Invalid value for '--age': 15 is smaller than the minimum valid value 18."
+        "Invalid value for '--age': 15 is not in the range x>=18" in result.output
+        or "Invalid value for '--age': 15 is smaller than the minimum valid value 18."
         in result.output
     )
 
@@ -59,9 +73,9 @@ def test_invalid_score():
     # TODO: when deprecating Click 7, remove second option
 
     assert (
-        "Error: Invalid value for '--score': 100.5 is not in the range x<=100."
+        "Invalid value for '--score': 100.5 is not in the range x<=100."
         in result.output
-        or "Error: Invalid value for '--score': 100.5 is bigger than the maximum valid value 100."
+        or "Invalid value for '--score': 100.5 is bigger than the maximum valid value"
         in result.output
     )
 

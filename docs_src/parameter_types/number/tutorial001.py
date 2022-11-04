@@ -6,9 +6,9 @@ def main(
     age: int = typer.Option(20, min=18),
     score: float = typer.Option(0, max=100),
 ):
-    typer.echo(f"ID is {id}")
-    typer.echo(f"--age is {age}")
-    typer.echo(f"--score is {score}")
+    print(f"ID is {id}")
+    print(f"--age is {age}")
+    print(f"--score is {score}")
 
 
 if __name__ == "__main__":

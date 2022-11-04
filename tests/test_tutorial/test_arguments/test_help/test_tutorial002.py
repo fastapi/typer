@@ -16,7 +16,7 @@ def test_help():
     assert result.exit_code == 0
     assert "[OPTIONS] NAME" in result.output
     assert "Say hi to NAME very gently, like Dirk." in result.output
-    assert "Arguments:" in result.output
+    assert "Arguments" in result.output
     assert "NAME" in result.output
     assert "The name of the user to greet" in result.output
     assert "[required]" in result.output

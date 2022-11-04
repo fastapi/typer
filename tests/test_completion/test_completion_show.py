@@ -18,8 +18,8 @@ def test_completion_show_no_shell():
     )
     # TODO: when deprecating Click 7, remove second option
     assert (
-        "Error: Option '--show-completion' requires an argument" in result.stderr
-        or "Error: --show-completion option requires an argument" in result.stderr
+        "Option '--show-completion' requires an argument" in result.stderr
+        or "--show-completion option requires an argument" in result.stderr
     )
 
 

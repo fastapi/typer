@@ -22,7 +22,7 @@ def test_no_confirm():
     result = runner.invoke(app, input="n\n")
     assert result.exit_code == 1
     assert "Are you sure you want to delete it? [y/N]:" in result.output
-    assert "Aborted!" in result.output
+    assert "Aborted" in result.output
 
 
 def test_script():

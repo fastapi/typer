@@ -1,6 +1,6 @@
 ## Python types
 
-If you need a refreshed about how to use Python type hints, check the first part of <a href="https://fastapi.tiangolo.com/python-types/" class="external-link" target="_blank">FastAPI's Python types intro</a>.
+If you need a refresher about how to use Python type hints, check the first part of <a href="https://fastapi.tiangolo.com/python-types/" class="external-link" target="_blank">FastAPI's Python types intro</a>.
 
 You can also check the <a href="https://mypy.readthedocs.io/en/latest/cheat_sheet_py3.html" class="external-link" target="_blank">mypy cheat sheet</a>.
 
@@ -68,11 +68,11 @@ For the tutorial, you might want to install it with all the optional dependencie
 <div class="termy">
 
 ```console
-$ pip install typer[all]
+$ pip install "typer[all]"
 ---> 100%
-Successfully installed typer click colorama shellingham
+Successfully installed typer click shellingham rich
 ```
 
 </div>
 
-...that also includes `colorama` and `shellingham`.
+...that also includes `rich` and `shellingham`.

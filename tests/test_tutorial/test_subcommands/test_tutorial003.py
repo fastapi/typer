@@ -26,7 +26,7 @@ def test_help(app):
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     assert "[OPTIONS] COMMAND [ARGS]..." in result.output
-    assert "Commands:" in result.output
+    assert "Commands" in result.output
     assert "items" in result.output
     assert "users" in result.output
     assert "lands" in result.output
@@ -36,7 +36,7 @@ def test_help_items(app):
     result = runner.invoke(app, ["items", "--help"])
     assert result.exit_code == 0
     assert "[OPTIONS] COMMAND [ARGS]..." in result.output
-    assert "Commands:" in result.output
+    assert "Commands" in result.output
     assert "create" in result.output
     assert "delete" in result.output
     assert "sell" in result.output
@@ -64,7 +64,7 @@ def test_help_users(app):
     result = runner.invoke(app, ["users", "--help"])
     assert result.exit_code == 0
     assert "[OPTIONS] COMMAND [ARGS]..." in result.output
-    assert "Commands:" in result.output
+    assert "Commands" in result.output
     assert "create" in result.output
     assert "delete" in result.output
     assert "sell" not in result.output
@@ -86,7 +86,7 @@ def test_help_lands(app):
     result = runner.invoke(app, ["lands", "--help"])
     assert result.exit_code == 0
     assert "lands [OPTIONS] COMMAND [ARGS]..." in result.output
-    assert "Commands:" in result.output
+    assert "Commands" in result.output
     assert "reigns" in result.output
     assert "towns" in result.output
 
@@ -95,7 +95,7 @@ def test_help_lands_reigns(app):
     result = runner.invoke(app, ["lands", "reigns", "--help"])
     assert result.exit_code == 0
     assert "lands reigns [OPTIONS] COMMAND [ARGS]..." in result.output
-    assert "Commands:" in result.output
+    assert "Commands" in result.output
     assert "conquer" in result.output
     assert "destroy" in result.output
 
@@ -116,7 +116,7 @@ def test_help_lands_towns(app):
     result = runner.invoke(app, ["lands", "towns", "--help"])
     assert result.exit_code == 0
     assert "lands towns [OPTIONS] COMMAND [ARGS]..." in result.output
-    assert "Commands:" in result.output
+    assert "Commands" in result.output
     assert "burn" in result.output
     assert "found" in result.output
 

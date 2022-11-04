@@ -25,6 +25,14 @@ def test_existing():
     assert "Notification sent for new user" not in result.output
 
 
+def test_existing_no_standalone():
+    # Mainly for coverage
+    result = runner.invoke(app, ["rick"], standalone_mode=False)
+    assert result.exit_code == 0
+    assert "The user already exists" in result.output
+    assert "Notification sent for new user" not in result.output
+
+
 def test_script():
     result = subprocess.run(
         ["coverage", "run", mod.__file__, "--help"],

@@ -14,7 +14,7 @@ app.command()(mod.main)
 def test_1():
     result = runner.invoke(app, ["Camila"])
     assert result.exit_code != 0
-    assert "Error: Missing argument 'LASTNAME'" in result.output
+    assert "Missing argument 'LASTNAME'" in result.output
 
 
 def test_2():

@@ -14,8 +14,11 @@ app.command()(mod.main)
 def test_option_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "-n, --name TEXT" in result.output
-    assert "-f, --formal" in result.output
+    assert "-n" in result.output
+    assert "--name" in result.output
+    assert "TEXT" in result.output
+    assert "-f" in result.output
+    assert "--formal" in result.output
 
 
 def test_call():
