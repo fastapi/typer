@@ -26,6 +26,7 @@ jobs:
         run: pip install flit
       - name: Install Dependencies
         run: flit install --deps=develop --symlink
+        # run: python -m flit install --extras test
       - name: Install Click 7
         if: matrix.click-7
         run: pip install "click<8.0.0"
