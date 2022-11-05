@@ -10,4 +10,5 @@ export _TYPER_FORCE_DISABLE_TERMINAL=1
 bash ./scripts/test-files.sh
 # Use xdist-pytest --forked to ensure modified sys.path to import relative modules in examples keeps working
 # pytest --cov-config=.coveragerc --cov --cov-report=term-missing -o console_output_style=progress --numprocesses=auto ${@}
-coverage run -m pytest -o console_output_style=progress ${@}
+# coverage run -m pytest -o console_output_style=progress ${@}
+pytest --cov=typer --cov=tests --cov=docs_src --cov-report=term-missing -o console_output_style=progress --numprocesses=auto ${@}
