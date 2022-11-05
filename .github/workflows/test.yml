@@ -25,6 +25,11 @@ jobs:
       - name: Install Flit
         run: pip install flit
       - name: Install Dependencies
+        if: ${{ matrix.python-version != '3.6' }}
+        run: python -m flit install --symlink
+      - name: Install Dependencies
+        if: ${{ matrix.python-version == '3.6' }}
+        # This doesn't install the editable install, so coverage doesn't get subprocesses
         run: python -m pip install ".[test]"
       - name: Install Click 7
         if: matrix.click-7
