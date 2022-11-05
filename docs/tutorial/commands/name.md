@@ -44,3 +44,13 @@ Creating user: Camila
 ```
 
 </div>
+
+Note that any underscores in the function name will be replaced with dashes.
+
+So if your function is something like:
+
+```Python
+def create_user(username: str):
+    ...
+```
+Then the command name will be `create-user`.
