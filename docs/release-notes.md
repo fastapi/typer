@@ -1,5 +1,6 @@
 ## Latest Changes
 
+* ✅ Add extra tests just for coverage because monkeypatching with strange imports confuses coverage. PR [#490](https://github.com/tiangolo/typer/pull/490) by [@tiangolo](https://github.com/tiangolo).
 
 ### Features
 
