@@ -1,7 +1,7 @@
 import os
 import subprocess
 
-from docs_src.first_steps import tutorial001 as mod
+from docs_src.commands.index import tutorial001 as mod
 
 
 def test_completion_show_no_shell():
