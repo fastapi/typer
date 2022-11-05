@@ -6,3 +6,4 @@ source =
     docs_src
 
 parallel = True
+context = '${CONTEXT}'
