@@ -40,6 +40,8 @@ jobs:
           CONTEXT: ${{ runner.os }}-py${{ matrix.python-version }}-click-7-${{ matrix.click-7 }}
       - name: Store coverage files
         uses: actions/upload-artifact@v3
+        # TODO: fix this, try to not store coverage for 3.6 to see if that affects the final number and see if the problem is there
+        if: ${{ matrix.python-version != '3.6' }}
         with:
           name: coverage
           path: coverage
