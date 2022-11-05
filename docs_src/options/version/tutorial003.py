@@ -7,7 +7,7 @@ __version__ = "0.1.0"
 
 def version_callback(value: bool):
     if value:
-        typer.echo(f"Awesome CLI Version: {__version__}")
+        print(f"Awesome CLI Version: {__version__}")
         raise typer.Exit()
 
 
@@ -23,7 +23,7 @@ def main(
         None, "--version", callback=version_callback, is_eager=True
     ),
 ):
-    typer.echo(f"Hello {name}")
+    print(f"Hello {name}")
 
 
 if __name__ == "__main__":

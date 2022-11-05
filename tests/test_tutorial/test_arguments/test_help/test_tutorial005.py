@@ -15,7 +15,7 @@ def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     assert "[OPTIONS] [NAME]" in result.output
-    assert "Arguments:" in result.output
+    assert "Arguments" in result.output
     assert "Who to greet" in result.output
     assert "[default: (Deadpoolio the amazing's name)]" in result.output
 

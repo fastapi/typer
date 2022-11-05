@@ -9,7 +9,7 @@ def top():
     """
     Top level command, form Typer
     """
-    typer.echo("The Typer app is at the top level")
+    print("The Typer app is at the top level")
 
 
 @app.callback()

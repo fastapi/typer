@@ -22,7 +22,7 @@ def users():
 
 @users_app.command()
 def create(name: str):
-    typer.echo(f"Creating user: {name}")
+    print(f"Creating user: {name}")
 
 
 if __name__ == "__main__":
