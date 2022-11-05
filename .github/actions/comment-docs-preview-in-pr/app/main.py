@@ -47,5 +47,7 @@ if __name__ == "__main__":
     if not use_pr:
         logging.error(f"No PR found for hash: {event.workflow_run.head_commit.id}")
         sys.exit(0)
-    use_pr.create_issue_comment(f"📝 Docs preview for commit {use_pr.head.sha} at: {settings.input_deploy_url}")
+    use_pr.create_issue_comment(
+        f"📝 Docs preview for commit {use_pr.head.sha} at: {settings.input_deploy_url}"
+    )
     logging.info("Finished")
