@@ -58,6 +58,7 @@ STYLE_COMMANDS_TABLE_SHOW_LINES = False
 STYLE_COMMANDS_TABLE_LEADING = 0
 STYLE_COMMANDS_TABLE_PAD_EDGE = False
 STYLE_COMMANDS_TABLE_PADDING = (0, 1)
+STYLE_COMMANDS_TABLE_EXPAND = True
 STYLE_COMMANDS_TABLE_BOX = ""
 STYLE_COMMANDS_TABLE_ROW_STYLES = None
 STYLE_COMMANDS_TABLE_BORDER_STYLE = None
@@ -478,13 +479,13 @@ def _print_commands_panel(
         "row_styles": STYLE_COMMANDS_TABLE_ROW_STYLES,
         "pad_edge": STYLE_COMMANDS_TABLE_PAD_EDGE,
         "padding": STYLE_COMMANDS_TABLE_PADDING,
+        "expand": STYLE_COMMANDS_TABLE_EXPAND,
     }
     box_style = getattr(box, t_styles.pop("box"), None)
 
     commands_table = Table(
         highlight=False,
         show_header=False,
-        expand=True,
         box=box_style,
         **t_styles,
     )
@@ -641,7 +642,12 @@ def rich_format_help(
             markup_mode=markup_mode,
             console=console,
         )
-        for panel_name, commands in panel_to_commands.items():
+
+        # panel_to_commands is sorted by commands across all panels
+        # Ordering panels by panel name (except for 'Commands' panel, always printed first)
+        sorted_panel_to_commands = dict(sorted(panel_to_commands.items()))
+
+        for panel_name, commands in sorted_panel_to_commands.items():
             if panel_name == COMMANDS_PANEL_TITLE:
                 # Already printed above
                 continue
