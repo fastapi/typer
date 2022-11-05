@@ -81,7 +81,7 @@ Modify the `complete_name()` function to receive a parameter of type `str`, it w
 
 Then we can check and return only the values that start with the incomplete value from the command line:
 
-```Python hl_lines="6 7 8 9 10 11"
+```Python hl_lines="6-11"
 {!../docs_src/options_autocompletion/tutorial003.py!}
 ```
 
