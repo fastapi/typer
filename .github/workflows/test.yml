@@ -17,7 +17,7 @@ jobs:
       fail-fast: false
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -36,8 +36,8 @@ jobs:
       - name: Test
         run: bash scripts/test.sh
         env:
-          COVERAGE_FILE: coverage/.coverage.${{ runner.os }}-py${{ matrix.python-version }}
-          CONTEXT: ${{ runner.os }}-py${{ matrix.python-version }}
+          COVERAGE_FILE: coverage/.coverage.${{ runner.os }}-py${{ matrix.python-version }}-click-7-${{ matrix.click-7 }}
+          CONTEXT: ${{ runner.os }}-py${{ matrix.python-version }}-click-7-${{ matrix.click-7 }}
       - name: Store coverage files
         uses: actions/upload-artifact@v3
         with:
