@@ -49,7 +49,7 @@ Error: Invalid value for '[%Y-%m-%d|%Y-%m-%dT%H:%M:%S|%Y-%m-%d %H:%M:%S]': inval
 
 You can also customize the formats received for the `datetime` with the `formats` parameter.
 
-`formats` receives a list of strings with the date formats that would be passed to <a href="https://docs.python.org/3/library/datetime.html#datetime.date.strftime" class="external-link" target="_blank">datetime.strptime()</a>.
+`formats` receives a list of strings with the date formats that would be passed to <a href="https://docs.python.org/3/library/datetime.html#datetime.datetime.strptime" class="external-link" target="_blank">datetime.strptime()</a>.
 
 For example, let's imagine that you want to accept an ISO formatted datetime, but for some strange reason, you also want to accept a format with:
 
