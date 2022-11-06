@@ -12,12 +12,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9]
+        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11"]
         click-7: [true, false]
       fail-fast: false
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -25,14 +25,55 @@ jobs:
       - name: Install Flit
         run: pip install flit
       - name: Install Dependencies
-        run: flit install --deps=develop --symlink
+        if: ${{ matrix.python-version != '3.6' }}
+        run: python -m flit install --symlink
+      - name: Install Dependencies
+        if: ${{ matrix.python-version == '3.6' }}
+        # This doesn't install the editable install, so coverage doesn't get subprocesses
+        run: python -m pip install ".[test]"
       - name: Install Click 7
         if: matrix.click-7
         run: pip install "click<8.0.0"
       - name: Lint
         if: ${{ matrix.python-version != '3.6' && matrix.click-7 == false }}
         run: bash scripts/lint.sh
+      - run: mkdir coverage
       - name: Test
         run: bash scripts/test.sh
-      - name: Upload coverage
-        uses: codecov/codecov-action@v3
+        env:
+          COVERAGE_FILE: coverage/.coverage.${{ runner.os }}-py${{ matrix.python-version }}-click-7-${{ matrix.click-7 }}
+          CONTEXT: ${{ runner.os }}-py${{ matrix.python-version }}-click-7-${{ matrix.click-7 }}
+      - name: Store coverage files
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage
+          path: coverage
+  coverage-combine:
+    needs: [test]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+
+      - name: Get coverage files
+        uses: actions/download-artifact@v3
+        with:
+          name: coverage
+          path: coverage
+
+      - run: pip install coverage[toml]
+
+      - run: ls -la coverage
+      - run: coverage combine coverage
+      - run: coverage report
+      - run: coverage html --show-contexts --title "Coverage for ${{ github.sha }}"
+
+      - name: Store coverage HTML
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-html
+          path: htmlcov

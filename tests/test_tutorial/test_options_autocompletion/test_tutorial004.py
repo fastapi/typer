@@ -1,15 +1,11 @@
 import os
 import subprocess
 
-import typer
 from typer.testing import CliRunner
 
-from docs_src.options.autocompletion import tutorial009 as mod
+from docs_src.options_autocompletion import tutorial004 as mod
 
 runner = CliRunner()
-
-app = typer.Typer()
-app.command()(mod.main)
 
 
 def test_completion():
@@ -20,23 +16,20 @@ def test_completion():
         encoding="utf-8",
         env={
             **os.environ,
-            "_TUTORIAL009.PY_COMPLETE": "complete_zsh",
-            "_TYPER_COMPLETE_ARGS": "tutorial009.py --name Sebastian --name ",
+            "_TUTORIAL004.PY_COMPLETE": "complete_zsh",
+            "_TYPER_COMPLETE_ARGS": "tutorial004_aux.py --name ",
             "_TYPER_COMPLETE_TESTING": "True",
         },
     )
     assert '"Camila":"The reader of books."' in result.stdout
     assert '"Carlos":"The writer of scripts."' in result.stdout
-    assert '"Sebastian":"The type hints guy."' not in result.stdout
-    # TODO: when deprecating Click 7, remove second option
-    assert "[]" in result.stderr or "['--name', 'Sebastian', '--name']" in result.stderr
+    assert '"Sebastian":"The type hints guy."' in result.stdout
 
 
 def test_1():
-    result = runner.invoke(app, ["--name", "Camila", "--name", "Sebastian"])
+    result = runner.invoke(mod.app, ["--name", "Camila"])
     assert result.exit_code == 0
     assert "Hello Camila" in result.output
-    assert "Hello Sebastian" in result.output
 
 
 def test_script():
