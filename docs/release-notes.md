@@ -1,5 +1,6 @@
 ## Latest Changes
 
+* ✏️ Add quotes to package name that includes brackets in docs. PR [#475](https://github.com/tiangolo/typer/pull/475) by [@gjolga](https://github.com/gjolga).
 
 ## 0.7.0
 
