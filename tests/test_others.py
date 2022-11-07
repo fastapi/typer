@@ -1,5 +1,6 @@
 import os
 import subprocess
+import sys
 from pathlib import Path
 from unittest import mock
 
@@ -97,7 +98,7 @@ def test_callback_3_untyped_parameters():
 def test_completion_untyped_parameters():
     file_path = Path(__file__).parent / "assets/completion_no_types.py"
     result = subprocess.run(
-        ["coverage", "run", str(file_path)],
+        [sys.executable, "-m", "coverage", "run", str(file_path)],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -119,7 +120,7 @@ def test_completion_untyped_parameters():
     assert '"Carlos":"The writer of scripts."' in result.stdout
 
     result = subprocess.run(
-        ["coverage", "run", str(file_path)],
+        [sys.executable, "-m", "coverage", "run", str(file_path)],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -130,7 +131,7 @@ def test_completion_untyped_parameters():
 def test_completion_untyped_parameters_different_order_correct_names():
     file_path = Path(__file__).parent / "assets/completion_no_types_order.py"
     result = subprocess.run(
-        ["coverage", "run", str(file_path)],
+        [sys.executable, "-m", "coverage", "run", str(file_path)],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -152,7 +153,7 @@ def test_completion_untyped_parameters_different_order_correct_names():
     assert '"Carlos":"The writer of scripts."' in result.stdout
 
     result = subprocess.run(
-        ["coverage", "run", str(file_path)],
+        [sys.executable, "-m", "coverage", "run", str(file_path)],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",

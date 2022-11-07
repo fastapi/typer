@@ -1,5 +1,6 @@
 import os
 import subprocess
+import sys
 
 import pytest
 from typer.testing import CliRunner
@@ -90,7 +91,7 @@ def test_scripts(mod):
 
     for module in [mod, items, users]:
         result = subprocess.run(
-            ["coverage", "run", module.__file__, "--help"],
+            [sys.executable, "-m", "coverage", "run", module.__file__, "--help"],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             encoding="utf-8",
