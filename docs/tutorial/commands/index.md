@@ -76,7 +76,7 @@ When you use `typer.run()`, **Typer** is doing more or less the same as above, i
 
     In our case, this decorator tells **Typer** that the function below is a "`command`".
 
-Both ways, with `typer.run()` and creating the explicit application, achieve the same.
+Both ways, with `typer.run()` and creating the explicit application, achieve almost the same.
 
 !!! tip
     If your use case is solved with just `typer.run()`, that's fine, you don't have to create the explicit `app` and use `@app.command()`, etc.
@@ -113,6 +113,44 @@ Options:
 ```
 
 </div>
+
+## CLI application completion
+
+There's a little detail that is worth noting here.
+
+To get shell/tab completion, it's necessary to build a package that you and your users can install and **call directly**.
+
+So instead of running a Python script like:
+
+<div class="termy">
+
+```console
+$ python main.py
+
+✨ Some magic here ✨
+```
+
+</div>
+
+...It would be called like:
+
+<div class="termy">
+
+```console
+$ magic-app
+
+✨ Some magic here ✨
+```
+
+</div>
+
+Having a standalone program like that allows setting up shell/tab completion.
+
+The first step to be able to create an installable package like that is to use an explicit `typer.Typer()` app.
+
+Later you can learn all the process to create a standalone CLI application and [Build a Package](../package.md){.internal-link target=_blank}.
+
+But for now, it's just good to know that you are on that path. 😎
 
 ## A CLI application with multiple commands
 

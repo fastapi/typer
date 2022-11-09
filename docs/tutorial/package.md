@@ -49,7 +49,7 @@ Add `typer[all]` to your dependencies:
 <div class="termy">
 
 ```console
-$ poetry add typer[all]
+$ poetry add "typer[all]"
 
 // It creates a virtual environment for your project
 Creating virtualenv rick-portal-gun-w31dJa0b-py3.6 in /home/rick/.cache/pypoetry/virtualenvs

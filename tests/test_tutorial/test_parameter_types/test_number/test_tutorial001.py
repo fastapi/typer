@@ -1,4 +1,5 @@
 import subprocess
+import sys
 
 import typer
 import typer.core
@@ -90,7 +91,7 @@ def test_negative_score():
 
 def test_script():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--help"],
+        [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
