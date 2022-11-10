@@ -10,7 +10,7 @@ Typer will accept any string from the following formats:
 
 * `%Y-%m-%d`
 * `%Y-%m-%dT%H:%M:%S`
-* `%Y-%m%d %H:%M:%S`
+* `%Y-%m-%d %H:%M:%S`
 
 Check it:
 
