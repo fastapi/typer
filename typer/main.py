@@ -1044,7 +1044,7 @@ def get_param_completion(
     return wrapper
 
 
-def run(function: Callable[..., Any], **kwargs) -> None:
+def run(function: Callable[..., Any], **kwargs: Dict[str, Any]) -> None:
     kwargs.setdefault("add_completion", False)
     app = Typer(**kwargs)
     app.command()(function)
