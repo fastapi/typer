@@ -1045,7 +1045,7 @@ def get_param_completion(
 
 
 def run(function: Callable[..., Any], **kwargs) -> None:
-    kwargs.setdefault('add_completion', False)
+    kwargs.setdefault("add_completion", False)
     app = Typer(**kwargs)
     app.command()(function)
     app()
