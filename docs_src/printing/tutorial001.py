@@ -1,5 +1,5 @@
-from rich import print
 import typer
+from rich import print
 
 data = {
     "name": "Rick",

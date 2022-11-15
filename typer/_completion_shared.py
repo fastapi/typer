@@ -5,16 +5,13 @@ import sys
 from enum import Enum
 from pathlib import Path
 from typing import Optional, Tuple
-from typing import Optional
+
 import click
 
 try:
     import shellingham
 except ImportError:  # pragma: nocover
     shellingham = None
-
-
-
 
 
 class Shells(str, Enum):

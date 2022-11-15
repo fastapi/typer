@@ -1,7 +1,7 @@
 import time
 
-from rich.progress import track
 import typer
+from rich.progress import track
 
 
 def main():

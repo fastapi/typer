@@ -1,7 +1,7 @@
 from typing import List
 
-from rich.console import Console
 import typer
+from rich.console import Console
 
 valid_completion_items = [
     ("Camila", "The reader of books."),
