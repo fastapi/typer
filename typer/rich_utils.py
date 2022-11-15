@@ -162,8 +162,7 @@ def _make_rich_rext(
         return Markdown(text, style=style)
     if markup_mode == MARKUP_MODE_RICH:
         return highlighter(Text.from_markup(text, style=style))
-    else:
-        return highlighter(Text(text, style=style))
+    return highlighter(Text(text, style=style))
 
 
 @group()

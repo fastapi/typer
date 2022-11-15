@@ -5,7 +5,7 @@ import sys
 from enum import Enum
 from pathlib import Path
 from typing import Optional, Tuple
-
+from typing import Optional
 import click
 
 try:
@@ -14,7 +14,7 @@ except ImportError:  # pragma: nocover
     shellingham = None
 
 
-from typing import Optional
+
 
 
 class Shells(str, Enum):
@@ -92,7 +92,7 @@ def get_completion_script(*, prog_name: str, complete_var: str, shell: str) -> s
     return (
         script
         % dict(
-            complete_func="_{}_completion".format(cf_name),
+            complete_func=f"_{cf_name}_completion",
             prog_name=prog_name,
             autocomplete_var=complete_var,
         )
@@ -224,21 +224,20 @@ def install(
             prog_name=prog_name, complete_var=complete_var, shell=shell
         )
         return shell, installed_path
-    elif shell == "zsh":
+    if shell == "zsh":
         installed_path = install_zsh(
             prog_name=prog_name, complete_var=complete_var, shell=shell
         )
         return shell, installed_path
-    elif shell == "fish":
+    if shell == "fish":
         installed_path = install_fish(
             prog_name=prog_name, complete_var=complete_var, shell=shell
         )
         return shell, installed_path
-    elif shell in {"powershell", "pwsh"}:
+    if shell in {"powershell", "pwsh"}:
         installed_path = install_powershell(
             prog_name=prog_name, complete_var=complete_var, shell=shell
         )
         return shell, installed_path
-    else:
-        click.echo(f"Shell {shell} is not supported.")
-        raise click.exceptions.Exit(1)
+    click.echo(f"Shell {shell} is not supported.")
+    raise click.exceptions.Exit(1)

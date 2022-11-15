@@ -1,5 +1,5 @@
-import typer
 from rich.console import Console
+import typer
 
 err_console = Console(stderr=True)
 

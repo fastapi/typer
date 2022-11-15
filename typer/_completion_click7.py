@@ -107,11 +107,11 @@ def do_powershell_complete(cli: click.Command, prog_name: str) -> bool:
 def do_shell_complete(*, cli: click.Command, prog_name: str, shell: str) -> bool:
     if shell == "bash":
         return do_bash_complete(cli, prog_name)
-    elif shell == "zsh":
+    if shell == "zsh":
         return do_zsh_complete(cli, prog_name)
-    elif shell == "fish":
+    if shell == "fish":
         return do_fish_complete(cli, prog_name)
-    elif shell in {"powershell", "pwsh"}:
+    if shell in {"powershell", "pwsh"}:
         return do_powershell_complete(cli, prog_name)
     return False
 
@@ -130,7 +130,7 @@ def handle_shell_complete(
             )
         )
         return True
-    elif command == "complete":
+    if command == "complete":
         return do_shell_complete(cli=cli, prog_name=prog_name, shell=shell)
     click.echo(f'Completion instruction "{command}" not supported.', err=True)
     return False

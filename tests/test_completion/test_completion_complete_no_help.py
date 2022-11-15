@@ -52,7 +52,7 @@ def test_completion_complete_subcommand_powershell():
             "_TYPER_COMPLETE_TESTING": "True",
         },
     )
-    assert ("create::: \ndelete::: ") in result.stdout
+    assert "create::: \ndelete::: " in result.stdout
 
 
 def test_completion_complete_subcommand_pwsh():
@@ -68,4 +68,4 @@ def test_completion_complete_subcommand_pwsh():
             "_TYPER_COMPLETE_TESTING": "True",
         },
     )
-    assert ("create::: \ndelete::: ") in result.stdout
+    assert "create::: \ndelete::: " in result.stdout

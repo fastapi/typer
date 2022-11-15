@@ -352,7 +352,7 @@ def get_command(typer_instance: Typer) -> click.Command:
             click_command.params.append(click_install_param)
             click_command.params.append(click_show_param)
         return click_command
-    elif len(typer_instance.registered_commands) == 1:
+    if len(typer_instance.registered_commands) == 1:
         # Create a single Command
         single_command = typer_instance.registered_commands[0]
 
@@ -691,7 +691,7 @@ def get_click_type(
 ) -> click.ParamType:
     if annotation == str:
         return click.STRING
-    elif annotation == int:
+    if annotation == int:
         if parameter_info.min is not None or parameter_info.max is not None:
             min_ = None
             max_ = None
@@ -700,24 +700,22 @@ def get_click_type(
             if parameter_info.max is not None:
                 max_ = int(parameter_info.max)
             return click.IntRange(min=min_, max=max_, clamp=parameter_info.clamp)
-        else:
-            return click.INT
-    elif annotation == float:
+        return click.INT
+    if annotation == float:
         if parameter_info.min is not None or parameter_info.max is not None:
             return click.FloatRange(
                 min=parameter_info.min,
                 max=parameter_info.max,
                 clamp=parameter_info.clamp,
             )
-        else:
-            return click.FLOAT
-    elif annotation == bool:
+        return click.FLOAT
+    if annotation == bool:
         return click.BOOL
-    elif annotation == UUID:
+    if annotation == UUID:
         return click.UUID
-    elif annotation == datetime:
+    if annotation == datetime:
         return click.DateTime(formats=parameter_info.formats)
-    elif (
+    if (
         annotation == Path
         or parameter_info.allow_dash
         or parameter_info.path_type
@@ -733,7 +731,7 @@ def get_click_type(
             allow_dash=parameter_info.allow_dash,
             path_type=parameter_info.path_type,
         )
-    elif lenient_issubclass(annotation, FileTextWrite):
+    if lenient_issubclass(annotation, FileTextWrite):
         return click.File(
             mode=parameter_info.mode or "w",
             encoding=parameter_info.encoding,
@@ -741,7 +739,7 @@ def get_click_type(
             lazy=parameter_info.lazy,
             atomic=parameter_info.atomic,
         )
-    elif lenient_issubclass(annotation, FileText):
+    if lenient_issubclass(annotation, FileText):
         return click.File(
             mode=parameter_info.mode or "r",
             encoding=parameter_info.encoding,
@@ -749,7 +747,7 @@ def get_click_type(
             lazy=parameter_info.lazy,
             atomic=parameter_info.atomic,
         )
-    elif lenient_issubclass(annotation, FileBinaryRead):
+    if lenient_issubclass(annotation, FileBinaryRead):
         return click.File(
             mode=parameter_info.mode or "rb",
             encoding=parameter_info.encoding,
@@ -757,7 +755,7 @@ def get_click_type(
             lazy=parameter_info.lazy,
             atomic=parameter_info.atomic,
         )
-    elif lenient_issubclass(annotation, FileBinaryWrite):
+    if lenient_issubclass(annotation, FileBinaryWrite):
         return click.File(
             mode=parameter_info.mode or "wb",
             encoding=parameter_info.encoding,
@@ -765,7 +763,7 @@ def get_click_type(
             lazy=parameter_info.lazy,
             atomic=parameter_info.atomic,
         )
-    elif lenient_issubclass(annotation, Enum):
+    if lenient_issubclass(annotation, Enum):
         return click.Choice(
             [item.value for item in annotation],
             case_sensitive=parameter_info.case_sensitive,
@@ -850,7 +848,7 @@ def get_click_param(
     if is_tuple:
         convertor = generate_tuple_convertor(main_type.__args__)
     if isinstance(parameter_info, OptionInfo):
-        if main_type is bool and not (parameter_info.is_flag is False):
+        if main_type is bool and not parameter_info.is_flag is False:
             is_flag = True
             # Click doesn't accept a flag of type bool, only None, and then it sets it
             # to bool internally
@@ -903,7 +901,7 @@ def get_click_param(
             ),
             convertor,
         )
-    elif isinstance(parameter_info, ArgumentInfo):
+    if isinstance(parameter_info, ArgumentInfo):
         param_decls = [param.name]
         nargs = None
         if is_list:

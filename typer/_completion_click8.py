@@ -93,8 +93,7 @@ class ZshComplete(click.shell_completion.ZshComplete):
         # return f"{item.type}\n{item.value}\n{item.help if item.help else '_'}"
         if item.help:
             return f'"{escape(item.value)}":"{escape(item.help)}"'
-        else:
-            return f'"{escape(item.value)}"'
+        return f'"{escape(item.value)}"'
 
     def complete(self) -> str:
         args, incomplete = self.get_completion_args()
@@ -103,8 +102,7 @@ class ZshComplete(click.shell_completion.ZshComplete):
         if res:
             args_str = "\n".join(res)
             return f"_arguments '*: :(({args_str}))'"
-        else:
-            return "_files"
+        return "_files"
 
 
 class FishComplete(click.shell_completion.FishComplete):
@@ -139,8 +137,7 @@ class FishComplete(click.shell_completion.FishComplete):
         if item.help:
             formatted_help = re.sub(r"\s", " ", item.help)
             return f"{item.value}\t{formatted_help}"
-        else:
-            return f"{item.value}"
+        return f"{item.value}"
 
     def complete(self) -> str:
         complete_action = os.getenv("_TYPER_COMPLETE_FISH_ACTION", "")

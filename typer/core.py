@@ -400,7 +400,7 @@ class TyperArgument(click.core.Argument):
             return self.metavar
         var = (self.name or "").upper()
         if not self.required:
-            var = "[{}]".format(var)
+            var = f"[{var}]"
         type_var = self.type.get_metavar(self)
         if type_var:
             var += f":{type_var}"

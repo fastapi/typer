@@ -1,5 +1,5 @@
-import typer
 from rich import print
+import typer
 
 
 def main():

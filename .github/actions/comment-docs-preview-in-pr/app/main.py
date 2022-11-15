@@ -62,7 +62,7 @@ if __name__ == "__main__":
             "body": f"📝 Docs preview for commit {use_pr.head.sha} at: {settings.input_deploy_url}"
         },
     )
-    if not (200 <= response.status_code <= 300):
+    if not 200 <= response.status_code <= 300:
         logging.error(f"Error posting comment: {response.text}")
         sys.exit(1)
     logging.info("Finished")

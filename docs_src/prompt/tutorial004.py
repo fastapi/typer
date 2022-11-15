@@ -1,6 +1,5 @@
-import typer
 from rich.prompt import Prompt
-
+import typer
 
 def main():
     name = Prompt.ask("Enter your name :sunglasses:")

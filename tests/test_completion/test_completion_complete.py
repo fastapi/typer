@@ -71,7 +71,7 @@ def test_completion_complete_subcommand_zsh_files():
             "_TYPER_COMPLETE_TESTING": "True",
         },
     )
-    assert ("_files") in result.stdout
+    assert "_files" in result.stdout
 
 
 def test_completion_complete_subcommand_fish():
@@ -177,4 +177,4 @@ def test_completion_complete_subcommand_noshell():
             "_TYPER_COMPLETE_TESTING": "True",
         },
     )
-    assert ("") in result.stdout
+    assert "" in result.stdout

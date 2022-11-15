@@ -1,7 +1,7 @@
 import time
 
-import typer
 from rich.progress import Progress, SpinnerColumn, TextColumn
+import typer
 
 
 def main():
