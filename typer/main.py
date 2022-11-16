@@ -228,6 +228,7 @@ class Typer:
         no_args_is_help: bool = False,
         hidden: bool = False,
         deprecated: bool = False,
+        wrapper: Callable[[CommandFunctionType], CommandFunctionType] = lambda f: f,
         # Rich settings
         rich_help_panel: Union[str, None] = Default(None),
     ) -> Callable[[CommandFunctionType], CommandFunctionType]:
@@ -240,7 +241,7 @@ class Typer:
                     name=name,
                     cls=cls,
                     context_settings=context_settings,
-                    callback=f,
+                    callback=wrapper(f),
                     help=help,
                     epilog=epilog,
                     short_help=short_help,
