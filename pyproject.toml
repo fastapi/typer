@@ -67,7 +67,7 @@ all = [
     "colorama >=0.4.3,<0.5.0",
     "shellingham >=1.3.0,<2.0.0",
     "rich >=10.11.0,<13.0.0",
-    "typing_extensions >3.6.6; python_version < '3.8'"
+    "typing_extensions >3.6.6; python_version < '3.8'",
 ]
 
 [tool.isort]
