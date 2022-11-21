@@ -4,7 +4,7 @@ import inspect
 import sys
 from collections import defaultdict
 from os import getenv
-from typing import Any, DefaultDict, Dict, Iterable, List, Optional, Union
+from typing import IO, Any, DefaultDict, Dict, Iterable, List, Optional, Union
 
 import click
 from rich import box
@@ -692,3 +692,25 @@ def rich_abort_error() -> None:
     """Print richly formatted abort error."""
     console = _get_rich_console(stderr=True)
     console.print(ABORTED_TEXT, style=STYLE_ABORTED)
+
+
+def print(
+    *objects: Any,
+    sep: str = " ",
+    end: str = "\n",
+    file: Optional[IO[str]] = None,
+    flush: bool = False,
+) -> None:
+    r"""Print object(s) supplied via positional arguments.
+    This function has an identical signature to the built-in print.
+    For more advanced features, see the :class:`~rich.console.Console` class.
+    Args:
+        sep (str, optional): Separator between printed objects. Defaults to " ".
+        end (str, optional): Character to write at end of output. Defaults to "\\n".
+        file (IO[str], optional): File to write to, or None for stdout. Defaults to None.
+        flush (bool, optional): Has no effect as Rich always flushes output. Defaults to False.
+    """
+    from rich.console import Console
+
+    write_console = _get_rich_console() if file is None else Console(file=file)
+    return write_console.print(*objects, sep=sep, end=end)
