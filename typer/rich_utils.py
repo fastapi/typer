@@ -12,7 +12,7 @@ from rich.align import Align
 from rich.columns import Columns
 from rich.console import Console, RenderableType, group
 from rich.emoji import Emoji
-from rich.highlighter import RegexHighlighter
+from rich.highlighter import RegexHighlighter, ReprHighlighter
 from rich.markdown import Markdown
 from rich.padding import Padding
 from rich.panel import Panel
@@ -712,5 +712,7 @@ def print(
     """
     from rich.console import Console
 
-    write_console = _get_rich_console() if file is None else Console(file=file)
+    console = _get_rich_console()
+    console.highlighter = ReprHighlighter()
+    write_console = console if file is None else Console(file=file)
     return write_console.print(*objects, sep=sep, end=end)
