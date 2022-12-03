@@ -1,9 +1,12 @@
+import os
 import subprocess
+import sys
 
 import pytest
 from typer.testing import CliRunner
 
 from docs_src.subcommands import tutorial003
+from docs_src.subcommands.tutorial003 import items, users
 
 runner = CliRunner()
 
@@ -46,16 +49,28 @@ def test_items_create(app):
     result = runner.invoke(app, ["items", "create", "Wand"])
     assert result.exit_code == 0
     assert "Creating item: Wand" in result.output
+    # For coverage, becauses the monkeypatch above sometimes confuses coverage
+    result = runner.invoke(items.app, ["create", "Wand"])
+    assert result.exit_code == 0
+    assert "Creating item: Wand" in result.output
 
 
 def test_items_sell(app):
     result = runner.invoke(app, ["items", "sell", "Vase"])
     assert result.exit_code == 0
     assert "Selling item: Vase" in result.output
+    # For coverage, becauses the monkeypatch above sometimes confuses coverage
+    result = runner.invoke(items.app, ["sell", "Vase"])
+    assert result.exit_code == 0
+    assert "Selling item: Vase" in result.output
 
 
 def test_items_delete(app):
     result = runner.invoke(app, ["items", "delete", "Vase"])
+    assert result.exit_code == 0
+    assert "Deleting item: Vase" in result.output
+    # For coverage, becauses the monkeypatch above sometimes confuses coverage
+    result = runner.invoke(items.app, ["delete", "Vase"])
     assert result.exit_code == 0
     assert "Deleting item: Vase" in result.output
 
@@ -74,10 +89,18 @@ def test_users_create(app):
     result = runner.invoke(app, ["users", "create", "Camila"])
     assert result.exit_code == 0
     assert "Creating user: Camila" in result.output
+    # For coverage, becauses the monkeypatch above sometimes confuses coverage
+    result = runner.invoke(users.app, ["create", "Camila"])
+    assert result.exit_code == 0
+    assert "Creating user: Camila" in result.output
 
 
 def test_users_delete(app):
     result = runner.invoke(app, ["users", "delete", "Camila"])
+    assert result.exit_code == 0
+    assert "Deleting user: Camila" in result.output
+    # For coverage, becauses the monkeypatch above sometimes confuses coverage
+    result = runner.invoke(users.app, ["delete", "Camila"])
     assert result.exit_code == 0
     assert "Deleting user: Camila" in result.output
 
@@ -136,11 +159,15 @@ def test_lands_towns_burn(app):
 def test_scripts(mod):
     from docs_src.subcommands.tutorial003 import items, lands, reigns, towns, users
 
+    env = os.environ.copy()
+    env["PYTHONPATH"] = ":".join(list(tutorial003.__path__))
+
     for module in [mod, items, lands, reigns, towns, users]:
         result = subprocess.run(
-            ["coverage", "run", module.__file__, "--help"],
+            [sys.executable, "-m", "coverage", "run", module.__file__, "--help"],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             encoding="utf-8",
+            env=env,
         )
         assert "Usage" in result.stdout
