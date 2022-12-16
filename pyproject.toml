@@ -24,6 +24,9 @@ classifiers = [
     "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "License :: OSI Approved :: MIT License"
     ]
 requires = [
@@ -38,10 +41,10 @@ Documentation = "https://typer.tiangolo.com/"
 [tool.flit.metadata.requires-extra]
 test = [
     "shellingham >=1.3.0,<2.0.0",
-    "pytest >=4.4.0,<5.4.0",
-    "pytest-cov >=2.10.0,<3.0.0",
-    "coverage >=5.2,<6.0",
-    "pytest-xdist >=1.32.0,<2.0.0",
+    "pytest >=4.4.0,<8.0.0",
+    "pytest-cov >=2.10.0,<5.0.0",
+    "coverage >=6.2,<7.0",
+    "pytest-xdist >=1.32.0,<4.0.0",
     "pytest-sugar >=0.9.4,<0.10.0",
     "mypy ==0.910",
     "black >=22.3.0,<23.0.0",
@@ -52,6 +55,8 @@ doc = [
     "mkdocs >=1.1.2,<2.0.0",
     "mkdocs-material >=8.1.4,<9.0.0",
     "mdx-include >=1.4.1,<2.0.0",
+    "pillow >=9.3.0,<10.0.0",
+    "cairosvg >=2.5.2,<3.0.0",
 ]
 dev = [
     "autoflake >=1.3.1,<2.0.0",
@@ -72,3 +77,19 @@ skip_glob = [
     "docs_src/subcommands/tutorial003/lands.py",
     "docs_src/subcommands/tutorial003/main.py",
     ]
+
+[tool.pytest.ini_options]
+addopts = [
+  "--strict-config",
+  "--strict-markers",
+]
+xfail_strict = true
+junit_family = "xunit2"
+filterwarnings = [
+    "error",
+    # TODO: until I refactor completion to use the new shell_complete
+    "ignore:'autocompletion' is renamed to 'shell_complete'. The old name is deprecated and will be removed in Click 8.1. See the docs about 'Parameter' for information about new behavior.:DeprecationWarning:typer",
+    'ignore:starlette.middleware.wsgi is deprecated and will be removed in a future release\..*:DeprecationWarning:starlette',
+    # For pytest-xdist
+    'ignore::DeprecationWarning:xdist',
+]
