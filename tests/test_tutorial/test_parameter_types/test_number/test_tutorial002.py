@@ -1,4 +1,5 @@
 import subprocess
+import sys
 
 import typer
 from typer.testing import CliRunner
@@ -17,9 +18,8 @@ def test_invalid_id():
     # TODO: when deprecating Click 7, remove second option
 
     assert (
-        "Error: Invalid value for 'ID': 1002 is not in the range 0<=x<=1000"
-        in result.output
-        or "Error: Invalid value for 'ID': 1002 is not in the valid range of 0 to 1000."
+        "Invalid value for 'ID': 1002 is not in the range 0<=x<=1000" in result.output
+        or "Invalid value for 'ID': 1002 is not in the valid range of 0 to 1000."
         in result.output
     )
 
@@ -34,7 +34,7 @@ def test_clamped():
 
 def test_script():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--help"],
+        [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",

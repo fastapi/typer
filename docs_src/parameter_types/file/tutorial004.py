@@ -10,7 +10,7 @@ def main(file: typer.FileBinaryWrite = typer.Option(...)):
     # This is already bytes, it starts with b"
     second_line = b"la cig\xc3\xbce\xc3\xb1a trae al ni\xc3\xb1o"
     file.write(second_line)
-    typer.echo("Binary file written")
+    print("Binary file written")
 
 
 if __name__ == "__main__":

@@ -3,9 +3,9 @@ import typer
 
 def main(name: str, lastname: str, formal: bool = False):
     if formal:
-        typer.echo(f"Good day Ms. {name} {lastname}.")
+        print(f"Good day Ms. {name} {lastname}.")
     else:
-        typer.echo(f"Hello {name} {lastname}")
+        print(f"Hello {name} {lastname}")
 
 
 if __name__ == "__main__":
