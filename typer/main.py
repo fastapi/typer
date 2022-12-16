@@ -1044,7 +1044,7 @@ def get_param_completion(
     return wrapper
 
 
-def run(function: Callable[..., Any]) -> Any:
-    app = Typer()
+def run(function: Callable[..., Any]) -> None:
+    app = Typer(add_completion=False)
     app.command()(function)
     app()
