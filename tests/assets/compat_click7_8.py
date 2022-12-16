@@ -22,7 +22,7 @@ def main(
     """
     Say hello.
     """
-    typer.echo(f"Hello {name} {lastname}, it seems you have {age}, {nickname}")
+    print(f"Hello {name} {lastname}, it seems you have {age}, {nickname}")
 
 
 if __name__ == "__main__":

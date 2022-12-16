@@ -70,7 +70,7 @@ Here we are checking that the exit code is 0, as it is for programs that exit wi
 Then we check that the text printed to "standard output" contains the text that our CLI program prints.
 
 !!! tip
-    You could also check `result.stderr` for "standard error".
+    You could also check `result.stderr` for "standard error" independently from "standard output" if your `CliRunner` instance is created with the `mix_stderr=False` argument.
 
 !!! info
     If you need a refresher about what is "standard output" and "standard error" check the section in [Printing and Colors: "Standard Output" and "Standard Error"](printing.md#standard-output-and-standard-error){.internal-link target=_blank}.

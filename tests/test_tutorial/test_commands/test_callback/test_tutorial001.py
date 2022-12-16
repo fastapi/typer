@@ -1,5 +1,7 @@
 import subprocess
+import sys
 
+import typer.core
 from typer.testing import CliRunner
 
 from docs_src.commands.callback import tutorial001 as mod
@@ -13,7 +15,19 @@ def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     assert "Manage users in the awesome CLI app." in result.output
-    assert "--verbose / --no-verbose" in result.output
+    assert "--verbose" in result.output
+    assert "--no-verbose" in result.output
+
+
+def test_help_no_rich():
+    rich = typer.core.rich
+    typer.core.rich = None
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "Manage users in the awesome CLI app." in result.output
+    assert "--verbose" in result.output
+    assert "--no-verbose" in result.output
+    typer.core.rich = rich
 
 
 def test_create():
@@ -51,14 +65,14 @@ def test_wrong_verbose():
     assert result.exit_code != 0
     # TODO: when deprecating Click 7, remove second option
     assert (
-        "Error: No such option: --verbose" in result.output
-        or "Error: no such option: --verbose" in result.output
+        "No such option: --verbose" in result.output
+        or "no such option: --verbose" in result.output
     )
 
 
 def test_script():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--help"],
+        [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",

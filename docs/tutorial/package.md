@@ -49,7 +49,7 @@ Add `typer[all]` to your dependencies:
 <div class="termy">
 
 ```console
-$ poetry add typer[all]
+$ poetry add "typer[all]"
 
 // It creates a virtual environment for your project
 Creating virtualenv rick-portal-gun-w31dJa0b-py3.6 in /home/rick/.cache/pypoetry/virtualenvs
@@ -142,7 +142,7 @@ def load():
 ```
 
 !!! tip
-    As we are creating an installable Python package, there's no need to add a section with `if __name__ == "__main__:`.
+    As we are creating an installable Python package, there's no need to add a section with `if __name__ == "__main__":`.
 
 ## Modify the README
 
