@@ -4,10 +4,11 @@ from typing import Any, Dict, Tuple
 
 import click
 
+from ._compat_utils import _get_click_major
 from ._completion_shared import Shells, get_completion_script, install
 from .models import ParamMeta
 from .params import Option
-from .utils import _get_click_major, get_params_from_function
+from .utils import get_params_from_function
 
 try:
     import shellingham

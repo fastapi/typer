@@ -25,7 +25,7 @@ def sub():
     """
     A single-command Typer sub app
     """
-    typer.echo("Typer is now below Click, the Click app is the top level")
+    print("Typer is now below Click, the Click app is the top level")
 
 
 typer_click_object = typer.main.get_command(app)

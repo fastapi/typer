@@ -1,14 +1,18 @@
 import typer
+from rich import print
+
+data = {
+    "name": "Rick",
+    "age": 42,
+    "items": [{"name": "Portal Gun"}, {"name": "Plumbus"}],
+    "active": True,
+    "affiliation": None,
+}
 
 
-def main(good: bool = True):
-    message_start = "everything is "
-    if good:
-        ending = typer.style("good", fg=typer.colors.GREEN, bold=True)
-    else:
-        ending = typer.style("bad", fg=typer.colors.WHITE, bg=typer.colors.RED)
-    message = message_start + ending
-    typer.echo(message)
+def main():
+    print("Here's the data")
+    print(data)
 
 
 if __name__ == "__main__":
