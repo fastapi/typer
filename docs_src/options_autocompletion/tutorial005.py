@@ -13,6 +13,10 @@ def complete_name(incomplete: str):
             yield (name, help_text)
 
 
+app = typer.Typer()
+
+
+@app.command()
 def main(
     name: str = typer.Option(
         "World", help="The name to say hi to.", autocompletion=complete_name
@@ -22,4 +26,4 @@ def main(
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()

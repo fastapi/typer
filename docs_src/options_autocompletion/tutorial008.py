@@ -12,14 +12,17 @@ valid_completion_items = [
 err_console = Console(stderr=True)
 
 
-def complete_name(ctx: typer.Context, args: List[str], incomplete: str):
+def complete_name(args: List[str], incomplete: str):
     err_console.print(f"{args}")
-    names = ctx.params.get("name") or []
     for name, help_text in valid_completion_items:
-        if name.startswith(incomplete) and name not in names:
+        if name.startswith(incomplete):
             yield (name, help_text)
 
 
+app = typer.Typer()
+
+
+@app.command()
 def main(
     name: List[str] = typer.Option(
         ["World"], help="The name to say hi to.", autocompletion=complete_name
@@ -30,4 +33,4 @@ def main(
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()
