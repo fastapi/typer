@@ -6,9 +6,9 @@ def main(
     formal: bool = typer.Option(False, "--formal", "-f"),
 ):
     if formal:
-        typer.echo(f"Good day Ms. {name}.")
+        print(f"Good day Ms. {name}.")
     else:
-        typer.echo(f"Hello {name}")
+        print(f"Hello {name}")
 
 
 if __name__ == "__main__":
