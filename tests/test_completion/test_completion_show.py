@@ -1,12 +1,13 @@
 import os
 import subprocess
+import sys
 
 from docs_src.commands.index import tutorial001 as mod
 
 
 def test_completion_show_no_shell():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--show-completion"],
+        [sys.executable, "-m", "coverage", "run", mod.__file__, "--show-completion"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -25,7 +26,15 @@ def test_completion_show_no_shell():
 
 def test_completion_show_bash():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--show-completion", "bash"],
+        [
+            sys.executable,
+            "-m",
+            "coverage",
+            "run",
+            mod.__file__,
+            "--show-completion",
+            "bash",
+        ],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -43,7 +52,15 @@ def test_completion_show_bash():
 
 def test_completion_source_zsh():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--show-completion", "zsh"],
+        [
+            sys.executable,
+            "-m",
+            "coverage",
+            "run",
+            mod.__file__,
+            "--show-completion",
+            "zsh",
+        ],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -58,7 +75,15 @@ def test_completion_source_zsh():
 
 def test_completion_source_fish():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--show-completion", "fish"],
+        [
+            sys.executable,
+            "-m",
+            "coverage",
+            "run",
+            mod.__file__,
+            "--show-completion",
+            "fish",
+        ],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -73,7 +98,15 @@ def test_completion_source_fish():
 
 def test_completion_source_powershell():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--show-completion", "powershell"],
+        [
+            sys.executable,
+            "-m",
+            "coverage",
+            "run",
+            mod.__file__,
+            "--show-completion",
+            "powershell",
+        ],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -91,7 +124,15 @@ def test_completion_source_powershell():
 
 def test_completion_source_pwsh():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--show-completion", "pwsh"],
+        [
+            sys.executable,
+            "-m",
+            "coverage",
+            "run",
+            mod.__file__,
+            "--show-completion",
+            "pwsh",
+        ],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",

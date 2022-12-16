@@ -1,12 +1,13 @@
 import os
 import subprocess
+import sys
 from pathlib import Path
 
 
 def test_traceback_no_rich():
     file_path = Path(__file__).parent / "assets/type_error_no_rich.py"
     result = subprocess.run(
-        ["coverage", "run", str(file_path)],
+        [sys.executable, "-m", "coverage", "run", str(file_path)],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -26,7 +27,7 @@ def test_traceback_no_rich():
 def test_traceback_no_rich_short_disable():
     file_path = Path(__file__).parent / "assets/type_error_no_rich_short_disable.py"
     result = subprocess.run(
-        ["coverage", "run", str(file_path)],
+        [sys.executable, "-m", "coverage", "run", str(file_path)],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -46,7 +47,7 @@ def test_traceback_no_rich_short_disable():
 def test_unmodified_traceback():
     file_path = Path(__file__).parent / "assets/type_error_normal_traceback.py"
     result = subprocess.run(
-        ["coverage", "run", str(file_path)],
+        [sys.executable, "-m", "coverage", "run", str(file_path)],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
