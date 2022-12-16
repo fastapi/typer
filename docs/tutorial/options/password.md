@@ -42,8 +42,8 @@ Check it:
 $ python main.py Camila
 
 // It prompts for the password, but doesn't show anything when you type
-# Password: $ 
-# Repeat for confirmation: $ 
+# Password: $
+# Repeat for confirmation: $
 
 // Let's imagine the password typed was "typerrocks"
 Hello Camila. Doing something very secure with password.

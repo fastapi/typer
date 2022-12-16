@@ -1,8 +1,13 @@
 import inspect
+import os
+import sys
+import traceback
 from datetime import datetime
 from enum import Enum
 from functools import update_wrapper, wraps
 from pathlib import Path
+from traceback import FrameSummary, StackSummary
+from types import TracebackType
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, Union
 from uuid import UUID
 import asyncio
@@ -10,7 +15,7 @@ import asyncio
 import click
 
 from .completion import get_completion_inspect_parameters
-from .core import TyperArgument, TyperCommand, TyperGroup, TyperOption
+from .core import MarkupMode, TyperArgument, TyperCommand, TyperGroup, TyperOption
 from .models import (
     AnyType,
     ArgumentInfo,
@@ -19,6 +24,7 @@ from .models import (
     CommandInfo,
     Default,
     DefaultPlaceholder,
+    DeveloperExceptionConfig,
     FileBinaryRead,
     FileBinaryWrite,
     FileText,
@@ -33,6 +39,73 @@ from .models import (
 )
 from .utils import get_params_from_function
 
+try:
+    import rich
+    from rich.console import Console
+    from rich.traceback import Traceback
+
+    console_stderr = Console(stderr=True)
+
+except ImportError:  # pragma: nocover
+    rich = None  # type: ignore
+
+_original_except_hook = sys.excepthook
+_typer_developer_exception_attr_name = "__typer_developer_exception__"
+
+
+def except_hook(
+    exc_type: Type[BaseException], exc_value: BaseException, tb: TracebackType
+) -> None:
+    exception_config: Union[DeveloperExceptionConfig, None] = getattr(
+        exc_value, _typer_developer_exception_attr_name, None
+    )
+    standard_traceback = os.getenv("_TYPER_STANDARD_TRACEBACK")
+    if (
+        standard_traceback
+        or not exception_config
+        or not exception_config.pretty_exceptions_enable
+    ):
+        _original_except_hook(exc_type, exc_value, tb)
+        return
+    typer_path = os.path.dirname(__file__)
+    click_path = os.path.dirname(click.__file__)
+    supress_internal_dir_names = [typer_path, click_path]
+    exc = exc_value
+    if rich:
+        rich_tb = Traceback.from_exception(
+            type(exc),
+            exc,
+            exc.__traceback__,
+            show_locals=exception_config.pretty_exceptions_show_locals,
+            suppress=supress_internal_dir_names,
+        )
+        console_stderr.print(rich_tb)
+        return
+    tb_exc = traceback.TracebackException.from_exception(exc)
+    stack: List[FrameSummary] = []
+    for frame in tb_exc.stack:
+        if any(
+            [frame.filename.startswith(path) for path in supress_internal_dir_names]
+        ):
+            if not exception_config.pretty_exceptions_short:
+                # Hide the line for internal libraries, Typer and Click
+                stack.append(
+                    traceback.FrameSummary(
+                        filename=frame.filename,
+                        lineno=frame.lineno,
+                        name=frame.name,
+                        line="",
+                    )
+                )
+        else:
+            stack.append(frame)
+    # Type ignore ref: https://github.com/python/typeshed/pull/8244
+    final_stack_summary = StackSummary.from_list(stack)  # type: ignore
+    tb_exc.stack = final_stack_summary
+    for line in tb_exc.format():
+        print(line, file=sys.stderr)
+    return
+
 
 def get_install_completion_arguments() -> Tuple[click.Parameter, click.Parameter]:
     install_param, show_param = get_completion_inspect_parameters()
@@ -46,7 +119,7 @@ class Typer:
         self,
         *,
         name: Optional[str] = Default(None),
-        cls: Optional[Type[click.Command]] = Default(None),
+        cls: Optional[Type[TyperGroup]] = Default(None),
         invoke_without_command: bool = Default(False),
         no_args_is_help: bool = Default(False),
         subcommand_metavar: Optional[str] = Default(None),
@@ -63,8 +136,19 @@ class Typer:
         hidden: bool = Default(False),
         deprecated: bool = Default(False),
         add_completion: bool = True,
+        # Rich settings
+        rich_markup_mode: MarkupMode = None,
+        rich_help_panel: Union[str, None] = Default(None),
+        pretty_exceptions_enable: bool = True,
+        pretty_exceptions_show_locals: bool = True,
+        pretty_exceptions_short: bool = True,
     ):
         self._add_completion = add_completion
+        self.rich_markup_mode: MarkupMode = rich_markup_mode
+        self.rich_help_panel = rich_help_panel
+        self.pretty_exceptions_enable = pretty_exceptions_enable
+        self.pretty_exceptions_show_locals = pretty_exceptions_show_locals
+        self.pretty_exceptions_short = pretty_exceptions_short
         self.info = TyperInfo(
             name=name,
             cls=cls,
@@ -91,7 +175,7 @@ class Typer:
         self,
         name: Optional[str] = Default(None),
         *,
-        cls: Optional[Type[click.Command]] = Default(None),
+        cls: Optional[Type[TyperGroup]] = Default(None),
         invoke_without_command: bool = Default(False),
         no_args_is_help: bool = Default(False),
         subcommand_metavar: Optional[str] = Default(None),
@@ -106,6 +190,8 @@ class Typer:
         add_help_option: bool = Default(True),
         hidden: bool = Default(False),
         deprecated: bool = Default(False),
+        # Rich settings
+        rich_help_panel: Union[str, None] = Default(None),
     ) -> Callable[[CommandFunctionType], CommandFunctionType]:
         def decorator(f: CommandFunctionType) -> CommandFunctionType:
             self.registered_callback = TyperInfo(
@@ -125,6 +211,7 @@ class Typer:
                 add_help_option=add_help_option,
                 hidden=hidden,
                 deprecated=deprecated,
+                rich_help_panel=rich_help_panel,
             )
             return f
 
@@ -134,7 +221,7 @@ class Typer:
         self,
         name: Optional[str] = None,
         *,
-        cls: Optional[Type[click.Command]] = None,
+        cls: Optional[Type[TyperCommand]] = None,
         context_settings: Optional[Dict[Any, Any]] = None,
         help: Optional[str] = None,
         epilog: Optional[str] = None,
@@ -144,6 +231,8 @@ class Typer:
         no_args_is_help: bool = False,
         hidden: bool = False,
         deprecated: bool = False,
+        # Rich settings
+        rich_help_panel: Union[str, None] = Default(None),
     ) -> Callable[[CommandFunctionType], CommandFunctionType]:
         if cls is None:
             cls = TyperCommand
@@ -163,6 +252,8 @@ class Typer:
                     no_args_is_help=no_args_is_help,
                     hidden=hidden,
                     deprecated=deprecated,
+                    # Rich settings
+                    rich_help_panel=rich_help_panel,
                 )
             )
             return f
@@ -228,7 +319,7 @@ class Typer:
         typer_instance: "Typer",
         *,
         name: Optional[str] = Default(None),
-        cls: Optional[Type[click.Command]] = Default(None),
+        cls: Optional[Type[TyperGroup]] = Default(None),
         invoke_without_command: bool = Default(False),
         no_args_is_help: bool = Default(False),
         subcommand_metavar: Optional[str] = Default(None),
@@ -244,6 +335,8 @@ class Typer:
         add_help_option: bool = Default(True),
         hidden: bool = Default(False),
         deprecated: bool = Default(False),
+        # Rich settings
+        rich_help_panel: Union[str, None] = Default(None),
     ) -> None:
         self.registered_groups.append(
             TyperInfo(
@@ -264,15 +357,40 @@ class Typer:
                 add_help_option=add_help_option,
                 hidden=hidden,
                 deprecated=deprecated,
+                rich_help_panel=rich_help_panel,
             )
         )
 
     def __call__(self, *args: Any, **kwargs: Any) -> Any:
-        return get_command(self)(*args, **kwargs)
+        if sys.excepthook != except_hook:
+            sys.excepthook = except_hook
+        try:
+            return get_command(self)(*args, **kwargs)
+        except Exception as e:
+            # Set a custom attribute to tell the hook to show nice exceptions for user
+            # code. An alternative/first implementation was a custom exception with
+            # raise custom_exc from e
+            # but that means the last error shown is the custom exception, not the
+            # actual error. This trick improves developer experience by showing the
+            # actual error last.
+            setattr(
+                e,
+                _typer_developer_exception_attr_name,
+                DeveloperExceptionConfig(
+                    pretty_exceptions_enable=self.pretty_exceptions_enable,
+                    pretty_exceptions_show_locals=self.pretty_exceptions_show_locals,
+                    pretty_exceptions_short=self.pretty_exceptions_short,
+                ),
+            )
+            raise e
 
 
-def get_group(typer_instance: Typer) -> click.Command:
-    group = get_group_from_info(TyperInfo(typer_instance))
+def get_group(typer_instance: Typer) -> TyperGroup:
+    group = get_group_from_info(
+        TyperInfo(typer_instance),
+        pretty_exceptions_short=typer_instance.pretty_exceptions_short,
+        rich_markup_mode=typer_instance.rich_markup_mode,
+    )
     return group
 
 
@@ -286,14 +404,25 @@ def get_command(typer_instance: Typer) -> click.Command:
         or len(typer_instance.registered_commands) > 1
     ):
         # Create a Group
-        click_command = get_group(typer_instance)
+        click_command: click.Command = get_group(typer_instance)
         if typer_instance._add_completion:
             click_command.params.append(click_install_param)
             click_command.params.append(click_show_param)
         return click_command
     elif len(typer_instance.registered_commands) == 1:
         # Create a single Command
-        click_command = get_command_from_info(typer_instance.registered_commands[0])
+        single_command = typer_instance.registered_commands[0]
+
+        if not single_command.context_settings and not isinstance(
+            typer_instance.info.context_settings, DefaultPlaceholder
+        ):
+            single_command.context_settings = typer_instance.info.context_settings
+
+        click_command = get_command_from_info(
+            single_command,
+            pretty_exceptions_short=typer_instance.pretty_exceptions_short,
+            rich_markup_mode=typer_instance.rich_markup_mode,
+        )
         if typer_instance._add_completion:
             click_command.params.append(click_install_param)
             click_command.params.append(click_show_param)
@@ -397,17 +526,30 @@ def solve_typer_info_defaults(typer_info: TyperInfo) -> TyperInfo:
     return TyperInfo(**values)
 
 
-def get_group_from_info(group_info: TyperInfo) -> click.Command:
+def get_group_from_info(
+    group_info: TyperInfo,
+    *,
+    pretty_exceptions_short: bool,
+    rich_markup_mode: MarkupMode,
+) -> TyperGroup:
     assert (
         group_info.typer_instance
     ), "A Typer instance is needed to generate a Click Group"
     commands: Dict[str, click.Command] = {}
     for command_info in group_info.typer_instance.registered_commands:
-        command = get_command_from_info(command_info=command_info)
+        command = get_command_from_info(
+            command_info=command_info,
+            pretty_exceptions_short=pretty_exceptions_short,
+            rich_markup_mode=rich_markup_mode,
+        )
         if command.name:
             commands[command.name] = command
     for sub_group_info in group_info.typer_instance.registered_groups:
-        sub_group = get_group_from_info(sub_group_info)
+        sub_group = get_group_from_info(
+            sub_group_info,
+            pretty_exceptions_short=pretty_exceptions_short,
+            rich_markup_mode=rich_markup_mode,
+        )
         if sub_group.name:
             commands[sub_group.name] = sub_group
     solved_info = solve_typer_info_defaults(group_info)
@@ -417,7 +559,8 @@ def get_group_from_info(group_info: TyperInfo) -> click.Command:
         context_param_name,
     ) = get_params_convertors_ctx_param_name_from_function(solved_info.callback)
     cls = solved_info.cls or TyperGroup
-    group = cls(  # type: ignore
+    assert issubclass(cls, TyperGroup)
+    group = cls(
         name=solved_info.name or "",
         commands=commands,
         invoke_without_command=solved_info.invoke_without_command,
@@ -431,8 +574,9 @@ def get_group_from_info(group_info: TyperInfo) -> click.Command:
             params=params,
             convertors=convertors,
             context_param_name=context_param_name,
+            pretty_exceptions_short=pretty_exceptions_short,
         ),
-        params=params,  # type: ignore
+        params=params,
         help=solved_info.help,
         epilog=solved_info.epilog,
         short_help=solved_info.short_help,
@@ -440,6 +584,9 @@ def get_group_from_info(group_info: TyperInfo) -> click.Command:
         add_help_option=solved_info.add_help_option,
         hidden=solved_info.hidden,
         deprecated=solved_info.deprecated,
+        rich_markup_mode=rich_markup_mode,
+        # Rich settings
+        rich_help_panel=solved_info.rich_help_panel,
     )
     return group
 
@@ -467,7 +614,12 @@ def get_params_convertors_ctx_param_name_from_function(
     return params, convertors, context_param_name
 
 
-def get_command_from_info(command_info: CommandInfo) -> click.Command:
+def get_command_from_info(
+    command_info: CommandInfo,
+    *,
+    pretty_exceptions_short: bool,
+    rich_markup_mode: MarkupMode,
+) -> click.Command:
     assert command_info.callback, "A command must have a callback function"
     name = command_info.name or get_command_name(command_info.callback.__name__)
     use_help = command_info.help
@@ -489,6 +641,7 @@ def get_command_from_info(command_info: CommandInfo) -> click.Command:
             params=params,
             convertors=convertors,
             context_param_name=context_param_name,
+            pretty_exceptions_short=pretty_exceptions_short,
         ),
         params=params,  # type: ignore
         help=use_help,
@@ -499,8 +652,20 @@ def get_command_from_info(command_info: CommandInfo) -> click.Command:
         no_args_is_help=command_info.no_args_is_help,
         hidden=command_info.hidden,
         deprecated=command_info.deprecated,
+        rich_markup_mode=rich_markup_mode,
+        # Rich settings
+        rich_help_panel=command_info.rich_help_panel,
     )
     return command
+
+
+def determine_type_convertor(type_: Any) -> Optional[Callable[[Any], Any]]:
+    convertor: Optional[Callable[[Any], Any]] = None
+    if lenient_issubclass(type_, Path):
+        convertor = param_path_convertor
+    if lenient_issubclass(type_, Enum):
+        convertor = generate_enum_convertor(type_)
+    return convertor
 
 
 def param_path_convertor(value: Optional[str] = None) -> Optional[Path]:
@@ -509,7 +674,7 @@ def param_path_convertor(value: Optional[str] = None) -> Optional[Path]:
     return None
 
 
-def generate_enum_convertor(enum: Type[Enum]) -> Callable[..., Any]:
+def generate_enum_convertor(enum: Type[Enum]) -> Callable[[Any], Any]:
     lower_val_map = {str(val.value).lower(): val for val in enum}
 
     def convertor(value: Any) -> Any:
@@ -522,9 +687,25 @@ def generate_enum_convertor(enum: Type[Enum]) -> Callable[..., Any]:
     return convertor
 
 
-def generate_iter_convertor(convertor: Callable[[Any], Any]) -> Callable[..., Any]:
-    def internal_convertor(value: Any) -> List[Any]:
-        return [convertor(v) for v in value]
+def generate_list_convertor(
+    convertor: Optional[Callable[[Any], Any]]
+) -> Callable[[Sequence[Any]], List[Any]]:
+    def internal_convertor(value: Sequence[Any]) -> List[Any]:
+        return [convertor(v) if convertor else v for v in value]
+
+    return internal_convertor
+
+
+def generate_tuple_convertor(
+    types: Sequence[Any],
+) -> Callable[[Tuple[Any, ...]], Tuple[Any, ...]]:
+    convertors = [determine_type_convertor(type_) for type_ in types]
+
+    def internal_convertor(param_args: Tuple[Any, ...]) -> Tuple[Any, ...]:
+        return tuple(
+            convertor(arg) if convertor else arg
+            for (convertor, arg) in zip(convertors, param_args)
+        )
 
     return internal_convertor
 
@@ -535,6 +716,7 @@ def get_callback(
     params: Sequence[click.Parameter] = [],
     convertors: Dict[str, Callable[[str], Any]] = {},
     context_param_name: Optional[str] = None,
+    pretty_exceptions_short: bool,
 ) -> Optional[Callable[..., Any]]:
     if not callback:
         return None
@@ -547,6 +729,7 @@ def get_callback(
             use_params[param.name] = param.default
 
     def wrapper(**kwargs: Any) -> Any:
+        _rich_traceback_guard = pretty_exceptions_short  # noqa: F841
         for k, v in kwargs.items():
             if k in convertors:
                 use_params[k] = convertors[k](v)
@@ -681,6 +864,7 @@ def get_click_param(
         annotation = str
     main_type = annotation
     is_list = False
+    is_tuple = False
     parameter_type: Any = None
     is_flag = None
     origin = getattr(main_type, "__origin__", None)
@@ -712,18 +896,16 @@ def get_click_param(
                     get_click_type(annotation=type_, parameter_info=parameter_info)
                 )
             parameter_type = tuple(types)
+            is_tuple = True
     if parameter_type is None:
         parameter_type = get_click_type(
             annotation=main_type, parameter_info=parameter_info
         )
-    convertor = None
-    if lenient_issubclass(main_type, Path):
-        convertor = param_path_convertor
-    if lenient_issubclass(main_type, Enum):
-        convertor = generate_enum_convertor(main_type)
-    if convertor and is_list:
-        convertor = generate_iter_convertor(convertor)
-        # TODO: handle recursive conversion for tuples
+    convertor = determine_type_convertor(main_type)
+    if is_list:
+        convertor = generate_list_convertor(convertor)
+    if is_tuple:
+        convertor = generate_tuple_convertor(main_type.__args__)
     if isinstance(parameter_info, OptionInfo):
         if main_type is bool and not (parameter_info.is_flag is False):
             is_flag = True
@@ -773,6 +955,8 @@ def get_click_param(
                 envvar=parameter_info.envvar,
                 shell_complete=parameter_info.shell_complete,
                 autocompletion=get_param_completion(parameter_info.autocompletion),
+                # Rich settings
+                rich_help_panel=parameter_info.rich_help_panel,
             ),
             convertor,
         )
@@ -804,6 +988,8 @@ def get_click_param(
                 is_eager=parameter_info.is_eager,
                 envvar=parameter_info.envvar,
                 autocompletion=get_param_completion(parameter_info.autocompletion),
+                # Rich settings
+                rich_help_panel=parameter_info.rich_help_panel,
             ),
             convertor,
         )
@@ -915,7 +1101,7 @@ def get_param_completion(
     return wrapper
 
 
-def run(function: Callable[..., Any]) -> Any:
-    app = Typer()
+def run(function: Callable[..., Any]) -> None:
+    app = Typer(add_completion=False)
     app.command()(function)
     app()

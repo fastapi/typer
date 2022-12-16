@@ -5,7 +5,7 @@ app = typer.Typer()
 
 @app.command()
 def create(username: str):
-    typer.echo(f"Creating user: {username}")
+    print(f"Creating user: {username}")
 
 
 @app.command()
@@ -14,9 +14,9 @@ def delete(
     force: bool = typer.Option(..., prompt="Are you sure you want to delete the user?"),
 ):
     if force:
-        typer.echo(f"Deleting user: {username}")
+        print(f"Deleting user: {username}")
     else:
-        typer.echo("Operation cancelled")
+        print("Operation cancelled")
 
 
 @app.command()
@@ -24,14 +24,14 @@ def delete_all(
     force: bool = typer.Option(..., prompt="Are you sure you want to delete ALL users?")
 ):
     if force:
-        typer.echo("Deleting all users")
+        print("Deleting all users")
     else:
-        typer.echo("Operation cancelled")
+        print("Operation cancelled")
 
 
 @app.command()
 def init():
-    typer.echo("Initializing user database")
+    print("Initializing user database")
 
 
 if __name__ == "__main__":
