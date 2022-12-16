@@ -1,4 +1,5 @@
 import subprocess
+import sys
 
 import typer
 from typer.testing import CliRunner
@@ -22,7 +23,12 @@ def test_prompt_not_equal():
         app, input="Old Project\nNew Spice\nOld Project\nOld Project\n"
     )
     assert result.exit_code == 0
-    assert "Error: the two entered values do not match" in result.output
+    # TODO: when deprecating Click 7, remove second option
+
+    assert (
+        "Error: The two entered values do not match" in result.output
+        or "Error: the two entered values do not match" in result.output
+    )
     assert "Deleting project Old Project" in result.output
 
 
@@ -36,13 +42,14 @@ def test_option():
 def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "--project-name TEXT" in result.output
+    assert "--project-name" in result.output
+    assert "TEXT" in result.output
     assert "[required]" in result.output
 
 
 def test_script():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--help"],
+        [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",

@@ -8,7 +8,7 @@ def get_name():
 
 
 def main(name: str = typer.Argument(get_name)):
-    typer.echo(f"Hello {name}")
+    print(f"Hello {name}")
 
 
 if __name__ == "__main__":
