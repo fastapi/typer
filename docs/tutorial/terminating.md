@@ -41,10 +41,10 @@ The user already exists
 </div>
 
 !!! tip
-    Even though you are rasing an exception, it doesn't necessarily mean there's an error.
+    Even though you are raising an exception, it doesn't necessarily mean there's an error.
 
     This is done with an exception because it works as an "error" and stops all execution.
-    
+
     But then **Typer** (actually Click) catches it and just terminates the program normally.
 
 ## Exit with an error

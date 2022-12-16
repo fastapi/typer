@@ -2,7 +2,7 @@ import typer
 
 
 def main():
-    typer.echo("Opening Typer's docs")
+    print("Opening Typer's docs")
     typer.launch("https://typer.tiangolo.com")
 
 

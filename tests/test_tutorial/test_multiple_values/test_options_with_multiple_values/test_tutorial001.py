@@ -1,4 +1,5 @@
 import subprocess
+import sys
 
 import typer
 from typer.testing import CliRunner
@@ -14,7 +15,7 @@ def test_main():
     result = runner.invoke(app)
     assert result.exit_code != 0
     assert "No user provided" in result.output
-    assert "Aborted!" in result.output
+    assert "Aborted" in result.output
 
 
 def test_user_1():
@@ -34,12 +35,17 @@ def test_user_2():
 def test_invalid_user():
     result = runner.invoke(app, ["--user", "Camila", "50"])
     assert result.exit_code != 0
-    assert "Error: --user option requires 3 arguments" in result.output
+    # TODO: when deprecating Click 7, remove second option
+
+    assert (
+        "Option '--user' requires 3 arguments" in result.output
+        or "--user option requires 3 arguments" in result.output
+    )
 
 
 def test_script():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--help"],
+        [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",

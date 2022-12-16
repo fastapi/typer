@@ -1,4 +1,5 @@
 import subprocess
+import sys
 
 import typer
 from typer.testing import CliRunner
@@ -21,15 +22,19 @@ def test_main():
 def test_invalid_uuid():
     result = runner.invoke(app, ["7479706572-72756c6573"])
     assert result.exit_code != 0
+    # TODO: when deprecating Click 7, remove second option
+
     assert (
-        "Error: Invalid value for 'USER_ID': 7479706572-72756c6573 is not a valid UUID value"
+        "Invalid value for 'USER_ID': '7479706572-72756c6573' is not a valid UUID"
+        in result.output
+        or "Invalid value for 'USER_ID': 7479706572-72756c6573 is not a valid UUID value"
         in result.output
     )
 
 
 def test_script():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--help"],
+        [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
