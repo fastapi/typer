@@ -1,4 +1,5 @@
 import subprocess
+import sys
 from pathlib import Path
 
 import typer
@@ -17,7 +18,7 @@ def test_no_path(tmpdir):
     result = runner.invoke(app)
     assert result.exit_code == 1
     assert "No config file" in result.output
-    assert "Aborted!" in result.output
+    assert "Aborted" in result.output
 
 
 def test_not_exists(tmpdir):
@@ -46,7 +47,7 @@ def test_dir():
 
 def test_script():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--help"],
+        [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",

@@ -1,4 +1,5 @@
 import subprocess
+import sys
 
 import typer
 from typer.testing import CliRunner
@@ -36,14 +37,14 @@ def test_invalid_no_force():
     # TODO: when deprecating Click 7, remove second option
 
     assert (
-        "Error: No such option: --no-force" in result.output
-        or "Error: no such option: --no-force" in result.output
+        "No such option: --no-force" in result.output
+        or "no such option: --no-force" in result.output
     )
 
 
 def test_script():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--help"],
+        [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
