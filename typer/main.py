@@ -1,3 +1,4 @@
+import asyncio
 import inspect
 import os
 import sys
@@ -10,7 +11,6 @@ from traceback import FrameSummary, StackSummary
 from types import TracebackType
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, Union
 from uuid import UUID
-import asyncio
 
 import click
 
@@ -19,8 +19,8 @@ from .core import MarkupMode, TyperArgument, TyperCommand, TyperGroup, TyperOpti
 from .models import (
     AnyType,
     ArgumentInfo,
-    CommandFunctionType,
     AsyncCommandFunctionType,
+    CommandFunctionType,
     CommandInfo,
     Default,
     DefaultPlaceholder,
@@ -260,12 +260,13 @@ class Typer:
 
         return decorator
 
-
     def async_command(
         self,
         name: Optional[str] = None,
         *,
-        run_func: RunFunction = lambda f, *args, **kwargs: asyncio.run(f(*args, **kwargs)),
+        run_func: RunFunction = lambda f, *args, **kwargs: asyncio.run(
+            f(*args, **kwargs)
+        ),
         cls: Optional[Type[click.Command]] = None,
         context_settings: Optional[Dict[Any, Any]] = None,
         help: Optional[str] = None,
@@ -304,7 +305,7 @@ class Typer:
                 add_help_option=add_help_option,
                 no_args_is_help=no_args_is_help,
                 hidden=hidden,
-                deprecated=deprecated
+                deprecated=deprecated,
             )(sync_func)
 
             # We return the async function unmodifed,
@@ -312,7 +313,6 @@ class Typer:
             return async_func
 
         return decorator
-
 
     def add_typer(
         self,

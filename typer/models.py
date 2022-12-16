@@ -4,15 +4,15 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
+    Coroutine,
     Dict,
     List,
     Optional,
+    Protocol,
     Sequence,
-    Coroutine,
     Type,
     TypeVar,
     Union,
-    Protocol
 )
 
 import click
@@ -76,7 +76,10 @@ class DefaultPlaceholder:
 DefaultType = TypeVar("DefaultType")
 
 CommandFunctionType = TypeVar("CommandFunctionType", bound=Callable[..., Any])
-AsyncCommandFunctionType = TypeVar("AsyncCommandFunctionType", bound=Callable[..., Coroutine[None, None, Any]])
+AsyncCommandFunctionType = TypeVar(
+    "AsyncCommandFunctionType", bound=Callable[..., Coroutine[None, None, Any]]
+)
+
 
 class RunFunction(Protocol):
     """
@@ -87,7 +90,9 @@ class RunFunction(Protocol):
         anyio: `run_func = lambda f, *args, **kwargs: anyio.run(f, *args, **kwargs)`
         trio: `run_func = lambda f, *args, **kwargs: trio.run(f, *args, **kwargs)`
     """
-    def __call__(self, f: AsyncCommandFunctionType, *args: Any, **kwargs: Any) -> Any: ...
+
+    def __call__(self, f: AsyncCommandFunctionType, *args: Any, **kwargs: Any) -> Any:
+        ...
 
 
 def Default(value: DefaultType) -> DefaultType:
