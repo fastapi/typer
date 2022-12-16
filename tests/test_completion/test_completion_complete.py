@@ -1,12 +1,13 @@
 import os
 import subprocess
+import sys
 
 from docs_src.commands.help import tutorial001 as mod
 
 
 def test_completion_complete_subcommand_bash():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, " "],
+        [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -23,7 +24,7 @@ def test_completion_complete_subcommand_bash():
 
 def test_completion_complete_subcommand_bash_invalid():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, " "],
+        [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -40,7 +41,7 @@ def test_completion_complete_subcommand_bash_invalid():
 
 def test_completion_complete_subcommand_zsh():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, " "],
+        [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -59,7 +60,7 @@ def test_completion_complete_subcommand_zsh():
 
 def test_completion_complete_subcommand_zsh_files():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, " "],
+        [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -75,7 +76,7 @@ def test_completion_complete_subcommand_zsh_files():
 
 def test_completion_complete_subcommand_fish():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, " "],
+        [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -95,7 +96,7 @@ def test_completion_complete_subcommand_fish():
 
 def test_completion_complete_subcommand_fish_should_complete():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, " "],
+        [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -112,7 +113,7 @@ def test_completion_complete_subcommand_fish_should_complete():
 
 def test_completion_complete_subcommand_fish_should_complete_no():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, " "],
+        [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -129,7 +130,7 @@ def test_completion_complete_subcommand_fish_should_complete_no():
 
 def test_completion_complete_subcommand_powershell():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, " "],
+        [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -147,7 +148,7 @@ def test_completion_complete_subcommand_powershell():
 
 def test_completion_complete_subcommand_pwsh():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, " "],
+        [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -165,7 +166,7 @@ def test_completion_complete_subcommand_pwsh():
 
 def test_completion_complete_subcommand_noshell():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, " "],
+        [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
