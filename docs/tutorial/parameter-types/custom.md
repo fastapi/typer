@@ -2,7 +2,7 @@ You can specify a custom type for your *CLI parameter* using Click's `ParamType`
 
 Instructions for how to build a custom type are described [here](https://click.palletsprojects.com/en/7.x/parameters/#implementing-custom-types) in Click's documentation.
 
-Using a custom *CLI parameter* type overrides **Typer**'s default behavior of converting user inputs based on the function's type annotation. 
+Using a custom *CLI parameter* type overrides **Typer**'s default behavior of converting user inputs based on the function's type annotation.
 
 Custom types are supported for both `typer.Option` and `typer.Argument`.
 
@@ -17,7 +17,7 @@ The above app converts a user input into a Python `dict` before the function `ma
 <div class="termy">
 
 ```console
-$ python main.py --help         
+$ python main.py --help
 Usage: main.py [OPTIONS]
 
 Options:
