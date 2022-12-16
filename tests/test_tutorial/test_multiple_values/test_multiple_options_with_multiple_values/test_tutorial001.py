@@ -3,7 +3,9 @@ import subprocess
 import typer
 from typer.testing import CliRunner
 
-from docs_src.multiple_values.multiple_options_with_multiple_values import tutorial001 as mod
+from docs_src.multiple_values.multiple_options_with_multiple_values import (
+    tutorial001 as mod,
+)
 
 runner = CliRunner()
 app = typer.Typer()

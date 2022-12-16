@@ -827,18 +827,22 @@ def get_click_param(
             main_type = main_type.__args__[0]
             is_list = True
             if hasattr(main_type, "__origin__"):
-                if lenient_issubclass(main_type.__origin__, Tuple):  # type: ignore 
+                if lenient_issubclass(main_type.__origin__, Tuple):  # type: ignore
                     types = []
                     for type_ in main_type.__args__:
                         assert not getattr(
                             type_, "__origin__", None
                         ), "Tuple types with complex sub-types are not currently supported"
                         types.append(
-                            get_click_type(annotation=type_, parameter_info=parameter_info)
+                            get_click_type(
+                                annotation=type_, parameter_info=parameter_info
+                            )
                         )
                     parameter_type = tuple(types)
                 else:
-                    raise AssertionError("List types with complex sub-types are not currently supported")
+                    raise AssertionError(
+                        "List types with complex sub-types are not currently supported"
+                    )
         elif lenient_issubclass(origin, Tuple):  # type: ignore
             types = []
             for type_ in main_type.__args__:
