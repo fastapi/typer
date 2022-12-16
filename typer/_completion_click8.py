@@ -176,9 +176,9 @@ class PowerShellComplete(click.shell_completion.ShellComplete):
         incomplete = os.getenv("_TYPER_COMPLETE_WORD_TO_COMPLETE", "")
         cursor = os.getenv("_TYPER_CURSOR_POSITION")
         if cursor:
-            completion_args = completion_args[:int(cursor)]
+            completion_args = completion_args[: int(cursor)]
         cwords = click.parser.split_arg_string(completion_args)
-        args = cwords[1:-1] if incomplete else cwords[1:] 
+        args = cwords[1:-1] if incomplete else cwords[1:]
         return args, incomplete
 
     def format_completion(self, item: click.shell_completion.CompletionItem) -> str:
