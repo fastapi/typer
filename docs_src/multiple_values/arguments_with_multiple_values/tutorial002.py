@@ -1,15 +1,14 @@
-from typing import Tuple
+from pathlib import Path
+from typing import Set
 
 import typer
 
 
-def main(
-    names: Tuple[str, str, str] = typer.Argument(
-        ("Harry", "Hermione", "Ron"), help="Select 3 characters to play with"
-    )
-):
-    for name in names:
-        print(f"Hello {name}")
+def main(files: Set[Path], celebration: str):
+    for path in files:
+        if path.is_file():
+            print(f"This file exists: {path.name}")
+            print(celebration)
 
 
 if __name__ == "__main__":

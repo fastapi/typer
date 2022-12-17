@@ -10,43 +10,24 @@ runner = CliRunner()
 app = typer.Typer()
 app.command()(mod.main)
 
+ARGS = [
+    "README.md",
+    "pyproject.toml",
+    "README.md",
+    "pyproject.toml",
+    "pyproject.toml",
+    "woohoo!",
+]
 
-def test_help():
-    result = runner.invoke(app, ["--help"])
+
+def test_main() -> None:
+    result = runner.invoke(app, ARGS)
     assert result.exit_code == 0
-    assert "[OPTIONS] [NAMES]..." in result.output
-    assert "Arguments" in result.output
-    assert "[default: Harry, Hermione, Ron]" in result.output
+    assert result.output.count("This file exists: README.md\nwoohoo!") == 1
+    assert result.output.count("This file exists: pyproject.toml\nwoohoo!") == 1
 
 
-def test_defaults():
-    result = runner.invoke(app)
-    assert result.exit_code == 0
-    assert "Hello Harry" in result.output
-    assert "Hello Hermione" in result.output
-    assert "Hello Ron" in result.output
-
-
-def test_invalid_args():
-    result = runner.invoke(app, ["Draco", "Hagrid"])
-    assert result.exit_code != 0
-    # TODO: when deprecating Click 7, remove second option
-
-    assert (
-        "Argument 'names' takes 3 values" in result.stdout
-        or "argument names takes 3 values" in result.stdout
-    )
-
-
-def test_valid_args():
-    result = runner.invoke(app, ["Draco", "Hagrid", "Dobby"])
-    assert result.exit_code == 0
-    assert "Hello Draco" in result.stdout
-    assert "Hello Hagrid" in result.stdout
-    assert "Hello Dobby" in result.stdout
-
-
-def test_script():
+def test_script() -> None:
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
         stdout=subprocess.PIPE,
