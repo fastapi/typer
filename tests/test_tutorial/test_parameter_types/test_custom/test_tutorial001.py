@@ -28,7 +28,7 @@ def test_invalid():
     assert result.exit_code != 0
     # TODO: when deprecating Click 7, remove second option
     assert (
-        "Error: Invalid value for '--data': Bad JSON: Expecting value: line 1 column 1 (char 0)"
+        "Bad JSON: Expecting value: line 1 column 1 (char 0)"
         in result.output
     )
 
