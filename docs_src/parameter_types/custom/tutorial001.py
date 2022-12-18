@@ -20,7 +20,9 @@ class JsonParamType(click.ParamType):
             if isinstance(value, (str, bytes)):
                 return json.loads(value)
             else:
-                self.fail(f"{value!r} was not a str, bytes or None.", param, ctx)  # pragma: nocover
+                self.fail(
+                    f"{value!r} was not a str, bytes or None.", param, ctx
+                )  # pragma: nocover
         except OSError as e:
             self.fail([*e.args, None][0], param, ctx)  # pragma: nocover
         except json.JSONDecodeError as e:
