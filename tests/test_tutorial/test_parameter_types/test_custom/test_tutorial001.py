@@ -27,10 +27,7 @@ def test_invalid():
     result = runner.invoke(app, ["--data=Python"])
     assert result.exit_code != 0
     # TODO: when deprecating Click 7, remove second option
-    assert (
-        "Bad JSON: Expecting value: line 1 column 1 (char 0)"
-        in result.output
-    )
+    assert "Bad JSON: Expecting value: line 1 column 1 (char 0)" in result.output
 
 
 def test_script():
