@@ -471,7 +471,7 @@ app(prog_name="rick-portal-gun")
 <div class="termy">
 
 ```console
-$ python -m rick_portal_gun
+$ python -m rick_portal_gun --help
 
 Usage: rick-portal-gun [OPTIONS] COMMAND [ARGS]...
 
