@@ -102,7 +102,6 @@ You can see that you have a generated project structure that looks like:
 │   └── __init__.py
 └── tests
     ├── __init__.py
-    └── test_rick_portal_gun.py
 ```
 
 ## Create your app
@@ -166,9 +165,6 @@ rick-portal-gun = "rick_portal_gun.main:app"
 [tool.poetry.dependencies]
 python = "^3.6"
 typer = {extras = ["all"], version = "^0.1.0"}
-
-[tool.poetry.dev-dependencies]
-pytest = "^5.2"
 
 [build-system]
 requires = ["poetry>=0.12"]
@@ -409,7 +405,6 @@ The file would live right beside `__init__.py`:
 │   └── __main__.py
 └── tests
     ├── __init__.py
-    └── test_rick_portal_gun.py
 ```
 
 No other file has to import it, you don't have to reference it in your `pyproject.toml` or anything else, it just works by default, as it is standard Python behavior.
@@ -675,9 +670,6 @@ rick-portal-gun = "rick_portal_gun.main:app"
 [tool.poetry.dependencies]
 python = "^3.6"
 typer = {extras = ["all"], version = "^0.1.0"}
-
-[tool.poetry.dev-dependencies]
-pytest = "^5.2"
 
 [build-system]
 requires = ["poetry>=0.12"]
