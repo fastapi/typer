@@ -236,7 +236,7 @@ $ which rick-portal-gun
 /home/rick/.cache/pypoetry/virtualenvs/rick-portal-gun-w31dJa0b-py3.6/bin/rick-portal-gun
 
 // Try it
-$ rick-portal-gun
+$ rick-portal-gun --help
 
 // You get all the standard help
 Usage: rick-portal-gun [OPTIONS] COMMAND [ARGS]...
@@ -421,7 +421,7 @@ Now, after installing your package, if you call it with `python -m` it will work
 <div class="termy">
 
 ```console
-$ python -m rick_portal_gun
+$ python -m rick_portal_gun --help
 
 Usage: __main__.py [OPTIONS] COMMAND [ARGS]...
 
