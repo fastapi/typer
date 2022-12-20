@@ -164,10 +164,10 @@ rick-portal-gun = "rick_portal_gun.main:app"
 
 [tool.poetry.dependencies]
 python = "^3.6"
-typer = {extras = ["all"], version = "^0.1.0"}
+typer = {extras = ["all"], version = "^0.7.0"}
 
 [build-system]
-requires = ["poetry>=0.12"]
+requires = ["poetry-core"]
 build-backend = "poetry.masonry.api"
 ```
 
@@ -669,10 +669,10 @@ rick-portal-gun = "rick_portal_gun.main:app"
 
 [tool.poetry.dependencies]
 python = "^3.6"
-typer = {extras = ["all"], version = "^0.1.0"}
+typer = {extras = ["all"], version = "^0.7.0"}
 
 [build-system]
-requires = ["poetry>=0.12"]
+requires = ["poetry-core"]
 build-backend = "poetry.masonry.api"
 ```
 
