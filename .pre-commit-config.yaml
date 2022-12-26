@@ -34,7 +34,7 @@ repos:
         - __init__.py
         - --remove-duplicate-keys
 -   repo: https://github.com/pycqa/isort
-    rev: 5.11.0
+    rev: 5.11.4
     hooks:
     -   id: isort
         name: isort (python)
