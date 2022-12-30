@@ -1,3 +1,4 @@
+import sys
 from enum import Enum
 from pathlib import Path
 from typing import List, Optional, Tuple
@@ -29,6 +30,9 @@ def test_optional():
 
 
 def test_union_none():
+    if sys.version_info < (3, 10):
+        pytest.skip("SomeType | None is only available in Python 3.10+")
+
     app = typer.Typer()
 
     @app.command()
