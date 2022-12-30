@@ -27,6 +27,24 @@ def test_optional():
     assert result.exit_code == 0
     assert "User: Camila" in result.output
 
+def test_union_none():
+    app = typer.Typer()
+
+    @app.command()
+    def union_none(user: str | None = None):
+        if user:
+            print(f"User: {user}")
+        else:
+            print("No user")
+    
+    result = runner.invoke(app)
+    assert result.exit_code == 0
+    assert "No user" in result.output
+
+    result = runner.invoke(app, ["--user", "Camila"])
+    assert result.exit_code == 0
+    assert "User: Camila" in result.output
+
 
 def test_no_type():
     app = typer.Typer()
