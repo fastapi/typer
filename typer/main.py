@@ -814,7 +814,7 @@ def get_click_param(
     contains_args = hasattr(main_type, "__args__")
 
     # Handle Optional[SomeType] and SomeType | None
-    if origin is Union or (origin is not None and contains_args):
+    if origin is Union or (origin is None and contains_args):
         types = []
         for type_ in main_type.__args__:
             if type_ is NoneType:
