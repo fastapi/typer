@@ -32,7 +32,7 @@ def test_union_none():
     app = typer.Typer()
 
     @app.command()
-    def union_none(user: str | None = None):
+    def union_none(user: "str | None" = None):
         if user:
             print(f"User: {user}")
         else:
