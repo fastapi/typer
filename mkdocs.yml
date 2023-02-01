@@ -8,7 +8,7 @@ theme:
   palette:
     - media: "(prefers-color-scheme: light)"
       primary: black
-      accent: teal      
+      accent: teal
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
