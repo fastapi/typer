@@ -10,7 +10,7 @@ Before checking how to provide custom completions, let's check again how it work
 
 After installing completion (for your own Python package or for **Typer CLI**), when you use your CLI program and start adding a *CLI option* with `--` an then hit <kbd>TAB</kbd>, your shell will show you the available *CLI options* (the same for *CLI arguments*, etc).
 
-To check it quickly without creating a new Python package, install [Typer CLI](../../typer-cli.md){.internal-link target=_blank}.
+To check it quickly without creating a new Python package, install [Typer CLI](../typer-cli.md){.internal-link target=_blank}.
 
 Then let's create small example program:
 
