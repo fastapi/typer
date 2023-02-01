@@ -6,8 +6,19 @@ theme:
   name: material
   custom_dir: docs/overrides
   palette:
-    primary: black
-    accent: teal
+    - media: "(prefers-color-scheme: light)"
+      primary: black
+      accent: teal      
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system light mode
   icon:
     repo: fontawesome/brands/github-alt
   logo: img/icon-white.svg
