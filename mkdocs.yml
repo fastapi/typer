@@ -10,14 +10,14 @@ theme:
       primary: black
       accent: teal
       toggle:
-        icon: material/lightbulb-outline
+        icon: material/lightbulb
         name: Switch to dark mode
 
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       primary: black
       toggle:
-        icon: material/lightbulb
+        icon: material/lightbulb-outline
         name: Switch to light mode
   icon:
     repo: fontawesome/brands/github-alt
