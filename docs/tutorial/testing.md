@@ -85,7 +85,7 @@ Then you can call `pytest` in your directory and it will run your tests:
 $ pytest
 
 ================ test session starts ================
-platform linux -- Python 3.6.9, pytest-5.3.5, py-1.8.1, pluggy-0.13.1
+platform linux -- Python 3.7.9, pytest-5.3.5, py-1.8.1, pluggy-0.13.1
 rootdir: /home/user/code/superawesome-cli/app
 plugins: forked-1.1.3, xdist-1.31.0, cov-2.8.1
 collected 1 item

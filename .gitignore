@@ -2,7 +2,6 @@
 *.pyc
 __pycache__
 env3.7
-env3.6
 env
 dist
 .mypy_cache

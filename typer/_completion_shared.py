@@ -92,7 +92,7 @@ def get_completion_script(*, prog_name: str, complete_var: str, shell: str) -> s
     return (
         script
         % dict(
-            complete_func="_{}_completion".format(cf_name),
+            complete_func=f"_{cf_name}_completion",
             prog_name=prog_name,
             autocomplete_var=complete_var,
         )
