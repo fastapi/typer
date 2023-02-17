@@ -51,7 +51,7 @@ _typer_developer_exception_attr_name = "__typer_developer_exception__"
 
 
 def except_hook(
-    exc_type: Type[BaseException], exc_value: BaseException, tb: TracebackType
+    exc_type: Type[BaseException], exc_value: BaseException, tb: Optional[TracebackType]
 ) -> None:
     exception_config: Union[DeveloperExceptionConfig, None] = getattr(
         exc_value, _typer_developer_exception_attr_name, None
@@ -96,8 +96,8 @@ def except_hook(
                 )
         else:
             stack.append(frame)
-    # Type ignore ref: https://github.com/python/typeshed/pull/8244
-    final_stack_summary = StackSummary.from_list(stack)  # type: ignore
+
+    final_stack_summary = StackSummary.from_list(stack)
     tb_exc.stack = final_stack_summary
     for line in tb_exc.format():
         print(line, file=sys.stderr)
