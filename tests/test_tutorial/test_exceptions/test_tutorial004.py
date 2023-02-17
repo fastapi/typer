@@ -23,9 +23,7 @@ def test_rich_pretty_exceptions_disable():
 
     assert "app()" in result.stderr
     assert "print(name + 3)" in result.stderr
-    assert (
-        'TypeError: can only concatenate str (not "int") to str' in result.stderr
-    )
+    assert 'TypeError: can only concatenate str (not "int") to str' in result.stderr
 
 
 def test_script():
