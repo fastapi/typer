@@ -17,10 +17,8 @@ def test_traceback_no_rich():
 
     assert "typer.run(main)" in result.stderr
     assert "print(name + 3)" in result.stderr
-    # TODO: when deprecating Python 3.6, remove second option
     assert (
         'TypeError: can only concatenate str (not "int") to str' in result.stderr
-        or "TypeError: must be str, not int" in result.stderr
     )
 
 
@@ -37,10 +35,8 @@ def test_traceback_no_rich_short_disable():
 
     assert "app()" in result.stderr
     assert "print(name + 3)" in result.stderr
-    # TODO: when deprecating Python 3.6, remove second option
     assert (
         'TypeError: can only concatenate str (not "int") to str' in result.stderr
-        or "TypeError: must be str, not int" in result.stderr
     )
 
 
@@ -60,8 +56,6 @@ def test_unmodified_traceback():
     )
     assert "typer.main.get_command(broken_app)()" in result.stderr
     assert "print(name + 3)" in result.stderr
-    # TODO: when deprecating Python 3.6, remove second option
     assert (
         'TypeError: can only concatenate str (not "int") to str' in result.stderr
-        or "TypeError: must be str, not int" in result.stderr
     )

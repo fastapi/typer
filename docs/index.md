@@ -46,7 +46,7 @@ And it's intended to be the FastAPI of CLIs.
 
 ## Requirements
 
-Python 3.6+
+Python 3.7+
 
 **Typer** stands on the shoulders of a giant. Its only internal dependency is <a href="https://click.palletsprojects.com/" class="external-link" target="_blank">Click</a>.
 
@@ -286,7 +286,7 @@ You do that with standard modern Python types.
 
 You don't have to learn a new syntax, the methods or classes of a specific library, etc.
 
-Just standard **Python 3.6+**.
+Just standard **Python 3.7+**.
 
 For example, for an `int`:
 
