@@ -17,9 +17,7 @@ def test_traceback_no_rich():
 
     assert "typer.run(main)" in result.stderr
     assert "print(name + 3)" in result.stderr
-    assert (
-        'TypeError: can only concatenate str (not "int") to str' in result.stderr
-    )
+    assert 'TypeError: can only concatenate str (not "int") to str' in result.stderr
 
 
 def test_traceback_no_rich_short_disable():
@@ -35,9 +33,7 @@ def test_traceback_no_rich_short_disable():
 
     assert "app()" in result.stderr
     assert "print(name + 3)" in result.stderr
-    assert (
-        'TypeError: can only concatenate str (not "int") to str' in result.stderr
-    )
+    assert 'TypeError: can only concatenate str (not "int") to str' in result.stderr
 
 
 def test_unmodified_traceback():
@@ -56,6 +52,4 @@ def test_unmodified_traceback():
     )
     assert "typer.main.get_command(broken_app)()" in result.stderr
     assert "print(name + 3)" in result.stderr
-    assert (
-        'TypeError: can only concatenate str (not "int") to str' in result.stderr
-    )
+    assert 'TypeError: can only concatenate str (not "int") to str' in result.stderr
