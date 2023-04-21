@@ -1,12 +1,12 @@
 [build-system]
-requires = ["flit_core >=2,<3"]
+requires = ["flit_core >=3.2,<4"]
 build-backend = "flit_core.buildapi"
 
-[tool.flit.metadata]
-module = "typer"
-author = "Sebastián Ramírez"
-author-email = "tiangolo@gmail.com"
-home-page = "https://github.com/tiangolo/typer"
+[project]
+name = "typer"
+authors = [
+    { name = "Sebastián Ramírez", email = "tiangolo@gmail.com"},
+]
 classifiers = [
     "Intended Audience :: Information Technology",
     "Intended Audience :: System Administrators",
@@ -29,17 +29,20 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "License :: OSI Approved :: MIT License"
     ]
-requires = [
+dependencies = [
     "click >= 7.1.1, <9.0.0",
     "typing-extensions >= 3.7.4.3",
 ]
-description-file = "README.md"
+readme = "README.md"
+license = { text = "MIT" }
 requires-python = ">=3.6"
+dynamic = ["description", "version"]
 
-[tool.flit.metadata.urls]
+[project.urls]
+Homepage = "https://github.com/tiangolo/typer"
 Documentation = "https://typer.tiangolo.com/"
 
-[tool.flit.metadata.requires-extra]
+[project.optional-dependencies]
 test = [
     "shellingham >=1.3.0,<2.0.0",
     "pytest >=4.4.0,<8.0.0",
