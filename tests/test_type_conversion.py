@@ -93,21 +93,6 @@ def test_tuple_parameter_elements_are_converted_recursively(type_annotation):
     assert result.exit_code == 0
 
 
-def test_custom_type():
-    class User:
-        def __init__(self, name: str) -> None:
-            self.name = name
-
-    app = typer.Typer()
-
-    @app.command()
-    def custom_type(user: User):
-        assert user.name == "John"
-
-    result = runner.invoke(app, ["John"])
-    assert result.exit_code == 0
-
-
 def test_custom_parse():
     app = typer.Typer()
 

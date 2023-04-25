@@ -219,6 +219,13 @@ class ParameterInfo:
         # Rich settings
         rich_help_panel: Union[str, None] = None,
     ):
+        # Check if user has provided multiple custom parsers
+        if all([parser, click_type]):
+            raise ValueError(
+                "Multiple custom type parsers provided. "
+                "`parser` and `click_type` may not both be provided."
+            )
+
         self.default = default
         self.param_decls = param_decls
         self.callback = callback
