@@ -318,3 +318,11 @@ If you want to keep Click's convention in a **Typer** app, you can do it with th
 
 !!! note "Technical Details"
     To support `help` in *CLI arguments* **Typer** does a lot of internal work in its own sub-classes of Click's internal classes.
+
+## Show `help` when no arguments are provided
+
+To show the `--help` output when no arguments are provided, set `no_args_is_help` to `True` when creating a `typer.Typer` app
+
+```Python
+typer.Typer(no_args_is_help=True)
+```
