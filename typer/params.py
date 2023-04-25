@@ -10,7 +10,7 @@ if TYPE_CHECKING:  # pragma: no cover
 
 def Option(
     # Parameter
-    default: Optional[Any],
+    default: Optional[Any] = ...,
     *param_decls: str,
     callback: Optional[Callable[..., Any]] = None,
     metavar: Optional[str] = None,
@@ -24,6 +24,7 @@ def Option(
         ]
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
+    default_factory: Optional[Callable[[], Any]] = None,
     # Option
     show_default: bool = True,
     prompt: Union[bool, str] = False,
@@ -75,6 +76,7 @@ def Option(
         envvar=envvar,
         shell_complete=shell_complete,
         autocompletion=autocompletion,
+        default_factory=default_factory,
         # Option
         show_default=show_default,
         prompt=prompt,
@@ -119,7 +121,7 @@ def Option(
 
 def Argument(
     # Parameter
-    default: Optional[Any],
+    default: Optional[Any] = ...,
     *,
     callback: Optional[Callable[..., Any]] = None,
     metavar: Optional[str] = None,
@@ -133,6 +135,7 @@ def Argument(
         ]
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
+    default_factory: Optional[Callable[[], Any]] = None,
     # TyperArgument
     show_default: Union[bool, str] = True,
     show_choices: bool = True,
@@ -178,6 +181,7 @@ def Argument(
         envvar=envvar,
         shell_complete=shell_complete,
         autocompletion=autocompletion,
+        default_factory=default_factory,
         # TyperArgument
         show_default=show_default,
         show_choices=show_choices,

@@ -184,6 +184,7 @@ class ParameterInfo:
             ]
         ] = None,
         autocompletion: Optional[Callable[..., Any]] = None,
+        default_factory: Optional[Callable[[], Any]] = None,
         # TyperArgument
         show_default: Union[bool, str] = True,
         show_choices: bool = True,
@@ -225,6 +226,7 @@ class ParameterInfo:
         self.envvar = envvar
         self.shell_complete = shell_complete
         self.autocompletion = autocompletion
+        self.default_factory = default_factory
         # TyperArgument
         self.show_default = show_default
         self.show_choices = show_choices
@@ -277,6 +279,7 @@ class OptionInfo(ParameterInfo):
             ]
         ] = None,
         autocompletion: Optional[Callable[..., Any]] = None,
+        default_factory: Optional[Callable[[], Any]] = None,
         # Option
         show_default: bool = True,
         prompt: Union[bool, str] = False,
@@ -327,6 +330,7 @@ class OptionInfo(ParameterInfo):
             envvar=envvar,
             shell_complete=shell_complete,
             autocompletion=autocompletion,
+            default_factory=default_factory,
             # TyperArgument
             show_default=show_default,
             show_choices=show_choices,
@@ -388,6 +392,7 @@ class ArgumentInfo(ParameterInfo):
             ]
         ] = None,
         autocompletion: Optional[Callable[..., Any]] = None,
+        default_factory: Optional[Callable[[], Any]] = None,
         # TyperArgument
         show_default: Union[bool, str] = True,
         show_choices: bool = True,
@@ -430,6 +435,7 @@ class ArgumentInfo(ParameterInfo):
             envvar=envvar,
             shell_complete=shell_complete,
             autocompletion=autocompletion,
+            default_factory=default_factory,
             # TyperArgument
             show_default=show_default,
             show_choices=show_choices,
