@@ -55,7 +55,7 @@ def test_too_may_parsers():
 
 def test_valid_parser_permutations():
     def custom_parser(value: str) -> int:
-        return int(value)   # pragma: no cover
+        return int(value)  # pragma: no cover
 
     class CustomClickParser(click.ParamType):
         name = "custom_parser"
@@ -66,7 +66,7 @@ def test_valid_parser_permutations():
             param: typing.Optional[click.Parameter],
             ctx: typing.Optional[click.Context],
         ) -> typing.Any:
-            return int(value)   # pragma: no cover
+            return int(value)  # pragma: no cover
 
     ParameterInfo()
     ParameterInfo(parser=custom_parser)
