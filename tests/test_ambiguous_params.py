@@ -112,7 +112,7 @@ def test_allow_multiple_non_typer_params_in_annotated():
 )
 def test_forbid_default_factory_and_default_value_in_annotated(param, param_info_type):
     def make_string():
-        return "foo"
+        return "foo"  # pragma: no cover
 
     app = typer.Typer()
 
@@ -160,7 +160,7 @@ def test_allow_default_factory_with_default_param(param):
 )
 def test_forbid_default_and_default_factory_with_default_param(param, param_info_type):
     def make_string():
-        return "foo"
+        return "foo"  # pragma: no cover
 
     app = typer.Typer()
 
