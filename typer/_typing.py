@@ -1,5 +1,6 @@
 # Copied from pydantic 1.9.2 (the latest version to support python 3.6.)
 # https://github.com/pydantic/pydantic/blob/v1.9.2/pydantic/typing.py
+# mypy: ignore-errors
 
 import sys
 from os import PathLike

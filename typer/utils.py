@@ -1,6 +1,6 @@
 import inspect
 from copy import copy
-from typing import Any, Callable, Dict, List, Tuple, Type, get_type_hints
+from typing import Any, Callable, Dict, List, Tuple, Type, cast, get_type_hints
 
 from typing_extensions import Annotated
 
@@ -28,7 +28,7 @@ class AnnotatedParamWithDefaultValueError(Exception):
         self.argument_name = argument_name
         self.param_type = param_type
 
-    def __str__(self):
+    def __str__(self) -> str:
         param_type_str = _param_type_to_user_string(self.param_type)
         return (
             f"{param_type_str} default value cannot be set in `Annotated`"
@@ -51,7 +51,7 @@ class MixedAnnotatedAndDefaultStyleError(Exception):
         self.annotated_param_type = annotated_param_type
         self.default_param_type = default_param_type
 
-    def __str__(self):
+    def __str__(self) -> str:
         annotated_param_type_str = _param_type_to_user_string(self.annotated_param_type)
         default_param_type_str = _param_type_to_user_string(self.default_param_type)
         msg = f"Cannot specify {annotated_param_type_str} in `Annotated` and"
@@ -69,7 +69,7 @@ class MultipleTyperAnnotationsError(Exception):
     def __init__(self, argument_name: str):
         self.argument_name = argument_name
 
-    def __str__(self):
+    def __str__(self) -> str:
         return (
             "Cannot specify multiple `Annotated` Typer arguments"
             f" for {self.argument_name!r}"
@@ -84,7 +84,7 @@ class DefaultFactoryAndDefaultValueError(Exception):
         self.argument_name = argument_name
         self.param_type = param_type
 
-    def __str__(self):
+    def __str__(self) -> str:
         param_type_str = _param_type_to_user_string(self.param_type)
         return (
             "Cannot specify `default_factory` and a default value together"
@@ -95,7 +95,7 @@ class DefaultFactoryAndDefaultValueError(Exception):
 def _split_annotation_from_typer_annotations(
     base_annotation: Type[Any],
 ) -> Tuple[Type[Any], List[ParameterInfo]]:
-    if get_origin(base_annotation) is not Annotated:
+    if get_origin(base_annotation) is not Annotated:  # type: ignore
         return base_annotation, []
     base_annotation, *maybe_typer_annotations = get_args(base_annotation)
     return base_annotation, [
@@ -144,8 +144,8 @@ def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
                 and parameter_info.default is not ...
             ):
                 parameter_info.param_decls = (
-                    parameter_info.default,
-                    *parameter_info.param_decls,
+                    cast(str, parameter_info.default),
+                    *(parameter_info.param_decls or ()),
                 )
                 parameter_info.default = ...
 
