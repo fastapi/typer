@@ -211,7 +211,7 @@ $ python main.py create --help
 
 <b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py create [OPTIONS] USERNAME                     </b>
 <b>                                                                     </b>
- <font color="#A6E22E"><b>Create</b></font> a new <i>shinny</i> user. ✨
+ <font color="#A6E22E"><b>Create</b></font> a new <i>shiny</i> user. ✨
  This requires a <font color="#A5A5A1"><u style="text-decoration-style:single">username</u></font><font color="#A5A5A1">.                                           </font>
 
 <font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
@@ -272,7 +272,7 @@ $ python main.py create --help
 
 <b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py create [OPTIONS] USERNAME                     </b>
 <b>                                                                     </b>
- <b>Create</b> a new <i>shinny</i> user. ✨
+ <b>Create</b> a new <i>shiny</i> user. ✨
 
  <font color="#F4BF75"><b> • </b></font><font color="#A5A5A1">Create a username                                                </font>
  <font color="#F4BF75"><b> • </b></font><font color="#A5A5A1">Show that the username is created                                </font>
