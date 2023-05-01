@@ -1,10 +1,23 @@
 ## Latest Changes
 
+
+
+### Features
+
+* ✨ Add support for custom types and parsers. Initial PR [#583](https://github.com/tiangolo/typer/pull/583) by [@jpurviance](https://github.com/jpurviance). Based on original PR [#443](https://github.com/tiangolo/typer/pull/443) by [@paulo-raca](https://github.com/paulo-raca).
+    * New docs: [CLI Parameter Types: Custom Types](https://typer.tiangolo.com/tutorial/parameter-types/custom-types/).
+
+### Docs
+
 * 📝 Tweak docs, Custom Types path, main page and READAME colors, broken links. PR [#588](https://github.com/tiangolo/typer/pull/588) by [@tiangolo](https://github.com/tiangolo).
-* ✨ Add support for custom types and parsers (updates/builds upon PR #443). PR [#583](https://github.com/tiangolo/typer/pull/583) by [@jpurviance](https://github.com/jpurviance).
+* 📝 Update docs about helping Typer. PR [#547](https://github.com/tiangolo/typer/pull/547) by [@tiangolo](https://github.com/tiangolo).
+* ✏️ Fix typo in datetime docs. PR [#495](https://github.com/tiangolo/typer/pull/495) by [@huxuan](https://github.com/huxuan).
+* ✏️ Add quotes to package name that includes brackets in docs. PR [#475](https://github.com/tiangolo/typer/pull/475) by [@gjolga](https://github.com/gjolga).
+
+### Internal
+
 * 🔧 Add `exclude_lines` to coverage configuration. PR [#585](https://github.com/tiangolo/typer/pull/585) by [@dmontagu](https://github.com/dmontagu).
 * ⬆️ Upgrade analytics. PR [#557](https://github.com/tiangolo/typer/pull/557) by [@tiangolo](https://github.com/tiangolo).
-* 📝 Update docs about helping Typer. PR [#547](https://github.com/tiangolo/typer/pull/547) by [@tiangolo](https://github.com/tiangolo).
 * 🔧 Update new issue chooser to suggest GitHub Discussions. PR [#544](https://github.com/tiangolo/typer/pull/544) by [@tiangolo](https://github.com/tiangolo).
 * 🔧 Add GitHub Discussion templates for questions. PR [#541](https://github.com/tiangolo/typer/pull/541) by [@tiangolo](https://github.com/tiangolo).
 * 🔧 Update pre-commit, Python version, isort version. PR [#542](https://github.com/tiangolo/typer/pull/542) by [@tiangolo](https://github.com/tiangolo).
@@ -13,13 +26,11 @@
 * 👷 Refactor CI artifact upload/download for docs previews. PR [#516](https://github.com/tiangolo/typer/pull/516) by [@tiangolo](https://github.com/tiangolo).
 * ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#500](https://github.com/tiangolo/typer/pull/500) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * ⬆ Bump actions/cache from 2 to 3. PR [#496](https://github.com/tiangolo/typer/pull/496) by [@dependabot[bot]](https://github.com/apps/dependabot).
-* ✏️ Fix typo in datetime docs. PR [#495](https://github.com/tiangolo/typer/pull/495) by [@huxuan](https://github.com/huxuan).
 * ⬆ Bump dawidd6/action-download-artifact from 2.24.1 to 2.24.2. PR [#494](https://github.com/tiangolo/typer/pull/494) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump dawidd6/action-download-artifact from 2.9.0 to 2.24.1. PR [#491](https://github.com/tiangolo/typer/pull/491) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump actions/setup-python from 2 to 4. PR [#492](https://github.com/tiangolo/typer/pull/492) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * 👷‍♂️ Consistently use `sys.executable` to run subprocesses, needed by OpenSUSE. PR [#408](https://github.com/tiangolo/typer/pull/408) by [@theMarix](https://github.com/theMarix).
 * 👷‍♂️ Ensure the `PYTHONPATH` is set properly when testing the tutorial scripts. PR [#407](https://github.com/tiangolo/typer/pull/407) by [@theMarix](https://github.com/theMarix).
-* ✏️ Add quotes to package name that includes brackets in docs. PR [#475](https://github.com/tiangolo/typer/pull/475) by [@gjolga](https://github.com/gjolga).
 
 ## 0.7.0
 
