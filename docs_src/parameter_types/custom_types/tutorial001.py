@@ -2,14 +2,14 @@ import typer
 
 
 class CustomClass:
-    def __init__(self, value):
+    def __init__(self, value: str):
         self.value = value
 
     def __str__(self):
         return f"<CustomClass: value={self.value}>"
 
 
-def parse_custom_class(value):
+def parse_custom_class(value: str):
     return CustomClass(value * 2)
 
 
@@ -22,4 +22,4 @@ def main(
 
 
 if __name__ == "__main__":
-    typer.run(main)  # pragma: no cover
+    typer.run(main)

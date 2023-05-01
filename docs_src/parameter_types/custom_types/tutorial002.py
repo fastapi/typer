@@ -3,7 +3,7 @@ import typer
 
 
 class CustomClass:
-    def __init__(self, value):
+    def __init__(self, value: str):
         self.value = value
 
     def __repr__(self):
@@ -26,4 +26,4 @@ def main(
 
 
 if __name__ == "__main__":
-    typer.run(main)  # pragma: no cover
+    typer.run(main)
