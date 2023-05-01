@@ -1,5 +1,6 @@
 ## Latest Changes
 
+* ⬆ Bump dawidd6/action-download-artifact from 2.24.2 to 2.26.0. PR [#558](https://github.com/tiangolo/typer/pull/558) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#549](https://github.com/tiangolo/typer/pull/549) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * ⬆ Upgrade Rich, support 13.x. PR [#524](https://github.com/tiangolo/typer/pull/524) by [@musicinmybrain](https://github.com/musicinmybrain).
 * ✏ Fix spelling (shinny -> shiny). PR [#586](https://github.com/tiangolo/typer/pull/586) by [@runofthemill](https://github.com/runofthemill).
