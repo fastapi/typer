@@ -220,7 +220,7 @@ class ParameterInfo:
         rich_help_panel: Union[str, None] = None,
     ):
         # Check if user has provided multiple custom parsers
-        if all([parser, click_type]):
+        if parser and click_type:
             raise ValueError(
                 "Multiple custom type parsers provided. "
                 "`parser` and `click_type` may not both be provided."
