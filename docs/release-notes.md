@@ -1,5 +1,6 @@
 ## Latest Changes
 
+* ✏ Fix spelling (shinny -> shiny). PR [#586](https://github.com/tiangolo/typer/pull/586) by [@runofthemill](https://github.com/runofthemill).
 
 
 ### Features
