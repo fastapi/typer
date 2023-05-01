@@ -1,6 +1,9 @@
 ## Latest Changes
 
 
+
+## 0.8.0
+
 ### Features
 
 * ✨ Add support for custom types and parsers. Initial PR [#583](https://github.com/tiangolo/typer/pull/583) by [@jpurviance](https://github.com/jpurviance). Based on original PR [#443](https://github.com/tiangolo/typer/pull/443) by [@paulo-raca](https://github.com/paulo-raca).
