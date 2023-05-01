@@ -6,7 +6,7 @@ app = typer.Typer(rich_markup_mode="markdown")
 @app.command()
 def create(username: str = typer.Argument(..., help="The username to be **created**")):
     """
-    **Create** a new *shinny* user. :sparkles:
+    **Create** a new *shiny* user. :sparkles:
 
     * Create a username
 
