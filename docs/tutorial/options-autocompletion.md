@@ -48,7 +48,7 @@ Hello Camila
 
 Right now we get completion for the *CLI option* names, but not for the values.
 
-We can provide completion for the values creating an `autocompletion` function, similar to the `callback` functions from [CLI Option Callback and Context](./callback-and-context.md){.internal-link target=_blank}:
+We can provide completion for the values creating an `autocompletion` function, similar to the `callback` functions from [CLI Option Callback and Context](./options/callback-and-context.md){.internal-link target=_blank}:
 
 ```Python hl_lines="4-5  14"
 {!../docs_src/options_autocompletion/tutorial002.py!}
@@ -273,7 +273,7 @@ Because completion is based on the output printed by your program (handled inter
 ### Printing to "standard error"
 
 !!! tip
-    If you need a refresher about what is "standard output" and "standard error" check the section in [Printing and Colors: "Standard Output" and "Standard Error"](../printing.md#standard-output-and-standard-error){.internal-link target=_blank}.
+    If you need a refresher about what is "standard output" and "standard error" check the section in [Printing and Colors: "Standard Output" and "Standard Error"](./printing.md#standard-output-and-standard-error){.internal-link target=_blank}.
 
 The completion system only reads from "standard output", so, printing to "standard error" won't break completion. 🚀
 
