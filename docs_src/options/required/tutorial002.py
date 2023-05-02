@@ -1,7 +1,7 @@
 import typer
 
 
-def main(name: str, lastname: str = typer.Option()):
+def main(name: str, lastname: str = typer.Option(default=...)):
     print(f"Hello {name} {lastname}")
 
 
