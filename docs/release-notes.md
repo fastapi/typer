@@ -1,9 +1,20 @@
 ## Latest Changes
 
-* 📝 Update docs examples for custom param types using `Annotated`, fix overloads for `typer.Argument`. PR [#594](https://github.com/tiangolo/typer/pull/594) by [@tiangolo](https://github.com/tiangolo).
-* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#592](https://github.com/tiangolo/typer/pull/592) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
-* ✨ Add support for PEP-593 `Annotated` for specifying options and arguments. PR [#584](https://github.com/tiangolo/typer/pull/584) by [@ryangalamb](https://github.com/ryangalamb).
+### Features
 
+* ✨ Add support for PEP-593 `Annotated` for specifying options and arguments. Initial PR [#584](https://github.com/tiangolo/typer/pull/584) by [@ryangalamb](https://github.com/ryangalamb).
+    * New docs: [Optional CLI arguments](https://typer.tiangolo.com/tutorial/arguments/optional/#an-alternative-cli-argument-declaration).
+    * It is no longer required to pass a default value of `...` to mark a *CLI Argument* or *CLI Option* as required.
+    * It is now recommended to use `Annotated` for `typer.Option()` and `typer.Argument()`.
+    * All the docs have been updated to recommend `Annotated`.
+
+### Docs
+
+* 📝 Update docs examples for custom param types using `Annotated`, fix overloads for `typer.Argument`. PR [#594](https://github.com/tiangolo/typer/pull/594) by [@tiangolo](https://github.com/tiangolo).
+
+### Internal
+
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#592](https://github.com/tiangolo/typer/pull/592) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 
 ## 0.8.0
 
