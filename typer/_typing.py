@@ -288,7 +288,8 @@ else:
 
 
 if TYPE_CHECKING:
-    from .fields import ModelField
+    # Only in Pydantic
+    # from .fields import ModelField
 
     TupleGenerator = Generator[Tuple[str, Any], None, None]
     DictStrAny = Dict[str, Any]
@@ -541,59 +542,61 @@ def is_classvar(ann_type: Type[Any]) -> bool:
     return False
 
 
-def update_field_forward_refs(field: "ModelField", globalns: Any, localns: Any) -> None:
-    """
-    Try to update ForwardRefs on fields based on this ModelField, globalns and localns.
-    """
-    if field.type_.__class__ == ForwardRef:
-        field.type_ = evaluate_forwardref(field.type_, globalns, localns or None)
-        field.prepare()
+# Only in Pydantic
+# def update_field_forward_refs(field: "ModelField", globalns: Any, localns: Any) -> None:
+#     """
+#     Try to update ForwardRefs on fields based on this ModelField, globalns and localns.
+#     """
+#     if field.type_.__class__ == ForwardRef:
+#         field.type_ = evaluate_forwardref(field.type_, globalns, localns or None)
+#         field.prepare()
 
-    if field.sub_fields:
-        for sub_f in field.sub_fields:
-            update_field_forward_refs(sub_f, globalns=globalns, localns=localns)
+#     if field.sub_fields:
+#         for sub_f in field.sub_fields:
+#             update_field_forward_refs(sub_f, globalns=globalns, localns=localns)
 
-    if field.discriminator_key is not None:
-        field.prepare_discriminated_union_sub_fields()
+#     if field.discriminator_key is not None:
+#         field.prepare_discriminated_union_sub_fields()
 
 
-def update_model_forward_refs(
-    model: Type[Any],
-    fields: Iterable["ModelField"],
-    json_encoders: Dict[Union[Type[Any], str], AnyCallable],
-    localns: "DictStrAny",
-    exc_to_suppress: Tuple[Type[BaseException], ...] = (),
-) -> None:
-    """
-    Try to update model fields ForwardRefs based on model and localns.
-    """
-    if model.__module__ in sys.modules:
-        globalns = sys.modules[model.__module__].__dict__.copy()
-    else:
-        globalns = {}
+# Only in Pydantic
+# def update_model_forward_refs(
+#     model: Type[Any],
+#     fields: Iterable["ModelField"],
+#     json_encoders: Dict[Union[Type[Any], str], AnyCallable],
+#     localns: "DictStrAny",
+#     exc_to_suppress: Tuple[Type[BaseException], ...] = (),
+# ) -> None:
+#     """
+#     Try to update model fields ForwardRefs based on model and localns.
+#     """
+#     if model.__module__ in sys.modules:
+#         globalns = sys.modules[model.__module__].__dict__.copy()
+#     else:
+#         globalns = {}
 
-    globalns.setdefault(model.__name__, model)
+#     globalns.setdefault(model.__name__, model)
 
-    for f in fields:
-        try:
-            update_field_forward_refs(f, globalns=globalns, localns=localns)
-        except exc_to_suppress:
-            pass
+#     for f in fields:
+#         try:
+#             update_field_forward_refs(f, globalns=globalns, localns=localns)
+#         except exc_to_suppress:
+#             pass
 
-    for key in set(json_encoders.keys()):
-        if isinstance(key, str):
-            fr: ForwardRef = ForwardRef(key)
-        elif isinstance(key, ForwardRef):
-            fr = key
-        else:
-            continue
+#     for key in set(json_encoders.keys()):
+#         if isinstance(key, str):
+#             fr: ForwardRef = ForwardRef(key)
+#         elif isinstance(key, ForwardRef):
+#             fr = key
+#         else:
+#             continue
 
-        try:
-            new_key = evaluate_forwardref(fr, globalns, localns or None)
-        except exc_to_suppress:  # pragma: no cover
-            continue
+#         try:
+#             new_key = evaluate_forwardref(fr, globalns, localns or None)
+#         except exc_to_suppress:  # pragma: no cover
+#             continue
 
-        json_encoders[new_key] = json_encoders.pop(key)
+#         json_encoders[new_key] = json_encoders.pop(key)
 
 
 def get_class(type_: Type[Any]) -> Union[None, bool, Type[Any]]:
