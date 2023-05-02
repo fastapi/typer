@@ -185,6 +185,9 @@ class ParameterInfo:
         ] = None,
         autocompletion: Optional[Callable[..., Any]] = None,
         default_factory: Optional[Callable[[], Any]] = None,
+        # Custom type
+        parser: Optional[Callable[[str], Any]] = None,
+        click_type: Optional[click.ParamType] = None,
         # TyperArgument
         show_default: Union[bool, str] = True,
         show_choices: bool = True,
@@ -217,6 +220,13 @@ class ParameterInfo:
         # Rich settings
         rich_help_panel: Union[str, None] = None,
     ):
+        # Check if user has provided multiple custom parsers
+        if parser and click_type:
+            raise ValueError(
+                "Multiple custom type parsers provided. "
+                "`parser` and `click_type` may not both be provided."
+            )
+
         self.default = default
         self.param_decls = param_decls
         self.callback = callback
@@ -227,6 +237,9 @@ class ParameterInfo:
         self.shell_complete = shell_complete
         self.autocompletion = autocompletion
         self.default_factory = default_factory
+        # Custom type
+        self.parser = parser
+        self.click_type = click_type
         # TyperArgument
         self.show_default = show_default
         self.show_choices = show_choices
@@ -280,6 +293,9 @@ class OptionInfo(ParameterInfo):
         ] = None,
         autocompletion: Optional[Callable[..., Any]] = None,
         default_factory: Optional[Callable[[], Any]] = None,
+        # Custom type
+        parser: Optional[Callable[[str], Any]] = None,
+        click_type: Optional[click.ParamType] = None,
         # Option
         show_default: bool = True,
         prompt: Union[bool, str] = False,
@@ -331,6 +347,9 @@ class OptionInfo(ParameterInfo):
             shell_complete=shell_complete,
             autocompletion=autocompletion,
             default_factory=default_factory,
+            # Custom type
+            parser=parser,
+            click_type=click_type,
             # TyperArgument
             show_default=show_default,
             show_choices=show_choices,
@@ -393,6 +412,9 @@ class ArgumentInfo(ParameterInfo):
         ] = None,
         autocompletion: Optional[Callable[..., Any]] = None,
         default_factory: Optional[Callable[[], Any]] = None,
+        # Custom type
+        parser: Optional[Callable[[str], Any]] = None,
+        click_type: Optional[click.ParamType] = None,
         # TyperArgument
         show_default: Union[bool, str] = True,
         show_choices: bool = True,
@@ -436,6 +458,9 @@ class ArgumentInfo(ParameterInfo):
             shell_complete=shell_complete,
             autocompletion=autocompletion,
             default_factory=default_factory,
+            # Custom type
+            parser=parser,
+            click_type=click_type,
             # TyperArgument
             show_default=show_default,
             show_choices=show_choices,

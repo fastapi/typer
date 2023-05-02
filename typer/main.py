@@ -689,7 +689,13 @@ def get_callback(
 def get_click_type(
     *, annotation: Any, parameter_info: ParameterInfo
 ) -> click.ParamType:
-    if annotation == str:
+    if parameter_info.click_type is not None:
+        return parameter_info.click_type
+
+    elif parameter_info.parser is not None:
+        return click.types.FuncParamType(parameter_info.parser)
+
+    elif annotation == str:
         return click.STRING
     elif annotation == int:
         if parameter_info.min is not None or parameter_info.max is not None:
