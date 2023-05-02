@@ -36,8 +36,6 @@ Usage: main.py [OPTIONS]
 
 Options:
   --force               [default: False]
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 
 // Try it:
@@ -99,8 +97,6 @@ Usage: main.py [OPTIONS]
 
 Options:
   --accept / --reject
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 
 // Try it
@@ -155,8 +151,6 @@ Usage: main.py [OPTIONS]
 
 Options:
   -f, --force / -F, --no-force  [default: False]
-  --install-completion          Install completion for the current shell.
-  --show-completion             Show completion for the current shell, to copy it or customize the installation.
   --help                        Show this message and exit.
 
 // Try with the short name -f
@@ -211,8 +205,6 @@ Usage: main.py [OPTIONS]
 
 Options:
    / -d, --demo         [default: True]
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 
 // Try it
