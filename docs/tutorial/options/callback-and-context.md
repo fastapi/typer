@@ -6,9 +6,20 @@ In those cases you can use a *CLI parameter* callback function.
 
 For example, you could do some validation before the rest of the code is executed.
 
-```Python hl_lines="4 5 6 7  10"
-{!../docs_src/options/callback/tutorial001.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="5-8  11"
+    {!> ../docs_src/options/callback/tutorial001_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="4-7  10"
+    {!> ../docs_src/options/callback/tutorial001.py!}
+    ```
 
 Here you pass a function to `typer.Option()` or `typer.Argument()` with the keyword argument `callback`.
 
@@ -94,9 +105,20 @@ But the main **important point** is that it is all based on values printed by yo
 
 Let's say that when the callback is running, we want to show a message saying that it's validating the name:
 
-```Python hl_lines="5"
-{!../docs_src/options/callback/tutorial002.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="6"
+    {!> ../docs_src/options/callback/tutorial002_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="5"
+    {!> ../docs_src/options/callback/tutorial002.py!}
+    ```
 
 And because the callback will be called when the shell calls your program asking for completion, that message `"Validating name"` will be printed and it will break completion.
 
@@ -131,9 +153,20 @@ But you can access the context by declaring a function parameter of type `typer.
 
 The "context" has some additional data about the current execution of your program:
 
-```Python hl_lines="4 5 6"
-{!../docs_src/options/callback/tutorial003.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="5-7"
+    {!> ../docs_src/options/callback/tutorial003_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="4-6"
+    {!> ../docs_src/options/callback/tutorial003.py!}
+    ```
 
 The `ctx.resilient_parsing` will be `True` when handling completion, so you can just return without printing anything else.
 
@@ -165,9 +198,20 @@ Hello Camila
 
 The same way you can access the `typer.Context` by declaring a function parameter with its value, you can declare another function parameter with type `typer.CallbackParam` to get the specific Click `Parameter` object.
 
-```Python hl_lines="4  7"
-{!../docs_src/options/callback/tutorial004.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="5  8"
+    {!> ../docs_src/options/callback/tutorial004_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="4  7"
+    {!> ../docs_src/options/callback/tutorial004.py!}
+    ```
 
 It's probably not very common, but you could do it if you need it.
 
