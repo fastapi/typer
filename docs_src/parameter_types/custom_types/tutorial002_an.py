@@ -1,5 +1,6 @@
 import click
 import typer
+from typing_extensions import Annotated
 
 
 class CustomClass:
@@ -18,8 +19,10 @@ class CustomClassParser(click.ParamType):
 
 
 def main(
-    custom_arg: CustomClass = typer.Argument(click_type=CustomClassParser()),
-    custom_opt: CustomClass = typer.Option("Foo", click_type=CustomClassParser()),
+    custom_arg: Annotated[CustomClass, typer.Argument(click_type=CustomClassParser())],
+    custom_opt: Annotated[
+        CustomClass, typer.Option(click_type=CustomClassParser())
+    ] = "Foo",
 ):
     print(f"custom_arg is {custom_arg}")
     print(f"--custom-opt is {custom_opt}")
