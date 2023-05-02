@@ -54,8 +54,6 @@ Arguments:
 Options:
   --lastname TEXT         Last name of person to greet. [default: ]
   --formal / --no-formal  Say hi formally.  [default: False]
-  --install-completion    Install completion for the current shell.
-  --show-completion       Show completion for the current shell, to copy it or customize the installation.
   --help                  Show this message and exit.
 
 // Now you have a help text for the --lastname and --formal CLI options 🎉
@@ -103,11 +101,6 @@ $ python main.py --help
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--lastname</b></font>                  <font color="#F4BF75"><b>TEXT</b></font>  Last name of person to greet.   │
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--install-completion</b></font>        <font color="#F4BF75"><b>    </b></font>  Install completion for the      │
-<font color="#A5A5A1">│                                   current shell.                  │</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--show-completion</b></font>           <font color="#F4BF75"><b>    </b></font>  Show completion for the current │
-<font color="#A5A5A1">│                                   shell, to copy it or customize  │</font>
-<font color="#A5A5A1">│                                   the installation.               │</font>
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                      <font color="#F4BF75"><b>    </b></font>  Show this message and exit.     │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Customization and Utils ─────────────────────────────────────────╮</font>
@@ -164,8 +157,6 @@ Usage: main.py [OPTIONS]
 
 Options:
   --fullname TEXT
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 
 // Notice there's no [default: Wade Wilson] 🔥

@@ -60,8 +60,6 @@ Arguments:
   [NAMES]...  Select 3 characters to play with  [default: Harry, Hermione, Ron]
 
 Options:
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 
 // Use it with its defaults

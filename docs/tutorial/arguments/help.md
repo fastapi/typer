@@ -41,8 +41,6 @@ Arguments:
   NAME  The name of the user to greet  [required]
 
 Options:
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 ```
 
@@ -83,8 +81,6 @@ Arguments:
   NAME  The name of the user to greet  [required]
 
 Options:
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 ```
 
@@ -125,8 +121,6 @@ Arguments:
   [NAME]  Who to greet  [default: World]
 
 Options:
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 ```
 
@@ -165,9 +159,6 @@ Arguments:
   [NAME]  Who to greet
 
 Options:
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
-
   --help                Show this message and exit.
 ```
 
@@ -211,8 +202,6 @@ Arguments:
 
 
 Options:
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 
 // See it shows "(Deadpoolio the amazing's name)" instead of the actual default of "Wade Wilson"
@@ -270,8 +259,6 @@ Arguments:
   ✨username✨  [default: World]
 
 Options:
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 ```
 
@@ -319,11 +306,6 @@ $ python main.py --help
 <font color="#A5A5A1">│   age           </font><font color="#A37F4E"><b>[AGE]     </b></font>  The user&apos;s age                        │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--install-completion</b></font>          Install completion for the current  │
-<font color="#A5A5A1">│                               shell.                              │</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--show-completion</b></font>             Show completion for the current     │
-<font color="#A5A5A1">│                               shell, to copy it or customize the  │</font>
-<font color="#A5A5A1">│                               installation.                       │</font>
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                        Show this message and exit.         │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 ```
@@ -372,8 +354,6 @@ Usage: main.py [OPTIONS] [NAME]
   Say hi to NAME very gently, like Dirk.
 
 Options:
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 ```
 
