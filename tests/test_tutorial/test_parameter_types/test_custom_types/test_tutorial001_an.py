@@ -26,7 +26,7 @@ def test_parse_custom_type():
 def test_parse_custom_type_with_default():
     result = runner.invoke(app, ["0"])
     assert "custom_arg is <CustomClass: value=00>" in result.output
-    assert "custom-opt is <CustomClass: value=YY>" in result.output
+    assert "custom-opt is <CustomClass: value=FooFoo>" in result.output
 
 
 def test_script():
