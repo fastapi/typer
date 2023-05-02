@@ -1,5 +1,6 @@
 ## Latest Changes
 
+* 📝 Remove obsolete references to `--install-completion` for `typer.run()` scripts. PR [#595](https://github.com/tiangolo/typer/pull/595) by [@tiangolo](https://github.com/tiangolo).
 
 ## 0.9.0
 
