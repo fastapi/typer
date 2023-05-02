@@ -11,7 +11,7 @@ if TYPE_CHECKING:  # pragma: no cover
 @overload
 def Option(
     # Parameter
-    default: Optional[Any],
+    default: Optional[Any] = ...,
     *param_decls: str,
     callback: Optional[Callable[..., Any]] = None,
     metavar: Optional[str] = None,
@@ -25,6 +25,7 @@ def Option(
         ]
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
+    default_factory: Optional[Callable[[], Any]] = None,
     # Custom type
     parser: Optional[Callable[[str], Any]] = None,
     # Option
@@ -73,7 +74,7 @@ def Option(
 @overload
 def Option(
     # Parameter
-    default: Optional[Any],
+    default: Optional[Any] = ...,
     *param_decls: str,
     callback: Optional[Callable[..., Any]] = None,
     metavar: Optional[str] = None,
@@ -87,6 +88,7 @@ def Option(
         ]
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
+    default_factory: Optional[Callable[[], Any]] = None,
     # Custom type
     click_type: Optional[click.ParamType] = None,
     # Option
@@ -134,7 +136,7 @@ def Option(
 
 def Option(
     # Parameter
-    default: Optional[Any],
+    default: Optional[Any] = ...,
     *param_decls: str,
     callback: Optional[Callable[..., Any]] = None,
     metavar: Optional[str] = None,
@@ -148,6 +150,7 @@ def Option(
         ]
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
+    default_factory: Optional[Callable[[], Any]] = None,
     # Custom type
     parser: Optional[Callable[[str], Any]] = None,
     click_type: Optional[click.ParamType] = None,
@@ -202,6 +205,7 @@ def Option(
         envvar=envvar,
         shell_complete=shell_complete,
         autocompletion=autocompletion,
+        default_factory=default_factory,
         # Custom type
         parser=parser,
         click_type=click_type,
@@ -357,7 +361,7 @@ def Argument(
 
 def Argument(
     # Parameter
-    default: Optional[Any],
+    default: Optional[Any] = ...,
     *,
     callback: Optional[Callable[..., Any]] = None,
     metavar: Optional[str] = None,
@@ -371,6 +375,7 @@ def Argument(
         ]
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
+    default_factory: Optional[Callable[[], Any]] = None,
     # Custom type
     parser: Optional[Callable[[str], Any]] = None,
     click_type: Optional[click.ParamType] = None,
@@ -419,6 +424,7 @@ def Argument(
         envvar=envvar,
         shell_complete=shell_complete,
         autocompletion=autocompletion,
+        default_factory=default_factory,
         # Custom type
         parser=parser,
         click_type=click_type,

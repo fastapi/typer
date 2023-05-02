@@ -45,9 +45,20 @@ Error: Invalid value for '--network': invalid choice: capsule. (choose from simp
 
 You can make an `Enum` (choice) *CLI parameter* be case-insensitive with the `case_sensitive` parameter:
 
-```Python hl_lines="13"
-{!../docs_src/parameter_types/enum/tutorial002.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="15"
+    {!> ../docs_src/parameter_types/enum/tutorial002_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="13"
+    {!> ../docs_src/parameter_types/enum/tutorial002.py!}
+    ```
 
 And then the values of the `Enum` will be checked no matter if lower case, upper case, or a mix:
 

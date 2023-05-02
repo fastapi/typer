@@ -1,8 +1,19 @@
 Apart from having a prompt, you can make a *CLI option* have a `confirmation_prompt=True`:
 
-```Python hl_lines="5"
-{!../docs_src/options/password/tutorial001.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="7"
+    {!> ../docs_src/options/password/tutorial001_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="5"
+    {!> ../docs_src/options/password/tutorial001.py!}
+    ```
 
 And the CLI program will ask for confirmation:
 
@@ -30,9 +41,20 @@ You can achieve the same using `hide_input=True`.
 
 And if you combine it with `confirmation_prompt=True` you can easily receive a password with double confirmation:
 
-```Python hl_lines="6 7 8"
-{!../docs_src/options/password/tutorial002.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="8"
+    {!> ../docs_src/options/password/tutorial002_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="6-8"
+    {!> ../docs_src/options/password/tutorial002.py!}
+    ```
 
 Check it:
 

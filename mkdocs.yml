@@ -104,6 +104,9 @@ markdown_extensions:
       alternate_style: true
   - mdx_include:
       base_path: docs
+  # Enable while writing docs to simplify highlighting
+  # - pymdownx.highlight:
+  #     linenums: true
 
 extra:
   analytics:

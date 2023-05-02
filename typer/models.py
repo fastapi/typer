@@ -184,6 +184,7 @@ class ParameterInfo:
             ]
         ] = None,
         autocompletion: Optional[Callable[..., Any]] = None,
+        default_factory: Optional[Callable[[], Any]] = None,
         # Custom type
         parser: Optional[Callable[[str], Any]] = None,
         click_type: Optional[click.ParamType] = None,
@@ -235,6 +236,7 @@ class ParameterInfo:
         self.envvar = envvar
         self.shell_complete = shell_complete
         self.autocompletion = autocompletion
+        self.default_factory = default_factory
         # Custom type
         self.parser = parser
         self.click_type = click_type
@@ -290,6 +292,7 @@ class OptionInfo(ParameterInfo):
             ]
         ] = None,
         autocompletion: Optional[Callable[..., Any]] = None,
+        default_factory: Optional[Callable[[], Any]] = None,
         # Custom type
         parser: Optional[Callable[[str], Any]] = None,
         click_type: Optional[click.ParamType] = None,
@@ -343,6 +346,7 @@ class OptionInfo(ParameterInfo):
             envvar=envvar,
             shell_complete=shell_complete,
             autocompletion=autocompletion,
+            default_factory=default_factory,
             # Custom type
             parser=parser,
             click_type=click_type,
@@ -407,6 +411,7 @@ class ArgumentInfo(ParameterInfo):
             ]
         ] = None,
         autocompletion: Optional[Callable[..., Any]] = None,
+        default_factory: Optional[Callable[[], Any]] = None,
         # Custom type
         parser: Optional[Callable[[str], Any]] = None,
         click_type: Optional[click.ParamType] = None,
@@ -452,6 +457,7 @@ class ArgumentInfo(ParameterInfo):
             envvar=envvar,
             shell_complete=shell_complete,
             autocompletion=autocompletion,
+            default_factory=default_factory,
             # Custom type
             parser=parser,
             click_type=click_type,

@@ -5,6 +5,9 @@ source =
     tests
     docs_src
 
+omit =
+    typer/_typing.py
+
 parallel = True
 context = '${CONTEXT}'
 
