@@ -1,4 +1,5 @@
 import typer
+from typing_extensions import Annotated
 
 
 class CustomClass:
@@ -14,8 +15,8 @@ def parse_custom_class(value: str):
 
 
 def main(
-    custom_arg: CustomClass = typer.Argument(parser=parse_custom_class),
-    custom_opt: CustomClass = typer.Option("Y", parser=parse_custom_class),
+    custom_arg: Annotated[CustomClass, typer.Argument(parser=parse_custom_class)],
+    custom_opt: Annotated[CustomClass, typer.Option(parser=parse_custom_class)] = "Foo",
 ):
     print(f"custom_arg is {custom_arg}")
     print(f"--custom-opt is {custom_opt}")

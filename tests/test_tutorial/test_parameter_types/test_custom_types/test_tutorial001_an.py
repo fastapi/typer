@@ -4,7 +4,7 @@ import sys
 import typer
 from typer.testing import CliRunner
 
-from docs_src.parameter_types.custom_types import tutorial002 as mod
+from docs_src.parameter_types.custom_types import tutorial001_an as mod
 
 runner = CliRunner()
 
@@ -19,14 +19,14 @@ def test_help():
 
 def test_parse_custom_type():
     result = runner.invoke(app, ["0", "--custom-opt", "1"])
-    assert "custom_arg is <CustomClass: value=000>" in result.output
-    assert "custom-opt is <CustomClass: value=111>" in result.output
+    assert "custom_arg is <CustomClass: value=00>" in result.output
+    assert "custom-opt is <CustomClass: value=11>" in result.output
 
 
 def test_parse_custom_type_with_default():
     result = runner.invoke(app, ["0"])
-    assert "custom_arg is <CustomClass: value=000>" in result.output
-    assert "custom-opt is <CustomClass: value=FooFooFoo>" in result.output
+    assert "custom_arg is <CustomClass: value=00>" in result.output
+    assert "custom-opt is <CustomClass: value=FooFoo>" in result.output
 
 
 def test_script():

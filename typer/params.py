@@ -254,7 +254,7 @@ def Option(
 @overload
 def Argument(
     # Parameter
-    default: Optional[Any],
+    default: Optional[Any] = ...,
     *,
     callback: Optional[Callable[..., Any]] = None,
     metavar: Optional[str] = None,
@@ -308,7 +308,7 @@ def Argument(
 @overload
 def Argument(
     # Parameter
-    default: Optional[Any],
+    default: Optional[Any] = ...,
     *,
     callback: Optional[Callable[..., Any]] = None,
     metavar: Optional[str] = None,
