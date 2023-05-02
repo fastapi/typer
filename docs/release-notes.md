@@ -1,5 +1,6 @@
 ## Latest Changes
 
+* ✨ Add support for PEP-593 `Annotated` for specifying options and arguments. PR [#584](https://github.com/tiangolo/typer/pull/584) by [@ryangalamb](https://github.com/ryangalamb).
 
 
 ## 0.8.0
