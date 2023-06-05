@@ -93,35 +93,24 @@ Run your application:
 $ python main.py
 
 // You get a nice error, you are missing NAME
-<font color="#F4BF75">Usage: </font>main.py [OPTIONS] NAME
-<font color="#A5A5A1">Try </font><font color="#44919F">&apos;main.py </font><font color="#44919F"><b>--help</b></font><font color="#44919F">&apos;</font><font color="#A5A5A1"> for help.</font>
-<font color="#F92672">╭─ Error ───────────────────────────────────────────╮</font>
-<font color="#F92672">│</font> Missing argument &apos;NAME&apos;.                          <font color="#F92672">│</font>
-<font color="#F92672">╰───────────────────────────────────────────────────╯</font>
+Usage: main.py [OPTIONS] NAME
+Try 'main.py --help' for help.
+╭─ Error ───────────────────────────────────────────╮
+│ Missing argument 'NAME'.                          │
+╰───────────────────────────────────────────────────╯
 
 
 // You get a --help for free
 $ python main.py --help
 
-<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] NAME                       </b>
-<b>                                                     </b>
-<font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    name      <font color="#F4BF75"><b>TEXT</b></font>  [default: None] <font color="#A6194C">[required]</font>   │
-<font color="#A5A5A1">╰───────────────────────────────────────────────────╯</font>
-<font color="#A5A5A1">╭─ Options ─────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--install-completion</b></font>          Install completion  │
-<font color="#A5A5A1">│                               for the current     │</font>
-<font color="#A5A5A1">│                               shell.              │</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--show-completion</b></font>             Show completion for │
-<font color="#A5A5A1">│                               the current shell,  │</font>
-<font color="#A5A5A1">│                               to copy it or       │</font>
-<font color="#A5A5A1">│                               customize the       │</font>
-<font color="#A5A5A1">│                               installation.       │</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                        Show this message   │
-<font color="#A5A5A1">│                               and exit.           │</font>
-<font color="#A5A5A1">╰───────────────────────────────────────────────────╯</font>
+Usage: main.py [OPTIONS] NAME
 
-// When you create a package you get ✨ auto-completion ✨ for free, installed with --install-completion
+╭─ Arguments ───────────────────────────────────────╮
+│ *    name      TEXT  [default: None] [required]   |
+╰───────────────────────────────────────────────────╯
+╭─ Options ─────────────────────────────────────────╮
+│ --help          Show this message and exit.       │
+╰───────────────────────────────────────────────────╯
 
 // Now pass the NAME argument
 $ python main.py Camila
@@ -186,24 +175,26 @@ Check the new help:
 ```console
 $ python main.py --help
 
-<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] COMMAND [ARGS]...          </b>
-<b>                                                     </b>
-<font color="#A5A5A1">╭─ Options ─────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--install-completion</b></font>          Install completion  │
-<font color="#A5A5A1">│                               for the current     │</font>
-<font color="#A5A5A1">│                               shell.              │</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--show-completion</b></font>             Show completion for │
-<font color="#A5A5A1">│                               the current shell,  │</font>
-<font color="#A5A5A1">│                               to copy it or       │</font>
-<font color="#A5A5A1">│                               customize the       │</font>
-<font color="#A5A5A1">│                               installation.       │</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                        Show this message   │
-<font color="#A5A5A1">│                               and exit.           │</font>
-<font color="#A5A5A1">╰───────────────────────────────────────────────────╯</font>
-<font color="#A5A5A1">╭─ Commands ────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>goodbye                                     </b></font>      │
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>hello                                       </b></font>      │
-<font color="#A5A5A1">╰───────────────────────────────────────────────────╯</font>
+ Usage: main.py [OPTIONS] COMMAND [ARGS]...
+
+╭─ Options ─────────────────────────────────────────╮
+│ --install-completion          Install completion  │
+│                               for the current     │
+│                               shell.              │
+│ --show-completion             Show completion for │
+│                               the current shell,  │
+│                               to copy it or       │
+│                               customize the       │
+│                               installation.       │
+│ --help                        Show this message   │
+│                               and exit.           │
+╰───────────────────────────────────────────────────╯
+╭─ Commands ────────────────────────────────────────╮
+│ goodbye                                           │
+│ hello                                             │
+╰───────────────────────────────────────────────────╯
+
+// When you create a package you get ✨ auto-completion ✨ for free, installed with --install-completion
 
 // You have 2 subcommands (the 2 functions): goodbye and hello
 ```
@@ -217,14 +208,14 @@ Now check the help for the `hello` command:
 ```console
 $ python main.py hello --help
 
-<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py hello [OPTIONS] NAME                 </b>
-<b>                                                     </b>
-<font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    name      <font color="#F4BF75"><b>TEXT</b></font>  [default: None] <font color="#A6194C">[required]</font>   │
-<font color="#A5A5A1">╰───────────────────────────────────────────────────╯</font>
-<font color="#A5A5A1">╭─ Options ─────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>          Show this message and exit.       │
-<font color="#A5A5A1">╰───────────────────────────────────────────────────╯</font>
+ Usage: main.py hello [OPTIONS] NAME
+
+╭─ Arguments ───────────────────────────────────────╮
+│ *    name      TEXT  [default: None] [required]   │
+╰───────────────────────────────────────────────────╯
+╭─ Options ─────────────────────────────────────────╮
+│ --help          Show this message and exit.       │
+╰───────────────────────────────────────────────────╯
 ```
 
 </div>
@@ -236,16 +227,16 @@ And now check the help for the `goodbye` command:
 ```console
 $ python main.py goodbye --help
 
-<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py goodbye [OPTIONS] NAME               </b>
-<b>                                                     </b>
-<font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    name      <font color="#F4BF75"><b>TEXT</b></font>  [default: None] <font color="#A6194C">[required]</font>   │
-<font color="#A5A5A1">╰───────────────────────────────────────────────────╯</font>
-<font color="#A5A5A1">╭─ Options ─────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--formal</b></font>    <font color="#AE81FF"><b>--no-formal</b></font>      [default: no-formal] │
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                       Show this message    │
-<font color="#A5A5A1">│                              and exit.            │</font>
-<font color="#A5A5A1">╰───────────────────────────────────────────────────╯</font>
+ Usage: main.py goodbye [OPTIONS] NAME
+
+╭─ Arguments ───────────────────────────────────────╮
+│ *    name      TEXT  [default: None] [required]   │
+╰───────────────────────────────────────────────────╯
+╭─ Options ─────────────────────────────────────────╮
+│ --formal    --no-formal      [default: no-formal] │
+│ --help                       Show this message    │
+│                              and exit.            │
+╰───────────────────────────────────────────────────╯
 
 // Automatic --formal and --no-formal for the bool option 🎉
 ```

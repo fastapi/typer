@@ -118,6 +118,11 @@ Options:
 
 There's a little detail that is worth noting here.
 
+Now the help shows two new *CLI options*:
+
+* `--install-completion`
+* `--show-completion`
+
 To get shell/tab completion, it's necessary to build a package that you and your users can install and **call directly**.
 
 So instead of running a Python script like:
