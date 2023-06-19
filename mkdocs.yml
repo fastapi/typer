@@ -60,6 +60,7 @@ nav:
           - Enum - Choices: tutorial/parameter-types/enum.md
           - Path: tutorial/parameter-types/path.md
           - File: tutorial/parameter-types/file.md
+          - Custom Types: tutorial/parameter-types/custom-types.md
       - SubCommands - Command Groups:
           - SubCommands - Command Groups - Intro: tutorial/subcommands/index.md
           - Add Typer: tutorial/subcommands/add-typer.md
@@ -103,6 +104,9 @@ markdown_extensions:
       alternate_style: true
   - mdx_include:
       base_path: docs
+  # Enable while writing docs to simplify highlighting
+  # - pymdownx.highlight:
+  #     linenums: true
 
 extra:
   analytics:

@@ -2,9 +2,20 @@ Commands can also have their own *CLI options*.
 
 In fact, each command can have different *CLI arguments* and *CLI options*:
 
-```Python hl_lines="7  13 14  24  33"
-{!../docs_src/commands/options/tutorial001.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="8  14-17  27-29  38"
+    {!> ../docs_src/commands/options/tutorial001_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="7  13-14  24  33"
+    {!> ../docs_src/commands/options/tutorial001.py!}
+    ```
 
 Here we have multiple commands, with different *CLI parameters*:
 
