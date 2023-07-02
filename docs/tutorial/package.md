@@ -2,7 +2,7 @@ When you create a CLI program with **Typer** you probably want to create your ow
 
 That's what allows your users to install it and have it as an independent program that they can use in their terminal.
 
-And that's also required for shell auto completion to work (unless you use your program through [Typer CLI](../typer-cli.md){.internal-link target=_blank}).
+And that's also required for shell auto completion to work (unless you use your program through [Typer CLI](../typer-cli.md){.internal-link target=\_blank}).
 
 Nowadays, there are several ways and tools to create Python packages (what you install with `pip install something`).
 
@@ -11,7 +11,7 @@ You might even have your favorite already.
 Here's a very opinionated, short guide, showing one of the alternative ways of creating a Python package with a **Typer** app, from scratch.
 
 !!! tip
-    If you already have a favorite way of creating Python packages, feel free to skip this.
+If you already have a favorite way of creating Python packages, feel free to skip this.
 
 ## Prerequisites
 
@@ -142,7 +142,7 @@ def load():
 ```
 
 !!! tip
-    As we are creating an installable Python package, there's no need to add a section with `if __name__ == "__main__":`.
+As we are creating an installable Python package, there's no need to add a section with `if __name__ == "__main__":`.
 
 ## Modify the README
 
@@ -166,30 +166,6 @@ name = "rick-portal-gun"
 version = "0.1.0"
 description = ""
 authors = ["Rick Sanchez <rick@example.com>"]
-
-[tool.poetry.dependencies]
-python = "^3.6"
-typer = {extras = ["all"], version = "^0.1.0"}
-
-[tool.poetry.dev-dependencies]
-pytest = "^5.2"
-
-[build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
-```
-
-We changed the default README, so let's make it use the new `README.md`.
-
-Add the line:
-
-```TOML hl_lines="6"
-[tool.poetry]
-name = "rick-portal-gun"
-version = "0.1.0"
-description = ""
-authors = ["Rick Sanchez <rick@example.com>"]
-readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.6"
@@ -342,7 +318,7 @@ Building rick-portal-gun (0.1.0)
 
 After that, if you check in your project directory, you should now have a couple of extra files at `./dist/`:
 
-``` hl_lines="3 4"
+```hl_lines="3 4"
 .
 ├── dist
 │   ├── rick_portal_gun-0.1.0-py3-none-any.whl
@@ -369,12 +345,12 @@ $ pip install --user /home/rock/code/rick-portal-gun/dist/rick_portal_gun-0.1.0-
 </div>
 
 !!! warning
-    The `--user` is important, that ensures you install it in your user's directory and not in the global system.
+The `--user` is important, that ensures you install it in your user's directory and not in the global system.
 
     If you installed it in the global system (e.g. with `sudo`) you could install a version of a library (e.g. a sub-dependency) that is incompatible with your system.
 
 !!! tip
-    Bonus points if you use <a href="https://github.com/pipxproject/pipx" class="external-link" target="_blank">`pipx`</a> to install it while keeping an isolated environment for your Python CLI programs 🚀
+Bonus points if you use <a href="https://github.com/pipxproject/pipx" class="external-link" target="_blank">`pipx`</a> to install it while keeping an isolated environment for your Python CLI programs 🚀
 
 Now you have your CLI program installed. And you can use it freely:
 
@@ -403,7 +379,7 @@ Completion will take effect once you restart the terminal.
 </div>
 
 !!! tip
-    If you want to remove completion you can just delete the added line in that file.
+If you want to remove completion you can just delete the added line in that file.
 
 And after you restart the terminal you will get completion for your new CLI program:
 
@@ -433,7 +409,7 @@ $ pip install fastapi
 
 </div>
 
-But you can also call Python with the `-m` *CLI Option* and pass a module for it to execute as if it was a script, like:
+But you can also call Python with the `-m` _CLI Option_ and pass a module for it to execute as if it was a script, like:
 
 <div class="termy">
 
@@ -443,12 +419,12 @@ $ python -m pip install fastapi
 
 </div>
 
-Here we pass `pip` as the value for `-m`, so, Python will execute the module `pip` as if it was a script. And then it will pass the rest of the *CLI Parameters* (`install fastapi`) to it.
+Here we pass `pip` as the value for `-m`, so, Python will execute the module `pip` as if it was a script. And then it will pass the rest of the _CLI Parameters_ (`install fastapi`) to it.
 
 These two are more or less equivalent, the `install fastapi` will be passed to `pip`.
 
 !!! tip
-    In the case of `pip`, in many occasions it's actually recommended that you run it with `python -m`, because if you create a virtual environment with its own `python`, that will ensure that you use the `pip` from *that* environment.
+In the case of `pip`, in many occasions it's actually recommended that you run it with `python -m`, because if you create a virtual environment with its own `python`, that will ensure that you use the `pip` from _that_ environment.
 
 ### Add a `__main__.py`
 
@@ -458,7 +434,7 @@ Python will look for that file and execute it.
 
 The file would live right beside `__init__.py`:
 
-``` hl_lines="7"
+```hl_lines="7"
 .
 ├── poetry.lock
 ├── pyproject.toml
@@ -505,7 +481,7 @@ Commands:
 </div>
 
 !!! tip
-    Notice that you have to pass the importable version of the package name, so `rick_portal_gun` instead of `rick-portal-gun`.
+Notice that you have to pass the importable version of the package name, so `rick_portal_gun` instead of `rick-portal-gun`.
 
 That works! 🚀 Sort of... 🤔
 
@@ -530,7 +506,7 @@ app(prog_name="rick-portal-gun")
 ```
 
 !!! tip
-    You can pass all the arguments and keyword arguments you could pass to a Click application, including `prog_name`.
+You can pass all the arguments and keyword arguments you could pass to a Click application, including `prog_name`.
 
 <div class="termy">
 
@@ -696,7 +672,7 @@ Loading portal gun
 
 ## Generate docs with **Typer CLI** (optional)
 
-You can install and use [Typer CLI](../typer-cli.md){.internal-link target=_blank} to generate docs for your package.
+You can install and use [Typer CLI](../typer-cli.md){.internal-link target=\_blank} to generate docs for your package.
 
 After installing it, you can use it to generate a new `README.md`:
 
