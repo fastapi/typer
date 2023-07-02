@@ -97,7 +97,7 @@ You can see that you have a generated project structure that looks like:
 .
 ├── poetry.lock
 ├── pyproject.toml
-├── README.rst
+├── README.md
 ├── rick_portal_gun
 │   └── __init__.py
 └── tests
@@ -146,13 +146,7 @@ def load():
 
 ## Modify the README
 
-Let's change the README. By default it's a file `README.rst`.
-
-Let's change it to `README.md`. So, change the extension from `.rst` to `.md`.
-
-So that we can use Markdown instead of reStructuredText.
-
-And change the file to have something like:
+Change the file to have something like:
 
 ```Markdown
 # Portal Gun
@@ -468,7 +462,7 @@ The file would live right beside `__init__.py`:
 .
 ├── poetry.lock
 ├── pyproject.toml
-├── README.rst
+├── README.md
 ├── rick_portal_gun
 │   ├── __init__.py
 │   └── __main__.py
