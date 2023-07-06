@@ -1,10 +1,11 @@
+import asyncio
 import inspect
 import os
 import sys
 import traceback
 from datetime import datetime
 from enum import Enum
-from functools import update_wrapper
+from functools import update_wrapper, wraps
 from pathlib import Path
 from traceback import FrameSummary, StackSummary
 from types import TracebackType
@@ -45,6 +46,11 @@ try:
 
 except ImportError:  # pragma: nocover
     rich = None  # type: ignore
+
+try:
+    from asyncio import Loop
+except ImportError:  # pragma: nocover
+    Loop = Any  # type: ignore
 
 _original_except_hook = sys.excepthook
 _typer_developer_exception_attr_name = "__typer_developer_exception__"
@@ -139,6 +145,7 @@ class Typer:
         pretty_exceptions_enable: bool = True,
         pretty_exceptions_show_locals: bool = True,
         pretty_exceptions_short: bool = True,
+        loop_factory: Optional[Callable[[], Loop]] = None,
     ):
         self._add_completion = add_completion
         self.rich_markup_mode: MarkupMode = rich_markup_mode
@@ -167,6 +174,7 @@ class Typer:
         self.registered_groups: List[TyperInfo] = []
         self.registered_commands: List[CommandInfo] = []
         self.registered_callback: Optional[TyperInfo] = None
+        self.loop_factory = loop_factory
 
     def callback(
         self,
@@ -235,12 +243,30 @@ class Typer:
             cls = TyperCommand
 
         def decorator(f: CommandFunctionType) -> CommandFunctionType:
+            def add_runner(f: CommandFunctionType) -> CommandFunctionType:
+                @wraps(f)
+                def runner(*args, **kwargs) -> Any:
+                    if sys.version_info >= (3, 11) and self.loop_factory:
+                        with asyncio.Runner(loop_factory=self.loop_factory) as runner:
+                            return runner.run(f(*args, **kwargs))
+                    elif sys.version_info >= (3, 7):
+                        return asyncio.run(f(*args, **kwargs))
+                    else:
+                        asyncio.get_event_loop().run_until_complete(asyncio.wait(f(*args, **kwargs)))
+
+                return runner
+
+            if inspect.iscoroutinefunction(f):
+                callback = add_runner(f)
+            else:
+                callback = f
+
             self.registered_commands.append(
                 CommandInfo(
                     name=name,
                     cls=cls,
                     context_settings=context_settings,
-                    callback=f,
+                    callback=callback,
                     help=help,
                     epilog=epilog,
                     short_help=short_help,
@@ -253,7 +279,7 @@ class Typer:
                     rich_help_panel=rich_help_panel,
                 )
             )
-            return f
+
 
         return decorator
 
