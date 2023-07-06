@@ -47,10 +47,7 @@ try:
 except ImportError:  # pragma: nocover
     rich = None  # type: ignore
 
-try:
-    from asyncio import Loop
-except ImportError:  # pragma: nocover
-    Loop = Any  # type: ignore
+from asyncio import AbstractEventLoop
 
 _original_except_hook = sys.excepthook
 _typer_developer_exception_attr_name = "__typer_developer_exception__"
@@ -145,7 +142,7 @@ class Typer:
         pretty_exceptions_enable: bool = True,
         pretty_exceptions_show_locals: bool = True,
         pretty_exceptions_short: bool = True,
-        loop_factory: Optional[Callable[[], Loop]] = None,
+        loop_factory: Optional[Callable[[], AbstractEventLoop]] = None,
     ):
         self._add_completion = add_completion
         self.rich_markup_mode: MarkupMode = rich_markup_mode
@@ -245,7 +242,7 @@ class Typer:
         def decorator(f: CommandFunctionType) -> CommandFunctionType:
             def add_runner(f: CommandFunctionType) -> CommandFunctionType:
                 @wraps(f)
-                def runner(*args, **kwargs) -> Any:
+                def run_wrapper(*args, **kwargs) -> Any:
                     if sys.version_info >= (3, 11) and self.loop_factory:
                         with asyncio.Runner(loop_factory=self.loop_factory) as runner:
                             return runner.run(f(*args, **kwargs))
@@ -254,7 +251,7 @@ class Typer:
                     else:
                         asyncio.get_event_loop().run_until_complete(asyncio.wait(f(*args, **kwargs)))
 
-                return runner
+                return run_wrapper
 
             if inspect.iscoroutinefunction(f):
                 callback = add_runner(f)
@@ -279,6 +276,7 @@ class Typer:
                     rich_help_panel=rich_help_panel,
                 )
             )
+            return f
 
 
         return decorator

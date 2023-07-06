@@ -5,14 +5,12 @@ from pathlib import Path
 from unittest import mock
 
 import shellingham
-import typer
-from typer.testing import CliRunner
 
 from docs_src.commands.index import tutorial001 as mod
+from typer.testing import CliRunner
 
 runner = CliRunner()
-app = typer.Typer()
-app.command()(mod.main)
+app = mod.app
 
 
 def test_completion_install_no_shell():
@@ -143,12 +141,6 @@ def test_completion_install_fish():
     assert "complete --command tutorial001.py" in new_text
     assert "completion installed in" in result.stdout
     assert "Completion will take effect once you restart the terminal" in result.stdout
-
-
-runner = CliRunner()
-app = typer.Typer()
-app.command()(mod.main)
-
 
 def test_completion_install_powershell():
     completion_path: Path = (
