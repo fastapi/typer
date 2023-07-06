@@ -242,16 +242,16 @@ class Typer:
         def decorator(f: CommandFunctionType) -> CommandFunctionType:
             def add_runner(f: CommandFunctionType) -> CommandFunctionType:
                 @wraps(f)
-                def run_wrapper(*args, **kwargs) -> Any:
+                def run_wrapper(*args: Any, **kwargs: Any) -> Any:
                     if sys.version_info >= (3, 11) and self.loop_factory:
-                        with asyncio.Runner(loop_factory=self.loop_factory) as runner:
+                        with asyncio.Runner(loop_factory=self.loop_factory) as runner: #type: ignore
                             return runner.run(f(*args, **kwargs))
                     elif sys.version_info >= (3, 7):
                         return asyncio.run(f(*args, **kwargs))
                     else:
-                        asyncio.get_event_loop().run_until_complete(asyncio.wait(f(*args, **kwargs)))
+                        asyncio.get_event_loop().run_until_complete(f(*args, **kwargs))
 
-                return run_wrapper
+                return run_wrapper #type: ignore
 
             if inspect.iscoroutinefunction(f):
                 callback = add_runner(f)
