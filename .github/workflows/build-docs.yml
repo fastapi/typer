@@ -43,7 +43,7 @@ jobs:
         run: python3.7 -m flit install --extras doc
       - name: Install Material for MkDocs Insiders
         if: ( github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false ) && steps.cache.outputs.cache-hit != 'true'
-        run: python3.7 -m pip install git+https://${{ secrets.ACTIONS_TOKEN }}@github.com/squidfunk/mkdocs-material-insiders.git
+        run: python3.7 -m pip install git+https://${{ secrets.TYPER_MKDOCS_MATERIAL_INSIDERS }}@github.com/squidfunk/mkdocs-material-insiders.git
       - uses: actions/cache@v3
         with:
           key: mkdocs-cards-${{ github.ref }}-v1
