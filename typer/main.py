@@ -8,7 +8,18 @@ from functools import update_wrapper
 from pathlib import Path
 from traceback import FrameSummary, StackSummary
 from types import TracebackType
-from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, Union
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    List,
+    Optional,
+    Sequence,
+    Tuple,
+    Type,
+    Union,
+    cast,
+)
 from uuid import UUID
 
 import click
@@ -34,7 +45,7 @@ from .models import (
     Required,
     TyperInfo,
 )
-from .utils import get_params_from_function
+from .utils import ensure_sync, get_params_from_function
 
 try:
     import rich
@@ -235,6 +246,8 @@ class Typer:
             cls = TyperCommand
 
         def decorator(f: CommandFunctionType) -> CommandFunctionType:
+            f = cast(CommandFunctionType, ensure_sync(f))
+
             self.registered_commands.append(
                 CommandInfo(
                     name=name,

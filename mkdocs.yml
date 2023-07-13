@@ -50,6 +50,7 @@ nav:
           - Typer Callback: tutorial/commands/callback.md
           - One or Multiple Commands: tutorial/commands/one-or-multiple.md
           - Using the Context: tutorial/commands/context.md
+      - Async functions: tutorial/async-cmd.md
       - CLI Option autocompletion: tutorial/options-autocompletion.md
       - CLI Parameter Types:
           - CLI Parameter Types Intro: tutorial/parameter-types/index.md

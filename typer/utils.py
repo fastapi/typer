@@ -1,8 +1,21 @@
 import inspect
 from copy import copy
-from typing import Any, Callable, Dict, List, Tuple, Type, cast, get_type_hints
+from functools import wraps
+from typing import (
+    Any,
+    Callable,
+    Coroutine,
+    Dict,
+    List,
+    Tuple,
+    Type,
+    TypeVar,
+    Union,
+    cast,
+    get_type_hints,
+)
 
-from typing_extensions import Annotated
+from typing_extensions import Annotated, ParamSpec
 
 from ._typing import get_args, get_origin
 from .models import ArgumentInfo, OptionInfo, ParameterInfo, ParamMeta
@@ -185,3 +198,23 @@ def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
             name=param.name, default=default, annotation=annotation
         )
     return params
+
+
+P = ParamSpec("P")
+R = TypeVar("R")
+
+
+def ensure_sync(f: Callable[P, Union[R, Coroutine[Any, Any, R]]]) -> Callable[P, R]:
+    # If `f` is an async function, wrap it into asyncio.run(f)
+    if not inspect.iscoroutinefunction(f):
+        f_sync = cast(Callable[P, R], f)
+        return f_sync
+
+    @wraps(f)
+    def run_f(*args: P.args, **kwargs: P.kwargs) -> R:
+        import asyncio
+
+        f_async = cast(Callable[P, Coroutine[Any, Any, R]], f)
+        return asyncio.run(f_async(*args, **kwargs))
+
+    return run_f
