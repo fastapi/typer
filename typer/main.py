@@ -45,9 +45,8 @@ try:
     console_stderr = Console(stderr=True)
 
 except ImportError:  # pragma: nocover
-    rich = None  # type: ignore
+    rich = None # type: ignore
 
-from asyncio import AbstractEventLoop
 
 _original_except_hook = sys.excepthook
 _typer_developer_exception_attr_name = "__typer_developer_exception__"
@@ -142,7 +141,6 @@ class Typer:
         pretty_exceptions_enable: bool = True,
         pretty_exceptions_show_locals: bool = True,
         pretty_exceptions_short: bool = True,
-        loop_factory: Optional[Callable[[], AbstractEventLoop]] = None,
     ):
         self._add_completion = add_completion
         self.rich_markup_mode: MarkupMode = rich_markup_mode
@@ -171,7 +169,6 @@ class Typer:
         self.registered_groups: List[TyperInfo] = []
         self.registered_commands: List[CommandInfo] = []
         self.registered_callback: Optional[TyperInfo] = None
-        self.loop_factory = loop_factory
 
     def callback(
         self,
@@ -243,10 +240,7 @@ class Typer:
             def add_runner(f: CommandFunctionType) -> CommandFunctionType:
                 @wraps(f)
                 def run_wrapper(*args: Any, **kwargs: Any) -> Any:
-                    if sys.version_info >= (3, 11) and self.loop_factory:
-                        with asyncio.Runner(loop_factory=self.loop_factory) as runner: #type: ignore
-                            return runner.run(f(*args, **kwargs))
-                    elif sys.version_info >= (3, 7):
+                    if sys.version_info >= (3, 7):
                         return asyncio.run(f(*args, **kwargs))
                     else:
                         asyncio.get_event_loop().run_until_complete(f(*args, **kwargs))

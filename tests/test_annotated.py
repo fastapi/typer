@@ -73,20 +73,3 @@ def test_runner_can_use_an_async_method():
     result = runner.invoke(app, ["42"])
     assert result.exit_code == 0, result.output
     assert "hello 42" in result.output
-
-if sys.version_info >= (3, 11):
-    def test_runner_can_use_a_custom_async_loop():
-        import asyncio
-        app = typer.Typer(loop_factory=asyncio.new_event_loop)
-        @app.command()
-        async def cmd(val: Annotated[int, typer.Argument()] = 0):
-            print(f"hello {val}")
-
-        result = runner.invoke(app)
-        assert result.exit_code == 0, result.output
-        assert "hello 0" in result.output
-
-        result = runner.invoke(app, ["42"])
-        assert result.exit_code == 0, result.output
-        assert "hello 42" in result.output
-
