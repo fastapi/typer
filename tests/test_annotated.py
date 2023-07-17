@@ -1,5 +1,3 @@
-import sys
-
 import typer
 from typer.testing import CliRunner
 from typing_extensions import Annotated
@@ -60,8 +58,10 @@ def test_annotated_option_with_argname_doesnt_mutate_multiple_calls():
     assert result.exit_code == 0, result.output
     assert "Forcing operation" in result.output
 
+
 def test_runner_can_use_an_async_method():
     app = typer.Typer()
+
     @app.command()
     async def cmd(val: Annotated[int, typer.Argument()] = 0):
         print(f"hello {val}")

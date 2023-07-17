@@ -45,7 +45,7 @@ try:
     console_stderr = Console(stderr=True)
 
 except ImportError:  # pragma: nocover
-    rich = None # type: ignore
+    rich = None  # type: ignore
 
 
 _original_except_hook = sys.excepthook
@@ -245,7 +245,7 @@ class Typer:
                     else:
                         asyncio.get_event_loop().run_until_complete(f(*args, **kwargs))
 
-                return run_wrapper #type: ignore
+                return run_wrapper  # type: ignore
 
             if inspect.iscoroutinefunction(f):
                 callback = add_runner(f)
@@ -271,7 +271,6 @@ class Typer:
                 )
             )
             return f
-
 
         return decorator
 
