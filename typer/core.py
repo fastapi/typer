@@ -9,6 +9,7 @@ from typing import (
     Callable,
     Dict,
     List,
+    MutableMapping,
     Optional,
     Sequence,
     TextIO,
@@ -634,7 +635,7 @@ def _typer_format_options(
 def _typer_main_shell_completion(
     self: click.core.Command,
     *,
-    ctx_args: Dict[str, Any],
+    ctx_args: MutableMapping[str, Any],
     prog_name: str,
     complete_var: Optional[str] = None,
 ) -> None:
@@ -696,7 +697,7 @@ class TyperCommand(click.core.Command):
 
     def _main_shell_completion(
         self,
-        ctx_args: Dict[str, Any],
+        ctx_args: MutableMapping[str, Any],
         prog_name: str,
         complete_var: Optional[str] = None,
     ) -> None:
@@ -758,7 +759,7 @@ class TyperGroup(click.core.Group):
 
     def _main_shell_completion(
         self,
-        ctx_args: Dict[str, Any],
+        ctx_args: MutableMapping[str, Any],
         prog_name: str,
         complete_var: Optional[str] = None,
     ) -> None:
