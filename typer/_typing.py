@@ -4,14 +4,13 @@
 
 import sys
 from os import PathLike
-from typing import (  # type: ignore
+from typing import (
     TYPE_CHECKING,
     AbstractSet,
     Any,
     ClassVar,
     Dict,
     Generator,
-    Iterable,
     List,
     Mapping,
     NewType,
