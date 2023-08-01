@@ -70,8 +70,8 @@ jobs:
       - name: Build Docs with Insiders
         if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false
         run: python -m mkdocs build --config-file mkdocs.insiders.yml
-      - name: Zip docs
-        run: bash ./scripts/zip-docs.sh
+
+
       - uses: actions/upload-artifact@v3
         with:
           name: docs-site
