@@ -1,5 +1,6 @@
 ## Latest Changes
 
+* ⚒️ Update build-docs.yml, do not zip docs. PR [#645](https://github.com/tiangolo/typer/pull/645) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Deploy docs to Cloudflare. PR [#644](https://github.com/tiangolo/typer/pull/644) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Upgrade CI for docs. PR [#642](https://github.com/tiangolo/typer/pull/642) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Update token for latest changes. PR [#635](https://github.com/tiangolo/typer/pull/635) by [@tiangolo](https://github.com/tiangolo).
