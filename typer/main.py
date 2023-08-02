@@ -58,6 +58,10 @@ _original_except_hook = sys.excepthook
 _typer_developer_exception_attr_name = "__typer_developer_exception__"
 
 
+def enable_rich(enable: bool) -> None:
+    set_rich_output(enable)
+
+
 def except_hook(
     exc_type: Type[BaseException], exc_value: BaseException, tb: Optional[TracebackType]
 ) -> None:
@@ -142,7 +146,6 @@ class Typer:
         deprecated: bool = Default(False),
         add_completion: bool = True,
         # Rich settings
-        rich_enable: bool = True,
         rich_markup_mode: MarkupMode = None,
         rich_help_panel: Union[str, None] = Default(None),
         pretty_exceptions_enable: bool = True,
@@ -150,7 +153,6 @@ class Typer:
         pretty_exceptions_short: bool = True,
     ):
         self._add_completion = add_completion
-        set_rich_output(rich_enable)
         self.rich_markup_mode: MarkupMode = rich_markup_mode
         self.rich_help_panel = rich_help_panel
         self.pretty_exceptions_enable = pretty_exceptions_enable

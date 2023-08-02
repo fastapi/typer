@@ -28,6 +28,7 @@ from click.utils import open_file as open_file
 
 from . import colors as colors
 from .main import Typer as Typer
+from .main import enable_rich as enable_rich
 from .main import run as run
 from .models import CallbackParam as CallbackParam
 from .models import Context as Context
