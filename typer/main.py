@@ -14,7 +14,15 @@ from uuid import UUID
 import click
 
 from .completion import get_completion_inspect_parameters
-from .core import MarkupMode, TyperArgument, TyperCommand, TyperGroup, TyperOption
+from .core import (
+    MarkupMode,
+    TyperArgument,
+    TyperCommand,
+    TyperGroup,
+    TyperOption,
+    is_rich_enabled,
+    set_rich_output,
+)
 from .models import (
     AnyType,
     ArgumentInfo,
@@ -68,7 +76,7 @@ def except_hook(
     click_path = os.path.dirname(click.__file__)
     supress_internal_dir_names = [typer_path, click_path]
     exc = exc_value
-    if rich:
+    if rich and is_rich_enabled():
         rich_tb = Traceback.from_exception(
             type(exc),
             exc,
@@ -134,6 +142,7 @@ class Typer:
         deprecated: bool = Default(False),
         add_completion: bool = True,
         # Rich settings
+        rich_enable: bool = True,
         rich_markup_mode: MarkupMode = None,
         rich_help_panel: Union[str, None] = Default(None),
         pretty_exceptions_enable: bool = True,
@@ -141,6 +150,7 @@ class Typer:
         pretty_exceptions_short: bool = True,
     ):
         self._add_completion = add_completion
+        set_rich_output(rich_enable)
         self.rich_markup_mode: MarkupMode = rich_markup_mode
         self.rich_help_panel = rich_help_panel
         self.pretty_exceptions_enable = pretty_exceptions_enable
