@@ -140,6 +140,11 @@ In general, **Typer** tends to be the entry point to your program, taking the fi
 
 The best results for your command line application would be achieved combining both **Typer** and **Rich**.
 
+### If you don't want to use Rich formated output
+
+In case you'd rather like to use the simple text ouput, but need **Rich** to be installed in your environment for any other reason, you can disable the use of **Rich** by **Typer** with the following call:`typer.enable_rich(False)`. This is a global switch affecting all instances of `typer.Typer()`.
+
+
 ## "Standard Output" and "Standard Error"
 
 The way printing works underneath is that the **operating system** (Linux, Windows, macOS) treats what we print as if our CLI program was **writing text** to a "**virtual file**" called "**standard output**".
