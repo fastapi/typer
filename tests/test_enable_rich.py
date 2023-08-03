@@ -11,5 +11,5 @@ def test_enable_rich_help_is_false():
         stderr=subprocess.PIPE,
         encoding="utf-8",
     )
-    assert "Arguments:" in result.stdout  # as opposed to 'Arguments' without ':'
-    # like in the Rich Panels
+    # assert simple help text
+    assert "─" not in result.stdout
