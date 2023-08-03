@@ -55,10 +55,6 @@ def set_rich_output(rich_enable: bool) -> None:
     _is_rich_enabled = rich_enable
 
 
-def is_rich_enabled() -> bool:
-    return _is_rich_enabled
-
-
 # TODO: when deprecating Click 7, remove this
 def _typer_param_shell_complete(
     self: click.core.Parameter, ctx: click.Context, incomplete: str
