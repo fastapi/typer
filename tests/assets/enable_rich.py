@@ -1,6 +1,6 @@
 import typer
 
-typer.enable_rich(False)
+typer.enable_rich_help(False)
 
 app = typer.Typer()
 
