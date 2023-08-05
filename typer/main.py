@@ -1071,8 +1071,8 @@ def run(
     deprecated: bool = Default(False),
     add_completion: bool = False,
     # Rich settings
-    rich_markup_mode: MarkupMode = None,
-    rich_help_panel: Union[str, None] = Default(None),
+    rich_markup_mode: Optional[MarkupMode] = None,
+    rich_help_panel: Optional[Union[str, None]] = Default(None),
     pretty_exceptions_enable: bool = True,
     pretty_exceptions_show_locals: bool = True,
     pretty_exceptions_short: bool = True,
