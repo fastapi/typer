@@ -1060,7 +1060,7 @@ def run(
     chain: bool = Default(False),
     result_callback: Optional[Callable[..., Any]] = Default(None),
     # Command
-    context_settings: Optional[dict[Any, Any]] = Default(None),
+    context_settings: Optional[Dict[Any, Any]] = Default(None),
     callback: Optional[Callable[..., Any]] = Default(None),
     help: Optional[str] = Default(None),
     epilog: Optional[str] = Default(None),
