@@ -1,8 +1,19 @@
 It's also possible to, instead of just showing an error, ask for the missing value with `prompt=True`:
 
-```Python hl_lines="4"
-{!../docs_src/options/prompt/tutorial001.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="5"
+    {!> ../docs_src/options/prompt/tutorial001_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="4"
+    {!> ../docs_src/options/prompt/tutorial001.py!}
+    ```
 
 And then your program will ask the user for it in the terminal:
 
@@ -24,9 +35,20 @@ Hello Camila Gutiérrez
 
 You can also set a custom prompt, passing the string that you want to use instead of just `True`:
 
-```Python hl_lines="5"
-{!../docs_src/options/prompt/tutorial002.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="7"
+    {!> ../docs_src/options/prompt/tutorial002_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="5"
+    {!> ../docs_src/options/prompt/tutorial002.py!}
+    ```
 
 And then your program will ask for it using with your custom prompt:
 
@@ -52,9 +74,20 @@ You can do it passing the parameter `confirmation_prompt=True`.
 
 Let's say it's a CLI app to delete a project:
 
-```Python hl_lines="4"
-{!../docs_src/options/prompt/tutorial003.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="6"
+    {!> ../docs_src/options/prompt/tutorial003_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="4"
+    {!> ../docs_src/options/prompt/tutorial003.py!}
+    ```
 
 And it will prompt the user for a value and then for the confirmation:
 

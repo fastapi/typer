@@ -2,35 +2,36 @@ You already saw how to add a help text for *CLI arguments* with the `help` param
 
 Let's now do the same for *CLI options*:
 
-```Python hl_lines="6 7"
-{!../docs_src/options/help/tutorial001.py!}
-```
+=== "Python 3.6+"
 
-We are replacing the default values we had before with `typer.Option()`.
+    ```Python hl_lines="7-8"
+    {!> ../docs_src/options/help/tutorial001_an.py!}
+    ```
 
-As we no longer have a default value there, the first parameter to `typer.Option()` serves the same purpose of defining that default value.
+=== "Python 3.6+ non-Annotated"
 
-So, if we had:
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
 
-```Python
-lastname: str = ""
-```
+    ```Python hl_lines="6-7"
+    {!> ../docs_src/options/help/tutorial001.py!}
+    ```
 
-now we write:
+The same way as with `typer.Argument()`, we can put `typer.Option()` inside of `Annotated`.
 
-```Python
-lastname: str = typer.Option("")
-```
-
-And both forms achieve the same: a *CLI option* with a default value of an empty string (`""`).
-
-And then we can pass the `help` keyword parameter:
+We can then pass the `help` keyword parameter:
 
 ```Python
-lastname: str = typer.Option("", help="this option does this and that")
+lastname: Annotated[str, typer.Option(help="this option does this and that")] = ""
 ```
 
-to create the help for that *CLI option*.
+...to create the help for that *CLI option*.
+
+The same way as with `typer.Argument()`, **Typer** also supports the old style using the function parameter default value:
+
+```Python
+lastname: str = typer.Option(default="", help="this option does this and that")
+```
 
 Copy that example from above to a file `main.py`.
 
@@ -53,8 +54,6 @@ Arguments:
 Options:
   --lastname TEXT         Last name of person to greet. [default: ]
   --formal / --no-formal  Say hi formally.  [default: False]
-  --install-completion    Install completion for the current shell.
-  --show-completion       Show completion for the current shell, to copy it or customize the installation.
   --help                  Show this message and exit.
 
 // Now you have a help text for the --lastname and --formal CLI options 🎉
@@ -68,9 +67,20 @@ The same as with *CLI arguments*, you can put the help for some *CLI options* in
 
 If you have installed Rich as described in the docs for [Printing and Colors](../printing.md){.internal-link target=_blank}, you can set the `rich_help_panel` parameter to the name of the panel you want for each *CLI option*:
 
-```Python hl_lines="8  11"
-{!../docs_src/options/help/tutorial002.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="11  17"
+    {!> ../docs_src/options/help/tutorial002_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="8  11"
+    {!> ../docs_src/options/help/tutorial002.py!}
+    ```
 
 Now, when you check the `--help` option, you will see a default panel named "`Options`" for the *CLI options* that don't have a custom `rich_help_panel`.
 
@@ -91,11 +101,6 @@ $ python main.py --help
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--lastname</b></font>                  <font color="#F4BF75"><b>TEXT</b></font>  Last name of person to greet.   │
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--install-completion</b></font>        <font color="#F4BF75"><b>    </b></font>  Install completion for the      │
-<font color="#A5A5A1">│                                   current shell.                  │</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--show-completion</b></font>           <font color="#F4BF75"><b>    </b></font>  Show completion for the current │
-<font color="#A5A5A1">│                                   shell, to copy it or customize  │</font>
-<font color="#A5A5A1">│                                   the installation.               │</font>
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                      <font color="#F4BF75"><b>    </b></font>  Show this message and exit.     │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Customization and Utils ─────────────────────────────────────────╮</font>
@@ -121,9 +126,20 @@ If you are in a hurry you can jump there, but otherwise, it would be better to c
 
 You can tell Typer to not show the default value in the help text with `show_default=False`:
 
-```Python hl_lines="4"
-{!../docs_src/options/help/tutorial003.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="5"
+    {!> ../docs_src/options/help/tutorial003_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="4"
+    {!> ../docs_src/options/help/tutorial003.py!}
+    ```
 
 And it will no longer show the default value in the help text:
 
@@ -141,8 +157,6 @@ Usage: main.py [OPTIONS]
 
 Options:
   --fullname TEXT
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 
 // Notice there's no [default: Wade Wilson] 🔥

@@ -552,7 +552,6 @@ def rich_format_help(
 
     # Print command / group help if we have some
     if obj.help:
-
         # Print with some padding
         console.print(
             Padding(
@@ -569,7 +568,6 @@ def rich_format_help(
     panel_to_arguments: DefaultDict[str, List[click.Argument]] = defaultdict(list)
     panel_to_options: DefaultDict[str, List[click.Option]] = defaultdict(list)
     for param in obj.get_params(ctx):
-
         # Skip if option is hidden
         if getattr(param, "hidden", False):
             continue
