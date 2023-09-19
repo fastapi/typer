@@ -14,15 +14,8 @@ from uuid import UUID
 import click
 
 from .completion import get_completion_inspect_parameters
-from .core import (
-    MarkupMode,
-    TyperArgument,
-    TyperCommand,
-    TyperGroup,
-    TyperOption,
-)
+from .core import MarkupMode, TyperArgument, TyperCommand, TyperGroup, TyperOption
 from .core import set_rich_help as core_set_rich_help
-
 from .models import (
     AnyType,
     ArgumentInfo,
