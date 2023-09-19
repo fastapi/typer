@@ -20,7 +20,7 @@ from .core import (
     TyperCommand,
     TyperGroup,
     TyperOption,
-    set_rich_output,
+    set_rich_help,
 )
 from .models import (
     AnyType,
@@ -60,7 +60,7 @@ _is_rich_traceback_enabled = True
 
 
 def enable_rich_help(enable: bool) -> None:
-    set_rich_output(enable)
+    set_rich_help(enable)
 
 
 def enable_rich_traceback(enable: bool) -> None:
