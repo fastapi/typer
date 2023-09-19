@@ -145,8 +145,8 @@ The best results for your command line application would be achieved combining b
 In case you'd rather like to use the simple text ouput, but need **Rich** to be installed in your environment for any other reason, you can disable the use of **Rich** by **Typer**.
 There are two functions in the **Typer** module to control the output format globally, affecting all `typer.Typer()` instances:
 
- 1. `typer.enable_rich_help`
- 2. `typer.enable_rich_traceback`
+ 1. `typer.set_rich_help(switch: bool)`
+ 2. `typer.set_rich_traceback(switch: bool)`
 
 The first one controls all help and **Click's** exception messages. The second one controls the format of the stack trace.
 

@@ -28,9 +28,9 @@ from click.utils import open_file as open_file
 
 from . import colors as colors
 from .main import Typer as Typer
-from .main import enable_rich_help as enable_rich_help
-from .main import enable_rich_traceback as enable_rich_traceback
 from .main import run as run
+from .main import set_rich_help as set_rich_help
+from .main import set_rich_traceback as set_rich_traceback
 from .models import CallbackParam as CallbackParam
 from .models import Context as Context
 from .models import FileBinaryRead as FileBinaryRead
