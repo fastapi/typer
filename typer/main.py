@@ -20,8 +20,9 @@ from .core import (
     TyperCommand,
     TyperGroup,
     TyperOption,
-    set_rich_help,
 )
+from .core import set_rich_help as core_set_rich_help
+
 from .models import (
     AnyType,
     ArgumentInfo,
@@ -60,7 +61,7 @@ _is_rich_traceback_enabled = True
 
 
 def enable_rich_help(enable: bool) -> None:
-    set_rich_help(enable)
+    core_set_rich_help(enable)
 
 
 def enable_rich_traceback(enable: bool) -> None:
