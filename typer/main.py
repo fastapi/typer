@@ -50,16 +50,16 @@ except ImportError:  # pragma: nocover
 _original_except_hook = sys.excepthook
 _typer_developer_exception_attr_name = "__typer_developer_exception__"
 
-_is_rich_traceback_enabled = True
+_is_rich_traceback = True
 
 
-def enable_rich_help(enable: bool) -> None:
-    core_set_rich_help(enable)
+def set_rich_help(switch: bool) -> None:
+    core_set_rich_help(switch)
 
 
-def enable_rich_traceback(enable: bool) -> None:
-    global _is_rich_traceback_enabled
-    _is_rich_traceback_enabled = enable
+def set_rich_traceback(switch: bool) -> None:
+    global _is_rich_traceback
+    _is_rich_traceback = switch
 
 
 def except_hook(
@@ -80,7 +80,7 @@ def except_hook(
     click_path = os.path.dirname(click.__file__)
     supress_internal_dir_names = [typer_path, click_path]
     exc = exc_value
-    if rich and _is_rich_traceback_enabled:
+    if rich and _is_rich_traceback:
         rich_tb = Traceback.from_exception(
             type(exc),
             exc,

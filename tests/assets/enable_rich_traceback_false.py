@@ -1,6 +1,6 @@
 import typer
 
-typer.enable_rich_traceback(False)
+typer.set_rich_traceback(False)
 
 app = typer.Typer()
 
