@@ -3,8 +3,8 @@ import sys
 from pathlib import Path
 
 
-def test_enable_rich_help_is_false():
-    file_path = Path(__file__).parent / "assets/enable_rich.py"
+def test_set_rich_help_false_outputs_plain_text():
+    file_path = Path(__file__).parent / "assets/set_rich_help.py"
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", str(file_path), "--help"],
         stdout=subprocess.PIPE,
@@ -15,8 +15,8 @@ def test_enable_rich_help_is_false():
     assert "─" not in result.stdout
 
 
-def test_enable_rich_traceback_is_false():
-    file_path = Path(__file__).parent / "assets/enable_rich_traceback_false.py"
+def test_set_rich_traceback_false_outputs_plain_text():
+    file_path = Path(__file__).parent / "assets/set_rich_traceback.py"
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", str(file_path)],
         stdout=subprocess.PIPE,
