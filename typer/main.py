@@ -8,24 +8,12 @@ from functools import update_wrapper
 from pathlib import Path
 from traceback import FrameSummary, StackSummary
 from types import TracebackType
-from typing import (
-    Any,
-    Callable,
-    Dict,
-    List,
-    Optional,
-    Sequence,
-    Tuple,
-    Type,
-    Union,
-    cast,
-)
+from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, Union
 from uuid import UUID
 
 import click
-from typing_extensions import Literal
 
-from ._typing import get_args, get_origin
+from ._typing import is_literal_type, literal_values
 from .completion import get_completion_inspect_parameters
 from .core import MarkupMode, TyperArgument, TyperCommand, TyperGroup, TyperOption
 from .models import (
@@ -790,23 +778,13 @@ def get_click_type(
             case_sensitive=parameter_info.case_sensitive,
         )
 
-    if sys.version_info < (3, 7):
-        origin = annotation.__class__
-        args = getattr(annotation, "__values__", None)
-    else:
-        # we cast to the return type of typing.get_origin. _typing.get_origin has another signature.
-        origin = cast(Union[Any, None], get_origin(annotation))
-        args = get_args(annotation)
-
-    if origin is Literal:
+    if is_literal_type(annotation):
         return click.Choice(
-            args,
+            literal_values(annotation),
             case_sensitive=parameter_info.case_sensitive,
         )
 
-    raise RuntimeError(
-        f"Type not yet supported: {annotation} with origin {origin}"
-    )  # pragma no cover
+    raise RuntimeError(f"Type not yet supported: {annotation}")  # pragma no cover
 
 
 def lenient_issubclass(
