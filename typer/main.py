@@ -8,7 +8,18 @@ from functools import update_wrapper
 from pathlib import Path
 from traceback import FrameSummary, StackSummary
 from types import TracebackType
-from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, Union
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    List,
+    Optional,
+    Sequence,
+    Tuple,
+    Type,
+    Union,
+    cast,
+)
 from uuid import UUID
 
 import click
@@ -779,7 +790,8 @@ def get_click_type(
             case_sensitive=parameter_info.case_sensitive,
         )
 
-    origin = get_origin(annotation)
+    # we cast to the return type of typing.origin. _typing.get_origin has another signature.
+    origin = cast(Union[Any, None], get_origin(annotation))
     args = get_args(annotation)
     if origin is Literal:
         return click.Choice(
