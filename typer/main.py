@@ -790,9 +790,14 @@ def get_click_type(
             case_sensitive=parameter_info.case_sensitive,
         )
 
-    # we cast to the return type of typing.origin. _typing.get_origin has another signature.
-    origin = cast(Union[Any, None], get_origin(annotation))
-    args = get_args(annotation)
+    if sys.version_info < (3, 7):
+        origin = annotation.__class__
+        args = getattr(annotation, "__values__", None)
+    else:
+        # we cast to the return type of typing.get_origin. _typing.get_origin has another signature.
+        origin = cast(Union[Any, None], get_origin(annotation))
+        args = get_args(annotation)
+
     if origin is Literal:
         return click.Choice(
             args,
