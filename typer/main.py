@@ -799,7 +799,9 @@ def get_click_type(
             case_sensitive=parameter_info.case_sensitive,
         )
 
-    raise RuntimeError(f"Type not yet supported: {annotation}")  # pragma no cover
+    raise RuntimeError(
+        f"Type not yet supported: {annotation} with origin {origin}"
+    )  # pragma no cover
 
 
 def lenient_issubclass(
