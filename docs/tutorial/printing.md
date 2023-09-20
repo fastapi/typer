@@ -140,10 +140,9 @@ In general, **Typer** tends to be the entry point to your program, taking the fi
 
 The best results for your command line application would be achieved combining both **Typer** and **Rich**.
 
-### If you don't want to use Rich formated output
+### Configuring Rich formatted output
 
-In case you'd rather like to use the simple text ouput, but need **Rich** to be installed in your environment for any other reason, you can disable the use of **Rich** by **Typer**.
-There are two functions in the **Typer** module to control the output format globally, affecting all `typer.Typer()` instances:
+By default, **Typer** uses the **Rich** library to format text output.  However it's an optional dependency, and is used only if it is installed in your environment.  In case you would rather have finer-grained control over when **Typer** uses rich formatting, you can do so with the two package level functions shown below to control the output format globally.  This affects all `typer.Typer()` instances.
 
  1. `typer.set_rich_help(switch: bool)`
  2. `typer.set_rich_traceback(switch: bool)`
