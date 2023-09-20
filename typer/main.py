@@ -12,8 +12,9 @@ from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, U
 from uuid import UUID
 
 import click
-from typing_extensions import Literal, get_args, get_origin
+from typing_extensions import Literal
 
+from ._typing import get_args, get_origin
 from .completion import get_completion_inspect_parameters
 from .core import MarkupMode, TyperArgument, TyperCommand, TyperGroup, TyperOption
 from .models import (
