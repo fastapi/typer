@@ -12,6 +12,7 @@ from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, U
 from uuid import UUID
 
 import click
+from typing_extensions import Literal, get_args, get_origin
 
 from .completion import get_completion_inspect_parameters
 from .core import MarkupMode, TyperArgument, TyperCommand, TyperGroup, TyperOption
@@ -776,6 +777,15 @@ def get_click_type(
             [item.value for item in annotation],
             case_sensitive=parameter_info.case_sensitive,
         )
+
+    origin = get_origin(annotation)
+    args = get_args(annotation)
+    if origin is Literal:
+        return click.Choice(
+            args,
+            case_sensitive=parameter_info.case_sensitive,
+        )
+
     raise RuntimeError(f"Type not yet supported: {annotation}")  # pragma no cover
 
 

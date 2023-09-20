@@ -4,7 +4,7 @@ import sys
 import typer
 from typer.testing import CliRunner
 
-from docs_src.parameter_types.enum import tutorial002 as mod
+from docs_src.parameter_types.choices import tutorial002_an as mod
 
 runner = CliRunner()
 
