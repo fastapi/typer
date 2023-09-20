@@ -136,7 +136,7 @@ You can make an `Literal` (choice) *CLI parameter* be case-insensitive with the 
     {!> ../docs_src/parameter_types/choices/tutorial004.py!}
     ```
 
-And then the values of the `Enum` will be checked no matter if lower case, upper case, or a mix:
+And then the values of the `Literal` will be checked no matter if lower case, upper case, or a mix:
 
 <div class="termy">
 
