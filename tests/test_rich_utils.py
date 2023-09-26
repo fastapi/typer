@@ -68,8 +68,9 @@ def test_markdown_pars():
     lines = [l.strip() for l in result.stdout.split("\n")]
     help_start = lines.index("First line")
     assert help_start != -1
-    assert lines[help_start : help_start + 5] == [
+    assert lines[help_start : help_start + 6] == [
         "First line",
+        "",
         "Line 1",
         "",
         "Line 2",
