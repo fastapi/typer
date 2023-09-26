@@ -203,7 +203,7 @@ def _get_help_text(
     # Get remaining lines, remove single line breaks and format as dim
     remaining_paragraphs = help_text.split("\n\n")[1:]
     if remaining_paragraphs:
-        if markup_mode != MARKUP_MODE_RICH:
+        if markup_mode not in (MARKUP_MODE_RICH, MARKUP_MODE_MARKDOWN):
             # Remove single linebreaks
             remaining_paragraphs = [
                 x.replace("\n", " ").strip()
