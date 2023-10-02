@@ -1,8 +1,19 @@
 You can define numeric validations with `max` and `min` values for `int` and `float` *CLI parameters*:
 
-```Python hl_lines="5 6 7"
-{!../docs_src/parameter_types/number/tutorial001.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="6-8"
+    {!> ../docs_src/parameter_types/number/tutorial001_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="5-7"
+    {!> ../docs_src/parameter_types/number/tutorial001.py!}
+    ```
 
 *CLI arguments* and *CLI options* can both use these validations.
 
@@ -24,8 +35,6 @@ Arguments:
 Options:
   --age INTEGER RANGE   [default: 20]
   --score FLOAT RANGE   [default: 0]
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 
 // Pass all the CLI parameters
@@ -75,9 +84,20 @@ You might want to, instead of showing an error, use the closest minimum or maxim
 
 You can do it with the `clamp` parameter:
 
-```Python hl_lines="5 6 7"
-{!../docs_src/parameter_types/number/tutorial002.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="6-8"
+    {!> ../docs_src/parameter_types/number/tutorial002_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="5-7"
+    {!> ../docs_src/parameter_types/number/tutorial002.py!}
+    ```
 
 And then, when you pass data that is out of the valid range, it will be "clamped", the closest valid value will be used:
 
@@ -106,9 +126,20 @@ ID is 5
 
 You can make a *CLI option* work as a counter with the `counter` parameter:
 
-```Python hl_lines="4"
-{!../docs_src/parameter_types/number/tutorial003.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="5"
+    {!> ../docs_src/parameter_types/number/tutorial003_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="4"
+    {!> ../docs_src/parameter_types/number/tutorial003.py!}
+    ```
 
 It means that the *CLI option* will be like a boolean flag, e.g. `--verbose`.
 

@@ -10,7 +10,7 @@ def create(
     )
 ):
     """
-    [bold green]Create[/bold green] a new [italic]shinny[/italic] user. :sparkles:
+    [bold green]Create[/bold green] a new [italic]shiny[/italic] user. :sparkles:
 
     This requires a [underline]username[/underline].
     """

@@ -3,6 +3,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+from docs_src.commands.index import tutorial001 as mod
 import pytest
 
 from docs_src.asynchronous import tutorial001 as async_mod
@@ -55,7 +56,7 @@ def test_install_completion(bashrc_lock, mod):
 @pytest.mark.parametrize(*mod_params)
 def test_completion_invalid_instruction(bashrc_lock, mod):
     result = subprocess.run(
-        ["coverage", "run", mod.__file__],
+        [sys.executable, "-m", "coverage", "run", mod.__file__],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -72,7 +73,7 @@ def test_completion_invalid_instruction(bashrc_lock, mod):
 @pytest.mark.parametrize(*mod_params)
 def test_completion_source_bash(bashrc_lock, mod):
     result = subprocess.run(
-        ["coverage", "run", mod.__file__],
+        [sys.executable, "-m", "coverage", "run", mod.__file__],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -91,7 +92,7 @@ def test_completion_source_bash(bashrc_lock, mod):
 @pytest.mark.parametrize(*mod_params)
 def test_completion_source_invalid_shell(bashrc_lock, mod):
     result = subprocess.run(
-        ["coverage", "run", mod.__file__],
+        [sys.executable, "-m", "coverage", "run", mod.__file__],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -107,7 +108,7 @@ def test_completion_source_invalid_shell(bashrc_lock, mod):
 @pytest.mark.parametrize(*mod_params)
 def test_completion_source_invalid_instruction(bashrc_lock, mod):
     result = subprocess.run(
-        ["coverage", "run", mod.__file__],
+        [sys.executable, "-m", "coverage", "run", mod.__file__],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -123,7 +124,7 @@ def test_completion_source_invalid_instruction(bashrc_lock, mod):
 @pytest.mark.parametrize(*mod_params)
 def test_completion_source_zsh(bashrc_lock, mod):
     result = subprocess.run(
-        ["coverage", "run", mod.__file__],
+        [sys.executable, "-m", "coverage", "run", mod.__file__],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -139,7 +140,7 @@ def test_completion_source_zsh(bashrc_lock, mod):
 @pytest.mark.parametrize(*mod_params)
 def test_completion_source_fish(bashrc_lock, mod):
     result = subprocess.run(
-        ["coverage", "run", mod.__file__],
+        [sys.executable, "-m", "coverage", "run", mod.__file__],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -155,7 +156,7 @@ def test_completion_source_fish(bashrc_lock, mod):
 @pytest.mark.parametrize(*mod_params)
 def test_completion_source_powershell(bashrc_lock, mod):
     result = subprocess.run(
-        ["coverage", "run", mod.__file__],
+        [sys.executable, "-m", "coverage", "run", mod.__file__],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -174,7 +175,7 @@ def test_completion_source_powershell(bashrc_lock, mod):
 @pytest.mark.parametrize(*mod_params)
 def test_completion_source_pwsh(bashrc_lock, mod):
     result = subprocess.run(
-        ["coverage", "run", mod.__file__],
+        [sys.executable, "-m", "coverage", "run", mod.__file__],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",

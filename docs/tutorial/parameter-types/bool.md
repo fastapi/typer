@@ -8,9 +8,20 @@ Let's say that we want a `--force` *CLI option* only, we want to discard `--no-f
 
 We can do that by specifying the exact name we want:
 
-```Python hl_lines="4"
-{!../docs_src/parameter_types/bool/tutorial001.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="5"
+    {!> ../docs_src/parameter_types/bool/tutorial001_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="4"
+    {!> ../docs_src/parameter_types/bool/tutorial001.py!}
+    ```
 
 Now there's only a `--force` *CLI option*:
 
@@ -25,8 +36,6 @@ Usage: main.py [OPTIONS]
 
 Options:
   --force               [default: False]
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 
 // Try it:
@@ -60,9 +69,20 @@ We might want to instead have `--accept` and `--reject`.
 
 We can do that by passing a single `str` with the 2 names for the `bool` *CLI option* separated by `/`:
 
-```Python hl_lines="6"
-{!../docs_src/parameter_types/bool/tutorial002.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="7"
+    {!> ../docs_src/parameter_types/bool/tutorial002_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="6"
+    {!> ../docs_src/parameter_types/bool/tutorial002.py!}
+    ```
 
 Check it:
 
@@ -77,8 +97,6 @@ Usage: main.py [OPTIONS]
 
 Options:
   --accept / --reject
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 
 // Try it
@@ -105,9 +123,20 @@ The same way, you can declare short versions of the names for these *CLI options
 
 For example, let's say we want `-f` for `--force` and `-F` for `--no-force`:
 
-```Python hl_lines="4"
-{!../docs_src/parameter_types/bool/tutorial003.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="5"
+    {!> ../docs_src/parameter_types/bool/tutorial003_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="4"
+    {!> ../docs_src/parameter_types/bool/tutorial003.py!}
+    ```
 
 Check it:
 
@@ -122,8 +151,6 @@ Usage: main.py [OPTIONS]
 
 Options:
   -f, --force / -F, --no-force  [default: False]
-  --install-completion          Install completion for the current shell.
-  --show-completion             Show completion for the current shell, to copy it or customize the installation.
   --help                        Show this message and exit.
 
 // Try with the short name -f
@@ -145,9 +172,20 @@ If you want to (although it might not be a good idea), you can declare only *CLI
 
 To do that, use a space and a single `/` and pass the negative name after:
 
-```Python hl_lines="4"
-{!../docs_src/parameter_types/bool/tutorial004.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="5"
+    {!> ../docs_src/parameter_types/bool/tutorial004_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="4"
+    {!> ../docs_src/parameter_types/bool/tutorial004.py!}
+    ```
 
 !!! tip
     Have in mind that it's a string with a preceding space and then a `/`.
@@ -167,8 +205,6 @@ Usage: main.py [OPTIONS]
 
 Options:
    / -d, --demo         [default: True]
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 
 // Try it

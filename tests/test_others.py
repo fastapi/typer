@@ -1,5 +1,7 @@
 import os
 import subprocess
+import sys
+import typing
 from pathlib import Path
 from unittest import mock
 
@@ -9,7 +11,7 @@ import shellingham
 import typer
 import typer.completion
 from typer.main import solve_typer_info_defaults, solve_typer_info_help
-from typer.models import TyperInfo
+from typer.models import ParameterInfo, TyperInfo
 from typer.testing import CliRunner
 
 runner = CliRunner()
@@ -25,6 +27,50 @@ def test_defaults_from_info():
     # Mainly for coverage/completeness
     value = solve_typer_info_defaults(TyperInfo())
     assert value
+
+
+def test_too_may_parsers():
+    def custom_parser(value: str) -> int:
+        return int(value)  # pragma: no cover
+
+    class CustomClickParser(click.ParamType):
+        name = "custom_parser"
+
+        def convert(
+            self,
+            value: str,
+            param: typing.Optional[click.Parameter],
+            ctx: typing.Optional[click.Context],
+        ) -> typing.Any:
+            return int(value)  # pragma: no cover
+
+    expected_error = (
+        "Multiple custom type parsers provided. "
+        "`parser` and `click_type` may not both be provided."
+    )
+
+    with pytest.raises(ValueError, match=expected_error):
+        ParameterInfo(parser=custom_parser, click_type=CustomClickParser())
+
+
+def test_valid_parser_permutations():
+    def custom_parser(value: str) -> int:
+        return int(value)  # pragma: no cover
+
+    class CustomClickParser(click.ParamType):
+        name = "custom_parser"
+
+        def convert(
+            self,
+            value: str,
+            param: typing.Optional[click.Parameter],
+            ctx: typing.Optional[click.Context],
+        ) -> typing.Any:
+            return int(value)  # pragma: no cover
+
+    ParameterInfo()
+    ParameterInfo(parser=custom_parser)
+    ParameterInfo(click_type=CustomClickParser())
 
 
 def test_install_invalid_shell():
@@ -97,7 +143,7 @@ def test_callback_3_untyped_parameters():
 def test_completion_untyped_parameters():
     file_path = Path(__file__).parent / "assets/completion_no_types.py"
     result = subprocess.run(
-        ["coverage", "run", str(file_path)],
+        [sys.executable, "-m", "coverage", "run", str(file_path)],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -119,7 +165,7 @@ def test_completion_untyped_parameters():
     assert '"Carlos":"The writer of scripts."' in result.stdout
 
     result = subprocess.run(
-        ["coverage", "run", str(file_path)],
+        [sys.executable, "-m", "coverage", "run", str(file_path)],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -130,7 +176,7 @@ def test_completion_untyped_parameters():
 def test_completion_untyped_parameters_different_order_correct_names():
     file_path = Path(__file__).parent / "assets/completion_no_types_order.py"
     result = subprocess.run(
-        ["coverage", "run", str(file_path)],
+        [sys.executable, "-m", "coverage", "run", str(file_path)],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -152,7 +198,7 @@ def test_completion_untyped_parameters_different_order_correct_names():
     assert '"Carlos":"The writer of scripts."' in result.stdout
 
     result = subprocess.run(
-        ["coverage", "run", str(file_path)],
+        [sys.executable, "-m", "coverage", "run", str(file_path)],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",

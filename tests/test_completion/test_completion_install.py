@@ -1,5 +1,6 @@
 import os
 import subprocess
+import sys
 from pathlib import Path
 from unittest import mock
 
@@ -19,7 +20,7 @@ runner = CliRunner()
 @pytest.mark.parametrize(*mod_params)
 def test_completion_install_no_shell(mod):
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--install-completion"],
+        [sys.executable, "-m", "coverage", "run", mod.__file__, "--install-completion"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -43,7 +44,15 @@ def test_completion_install_bash(bashrc_lock, mod):
     if bash_completion_path.is_file():
         text = bash_completion_path.read_text()
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--install-completion", "bash"],
+        [
+            sys.executable,
+            "-m",
+            "coverage",
+            "run",
+            mod.__file__,
+            "--install-completion",
+            "bash",
+        ],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -79,7 +88,15 @@ def test_completion_install_zsh(zshrc_lock, mod):
     if completion_path.is_file():
         text = completion_path.read_text()
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--install-completion", "zsh"],
+        [
+            sys.executable,
+            "-m",
+            "coverage",
+            "run",
+            mod.__file__,
+            "--install-completion",
+            "zsh",
+        ],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -109,7 +126,15 @@ def test_completion_install_fish(fish_config_lock, mod):
         Path.home() / f".config/fish/completions/{script_path.name}.fish"
     )
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--install-completion", "fish"],
+        [
+            sys.executable,
+            "-m",
+            "coverage",
+            "run",
+            mod.__file__,
+            "--install-completion",
+            "fish",
+        ],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",

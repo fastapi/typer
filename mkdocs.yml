@@ -41,7 +41,6 @@ nav:
           - CLI Option Name: tutorial/options/name.md
           - CLI Option Callback and Context: tutorial/options/callback-and-context.md
           - Version CLI Option, is_eager: tutorial/options/version.md
-          - CLI Option autocompletion: tutorial/options/autocompletion.md
       - Commands:
           - Commands Intro: tutorial/commands/index.md
           - Command CLI Arguments: tutorial/commands/arguments.md
@@ -51,6 +50,7 @@ nav:
           - Typer Callback: tutorial/commands/callback.md
           - One or Multiple Commands: tutorial/commands/one-or-multiple.md
           - Using the Context: tutorial/commands/context.md
+      - CLI Option autocompletion: tutorial/options-autocompletion.md
       - CLI Parameter Types:
           - CLI Parameter Types Intro: tutorial/parameter-types/index.md
           - Number: tutorial/parameter-types/number.md
@@ -60,6 +60,7 @@ nav:
           - Enum - Choices: tutorial/parameter-types/enum.md
           - Path: tutorial/parameter-types/path.md
           - File: tutorial/parameter-types/file.md
+          - Custom Types: tutorial/parameter-types/custom-types.md
       - SubCommands - Command Groups:
           - SubCommands - Command Groups - Intro: tutorial/subcommands/index.md
           - Add Typer: tutorial/subcommands/add-typer.md
@@ -104,11 +105,14 @@ markdown_extensions:
       alternate_style: true
   - mdx_include:
       base_path: docs
+  # Enable while writing docs to simplify highlighting
+  # - pymdownx.highlight:
+  #     linenums: true
 
 extra:
   analytics:
     provider: google
-    property: UA-133183413-1
+    property: G-T78C5GNRXK
   social:
     - icon: fontawesome/brands/github-alt
       link: https://github.com/tiangolo/typer

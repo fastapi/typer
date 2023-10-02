@@ -1,5 +1,6 @@
 import os
 import subprocess
+import sys
 
 import pytest
 
@@ -12,7 +13,7 @@ mod_params = ("mod", (sync_mod, async_mod))
 @pytest.mark.parametrize(*mod_params)
 def test_completion_show_no_shell(mod):
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--show-completion"],
+        [sys.executable, "-m", "coverage", "run", mod.__file__, "--show-completion"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -32,7 +33,15 @@ def test_completion_show_no_shell(mod):
 @pytest.mark.parametrize(*mod_params)
 def test_completion_show_bash(mod):
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--show-completion", "bash"],
+        [
+            sys.executable,
+            "-m",
+            "coverage",
+            "run",
+            mod.__file__,
+            "--show-completion",
+            "bash",
+        ],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -51,7 +60,15 @@ def test_completion_show_bash(mod):
 @pytest.mark.parametrize(*mod_params)
 def test_completion_source_zsh(mod):
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--show-completion", "zsh"],
+        [
+            sys.executable,
+            "-m",
+            "coverage",
+            "run",
+            mod.__file__,
+            "--show-completion",
+            "zsh",
+        ],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -67,7 +84,15 @@ def test_completion_source_zsh(mod):
 @pytest.mark.parametrize(*mod_params)
 def test_completion_source_fish(mod):
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--show-completion", "fish"],
+        [
+            sys.executable,
+            "-m",
+            "coverage",
+            "run",
+            mod.__file__,
+            "--show-completion",
+            "fish",
+        ],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -83,7 +108,15 @@ def test_completion_source_fish(mod):
 @pytest.mark.parametrize(*mod_params)
 def test_completion_source_powershell(mod):
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--show-completion", "powershell"],
+        [
+            sys.executable,
+            "-m",
+            "coverage",
+            "run",
+            mod.__file__,
+            "--show-completion",
+            "powershell",
+        ],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -102,7 +135,15 @@ def test_completion_source_powershell(mod):
 @pytest.mark.parametrize(*mod_params)
 def test_completion_source_pwsh(mod):
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--show-completion", "pwsh"],
+        [
+            sys.executable,
+            "-m",
+            "coverage",
+            "run",
+            mod.__file__,
+            "--show-completion",
+            "pwsh",
+        ],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
