@@ -1,5 +1,8 @@
-from tests.test_completion.for_testing import commands_help_tutorial001_async as async_mod
 from typer.testing import CliRunner
+
+from tests.test_completion.for_testing import (
+    commands_help_tutorial001_async as async_mod,
+)
 
 app = async_mod.app
 

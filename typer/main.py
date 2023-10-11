@@ -49,7 +49,6 @@ from .models import (
 )
 from .utils import get_params_from_function
 
-
 try:
     import anyio
 
@@ -59,6 +58,7 @@ try:
         alternative async engines are not mixed and only installed on demand.
         """
         import importlib.util
+
         package = "trio"
         if importlib.util.find_spec(package) is None:
             backend = "trio"
@@ -268,7 +268,7 @@ class Typer:
                 deprecated=deprecated,
                 rich_help_panel=rich_help_panel,
             )
-            return f # self.to_sync(f, async_runner) # TESTING
+            return f  # self.to_sync(f, async_runner) # TESTING
 
         return decorator
 
@@ -315,7 +315,7 @@ class Typer:
             # test = f()
             # test2 = self.to_sync(f, async_runner)
             # test3 = test2()
-            return f # self.to_sync(f, async_runner) # TESTING
+            return f  # self.to_sync(f, async_runner) # TESTING
 
         return decorator
 
@@ -1112,7 +1112,9 @@ def get_param_completion(
     return wrapper
 
 
-def run(function: Union[Callable[..., Any], Callable[..., Coroutine[Any, Any, Any]]]) -> None:
+def run(
+    function: Union[Callable[..., Any], Callable[..., Coroutine[Any, Any, Any]]]
+) -> None:
     app = Typer(add_completion=False)
     app.command()(function)
     app()

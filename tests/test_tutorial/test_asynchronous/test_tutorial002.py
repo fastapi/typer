@@ -1,7 +1,7 @@
 import typer
+from typer.testing import CliRunner
 
 from docs_src.asynchronous import tutorial002 as async_mod
-from typer.testing import CliRunner
 
 runner = CliRunner()
 

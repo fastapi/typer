@@ -6,6 +6,7 @@ app = mod.app
 
 runner = CliRunner()
 
+
 def test_wait():
     result = runner.invoke(app, ["2"])
     assert result.exit_code == 0

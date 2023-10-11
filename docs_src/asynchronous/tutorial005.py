@@ -6,6 +6,7 @@ app = typer.Typer()
 @app.command()
 async def wait(seconds: int):
     import trio
+
     await trio.sleep(seconds)
     typer.echo(f"Waited for {seconds} seconds")
 

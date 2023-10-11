@@ -1,9 +1,13 @@
-from tests.test_completion.for_testing import commands_index_tutorial002_async as async_mod
 from typer.testing import CliRunner
+
+from tests.test_completion.for_testing import (
+    commands_index_tutorial002_async as async_mod,
+)
 
 app = async_mod.app
 
 runner = CliRunner()
+
 
 def test_create():
     result = runner.invoke(app, ["create"])
