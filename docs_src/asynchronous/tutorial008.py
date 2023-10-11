@@ -3,7 +3,7 @@ import asyncio
 import anyio
 import typer
 
-app = typer.Typer(async_runner=lambda c: anyio.run(c, backend="asyncio"))
+app = typer.Typer(async_runner=lambda c: anyio.run(lambda: c, backend="asyncio"))
 
 
 @app.command()

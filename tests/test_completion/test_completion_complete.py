@@ -5,7 +5,6 @@ import sys
 import pytest
 
 from docs_src.commands.help import tutorial001 as sync_mod
-
 from .for_testing import commands_help_tutorial001_async as async_mod
 
 mod_params = ("mod", (sync_mod, async_mod))

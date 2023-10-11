@@ -3,11 +3,11 @@ import subprocess
 import sys
 from pathlib import Path
 
-from docs_src.commands.index import tutorial001 as mod
+
 import pytest
 
+from docs_src.commands.index import tutorial001 as sync_mod
 from docs_src.asynchronous import tutorial001 as async_mod
-from docs_src.first_steps import tutorial001 as sync_mod
 
 mod_params = ("mod", (sync_mod, async_mod))
 
@@ -18,7 +18,7 @@ def test_show_completion(bashrc_lock, mod):
         [
             "bash",
             "-c",
-            f"{sys.executable}  -m coverage run {mod.__file__} --show-completion",
+            f"{sys.executable} -m coverage run {mod.__file__} --show-completion",
         ],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,

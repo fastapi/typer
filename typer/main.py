@@ -49,6 +49,7 @@ from .models import (
 )
 from .utils import get_params_from_function
 
+
 try:
     import anyio
 
@@ -57,13 +58,13 @@ try:
         When using anyio we try to predict the appropriate backend assuming that
         alternative async engines are not mixed and only installed on demand.
         """
-
-        try:
-            import trio  # just used to determine if trio is installed
-
+        import importlib.util
+        package = "trio"
+        if importlib.util.find_spec(package) is None:
             backend = "trio"
-        except ImportError:
+        else:
             backend = "asyncio"
+
         return anyio.run(lambda: coroutine, backend=backend)
 
 except ImportError:
@@ -267,7 +268,7 @@ class Typer:
                 deprecated=deprecated,
                 rich_help_panel=rich_help_panel,
             )
-            return f
+            return f # self.to_sync(f, async_runner) # TESTING
 
         return decorator
 
@@ -311,7 +312,10 @@ class Typer:
                     rich_help_panel=rich_help_panel,
                 )
             )
-            return f
+            # test = f()
+            # test2 = self.to_sync(f, async_runner)
+            # test3 = test2()
+            return f # self.to_sync(f, async_runner) # TESTING
 
         return decorator
 

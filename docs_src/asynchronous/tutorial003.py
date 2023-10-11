@@ -2,7 +2,7 @@ import asyncio
 
 import typer
 
-app = typer.Typer()
+app = typer.Typer(async_runner=asyncio.run)
 
 
 @app.command()
