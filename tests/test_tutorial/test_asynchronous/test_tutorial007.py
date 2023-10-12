@@ -8,15 +8,9 @@ runner = CliRunner()
 
 
 def test_wait_trio():
-    try:
-        result = runner.invoke(app, ["wait-trio", "2"])
-        assert result.exit_code == 0
-        assert "Waited for 2 seconds using trio (default)" in result.output
-    except RuntimeWarning as e:
-        assert (
-            str(e)
-            == "You seem to already have a custom sys.excepthook handler installed. I'll skip installing Trio's custom handler, but this means MultiErrors will not show full tracebacks."
-        )
+    result = runner.invoke(app, ["wait-trio", "2"])
+    assert result.exit_code == 0
+    assert "Waited for 2 seconds using trio (default)" in result.output
 
 
 def test_wait_asyncio():

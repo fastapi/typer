@@ -8,12 +8,6 @@ runner = CliRunner()
 
 
 def test_wait():
-    try:
-        result = runner.invoke(app, ["2"])
-        assert result.exit_code == 0
-        assert "Waited for 2 seconds" in result.output
-    except RuntimeWarning as e:
-        assert (
-            str(e)
-            == "You seem to already have a custom sys.excepthook handler installed. I'll skip installing Trio's custom handler, but this means MultiErrors will not show full tracebacks."
-        )
+    result = runner.invoke(app, ["2"])
+    assert result.exit_code == 0
+    assert "Waited for 2 seconds" in result.output

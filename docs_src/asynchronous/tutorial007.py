@@ -1,5 +1,6 @@
 import asyncio
 
+import trio
 import typer
 
 app = typer.Typer()
@@ -7,13 +8,11 @@ app = typer.Typer()
 
 @app.command()
 async def wait_trio(seconds: int):
-    import trio
-
     await trio.sleep(seconds)
     typer.echo(f"Waited for {seconds} seconds using trio (default)")
 
 
-@app.command(async_runner=lambda c: asyncio.run(c))
+@app.command(async_runner=asyncio.run)
 async def wait_asyncio(seconds: int):
     await asyncio.sleep(seconds)
     typer.echo(f"Waited for {seconds} seconds using asyncio (custom runner)")
