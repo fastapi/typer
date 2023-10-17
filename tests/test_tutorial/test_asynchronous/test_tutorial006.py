@@ -10,7 +10,10 @@ runner = CliRunner()
 def test_wait_trio():
     result = runner.invoke(app, ["2"])
     assert result.exit_code == 0
-    assert "Waited for 2 seconds using trio (default)" in result.output
+    assert (
+        "Waited for 2 seconds before running command using asyncio (customized)"
+        in result.output
+    )
 
 
 def test_wait_asyncio():

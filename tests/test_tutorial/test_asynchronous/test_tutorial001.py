@@ -1,3 +1,5 @@
+import importlib
+
 import typer
 from typer.testing import CliRunner
 
@@ -9,8 +11,9 @@ app = typer.Typer()
 app.command()(async_mod.main)
 
 
-def test_asyncio():
+def test_asyncio(mocker):
+    mocker.patch("importlib.util.find_spec", return_value=None)
     result = runner.invoke(app)
-
+    importlib.util.find_spec.assert_called_once_with("trio")
     assert result.exit_code == 0
     assert "Hello World\n" in result.output

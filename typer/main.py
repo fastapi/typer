@@ -1,3 +1,4 @@
+import importlib
 import inspect
 import os
 import sys
@@ -57,13 +58,8 @@ try:
         When using anyio we try to predict the appropriate backend assuming that
         alternative async engines are not mixed and only installed on demand.
         """
-        import importlib.util
 
-        package = "trio"
-        if importlib.util.find_spec(package) is None:
-            backend = "trio"
-        else:
-            backend = "asyncio"
+        backend = "trio" if importlib.util.find_spec("trio") else "asyncio"  # type: ignore
 
         return anyio.run(lambda: coroutine, backend=backend)
 

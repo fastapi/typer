@@ -47,12 +47,14 @@ test = [
     "coverage >=6.2,<7.0",
     "pytest-xdist >=1.32.0,<4.0.0",
     "pytest-sugar >=0.9.4,<0.10.0",
+    "pytest-mock >= 3.11.1",
     "mypy ==0.971",
     "black >=22.3.0,<23.0.0",
     "isort >=5.0.6,<6.0.0",
     "rich >=10.11.0,<14.0.0",
-    "anyio[trio] >= 3.0.0, < 4.0.0",
-    "filelock >= 3.4.0, < 4.0.0"
+    "anyio >= 4.0.0",
+    "filelock >= 3.4.0, < 4.0.0",
+    "trio >= 0.22",
 ]
 doc = [
     "mkdocs >=1.1.2,<2.0.0",
@@ -71,8 +73,9 @@ all = [
     "shellingham >=1.3.0,<2.0.0",
     "rich >=10.11.0,<14.0.0",
 ]
+
 anyio = [
-    "anyio >= 3.0.0, < 4.0.0",
+    "anyio >= 3.6.0, < 4.0.0",
 ]
 
 [tool.isort]
