@@ -50,25 +50,22 @@ from .models import (
 )
 from .utils import get_params_from_function
 
-try:
-    import anyio
 
-    def run_as_sync(coroutine: Coroutine[Any, Any, Any]) -> Any:
-        """
-        When using anyio we try to predict the appropriate backend assuming that
-        alternative async engines are not mixed and only installed on demand.
-        """
+def run_as_sync(coroutine: Coroutine[Any, Any, Any]) -> Any:
+    """
+    When using anyio we try to predict the appropriate backend assuming that
+    alternative async engines are not mixed and only installed on demand.
+    """
+
+    if importlib.util.find_spec("anyio"):  # type: ignore
+        import anyio
 
         backend = "trio" if importlib.util.find_spec("trio") else "asyncio"  # type: ignore
 
         return anyio.run(lambda: coroutine, backend=backend)
+    else:
+        import asyncio
 
-except ImportError:
-    import asyncio
-
-    anyio = None  # type: ignore
-
-    def run_as_sync(coroutine: Coroutine[Any, Any, Any]) -> Any:
         return asyncio.run(coroutine)
 
 

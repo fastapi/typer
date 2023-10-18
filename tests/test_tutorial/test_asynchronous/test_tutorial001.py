@@ -1,6 +1,6 @@
-import importlib
 import subprocess
 import sys
+from unittest.mock import patch
 
 import typer
 from typer.testing import CliRunner
@@ -13,10 +13,18 @@ app = typer.Typer()
 app.command()(async_mod.main)
 
 
+@patch("importlib.util.find_spec")
 def test_asyncio(mocker):
-    mocker.patch("importlib.util.find_spec", return_value=None)
+    mocker.side_effect = [True, None]
     result = runner.invoke(app)
-    importlib.util.find_spec.assert_called_once_with("trio")
+    assert result.exit_code == 0
+    assert "Hello World\n" in result.output
+
+
+@patch("importlib.util.find_spec")
+def test_asyncio_no_anyio(mocker):
+    mocker.side_effect = [None, None]
+    result = runner.invoke(app)
     assert result.exit_code == 0
     assert "Hello World\n" in result.output
 
