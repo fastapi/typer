@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.8", "3.9", "3.10", "3.11"]
         click-7: [true, false]
       fail-fast: false
 
@@ -25,17 +25,12 @@ jobs:
       - name: Install Flit
         run: pip install flit
       - name: Install Dependencies
-        if: ${{ matrix.python-version != '3.6' }}
         run: python -m flit install --symlink
-      - name: Install Dependencies
-        if: ${{ matrix.python-version == '3.6' }}
-        # This doesn't install the editable install, so coverage doesn't get subprocesses
-        run: python -m pip install ".[test]"
       - name: Install Click 7
         if: matrix.click-7
         run: pip install "click<8.0.0"
       - name: Lint
-        if: ${{ matrix.python-version != '3.6' && matrix.click-7 == false }}
+        if: ${{ matrix.click-7 == false }}
         run: bash scripts/lint.sh
       - run: mkdir coverage
       - name: Test
