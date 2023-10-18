@@ -1,3 +1,6 @@
+import subprocess
+import sys
+
 import typer
 from typer.testing import CliRunner
 
@@ -14,3 +17,13 @@ def test_anyio():
 
     assert result.exit_code == 0
     assert "Hello World\n" in result.output
+
+
+def test_script():
+    result = subprocess.run(
+        [sys.executable, "-m", "coverage", "run", async_mod.__file__, "--help"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        encoding="utf-8",
+    )
+    assert "Usage" in result.stdout
