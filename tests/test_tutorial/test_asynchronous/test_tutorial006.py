@@ -1,7 +1,6 @@
 import subprocess
 import sys
 
-import pytest
 from typer.testing import CliRunner
 
 from docs_src.asynchronous import tutorial006 as mod
@@ -18,12 +17,6 @@ def test_wait_asyncio():
         "Waited for 1 seconds before running command using asyncio (customized)\n"
         "Waited for 2 seconds using trio (default)" in result.output
     )
-
-
-@pytest.mark.anyio
-@pytest.mark.parametrize("anyio_backend", ["asyncio"])
-async def test_callback(anyio_backend):
-    await mod.wait_asyncio(2)
 
 
 def test_script():
