@@ -12,7 +12,7 @@ async def wait_trio(seconds: int):
     typer.echo(f"Waited for {seconds} seconds using trio (default)")
 
 
-@app.callback(invoke_without_command=True, async_runner=lambda c: asyncio.run(c))
+@app.callback(async_runner=lambda c: asyncio.run(c))
 async def wait_asyncio(seconds: int):
     await asyncio.sleep(seconds)
     typer.echo(
