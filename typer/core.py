@@ -9,6 +9,7 @@ from typing import (
     Callable,
     Dict,
     List,
+    Literal,
     MutableMapping,
     Optional,
     Sequence,
@@ -27,11 +28,6 @@ import click.utils
 from typer.completion import completion_init
 
 from ._compat_utils import _get_click_major
-
-if sys.version_info >= (3, 8):
-    from typing import Literal
-else:
-    from typing_extensions import Literal
 
 try:
     import rich
