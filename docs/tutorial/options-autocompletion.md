@@ -10,13 +10,24 @@ Before checking how to provide custom completions, let's check again how it work
 
 After installing completion (for your own Python package or for **Typer CLI**), when you use your CLI program and start adding a *CLI option* with `--` an then hit <kbd>TAB</kbd>, your shell will show you the available *CLI options* (the same for *CLI arguments*, etc).
 
-To check it quickly without creating a new Python package, install [Typer CLI](../../typer-cli.md){.internal-link target=_blank}.
+To check it quickly without creating a new Python package, install [Typer CLI](../typer-cli.md){.internal-link target=_blank}.
 
 Then let's create small example program:
 
-```Python
-{!../docs_src/options_autocompletion/tutorial001.py!}
-```
+=== "Python 3.6+"
+
+    ```Python
+    {!> ../docs_src/options_autocompletion/tutorial001_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python
+    {!> ../docs_src/options_autocompletion/tutorial001.py!}
+    ```
 
 And let's try it with **Typer CLI** to get completion:
 
@@ -48,11 +59,22 @@ Hello Camila
 
 Right now we get completion for the *CLI option* names, but not for the values.
 
-We can provide completion for the values creating an `autocompletion` function, similar to the `callback` functions from [CLI Option Callback and Context](./callback-and-context.md){.internal-link target=_blank}:
+We can provide completion for the values creating an `autocompletion` function, similar to the `callback` functions from [CLI Option Callback and Context](./options/callback-and-context.md){.internal-link target=_blank}:
 
-```Python hl_lines="4-5  14"
-{!../docs_src/options_autocompletion/tutorial002.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="5-6  15"
+    {!> ../docs_src/options_autocompletion/tutorial002_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="4-5  14"
+    {!> ../docs_src/options_autocompletion/tutorial002.py!}
+    ```
 
 We return a `list` of strings from the `complete_name()` function.
 
@@ -81,9 +103,20 @@ Modify the `complete_name()` function to receive a parameter of type `str`, it w
 
 Then we can check and return only the values that start with the incomplete value from the command line:
 
-```Python hl_lines="6-11"
-{!../docs_src/options_autocompletion/tutorial003.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="7-12"
+    {!> ../docs_src/options_autocompletion/tutorial003_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="6-11"
+    {!> ../docs_src/options_autocompletion/tutorial003.py!}
+    ```
 
 Now let's try it:
 
@@ -119,9 +152,20 @@ In the `complete_name()` function, instead of providing one `str` per completion
 
 So, in the end, we return a `list` of `tuples` of `str`:
 
-```Python hl_lines="3 4 5 6 7  10 11 12 13 14 15 16"
-{!../docs_src/options_autocompletion/tutorial004.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="4-8  11-17"
+    {!> ../docs_src/options_autocompletion/tutorial004_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="3-7  10-16"
+    {!> ../docs_src/options_autocompletion/tutorial004.py!}
+    ```
 
 !!! tip
     If you want to have help text for each item, make sure each item in the list is a `tuple`. Not a `list`.
@@ -156,9 +200,20 @@ Instead of creating and returning a list with values (`str` or `tuple`), we can 
 
 That way our function will be a <a href="https://docs.python.org/3.8/glossary.html#index-19" class="external-link" target="_blank">generator</a> that **Typer** (actually Click) can iterate:
 
-```Python hl_lines="10 11 12 13"
-{!../docs_src/options_autocompletion/tutorial005.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="11-14"
+    {!> ../docs_src/options_autocompletion/tutorial005_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="10-13"
+    {!> ../docs_src/options_autocompletion/tutorial005.py!}
+    ```
 
 That simplifies our code a bit and works the same.
 
@@ -185,9 +240,20 @@ So, we will allow multiple `--name` *CLI options*.
 
 For this we use a `List` of `str`:
 
-```Python hl_lines="8-11"
-{!../docs_src/options_autocompletion/tutorial006.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="9-14"
+    {!> ../docs_src/options_autocompletion/tutorial006_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="8-11"
+    {!> ../docs_src/options_autocompletion/tutorial006.py!}
+    ```
 
 And then we can use it like:
 
@@ -212,9 +278,20 @@ But you can access the context by declaring a function parameter of type `typer.
 
 And from that context you can get the current values for each parameter.
 
-```Python hl_lines="12 13  15"
-{!../docs_src/options_autocompletion/tutorial007.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="13-14  16"
+    {!> ../docs_src/options_autocompletion/tutorial007_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="12-13  15"
+    {!> ../docs_src/options_autocompletion/tutorial007.py!}
+    ```
 
 We are getting the `names` already provided with `--name` in the command line before this completion was triggered.
 
@@ -273,7 +350,7 @@ Because completion is based on the output printed by your program (handled inter
 ### Printing to "standard error"
 
 !!! tip
-    If you need a refresher about what is "standard output" and "standard error" check the section in [Printing and Colors: "Standard Output" and "Standard Error"](../printing.md#standard-output-and-standard-error){.internal-link target=_blank}.
+    If you need a refresher about what is "standard output" and "standard error" check the section in [Printing and Colors: "Standard Output" and "Standard Error"](./printing.md#standard-output-and-standard-error){.internal-link target=_blank}.
 
 The completion system only reads from "standard output", so, printing to "standard error" won't break completion. 🚀
 
@@ -281,9 +358,20 @@ You can print to "standard error" with a **Rich** `Console(stderr=True)`.
 
 Using `stderr=True` tells **Rich** that the output should be shown in "standard error".
 
-```Python hl_lines="12  15-16"
-{!../docs_src/options_autocompletion/tutorial008.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="13  16-17"
+    {!> ../docs_src/options_autocompletion/tutorial008_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="12  15-16"
+    {!> ../docs_src/options_autocompletion/tutorial008.py!}
+    ```
 
 !!! info
     If you can't install and use Rich, you can also use `print(lastname, file=sys.stderr)` or `typer.echo("some text", err=True)` instead.
@@ -322,9 +410,20 @@ Sebastian  -- The type hints guy.
 
 Of course, you can declare everything if you need it, the context, the raw *CLI parameters*, and the incomplete `str`:
 
-```Python hl_lines="15"
-{!../docs_src/options_autocompletion/tutorial009.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="16"
+    {!> ../docs_src/options_autocompletion/tutorial009_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="15"
+    {!> ../docs_src/options_autocompletion/tutorial009.py!}
+    ```
 
 Check it:
 

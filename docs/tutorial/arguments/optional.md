@@ -29,7 +29,7 @@ __init__.py  test_tutorial
 
 </div>
 
-### An alternative *CLI argument* declaration
+## An alternative *CLI argument* declaration
 
 In the [First Steps](../first-steps.md#add-a-cli-argument){.internal-link target=_blank} you saw how to add a *CLI argument*:
 
@@ -39,9 +39,17 @@ In the [First Steps](../first-steps.md#add-a-cli-argument){.internal-link target
 
 Now let's see an alternative way to create the same *CLI argument*:
 
-```Python hl_lines="4"
-{!../docs_src/arguments/optional/tutorial001.py!}
+
+```Python hl_lines="5"
+{!> ../docs_src/arguments/optional/tutorial001_an.py!}
 ```
+
+!!! info
+    Typer added support for `Annotated` (and started recommending it) in version 0.9.0.
+
+    If you have an older version, you would get errors when trying to use `Annotated`.
+
+    Make sure you Upgrade the Typer version to at least 0.9.0 before using `Annotated`.
 
 Before, you had this function parameter:
 
@@ -49,24 +57,21 @@ Before, you had this function parameter:
 name: str
 ```
 
-And because `name` didn't have any default value it would be a **required parameter** for the Python function, in Python terms.
-
-**Typer** does the same and makes it a **required** *CLI argument*.
-
-And then we changed it to:
+And now we wrap it with `Annotated`:
 
 ```Python
-name: str = typer.Argument(...)
+name: Annotated[str]
 ```
 
-But now as `typer.Argument()` is the "default value" of the function's parameter, it would mean that "it is no longer required" (in Python terms).
+Both of these versions mean the same thing, `Annotated` is part of standard Python and is there for this.
 
-As we no longer have the Python function default value (or its absence) to tell if something is required or not and what is the default value, the first parameter to `typer.Argument()` serves the same purpose of defining that default value, or making it required.
+But the second version using `Annotated` allows us to pass additional metadata that can be used by **Typer**:
 
-To make it *required*, we pass `...` as the first function argument passed to `typer.Argument(...)`.
+```Python
+name: Annotated[str, typer.Argument()]
+```
 
-!!! info
-    If you hadn't seen that `...` before: it is a special single value, it is <a href="https://docs.python.org/3/library/constants.html#Ellipsis" class="external-link" target="_blank">part of Python and is called "Ellipsis"</a>.
+Now we are being explicit that `name` is a *CLI argument*. It's still a `str` and it's still required (it doesn't have a default value).
 
 All we did there achieves the same thing as before, a **required** *CLI argument*:
 
@@ -85,27 +90,37 @@ Error: Missing argument 'NAME'.
 
 It's still not very useful, but it works correctly.
 
-And being able to declare a **required** *CLI argument* using `name: str = typer.Argument(...)` that works exactly the same as `name: str` will come handy later.
+And being able to declare a **required** *CLI argument* using
 
-### Make an optional *CLI argument*
+```Python
+name: Annoated[str, typer.Argument()]
+```
+
+...that works exactly the same as
+
+```Python
+name: str
+```
+
+...will come handy later.
+
+## Make an optional *CLI argument*
 
 Now, finally what we came for, an optional *CLI argument*.
 
 To make a *CLI argument* optional, use `typer.Argument()` and pass a different "default" as the first parameter to `typer.Argument()`, for example `None`:
 
-```Python hl_lines="6"
-{!../docs_src/arguments/optional/tutorial002.py!}
+```Python hl_lines="7"
+{!../docs_src/arguments/optional/tutorial002_an.py!}
 ```
 
 Now we have:
 
 ```Python
-name: Optional[str] = typer.Argument(None)
+name: Annotated[Optional[str], typer.Argument()] = None
 ```
 
 Because we are using `typer.Argument()` **Typer** will know that this is a *CLI argument* (no matter if *required* or *optional*).
-
-And because the first parameter passed to `typer.Argument(None)` (the new "default" value) is `None`, **Typer** knows that this is an **optional** *CLI argument*, if no value is provided when calling it in the command line, it will have that default value of `None`.
 
 !!! tip
     By using `Optional` your editor will be able to know that the value *could* be `None`, and will be able to warn you if you do something assuming it is a `str` that would break if it was `None`.
@@ -124,8 +139,6 @@ Arguments:
   [NAME]
 
 Options:
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 ```
 
@@ -156,3 +169,65 @@ Hello Camila
 
 !!! tip
     Notice that "`Camila`" here is an optional *CLI argument*, not a *CLI option*, because we didn't use something like "`--name Camila`", we just passed "`Camila`" directly to the program.
+
+## Alternative (old) `typer.Argument()` as the default value
+
+**Typer** also supports another older alternative syntax for declaring *CLI arguments* with additional metadata.
+
+Instead of using `Annotated`, you can use `typer.Argument()` as the default value:
+
+```Python hl_lines="4"
+{!> ../docs_src/arguments/optional/tutorial001.py!}
+```
+
+!!! tip
+    Prefer to use the `Annotated` version if possible.
+
+Before, because `name` didn't have any default value it would be a **required parameter** for the Python function, in Python terms.
+
+When using `typer.Argument()` as the default value **Typer** does the same and makes it a **required** *CLI argument*.
+
+We changed it to:
+
+```Python
+name: str = typer.Argument()
+```
+
+But now as `typer.Argument()` is the "default value" of the function's parameter, it would mean that "it is no longer required" (in Python terms).
+
+As we no longer have the Python function default value (or its absence) to tell if something is required or not and what is the default value, `typer.Argument()` receives a first parameter `default` that serves the same purpose of defining that default value, or making it required.
+
+Not passing any value to the `default` argument is the same as marking it as required. But you can also explicitly mark it as *required* by passing `...` as the `default` argument, passed to `typer.Argument(default=...)`.
+
+```Python
+name: str = typer.Argument(default=...)
+```
+
+!!! info
+    If you hadn't seen that `...` before: it is a special single value, it is <a href="https://docs.python.org/3/library/constants.html#Ellipsis" class="external-link" target="_blank">part of Python and is called "Ellipsis"</a>.
+
+```Python hl_lines="4"
+{!> ../docs_src/arguments/optional/tutorial003.py!}
+```
+
+And the same way, you can make it optional by passing a different `default` value, for example `None`:
+
+```Python hl_lines="6"
+{!> ../docs_src/arguments/optional/tutorial002.py!}
+```
+
+Because the first parameter passed to `typer.Argument(default=None)` (the new "default" value) is `None`, **Typer** knows that this is an **optional** *CLI argument*, if no value is provided when calling it in the command line, it will have that default value of `None`.
+
+The `default` argument is the first one, so it's possible that you see code that passes the value without explicitly using `default=`, like:
+
+```Python
+name: str = typer.Argument(...)
+```
+
+...or like:
+
+```Python
+name: str = typer.Argument(None)
+```
+
+...but again, try to use `Annotated` if possible, that way your code in terms of Python will mean the same thing as with **Typer** and you won't have to remember any of these details.

@@ -1,6 +1,6 @@
 import os
 import sys
-from typing import Any, Dict, Tuple
+from typing import Any, MutableMapping, Tuple
 
 import click
 
@@ -120,7 +120,7 @@ def completion_init() -> None:
 # This is only called in new Command method, only used by Click 8.x+
 def shell_complete(
     cli: click.BaseCommand,
-    ctx_args: Dict[str, Any],
+    ctx_args: MutableMapping[str, Any],
     prog_name: str,
     complete_var: str,
     instruction: str,
