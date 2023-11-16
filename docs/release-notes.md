@@ -1,5 +1,7 @@
 ## Latest Changes
 
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#606](https://github.com/tiangolo/typer/pull/606) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* 👷 Install MkDocs Material Insiders only when secrets are available, for Dependabot. PR [#685](https://github.com/tiangolo/typer/pull/685) by [@tiangolo](https://github.com/tiangolo).
 * ⚒️ Update build-docs.yml, do not zip docs. PR [#645](https://github.com/tiangolo/typer/pull/645) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Deploy docs to Cloudflare. PR [#644](https://github.com/tiangolo/typer/pull/644) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Upgrade CI for docs. PR [#642](https://github.com/tiangolo/typer/pull/642) by [@tiangolo](https://github.com/tiangolo).
@@ -8,6 +10,10 @@
 * 👷 Update token for Material for MkDocs Insiders. PR [#636](https://github.com/tiangolo/typer/pull/636) by [@tiangolo](https://github.com/tiangolo).
 * 🐛 Fix internal type annotations and bump mypy version. PR [#638](https://github.com/tiangolo/typer/pull/638) by [@paulo-raca](https://github.com/paulo-raca).
 * 📝 Remove obsolete references to `--install-completion` for `typer.run()` scripts. PR [#595](https://github.com/tiangolo/typer/pull/595) by [@tiangolo](https://github.com/tiangolo).
+
+### Internal
+
+* 👷 Upgrade latest-changes GitHub Action. PR [#691](https://github.com/tiangolo/typer/pull/691) by [@tiangolo](https://github.com/tiangolo).
 
 ## 0.9.0
 
