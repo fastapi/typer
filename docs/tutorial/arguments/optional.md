@@ -123,7 +123,7 @@ name: Annotated[Optional[str], typer.Argument()] = None
 Because we are using `typer.Argument()` **Typer** will know that this is a *CLI argument* (no matter if *required* or *optional*).
 
 !!! tip
-    By using `Optional` your editor will be able to know that the value *could* be `None`, and will be able to warn you if you do something assuming it is a `str` that would break if it was `None`.
+    By using `Optional` your editor will be able to know that the value *could* be `None`, and will be able to warn you if you do something assuming it is a `str` that would break if it was `None`. If you are using Python 3.10 or newer, you can also use `T | None` instead of `Optional[T]` (e.g., `str | None`).
 
 Check the help:
 

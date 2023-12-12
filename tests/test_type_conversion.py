@@ -1,3 +1,4 @@
+import sys
 from enum import Enum
 from pathlib import Path
 from typing import Any, List, Optional, Tuple
@@ -15,6 +16,28 @@ def test_optional():
 
     @app.command()
     def opt(user: Optional[str] = None):
+        if user:
+            print(f"User: {user}")
+        else:
+            print("No user")
+
+    result = runner.invoke(app)
+    assert result.exit_code == 0
+    assert "No user" in result.output
+
+    result = runner.invoke(app, ["--user", "Camila"])
+    assert result.exit_code == 0
+    assert "User: Camila" in result.output
+
+
+def test_union_none():
+    if sys.version_info < (3, 10):
+        pytest.skip("SomeType | None is only available in Python 3.10+")
+
+    app = typer.Typer()
+
+    @app.command()
+    def union_none(user: "str | None" = None):
         if user:
             print(f"User: {user}")
         else:

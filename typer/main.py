@@ -817,35 +817,36 @@ def get_click_param(
     parameter_type: Any = None
     is_flag = None
     origin = getattr(main_type, "__origin__", None)
-    if origin is not None:
-        # Handle Optional[SomeType]
-        if origin is Union:
-            types = []
-            for type_ in main_type.__args__:
-                if type_ is NoneType:
-                    continue
-                types.append(type_)
-            assert len(types) == 1, "Typer Currently doesn't support Union types"
-            main_type = types[0]
-            origin = getattr(main_type, "__origin__", None)
-        # Handle Tuples and Lists
-        if lenient_issubclass(origin, List):
-            main_type = main_type.__args__[0]
+    contains_args = hasattr(main_type, "__args__")
+
+    # Handle Optional[SomeType] and SomeType | None
+    if origin is Union or (origin is None and contains_args):
+        types = []
+        for type_ in main_type.__args__:
+            if type_ is NoneType:
+                continue
+            types.append(type_)
+        assert len(types) == 1, "Typer Currently doesn't support Union types"
+        main_type = types[0]
+        origin = getattr(main_type, "__origin__", None)
+    # Handle Tuples and Lists
+    if lenient_issubclass(origin, List):
+        main_type = main_type.__args__[0]
+        assert not getattr(
+            main_type, "__origin__", None
+        ), "List types with complex sub-types are not currently supported"
+        is_list = True
+    elif lenient_issubclass(origin, Tuple):  # type: ignore
+        types = []
+        for type_ in main_type.__args__:
             assert not getattr(
-                main_type, "__origin__", None
-            ), "List types with complex sub-types are not currently supported"
-            is_list = True
-        elif lenient_issubclass(origin, Tuple):  # type: ignore
-            types = []
-            for type_ in main_type.__args__:
-                assert not getattr(
-                    type_, "__origin__", None
-                ), "Tuple types with complex sub-types are not currently supported"
-                types.append(
-                    get_click_type(annotation=type_, parameter_info=parameter_info)
-                )
-            parameter_type = tuple(types)
-            is_tuple = True
+                type_, "__origin__", None
+            ), "Tuple types with complex sub-types are not currently supported"
+            types.append(
+                get_click_type(annotation=type_, parameter_info=parameter_info)
+            )
+        parameter_type = tuple(types)
+        is_tuple = True
     if parameter_type is None:
         parameter_type = get_click_type(
             annotation=main_type, parameter_info=parameter_info
