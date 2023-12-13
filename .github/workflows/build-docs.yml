@@ -30,6 +30,8 @@ jobs:
             - pyproject.toml
             - mkdocs.yml
             - mkdocs.insiders.yml
+            - .github/workflows/build-docs.yml
+            - .github/workflows/deploy-docs.yml
 
   build-docs:
     needs:
