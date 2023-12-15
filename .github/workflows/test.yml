@@ -44,7 +44,7 @@ jobs:
           COVERAGE_FILE: coverage/.coverage.${{ runner.os }}-py${{ matrix.python-version }}-click-7-${{ matrix.click-7 }}
           CONTEXT: ${{ runner.os }}-py${{ matrix.python-version }}-click-7-${{ matrix.click-7 }}
       - name: Store coverage files
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage
           path: coverage
@@ -73,7 +73,7 @@ jobs:
       - run: coverage html --show-contexts --title "Coverage for ${{ github.sha }}"
 
       - name: Store coverage HTML
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-html
           path: htmlcov
