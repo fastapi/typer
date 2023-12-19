@@ -1,3 +1,6 @@
+import sys
+
+import pytest
 import typer
 from typer.testing import CliRunner
 from typing_extensions import Annotated
@@ -10,6 +13,23 @@ def test_annotated_argument_with_default():
 
     @app.command()
     def cmd(val: Annotated[int, typer.Argument()] = 0):
+        print(f"hello {val}")
+
+    result = runner.invoke(app)
+    assert result.exit_code == 0, result.output
+    assert "hello 0" in result.output
+
+    result = runner.invoke(app, ["42"])
+    assert result.exit_code == 0, result.output
+    assert "hello 42" in result.output
+
+
+@pytest.mark.skipif(sys.version_info < (3, 10), reason="requires python3.10 or higher")
+def test_annotated_argument_in_string_type_with_default():
+    app = typer.Typer()
+
+    @app.command()
+    def cmd(val: "Annotated[int, typer.Argument()]" = 0):
         print(f"hello {val}")
 
     result = runner.invoke(app)
