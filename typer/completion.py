@@ -135,7 +135,7 @@ def shell_complete(
         click.echo(f"Shell {shell} not supported.", err=True)
         return 1
 
-    comp = comp_cls(cli, ctx_args, prog_name, complete_var)
+    comp = comp_cls(cli, dict(ctx_args), prog_name, complete_var)
 
     if instruction == "source":
         click.echo(comp.source())
