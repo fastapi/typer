@@ -9,7 +9,7 @@ from docs_src.arguments.help import tutorial007_an as mod
 
 runner = CliRunner()
 
-app = typer.Typer()
+app = typer.Typer(rich_markup_mode="rich")
 app.command()(mod.main)
 
 

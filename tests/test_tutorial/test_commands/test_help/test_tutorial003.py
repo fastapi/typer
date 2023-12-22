@@ -6,6 +6,7 @@ from typer.testing import CliRunner
 from docs_src.commands.help import tutorial003 as mod
 
 app = mod.app
+app.rich_markup_mode = "rich"
 
 runner = CliRunner()
 

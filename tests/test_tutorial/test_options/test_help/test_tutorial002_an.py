@@ -8,7 +8,7 @@ from docs_src.options.help import tutorial002_an as mod
 
 runner = CliRunner()
 
-app = typer.Typer()
+app = typer.Typer(rich_markup_mode="rich")
 app.command()(mod.main)
 
 
