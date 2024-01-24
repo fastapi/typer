@@ -936,6 +936,7 @@ def get_click_param(
                 expose_value=parameter_info.expose_value,
                 is_eager=parameter_info.is_eager,
                 envvar=parameter_info.envvar,
+                shell_complete=parameter_info.shell_complete,
                 autocompletion=get_param_completion(parameter_info.autocompletion),
                 # Rich settings
                 rich_help_panel=parameter_info.rich_help_panel,
