@@ -16,7 +16,6 @@ def main(name: str = typer.Argument(shell_complete=shell_complete)):
     """
     Say hello.
     """
-    print(f"Hello {name}")
 
 
 if __name__ == "__main__":
