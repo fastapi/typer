@@ -46,6 +46,12 @@ try:
 except ImportError:  # pragma: nocover
     rich = None  # type: ignore
 
+if sys.version_info >= (3, 10):
+    from types import UnionType
+else:
+    # Python < 3.10 doesn't have UnionType, so we define it manually as non inheritable type
+    UnionType = type("", (), {})
+
 _original_except_hook = sys.excepthook
 _typer_developer_exception_attr_name = "__typer_developer_exception__"
 
@@ -816,8 +822,9 @@ def get_click_param(
     is_tuple = False
     parameter_type: Any = None
     is_flag = None
+    is_union_type = lenient_issubclass(type(main_type), UnionType)
     origin = getattr(main_type, "__origin__", None)
-    if origin is not None:
+    if origin is not None or is_union_type:
         # Handle Optional[SomeType]
         if origin is Union:
             types = []
@@ -828,6 +835,17 @@ def get_click_param(
             assert len(types) == 1, "Typer Currently doesn't support Union types"
             main_type = types[0]
             origin = getattr(main_type, "__origin__", None)
+        # Handle (SomeType | None)
+        elif is_union_type:
+            types = []
+            for type_ in main_type.__args__:
+                if type_ is NoneType:
+                    continue
+                types.append(type_)
+            assert (
+                len(types) == 1
+            ), "Typer Currently doesn't support UnionType other than (T | None)"
+            main_type = types[0]
         # Handle Tuples and Lists
         if lenient_issubclass(origin, List):
             main_type = main_type.__args__[0]
