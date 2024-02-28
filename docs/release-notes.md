@@ -13,6 +13,7 @@
 
 ### Docs
 
+* ✏ Fix typo in `docs/tutorial/options/name.md`. PR [#725](https://github.com/tiangolo/typer/pull/725) by [@bwagner](https://github.com/bwagner).
 * ✏ Fix typo in `docs/tutorial/arguments/optional.md`. PR [#602](https://github.com/tiangolo/typer/pull/602) by [@tadasgedgaudas](https://github.com/tadasgedgaudas).
 
 ### Internal
