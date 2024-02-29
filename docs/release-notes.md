@@ -11,6 +11,12 @@
 * 🐛 Fix internal type annotations and bump mypy version. PR [#638](https://github.com/tiangolo/typer/pull/638) by [@paulo-raca](https://github.com/paulo-raca).
 * 📝 Remove obsolete references to `--install-completion` for `typer.run()` scripts. PR [#595](https://github.com/tiangolo/typer/pull/595) by [@tiangolo](https://github.com/tiangolo).
 
+### Docs
+
+* ✏ Fix typo in `docs/tutorial/exceptions.md`. PR [#702](https://github.com/tiangolo/typer/pull/702) by [@menzenski](https://github.com/menzenski).
+* ✏ Fix typo in `docs/tutorial/options/name.md`. PR [#725](https://github.com/tiangolo/typer/pull/725) by [@bwagner](https://github.com/bwagner).
+* ✏ Fix typo in `docs/tutorial/arguments/optional.md`. PR [#602](https://github.com/tiangolo/typer/pull/602) by [@tadasgedgaudas](https://github.com/tadasgedgaudas).
+
 ### Internal
 
 * 👷 Update build docs CI cache paths. PR [#707](https://github.com/tiangolo/typer/pull/707) by [@tiangolo](https://github.com/tiangolo).
