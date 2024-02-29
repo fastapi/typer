@@ -183,7 +183,7 @@ tar: You must specify one of the blah, blah, error, error
 
 In **Typer** you can also define *CLI option* short names the same way you can customize the long names.
 
-YOu can pass *positional* arguments to `typer.Option()` to define the *CLI option* name(s).
+You can pass *positional* arguments to `typer.Option()` to define the *CLI option* name(s).
 
 !!! tip
     Remember the *positional* function arguments are those that don't have a keyword.
