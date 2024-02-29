@@ -13,6 +13,7 @@
 
 ### Docs
 
+* 🔧 Add `CITATION.cff` file for academic citations. PR [#681](https://github.com/tiangolo/typer/pull/681) by [@tiangolo](https://github.com/tiangolo).
 * ✏ Fix typo in `docs/tutorial/exceptions.md`. PR [#702](https://github.com/tiangolo/typer/pull/702) by [@menzenski](https://github.com/menzenski).
 * ✏ Fix typo in `docs/tutorial/options/name.md`. PR [#725](https://github.com/tiangolo/typer/pull/725) by [@bwagner](https://github.com/bwagner).
 * ✏ Fix typo in `docs/tutorial/arguments/optional.md`. PR [#602](https://github.com/tiangolo/typer/pull/602) by [@tadasgedgaudas](https://github.com/tadasgedgaudas).
