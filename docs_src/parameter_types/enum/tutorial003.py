@@ -9,9 +9,7 @@ class Interval(Enum):
     OTHER = "o"
 
 
-def main(
-    interval: Interval = typer.Option(Interval.OTHER, case_sensitive=True)
-):
+def main(interval: Interval = typer.Option(Interval.OTHER, case_sensitive=True)):
     print(f"Found interval: {interval.value}")
 
 
