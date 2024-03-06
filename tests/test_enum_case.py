@@ -1,5 +1,5 @@
 """
-Regresion test for
+Regression test for
     Enum values that differ in case get conflated #570
     https://github.com/tiangolo/typer/discussions/570
 """
