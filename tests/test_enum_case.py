@@ -13,22 +13,18 @@ runner = CliRunner()
 app = typer.Typer()
 
 
-class Case(str, Enum):
-    UPPER = "CASE"
-    TITLE = "Case"
-    LOWER = "case"
-
-    def __str__(self) -> str:
-        return self.value
+class Interval(Enum):
+    ONE_MINUTE = "1m"
+    ONE_MONTH = "1M"
 
 
 @app.command()
-def enum_case(case: Case):
-    print(case)
+def enum_case(interval: Interval):
+    print(interval.value)
 
 
-@pytest.mark.parametrize("case", Case)
-def test_enum_case(case: Case):
-    result = runner.invoke(app, [f"{case}"])
+@pytest.mark.parametrize("interval", ["1M", "1m"])
+def test_enum_case(interval: str):
+    result = runner.invoke(app, [interval])
     assert result.exit_code == 0
-    assert case in result.output
+    assert interval in result.output
