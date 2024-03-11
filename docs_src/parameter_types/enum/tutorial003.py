@@ -3,14 +3,17 @@ from enum import Enum
 import typer
 
 
-class Interval(Enum):
-    ONE_MINUTE = "1m"
-    ONE_MONTH = "1M"
-    OTHER = "o"
+class NeuralNetwork(str, Enum):
+    simple = "simple"
+    conv = "conv"
+    lstm_lower = "lstm"
+    lstm_upper = "LSTM"
 
 
-def main(interval: Interval = typer.Option(Interval.OTHER, case_sensitive=True)):
-    print(f"Found interval: {interval.value}")
+def main(
+    network: NeuralNetwork = typer.Option(NeuralNetwork.simple)
+):
+    print(f"Training neural network of type: {network.value}")
 
 
 if __name__ == "__main__":

@@ -13,11 +13,16 @@ app = typer.Typer()
 app.command()(mod.main)
 
 
-@pytest.mark.parametrize("interval", ["1M", "1m"])
-def test_case(interval):
-    result = runner.invoke(app, ["--interval", interval])
+def test_upper():
+    result = runner.invoke(app, ["--network", "LSTM"])
     assert result.exit_code == 0
-    assert f"Found interval: {interval}" in result.output
+    assert "Training neural network of type: LSTM" in result.output
+
+
+def test_lower():
+    result = runner.invoke(app, ["--network", "lstm"])
+    assert result.exit_code == 0
+    assert "Training neural network of type: lstm" in result.output
 
 
 def test_script():
