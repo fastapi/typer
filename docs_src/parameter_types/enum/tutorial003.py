@@ -10,9 +10,7 @@ class NeuralNetwork(str, Enum):
     lstm_upper = "LSTM"
 
 
-def main(
-    network: NeuralNetwork = typer.Option(NeuralNetwork.simple)
-):
+def main(network: NeuralNetwork = typer.Option(NeuralNetwork.simple)):
     print(f"Training neural network of type: {network.value}")
 
 
