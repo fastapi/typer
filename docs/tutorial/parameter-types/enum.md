@@ -28,6 +28,14 @@ $ python main.py --network conv
 
 Training neural network of type: conv
 
+// Note that enums are case sensitive by default
+$ python main.py --network CONV
+
+Usage: main.py [OPTIONS]
+Try "main.py --help" for help.
+
+Error: Invalid value for '--network': invalid choice: CONV. (choose from simple, conv, lstm)
+
 // Invalid value
 $ python main.py --network capsule
 
