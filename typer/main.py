@@ -51,7 +51,7 @@ _typer_developer_exception_attr_name = "__typer_developer_exception__"
 
 
 def except_hook(
-    exc_type: Type[BaseException], exc_value: BaseException, tb: TracebackType
+    exc_type: Type[BaseException], exc_value: BaseException, tb: Optional[TracebackType]
 ) -> None:
     exception_config: Union[DeveloperExceptionConfig, None] = getattr(
         exc_value, _typer_developer_exception_attr_name, None
@@ -689,7 +689,13 @@ def get_callback(
 def get_click_type(
     *, annotation: Any, parameter_info: ParameterInfo
 ) -> click.ParamType:
-    if annotation == str:
+    if parameter_info.click_type is not None:
+        return parameter_info.click_type
+
+    elif parameter_info.parser is not None:
+        return click.types.FuncParamType(parameter_info.parser)
+
+    elif annotation == str:
         return click.STRING
     elif annotation == int:
         if parameter_info.min is not None or parameter_info.max is not None:

@@ -33,8 +33,6 @@ Options:
   --age INTEGER           [default: 20]
   --height-meters FLOAT   [default: 1.89]
   --female / --no-female  [default: True]
-  --install-completion    Install completion for the current shell.
-  --show-completion       Show completion for the current shell, to copy it or customize the installation.
   --help                  Show this message and exit.
 
 // Call it with CLI parameters
