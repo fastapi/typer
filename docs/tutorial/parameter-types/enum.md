@@ -79,7 +79,7 @@ Training neural network of type: lstm
 
 ### List of Enum values
 
-A *CLI parameter* can als take a list of `Enum` values:
+A *CLI parameter* can also take a list of `Enum` values:
 
 === "Python 3.6+"
 
