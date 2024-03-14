@@ -10,9 +10,7 @@ class Food(str, Enum):
     food_3 = "Cheese"
 
 
-def main(
-    groceries: List[Food] = typer.Option([Food.food_1, Food.food_3])
-):
+def main(groceries: List[Food] = typer.Option([Food.food_1, Food.food_3])):
     print(f"Buying groceries: {', '.join([f.value for f in groceries])}")
 
 
