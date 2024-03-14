@@ -112,7 +112,7 @@ Options:
   --help                           Show this message and exit.
 
 // Try it with the default values
-$ python main.py 
+$ python main.py
 
 Buying groceries: Eggs, Cheese
 
