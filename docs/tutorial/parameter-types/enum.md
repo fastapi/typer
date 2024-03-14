@@ -111,6 +111,11 @@ Options:
   --groceries [Eggs|Bacon|Cheese]  [default: Eggs, Cheese]
   --help                           Show this message and exit.
 
+// Try it with the default values
+$ python main.py 
+
+Buying groceries: Eggs, Cheese
+
 // Try it with a single value
 $ python main.py --groceries "Eggs"
 
