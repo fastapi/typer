@@ -2,9 +2,20 @@ You can also configure a *CLI argument* to read a value from an environment vari
 
 To do that, use the `envvar` parameter for `typer.Argument()`:
 
-```Python hl_lines="4"
-{!../docs_src/arguments/envvar/tutorial001.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="5"
+    {!> ../docs_src/arguments/envvar/tutorial001_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="4"
+    {!> ../docs_src/arguments/envvar/tutorial001.py!}
+    ```
 
 In this case, the *CLI argument* `name` will have a default value of `"World"`, but will also read any value passed to the environment variable `AWESOME_NAME` if no value is provided in the command line:
 
@@ -20,8 +31,6 @@ Arguments:
   [NAME]  [env var: AWESOME_NAME;default: World]
 
 Options:
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 
 // Call it without a CLI argument
@@ -51,9 +60,20 @@ Hello Mr. Czernobog
 
 You are not restricted to a single environment variable, you can declare a list of environment variables that could be used to get a value if it was not passed in the command line:
 
-```Python hl_lines="4"
-{!../docs_src/arguments/envvar/tutorial002.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="6"
+    {!> ../docs_src/arguments/envvar/tutorial002_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="4"
+    {!> ../docs_src/arguments/envvar/tutorial002.py!}
+    ```
 
 Check it:
 
@@ -69,8 +89,6 @@ Arguments:
   [NAME]  [env var: AWESOME_NAME, GOD_NAME;default: World]
 
 Options:
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 
 // Try the first env var
@@ -90,9 +108,20 @@ Hello Mr. Anubis
 
 By default, environment variables used will be shown in the help text, but you can disable them with `show_envvar=False`:
 
-```Python hl_lines="4"
-{!../docs_src/arguments/envvar/tutorial003.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="7"
+    {!> ../docs_src/arguments/envvar/tutorial003_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="4"
+    {!> ../docs_src/arguments/envvar/tutorial003.py!}
+    ```
 
 Check it:
 
@@ -109,8 +138,6 @@ Arguments:
   [NAME]  [default: World]
 
 Options:
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 
 // But it will still be able to use it

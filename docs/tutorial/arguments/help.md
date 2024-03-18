@@ -12,9 +12,20 @@ Now that you also know how to use `typer.Argument()`, let's use it to add docume
 
 You can use the `help` parameter to add a help text for a *CLI argument*:
 
-```Python hl_lines="4"
-{!../docs_src/arguments/help/tutorial001.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="5"
+    {!> ../docs_src/arguments/help/tutorial001_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="4"
+    {!> ../docs_src/arguments/help/tutorial001.py!}
+    ```
 
 And it will be used in the automatic `--help` option:
 
@@ -30,8 +41,6 @@ Arguments:
   NAME  The name of the user to greet  [required]
 
 Options:
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 ```
 
@@ -41,9 +50,20 @@ Options:
 
 And of course, you can also combine that `help` with the <abbr title="a multi-line string as the first expression inside a function (not assigned to any variable) used for documentation">docstring</abbr>:
 
-```Python hl_lines="4 5 6 7"
-{!../docs_src/arguments/help/tutorial002.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="5-8"
+    {!> ../docs_src/arguments/help/tutorial002_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="4-7"
+    {!> ../docs_src/arguments/help/tutorial002.py!}
+    ```
 
 And the `--help` option will combine all the information:
 
@@ -61,8 +81,6 @@ Arguments:
   NAME  The name of the user to greet  [required]
 
 Options:
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 ```
 
@@ -72,9 +90,20 @@ Options:
 
 If you have a *CLI argument* with a default value, like `"World"`:
 
-```Python hl_lines="4"
-{!../docs_src/arguments/help/tutorial003.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="5"
+    {!> ../docs_src/arguments/help/tutorial003_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="4"
+    {!> ../docs_src/arguments/help/tutorial003.py!}
+    ```
 
 It will show that default value in the help text:
 
@@ -92,8 +121,6 @@ Arguments:
   [NAME]  Who to greet  [default: World]
 
 Options:
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 ```
 
@@ -101,9 +128,20 @@ Options:
 
 But you can disable that if you want to, with `show_default=False`:
 
-```Python hl_lines="4"
-{!../docs_src/arguments/help/tutorial004.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="7"
+    {!> ../docs_src/arguments/help/tutorial004_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="4"
+    {!> ../docs_src/arguments/help/tutorial004.py!}
+    ```
 
 And then it won't show the default value:
 
@@ -121,9 +159,6 @@ Arguments:
   [NAME]  Who to greet
 
 Options:
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
-
   --help                Show this message and exit.
 ```
 
@@ -138,9 +173,20 @@ Options:
 
 You can use the same `show_default` to pass a custom string (instead of a `bool`) to customize the default value to be shown in the help text:
 
-```Python hl_lines="6"
-{!../docs_src/arguments/help/tutorial005.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="9"
+    {!> ../docs_src/arguments/help/tutorial005_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="6"
+    {!> ../docs_src/arguments/help/tutorial005.py!}
+    ```
 
 And it will be used in the help text:
 
@@ -156,8 +202,6 @@ Arguments:
 
 
 Options:
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 
 // See it shows "(Deadpoolio the amazing's name)" instead of the actual default of "Wade Wilson"
@@ -187,9 +231,20 @@ But you can customize it with the `metavar` parameter for `typer.Argument()`.
 
 For example, let's say you don't want to have the default of `NAME`, you want to have `username`, in lowercase, and you really want ✨ emojis ✨ everywhere:
 
-```Python hl_lines="4"
-{!../docs_src/arguments/help/tutorial006.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="5"
+    {!> ../docs_src/arguments/help/tutorial006_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="4"
+    {!> ../docs_src/arguments/help/tutorial006.py!}
+    ```
 
 Now the generated help text will have `✨username✨` instead of `NAME`:
 
@@ -204,8 +259,6 @@ Arguments:
   ✨username✨  [default: World]
 
 Options:
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 ```
 
@@ -217,9 +270,20 @@ You might want to show the help information for *CLI arguments* in different pan
 
 If you have installed Rich as described in the docs for [Printing and Colors](../printing.md){.internal-link target=_blank}, you can set the `rich_help_panel` parameter to the name of the panel where you want this *CLI argument* to be shown:
 
-```Python hl_lines="7  10"
-{!../docs_src/arguments/help/tutorial007.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="8  12"
+    {!> ../docs_src/arguments/help/tutorial007_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="7  10"
+    {!> ../docs_src/arguments/help/tutorial007.py!}
+    ```
 
 Then, if you check the `--help` option, you will see a default panel named "`Arguments`" for the *CLI arguments* that don't have a custom `rich_help_panel`.
 
@@ -242,11 +306,6 @@ $ python main.py --help
 <font color="#A5A5A1">│   age           </font><font color="#A37F4E"><b>[AGE]     </b></font>  The user&apos;s age                        │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--install-completion</b></font>          Install completion for the current  │
-<font color="#A5A5A1">│                               shell.                              │</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--show-completion</b></font>             Show completion for the current     │
-<font color="#A5A5A1">│                               shell, to copy it or customize the  │</font>
-<font color="#A5A5A1">│                               installation.                       │</font>
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                        Show this message and exit.         │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 ```
@@ -267,9 +326,20 @@ If you want, you can make a *CLI argument* **not** show up in the `Arguments` se
 
 You will probably not want to do this normally, but it's possible:
 
-```Python hl_lines="4"
-{!../docs_src/arguments/help/tutorial008.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="5"
+    {!> ../docs_src/arguments/help/tutorial008_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="4"
+    {!> ../docs_src/arguments/help/tutorial008.py!}
+    ```
 
 Check it:
 
@@ -284,8 +354,6 @@ Usage: main.py [OPTIONS] [NAME]
   Say hi to NAME very gently, like Dirk.
 
 Options:
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 ```
 

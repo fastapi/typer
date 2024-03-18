@@ -2,9 +2,20 @@ The same as before, you can add help for the commands in the docstrings and the 
 
 And the `typer.Typer()` application receives a parameter `help` that you can pass with the main help text for your CLI program:
 
-```Python hl_lines="3  8 9 10  20  23 24 25 26 27  39  42 43 44 45 46  55 56 57"
-{!../docs_src/commands/help/tutorial001.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="4  9-11  22  26-30  43  47-51  60-62"
+    {!> ../docs_src/commands/help/tutorial001_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="3  8-10  20  23-27  39  42-46  55-57"
+    {!> ../docs_src/commands/help/tutorial001.py!}
+    ```
 
 Check it:
 
@@ -190,9 +201,20 @@ Then you can use more formatting in the docstrings and the `help` parameter for 
 
 If you set `rich_markup_mode="rich"` when creating the `typer.Typer()` app, you will be able to use <a href="https://rich.readthedocs.io/en/stable/markup.html" class="external-link" target="_blank">Rich Console Markup</a> in the docstring, and even in the help for the *CLI arguments* and options:
 
-```Python hl_lines="3  9  13-15  20  22  24"
-{!../docs_src/commands/help/tutorial004.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="4  10  14-16  21  24  27"
+    {!> ../docs_src/commands/help/tutorial004_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="3  9  13-15  20  22  24"
+    {!> ../docs_src/commands/help/tutorial004.py!}
+    ```
 
 With that, you can use <a href="https://rich.readthedocs.io/en/stable/markup.html" class="external-link" target="_blank">Rich Console Markup</a> to format the text in the docstring for the command `create`, make the word "`create`" bold and green, and even use an <a href="https://rich.readthedocs.io/en/stable/markup.html#emoji" class="external-link" target="_blank">emoji</a>.
 
@@ -211,7 +233,7 @@ $ python main.py create --help
 
 <b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py create [OPTIONS] USERNAME                     </b>
 <b>                                                                     </b>
- <font color="#A6E22E"><b>Create</b></font> a new <i>shinny</i> user. ✨
+ <font color="#A6E22E"><b>Create</b></font> a new <i>shiny</i> user. ✨
  This requires a <font color="#A5A5A1"><u style="text-decoration-style:single">username</u></font><font color="#A5A5A1">.                                           </font>
 
 <font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
@@ -255,9 +277,20 @@ $ python main.py delete --help
 
 If you set `rich_markup_mode="markdown"` when creating the `typer.Typer()` app, you will be able to use Markdown in the docstring:
 
-```Python hl_lines="3  7  9-17  22  24-25"
-{!../docs_src/commands/help/tutorial005.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="4  9  12-20  25  27-28"
+    {!> ../docs_src/commands/help/tutorial005_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="3  7  9-17  22  24-25"
+    {!> ../docs_src/commands/help/tutorial005.py!}
+    ```
 
 With that, you can use Markdown to format the text in the docstring for the command `create`, make the word "`create`" bold, show a list of items, and even use an <a href="https://rich.readthedocs.io/en/stable/markup.html#emoji" class="external-link" target="_blank">emoji</a>.
 
@@ -272,7 +305,7 @@ $ python main.py create --help
 
 <b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py create [OPTIONS] USERNAME                     </b>
 <b>                                                                     </b>
- <b>Create</b> a new <i>shinny</i> user. ✨
+ <b>Create</b> a new <i>shiny</i> user. ✨
 
  <font color="#F4BF75"><b> • </b></font><font color="#A5A5A1">Create a username                                                </font>
  <font color="#F4BF75"><b> • </b></font><font color="#A5A5A1">Show that the username is created                                </font>
@@ -330,9 +363,11 @@ If you installed <a href="https://rich.readthedocs.io/" class="external-link" ta
 
 To set the panel for a command you can pass the argument `rich_help_panel` with the name of the panel you want to use:
 
-```Python hl_lines="22  30  38  46"
-{!../docs_src/commands/help/tutorial006.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="22  30  38  46"
+    {!> ../docs_src/commands/help/tutorial006.py!}
+    ```
 
 Commands without a panel will be shown in the default panel `Commands`, and the rest will be shown in the next panels:
 
@@ -373,9 +408,20 @@ The same way, you can configure the panels for *CLI arguments* and *CLI options*
 
 And of course, in the same application you can also set the `rich_help_panel` for commands.
 
-```Python hl_lines="12  16  21  30"
-{!../docs_src/commands/help/tutorial007.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="15  21  27  37"
+    {!> ../docs_src/commands/help/tutorial007_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="12  16  21  30"
+    {!> ../docs_src/commands/help/tutorial007.py!}
+    ```
 
 Then if you run the application you will see all the *CLI parameters* in their respective panels.
 
