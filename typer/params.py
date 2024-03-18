@@ -268,6 +268,7 @@ def Argument(
         ]
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
+    default_factory: Optional[Callable[[], Any]] = None,
     # Custom type
     parser: Optional[Callable[[str], Any]] = None,
     # TyperArgument
@@ -322,6 +323,7 @@ def Argument(
         ]
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
+    default_factory: Optional[Callable[[], Any]] = None,
     # Custom type
     click_type: Optional[click.ParamType] = None,
     # TyperArgument
