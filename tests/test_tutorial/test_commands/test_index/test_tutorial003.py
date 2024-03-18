@@ -19,6 +19,18 @@ def test_no_arg():
     assert "delete" in result.output
 
 
+def test_create():
+    result = runner.invoke(app, ["create"])
+    assert result.exit_code == 0
+    assert "Creating user: Hiro Hamada" in result.output
+
+
+def test_delete():
+    result = runner.invoke(app, ["delete"])
+    assert result.exit_code == 0
+    assert "Deleting user: Hiro Hamada" in result.output
+
+
 def test_script():
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
