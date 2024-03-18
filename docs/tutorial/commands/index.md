@@ -213,7 +213,7 @@ Notice that the help text now shows the 2 commands: `create` and `delete`.
 
 ## Show the help message if no command is given
 
-By default, we need to specify `--help` to get the command's help page. 
+By default, we need to specify `--help` to get the command's help page.
 
 However, by setting `no_args_is_help=True` when defining the `typer.Typer()` application, the help function will be shown whenever no argument is given:
 
