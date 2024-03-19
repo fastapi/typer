@@ -8,6 +8,7 @@ if TYPE_CHECKING:  # pragma: no cover
     import click.shell_completion
 
 
+# Overload for Option created with custom type 'parser'
 @overload
 def Option(
     # Parameter
@@ -71,6 +72,7 @@ def Option(
     ...
 
 
+# Overload for Option created with custom type 'click_type'
 @overload
 def Option(
     # Parameter
