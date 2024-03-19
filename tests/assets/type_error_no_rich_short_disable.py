@@ -4,7 +4,7 @@ import typer.main
 typer.main.rich = None
 
 
-app = typer.Typer(pretty_errors_short=False)
+app = typer.Typer(pretty_exceptions_short=False)
 
 
 @app.command()

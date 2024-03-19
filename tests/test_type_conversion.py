@@ -1,7 +1,8 @@
 from enum import Enum
 from pathlib import Path
-from typing import List, Optional, Tuple
+from typing import Any, List, Optional, Tuple
 
+import click
 import pytest
 import typer
 from typer.testing import CliRunner
@@ -15,9 +16,9 @@ def test_optional():
     @app.command()
     def opt(user: Optional[str] = None):
         if user:
-            typer.echo(f"User: {user}")
+            print(f"User: {user}")
         else:
-            typer.echo("No user")
+            print("No user")
 
     result = runner.invoke(app)
     assert result.exit_code == 0
@@ -33,7 +34,7 @@ def test_no_type():
 
     @app.command()
     def no_type(user):
-        typer.echo(f"User: {user}")
+        print(f"User: {user}")
 
     result = runner.invoke(app, ["Camila"])
     assert result.exit_code == 0
@@ -89,4 +90,41 @@ def test_tuple_parameter_elements_are_converted_recursively(type_annotation):
             assert isinstance(element, expected_type)
 
     result = runner.invoke(app, ["one", "two"])
+    assert result.exit_code == 0
+
+
+def test_custom_parse():
+    app = typer.Typer()
+
+    @app.command()
+    def custom_parser(
+        hex_value: int = typer.Argument(None, parser=lambda x: int(x, 0))
+    ):
+        assert hex_value == 0x56
+
+    result = runner.invoke(app, ["0x56"])
+    assert result.exit_code == 0
+
+
+def test_custom_click_type():
+    class BaseNumberParamType(click.ParamType):
+        name = "base_integer"
+
+        def convert(
+            self,
+            value: Any,
+            param: Optional[click.Parameter],
+            ctx: Optional[click.Context],
+        ) -> Any:
+            return int(value, 0)
+
+    app = typer.Typer()
+
+    @app.command()
+    def custom_click_type(
+        hex_value: int = typer.Argument(None, click_type=BaseNumberParamType())
+    ):
+        assert hex_value == 0x56
+
+    result = runner.invoke(app, ["0x56"])
     assert result.exit_code == 0

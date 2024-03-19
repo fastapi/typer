@@ -1,5 +1,7 @@
 import os
 import subprocess
+import sys
+import typing
 from pathlib import Path
 from unittest import mock
 
@@ -9,7 +11,7 @@ import shellingham
 import typer
 import typer.completion
 from typer.main import solve_typer_info_defaults, solve_typer_info_help
-from typer.models import TyperInfo
+from typer.models import ParameterInfo, TyperInfo
 from typer.testing import CliRunner
 
 runner = CliRunner()
@@ -27,12 +29,56 @@ def test_defaults_from_info():
     assert value
 
 
+def test_too_may_parsers():
+    def custom_parser(value: str) -> int:
+        return int(value)  # pragma: no cover
+
+    class CustomClickParser(click.ParamType):
+        name = "custom_parser"
+
+        def convert(
+            self,
+            value: str,
+            param: typing.Optional[click.Parameter],
+            ctx: typing.Optional[click.Context],
+        ) -> typing.Any:
+            return int(value)  # pragma: no cover
+
+    expected_error = (
+        "Multiple custom type parsers provided. "
+        "`parser` and `click_type` may not both be provided."
+    )
+
+    with pytest.raises(ValueError, match=expected_error):
+        ParameterInfo(parser=custom_parser, click_type=CustomClickParser())
+
+
+def test_valid_parser_permutations():
+    def custom_parser(value: str) -> int:
+        return int(value)  # pragma: no cover
+
+    class CustomClickParser(click.ParamType):
+        name = "custom_parser"
+
+        def convert(
+            self,
+            value: str,
+            param: typing.Optional[click.Parameter],
+            ctx: typing.Optional[click.Context],
+        ) -> typing.Any:
+            return int(value)  # pragma: no cover
+
+    ParameterInfo()
+    ParameterInfo(parser=custom_parser)
+    ParameterInfo(click_type=CustomClickParser())
+
+
 def test_install_invalid_shell():
     app = typer.Typer()
 
     @app.command()
     def main():
-        typer.echo("Hello World")
+        print("Hello World")
 
     with mock.patch.object(
         shellingham, "detect_shell", return_value=("xshell", "/usr/bin/xshell")
@@ -64,12 +110,12 @@ def test_callback_2_untyped_parameters():
     app = typer.Typer()
 
     def name_callback(ctx, value):
-        typer.echo(f"info name is: {ctx.info_name}")
-        typer.echo(f"value is: {value}")
+        print(f"info name is: {ctx.info_name}")
+        print(f"value is: {value}")
 
     @app.command()
     def main(name: str = typer.Option(..., callback=name_callback)):
-        typer.echo("Hello World")
+        print("Hello World")
 
     result = runner.invoke(app, ["--name", "Camila"])
     assert "info name is: main" in result.stdout
@@ -80,13 +126,13 @@ def test_callback_3_untyped_parameters():
     app = typer.Typer()
 
     def name_callback(ctx, param, value):
-        typer.echo(f"info name is: {ctx.info_name}")
-        typer.echo(f"param name is: {param.name}")
-        typer.echo(f"value is: {value}")
+        print(f"info name is: {ctx.info_name}")
+        print(f"param name is: {param.name}")
+        print(f"value is: {value}")
 
     @app.command()
     def main(name: str = typer.Option(..., callback=name_callback)):
-        typer.echo("Hello World")
+        print("Hello World")
 
     result = runner.invoke(app, ["--name", "Camila"])
     assert "info name is: main" in result.stdout
@@ -97,7 +143,7 @@ def test_callback_3_untyped_parameters():
 def test_completion_untyped_parameters():
     file_path = Path(__file__).parent / "assets/completion_no_types.py"
     result = subprocess.run(
-        ["coverage", "run", str(file_path)],
+        [sys.executable, "-m", "coverage", "run", str(file_path)],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -119,7 +165,7 @@ def test_completion_untyped_parameters():
     assert '"Carlos":"The writer of scripts."' in result.stdout
 
     result = subprocess.run(
-        ["coverage", "run", str(file_path)],
+        [sys.executable, "-m", "coverage", "run", str(file_path)],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -130,7 +176,7 @@ def test_completion_untyped_parameters():
 def test_completion_untyped_parameters_different_order_correct_names():
     file_path = Path(__file__).parent / "assets/completion_no_types_order.py"
     result = subprocess.run(
-        ["coverage", "run", str(file_path)],
+        [sys.executable, "-m", "coverage", "run", str(file_path)],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -152,7 +198,7 @@ def test_completion_untyped_parameters_different_order_correct_names():
     assert '"Carlos":"The writer of scripts."' in result.stdout
 
     result = subprocess.run(
-        ["coverage", "run", str(file_path)],
+        [sys.executable, "-m", "coverage", "run", str(file_path)],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
@@ -180,20 +226,18 @@ def test_forward_references():
 
     @app.command()
     def main(arg1, arg2: int, arg3: "int", arg4: bool = False, arg5: "bool" = False):
-        typer.echo(f"arg1: {type(arg1)} {arg1}")
-        typer.echo(f"arg2: {type(arg2)} {arg2}")
-        typer.echo(f"arg3: {type(arg3)} {arg3}")
-        typer.echo(f"arg4: {type(arg4)} {arg4}")
-        typer.echo(f"arg5: {type(arg5)} {arg5}")
+        print(f"arg1: {type(arg1)} {arg1}")
+        print(f"arg2: {type(arg2)} {arg2}")
+        print(f"arg3: {type(arg3)} {arg3}")
+        print(f"arg4: {type(arg4)} {arg4}")
+        print(f"arg5: {type(arg5)} {arg5}")
 
     result = runner.invoke(app, ["Hello", "2", "invalid"])
     # TODO: when deprecating Click 7, remove second option
 
     assert (
-        "Error: Invalid value for 'ARG3': 'invalid' is not a valid integer"
-        in result.stdout
-        or "Error: Invalid value for 'ARG3': invalid is not a valid integer"
-        in result.stdout
+        "Invalid value for 'ARG3': 'invalid' is not a valid integer" in result.stdout
+        or "Invalid value for 'ARG3': invalid is not a valid integer" in result.stdout
     )
     result = runner.invoke(app, ["Hello", "2", "3", "--arg4", "--arg5"])
     assert (

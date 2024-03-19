@@ -4,9 +4,20 @@ You can set the number of values and types to anything you want, but it has to b
 
 For this, use the standard Python `typing.Tuple`:
 
-```Python hl_lines="1  6"
-{!../docs_src/multiple_values/options_with_multiple_values/tutorial001.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="1  7"
+    {!> ../docs_src/multiple_values/options_with_multiple_values/tutorial001_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="1  6"
+    {!> ../docs_src/multiple_values/options_with_multiple_values/tutorial001.py!}
+    ```
 
 Each of the internal types defines the type of each value in the tuple.
 
@@ -68,8 +79,6 @@ Usage: main.py [OPTIONS]
 
 Options:
   --user &lt;TEXT INTEGER BOOLEAN&gt;...
-  --install-completion            Install completion for the current shell.
-  --show-completion               Show completion for the current shell, to copy it or customize the installation.
   --help                          Show this message and exit.
 
 // Now try it

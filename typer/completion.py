@@ -1,13 +1,14 @@
 import os
 import sys
-from typing import Any, Dict, Tuple
+from typing import Any, MutableMapping, Tuple
 
 import click
 
+from ._compat_utils import _get_click_major
 from ._completion_shared import Shells, get_completion_script, install
 from .models import ParamMeta
 from .params import Option
-from .utils import _get_click_major, get_params_from_function
+from .utils import get_params_from_function
 
 try:
     import shellingham
@@ -119,7 +120,7 @@ def completion_init() -> None:
 # This is only called in new Command method, only used by Click 8.x+
 def shell_complete(
     cli: click.BaseCommand,
-    ctx_args: Dict[str, Any],
+    ctx_args: MutableMapping[str, Any],
     prog_name: str,
     complete_var: str,
     instruction: str,

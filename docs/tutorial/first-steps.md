@@ -6,9 +6,6 @@ The simplest **Typer** file could look like this:
 {!../docs_src/first_steps/tutorial001.py!}
 ```
 
-!!! tip
-    You will learn more about `typer.echo()` later in the docs.
-
 Copy that to a file `main.py`.
 
 Test it:
@@ -25,12 +22,12 @@ Hello World
 // Now check the --help
 $ python main.py --help
 
-Usage: main.py [OPTIONS]
-
-Options:
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
-  --help                Show this message and exit.
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS]                            </b>
+<b>                                                     </b>
+<font color="#A5A5A1">╭─ Options ─────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                        Show this message   │
+<font color="#A5A5A1">│                               and exit.           │</font>
+<font color="#A5A5A1">╰───────────────────────────────────────────────────╯</font>
 ```
 
 </div>
@@ -75,10 +72,11 @@ Update the previous example with an argument `name`:
 $ python main.py
 
 // If you run it without the argument, it shows a nice error
-Usage: main.py [OPTIONS] NAME
-Try "main.py --help" for help.
-
-Error: Missing argument 'NAME'.
+<font color="#F4BF75">Usage: </font>main.py [OPTIONS] NAME
+<font color="#A5A5A1">Try </font><font color="#44919F">&apos;main.py </font><font color="#44919F"><b>--help</b></font><font color="#44919F">&apos;</font><font color="#A5A5A1"> for help.</font>
+<font color="#F92672">╭─ Error ───────────────────────────────────────────╮</font>
+<font color="#F92672">│</font> Missing argument &apos;NAME&apos;.                          <font color="#F92672">│</font>
+<font color="#F92672">╰───────────────────────────────────────────────────╯</font>
 
 // Now pass that NAME CLI argument
 $ python main.py Camila
@@ -114,26 +112,30 @@ So, extend that to have 2 arguments, `name` and `lastname`:
 // Check the main --help
 $ python main.py --help
 
-Usage: main.py [OPTIONS] NAME LASTNAME
+<font color="#F4BF75">Usage: </font>main.py [OPTIONS] NAME
+<font color="#A5A5A1">Try </font><font color="#44919F">&apos;main.py </font><font color="#44919F"><b>--help</b></font><font color="#44919F">&apos;</font><font color="#A5A5A1"> for help.</font>
+<font color="#F92672">╭─ Error ───────────────────────────────────────────╮</font>
+<font color="#F92672">│</font> Missing argument &apos;NAME&apos;.                          <font color="#F92672">│</font>
+<font color="#F92672">╰───────────────────────────────────────────────────╯</font>
 
-Arguments:
-  NAME      [required]
-  LASTNAME  [required]
-
-Options:
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
-  --help                Show this message and exit.
+<font color="#A1EFE4"><b>typer</b></font> on <font color="#AE81FF"><b> richify</b></font> <font color="#F92672"><b>[»!?] </b></font>via <font color="#F4BF75"><b>🐍 v3.7.5 (env3.7)</b></font>
+<font color="#F92672"><b>❯</b></font> <font color="#A6E22E">python</font> <u style="text-decoration-style:single">main.py</u>
+<font color="#F4BF75">Usage: </font>main.py [OPTIONS] NAME LASTNAME
+<font color="#A5A5A1">Try </font><font color="#44919F">&apos;main.py </font><font color="#44919F"><b>--help</b></font><font color="#44919F">&apos;</font><font color="#A5A5A1"> for help.</font>
+<font color="#F92672">╭─ Error ───────────────────────────────────────────╮</font>
+<font color="#F92672">│</font> Missing argument &apos;NAME&apos;.                          <font color="#F92672">│</font>
+<font color="#F92672">╰───────────────────────────────────────────────────╯</font>
 
 // There are now 2 CLI arguments, name and lastname
 
 // Now pass a single name argument
 $ python main.py Camila
 
-Usage: main.py [OPTIONS] NAME LASTNAME
-Try "main.py --help" for help.
-
-Error: Missing argument 'LASTNAME'.
+<font color="#F4BF75">Usage: </font>main.py [OPTIONS] NAME LASTNAME
+<font color="#A5A5A1">Try </font><font color="#44919F">&apos;main.py </font><font color="#44919F"><b>--help</b></font><font color="#44919F">&apos;</font><font color="#A5A5A1"> for help.</font>
+<font color="#F92672">╭─ Error ───────────────────────────────────────────╮</font>
+<font color="#F92672">│</font> Missing argument &apos;LASTNAME&apos;.                      <font color="#F92672">│</font>
+<font color="#F92672">╰───────────────────────────────────────────────────╯</font>
 
 // These 2 arguments are required, so, pass both:
 $ python main.py Camila Gutiérrez
@@ -233,17 +235,17 @@ Here `formal` is a `bool` that is `False` by default.
 // Get the help
 $ python main.py --help
 
-Usage: main.py [OPTIONS] NAME LASTNAME
-
-Arguments:
-  NAME      [required]
-  LASTNAME  [required]
-
-Options:
-  --formal / --no-formal  [default: False]
-  --install-completion    Install completion for the current shell.
-  --show-completion       Show completion for the current shell, to copy it or customize the installation.
-  --help                  Show this message and exit.
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] NAME LASTNAME                            </b>
+<b>                                                                   </b>
+<font color="#A5A5A1">╭─ Arguments ─────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    name          <font color="#F4BF75"><b>TEXT</b></font>  [default: None] <font color="#A6194C">[required]</font>             │
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    lastname      <font color="#F4BF75"><b>TEXT</b></font>  [default: None] <font color="#A6194C">[required]</font>             │
+<font color="#A5A5A1">╰─────────────────────────────────────────────────────────────────╯</font>
+<font color="#A5A5A1">╭─ Options ───────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--formal</b></font>                <font color="#AE81FF"><b>--no-formal</b></font>      [default: no-formal]   │
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                                   Show this message and  │
+<font color="#A5A5A1">│                                          exit.                  │</font>
+<font color="#A5A5A1">╰─────────────────────────────────────────────────────────────────╯</font>
 ```
 
 </div>
@@ -292,17 +294,17 @@ As `lastname` now has a default value of `""` (an empty string) it is no longer 
 ```console
 $ python main.py --help
 
-Usage: main.py [OPTIONS] NAME
-
-Arguments:
-  NAME  [required]
-
-Options:
-  --lastname TEXT         [default: ]
-  --formal / --no-formal  [default: False]
-  --install-completion    Install completion for the current shell.
-  --show-completion       Show completion for the current shell, to copy it or customize the installation.
-  --help                  Show this message and exit.
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] NAME                                       </b>
+<b>                                                                     </b>
+<font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    name      <font color="#F4BF75"><b>TEXT</b></font>  [default: None] <font color="#A6194C">[required]</font>                   │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+<font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--lastname</b></font>                             <font color="#F4BF75"><b>TEXT</b></font>                       │
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--formal</b></font>                <font color="#AE81FF"><b>--no-formal</b></font>    <font color="#F4BF75"><b>    </b></font>  [default: no-formal] │
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                                 <font color="#F4BF75"><b>    </b></font>  Show this message    │
+<font color="#A5A5A1">│                                              and exit.            │</font>
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 ```
 
 </div>
@@ -359,21 +361,20 @@ Now see it with the `--help` option:
 ```console
 $ python main.py --help
 
-Usage: main.py [OPTIONS] NAME
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] NAME                                       </b>
+<b>                                                                     </b>
+ Say hi to NAME, optionally with a <font color="#A1EFE4"><b>--lastname</b></font>.
+ If <font color="#6B9F98"><b>--formal</b></font><font color="#A5A5A1"> is used, say hi very formally.                          </font>
 
-  Say hi to NAME, optionally with a --lastname.
-
-  If --formal is used, say hi very formally.
-
-Arguments:
-  NAME  [required]
-
-Options:
-  --lastname TEXT         [default: ]
-  --formal / --no-formal  [default: False]
-  --install-completion    Install completion for the current shell.
-  --show-completion       Show completion for the current shell, to copy it or customize the installation.
-  --help                  Show this message and exit.
+<font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    name      <font color="#F4BF75"><b>TEXT</b></font>  [default: None] <font color="#A6194C">[required]</font>                   │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+<font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--lastname</b></font>                             <font color="#F4BF75"><b>TEXT</b></font>                       │
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--formal</b></font>                <font color="#AE81FF"><b>--no-formal</b></font>    <font color="#F4BF75"><b>    </b></font>  [default: no-formal] │
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                                 <font color="#F4BF75"><b>    </b></font>  Show this message    │
+<font color="#A5A5A1">│                                              and exit.            │</font>
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 ```
 
 </div>
@@ -401,14 +402,14 @@ are called "Python function parameters" or "Python function arguments".
 
     It's quite technical... and somewhat pedantic.
 
-    One refers to the variable name in a function *declaration*. Like:
+    *Parameter* refers to the variable name in a function *declaration*. Like:
 
     ```
     def bring_person(name: str, lastname: str = ""):
         pass
     ```
 
-    The other refers to the value passed when *calling* a function. Like:
+    *Argument* refers to the value passed when *calling* a function. Like:
 
     ```
     person = bring_person("Camila", lastname="Gutiérrez")

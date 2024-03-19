@@ -2,9 +2,20 @@ You can declare a *CLI parameter* to be a standard Python <a href="https://docs.
 
 This is what you would do for directory paths, file paths, etc:
 
-```Python hl_lines="1  7"
-{!../docs_src/parameter_types/path/tutorial001.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="1  8"
+    {!> ../docs_src/parameter_types/path/tutorial001_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="1  7"
+    {!> ../docs_src/parameter_types/path/tutorial001.py!}
+    ```
 
 And again, as you receive a standard Python `Path` object the same as the type annotation, your editor will give you autocompletion for all its attributes and methods.
 
@@ -59,9 +70,20 @@ You can perform several validations for `Path` *CLI parameters*:
 
 For example:
 
-```Python hl_lines="9 10 11 12 13 14"
-{!../docs_src/parameter_types/path/tutorial002.py!}
-```
+=== "Python 3.6+"
+
+    ```Python hl_lines="11-16"
+    {!> ../docs_src/parameter_types/path/tutorial002_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="9-14"
+    {!> ../docs_src/parameter_types/path/tutorial002.py!}
+    ```
 
 Check it:
 

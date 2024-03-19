@@ -1,4 +1,5 @@
 import subprocess
+import sys
 
 import typer
 from typer.testing import CliRunner
@@ -14,7 +15,7 @@ def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     assert "[OPTIONS] [NAMES]..." in result.output
-    assert "Arguments:" in result.output
+    assert "Arguments" in result.output
     assert "[default: Harry, Hermione, Ron]" in result.output
 
 
@@ -32,8 +33,8 @@ def test_invalid_args():
     # TODO: when deprecating Click 7, remove second option
 
     assert (
-        "Error: Argument 'names' takes 3 values" in result.stdout
-        or "Error: argument names takes 3 values" in result.stdout
+        "Argument 'names' takes 3 values" in result.stdout
+        or "argument names takes 3 values" in result.stdout
     )
 
 
@@ -47,7 +48,7 @@ def test_valid_args():
 
 def test_script():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--help"],
+        [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
