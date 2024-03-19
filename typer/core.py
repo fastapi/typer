@@ -620,10 +620,6 @@ def _typer_format_options(
             elif param.param_type_name == "option":
                 opts.append(rv)
 
-    # TODO: explore adding Click's gettext support, e.g.:
-    # from gettext import gettext as _
-    # with formatter.section(_("Options")):
-    #     ...
     if args:
         with formatter.section(_("Arguments")):
             formatter.write_dl(args)
