@@ -162,7 +162,7 @@ def _extract_default_help_str(
             default_value = obj.get_default(ctx, call=False)
         else:
             if inspect.isfunction(obj.default):
-                default_value = "(dynamic)"
+                default_value = _("(dynamic)")
             else:
                 default_value = obj.default
     finally:
