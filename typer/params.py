@@ -251,6 +251,7 @@ def Option(
     )
 
 
+# Overload for Argument created with custom type 'parser'
 @overload
 def Argument(
     # Parameter
@@ -305,6 +306,7 @@ def Argument(
     ...
 
 
+# Overload for Argument created with custom type 'click_type'
 @overload
 def Argument(
     # Parameter
