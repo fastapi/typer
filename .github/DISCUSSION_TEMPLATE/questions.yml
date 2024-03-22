@@ -1,5 +1,3 @@
-name: Question or Problem
-description: Ask a question or ask about a problem
 labels: [question]
 body:
   - type: markdown
@@ -9,9 +7,9 @@ body:
 
         Please follow these instructions, fill every question, and do every step. 🙏
 
-        I'm asking this because answering questions and solving problems in GitHub issues is what consumes most of the time.
+        I'm asking this because answering questions and solving problems in GitHub is what consumes most of the time.
 
-        I end up not being able to add new features, fix bugs, review pull requests, etc. as fast as I wish because I have to spend too much time handling issues.
+        I end up not being able to add new features, fix bugs, review pull requests, etc. as fast as I wish because I have to spend too much time handling questions.
 
         All that, on top of all the incredible help provided by a bunch of community members that give a lot of their time to come here and help others.
 
@@ -21,16 +19,16 @@ body:
 
         And there's a high chance that you will find the solution along the way and you won't even have to submit it and wait for an answer. 😎
 
-        As there are too many issues with questions, I'll have to close the incomplete ones. That will allow me (and others) to focus on helping people like you that follow the whole process and help us help you. 🤓
+        As there are too many questions, I'll have to discard and close the incomplete ones. That will allow me (and others) to focus on helping people like you that follow the whole process and help us help you. 🤓
   - type: checkboxes
     id: checks
     attributes:
       label: First Check
       description: Please confirm and check all the following options.
       options:
-        - label: I added a very descriptive title to this issue.
+        - label: I added a very descriptive title here.
           required: true
-        - label: I used the GitHub search to find a similar issue and didn't find it.
+        - label: I used the GitHub search to find a similar question and didn't find it.
           required: true
         - label: I searched the Typer documentation, with the integrated search.
           required: true
@@ -49,7 +47,7 @@ body:
 
           * Read open issues with questions until I find 2 issues where I can help someone and add a comment to help there.
           * I already hit the "watch" button in this repository to receive notifications and I commit to help at least 2 people that ask questions in the future.
-          * Implement a Pull Request for a confirmed bug.
+          * Review one Pull Request by downloading the code and following all the review process](https://typer.tiangolo.com/help-typer/#review-pull-requests).
 
       options:
         - label: I commit to help with one of those options 👆
