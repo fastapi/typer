@@ -34,7 +34,7 @@ from .models import (
     Required,
     TyperInfo,
 )
-from .utils import get_params_from_function
+from .utils import get_params_from_function, pydantic, update_pydantic_params
 
 try:
     import rich
@@ -680,6 +680,8 @@ def get_callback(
                 use_params[k] = v
         if context_param_name:
             use_params[context_param_name] = click.get_current_context()
+
+        update_pydantic_params(callback, use_params)
         return callback(**use_params)  # type: ignore
 
     update_wrapper(wrapper, callback)
@@ -691,6 +693,14 @@ def get_click_type(
 ) -> click.ParamType:
     if parameter_info.click_type is not None:
         return parameter_info.click_type
+
+    elif pydantic and lenient_issubclass(annotation, pydantic.BaseModel):
+
+        class CustomParamType(click.ParamType):
+            def convert(self, value, param, ctx):
+                return annotation.parse_raw(value)
+
+        return CustomParamType()
 
     elif parameter_info.parser is not None:
         return click.types.FuncParamType(parameter_info.parser)
