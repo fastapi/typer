@@ -26,9 +26,10 @@ Check it:
 <div class="termy">
 
 ```console
+// The default value is 'None'
 $ python main.py
 
-No provided users
+No provided users (raw input = None)
 Aborted!
 
 // Now pass a user
