@@ -18,6 +18,7 @@
 
 ### Docs
 
+* 📝 Update docs example for a Typer/Click group to make new subcommands explicit. PR [#755](https://github.com/tiangolo/typer/pull/755) by [@svlandeg](https://github.com/svlandeg).
 * 📝 Update docs for building a package, file structure example. PR [#683](https://github.com/tiangolo/typer/pull/683) by [@davidbgk](https://github.com/davidbgk).
 * 📝 Update link in docs to the newest stable version of click. PR [#675](https://github.com/tiangolo/typer/pull/675) by [@javier171188](https://github.com/javier171188).
 * 🔧 Add `CITATION.cff` file for academic citations. PR [#681](https://github.com/tiangolo/typer/pull/681) by [@tiangolo](https://github.com/tiangolo).
