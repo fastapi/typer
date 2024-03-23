@@ -1,22 +1,13 @@
 ## Latest Changes
 
-* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#606](https://github.com/tiangolo/typer/pull/606) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
-* 👷 Install MkDocs Material Insiders only when secrets are available, for Dependabot. PR [#685](https://github.com/tiangolo/typer/pull/685) by [@tiangolo](https://github.com/tiangolo).
-* ⚒️ Update build-docs.yml, do not zip docs. PR [#645](https://github.com/tiangolo/typer/pull/645) by [@tiangolo](https://github.com/tiangolo).
-* 👷 Deploy docs to Cloudflare. PR [#644](https://github.com/tiangolo/typer/pull/644) by [@tiangolo](https://github.com/tiangolo).
-* 👷 Upgrade CI for docs. PR [#642](https://github.com/tiangolo/typer/pull/642) by [@tiangolo](https://github.com/tiangolo).
-* 👷 Update token for latest changes. PR [#635](https://github.com/tiangolo/typer/pull/635) by [@tiangolo](https://github.com/tiangolo).
-* 👷 Update CI workflow dispatch for latest changes. PR [#643](https://github.com/tiangolo/typer/pull/643) by [@tiangolo](https://github.com/tiangolo).
-* 👷 Update token for Material for MkDocs Insiders. PR [#636](https://github.com/tiangolo/typer/pull/636) by [@tiangolo](https://github.com/tiangolo).
-* 🐛 Fix internal type annotations and bump mypy version. PR [#638](https://github.com/tiangolo/typer/pull/638) by [@paulo-raca](https://github.com/paulo-raca).
-* 📝 Remove obsolete references to `--install-completion` for `typer.run()` scripts. PR [#595](https://github.com/tiangolo/typer/pull/595) by [@tiangolo](https://github.com/tiangolo).
-
 ### Fixes
 
 * 🐛 Add missing `default_factory` in `Argument` overloads. PR [#750](https://github.com/tiangolo/typer/pull/750) by [@m9810223](https://github.com/m9810223).
 * 🐛 Fix preserving case in enum values. PR [#571](https://github.com/tiangolo/typer/pull/571) by [@avaldebe](https://github.com/avaldebe).
 
 ### Docs
+
+* 📝 Remove obsolete references to `--install-completion` for `typer.run()` scripts. PR [#595](https://github.com/tiangolo/typer/pull/595) by [@tiangolo](https://github.com/tiangolo).
 
 * 📝 Update docs example for a Typer/Click group to make new subcommands explicit. PR [#755](https://github.com/tiangolo/typer/pull/755) by [@svlandeg](https://github.com/svlandeg).
 * 📝 Update docs for building a package, file structure example. PR [#683](https://github.com/tiangolo/typer/pull/683) by [@davidbgk](https://github.com/davidbgk).
@@ -28,6 +19,15 @@
 
 ### Internal
 
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#606](https://github.com/tiangolo/typer/pull/606) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* 👷 Install MkDocs Material Insiders only when secrets are available, for Dependabot. PR [#685](https://github.com/tiangolo/typer/pull/685) by [@tiangolo](https://github.com/tiangolo).
+* ⚒️ Update build-docs.yml, do not zip docs. PR [#645](https://github.com/tiangolo/typer/pull/645) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Deploy docs to Cloudflare. PR [#644](https://github.com/tiangolo/typer/pull/644) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Upgrade CI for docs. PR [#642](https://github.com/tiangolo/typer/pull/642) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Update token for latest changes. PR [#635](https://github.com/tiangolo/typer/pull/635) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Update CI workflow dispatch for latest changes. PR [#643](https://github.com/tiangolo/typer/pull/643) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Update token for Material for MkDocs Insiders. PR [#636](https://github.com/tiangolo/typer/pull/636) by [@tiangolo](https://github.com/tiangolo).
+* 🐛 Fix internal type annotations and bump mypy version. PR [#638](https://github.com/tiangolo/typer/pull/638) by [@paulo-raca](https://github.com/paulo-raca).
 * 💡 Add comments to document overload definitions in code. PR [#752](https://github.com/tiangolo/typer/pull/752) by [@svlandeg](https://github.com/svlandeg).
 * 🔥 Remove Jina QA Bot as it has been discontinued. PR [#749](https://github.com/tiangolo/typer/pull/749) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Update build docs CI cache paths. PR [#707](https://github.com/tiangolo/typer/pull/707) by [@tiangolo](https://github.com/tiangolo).
