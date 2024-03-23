@@ -1,5 +1,7 @@
 ## Latest Changes
 
+## 0.10.0
+
 ### Fixes
 
 * 🐛 Fix default value of `None` for CLI Parameters when the type is `list | None` and the default value is `None`. PR [#664](https://github.com/tiangolo/typer/pull/664) by [@theowisear](https://github.com/theowisear).
