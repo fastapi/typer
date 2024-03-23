@@ -1,5 +1,7 @@
 ## Latest Changes
 
+## 0.9.1
+
 ### Fixes
 
 * 🐛 Add missing `default_factory` in `Argument` overloads. PR [#750](https://github.com/tiangolo/typer/pull/750) by [@m9810223](https://github.com/m9810223).
