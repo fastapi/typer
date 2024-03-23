@@ -1,5 +1,9 @@
 ## Latest Changes
 
+### Docs
+
+* 📝 Add docs and test for `no_args_is_help` feature. PR [#751](https://github.com/tiangolo/typer/pull/751) by [@svlandeg](https://github.com/svlandeg).
+
 ## 0.9.1
 
 ### Fixes
