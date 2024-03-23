@@ -618,13 +618,13 @@ def param_path_convertor(value: Optional[str] = None) -> Optional[Path]:
 
 
 def generate_enum_convertor(enum: Type[Enum]) -> Callable[[Any], Any]:
-    lower_val_map = {str(val.value).lower(): val for val in enum}
+    val_map = {str(val.value): val for val in enum}
 
     def convertor(value: Any) -> Any:
         if value is not None:
-            low = str(value).lower()
-            if low in lower_val_map:
-                key = lower_val_map[low]
+            val = str(value)
+            if val in val_map:
+                key = val_map[val]
                 return enum(key)
 
     return convertor
