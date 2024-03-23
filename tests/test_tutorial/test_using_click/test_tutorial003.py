@@ -14,6 +14,14 @@ def test_cli():
     assert "Missing command" in result.stdout or "Usage" in result.stdout
 
 
+def test_help():
+    result = runner.invoke(mod.typer_click_object, ["--help"])
+    assert result.exit_code == 0
+    assert "Commands" in result.output
+    assert "top" in result.output
+    assert "hello" in result.output
+
+
 def test_typer():
     result = runner.invoke(mod.typer_click_object, ["top"])
     assert "The Typer app is at the top level" in result.stdout

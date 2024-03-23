@@ -94,12 +94,19 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py
+$ python main.py --help
 
 // Notice we have both subcommands, top and hello
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
 
-Error: Missing command.
+Options:
+  --install-completion  Install completion for the current shell.
+  --show-completion     Show completion for the current shell, to copy it or customize the installation.
+  --help                Show this message and exit.
+
+Commands:
+  hello
+  top
 
 // Call the Typer part
 $ python main.py top

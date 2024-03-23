@@ -297,7 +297,7 @@ class OptionInfo(ParameterInfo):
         parser: Optional[Callable[[str], Any]] = None,
         click_type: Optional[click.ParamType] = None,
         # Option
-        show_default: bool = True,
+        show_default: Union[bool, str] = True,
         prompt: Union[bool, str] = False,
         confirmation_prompt: bool = False,
         prompt_required: bool = True,
