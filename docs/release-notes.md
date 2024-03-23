@@ -1,5 +1,9 @@
 ## Latest Changes
 
+### Internal
+
+* 👷 Add alls-green to CI. PR [#759](https://github.com/tiangolo/typer/pull/759) by [@tiangolo](https://github.com/tiangolo).
+
 ## 0.10.0
 
 ### Fixes
