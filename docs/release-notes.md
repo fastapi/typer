@@ -1,5 +1,7 @@
 ## Latest Changes
 
+## 0.9.2
+
 ### Fixes
 
 * 🐛 Fix display of default value for Enum parameters inside of a list, include docs and tests. PR [#473](https://github.com/tiangolo/typer/pull/473) by [@asieira](https://github.com/asieira).
