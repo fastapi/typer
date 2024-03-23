@@ -1,12 +1,12 @@
 You can define numeric validations with `max` and `min` values for `int` and `float` *CLI parameters*:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="6-8"
     {!> ../docs_src/parameter_types/number/tutorial001_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -84,13 +84,13 @@ You might want to, instead of showing an error, use the closest minimum or maxim
 
 You can do it with the `clamp` parameter:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="6-8"
     {!> ../docs_src/parameter_types/number/tutorial002_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -126,13 +126,13 @@ ID is 5
 
 You can make a *CLI option* work as a counter with the `counter` parameter:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="5"
     {!> ../docs_src/parameter_types/number/tutorial003_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
