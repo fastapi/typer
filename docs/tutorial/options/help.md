@@ -168,3 +168,45 @@ Options:
     In Click applications the default values are hidden by default. 🙈
 
     In **Typer** these default values are shown by default. 👀
+
+## Custom default string
+
+You can use the same `show_default` to pass a custom string (instead of a `bool`) to customize the default value to be shown in the help text:
+
+=== "Python 3.6+"
+
+    ```Python hl_lines="7"
+    {!> ../docs_src/options/help/tutorial004_an.py!}
+    ```
+
+=== "Python 3.6+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="6"
+    {!> ../docs_src/options/help/tutorial004.py!}
+    ```
+
+And it will be used in the help text:
+
+<div class="termy">
+
+```console
+$ python main.py
+
+Hello Wade Wilson
+
+// Show the help
+$ python main.py --help
+
+Usage: main.py [OPTIONS]
+
+Options:
+  --fullname TEXT       [default: (Deadpoolio the amazing's name)]
+  --help                Show this message and exit.
+
+// Notice how it shows "(Deadpoolio the amazing's name)" instead of the actual default of "Wade Wilson"
+```
+
+</div>

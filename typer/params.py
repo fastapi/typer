@@ -30,7 +30,7 @@ def Option(
     # Custom type
     parser: Optional[Callable[[str], Any]] = None,
     # Option
-    show_default: bool = True,
+    show_default: Union[bool, str] = True,
     prompt: Union[bool, str] = False,
     confirmation_prompt: bool = False,
     prompt_required: bool = True,
@@ -94,7 +94,7 @@ def Option(
     # Custom type
     click_type: Optional[click.ParamType] = None,
     # Option
-    show_default: bool = True,
+    show_default: Union[bool, str] = True,
     prompt: Union[bool, str] = False,
     confirmation_prompt: bool = False,
     prompt_required: bool = True,
@@ -157,7 +157,7 @@ def Option(
     parser: Optional[Callable[[str], Any]] = None,
     click_type: Optional[click.ParamType] = None,
     # Option
-    show_default: bool = True,
+    show_default: Union[bool, str] = True,
     prompt: Union[bool, str] = False,
     confirmation_prompt: bool = False,
     prompt_required: bool = True,
