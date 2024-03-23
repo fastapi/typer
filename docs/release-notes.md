@@ -1,5 +1,9 @@
 ## Latest Changes
 
+### Fixes
+
+* 🐛 Update type annotations for `show_default` parameter and update docs for setting a "Custom default string". PR [#501](https://github.com/tiangolo/typer/pull/501) by [@plannigan](https://github.com/plannigan).
+
 ### Docs
 
 * 📝 Add docs and test for `no_args_is_help` feature. PR [#751](https://github.com/tiangolo/typer/pull/751) by [@svlandeg](https://github.com/svlandeg).
