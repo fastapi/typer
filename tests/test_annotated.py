@@ -1,7 +1,7 @@
-
 import typer
 from typer.testing import CliRunner
 from typing_extensions import Annotated
+
 from .utils import needs_py310
 
 runner = CliRunner()
