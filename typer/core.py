@@ -170,7 +170,7 @@ def _extract_default_help_str(
             default_value = obj.get_default(ctx, call=False)
         else:
             if inspect.isfunction(obj.default):
-                default_value = "(dynamic)"
+                default_value = _("(dynamic)")
             else:
                 default_value = obj.default
     finally:
@@ -396,7 +396,7 @@ class TyperArgument(click.core.Argument):
             if default_string:
                 extra.append(_("default: {default}").format(default=default_string))
         if self.required:
-            extra.append("required")
+            extra.append(_("required"))
         if extra:
             extra_str = ";".join(extra)
             help = f"{help}  [{extra_str}]" if help else f"[{extra_str}]"
@@ -628,15 +628,11 @@ def _typer_format_options(
             elif param.param_type_name == "option":
                 opts.append(rv)
 
-    # TODO: explore adding Click's gettext support, e.g.:
-    # from gettext import gettext as _
-    # with formatter.section(_("Options")):
-    #     ...
     if args:
-        with formatter.section("Arguments"):
+        with formatter.section(_("Arguments")):
             formatter.write_dl(args)
     if opts:
-        with formatter.section("Options"):
+        with formatter.section(_("Options")):
             formatter.write_dl(opts)
 
 
