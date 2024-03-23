@@ -6,6 +6,10 @@
 
 * ✨ Improve support for CLI translations using gettext. PR [#417](https://github.com/tiangolo/typer/pull/417) by [@mjodmj](https://github.com/mjodmj).
 
+### Fixes
+
+* 🐛 Fix default value of `None` for CLI Parameters when the type is `list | None` and the default value is `None`. PR [#664](https://github.com/tiangolo/typer/pull/664) by [@theowisear](https://github.com/theowisear).
+
 ## 0.9.3
 
 ### Fixes
