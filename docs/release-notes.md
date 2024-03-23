@@ -1,5 +1,7 @@
 ## Latest Changes
 
+### 0.9.4
+
 ### Features
 
 * ✨ Improve support for CLI translations using gettext. PR [#417](https://github.com/tiangolo/typer/pull/417) by [@mjodmj](https://github.com/mjodmj).
