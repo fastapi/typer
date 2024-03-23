@@ -51,13 +51,13 @@ Error: Invalid value for '--network': invalid choice: CONV. (choose from simple,
 
 You can make an `Enum` (choice) *CLI parameter* be case-insensitive with the `case_sensitive` parameter:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="15"
     {!> ../docs_src/parameter_types/enum/tutorial002_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -88,13 +88,13 @@ Training neural network of type: lstm
 
 A *CLI parameter* can also take a list of `Enum` values:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="14"
     {!> ../docs_src/parameter_types/enum/tutorial003_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.

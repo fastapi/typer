@@ -21,7 +21,6 @@ classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
@@ -34,7 +33,7 @@ requires = [
     "typing-extensions >= 3.7.4.3",
 ]
 description-file = "README.md"
-requires-python = ">=3.6"
+requires-python = ">=3.7"
 
 [tool.flit.metadata.urls]
 Documentation = "https://typer.tiangolo.com/"
