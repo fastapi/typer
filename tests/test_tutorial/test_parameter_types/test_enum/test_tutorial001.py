@@ -17,6 +17,7 @@ def test_help():
     assert result.exit_code == 0
     assert "--network" in result.output
     assert "[simple|conv|lstm]" in result.output
+    assert "default: simple" in result.output
 
 
 def test_main():

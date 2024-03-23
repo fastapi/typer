@@ -2,6 +2,7 @@ import errno
 import inspect
 import os
 import sys
+from enum import Enum
 from gettext import gettext as _
 from typing import (
     TYPE_CHECKING,
@@ -116,7 +117,14 @@ def _get_default_string(
     if show_default_is_str:
         default_string = f"({obj.show_default})"
     elif isinstance(default_value, (list, tuple)):
-        default_string = ", ".join(str(d) for d in default_value)
+        default_string = ", ".join(
+            _get_default_string(
+                obj, ctx=ctx, show_default_is_str=show_default_is_str, default_value=d
+            )
+            for d in default_value
+        )
+    elif isinstance(default_value, Enum):
+        default_string = str(default_value.value)
     elif callable(default_value):
         default_string = _("(dynamic)")
     elif isinstance(obj, TyperOption) and obj.is_bool_flag and obj.secondary_opts:
