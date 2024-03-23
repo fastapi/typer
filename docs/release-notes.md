@@ -1,5 +1,7 @@
 ## Latest Changes
 
+## 0.9.3
+
 ### Fixes
 
 * 🐛 Fix evaluating stringified annotations in Python 3.10 (also `from __future__ import annotations`). PR [#721](https://github.com/tiangolo/typer/pull/721) by [@heckad](https://github.com/heckad).
