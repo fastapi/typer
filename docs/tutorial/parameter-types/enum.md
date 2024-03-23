@@ -76,7 +76,6 @@ Training neural network of type: lstm
 
 </div>
 
-
 ### List of Enum values
 
 A *CLI parameter* can also take a list of `Enum` values:
@@ -99,7 +98,6 @@ A *CLI parameter* can also take a list of `Enum` values:
 This works just like any other parameter value taking a list of things:
 
 <div class="termy">
-
 
 ```console
 $ python main.py --help
