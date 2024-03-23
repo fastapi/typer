@@ -471,7 +471,8 @@ The file would live right beside `__init__.py`:
 ├── README.rst
 ├── rick_portal_gun
 │   ├── __init__.py
-│   └── __main__.py
+│   ├── __main__.py
+│   └── main.py
 └── tests
     ├── __init__.py
     └── test_rick_portal_gun.py
