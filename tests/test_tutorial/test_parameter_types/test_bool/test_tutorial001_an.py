@@ -34,12 +34,7 @@ def test_force():
 def test_invalid_no_force():
     result = runner.invoke(app, ["--no-force"])
     assert result.exit_code != 0
-    # TODO: when deprecating Click 7, remove second option
-
-    assert (
-        "No such option: --no-force" in result.output
-        or "no such option: --no-force" in result.output
-    )
+    assert "No such option: --no-force" in result.output
 
 
 def test_script():

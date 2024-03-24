@@ -29,11 +29,7 @@ def test_call():
 def test_call_no_args():
     result = runner.invoke(app, ["--name"])
     assert result.exit_code != 0
-    # TODO: when deprecating Click 7, remove second option
-    assert (
-        "Option '--name' requires an argument" in result.output
-        or "--name option requires an argument" in result.output
-    )
+    assert "Option '--name' requires an argument" in result.output
 
 
 def test_script():

@@ -29,13 +29,7 @@ def test_main():
 def test_invalid_case():
     result = runner.invoke(app, ["--network", "CONV"])
     assert result.exit_code != 0
-    # TODO: when deprecating Click 7, remove second option
-
-    assert (
-        "Invalid value for '--network': 'CONV' is not one of" in result.output
-        or "Invalid value for '--network': invalid choice: CONV. (choose from"
-        in result.output
-    )
+    assert "Invalid value for '--network': 'CONV' is not one of" in result.output
     assert "simple" in result.output
     assert "conv" in result.output
     assert "lstm" in result.output
@@ -44,13 +38,7 @@ def test_invalid_case():
 def test_invalid_other():
     result = runner.invoke(app, ["--network", "capsule"])
     assert result.exit_code != 0
-    # TODO: when deprecating Click 7, remove second option
-
-    assert (
-        "Invalid value for '--network': 'capsule' is not one of" in result.output
-        or "Invalid value for '--network': invalid choice: capsule. (choose from"
-        in result.output
-    )
+    assert "Invalid value for '--network': 'capsule' is not one of" in result.output
     assert "simple" in result.output
     assert "conv" in result.output
     assert "lstm" in result.output
