@@ -14,9 +14,6 @@ except ImportError:  # pragma: nocover
     shellingham = None
 
 
-from typing import Optional
-
-
 class Shells(str, Enum):
     bash = "bash"
     zsh = "zsh"

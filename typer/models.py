@@ -14,13 +14,9 @@ from typing import (
 )
 
 import click
-
-from ._compat_utils import _get_click_major
+import click.shell_completion
 
 if TYPE_CHECKING:  # pragma: no cover
-    if _get_click_major() > 7:
-        import click.shell_completion
-
     from .core import TyperCommand, TyperGroup
     from .main import Typer
 

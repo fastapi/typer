@@ -4,7 +4,7 @@ from typing import Any, MutableMapping, Tuple
 
 import click
 
-from ._compat_utils import _get_click_major
+from ._completion_classes import completion_init
 from ._completion_shared import Shells, get_completion_script, install
 from .models import ParamMeta
 from .params import Option
@@ -100,17 +100,6 @@ def _install_completion_no_auto_placeholder_function(
     ),
 ) -> Any:
     pass  # pragma no cover
-
-
-def completion_init() -> None:
-    if _get_click_major() < 8:
-        from ._completion_click7 import completion_init
-
-        completion_init()
-    else:
-        from ._completion_click8 import completion_init
-
-        completion_init()
 
 
 # Re-implement Click's shell_complete to add error message with:
