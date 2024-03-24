@@ -32,9 +32,7 @@ def test_defaults():
 def test_invalid_args():
     result = runner.invoke(app, ["Draco", "Hagrid"])
     assert result.exit_code != 0
-    assert (
-        "Argument 'names' takes 3 values" in result.stdout
-    )
+    assert "Argument 'names' takes 3 values" in result.stdout
 
 
 def test_valid_args():
