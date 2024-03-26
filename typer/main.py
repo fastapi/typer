@@ -661,7 +661,7 @@ def get_callback(
     *,
     callback: Optional[Callable[..., Any]] = None,
     params: Sequence[click.Parameter] = [],
-    convertors: Dict[str, Callable[[str], Any]] = None,
+    convertors: Optional[Dict[str, Callable[[str], Any]]] = None,
     context_param_name: Optional[str] = None,
     pretty_exceptions_short: bool,
 ) -> Optional[Callable[..., Any]]:
