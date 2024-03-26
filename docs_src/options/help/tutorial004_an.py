@@ -5,7 +5,7 @@ from typing_extensions import Annotated
 def main(
     fullname: Annotated[
         str, typer.Option(show_default="Deadpoolio the amazing's name")
-    ] = "Wade Wilson"
+    ] = "Wade Wilson",
 ):
     print(f"Hello {fullname}")
 

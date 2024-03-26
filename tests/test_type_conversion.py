@@ -98,7 +98,7 @@ def test_custom_parse():
 
     @app.command()
     def custom_parser(
-        hex_value: int = typer.Argument(None, parser=lambda x: int(x, 0))
+        hex_value: int = typer.Argument(None, parser=lambda x: int(x, 0)),
     ):
         assert hex_value == 0x56
 
@@ -122,7 +122,7 @@ def test_custom_click_type():
 
     @app.command()
     def custom_click_type(
-        hex_value: int = typer.Argument(None, click_type=BaseNumberParamType())
+        hex_value: int = typer.Argument(None, click_type=BaseNumberParamType()),
     ):
         assert hex_value == 0x56
 
