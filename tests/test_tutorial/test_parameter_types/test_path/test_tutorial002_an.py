@@ -15,7 +15,7 @@ app.command()(mod.main)
 
 def test_not_exists(tmpdir):
     config_file = Path(tmpdir) / "config.txt"
-    if config_file.exists():  # pragma no cover
+    if config_file.exists():  # pragma: no cover
         config_file.unlink()
     result = runner.invoke(app, ["--config", f"{config_file}"])
     assert result.exit_code != 0

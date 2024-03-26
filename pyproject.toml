@@ -76,6 +76,27 @@ filterwarnings = [
     'ignore::DeprecationWarning:xdist',
 ]
 
+[tool.coverage.run]
+parallel = true
+data_file = "coverage/.coverage"
+source = [
+    "docs_src",
+    "tests",
+    "typer"
+]
+omit = [
+    "typer/_typing.py"
+]
+context = '${CONTEXT}'
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "@overload",
+    'if __name__ == "__main__":',
+    "if TYPE_CHECKING:",
+]
+
 [tool.mypy]
 strict = true
 

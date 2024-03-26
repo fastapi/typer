@@ -36,7 +36,7 @@ try:
 
     from . import rich_utils
 
-except ImportError:  # pragma: nocover
+except ImportError:  # pragma: no cover
     rich = None  # type: ignore
 
 MarkupMode = Literal["markdown", "rich", None]
