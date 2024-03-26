@@ -1,4 +1,5 @@
 import errno
+import inspect
 import os
 import sys
 from enum import Enum
@@ -100,7 +101,7 @@ def _get_default_string(
         )
     elif isinstance(default_value, Enum):
         default_string = str(default_value.value)
-    elif callable(default_value):
+    elif inspect.isfunction(default_value):
         default_string = _("(dynamic)")
     elif isinstance(obj, TyperOption) and obj.is_bool_flag and obj.secondary_opts:
         # For boolean flags that have distinct True/False opts,
@@ -111,11 +112,11 @@ def _get_default_string(
         # )[1]
         if obj.default:
             if obj.opts:
-                default_string = click.parser.split_opt(obj.opts[0])[1]
+                default_string = click.parser._split_opt(obj.opts[0])[1]
             else:
                 default_string = str(default_value)
         else:
-            default_string = click.parser.split_opt(obj.secondary_opts[0])[1]
+            default_string = click.parser._split_opt(obj.secondary_opts[0])[1]
         # Typer override end
     elif (
         isinstance(obj, TyperOption)
