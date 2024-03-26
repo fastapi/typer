@@ -77,14 +77,15 @@ def _typer_param_setup_autocompletion_compat(
 
             out = []
 
-            for c in autocompletion(ctx, [], incomplete):  # type: ignore
+            for c in autocompletion(ctx, [], incomplete):
                 if isinstance(c, tuple):
-                    c = CompletionItem(c[0], help=c[1])
-                elif isinstance(c, str):
-                    c = CompletionItem(c)
+                    use_completion = CompletionItem(c[0], help=c[1])
+                else:
+                    assert isinstance(c, str)
+                    use_completion = CompletionItem(c)
 
-                if c.value.startswith(incomplete):
-                    out.append(c)
+                if use_completion.value.startswith(incomplete):
+                    out.append(use_completion)
 
             return out
 
