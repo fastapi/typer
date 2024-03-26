@@ -8,7 +8,7 @@ For example, you could do some validation before the rest of the code is execute
 
 === "Python 3.7+"
 
-    ```Python hl_lines="5-8  11"
+    ```Python hl_lines="7-10  13"
     {!> ../docs_src/options/callback/tutorial001_an.py!}
     ```
 
@@ -17,7 +17,7 @@ For example, you could do some validation before the rest of the code is execute
     !!! tip
         Prefer to use the `Annotated` version if possible.
 
-    ```Python hl_lines="4-7  10"
+    ```Python hl_lines="6-9  12"
     {!> ../docs_src/options/callback/tutorial001.py!}
     ```
 
@@ -107,7 +107,7 @@ Let's say that when the callback is running, we want to show a message saying th
 
 === "Python 3.7+"
 
-    ```Python hl_lines="6"
+    ```Python hl_lines="8"
     {!> ../docs_src/options/callback/tutorial002_an.py!}
     ```
 
@@ -116,7 +116,7 @@ Let's say that when the callback is running, we want to show a message saying th
     !!! tip
         Prefer to use the `Annotated` version if possible.
 
-    ```Python hl_lines="5"
+    ```Python hl_lines="7"
     {!> ../docs_src/options/callback/tutorial002.py!}
     ```
 
@@ -155,7 +155,7 @@ The "context" has some additional data about the current execution of your progr
 
 === "Python 3.7+"
 
-    ```Python hl_lines="5-7"
+    ```Python hl_lines="7-9"
     {!> ../docs_src/options/callback/tutorial003_an.py!}
     ```
 
@@ -164,7 +164,7 @@ The "context" has some additional data about the current execution of your progr
     !!! tip
         Prefer to use the `Annotated` version if possible.
 
-    ```Python hl_lines="4-6"
+    ```Python hl_lines="6-8"
     {!> ../docs_src/options/callback/tutorial003.py!}
     ```
 
@@ -172,7 +172,7 @@ The `ctx.resilient_parsing` will be `True` when handling completion, so you can 
 
 But it will be `False` when calling the program normally. So you can continue the execution of your previous code.
 
-That's all is needed to fix completion 🚀
+That's all is needed to fix completion. 🚀
 
 Check it:
 
@@ -200,7 +200,7 @@ The same way you can access the `typer.Context` by declaring a function paramete
 
 === "Python 3.7+"
 
-    ```Python hl_lines="5  8"
+    ```Python hl_lines="7  10"
     {!> ../docs_src/options/callback/tutorial004_an.py!}
     ```
 
@@ -209,7 +209,7 @@ The same way you can access the `typer.Context` by declaring a function paramete
     !!! tip
         Prefer to use the `Annotated` version if possible.
 
-    ```Python hl_lines="4  7"
+    ```Python hl_lines="6  9"
     {!> ../docs_src/options/callback/tutorial004.py!}
     ```
 
