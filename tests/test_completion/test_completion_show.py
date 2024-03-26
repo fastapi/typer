@@ -4,10 +4,10 @@ import sys
 from unittest import mock
 
 import shellingham
-
 import typer
-from docs_src.commands.index import tutorial001 as mod
 from typer.testing import CliRunner
+
+from docs_src.commands.index import tutorial001 as mod
 
 runner = CliRunner()
 app = typer.Typer()
