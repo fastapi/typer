@@ -85,7 +85,7 @@ def get_completion_script(*, prog_name: str, complete_var: str, shell: str) -> s
     script = _completion_scripts.get(shell)
     if script is None:
         click.echo(f"Shell {shell} not supported.", err=True)
-        sys.exit(1)
+        raise click.exceptions.Exit(1)
     return (
         script
         % dict(
