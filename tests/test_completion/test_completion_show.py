@@ -1,8 +1,17 @@
 import os
 import subprocess
 import sys
+from unittest import mock
 
+import shellingham
+
+import typer
 from docs_src.commands.index import tutorial001 as mod
+from typer.testing import CliRunner
+
+runner = CliRunner()
+app = typer.Typer()
+app.command()(mod.main)
 
 
 def test_completion_show_no_shell():
@@ -142,3 +151,11 @@ def test_completion_source_pwsh():
         "Register-ArgumentCompleter -Native -CommandName tutorial001.py -ScriptBlock $scriptblock"
         in result.stdout
     )
+
+
+def test_completion_show_invalid_shell():
+    with mock.patch.object(
+        shellingham, "detect_shell", return_value=("xshell", "/usr/bin/xshell")
+    ):
+        result = runner.invoke(app, ["--show-completion"])
+    assert "Shell xshell not supported" in result.stdout
