@@ -41,6 +41,7 @@ except ImportError:  # pragma: nocover
 
 MarkupMode = Literal["markdown", "rich", None]
 
+
 # Copy from click.parser._split_opt
 def _split_opt(opt: str) -> tuple[str, str]:
     first = opt[:1]
