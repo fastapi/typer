@@ -1,5 +1,7 @@
 ## Latest Changes
 
+## 0.11.0
+
 ### Breaking Changes
 
 * 🔧 Refactor package manager, move from Flit to PDM, remove private pip extras for `test`, `doc`, `dev`. PR [#764](https://github.com/tiangolo/typer/pull/764) by [@tiangolo](https://github.com/tiangolo).
