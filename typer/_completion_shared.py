@@ -1,7 +1,6 @@
 import os
 import re
 import subprocess
-import sys
 from enum import Enum
 from pathlib import Path
 from typing import Optional, Tuple
@@ -12,9 +11,6 @@ try:
     import shellingham
 except ImportError:  # pragma: nocover
     shellingham = None
-
-
-from typing import Optional
 
 
 class Shells(str, Enum):
@@ -88,7 +84,7 @@ def get_completion_script(*, prog_name: str, complete_var: str, shell: str) -> s
     script = _completion_scripts.get(shell)
     if script is None:
         click.echo(f"Shell {shell} not supported.", err=True)
-        sys.exit(1)
+        raise click.exceptions.Exit(1)
     return (
         script
         % dict(

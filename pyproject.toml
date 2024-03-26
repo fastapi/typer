@@ -29,7 +29,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License"
     ]
 requires = [
-    "click >= 7.1.1, <9.0.0",
+    "click >= 8.0.0",
     "typing-extensions >= 3.7.4.3",
 ]
 description-file = "README.md"

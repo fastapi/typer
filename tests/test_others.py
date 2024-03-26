@@ -10,6 +10,7 @@ import pytest
 import shellingham
 import typer
 import typer.completion
+from typer.core import _split_opt
 from typer.main import solve_typer_info_defaults, solve_typer_info_help
 from typer.models import ParameterInfo, TyperInfo
 from typer.testing import CliRunner
@@ -155,11 +156,7 @@ def test_completion_untyped_parameters():
         },
     )
     assert "info name is: completion_no_types.py" in result.stderr
-    # TODO: when deprecating Click 7, remove second option
-    assert (
-        "args is: []" in result.stderr
-        or "args is: ['--name', 'Sebastian', '--name']" in result.stderr
-    )
+    assert "args is: []" in result.stderr
     assert "incomplete is: Ca" in result.stderr
     assert '"Camila":"The reader of books."' in result.stdout
     assert '"Carlos":"The writer of scripts."' in result.stdout
@@ -188,11 +185,7 @@ def test_completion_untyped_parameters_different_order_correct_names():
         },
     )
     assert "info name is: completion_no_types_order.py" in result.stderr
-    # TODO: when deprecating Click 7, remove second option
-    assert (
-        "args is: []" in result.stderr
-        or "args is: ['--name', 'Sebastian', '--name']" in result.stderr
-    )
+    assert "args is: []" in result.stderr
     assert "incomplete is: Ca" in result.stderr
     assert '"Camila":"The reader of books."' in result.stdout
     assert '"Carlos":"The writer of scripts."' in result.stdout
@@ -233,12 +226,8 @@ def test_forward_references():
         print(f"arg5: {type(arg5)} {arg5}")
 
     result = runner.invoke(app, ["Hello", "2", "invalid"])
-    # TODO: when deprecating Click 7, remove second option
 
-    assert (
-        "Invalid value for 'ARG3': 'invalid' is not a valid integer" in result.stdout
-        or "Invalid value for 'ARG3': invalid is not a valid integer" in result.stdout
-    )
+    assert "Invalid value for 'ARG3': 'invalid' is not a valid integer" in result.stdout
     result = runner.invoke(app, ["Hello", "2", "3", "--arg4", "--arg5"])
     assert (
         "arg1: <class 'str'> Hello\narg2: <class 'int'> 2\narg3: <class 'int'> 3\narg4: <class 'bool'> True\narg5: <class 'bool'> True\n"
@@ -255,3 +244,21 @@ def test_context_settings_inheritance_single_command():
 
     result = runner.invoke(app, ["main", "-h"])
     assert "Show this message and exit." in result.stdout
+
+
+def test_split_opt():
+    prefix, opt = _split_opt("--verbose")
+    assert prefix == "--"
+    assert opt == "verbose"
+
+    prefix, opt = _split_opt("//verbose")
+    assert prefix == "//"
+    assert opt == "verbose"
+
+    prefix, opt = _split_opt("-verbose")
+    assert prefix == "-"
+    assert opt == "verbose"
+
+    prefix, opt = _split_opt("verbose")
+    assert prefix == ""
+    assert opt == "verbose"
