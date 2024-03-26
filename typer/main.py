@@ -665,8 +665,7 @@ def get_callback(
     context_param_name: Optional[str] = None,
     pretty_exceptions_short: bool,
 ) -> Optional[Callable[..., Any]]:
-    if convertors is None:
-        convertors = {}
+    use_convertors = convertors or {}
     if not callback:
         return None
     parameters = get_params_from_function(callback)
@@ -680,8 +679,8 @@ def get_callback(
     def wrapper(**kwargs: Any) -> Any:
         _rich_traceback_guard = pretty_exceptions_short  # noqa: F841
         for k, v in kwargs.items():
-            if k in convertors:
-                use_params[k] = convertors[k](v)
+            if k in use_convertors:
+                use_params[k] = use_convertors[k](v)
             else:
                 use_params[k] = v
         if context_param_name:
