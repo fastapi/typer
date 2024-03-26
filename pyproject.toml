@@ -1,15 +1,16 @@
 [build-system]
-requires = ["flit_core >=2,<3"]
-build-backend = "flit_core.buildapi"
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
 
 [project]
+name = "typer"
+dynamic = ["version"]
+description = "Typer, build great CLIs. Easy to code. Based on Python type hints."
+authors = [
+    {name = "Sebastián Ramírez", email = "tiangolo@gmail.com"},
+]
+readme = "README.md"
 requires-python = ">=3.7"
-
-[tool.flit.metadata]
-module = "typer"
-author = "Sebastián Ramírez"
-author-email = "tiangolo@gmail.com"
-home-page = "https://github.com/tiangolo/typer"
 classifiers = [
     "Intended Audience :: Information Technology",
     "Intended Audience :: System Administrators",
@@ -29,45 +30,26 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
-    "License :: OSI Approved :: MIT License"
-    ]
-requires = [
+    "License :: OSI Approved :: MIT License",
+]
+dependencies = [
     "click >= 8.0.0",
     "typing-extensions >= 3.7.4.3",
 ]
-description-file = "README.md"
-requires-python = ">=3.7"
 
-[tool.flit.metadata.urls]
+[project.urls]
 Documentation = "https://typer.tiangolo.com/"
+homepage = "https://github.com/tiangolo/typer"
 
-[tool.flit.metadata.requires-extra]
-test = [
-    "shellingham >=1.3.0,<2.0.0",
-    "pytest >=4.4.0,<8.0.0",
-    "pytest-cov >=2.10.0,<5.0.0",
-    "coverage >=6.2,<7.0",
-    "pytest-xdist >=1.32.0,<4.0.0",
-    "pytest-sugar >=0.9.4,<0.10.0",
-    "mypy ==0.971",
-    "ruff ==0.2.0",
-    "rich >=10.11.0,<14.0.0",
-]
-doc = [
-    "mkdocs >=1.1.2,<2.0.0",
-    "mkdocs-material >=8.1.4,<9.0.0",
-    "mdx-include >=1.4.1,<2.0.0",
-    "pillow >=9.3.0,<10.0.0",
-    "cairosvg >=2.5.2,<3.0.0",
-]
-dev = [
-    "pre-commit >=2.17.0,<3.0.0",
-]
+[project.optional-dependencies]
 all = [
     "colorama >=0.4.3,<0.5.0",
     "shellingham >=1.3.0,<2.0.0",
     "rich >=10.11.0,<14.0.0",
 ]
+
+[tool.pdm]
+version = { source = "file", path = "typer/__init__.py" }
 
 [tool.isort]
 profile = "black"
