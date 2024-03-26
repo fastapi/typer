@@ -12,7 +12,7 @@ from .utils import get_params_from_function
 
 try:
     import shellingham
-except ImportError:  # pragma: nocover
+except ImportError:  # pragma: no cover
     shellingham = None
 
 
@@ -34,7 +34,7 @@ def get_completion_inspect_parameters() -> Tuple[ParamMeta, ParamMeta]:
 
 def install_callback(ctx: click.Context, param: click.Parameter, value: Any) -> Any:
     if not value or ctx.resilient_parsing:
-        return value  # pragma no cover
+        return value  # pragma: no cover
     if isinstance(value, str):
         shell, path = install(shell=value)
     else:
@@ -46,7 +46,7 @@ def install_callback(ctx: click.Context, param: click.Parameter, value: Any) -> 
 
 def show_callback(ctx: click.Context, param: click.Parameter, value: Any) -> Any:
     if not value or ctx.resilient_parsing:
-        return value  # pragma no cover
+        return value  # pragma: no cover
     prog_name = ctx.find_root().info_name
     assert prog_name
     complete_var = "_{}_COMPLETE".format(prog_name.replace("-", "_").upper())
@@ -82,7 +82,7 @@ def _install_completion_placeholder_function(
         help="Show completion for the current shell, to copy it or customize the installation.",
     ),
 ) -> Any:
-    pass  # pragma no cover
+    pass  # pragma: no cover
 
 
 def _install_completion_no_auto_placeholder_function(
@@ -99,7 +99,7 @@ def _install_completion_no_auto_placeholder_function(
         help="Show completion for the specified shell, to copy it or customize the installation.",
     ),
 ) -> Any:
-    pass  # pragma no cover
+    pass  # pragma: no cover
 
 
 # Re-implement Click's shell_complete to add error message with:

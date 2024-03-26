@@ -9,7 +9,7 @@ import click
 
 try:
     import shellingham
-except ImportError:  # pragma: nocover
+except ImportError:  # pragma: no cover
     shellingham = None
 
 
@@ -108,7 +108,7 @@ def install_bash(*, prog_name: str, complete_var: str, shell: str) -> Path:
         rc_content = rc_path.read_text()
     completion_init_lines = [f"source {completion_path}"]
     for line in completion_init_lines:
-        if line not in rc_content:  # pragma: nocover
+        if line not in rc_content:  # pragma: no cover
             rc_content += f"\n{line}"
     rc_content += "\n"
     rc_path.write_text(rc_content)
@@ -135,7 +135,7 @@ def install_zsh(*, prog_name: str, complete_var: str, shell: str) -> Path:
         "fpath+=~/.zfunc",
     ]
     for line in completion_init_lines:
-        if line not in zshrc_content:  # pragma: nocover
+        if line not in zshrc_content:  # pragma: no cover
             zshrc_content += f"\n{line}"
     zshrc_content += "\n"
     zshrc_path.write_text(zshrc_content)
@@ -176,17 +176,17 @@ def install_powershell(*, prog_name: str, complete_var: str, shell: str) -> Path
         check=True,
         stdout=subprocess.PIPE,
     )
-    if result.returncode != 0:  # pragma: nocover
+    if result.returncode != 0:  # pragma: no cover
         click.echo("Couldn't get PowerShell user profile", err=True)
         raise click.exceptions.Exit(result.returncode)
     path_str = ""
-    if isinstance(result.stdout, str):  # pragma: nocover
+    if isinstance(result.stdout, str):  # pragma: no cover
         path_str = result.stdout
     if isinstance(result.stdout, bytes):
         try:
             # PowerShell would be predominant in Windows
             path_str = result.stdout.decode("windows-1252")
-        except UnicodeDecodeError:  # pragma: nocover
+        except UnicodeDecodeError:  # pragma: no cover
             try:
                 path_str = result.stdout.decode("utf8")
             except UnicodeDecodeError:

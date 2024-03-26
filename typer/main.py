@@ -43,7 +43,7 @@ try:
 
     console_stderr = Console(stderr=True)
 
-except ImportError:  # pragma: nocover
+except ImportError:  # pragma: no cover
     rich = None  # type: ignore
 
 _original_except_hook = sys.excepthook
@@ -370,7 +370,7 @@ def get_command(typer_instance: Typer) -> click.Command:
         return click_command
     raise RuntimeError(
         "Could not get a command for this Typer instance"
-    )  # pragma no cover
+    )  # pragma: no cover
 
 
 def get_group_name(typer_info: TyperInfo) -> Optional[str]:
@@ -781,7 +781,7 @@ def get_click_type(
             [item.value for item in annotation],
             case_sensitive=parameter_info.case_sensitive,
         )
-    raise RuntimeError(f"Type not yet supported: {annotation}")  # pragma no cover
+    raise RuntimeError(f"Type not yet supported: {annotation}")  # pragma: no cover
 
 
 def lenient_issubclass(
@@ -949,7 +949,7 @@ def get_click_param(
             ),
             convertor,
         )
-    raise AssertionError("A click.Parameter should be returned")  # pragma no cover
+    raise AssertionError("A click.Parameter should be returned")  # pragma: no cover
 
 
 def get_param_callback(

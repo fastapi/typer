@@ -15,7 +15,7 @@ app.command()(mod.main)
 
 def test_main(tmpdir):
     binary_file = Path(tmpdir) / "config.txt"
-    if binary_file.exists():  # pragma no cover
+    if binary_file.exists():  # pragma: no cover
         binary_file.unlink()
     result = runner.invoke(app, ["--file", f"{binary_file}"])
     text = binary_file.read_text()

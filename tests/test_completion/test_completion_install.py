@@ -72,7 +72,7 @@ def test_completion_install_bash():
 def test_completion_install_zsh():
     completion_path: Path = Path.home() / ".zshrc"
     text = ""
-    if not completion_path.is_file():  # pragma: nocover
+    if not completion_path.is_file():  # pragma: no cover
         completion_path.write_text('echo "custom .zshrc"')
     if completion_path.is_file():
         text = completion_path.read_text()
@@ -148,7 +148,7 @@ def test_completion_install_powershell():
     )
     completion_path_bytes = f"{completion_path}\n".encode("windows-1252")
     text = ""
-    if completion_path.is_file():  # pragma: nocover
+    if completion_path.is_file():  # pragma: no cover
         text = completion_path.read_text()
 
     with mock.patch.object(
