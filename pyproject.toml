@@ -113,9 +113,24 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 # "__init__.py" = ["F401"]
 # This file is more readable without yield from
-"docs_src/progressbar/tutorial004.py" = ["UP028"]
+"docs_src/progressbar/tutorial004.py" = ["UP028", "B007"]
 # Default mutable data structure
 "docs_src/options_autocompletion/tutorial006_an.py" = ["B006"]
+"docs_src/multiple_values/multiple_options/tutorial002_an.py" = ["B006"]
+"docs_src/options_autocompletion/tutorial007_an.py" = ["B006"]
+"docs_src/options_autocompletion/tutorial008_an.py" = ["B006"]
+"docs_src/options_autocompletion/tutorial009_an.py" = ["B006"]
+"docs_src/parameter_types/enum/tutorial003_an.py" = ["B006"]
+# Loop control variable `value` not used within loop body
+"docs_src/progressbar/tutorial001.py" = ["B007"]
+"docs_src/progressbar/tutorial003.py" = ["B007"]
+"docs_src/progressbar/tutorial005.py" = ["B007"]
+"docs_src/progressbar/tutorial006.py" = ["B007"]
+# Local variable `delete` is assigned to but never used
+"docs_src/prompt/tutorial003.py" = ["F841"]
+# Loop control variable `x` not used within loop body
+"docs_src/using_click/tutorial001.py" = ["B007"]
+
 # TODO: refactor _typing.py, remove unnecessary code
 "typer/_typing.py" = ["UP036", "F822"]
 
