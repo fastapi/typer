@@ -18,8 +18,7 @@ app.command()(mod.main)
 def test_completion_install_no_shell():
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--install-completion"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
         env={
             **os.environ,
@@ -45,8 +44,7 @@ def test_completion_install_bash():
             "--install-completion",
             "bash",
         ],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
         env={
             **os.environ,
@@ -88,8 +86,7 @@ def test_completion_install_zsh():
             "--install-completion",
             "zsh",
         ],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
         env={
             **os.environ,
@@ -125,8 +122,7 @@ def test_completion_install_fish():
             "--install-completion",
             "fish",
         ],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
         env={
             **os.environ,
@@ -148,7 +144,7 @@ app.command()(mod.main)
 
 def test_completion_install_powershell():
     completion_path: Path = (
-        Path.home() / f".config/powershell/Microsoft.PowerShell_profile.ps1"
+        Path.home() / ".config/powershell/Microsoft.PowerShell_profile.ps1"
     )
     completion_path_bytes = f"{completion_path}\n".encode("windows-1252")
     text = ""

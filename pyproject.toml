@@ -74,3 +74,53 @@ filterwarnings = [
     # For pytest-xdist
     'ignore::DeprecationWarning:xdist',
 ]
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP", # pyupgrade
+]
+ignore = [
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+    "W191", # indentation contains tabs
+]
+
+[tool.ruff.lint.per-file-ignores]
+# "__init__.py" = ["F401"]
+# This file is more readable without yield from
+"docs_src/progressbar/tutorial004.py" = ["UP028", "B007"]
+# Default mutable data structure
+"docs_src/options_autocompletion/tutorial006_an.py" = ["B006"]
+"docs_src/multiple_values/multiple_options/tutorial002_an.py" = ["B006"]
+"docs_src/options_autocompletion/tutorial007_an.py" = ["B006"]
+"docs_src/options_autocompletion/tutorial008_an.py" = ["B006"]
+"docs_src/options_autocompletion/tutorial009_an.py" = ["B006"]
+"docs_src/parameter_types/enum/tutorial003_an.py" = ["B006"]
+# Loop control variable `value` not used within loop body
+"docs_src/progressbar/tutorial001.py" = ["B007"]
+"docs_src/progressbar/tutorial003.py" = ["B007"]
+"docs_src/progressbar/tutorial005.py" = ["B007"]
+"docs_src/progressbar/tutorial006.py" = ["B007"]
+# Local variable `delete` is assigned to but never used
+"docs_src/prompt/tutorial003.py" = ["F841"]
+# Loop control variable `x` not used within loop body
+"docs_src/using_click/tutorial001.py" = ["B007"]
+
+# TODO: refactor _typing.py, remove unnecessary code
+"typer/_typing.py" = ["UP036", "F822"]
+
+[tool.ruff.lint.isort]
+known-third-party = ["typer", "click"]
+# For docs_src/subcommands/tutorial003/
+known-first-party = ["reigns", "towns", "lands", "items", "users"]
+
+[tool.ruff.lint.pyupgrade]
+# Preserve types, even if a file imports `from __future__ import annotations`.
+keep-runtime-typing = true

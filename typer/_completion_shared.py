@@ -87,11 +87,11 @@ def get_completion_script(*, prog_name: str, complete_var: str, shell: str) -> s
         raise click.exceptions.Exit(1)
     return (
         script
-        % dict(
-            complete_func="_{}_completion".format(cf_name),
-            prog_name=prog_name,
-            autocomplete_var=complete_var,
-        )
+        % {
+            "complete_func": f"_{cf_name}_completion",
+            "prog_name": prog_name,
+            "autocomplete_var": complete_var,
+        }
     ).strip()
 
 
@@ -191,7 +191,7 @@ def install_powershell(*, prog_name: str, complete_var: str, shell: str) -> Path
                 path_str = result.stdout.decode("utf8")
             except UnicodeDecodeError:
                 click.echo("Couldn't decode the path automatically", err=True)
-                raise click.exceptions.Exit(1)
+                raise
     path_obj = Path(path_str.strip())
     parent_dir: Path = path_obj.parent
     parent_dir.mkdir(parents=True, exist_ok=True)

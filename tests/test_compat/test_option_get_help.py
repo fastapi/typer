@@ -42,8 +42,7 @@ def test_coverage_call():
 def test_completion():
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
         env={
             **os.environ,
