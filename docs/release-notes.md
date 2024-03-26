@@ -8,6 +8,7 @@
 
 ### Internal
 
+* 👷 Upgrade issue-manager GitHub Action. PR [#765](https://github.com/tiangolo/typer/pull/765) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Add alls-green to CI. PR [#759](https://github.com/tiangolo/typer/pull/759) by [@tiangolo](https://github.com/tiangolo).
 
 ## 0.10.0
