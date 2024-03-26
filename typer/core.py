@@ -43,7 +43,7 @@ MarkupMode = Literal["markdown", "rich", None]
 
 
 # Copy from click.parser._split_opt
-def _split_opt(opt: str) -> tuple[str, str]:
+def _split_opt(opt: str) -> Tuple[str, str]:
     first = opt[:1]
     if first.isalnum():
         return "", opt
