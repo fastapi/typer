@@ -41,6 +41,15 @@ except ImportError:  # pragma: nocover
 
 MarkupMode = Literal["markdown", "rich", None]
 
+# Copy from click.parser._split_opt
+def _split_opt(opt: str) -> tuple[str, str]:
+    first = opt[:1]
+    if first.isalnum():
+        return "", opt
+    if opt[1:2] == first:
+        return opt[:2], opt[2:]
+    return first, opt[1:]
+
 
 def _typer_param_setup_autocompletion_compat(
     self: click.Parameter,
@@ -112,11 +121,11 @@ def _get_default_string(
         # )[1]
         if obj.default:
             if obj.opts:
-                default_string = click.parser._split_opt(obj.opts[0])[1]
+                default_string = _split_opt(obj.opts[0])[1]
             else:
                 default_string = str(default_value)
         else:
-            default_string = click.parser._split_opt(obj.secondary_opts[0])[1]
+            default_string = _split_opt(obj.secondary_opts[0])[1]
         # Typer override end
     elif (
         isinstance(obj, TyperOption)
