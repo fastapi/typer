@@ -52,7 +52,7 @@ Add `typer[all]` to your dependencies:
 $ poetry add "typer[all]"
 
 // It creates a virtual environment for your project
-Creating virtualenv rick-portal-gun-w31dJa0b-py3.6 in /home/rick/.cache/pypoetry/virtualenvs
+Creating virtualenv rick-portal-gun-w31dJa0b-py3.10 in /home/rick/.cache/pypoetry/virtualenvs
 Using version ^0.1.0 for typer
 
 Updating dependencies
@@ -83,7 +83,7 @@ Package operations: 15 installs, 0 updates, 0 removals
 // Activate that new virtual environment
 $ poetry shell
 
-Spawning shell within /home/rick/.cache/pypoetry/virtualenvs/rick-portal-gun-w31dJa0b-py3.6
+Spawning shell within /home/rick/.cache/pypoetry/virtualenvs/rick-portal-gun-w31dJa0b-py3.10
 
 // Open an editor using this new environment, for example VS Code
 $ code ./
@@ -174,7 +174,7 @@ description = ""
 authors = ["Rick Sanchez <rick@example.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.10"
 typer = {extras = ["all"], version = "^0.1.0"}
 
 [tool.poetry.dev-dependencies]
@@ -198,7 +198,7 @@ authors = ["Rick Sanchez <rick@example.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.10"
 typer = {extras = ["all"], version = "^0.1.0"}
 
 [tool.poetry.dev-dependencies]
@@ -229,7 +229,7 @@ readme = "README.md"
 rick-portal-gun = "rick_portal_gun.main:app"
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.10"
 typer = {extras = ["all"], version = "^0.1.0"}
 
 [tool.poetry.dev-dependencies]
@@ -302,7 +302,7 @@ Your package is installed in the environment created by Poetry, but you can alre
 $ which rick-portal-gun
 
 // You get the one from your environment
-/home/rick/.cache/pypoetry/virtualenvs/rick-portal-gun-w31dJa0b-py3.6/bin/rick-portal-gun
+/home/rick/.cache/pypoetry/virtualenvs/rick-portal-gun-w31dJa0b-py3.10/bin/rick-portal-gun
 
 // Try it
 $ rick-portal-gun
@@ -471,7 +471,8 @@ The file would live right beside `__init__.py`:
 ├── README.rst
 ├── rick_portal_gun
 │   ├── __init__.py
-│   └── __main__.py
+│   ├── __main__.py
+│   └── main.py
 └── tests
     ├── __init__.py
     └── test_rick_portal_gun.py
@@ -659,8 +660,8 @@ Found existing installation: rick-portal-gun 0.1.0
 Uninstalling rick-portal-gun-0.1.0:
   Would remove:
     /home/user/.local/bin/rick-portal-gun
-    /home/user/.local/lib/python3.6/site-packages/rick_portal_gun-0.1.0.dist-info/*
-    /home/user/.local/lib/python3.6/site-packages/rick_portal_gun/*
+    /home/user/.local/lib/python3.10/site-packages/rick_portal_gun-0.1.0.dist-info/*
+    /home/user/.local/lib/python3.10/site-packages/rick_portal_gun/*
 # Proceed (y/n)? $ y
     Successfully uninstalled rick-portal-gun-0.1.0
 ```
@@ -677,10 +678,10 @@ $ pip install --user rick-portal-gun
 // Notice that it says "Downloading" 🚀
 Collecting rick-portal-gun
   Downloading rick_portal_gun-0.1.0-py3-none-any.whl (1.8 kB)
-Requirement already satisfied: typer[all]<0.0.12,>=0.0.11 in ./.local/lib/python3.6/site-packages (from rick-portal-gun) (0.0.11)
-Requirement already satisfied: click<7.2.0,>=7.1.1 in ./anaconda3/lib/python3.6/site-packages (from typer[all]<0.0.12,>=0.0.11->rick-portal-gun) (7.1.1)
-Requirement already satisfied: colorama; extra == "all" in ./anaconda3/lib/python3.6/site-packages (from typer[all]<0.0.12,>=0.0.11->rick-portal-gun) (0.4.3)
-Requirement already satisfied: shellingham; extra == "all" in ./anaconda3/lib/python3.6/site-packages (from typer[all]<0.0.12,>=0.0.11->rick-portal-gun) (1.3.1)
+Requirement already satisfied: typer[all]<0.0.12,>=0.0.11 in ./.local/lib/python3.10/site-packages (from rick-portal-gun) (0.0.11)
+Requirement already satisfied: click<7.2.0,>=7.1.1 in ./anaconda3/lib/python3.10/site-packages (from typer[all]<0.0.12,>=0.0.11->rick-portal-gun) (7.1.1)
+Requirement already satisfied: colorama; extra == "all" in ./anaconda3/lib/python3.10/site-packages (from typer[all]<0.0.12,>=0.0.11->rick-portal-gun) (0.4.3)
+Requirement already satisfied: shellingham; extra == "all" in ./anaconda3/lib/python3.10/site-packages (from typer[all]<0.0.12,>=0.0.11->rick-portal-gun) (1.3.1)
 Installing collected packages: rick-portal-gun
 Successfully installed rick-portal-gun-0.1.0
 ```
@@ -738,7 +739,7 @@ readme = "README.md"
 rick-portal-gun = "rick_portal_gun.main:app"
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.10"
 typer = {extras = ["all"], version = "^0.1.0"}
 
 [tool.poetry.dev-dependencies]

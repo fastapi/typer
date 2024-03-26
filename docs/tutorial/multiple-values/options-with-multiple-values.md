@@ -4,13 +4,13 @@ You can set the number of values and types to anything you want, but it has to b
 
 For this, use the standard Python `typing.Tuple`:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="1  7"
     {!> ../docs_src/multiple_values/options_with_multiple_values/tutorial001_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.

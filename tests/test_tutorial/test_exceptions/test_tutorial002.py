@@ -23,12 +23,7 @@ def test_traceback_rich():
 
     assert "app()" not in result.stderr
     assert "print(password + 3)" in result.stderr
-
-    # TODO: when deprecating Python 3.6, remove second option
-    assert (
-        'TypeError: can only concatenate str (not "int") to str' in result.stderr
-        or "TypeError: must be str, not int" in result.stderr
-    )
+    assert 'TypeError: can only concatenate str (not "int") to str' in result.stderr
     assert "name = 'morty'" not in result.stderr
 
 
@@ -45,12 +40,7 @@ def test_standard_traceback_env_var():
 
     assert "app()" in result.stderr
     assert "print(password + 3)" in result.stderr
-
-    # TODO: when deprecating Python 3.6, remove second option
-    assert (
-        'TypeError: can only concatenate str (not "int") to str' in result.stderr
-        or "TypeError: must be str, not int" in result.stderr
-    )
+    assert 'TypeError: can only concatenate str (not "int") to str' in result.stderr
     assert "name = 'morty'" not in result.stderr
 
 

@@ -12,13 +12,13 @@ Now that you also know how to use `typer.Argument()`, let's use it to add docume
 
 You can use the `help` parameter to add a help text for a *CLI argument*:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="5"
     {!> ../docs_src/arguments/help/tutorial001_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -50,13 +50,13 @@ Options:
 
 And of course, you can also combine that `help` with the <abbr title="a multi-line string as the first expression inside a function (not assigned to any variable) used for documentation">docstring</abbr>:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="5-8"
     {!> ../docs_src/arguments/help/tutorial002_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -90,13 +90,13 @@ Options:
 
 If you have a *CLI argument* with a default value, like `"World"`:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="5"
     {!> ../docs_src/arguments/help/tutorial003_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -128,13 +128,13 @@ Options:
 
 But you can disable that if you want to, with `show_default=False`:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="7"
     {!> ../docs_src/arguments/help/tutorial004_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -173,13 +173,13 @@ Options:
 
 You can use the same `show_default` to pass a custom string (instead of a `bool`) to customize the default value to be shown in the help text:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="9"
     {!> ../docs_src/arguments/help/tutorial005_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -231,13 +231,13 @@ But you can customize it with the `metavar` parameter for `typer.Argument()`.
 
 For example, let's say you don't want to have the default of `NAME`, you want to have `username`, in lowercase, and you really want ✨ emojis ✨ everywhere:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="5"
     {!> ../docs_src/arguments/help/tutorial006_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -270,13 +270,13 @@ You might want to show the help information for *CLI arguments* in different pan
 
 If you have installed Rich as described in the docs for [Printing and Colors](../printing.md){.internal-link target=_blank}, you can set the `rich_help_panel` parameter to the name of the panel where you want this *CLI argument* to be shown:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="8  12"
     {!> ../docs_src/arguments/help/tutorial007_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -326,13 +326,13 @@ If you want, you can make a *CLI argument* **not** show up in the `Arguments` se
 
 You will probably not want to do this normally, but it's possible:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="5"
     {!> ../docs_src/arguments/help/tutorial008_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.

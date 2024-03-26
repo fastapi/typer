@@ -1,5 +1,63 @@
 ## Latest Changes
 
+### Breaking Changes
+
+* 🔥 Remove support for Python 3.6. PR [#758](https://github.com/tiangolo/typer/pull/758) by [@tiangolo](https://github.com/tiangolo).
+
+### Internal
+
+* 👷 Add alls-green to CI. PR [#759](https://github.com/tiangolo/typer/pull/759) by [@tiangolo](https://github.com/tiangolo).
+
+## 0.10.0
+
+### Fixes
+
+* 🐛 Fix default value of `None` for CLI Parameters when the type is `list | None` and the default value is `None`. PR [#664](https://github.com/tiangolo/typer/pull/664) by [@theowisear](https://github.com/theowisear).
+
+## 0.9.4
+
+### Features
+
+* ✨ Improve support for CLI translations using gettext. PR [#417](https://github.com/tiangolo/typer/pull/417) by [@mjodmj](https://github.com/mjodmj).
+
+## 0.9.3
+
+### Fixes
+
+* 🐛 Fix evaluating stringified annotations in Python 3.10 (also `from __future__ import annotations`). PR [#721](https://github.com/tiangolo/typer/pull/721) by [@heckad](https://github.com/heckad).
+
+## 0.9.2
+
+### Fixes
+
+* 🐛 Fix display of default value for Enum parameters inside of a list, include docs and tests. PR [#473](https://github.com/tiangolo/typer/pull/473) by [@asieira](https://github.com/asieira).
+* 🐛 Update type annotations for `show_default` parameter and update docs for setting a "Custom default string". PR [#501](https://github.com/tiangolo/typer/pull/501) by [@plannigan](https://github.com/plannigan).
+
+### Docs
+
+* 📝 Add docs and test for `no_args_is_help` feature. PR [#751](https://github.com/tiangolo/typer/pull/751) by [@svlandeg](https://github.com/svlandeg).
+
+## 0.9.1
+
+### Fixes
+
+* 🐛 Add missing `default_factory` in `Argument` overloads. PR [#750](https://github.com/tiangolo/typer/pull/750) by [@m9810223](https://github.com/m9810223).
+* 🐛 Fix preserving case in enum values. PR [#571](https://github.com/tiangolo/typer/pull/571) by [@avaldebe](https://github.com/avaldebe).
+
+### Docs
+
+* 📝 Remove obsolete references to `--install-completion` for `typer.run()` scripts. PR [#595](https://github.com/tiangolo/typer/pull/595) by [@tiangolo](https://github.com/tiangolo).
+
+* 📝 Update docs example for a Typer/Click group to make new subcommands explicit. PR [#755](https://github.com/tiangolo/typer/pull/755) by [@svlandeg](https://github.com/svlandeg).
+* 📝 Update docs for building a package, file structure example. PR [#683](https://github.com/tiangolo/typer/pull/683) by [@davidbgk](https://github.com/davidbgk).
+* 📝 Update link in docs to the newest stable version of click. PR [#675](https://github.com/tiangolo/typer/pull/675) by [@javier171188](https://github.com/javier171188).
+* 🔧 Add `CITATION.cff` file for academic citations. PR [#681](https://github.com/tiangolo/typer/pull/681) by [@tiangolo](https://github.com/tiangolo).
+* ✏ Fix typo in `docs/tutorial/exceptions.md`. PR [#702](https://github.com/tiangolo/typer/pull/702) by [@menzenski](https://github.com/menzenski).
+* ✏ Fix typo in `docs/tutorial/options/name.md`. PR [#725](https://github.com/tiangolo/typer/pull/725) by [@bwagner](https://github.com/bwagner).
+* ✏ Fix typo in `docs/tutorial/arguments/optional.md`. PR [#602](https://github.com/tiangolo/typer/pull/602) by [@tadasgedgaudas](https://github.com/tadasgedgaudas).
+
+### Internal
+
 * ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#606](https://github.com/tiangolo/typer/pull/606) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * 👷 Install MkDocs Material Insiders only when secrets are available, for Dependabot. PR [#685](https://github.com/tiangolo/typer/pull/685) by [@tiangolo](https://github.com/tiangolo).
 * ⚒️ Update build-docs.yml, do not zip docs. PR [#645](https://github.com/tiangolo/typer/pull/645) by [@tiangolo](https://github.com/tiangolo).
@@ -9,17 +67,7 @@
 * 👷 Update CI workflow dispatch for latest changes. PR [#643](https://github.com/tiangolo/typer/pull/643) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Update token for Material for MkDocs Insiders. PR [#636](https://github.com/tiangolo/typer/pull/636) by [@tiangolo](https://github.com/tiangolo).
 * 🐛 Fix internal type annotations and bump mypy version. PR [#638](https://github.com/tiangolo/typer/pull/638) by [@paulo-raca](https://github.com/paulo-raca).
-* 📝 Remove obsolete references to `--install-completion` for `typer.run()` scripts. PR [#595](https://github.com/tiangolo/typer/pull/595) by [@tiangolo](https://github.com/tiangolo).
-
-### Docs
-
-* 🔧 Add `CITATION.cff` file for academic citations. PR [#681](https://github.com/tiangolo/typer/pull/681) by [@tiangolo](https://github.com/tiangolo).
-* ✏ Fix typo in `docs/tutorial/exceptions.md`. PR [#702](https://github.com/tiangolo/typer/pull/702) by [@menzenski](https://github.com/menzenski).
-* ✏ Fix typo in `docs/tutorial/options/name.md`. PR [#725](https://github.com/tiangolo/typer/pull/725) by [@bwagner](https://github.com/bwagner).
-* ✏ Fix typo in `docs/tutorial/arguments/optional.md`. PR [#602](https://github.com/tiangolo/typer/pull/602) by [@tadasgedgaudas](https://github.com/tadasgedgaudas).
-
-### Internal
-
+* 💡 Add comments to document overload definitions in code. PR [#752](https://github.com/tiangolo/typer/pull/752) by [@svlandeg](https://github.com/svlandeg).
 * 🔥 Remove Jina QA Bot as it has been discontinued. PR [#749](https://github.com/tiangolo/typer/pull/749) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Update build docs CI cache paths. PR [#707](https://github.com/tiangolo/typer/pull/707) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Upgrade latest-changes GitHub Action. PR [#691](https://github.com/tiangolo/typer/pull/691) by [@tiangolo](https://github.com/tiangolo).

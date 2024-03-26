@@ -12,8 +12,10 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11"]
-        click-7: [true, false]
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+        click-version:
+          - click-7
+          - click-8
       fail-fast: false
 
     steps:
@@ -25,29 +27,25 @@ jobs:
       - name: Install Flit
         run: pip install flit
       - name: Install Dependencies
-        if: ${{ matrix.python-version != '3.6' }}
         run: python -m flit install --symlink
-      - name: Install Dependencies
-        if: ${{ matrix.python-version == '3.6' }}
-        # This doesn't install the editable install, so coverage doesn't get subprocesses
-        run: python -m pip install ".[test]"
       - name: Install Click 7
-        if: matrix.click-7
+        if: matrix.click-version == 'click-7'
         run: pip install "click<8.0.0"
       - name: Lint
-        if: ${{ matrix.python-version != '3.6' && matrix.click-7 == false }}
+        if: ${{ matrix.click-version == 'click-8' }}
         run: bash scripts/lint.sh
       - run: mkdir coverage
       - name: Test
         run: bash scripts/test.sh
         env:
-          COVERAGE_FILE: coverage/.coverage.${{ runner.os }}-py${{ matrix.python-version }}-click-7-${{ matrix.click-7 }}
-          CONTEXT: ${{ runner.os }}-py${{ matrix.python-version }}-click-7-${{ matrix.click-7 }}
+          COVERAGE_FILE: coverage/.coverage.${{ runner.os }}-py${{ matrix.python-version }}-${{ matrix.click-version }}
+          CONTEXT: ${{ runner.os }}-py${{ matrix.python-version }}-${{ matrix.click-version }}
       - name: Store coverage files
         uses: actions/upload-artifact@v3
         with:
           name: coverage
           path: coverage
+
   coverage-combine:
     needs: [test]
     runs-on: ubuntu-latest
@@ -77,3 +75,19 @@ jobs:
         with:
           name: coverage-html
           path: htmlcov
+
+  # https://github.com/marketplace/actions/alls-green#why
+  check:  # This job does nothing and is only used for the branch protection
+    if: always()
+    needs:
+      - coverage-combine
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: Decide whether the needed jobs succeeded or failed
+        uses: re-actors/alls-green@release/v1
+        with:
+          jobs: ${{ toJSON(needs) }}

@@ -26,7 +26,7 @@ Let's say the function parameter name is `user_name` as above, but you want the 
 
 You can pass the *CLI option* name that you want to have in the following positional argument passed to `typer.Option()`:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="5"
     {!> ../docs_src/options/name/tutorial001_an.py!}
@@ -34,7 +34,7 @@ You can pass the *CLI option* name that you want to have in the following positi
 
     Here you are passing the string `"--name"` as the first positional argument to `typer.Option()`.
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -194,13 +194,13 @@ You can overwrite the *CLI option* name to use as in the previous example, but y
 
 For example, extending the previous example, let's add a *CLI option* short name `-n`:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="5"
     {!> ../docs_src/options/name/tutorial002_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -238,13 +238,13 @@ Hello Camila
 
 If you only declare a short name like `-n` then that will be the only *CLI option* name. And neither `--name` nor `--user-name` will be available.
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="5"
     {!> ../docs_src/options/name/tutorial003_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -279,13 +279,13 @@ Hello Camila
 
 Continuing with the example above, as **Typer** allows you to declare a *CLI option* as having only a short name, if you want to have the default long name plus a short name, you have to declare both explicitly:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="5"
     {!> ../docs_src/options/name/tutorial004_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -326,13 +326,13 @@ You can create multiple short names and use them together.
 
 You don't have to do anything special for it to work (apart from declaring those short versions):
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="6-7"
     {!> ../docs_src/options/name/tutorial005_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
