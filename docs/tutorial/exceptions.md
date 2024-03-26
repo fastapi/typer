@@ -83,7 +83,7 @@ name = 'morty'
 
 In this case, `name` is a local variable, it comes from a parameter passed to the function.
 
-But if it was something like a password, would would have liked to hide it.
+But if it was something like a password, you would have liked to hide it.
 
 In that case, you can create the `typer.Typer()` application explicitly and set the parameter `pretty_exceptions_show_locals=False`:
 

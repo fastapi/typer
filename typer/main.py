@@ -51,7 +51,7 @@ _typer_developer_exception_attr_name = "__typer_developer_exception__"
 
 
 def except_hook(
-    exc_type: Type[BaseException], exc_value: BaseException, tb: TracebackType
+    exc_type: Type[BaseException], exc_value: BaseException, tb: Optional[TracebackType]
 ) -> None:
     exception_config: Union[DeveloperExceptionConfig, None] = getattr(
         exc_value, _typer_developer_exception_attr_name, None
@@ -618,22 +618,24 @@ def param_path_convertor(value: Optional[str] = None) -> Optional[Path]:
 
 
 def generate_enum_convertor(enum: Type[Enum]) -> Callable[[Any], Any]:
-    lower_val_map = {str(val.value).lower(): val for val in enum}
+    val_map = {str(val.value): val for val in enum}
 
     def convertor(value: Any) -> Any:
         if value is not None:
-            low = str(value).lower()
-            if low in lower_val_map:
-                key = lower_val_map[low]
+            val = str(value)
+            if val in val_map:
+                key = val_map[val]
                 return enum(key)
 
     return convertor
 
 
 def generate_list_convertor(
-    convertor: Optional[Callable[[Any], Any]]
-) -> Callable[[Sequence[Any]], List[Any]]:
-    def internal_convertor(value: Sequence[Any]) -> List[Any]:
+    convertor: Optional[Callable[[Any], Any]], default_value: Optional[Any]
+) -> Callable[[Sequence[Any]], Optional[List[Any]]]:
+    def internal_convertor(value: Sequence[Any]) -> Optional[List[Any]]:
+        if default_value is None and len(value) == 0:
+            return None
         return [convertor(v) if convertor else v for v in value]
 
     return internal_convertor
@@ -689,7 +691,13 @@ def get_callback(
 def get_click_type(
     *, annotation: Any, parameter_info: ParameterInfo
 ) -> click.ParamType:
-    if annotation == str:
+    if parameter_info.click_type is not None:
+        return parameter_info.click_type
+
+    elif parameter_info.parser is not None:
+        return click.types.FuncParamType(parameter_info.parser)
+
+    elif annotation == str:
         return click.STRING
     elif annotation == int:
         if parameter_info.min is not None or parameter_info.max is not None:
@@ -846,7 +854,9 @@ def get_click_param(
         )
     convertor = determine_type_convertor(main_type)
     if is_list:
-        convertor = generate_list_convertor(convertor)
+        convertor = generate_list_convertor(
+            convertor=convertor, default_value=default_value
+        )
     if is_tuple:
         convertor = generate_tuple_convertor(main_type.__args__)
     if isinstance(parameter_info, OptionInfo):

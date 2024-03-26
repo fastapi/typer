@@ -3,6 +3,7 @@
 import inspect
 import sys
 from collections import defaultdict
+from gettext import gettext as _
 from os import getenv
 from typing import Any, DefaultDict, Dict, Iterable, List, Optional, Union
 
@@ -80,17 +81,17 @@ if _TYPER_FORCE_DISABLE_TERMINAL:
     FORCE_TERMINAL = False
 
 # Fixed strings
-DEPRECATED_STRING = "(deprecated) "
-DEFAULT_STRING = "[default: {}]"
-ENVVAR_STRING = "[env var: {}]"
+DEPRECATED_STRING = _("(deprecated) ")
+DEFAULT_STRING = _("[default: {}]")
+ENVVAR_STRING = _("[env var: {}]")
 REQUIRED_SHORT_STRING = "*"
-REQUIRED_LONG_STRING = "[required]"
+REQUIRED_LONG_STRING = _("[required]")
 RANGE_STRING = " [{}]"
-ARGUMENTS_PANEL_TITLE = "Arguments"
-OPTIONS_PANEL_TITLE = "Options"
-COMMANDS_PANEL_TITLE = "Commands"
-ERRORS_PANEL_TITLE = "Error"
-ABORTED_TEXT = "Aborted."
+ARGUMENTS_PANEL_TITLE = _("Arguments")
+OPTIONS_PANEL_TITLE = _("Options")
+COMMANDS_PANEL_TITLE = _("Commands")
+ERRORS_PANEL_TITLE = _("Error")
+ABORTED_TEXT = _("Aborted.")
 
 MARKUP_MODE_MARKDOWN = "markdown"
 MARKUP_MODE_RICH = "rich"
@@ -552,7 +553,6 @@ def rich_format_help(
 
     # Print command / group help if we have some
     if obj.help:
-
         # Print with some padding
         console.print(
             Padding(
@@ -569,7 +569,6 @@ def rich_format_help(
     panel_to_arguments: DefaultDict[str, List[click.Argument]] = defaultdict(list)
     panel_to_options: DefaultDict[str, List[click.Option]] = defaultdict(list)
     for param in obj.get_params(ctx):
-
         # Skip if option is hidden
         if getattr(param, "hidden", False):
             continue
