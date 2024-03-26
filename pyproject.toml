@@ -50,6 +50,7 @@ all = [
 
 [tool.pdm]
 version = { source = "file", path = "typer/__init__.py" }
+distribution = true
 
 [tool.isort]
 profile = "black"
@@ -74,6 +75,19 @@ filterwarnings = [
     # For pytest-xdist
     'ignore::DeprecationWarning:xdist',
 ]
+
+[tool.mypy]
+strict = true
+
+[[tool.mypy.overrides]]
+module = "docs_src.*"
+disallow_incomplete_defs = false
+disallow_untyped_defs = false
+disallow_untyped_calls = false
+
+[[tool.mypy.overrides]]
+module = "shellingham"
+ignore_missing_imports = true
 
 [tool.ruff.lint]
 select = [

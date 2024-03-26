@@ -95,7 +95,7 @@ def except_hook(
         else:
             stack.append(frame)
     # Type ignore ref: https://github.com/python/typeshed/pull/8244
-    final_stack_summary = StackSummary.from_list(stack)  # type: ignore
+    final_stack_summary = StackSummary.from_list(stack)
     tb_exc.stack = final_stack_summary
     for line in tb_exc.format():
         print(line, file=sys.stderr)
@@ -685,7 +685,7 @@ def get_callback(
                 use_params[k] = v
         if context_param_name:
             use_params[context_param_name] = click.get_current_context()
-        return callback(**use_params)  # type: ignore
+        return callback(**use_params)
 
     update_wrapper(wrapper, callback)
     return wrapper
@@ -998,7 +998,7 @@ def get_param_callback(
             else:
                 use_value = value
             use_params[value_name] = use_value
-        return callback(**use_params)  # type: ignore
+        return callback(**use_params)
 
     update_wrapper(wrapper, callback)
     return wrapper
@@ -1051,7 +1051,7 @@ def get_param_completion(
             use_params[args_name] = args
         if incomplete_name:
             use_params[incomplete_name] = incomplete
-        return callback(**use_params)  # type: ignore
+        return callback(**use_params)
 
     update_wrapper(wrapper, callback)
     return wrapper
