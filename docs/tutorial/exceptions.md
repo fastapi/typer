@@ -202,6 +202,18 @@ $ python main.py
 
 </div>
 
+## Suppress Frames from Pretty Exceptions
+
+By default, typer will **omit** all the parts of the traceback that come from the internal parts in Typer and Click, but you can exclude frames from additional
+frameworks using `pretty_exceptions_suppress`, which should be a list of modules or str paths.
+
+```Python
+import typer
+import sqlalchemy
+
+app = typer.Typer(pretty_exceptions_suppress=[sqlalchemy])
+```
+
 ## Disable Pretty Exceptions
 
 You can also entirely disable pretty exceptions with the parameter `pretty_exceptions_enable=False`:
