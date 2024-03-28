@@ -40,6 +40,7 @@ jobs:
       - name: Lint
         run: bash scripts/lint.sh
       - run: mkdir coverage
+      - run: bash ./scripts/test-files.sh
       - name: Test
         run: bash scripts/test.sh
         env:
