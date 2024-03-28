@@ -39,10 +39,10 @@ jobs:
           cd dist
           tar xvf typer*.tar.gz
       - run: |
-          cd dist/typer-*
+          cd dist/typer-*/
           pip install -r requirements-tests.txt
       - run: |
-          cd dist/typer-*
+          cd dist/typer-*/
           pytest tests
       - run: |
           cd dist
