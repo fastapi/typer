@@ -27,24 +27,22 @@ jobs:
           # cache-dependency-path: pyproject.toml
       - name: Install build dependencies
         run: pip install build
-      # TODO: remove this
-      # Allow debugging with tmate
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        with:
-          limit-access-to-actor: true
-      - name: Build distribution
+      - name: Build source distribution
         run: python -m build --sdist
-      - run: |
+      - name: Decompress source distribution
+        run: |
           cd dist
           tar xvf typer*.tar.gz
-      - run: |
+      - name: Install test dependencies
+        run: |
           cd dist/typer-*/
           pip install -r requirements-tests.txt
-      - run: |
+      - name: Run source distribution tests
+        run: |
           cd dist/typer-*/
           bash scripts/test.sh
-      - run: |
+      - name: Build wheel distribution
+        run: |
           cd dist
           pip wheel --no-deps typer-*.tar.gz
       - name: Dump GitHub context
