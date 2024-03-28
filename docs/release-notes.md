@@ -1,5 +1,7 @@
 ## Latest Changes
 
+## 0.11.1
+
 ### Fixes
 
 * 🔧 Explicitly include testing files in sdist for redistributors (e.g. OpenSUSE) and add CI to test redistribution. PR [#773](https://github.com/tiangolo/typer/pull/773) by [@tiangolo](https://github.com/tiangolo).
