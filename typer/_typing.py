@@ -252,7 +252,7 @@ else:
             return _UnionGenericAlias(origin, converted)
         else:
             try:
-                setattr(tp, "__args__", converted)
+                setattr(tp, "__args__", converted)  # noqa: B010
             except AttributeError:
                 pass
             return tp

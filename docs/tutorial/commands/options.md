@@ -2,13 +2,13 @@ Commands can also have their own *CLI options*.
 
 In fact, each command can have different *CLI arguments* and *CLI options*:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="8  14-17  27-29  38"
     {!> ../docs_src/commands/options/tutorial001_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.

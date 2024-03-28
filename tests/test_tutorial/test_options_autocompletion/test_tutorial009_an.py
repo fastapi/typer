@@ -12,8 +12,7 @@ runner = CliRunner()
 def test_completion():
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
         env={
             **os.environ,
@@ -25,8 +24,7 @@ def test_completion():
     assert '"Camila":"The reader of books."' in result.stdout
     assert '"Carlos":"The writer of scripts."' in result.stdout
     assert '"Sebastian":"The type hints guy."' not in result.stdout
-    # TODO: when deprecating Click 7, remove second option
-    assert "[]" in result.stderr or "['--name', 'Sebastian', '--name']" in result.stderr
+    assert "[]" in result.stderr
 
 
 def test_1():
@@ -39,8 +37,7 @@ def test_1():
 def test_script():
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
     )
     assert "Usage" in result.stdout

@@ -1,5 +1,26 @@
 ## Latest Changes
 
+## 0.11.0
+
+### Breaking Changes
+
+* 🔧 Refactor package manager, move from Flit to PDM, remove private pip extras for `test`, `doc`, `dev`. PR [#764](https://github.com/tiangolo/typer/pull/764) by [@tiangolo](https://github.com/tiangolo).
+* 🔥 Remove support for Click 7, require Click 8+. PR [#760](https://github.com/tiangolo/typer/pull/760) by [@tiangolo](https://github.com/tiangolo).
+* 🔥 Remove support for Python 3.6. PR [#758](https://github.com/tiangolo/typer/pull/758) by [@tiangolo](https://github.com/tiangolo).
+
+### Refactors
+
+* 🔧 Migrate from Black, isort, flake8, autoflake, pyupgrade to Ruff. PR [#763](https://github.com/tiangolo/typer/pull/763) by [@tiangolo](https://github.com/tiangolo).
+
+### Internal
+
+* ⬆️ Upgrade coverage and configs. PR [#769](https://github.com/tiangolo/typer/pull/769) by [@tiangolo](https://github.com/tiangolo).
+* 🔧 Upgrade mypy and config. PR [#768](https://github.com/tiangolo/typer/pull/768) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Upgrade Smokeshow GitHub action. PR [#767](https://github.com/tiangolo/typer/pull/767) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Upgrade latest-changes GitHub Action. PR [#766](https://github.com/tiangolo/typer/pull/766) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Upgrade issue-manager GitHub Action. PR [#765](https://github.com/tiangolo/typer/pull/765) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Add alls-green to CI. PR [#759](https://github.com/tiangolo/typer/pull/759) by [@tiangolo](https://github.com/tiangolo).
+
 ## 0.10.0
 
 ### Fixes

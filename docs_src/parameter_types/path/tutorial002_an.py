@@ -15,7 +15,7 @@ def main(
             readable=True,
             resolve_path=True,
         ),
-    ]
+    ],
 ):
     text = config.read_text()
     print(f"Config file contents: {text}")
