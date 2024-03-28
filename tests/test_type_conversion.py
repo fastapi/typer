@@ -29,23 +29,23 @@ def test_optional():
     assert "User: Camila" in result.output
 
 
-def test_tuple_with_optional():
+def test_optional_tuple():
     app = typer.Typer()
 
     @app.command()
-    def opt(arg: Optional[Tuple[int, int]] = None):
-        if arg:
-            print(arg)
+    def opt(number: Optional[Tuple[int, int]] = None):
+        if number:
+            print(f"Number: {number}")
         else:
-            print("None")
+            print("No number")
 
     result = runner.invoke(app)
     assert result.exit_code == 0
-    assert "None" in result.output
+    assert "No number" in result.output
 
-    result = runner.invoke(app, ["--arg", "1", "1"])
+    result = runner.invoke(app, ["--number", "4", "2"])
     assert result.exit_code == 0
-    assert "(1, 1)" in result.output
+    assert "Number: (4, 2)" in result.output
 
 
 def test_no_type():
