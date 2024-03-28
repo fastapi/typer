@@ -53,7 +53,12 @@ version = { source = "file", path = "typer/__init__.py" }
 distribution = true
 
 [tool.pdm.build]
-source-includes = ["tests/", "docs_src/", "requirements*.txt"]
+source-includes = [
+    "tests/",
+    "docs_src/",
+    "requirements*.txt",
+    "scripts/",
+    ]
 
 [tool.isort]
 profile = "black"

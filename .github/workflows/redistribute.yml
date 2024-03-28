@@ -43,7 +43,7 @@ jobs:
           pip install -r requirements-tests.txt
       - run: |
           cd dist/typer-*/
-          pytest tests
+          bash scripts/test.sh
       - run: |
           cd dist
           pip wheel --no-deps typer-*.tar.gz
