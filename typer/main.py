@@ -649,7 +649,7 @@ def generate_tuple_convertor(
     convertors = [determine_type_convertor(type_) for type_ in types]
 
     def internal_convertor(
-        param_args: Optional[Tuple[Any, ...]]
+        param_args: Optional[Tuple[Any, ...]],
     ) -> Optional[Tuple[Any, ...]]:
         if param_args is None:
             return None
