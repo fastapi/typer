@@ -29,9 +29,6 @@ def test_optional():
     assert "User: Camila" in result.output
 
 
-@pytest.mark.skipif(
-    int(click.__version__.split(".")[0]) < 8, reason="Only support for click 8"
-)
 def test_tuple_with_optional():
     app = typer.Typer()
 
