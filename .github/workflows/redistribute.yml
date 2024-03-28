@@ -34,7 +34,15 @@ jobs:
         with:
           limit-access-to-actor: true
       - name: Build distribution
-        run: python -m build
+        run: python -m build --sdist
+      - run: tar xvf typer*.tar.gz
+        working-directory: dist
+      - run: pip install -r requirements-tests.txt
+        working-directory: dist/typer-*
+      - run: pytest tests
+        working-directory: dist/typer-*
+      - run: pip wheel --no-deps typer-*.tar.gz
+        working-directory: dist
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
