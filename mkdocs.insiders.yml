@@ -1,4 +1,5 @@
 INHERIT: mkdocs.yml
 plugins:
   - search
-  - social
+  # TODO: Re-enable once this is fixed: https://github.com/squidfunk/mkdocs-material/issues/6983
+  # - social
