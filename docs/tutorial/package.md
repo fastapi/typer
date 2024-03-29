@@ -166,6 +166,7 @@ name = "rick-portal-gun"
 version = "0.1.0"
 description = ""
 authors = ["Rick Sanchez <rick@example.com>"]
+readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
