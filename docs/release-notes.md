@@ -1,5 +1,10 @@
 ## Latest Changes
 
+### Internal
+
+* 🔧 Temporarily disable social plugin while a MkDocs issue is handled. PR [#779](https://github.com/tiangolo/typer/pull/779) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Fix install MkDocs Insiders only when available. PR [#778](https://github.com/tiangolo/typer/pull/778) by [@tiangolo](https://github.com/tiangolo).
+
 ## 0.11.1
 
 ### Fixes
