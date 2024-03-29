@@ -104,7 +104,7 @@ But for advanced use cases, you could create a `Console` yourself.
 {!../docs_src/printing/tutorial003.py!}
 ```
 
-In this example, we create a `Console`, and a `Table`. And then we can add some rows to the table, and print it.
+In this example, we create a `Console`, and a `Table`. Then we can add some rows to the table, and print it.
 
 If you run it, you will see a nicely formatted table:
 
