@@ -35,6 +35,14 @@ Usage: main.py [OPTIONS]
 Try "main.py --help" for help.
 
 Error: Invalid value for '--network': invalid choice: capsule. (choose from simple, conv, lstm)
+
+// Note that enums are case sensitive by default
+$ python main.py --network CONV
+
+Usage: main.py [OPTIONS]
+Try "main.py --help" for help.
+
+Error: Invalid value for '--network': invalid choice: CONV. (choose from simple, conv, lstm)
 ```
 
 </div>
@@ -43,13 +51,13 @@ Error: Invalid value for '--network': invalid choice: capsule. (choose from simp
 
 You can make an `Enum` (choice) *CLI parameter* be case-insensitive with the `case_sensitive` parameter:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="15"
     {!> ../docs_src/parameter_types/enum/tutorial002_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -72,6 +80,57 @@ Training neural network of type: conv
 $ python main.py --network LsTm
 
 Training neural network of type: lstm
+```
+
+</div>
+
+### List of Enum values
+
+A *CLI parameter* can also take a list of `Enum` values:
+
+=== "Python 3.7+"
+
+    ```Python hl_lines="14"
+    {!> ../docs_src/parameter_types/enum/tutorial003_an.py!}
+    ```
+
+=== "Python 3.7+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="13"
+    {!> ../docs_src/parameter_types/enum/tutorial003.py!}
+    ```
+
+This works just like any other parameter value taking a list of things:
+
+<div class="termy">
+
+```console
+$ python main.py --help
+
+// Notice the default values being shown
+Usage: main.py [OPTIONS]
+
+Options:
+  --groceries [Eggs|Bacon|Cheese]  [default: Eggs, Cheese]
+  --help                           Show this message and exit.
+
+// Try it with the default values
+$ python main.py
+
+Buying groceries: Eggs, Cheese
+
+// Try it with a single value
+$ python main.py --groceries "Eggs"
+
+Buying groceries: Eggs
+
+// Try it with multiple values
+$ python main.py --groceries "Eggs" --groceries "Bacon"
+
+Buying groceries: Eggs, Bacon
 ```
 
 </div>

@@ -12,7 +12,7 @@ runner = CliRunner()
 
 @pytest.fixture()
 def mod(monkeypatch):
-    with monkeypatch.context() as m:
+    with monkeypatch.context():
         monkeypatch.syspath_prepend(list(tutorial001.__path__)[0])
         from docs_src.subcommands.tutorial001 import main
 
@@ -92,8 +92,7 @@ def test_scripts(mod):
     for module in [mod, items, users]:
         result = subprocess.run(
             [sys.executable, "-m", "coverage", "run", module.__file__, "--help"],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            capture_output=True,
             encoding="utf-8",
             env=env,
         )
