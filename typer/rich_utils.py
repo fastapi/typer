@@ -3,6 +3,7 @@
 import inspect
 import sys
 from collections import defaultdict
+from gettext import gettext as _
 from os import getenv
 from typing import Any, DefaultDict, Dict, Iterable, List, Optional, Union
 
@@ -80,17 +81,17 @@ if _TYPER_FORCE_DISABLE_TERMINAL:
     FORCE_TERMINAL = False
 
 # Fixed strings
-DEPRECATED_STRING = "(deprecated) "
-DEFAULT_STRING = "[default: {}]"
-ENVVAR_STRING = "[env var: {}]"
+DEPRECATED_STRING = _("(deprecated) ")
+DEFAULT_STRING = _("[default: {}]")
+ENVVAR_STRING = _("[env var: {}]")
 REQUIRED_SHORT_STRING = "*"
-REQUIRED_LONG_STRING = "[required]"
+REQUIRED_LONG_STRING = _("[required]")
 RANGE_STRING = " [{}]"
-ARGUMENTS_PANEL_TITLE = "Arguments"
-OPTIONS_PANEL_TITLE = "Options"
-COMMANDS_PANEL_TITLE = "Commands"
-ERRORS_PANEL_TITLE = "Error"
-ABORTED_TEXT = "Aborted."
+ARGUMENTS_PANEL_TITLE = _("Arguments")
+OPTIONS_PANEL_TITLE = _("Options")
+COMMANDS_PANEL_TITLE = _("Commands")
+ERRORS_PANEL_TITLE = _("Error")
+ABORTED_TEXT = _("Aborted.")
 
 MARKUP_MODE_MARKDOWN = "markdown"
 MARKUP_MODE_RICH = "rich"
@@ -382,19 +383,15 @@ def _print_options_panel(
 
         # Range - from
         # https://github.com/pallets/click/blob/c63c70dabd3f86ca68678b4f00951f78f52d0270/src/click/core.py#L2698-L2706  # noqa: E501
-        try:
-            # skip count with default range type
-            if (
-                isinstance(param.type, click.types._NumberRangeBase)
-                and isinstance(param, click.Option)
-                and not (param.count and param.type.min == 0 and param.type.max is None)
-            ):
-                range_str = param.type._describe_range()
-                if range_str:
-                    metavar.append(RANGE_STRING.format(range_str))
-        except AttributeError:  # pragma: no cover
-            # click.types._NumberRangeBase is only in Click 8x onwards
-            pass
+        # skip count with default range type
+        if (
+            isinstance(param.type, click.types._NumberRangeBase)
+            and isinstance(param, click.Option)
+            and not (param.count and param.type.min == 0 and param.type.max is None)
+        ):
+            range_str = param.type._describe_range()
+            if range_str:
+                metavar.append(RANGE_STRING.format(range_str))
 
         # Required asterisk
         required: Union[str, Text] = ""
@@ -620,7 +617,7 @@ def rich_format_help(
             console=console,
         )
 
-    if isinstance(obj, click.MultiCommand):
+    if isinstance(obj, click.Group):
         panel_to_commands: DefaultDict[str, List[click.Command]] = defaultdict(list)
         for command_name in obj.list_commands(ctx):
             command = obj.get_command(ctx, command_name)

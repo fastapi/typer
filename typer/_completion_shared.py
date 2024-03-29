@@ -1,7 +1,6 @@
 import os
 import re
 import subprocess
-import sys
 from enum import Enum
 from pathlib import Path
 from typing import Optional, Tuple
@@ -10,11 +9,8 @@ import click
 
 try:
     import shellingham
-except ImportError:  # pragma: nocover
+except ImportError:  # pragma: no cover
     shellingham = None
-
-
-from typing import Optional
 
 
 class Shells(str, Enum):
@@ -88,14 +84,14 @@ def get_completion_script(*, prog_name: str, complete_var: str, shell: str) -> s
     script = _completion_scripts.get(shell)
     if script is None:
         click.echo(f"Shell {shell} not supported.", err=True)
-        sys.exit(1)
+        raise click.exceptions.Exit(1)
     return (
         script
-        % dict(
-            complete_func="_{}_completion".format(cf_name),
-            prog_name=prog_name,
-            autocomplete_var=complete_var,
-        )
+        % {
+            "complete_func": f"_{cf_name}_completion",
+            "prog_name": prog_name,
+            "autocomplete_var": complete_var,
+        }
     ).strip()
 
 
@@ -112,7 +108,7 @@ def install_bash(*, prog_name: str, complete_var: str, shell: str) -> Path:
         rc_content = rc_path.read_text()
     completion_init_lines = [f"source {completion_path}"]
     for line in completion_init_lines:
-        if line not in rc_content:  # pragma: nocover
+        if line not in rc_content:  # pragma: no cover
             rc_content += f"\n{line}"
     rc_content += "\n"
     rc_path.write_text(rc_content)
@@ -139,7 +135,7 @@ def install_zsh(*, prog_name: str, complete_var: str, shell: str) -> Path:
         "fpath+=~/.zfunc",
     ]
     for line in completion_init_lines:
-        if line not in zshrc_content:  # pragma: nocover
+        if line not in zshrc_content:  # pragma: no cover
             zshrc_content += f"\n{line}"
     zshrc_content += "\n"
     zshrc_path.write_text(zshrc_content)
@@ -180,22 +176,22 @@ def install_powershell(*, prog_name: str, complete_var: str, shell: str) -> Path
         check=True,
         stdout=subprocess.PIPE,
     )
-    if result.returncode != 0:  # pragma: nocover
+    if result.returncode != 0:  # pragma: no cover
         click.echo("Couldn't get PowerShell user profile", err=True)
         raise click.exceptions.Exit(result.returncode)
     path_str = ""
-    if isinstance(result.stdout, str):  # pragma: nocover
+    if isinstance(result.stdout, str):  # pragma: no cover
         path_str = result.stdout
     if isinstance(result.stdout, bytes):
         try:
             # PowerShell would be predominant in Windows
             path_str = result.stdout.decode("windows-1252")
-        except UnicodeDecodeError:  # pragma: nocover
+        except UnicodeDecodeError:  # pragma: no cover
             try:
                 path_str = result.stdout.decode("utf8")
             except UnicodeDecodeError:
                 click.echo("Couldn't decode the path automatically", err=True)
-                raise click.exceptions.Exit(1)
+                raise
     path_obj = Path(path_str.strip())
     parent_dir: Path = path_obj.parent
     parent_dir.mkdir(parents=True, exist_ok=True)
