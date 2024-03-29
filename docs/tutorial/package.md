@@ -179,6 +179,7 @@ pytest = "^5.2"
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
 ```
+
 ## Add a "script"
 
 We are creating a Python package that can be installed with `pip install`.
