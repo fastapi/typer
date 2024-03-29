@@ -7,7 +7,7 @@ To define a *CLI parameter* that can take a value from a predefined set of value
     {!> ../docs_src/parameter_types/enum/tutorial001_v3_11.py!}
     ```
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="1  6 7 8 9  12 13"
     {!> ../docs_src/parameter_types/enum/tutorial001.py!}
