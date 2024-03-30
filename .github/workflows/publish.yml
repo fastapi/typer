@@ -18,9 +18,6 @@ jobs:
           - ./
           - typer_package
           - typer_cli_package
-    defaults:
-      run:
-        working-directory: ${{ matrix.package_dir }}
     steps:
       - name: Dump GitHub context
         env:
@@ -37,6 +34,7 @@ jobs:
       - name: Install build dependencies
         run: pip install build
       - name: Build distribution
+        working-directory: ${{ matrix.package_dir }}
         run: python -m build
       - name: Publish
         uses: pypa/gh-action-pypi-publish@v1.8.11
@@ -46,6 +44,7 @@ jobs:
           # TODO: remove this
           password: ${{ secrets.TEST_PYPI_API_TOKEN }}
           repository-url: https://test.pypi.org/legacy/
+          packages-dir: ${{ matrix.package_dir }}/dist/
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
