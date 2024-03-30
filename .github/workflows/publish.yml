@@ -4,10 +4,23 @@ on:
   release:
     types:
       - created
+  # TODO: remove this
+  push:
+    branches:
+      - typer-slim
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package_dir:
+          - ./
+          - typer_package
+          - typer_cli_package
+    defaults:
+      run:
+        working-directory: ${{ matrix.package_dir }}
     steps:
       - name: Dump GitHub context
         env:
@@ -28,7 +41,11 @@ jobs:
       - name: Publish
         uses: pypa/gh-action-pypi-publish@v1.8.11
         with:
-          password: ${{ secrets.PYPI_API_TOKEN }}
+          # TODO: uncomment this
+          # password: ${{ secrets.PYPI_API_TOKEN }}
+          # TODO: remove this
+          password: ${{ secrets.TEST_PYPI_API_TOKEN }}
+          repository-url: https://test.pypi.org/legacy/
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
