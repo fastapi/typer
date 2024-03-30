@@ -2,7 +2,7 @@ import importlib.util
 import re
 import sys
 from pathlib import Path
-from typing import Any, List, Optional, cast
+from typing import Any, List, Optional
 
 import click
 import typer
@@ -235,7 +235,7 @@ def get_docs_for_click(
     if obj.epilog:
         docs += f"{obj.epilog}\n\n"
     if isinstance(obj, Group):
-        group: Group = cast(Group, obj)
+        group = obj
         commands = group.list_commands(ctx)
         if commands:
             docs += "**Commands**:\n\n"
