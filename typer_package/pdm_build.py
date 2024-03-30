@@ -33,8 +33,6 @@ def pdm_build_initialize(context: Context):
     # README.md and LICENSE
     readme_content = readme_path.read_text()
     license_content = license_path.read_text()
-    # Inline README.md
-    # metadata["readme"] = {"text": readme_content, "content-type": "text/markdown"}
     metadata["readme"] = readme_name
     context.ensure_build_dir()
     # Copy README.md and LICENSE to build directory
