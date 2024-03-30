@@ -1,100 +1,45 @@
-# Typer CLI
+# `typer` command
 
-<p align="center">
-    <em>Run <strong>Typer</strong> scripts with completion, without having to create a package, using <strong>Typer CLI</strong>.</em>
-</p>
-<p align="center">
-<a href="https://travis-ci.com/tiangolo/typer-cli" target="_blank">
-    <img src="https://travis-ci.com/tiangolo/typer-cli.svg?branch=master" alt="Build Status">
-</a>
-<a href="https://codecov.io/gh/tiangolo/typer-cli" target="_blank">
-    <img src="https://img.shields.io/codecov/c/github/tiangolo/typer-cli" alt="Coverage">
-</a>
-<a href="https://pypi.org/project/typer-cli" target="_blank">
-    <img src="https://badge.fury.io/py/typer-cli.svg" alt="Package version">
-</a>
-</p>
-
-There is an optional utility tool called **Typer CLI**, additional to **Typer** itself.
-
-It's main feature is to provide ✨ completion ✨ in the Terminal for your own small programs built with **Typer**.
-
-...without you having to create a complete installable Python package.
+The `typer` command provides ✨ completion ✨ in the Terminal for your own small scripts. Even if they don't use Typer internally. Of course, it works better if you use **Typer** in your script.
 
 It's probably most useful if you have a small custom Python script using **Typer** (maybe as part of some project), for some small tasks, and it's not complex/important enough to create a whole installable Python package for it (something to be installed with `pip`).
 
-In that case, you can install **Typer CLI**, and run your program with the `typer` command in your Terminal, and it will provide completion for your script.
+In that case, you can run your program with the `typer` command in your Terminal, and it will provide completion for your script.
 
-You can also use **Typer CLI** to generate Markdown documentation for your own **Typer** programs 📝.
+The `typer` command also has functionality to generate Markdown documentation for your own **Typer** programs 📝.
 
----
+## Install
 
-**Documentation**: <a href="https://typer.tiangolo.com/typer-cli/" target="_blank">https://typer.tiangolo.com/typer-cli/</a>
+When you install **Typer** with:
 
-**Source Code for Typer CLI**: <a href="https://github.com/tiangolo/typer-cli" target="_blank">https://github.com/tiangolo/typer-cli</a>
-
----
-
-## **Typer** or **Typer CLI**
-
-**Typer** is a library for building CLIs (Command Line Interface applications).
-
-You use **Typer** in your Python scripts. Like in:
-
-```Python
-import typer
-
-
-def main():
-    typer.echo("Hello World")
-
-
-if __name__ == "__main__":
-    typer.run(main)
+```bash
+pip install typer
 ```
 
-**Typer CLI** is a command line application to run simple programs created with **Typer**, with completion in your terminal 🚀.
+...it includes the `typer` command.
 
-You use **Typer CLI** in your terminal, to run your scripts (as an alternative to calling `python` directly). Like in:
+If you don't want to have the `typer` command, you can install instead:
 
-<div class="termy">
-
-```console
-$ typer my_script.py run
-
-Hello World
+```bash
+pip install typer-slim
 ```
 
-</div>
+You can still use it by calling the Typer library as a module with:
 
-But you never import anything from **Typer CLI** in your own scripts.
-
-## Usage
-
-### Install
-
-Install **Typer CLI**:
-
-<div class="termy">
-
-```console
-$ python -m pip install typer-cli
----> 100%
-Successfully installed typer-cli
+```bash
+python -m typer
 ```
 
-</div>
+## Install completion
 
-That creates a `typer` command you can call in your terminal, much like `python`, `git`, or `echo`.
-
-You can then install completion for it:
+You can then install completion for the `typer` command with:
 
 <div class="termy">
 
 ```console
 $ typer --install-completion
 
-zsh completion installed in /home/user/.bashrc.
+bash completion installed in /home/user/.bashrc.
 Completion will take effect once you restart the terminal.
 ```
 
@@ -170,11 +115,9 @@ There's nothing wrong with using Python directly to run it. And, in fact, if som
 
 ⛔️ But in your terminal, you won't get completion when hitting <kbd>TAB</kbd> for any of the subcommands or options, like `hello`, `bye`, and `--name`.
 
-### Run with **Typer CLI**
+### Run with the `typer` command.
 
-Here's where **Typer CLI** is useful.
-
-You can also run the same script with the `typer` command you get after installing `typer-cli`:
+You can also run the same script with the `typer` command:
 
 <div class="termy">
 
@@ -197,24 +140,24 @@ Bye Camila
 * Instead of using `python` directly you use the `typer` command.
 * After the name of the file, add the subcommand `run`.
 
-✔️ If you installed completion for **Typer CLI** (for the `typer` command) as described above, when you hit <kbd>TAB</kbd> you will have ✨ completion for everything ✨, including all the subcommands and options of your script, like `hello`, `bye`, and `--name` 🚀.
+✔️ If you installed completion for the `typer` command as described above, when you hit <kbd>TAB</kbd> you will have ✨ completion for everything ✨, including all the subcommands and options of your script, like `hello`, `bye`, and `--name` 🚀.
 
 ## If main
 
-Because **Typer CLI** won't use the block with:
+Because the `typer` command won't use the block with:
 
 ```Python
 if __name__ == "__main__":
     app()
 ```
 
-...you can also remove it if you are calling that script only with **Typer CLI** (using the `typer` command).
+...you can also remove it if you are calling that script only with the `typer` command.
 
 ## Run other files
 
-**Typer CLI** can run any script with **Typer**, but the script doesn't even have to use **Typer** at all.
+The `typer` command can run any script with **Typer**, but the script doesn't even have to use **Typer** at all.
 
-**Typer CLI** could even run a file with a function that could be used with `typer.run()`, even if the script doesn't use `typer.run()` or anything else.
+You could even run a file with a function that could be used with `typer.run()`, even if the script doesn't use `typer.run()` or anything else.
 
 For example, a file `main.py` like this will still work:
 
@@ -281,7 +224,7 @@ You can specify one of the following **CLI options**:
 
 ### Defaults
 
-When your run a script with the **Typer CLI** (the `typer` command) it will use the app from the following priority:
+When your run a script with the `typer` command it will use the app from the following priority:
 
 * An app object from the `--app` *CLI Option*.
 * A function to convert to a **Typer** app from `--func` *CLI Option* (like when using `typer.run()`).
@@ -292,7 +235,7 @@ When your run a script with the **Typer CLI** (the `typer` command) it will use 
 
 ## Generate docs
 
-**Typer CLI** can also generate Markdown documentation for your **Typer** application.
+You can also use the `typer` command to generate Markdown documentation for your **Typer** application.
 
 ### Sample script with docs
 
@@ -302,9 +245,9 @@ For example, you could have a script like:
 {!../docs_src/commands/help/tutorial001.py!}
 ```
 
-### Generate docs with Typer CLI
+### Generate docs with the `typer` command
 
-Then you could generate docs for it with **Typer CLI**.
+Then you could generate docs for it with the `typer` command.
 
 You can use the subcommand `utils`.
 
@@ -317,6 +260,13 @@ $ typer some_script.py utils docs
 ```
 
 </div>
+
+!!! tip
+    If you installed only `typer-slim` and you don't have the `typer` command, you can still generate docs with:
+
+    ```console
+    $ python -m typer some_script.py utils docs
+    ```
 
 **Options**:
 
@@ -425,9 +375,3 @@ $ awesome-cli init [OPTIONS]
 **Options**:
 
 * `--help`: Show this message and exit.
-
----
-
-## License
-
-**Typer CLI**, the same as **Typer**, is licensed under the terms of the MIT license.

@@ -8,6 +8,16 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package:
+          - typer-slim
+          - typer
+          - typer-cli
+    env:
+      dir: ${{ matrix.package == 'typer-slim' && './' || matrix.package == 'typer' && 'typer_package' || matrix.package == 'typer-cli' && 'typer_cli_package' }}
+    permissions:
+      id-token: write
     steps:
       - name: Dump GitHub context
         env:
@@ -24,12 +34,9 @@ jobs:
       - name: Install build dependencies
         run: pip install build
       - name: Build distribution
+        working-directory: ${{ env.dir }}
         run: python -m build
       - name: Publish
         uses: pypa/gh-action-pypi-publish@v1.8.11
         with:
-          password: ${{ secrets.PYPI_API_TOKEN }}
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
+          packages-dir: ${{ env.dir }}/dist/
