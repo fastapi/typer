@@ -61,18 +61,29 @@ You can learn a lot more by running some examples and playing around with them t
 
 ## Install **Typer**
 
-The first step is to install **Typer**.
-
-For the tutorial, you might want to install it with all the optional dependencies and features:
+The first step is to install **Typer**:
 
 <div class="termy">
 
 ```console
-$ pip install "typer[all]"
+$ pip install typer
 ---> 100%
-Successfully installed typer click shellingham rich
+Successfully installed typer click shellingham rich typer-cli
 ```
 
 </div>
 
-...that also includes `rich` and `shellingham`.
+By default, `typer` comes with `rich`, `shellingham`, and `typer-cli`.
+
+!!! note
+    If you are an advanced user and want to opt out of these default extra dependencies, you can instead install `typer-slim`.
+
+    ```bash
+    pip install typer
+    ```
+
+    ...is the equivalent of:
+
+    ```bash
+    pip install "typer-slim[standard]"
+    ```

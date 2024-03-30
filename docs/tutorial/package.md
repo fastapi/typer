@@ -2,7 +2,7 @@ When you create a CLI program with **Typer** you probably want to create your ow
 
 That's what allows your users to install it and have it as an independent program that they can use in their terminal.
 
-And that's also required for shell auto completion to work (unless you use your program through [Typer CLI](../typer-cli.md){.internal-link target=_blank}).
+And that's also required for shell auto completion to work (unless you use your program through `typer` command).
 
 Nowadays, there are several ways and tools to create Python packages (what you install with `pip install something`).
 
@@ -701,11 +701,9 @@ Loading portal gun
 
 </div>
 
-## Generate docs with **Typer CLI** (optional)
+## Generate docs
 
-You can install and use [Typer CLI](../typer-cli.md){.internal-link target=_blank} to generate docs for your package.
-
-After installing it, you can use it to generate a new `README.md`:
+You can use the `typer` command to generate docs for your package that you can put in your `README.md`:
 
 <div class="termy">
 
@@ -720,6 +718,9 @@ Docs saved to: README.md
 You just have to pass it the module to import (`rick_portal_gun.main`) and it will detect the `typer.Typer` app automatically.
 
 By specifying the `--name` of the program it will be able to use it while generating the docs.
+
+!!! tip
+    If you installed `typer-slim` and don't have the `typer` command, you can use `python -m typer` instead.
 
 ### Publish a new version with the docs
 
