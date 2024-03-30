@@ -49,7 +49,7 @@ Add `typer` to your dependencies:
 <div class="termy">
 
 ```console
-$ poetry add "typer"
+$ poetry add typer
 
 // It creates a virtual environment for your project
 Creating virtualenv rick-portal-gun-w31dJa0b-py3.10 in /home/rick/.cache/pypoetry/virtualenvs
@@ -96,7 +96,7 @@ You can see that you have a generated project structure that looks like:
 ├── rick_portal_gun
 │   └── __init__.py
 └── tests
-    ├── __init__.py
+    └── __init__.py
 ```
 
 ## Create your app
@@ -411,7 +411,7 @@ The file would live right beside `__init__.py`:
 │   ├── __main__.py
 │   └── main.py
 └── tests
-    ├── __init__.py
+    └── __init__.py
 ```
 
 No other file has to import it, you don't have to reference it in your `pyproject.toml` or anything else, it just works by default, as it is standard Python behavior.
