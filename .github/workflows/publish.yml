@@ -18,6 +18,8 @@ jobs:
           - ./
           - typer_package
           - typer_cli_package
+    permissions:
+      id-token: write
     steps:
       - name: Dump GitHub context
         env:
@@ -36,12 +38,8 @@ jobs:
       - name: Build distribution
         working-directory: ${{ matrix.package_dir }}
         run: python -m build
-      - name: Publish
+      - name: Publish typer
+        if: ${{ matrix.package_dir == './'}}
         uses: pypa/gh-action-pypi-publish@v1.8.11
         with:
-          password: ${{ secrets.PYPI_API_TOKEN }}
           packages-dir: ${{ matrix.package_dir }}/dist/
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
