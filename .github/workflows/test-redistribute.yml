@@ -42,12 +42,12 @@ jobs:
           cd dist
           tar xvf typer*.tar.gz
       - name: Install test dependencies
-        if: ${{ matrix.package_dir == '.' }}
+        if: ${{ matrix.package_dir == './' }}
         run: |
           cd dist/typer*/
           pip install -r requirements-tests.txt
       - name: Run source distribution tests
-        if: ${{ matrix.package_dir == '.' }}
+        if: ${{ matrix.package_dir == './' }}
         run: |
           cd dist/typer*/
           bash scripts/test.sh
