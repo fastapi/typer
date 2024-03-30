@@ -14,7 +14,6 @@ def test_script_completion_run():
             "_PYTHON _M TYPER_COMPLETE": "complete_bash",
             "COMP_WORDS": "typer tests/assets/cli/sample.py",
             "COMP_CWORD": "2",
-            "_TYPER_COMPLETE_TESTING": "True",
         },
     )
     assert "run" in result.stdout

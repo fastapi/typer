@@ -45,7 +45,6 @@ def test_completion():
             "_TUTORIAL004_AN.PY_COMPLETE": "complete_bash",
             "COMP_WORDS": "tutorial004_an.py --",
             "COMP_CWORD": "1",
-            "_TYPER_COMPLETE_TESTING": "True",
         },
     )
     assert "--name" in result.stdout

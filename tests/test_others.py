@@ -151,7 +151,6 @@ def test_completion_untyped_parameters():
             **os.environ,
             "_COMPLETION_NO_TYPES.PY_COMPLETE": "complete_zsh",
             "_TYPER_COMPLETE_ARGS": "completion_no_types.py --name Sebastian --name Ca",
-            "_TYPER_COMPLETE_TESTING": "True",
         },
     )
     assert "info name is: completion_no_types.py" in result.stderr
@@ -178,7 +177,6 @@ def test_completion_untyped_parameters_different_order_correct_names():
             **os.environ,
             "_COMPLETION_NO_TYPES_ORDER.PY_COMPLETE": "complete_zsh",
             "_TYPER_COMPLETE_ARGS": "completion_no_types_order.py --name Sebastian --name Ca",
-            "_TYPER_COMPLETE_TESTING": "True",
         },
     )
     assert "info name is: completion_no_types_order.py" in result.stderr
