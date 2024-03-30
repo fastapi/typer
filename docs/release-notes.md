@@ -1,5 +1,7 @@
 ## Latest Changes
 
+## 0.12.0
+
 ### Features
 
 * ✨ Add `typer-slim` package without extras, make `typer` include `typer-slim[default]` and integrate Typer CLI (`typer` command) into Typer. PR [#780](https://github.com/tiangolo/typer/pull/780) by [@tiangolo](https://github.com/tiangolo).
