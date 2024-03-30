@@ -38,8 +38,7 @@ jobs:
       - name: Build distribution
         working-directory: ${{ matrix.package_dir }}
         run: python -m build
-      - name: Publish typer
-        if: ${{ matrix.package_dir == './'}}
+      - name: Publish
         uses: pypa/gh-action-pypi-publish@v1.8.11
         with:
           packages-dir: ${{ matrix.package_dir }}/dist/
