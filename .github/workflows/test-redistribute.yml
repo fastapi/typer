@@ -18,9 +18,6 @@ jobs:
           - ./
           - typer_package
           - typer_cli_package
-    defaults:
-      run:
-        working-directory: ${{ matrix.package_dir }}
     steps:
       - name: Dump GitHub context
         env:
@@ -37,8 +34,10 @@ jobs:
       - name: Install build dependencies
         run: pip install build
       - name: Build source distribution
+        working-directory: ${{ matrix.package_dir }}
         run: python -m build --sdist
       - name: Decompress source distribution
+        working-directory: ${{ matrix.package_dir }}
         run: |
           cd dist
           tar xvf typer*.tar.gz
@@ -53,6 +52,7 @@ jobs:
           cd dist/typer-*/
           bash scripts/test.sh
       - name: Build wheel distribution
+        working-directory: ${{ matrix.package_dir }}
         run: |
           cd dist
           pip wheel --no-deps typer-*.tar.gz
