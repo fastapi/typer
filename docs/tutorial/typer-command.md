@@ -272,6 +272,7 @@ $ typer some_script.py utils docs
 
 * `--name TEXT`: The name of the CLI program to use in docs.
 * `--output FILE`: An output file to write docs to, like README.md.
+* `--title TEXT`: A title to use in the docs, by default the name of the command.
 
 For example:
 
