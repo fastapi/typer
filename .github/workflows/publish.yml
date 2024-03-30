@@ -39,11 +39,7 @@ jobs:
       - name: Publish
         uses: pypa/gh-action-pypi-publish@v1.8.11
         with:
-          # TODO: uncomment this
-          # password: ${{ secrets.PYPI_API_TOKEN }}
-          # TODO: remove this
-          password: ${{ secrets.TEST_PYPI_API_TOKEN }}
-          repository-url: https://test.pypi.org/legacy/
+          password: ${{ secrets.PYPI_API_TOKEN }}
           packages-dir: ${{ matrix.package_dir }}/dist/
       - name: Dump GitHub context
         env:
