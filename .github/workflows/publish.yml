@@ -14,10 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        package_dir:
-          - ./
-          - typer_package
-          - typer_cli_package
+        package:
+          - typer-slim
+          - typer
+          - typer-cli
+    env:
+      dir: ${{ matrix.package == 'typer-slim' && './' || matrix.package == 'typer' && 'typer_package' || matrix.package == 'typer-cli' && 'typer_cli_package' }}
     permissions:
       id-token: write
     steps:
@@ -36,9 +38,9 @@ jobs:
       - name: Install build dependencies
         run: pip install build
       - name: Build distribution
-        working-directory: ${{ matrix.package_dir }}
+        working-directory: ${{ env.dir }}
         run: python -m build
       - name: Publish
         uses: pypa/gh-action-pypi-publish@v1.8.11
         with:
-          packages-dir: ${{ matrix.package_dir }}/dist/
+          packages-dir: ${{ env.dir }}/dist/
