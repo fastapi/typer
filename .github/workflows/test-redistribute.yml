@@ -44,18 +44,18 @@ jobs:
       - name: Install test dependencies
         if: ${{ matrix.package_dir == '.' }}
         run: |
-          cd dist/typer-*/
+          cd dist/typer*/
           pip install -r requirements-tests.txt
       - name: Run source distribution tests
         if: ${{ matrix.package_dir == '.' }}
         run: |
-          cd dist/typer-*/
+          cd dist/typer*/
           bash scripts/test.sh
       - name: Build wheel distribution
         working-directory: ${{ matrix.package_dir }}
         run: |
           cd dist
-          pip wheel --no-deps typer-*.tar.gz
+          pip wheel --no-deps typer*.tar.gz
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
