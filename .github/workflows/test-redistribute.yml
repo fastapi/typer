@@ -12,6 +12,15 @@ on:
 jobs:
   test-redistribute:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package_dir:
+          - ./
+          - typer_package
+          - typer_cli_package
+    defaults:
+      run:
+        working-directory: ${{ matrix.package_dir }}
     steps:
       - name: Dump GitHub context
         env:
@@ -34,10 +43,12 @@ jobs:
           cd dist
           tar xvf typer*.tar.gz
       - name: Install test dependencies
+        if: ${{ matrix.package_dir == '.' }}
         run: |
           cd dist/typer-*/
           pip install -r requirements-tests.txt
       - name: Run source distribution tests
+        if: ${{ matrix.package_dir == '.' }}
         run: |
           cd dist/typer-*/
           bash scripts/test.sh
