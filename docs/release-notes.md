@@ -1,5 +1,9 @@
 ## Latest Changes
 
+### Features
+
+* ✨ Add support for `typer ./someprogram.py utils docs --title`. PR [#782](https://github.com/tiangolo/typer/pull/782) by [@tiangolo](https://github.com/tiangolo).
+
 ## 0.12.0
 
 ### Features
