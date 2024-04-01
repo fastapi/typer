@@ -18,27 +18,7 @@ Hello World
 
 ## Use Rich
 
-You can also display beautiful and more complex information using <a href="https://rich.readthedocs.io/" class="external-link" target="_blank">Rich</a>.
-
-### Install Rich
-
-First, you need to install it:
-
-<div class="termy">
-
-```console
-// Rich comes with typer[all]
-$ pip install "typer[all]"
----> 100%
-Successfully installed typer rich
-
-// Alternatively, you can install Rich independently
-$ pip install rich
----> 100%
-Successfully installed rich
-```
-
-</div>
+You can also display beautiful and more complex information using <a href="https://rich.readthedocs.io/" class="external-link" target="_blank">Rich</a>. It comes by default when you install `typer`.
 
 ### Use Rich `print`
 

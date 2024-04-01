@@ -34,8 +34,7 @@ def test_3():
 def test_script():
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
     )
     assert "Usage" in result.stdout
@@ -44,15 +43,13 @@ def test_script():
 def test_completion():
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
         env={
             **os.environ,
             "_TUTORIAL003_AN.PY_COMPLETE": "complete_bash",
             "COMP_WORDS": "tutorial003_an.py --name Rick --v",
             "COMP_CWORD": "3",
-            "_TYPER_COMPLETE_TESTING": "True",
         },
     )
     assert "--version" in result.stdout

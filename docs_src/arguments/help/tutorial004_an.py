@@ -5,7 +5,7 @@ from typing_extensions import Annotated
 def main(
     name: Annotated[
         str, typer.Argument(help="Who to greet", show_default=False)
-    ] = "World"
+    ] = "World",
 ):
     """
     Say hi to NAME very gently, like Dirk.
