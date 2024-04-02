@@ -50,7 +50,6 @@ def test_completion():
             "_TUTORIAL003_AN.PY_COMPLETE": "complete_bash",
             "COMP_WORDS": "tutorial003_an.py --name Rick --v",
             "COMP_CWORD": "3",
-            "_TYPER_COMPLETE_TESTING": "True",
         },
     )
     assert "--version" in result.stdout

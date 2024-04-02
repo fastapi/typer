@@ -14,7 +14,6 @@ def test_completion_complete_subcommand_zsh():
             **os.environ,
             "_TUTORIAL002.PY_COMPLETE": "complete_zsh",
             "_TYPER_COMPLETE_ARGS": "tutorial002.py ",
-            "_TYPER_COMPLETE_TESTING": "True",
         },
     )
     assert "create" in result.stdout
@@ -31,7 +30,6 @@ def test_completion_complete_subcommand_fish():
             "_TUTORIAL002.PY_COMPLETE": "complete_fish",
             "_TYPER_COMPLETE_ARGS": "tutorial002.py ",
             "_TYPER_COMPLETE_FISH_ACTION": "get-args",
-            "_TYPER_COMPLETE_TESTING": "True",
         },
     )
     assert "create\ndelete" in result.stdout
@@ -46,7 +44,6 @@ def test_completion_complete_subcommand_powershell():
             **os.environ,
             "_TUTORIAL002.PY_COMPLETE": "complete_powershell",
             "_TYPER_COMPLETE_ARGS": "tutorial002.py ",
-            "_TYPER_COMPLETE_TESTING": "True",
         },
     )
     assert ("create::: \ndelete::: ") in result.stdout
@@ -61,7 +58,6 @@ def test_completion_complete_subcommand_pwsh():
             **os.environ,
             "_TUTORIAL002.PY_COMPLETE": "complete_pwsh",
             "_TYPER_COMPLETE_ARGS": "tutorial002.py ",
-            "_TYPER_COMPLETE_TESTING": "True",
         },
     )
     assert ("create::: \ndelete::: ") in result.stdout

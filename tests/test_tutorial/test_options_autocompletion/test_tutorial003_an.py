@@ -18,7 +18,6 @@ def test_completion():
             **os.environ,
             "_TUTORIAL003_AN.PY_COMPLETE": "complete_zsh",
             "_TYPER_COMPLETE_ARGS": "tutorial003_an.py --name Seb",
-            "_TYPER_COMPLETE_TESTING": "True",
         },
     )
     assert "Camila" not in result.stdout

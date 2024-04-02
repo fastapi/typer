@@ -28,6 +28,8 @@
 
 Typer is a library for building <abbr title="command line interface, programs executed from a terminal">CLI</abbr> applications that users will **love using** and developers will **love creating**. Based on Python type hints.
 
+It's also a command line tool to run scripts, automatically converting them to CLI applications.
+
 The key features are:
 
 * **Intuitive to write**: Great editor support. <abbr title="also known as auto-complete, autocompletion, IntelliSense">Completion</abbr> everywhere. Less time debugging. Designed to be easy to use and learn. Less time reading docs.
@@ -35,38 +37,86 @@ The key features are:
 * **Short**: Minimize code duplication. Multiple features from each parameter declaration. Fewer bugs.
 * **Start simple**: The simplest example adds only 2 lines of code to your app: **1 import, 1 function call**.
 * **Grow large**: Grow in complexity as much as you want, create arbitrarily complex trees of commands and groups of subcommands, with options and arguments.
+* **Run scripts**: Typer includes a `typer` command that you can use to run scripts, automatically converting them to CLIs, even if they don't use Typer internally.
 
 ## FastAPI of CLIs
 
-<a href="https://fastapi.tiangolo.com" target="_blank"><img src="https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png" style="width: 20%;"></a>
-
-**Typer** is <a href="https://fastapi.tiangolo.com" class="external-link" target="_blank">FastAPI</a>'s little sibling.
-
-And it's intended to be the FastAPI of CLIs.
-
-## Requirements
-
-**Typer** stands on the shoulders of a giant. Its only internal dependency is <a href="https://click.palletsprojects.com/" class="external-link" target="_blank">Click</a>.
+**Typer** is <a href="https://fastapi.tiangolo.com" class="external-link" target="_blank">FastAPI</a>'s little sibling, it's the FastAPI of CLIs.
 
 ## Installation
 
 <div class="termy">
 
 ```console
-$ pip install "typer[all]"
+$ pip install typer
 ---> 100%
-Successfully installed typer
+Successfully installed typer rich shellingham
 ```
 
 </div>
-
-**Note**: that will include <a href="https://rich.readthedocs.io/" class="external-link" target="_blank">Rich</a>. Rich is the recommended library to *display* information on the terminal, it is optional, but when installed, it's deeply integrated into **Typer** to display beautiful output.
 
 ## Example
 
 ### The absolute minimum
 
 * Create a file `main.py` with:
+
+```Python
+def main(name: str):
+    print(f"Hello {name}")
+```
+
+This script doesn't even use Typer internally. But you can use the `typer` command to run it as a CLI application.
+
+### Run it
+
+Run your application with the `typer` command:
+
+<div class="termy">
+
+```console
+// Run your application
+$ typer main.py run
+
+// You get a nice error, you are missing NAME
+Usage: typer [PATH_OR_MODULE] run [OPTIONS] NAME
+Try 'typer [PATH_OR_MODULE] run --help' for help.
+╭─ Error ───────────────────────────────────────────╮
+│ Missing argument 'NAME'.                          │
+╰───────────────────────────────────────────────────╯
+
+
+// You get a --help for free
+$ typer main.py run --help
+
+Usage: typer [PATH_OR_MODULE] run [OPTIONS] NAME
+
+Run the provided Typer app.
+
+╭─ Arguments ───────────────────────────────────────╮
+│ *    name      TEXT  [default: None] [required]   |
+╰───────────────────────────────────────────────────╯
+╭─ Options ─────────────────────────────────────────╮
+│ --help          Show this message and exit.       │
+╰───────────────────────────────────────────────────╯
+
+// Now pass the NAME argument
+$ typer main.py run Camila
+
+Hello Camila
+
+// It works! 🎉
+```
+
+</div>
+
+This is the simplest use case, not even using Typer internally, but it can already be quite useful for simple scripts.
+
+**Note**: auto-completion works when you create a Python package and run it with `--install-completion` or when you use the `typer` command.
+
+## Use Typer in your code
+
+Now let's start using Typer in your own code, update `main.py` with:
 
 ```Python
 import typer
@@ -80,9 +130,7 @@ if __name__ == "__main__":
     typer.run(main)
 ```
 
-### Run it
-
-Run your application:
+Now you could run it with Python directly:
 
 <div class="termy">
 
@@ -120,7 +168,7 @@ Hello Camila
 
 </div>
 
-**Note**: auto-completion works when you create a Python package and run it with `--install-completion` or when you use <a href="https://typer.tiangolo.com/typer-cli/" class="internal-link" target="_blank">Typer CLI</a>.
+**Note**: you can also call this same script with the `typer` command, but you don't need to.
 
 ## Example upgrade
 
@@ -293,22 +341,43 @@ And similarly for **files**, **paths**, **enums** (choices), etc. And there are 
 
 **You get**: great editor support, including **completion** and **type checks** everywhere.
 
-**Your users get**: automatic **`--help`**, **auto-completion** in their terminal (Bash, Zsh, Fish, PowerShell) when they install your package or when using <a href="https://typer.tiangolo.com/typer-cli/" class="internal-link" target="_blank">Typer CLI</a>.
+**Your users get**: automatic **`--help`**, **auto-completion** in their terminal (Bash, Zsh, Fish, PowerShell) when they install your package or when using the `typer` command.
 
 For a more complete example including more features, see the <a href="https://typer.tiangolo.com/tutorial/">Tutorial - User Guide</a>.
 
-## Optional Dependencies
+## Dependencies
 
-Typer uses <a href="https://click.palletsprojects.com/" class="external-link" target="_blank">Click</a> internally. That's the only dependency.
+**Typer** stands on the shoulders of a giant. Its only internal required dependency is <a href="https://click.palletsprojects.com/" class="external-link" target="_blank">Click</a>.
 
-But you can also install extras:
+By default it also comes with extra standard dependencies:
 
-* <a href="https://rich.readthedocs.io/en/stable/index.html" class="external-link" target="_blank"><code>rich</code></a>: and Typer will show nicely formatted errors automatically.
-* <a href="https://github.com/sarugaku/shellingham" class="external-link" target="_blank"><code>shellingham</code></a>: and Typer will automatically detect the current shell when installing completion.
+* <a href="https://rich.readthedocs.io/en/stable/index.html" class="external-link" target="_blank"><code>rich</code></a>: to show nicely formatted errors automatically.
+* <a href="https://github.com/sarugaku/shellingham" class="external-link" target="_blank"><code>shellingham</code></a>: to automatically detect the current shell when installing completion.
     * With `shellingham` you can just use `--install-completion`.
     * Without `shellingham`, you have to pass the name of the shell to install completion for, e.g. `--install-completion bash`.
+* `typer-cli`: adds the `typer` command to your shell:
+    * Quickly run scripts (that don't have to use Typer) with shell completion.
+    * Generate docs for your Typer applications.
 
-You can install `typer` with `rich` and `shellingham` with `pip install typer[all]`.
+### `typer-slim`
+
+If you don't want the extra dependencies, install `typer-slim` instead.
+
+When you install with:
+
+```bash
+pip install typer
+```
+
+...it's the equivalent of:
+
+```bash
+pip install "typer-slim[standard]"
+```
+
+The `standard` extra dependencies are `rich`, `shellingham`, `typer-cli`.
+
+**Note**: even if you don't install `typer-cli` you can still use it's functionality by calling `typer` as a module, e.g. `python -m typer`.
 
 ## License
 
