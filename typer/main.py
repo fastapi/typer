@@ -38,10 +38,9 @@ from .utils import get_params_from_function
 
 try:
     import rich
-    from rich.console import Console
     from rich.traceback import Traceback
-
-    console_stderr = Console(stderr=True)
+    from . import rich_utils
+    console_stderr = rich_utils._get_rich_console(stderr=True)
 
 except ImportError:  # pragma: no cover
     rich = None  # type: ignore
@@ -69,12 +68,14 @@ def except_hook(
     supress_internal_dir_names = [typer_path, click_path]
     exc = exc_value
     if rich:
+        from .rich_utils import MAX_WIDTH
         rich_tb = Traceback.from_exception(
             type(exc),
             exc,
             exc.__traceback__,
             show_locals=exception_config.pretty_exceptions_show_locals,
             suppress=supress_internal_dir_names,
+            width=MAX_WIDTH,
         )
         console_stderr.print(rich_tb)
         return
