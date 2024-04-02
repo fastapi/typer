@@ -146,38 +146,14 @@ def load():
 
 ## Modify the README
 
+The default README has a `.md` extension and supports Markdown syntax. It can be replaced with an `.rst` file (reStructuredText), along with the corresponding change in `pyproject.toml`'s project metadata.
+
 Let's change the README to have something like:
 
 ```Markdown
 # Portal Gun
 
 The awesome Portal Gun
-```
-
-## Modify your project metadata
-
-Edit your file `pyproject.toml`.
-
-It would look something like:
-
-```TOML
-[tool.poetry]
-name = "rick-portal-gun"
-version = "0.1.0"
-description = ""
-authors = ["Rick Sanchez <rick@example.com>"]
-readme = "README.md"
-
-[tool.poetry.dependencies]
-python = "^3.10"
-typer = {extras = ["all"], version = "^0.1.0"}
-
-[tool.poetry.dev-dependencies]
-pytest = "^5.2"
-
-[build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
 ```
 
 ## Add a "script"
