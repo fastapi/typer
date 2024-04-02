@@ -108,7 +108,7 @@ $ python main.py
 # Project name: $ Old Project
 # Repeat for confirmation: $ New Spice
 
-Error: the two entered values do not match
+Error: The two entered values do not match
 
 # Project name: $ Old Project
 # Repeat for confirmation: $ Old Project

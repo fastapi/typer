@@ -54,7 +54,7 @@ $ python main.py --no-force
 Usage: main.py [OPTIONS]
 Try "main.py --help" for help.
 
-Error: no such option: --no-force
+Error: No such option: --no-force
 ```
 
 </div>
