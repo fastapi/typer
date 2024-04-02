@@ -39,7 +39,9 @@ from .utils import get_params_from_function
 try:
     import rich
     from rich.traceback import Traceback
+
     from . import rich_utils
+
     console_stderr = rich_utils._get_rich_console(stderr=True)
 
 except ImportError:  # pragma: no cover
@@ -69,6 +71,7 @@ def except_hook(
     exc = exc_value
     if rich:
         from .rich_utils import MAX_WIDTH
+
         rich_tb = Traceback.from_exception(
             type(exc),
             exc,
