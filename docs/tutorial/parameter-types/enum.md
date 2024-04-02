@@ -4,7 +4,7 @@ To define a *CLI parameter* that can take a value from a predefined set of value
 === "Python 3.11+"
 
     ```Python hl_lines="1  6 7 8 9  12 13"
-    {!> ../docs_src/parameter_types/enum/tutorial001_v3_11.py!}
+    {!> ../docs_src/parameter_types/enum/tutorial001_str_enum.py!}
     ```
 
 === "Python 3.7+"
@@ -64,7 +64,7 @@ You can make an `Enum` (choice) *CLI parameter* be case-insensitive with the `ca
 === "Python 3.11+"
 
     ```Python hl_lines="15"
-    {!> ../docs_src/parameter_types/enum/tutorial002_an_v3_11.py!}
+    {!> ../docs_src/parameter_types/enum/tutorial002_str_enum.py!}
     ```
 
 === "Python 3.7+"
