@@ -18,7 +18,6 @@ def test_completion():
             **os.environ,
             "_TUTORIAL008.PY_COMPLETE": "complete_zsh",
             "_TYPER_COMPLETE_ARGS": "tutorial008.py --name ",
-            "_TYPER_COMPLETE_TESTING": "True",
         },
     )
     assert '"Camila":"The reader of books."' in result.stdout
