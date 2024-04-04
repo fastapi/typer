@@ -4,6 +4,10 @@ on:
   release:
     types:
       - created
+  # TODO: remove this
+  push:
+    branches:
+      - fix-typer-package-src
 
 jobs:
   publish:
