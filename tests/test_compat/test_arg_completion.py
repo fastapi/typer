@@ -2,8 +2,6 @@ import os
 import subprocess
 import sys
 
-from typer._compat_utils import _get_click_major
-
 from tests.assets import compat_arg_complete_click7_8 as mod
 
 
@@ -22,7 +20,6 @@ def test_arg_completion():
     )
     # TODO: when deprecating Click 7, remove second option
     assert "Emma" in result.stdout or "_files" in result.stdout
-    if _get_click_major() > 7:
-        assert "ctx: compat_arg_complete_click7_8" in result.stderr
-        assert "arg is: name" in result.stderr
-        assert "incomplete is: E" in result.stderr
+    assert "ctx: compat_arg_complete_click7_8" in result.stderr
+    assert "arg is: name" in result.stderr
+    assert "incomplete is: E" in result.stderr
