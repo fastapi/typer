@@ -58,34 +58,34 @@ source-includes = [
     "scripts/",
     ]
 
-[tool.tiangolo._internal_slim_build]
-sync_dependencies = [
+[tool.tiangolo._internal-slim-build]
+sync-dependencies = [
     "typer-slim[standard]",
     "typer-cli",
+    "typer"
 ]
 
-[tool.tiangolo._internal_slim_build.packages.typer-slim.project]
+[tool.tiangolo._internal-slim-build.packages.typer-slim.project]
 name = "typer-slim"
 
-[tool.tiangolo._internal_slim_build.packages.typer.project]
-dependencies = [
-    "typer-slim[standard]",
-    "typer-cli",
-]
+[tool.tiangolo._internal-slim-build.packages.typer]
+include-optional-dependencies = ["standard"]
+
+[tool.tiangolo._internal-slim-build.packages.typer.project]
 optional-dependencies = {}
 
-[tool.tiangolo._internal_slim_build.packages.typer-cli.project]
+[tool.tiangolo._internal-slim-build.packages.typer.project.scripts]
+typer = "typer.cli:main"
+
+[tool.tiangolo._internal-slim-build.packages.typer-cli.project]
 name = "typer-cli"
 readme = "typer-cli/README.md"
 dependencies = [
-    "typer-slim[standard]",
+    "typer",
 ]
 optional-dependencies = {}
 
-[tool.tiangolo._internal_slim_build.packages.typer-cli.project.scripts]
-typer = "typer.cli:main"
-
-[tool.tiangolo._internal_slim_build.packages.typer-cli.tool.pdm.build]
+[tool.tiangolo._internal-slim-build.packages.typer-cli.tool.pdm.build]
 # excludes needs to explicitly exclude the top level python packages,
 # otherwise PDM includes them by default
 # A "*" glob pattern can't be used here because in PDM internals, the patterns are put
