@@ -58,11 +58,49 @@ source-includes = [
     "scripts/",
     ]
 
-[tool.typer._internal_build]
+[tool.tiangolo._internal_slim_build]
+sync_dependencies = [
+    "typer-slim[standard]",
+    "typer-cli",
+]
+
+[tool.tiangolo._internal_slim_build.packages.typer-slim.project]
+name = "typer-slim"
+
+[tool.tiangolo._internal_slim_build.packages.typer.project]
 dependencies = [
     "typer-slim[standard]",
     "typer-cli",
 ]
+optional-dependencies = {}
+
+[tool.tiangolo._internal_slim_build.packages.typer-cli.project]
+name = "typer-cli"
+readme = "typer-cli/README.md"
+dependencies = [
+    "typer-slim[standard]",
+]
+optional-dependencies = {}
+
+[tool.tiangolo._internal_slim_build.packages.typer-cli.project.scripts]
+typer = "typer.cli:main"
+
+[tool.tiangolo._internal_slim_build.packages.typer-cli.tool.pdm.build]
+# excludes needs to explicitly exclude the top level python packages,
+# otherwise PDM includes them by default
+# A "*" glob pattern can't be used here because in PDM internals, the patterns are put
+# in a set (unordered, order varies) and each excluded file is assigned one of the
+# glob patterns that matches, as the set is unordered, the matched pattern could be "*"
+# independent of the order here. And then the internal code would give it a lower score
+# than the one for a default included file.
+# By not using "*" and explicitly excluding the top level packages, they get a higher
+# score than the default inclusion
+excludes = ["typer", "tests", "pdm_build.py"]
+# source-includes needs to explicitly define some value because PDM will check the
+# truthy value of the list, and if empty, will include some defaults, including "tests",
+# an empty string doesn't match anything, but makes the list truthy, so that PDM
+# doesn't override it during the build.
+source-includes = [""]
 
 [tool.isort]
 profile = "black"
