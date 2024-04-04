@@ -32,8 +32,8 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
 ]
 dependencies = [
-    "typer-slim[standard]",
-    "typer-cli",
+    "click >= 8.0.0",
+    "typing-extensions >= 3.7.4.3",
 ]
 readme = "README.md"
 [project.urls]
@@ -41,8 +41,10 @@ Documentation = "https://typer.tiangolo.com/"
 homepage = "https://github.com/tiangolo/typer"
 
 [project.optional-dependencies]
-# For backwards compatibility
-all = []
+standard = [
+    "shellingham >=1.3.0",
+    "rich >=10.11.0",
+]
 
 [tool.pdm]
 version = { source = "file", path = "typer/__init__.py" }
@@ -55,6 +57,12 @@ source-includes = [
     "requirements*.txt",
     "scripts/",
     ]
+
+[tool.typer._internal_build]
+dependencies = [
+    "typer-slim[standard]",
+    "typer-cli",
+]
 
 [tool.isort]
 profile = "black"
