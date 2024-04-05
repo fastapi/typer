@@ -42,15 +42,12 @@ def test_coverage_call():
 def test_completion():
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
         env={
             **os.environ,
             "_COMPAT_CLICK7_8.PY_COMPLETE": "complete_zsh",
             "_TYPER_COMPLETE_ARGS": "compat_click7_8.py --nickname ",
-            "_TYPER_COMPLETE_TESTING": "True",
         },
     )
-    # TODO: when deprecating Click 7, remove second option
-    assert "Jonny" in result.stdout or "_files" in result.stdout
+    assert "Jonny" in result.stdout
