@@ -641,7 +641,7 @@ def rich_format_help(
 
         # Identify the longest command name in all panels
         max_cmd_len = 0
-        for panel_name, commands in panel_to_commands.items():
+        for _, commands in panel_to_commands.items():
             for command in commands:
                 max_cmd_len = max(max_cmd_len, len(command.name or ""))
 
