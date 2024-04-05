@@ -18,8 +18,6 @@ jobs:
           - typer-slim
           - typer
           - typer-cli
-    env:
-      dir: ${{ matrix.package == 'typer-slim' && './' || matrix.package == 'typer' && 'typer_package' || matrix.package == 'typer-cli' && 'typer_cli_package' }}
     steps:
       - name: Dump GitHub context
         env:
@@ -36,25 +34,24 @@ jobs:
       - name: Install build dependencies
         run: pip install build
       - name: Build source distribution
-        working-directory: ${{ env.dir }}
+        env:
+          TIANGOLO_BUILD_PACKAGE: ${{ matrix.package }}
         run: python -m build --sdist
       - name: Decompress source distribution
-        working-directory: ${{ env.dir }}
         run: |
           cd dist
           tar xvf typer*.tar.gz
       - name: Install test dependencies
-        if: ${{ matrix.package == 'typer-slim' }}
+        if: ${{ matrix.package != 'typer-cli' }}
         run: |
           cd dist/typer*/
           pip install -r requirements-tests.txt
       - name: Run source distribution tests
-        if: ${{ matrix.package == 'typer-slim' }}
+        if: ${{ matrix.package != 'typer-cli' }}
         run: |
           cd dist/typer*/
           bash scripts/test.sh
       - name: Build wheel distribution
-        working-directory: ${{ env.dir }}
         run: |
           cd dist
           pip wheel --no-deps typer*.tar.gz

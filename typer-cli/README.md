@@ -30,9 +30,13 @@ Typer is a library for building <abbr title="command line interface, programs ex
 
 ## Typer CLI
 
-This package, `typer-cli`, only provides a command `typer` in the shell with the same functionality of `python -m typer`.
+⚠️ Do not install this package. ⚠️
 
-The only reason why this is a separate package is to allow developers to opt out of the `typer` command by installing `typer-slim`, that doesn't include `typer-cli`.
+This package, `typer-cli`, does nothing other than depend on `typer`.
+
+All the functionality has been integrated into `typer`.
+
+The only reason this package exists is as a migration path for old projects that used to depend on `typer-cli`, so that they can get the latest version of `typer`.
 
 You probably **should not** install this package.
 
@@ -42,7 +46,7 @@ Install instead:
 pip install typer
 ```
 
-That includes this package, `typer-cli`, with the `typer` command.
+That includes the `typer` command.
 
 ## License
 
