@@ -36,7 +36,7 @@ This package, `typer-cli`, does nothing other than depend on `typer`.
 
 All the functionality has been integrated into `typer`.
 
-The only reason this package exists is as a migration path for old projects that used to depend on `typer-cli`, so that they can notice they can upgrade it to just use `typer`.
+The only reason this package exists is as a migration path for old projects that used to depend on `typer-cli`, so that they can get the latest version of `typer`.
 
 You probably **should not** install this package.
 
