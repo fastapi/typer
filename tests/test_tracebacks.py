@@ -8,8 +8,7 @@ def test_traceback_no_rich():
     file_path = Path(__file__).parent / "assets/type_error_no_rich.py"
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", str(file_path)],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
         env={**os.environ, "_TYPER_STANDARD_TRACEBACK": ""},
     )
@@ -17,19 +16,14 @@ def test_traceback_no_rich():
 
     assert "typer.run(main)" in result.stderr
     assert "print(name + 3)" in result.stderr
-    # TODO: when deprecating Python 3.6, remove second option
-    assert (
-        'TypeError: can only concatenate str (not "int") to str' in result.stderr
-        or "TypeError: must be str, not int" in result.stderr
-    )
+    assert 'TypeError: can only concatenate str (not "int") to str' in result.stderr
 
 
 def test_traceback_no_rich_short_disable():
     file_path = Path(__file__).parent / "assets/type_error_no_rich_short_disable.py"
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", str(file_path)],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
         env={**os.environ, "_TYPER_STANDARD_TRACEBACK": ""},
     )
@@ -37,19 +31,14 @@ def test_traceback_no_rich_short_disable():
 
     assert "app()" in result.stderr
     assert "print(name + 3)" in result.stderr
-    # TODO: when deprecating Python 3.6, remove second option
-    assert (
-        'TypeError: can only concatenate str (not "int") to str' in result.stderr
-        or "TypeError: must be str, not int" in result.stderr
-    )
+    assert 'TypeError: can only concatenate str (not "int") to str' in result.stderr
 
 
 def test_unmodified_traceback():
     file_path = Path(__file__).parent / "assets/type_error_normal_traceback.py"
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", str(file_path)],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
         env={**os.environ, "_TYPER_STANDARD_TRACEBACK": ""},
     )
@@ -60,8 +49,4 @@ def test_unmodified_traceback():
     )
     assert "typer.main.get_command(broken_app)()" in result.stderr
     assert "print(name + 3)" in result.stderr
-    # TODO: when deprecating Python 3.6, remove second option
-    assert (
-        'TypeError: can only concatenate str (not "int") to str' in result.stderr
-        or "TypeError: must be str, not int" in result.stderr
-    )
+    assert 'TypeError: can only concatenate str (not "int") to str' in result.stderr
