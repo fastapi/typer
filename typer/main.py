@@ -645,10 +645,14 @@ def generate_list_convertor(
 
 def generate_tuple_convertor(
     types: Sequence[Any],
-) -> Callable[[Tuple[Any, ...]], Tuple[Any, ...]]:
+) -> Callable[[Optional[Tuple[Any, ...]]], Optional[Tuple[Any, ...]]]:
     convertors = [determine_type_convertor(type_) for type_ in types]
 
-    def internal_convertor(param_args: Tuple[Any, ...]) -> Tuple[Any, ...]:
+    def internal_convertor(
+        param_args: Optional[Tuple[Any, ...]],
+    ) -> Optional[Tuple[Any, ...]]:
+        if param_args is None:
+            return None
         return tuple(
             convertor(arg) if convertor else arg
             for (convertor, arg) in zip(convertors, param_args)
