@@ -1,11 +1,81 @@
 ## Latest Changes
 
-### Breaking Changes
+## 0.12.1
 
-* 🔥 Remove support for Python 3.6. PR [#758](https://github.com/tiangolo/typer/pull/758) by [@tiangolo](https://github.com/tiangolo).
+Now you don't need to install `typer[all]`. When you install `typer` it comes with the default optional dependencies and the `typer` command.
+
+If you don't want the extra optional dependencies (`rich` and `shellingham`), you can install `typer-slim` instead.
+
+You can also install `typer-slim[standard]`, which includes the default optional dependencies, but not the `typer` command.
+
+Now the package `typer-cli` doesn't add anything on top of what `typer` has, it only depends on `typer`, and is there only for backwards compatibility, so that projects that depend on `typer-cli` can get the latest features of the `typer` command while they upgrade their dependencies to require `typer` directly.
+
+### Features
+
+* ✨ Add support for `typer ./someprogram.py utils docs --title`. PR [#782](https://github.com/tiangolo/typer/pull/782) by [@tiangolo](https://github.com/tiangolo).
+
+### Fixes
+
+* 🐛 Fix broken installation when upgrading from `typer <0.12.0` to `typer >=0.12.0`, make `typer` independent of `typer-slim`, include `typer` command in `typer` package. PR [#791](https://github.com/tiangolo/typer/pull/791) by [@tiangolo](https://github.com/tiangolo).
+
+This fixes a problem that would break the `typer` installation directory when upgrading from `typer <0.12.0` to `typer >=0.12.0`, see issue [#790](https://github.com/tiangolo/typer/issues/790).
+
+By installing the latest version (`0.12.1`) it fixes it, for any previous version, even if the installation directory was already broken by the previous upgrade.
 
 ### Internal
 
+* 👷 Add cron to run test once a week on monday. PR [#783](https://github.com/tiangolo/typer/pull/783) by [@estebanx64](https://github.com/estebanx64).
+
+## 0.12.0
+
+In version `0.12.0`, the `typer` package depends on `typer-slim[standard]` which includes the default dependencies (instead of `typer[all]`) and `typer-cli` (that provides the `typer` command).
+
+If you don't want the extra optional dependencies (`rich` and `shellingham`), you can install `typer-slim` instead.
+
+You can also install `typer-slim[standard]`, which includes the default optional dependencies, but not the `typer` command.
+
+In version `0.12.0` the `typer-cli` package only provides the `typer` command, but the code is still in the main code, so even without installing `typer-cli`, it can be called with `python -m typer`.
+
+This approach of having `typer` depend on `typer-slim[standard]` instead of including the whole code and dependencies itself caused an issue when upgrading from `typer <0.12.0` to `typer >=0.12.0`, see issue [#790](https://github.com/tiangolo/typer/issues/790). This is fixed in version `0.12.1`.
+
+### Features
+
+* ✨ Add `typer-slim` package without extras, make `typer` include `typer-slim[default]` and integrate Typer CLI (`typer` command) into Typer. PR [#780](https://github.com/tiangolo/typer/pull/780) by [@tiangolo](https://github.com/tiangolo).
+
+### Internal
+
+* 🔧 Temporarily disable social plugin while a MkDocs issue is handled. PR [#779](https://github.com/tiangolo/typer/pull/779) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Fix install MkDocs Insiders only when available. PR [#778](https://github.com/tiangolo/typer/pull/778) by [@tiangolo](https://github.com/tiangolo).
+
+## 0.11.1
+
+### Fixes
+
+* 🔧 Explicitly include testing files in sdist for redistributors (e.g. OpenSUSE) and add CI to test redistribution. PR [#773](https://github.com/tiangolo/typer/pull/773) by [@tiangolo](https://github.com/tiangolo).
+
+### Internal
+
+* 👷 Do not use the cache for dependencies when publishing to PyPI. PR [#774](https://github.com/tiangolo/typer/pull/774) by [@tiangolo](https://github.com/tiangolo).
+
+## 0.11.0
+
+### Breaking Changes
+
+* 🔧 Refactor package manager, move from Flit to PDM, remove private pip extras for `test`, `doc`, `dev`. PR [#764](https://github.com/tiangolo/typer/pull/764) by [@tiangolo](https://github.com/tiangolo).
+* 🔥 Remove support for Click 7, require Click 8+. PR [#760](https://github.com/tiangolo/typer/pull/760) by [@tiangolo](https://github.com/tiangolo).
+* 🔥 Remove support for Python 3.6. PR [#758](https://github.com/tiangolo/typer/pull/758) by [@tiangolo](https://github.com/tiangolo).
+
+### Refactors
+
+* 🔧 Migrate from Black, isort, flake8, autoflake, pyupgrade to Ruff. PR [#763](https://github.com/tiangolo/typer/pull/763) by [@tiangolo](https://github.com/tiangolo).
+
+### Internal
+
+* ⬆️ Upgrade coverage and configs. PR [#769](https://github.com/tiangolo/typer/pull/769) by [@tiangolo](https://github.com/tiangolo).
+* 🔧 Upgrade mypy and config. PR [#768](https://github.com/tiangolo/typer/pull/768) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Upgrade Smokeshow GitHub action. PR [#767](https://github.com/tiangolo/typer/pull/767) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Upgrade latest-changes GitHub Action. PR [#766](https://github.com/tiangolo/typer/pull/766) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Upgrade issue-manager GitHub Action. PR [#765](https://github.com/tiangolo/typer/pull/765) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Add alls-green to CI. PR [#759](https://github.com/tiangolo/typer/pull/759) by [@tiangolo](https://github.com/tiangolo).
 
 ## 0.10.0

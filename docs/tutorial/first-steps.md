@@ -452,11 +452,11 @@ And we'll use ***CLI option*** to refer to those *CLI parameters* that depend on
 
 We will use ***CLI parameter*** to refer to both, *CLI arguments* and *CLI options*.
 
-## **Typer CLI**
+## The `typer` Command
 
-Now that you know the basics of **Typer**, you might want to install and use [Typer CLI](../typer-cli.md){.internal-link target=_blank}.
+When you install `typer`, by default it adds a `typer` command to your shell.
 
-**Typer CLI** is a tool to run your **Typer** scripts giving you ✨ auto completion ✨ in your terminal.
+This `typer` command allows you to run your scripts with ✨ auto completion ✨ in your terminal.
 
 As an alternative to running with Python:
 
@@ -470,7 +470,7 @@ Hello World
 
 </div>
 
-You can run with **Typer CLI**:
+You can run with the `typer` command:
 
 <div class="termy">
 
@@ -487,6 +487,6 @@ Hello World
 So you can use it to have auto completion for your own scripts as you continue with the tutorial.
 
 !!! tip
-    Your CLI application built with **Typer** won't need [Typer CLI](../typer-cli.md){.internal-link target=_blank} to have auto completion once you create a Python package.
+    Your CLI application built with **Typer** won't need the `typer` command to have auto completion once you create a Python package.
 
     But for short scripts and for learning, before creating a Python package, it might be useful.

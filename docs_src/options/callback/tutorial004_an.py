@@ -1,3 +1,5 @@
+from typing import Optional
+
 import typer
 from typing_extensions import Annotated
 
@@ -11,7 +13,7 @@ def name_callback(ctx: typer.Context, param: typer.CallbackParam, value: str):
     return value
 
 
-def main(name: Annotated[str, typer.Option(callback=name_callback)]):
+def main(name: Annotated[Optional[str], typer.Option(callback=name_callback)] = None):
     print(f"Hello {name}")
 
 

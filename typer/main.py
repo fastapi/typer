@@ -43,7 +43,7 @@ try:
 
     console_stderr = Console(stderr=True)
 
-except ImportError:  # pragma: nocover
+except ImportError:  # pragma: no cover
     rich = None  # type: ignore
 
 _original_except_hook = sys.excepthook
@@ -81,9 +81,7 @@ def except_hook(
     tb_exc = traceback.TracebackException.from_exception(exc)
     stack: List[FrameSummary] = []
     for frame in tb_exc.stack:
-        if any(
-            [frame.filename.startswith(path) for path in supress_internal_dir_names]
-        ):
+        if any(frame.filename.startswith(path) for path in supress_internal_dir_names):
             if not exception_config.pretty_exceptions_short:
                 # Hide the line for internal libraries, Typer and Click
                 stack.append(
@@ -97,7 +95,7 @@ def except_hook(
         else:
             stack.append(frame)
     # Type ignore ref: https://github.com/python/typeshed/pull/8244
-    final_stack_summary = StackSummary.from_list(stack)  # type: ignore
+    final_stack_summary = StackSummary.from_list(stack)
     tb_exc.stack = final_stack_summary
     for line in tb_exc.format():
         print(line, file=sys.stderr)
@@ -370,7 +368,9 @@ def get_command(typer_instance: Typer) -> click.Command:
             click_command.params.append(click_install_param)
             click_command.params.append(click_show_param)
         return click_command
-    assert False, "Could not get a command for this Typer instance"  # pragma no cover
+    raise RuntimeError(
+        "Could not get a command for this Typer instance"
+    )  # pragma: no cover
 
 
 def get_group_name(typer_info: TyperInfo) -> Optional[str]:
@@ -444,7 +444,8 @@ def solve_typer_info_defaults(typer_info: TyperInfo) -> TyperInfo:
         # Priority 2: Value was set in @subapp.callback()
         try:
             callback_value = getattr(
-                typer_info.typer_instance.registered_callback, name  # type: ignore
+                typer_info.typer_instance.registered_callback,  # type: ignore
+                name,
             )
             if not isinstance(callback_value, DefaultPlaceholder):
                 values[name] = callback_value
@@ -454,7 +455,8 @@ def solve_typer_info_defaults(typer_info: TyperInfo) -> TyperInfo:
         # Priority 3: Value set in subapp = typer.Typer()
         try:
             instance_value = getattr(
-                typer_info.typer_instance.info, name  # type: ignore
+                typer_info.typer_instance.info,  # type: ignore
+                name,
             )
             if not isinstance(instance_value, DefaultPlaceholder):
                 values[name] = instance_value
@@ -539,7 +541,7 @@ def get_command_name(name: str) -> str:
 
 
 def get_params_convertors_ctx_param_name_from_function(
-    callback: Optional[Callable[..., Any]]
+    callback: Optional[Callable[..., Any]],
 ) -> Tuple[List[Union[click.Argument, click.Option]], Dict[str, Any], Optional[str]]:
     params = []
     convertors = {}
@@ -659,10 +661,11 @@ def get_callback(
     *,
     callback: Optional[Callable[..., Any]] = None,
     params: Sequence[click.Parameter] = [],
-    convertors: Dict[str, Callable[[str], Any]] = {},
+    convertors: Optional[Dict[str, Callable[[str], Any]]] = None,
     context_param_name: Optional[str] = None,
     pretty_exceptions_short: bool,
 ) -> Optional[Callable[..., Any]]:
+    use_convertors = convertors or {}
     if not callback:
         return None
     parameters = get_params_from_function(callback)
@@ -676,13 +679,13 @@ def get_callback(
     def wrapper(**kwargs: Any) -> Any:
         _rich_traceback_guard = pretty_exceptions_short  # noqa: F841
         for k, v in kwargs.items():
-            if k in convertors:
-                use_params[k] = convertors[k](v)
+            if k in use_convertors:
+                use_params[k] = use_convertors[k](v)
             else:
                 use_params[k] = v
         if context_param_name:
             use_params[context_param_name] = click.get_current_context()
-        return callback(**use_params)  # type: ignore
+        return callback(**use_params)
 
     update_wrapper(wrapper, callback)
     return wrapper
@@ -778,7 +781,7 @@ def get_click_type(
             [item.value for item in annotation],
             case_sensitive=parameter_info.case_sensitive,
         )
-    raise RuntimeError(f"Type not yet supported: {annotation}")  # pragma no cover
+    raise RuntimeError(f"Type not yet supported: {annotation}")  # pragma: no cover
 
 
 def lenient_issubclass(
@@ -860,7 +863,7 @@ def get_click_param(
     if is_tuple:
         convertor = generate_tuple_convertor(main_type.__args__)
     if isinstance(parameter_info, OptionInfo):
-        if main_type is bool and not (parameter_info.is_flag is False):
+        if main_type is bool and parameter_info.is_flag is not False:
             is_flag = True
             # Click doesn't accept a flag of type bool, only None, and then it sets it
             # to bool internally
@@ -946,7 +949,7 @@ def get_click_param(
             ),
             convertor,
         )
-    assert False, "A click.Parameter should be returned"  # pragma no cover
+    raise AssertionError("A click.Parameter should be returned")  # pragma: no cover
 
 
 def get_param_callback(
@@ -995,14 +998,14 @@ def get_param_callback(
             else:
                 use_value = value
             use_params[value_name] = use_value
-        return callback(**use_params)  # type: ignore
+        return callback(**use_params)
 
     update_wrapper(wrapper, callback)
     return wrapper
 
 
 def get_param_completion(
-    callback: Optional[Callable[..., Any]] = None
+    callback: Optional[Callable[..., Any]] = None,
 ) -> Optional[Callable[..., Any]]:
     if not callback:
         return None
@@ -1010,7 +1013,7 @@ def get_param_completion(
     ctx_name = None
     args_name = None
     incomplete_name = None
-    unassigned_params = [param for param in parameters.values()]
+    unassigned_params = list(parameters.values())
     for param_sig in unassigned_params[:]:
         origin = getattr(param_sig.annotation, "__origin__", None)
         if lenient_issubclass(param_sig.annotation, click.Context):
@@ -1048,7 +1051,7 @@ def get_param_completion(
             use_params[args_name] = args
         if incomplete_name:
             use_params[incomplete_name] = incomplete
-        return callback(**use_params)  # type: ignore
+        return callback(**use_params)
 
     update_wrapper(wrapper, callback)
     return wrapper

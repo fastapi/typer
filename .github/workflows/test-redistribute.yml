@@ -1,0 +1,57 @@
+name: Test Redistribute
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  test-redistribute:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package:
+          - typer-slim
+          - typer
+          - typer-cli
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          # Issue ref: https://github.com/actions/setup-python/issues/436
+          # cache: "pip"
+          # cache-dependency-path: pyproject.toml
+      - name: Install build dependencies
+        run: pip install build
+      - name: Build source distribution
+        env:
+          TIANGOLO_BUILD_PACKAGE: ${{ matrix.package }}
+        run: python -m build --sdist
+      - name: Decompress source distribution
+        run: |
+          cd dist
+          tar xvf typer*.tar.gz
+      - name: Install test dependencies
+        if: ${{ matrix.package != 'typer-cli' }}
+        run: |
+          cd dist/typer*/
+          pip install -r requirements-tests.txt
+      - name: Run source distribution tests
+        if: ${{ matrix.package != 'typer-cli' }}
+        run: |
+          cd dist/typer*/
+          bash scripts/test.sh
+      - name: Build wheel distribution
+        run: |
+          cd dist
+          pip wheel --no-deps typer*.tar.gz
