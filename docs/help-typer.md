@@ -234,7 +234,7 @@ As you have seen in the documentation, Typer is built on top of Click.
 
 You can also sponsor:
 
-* Pallets Project (Click maintainers)<a href="https://palletsprojects.com/donate" class="external-link" target="_blank">via the PSF</a> or <a href="https://tidelift.com/subscription/pkg/pypi-click" class="external-link" target="_blank">via Tidelift</a>
+* Pallets Project (Click maintainers) <a href="https://palletsprojects.com/donate" class="external-link" target="_blank">via the PSF</a> or <a href="https://tidelift.com/subscription/pkg/pypi-click" class="external-link" target="_blank">via Tidelift</a>
 
 ---
 

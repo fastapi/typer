@@ -37,7 +37,7 @@ The key features are:
 * **Short**: Minimize code duplication. Multiple features from each parameter declaration. Fewer bugs.
 * **Start simple**: The simplest example adds only 2 lines of code to your app: **1 import, 1 function call**.
 * **Grow large**: Grow in complexity as much as you want, create arbitrarily complex trees of commands and groups of subcommands, with options and arguments.
-* **Run scripts**: Typer includes a `typer` command that you can use to run scripts, automatically converting them to CLIs, even if they don't use Typer internally.
+* **Run scripts**: Typer includes a `typer` command/program that you can use to run scripts, automatically converting them to CLIs, even if they don't use Typer internally.
 
 ## FastAPI of CLIs
 
@@ -355,13 +355,10 @@ By default it also comes with extra standard dependencies:
 * <a href="https://github.com/sarugaku/shellingham" class="external-link" target="_blank"><code>shellingham</code></a>: to automatically detect the current shell when installing completion.
     * With `shellingham` you can just use `--install-completion`.
     * Without `shellingham`, you have to pass the name of the shell to install completion for, e.g. `--install-completion bash`.
-* `typer-cli`: adds the `typer` command to your shell:
-    * Quickly run scripts (that don't have to use Typer) with shell completion.
-    * Generate docs for your Typer applications.
 
 ### `typer-slim`
 
-If you don't want the extra dependencies, install `typer-slim` instead.
+If you don't want the extra standard optional dependencies, install `typer-slim` instead.
 
 When you install with:
 
@@ -369,15 +366,15 @@ When you install with:
 pip install typer
 ```
 
-...it's the equivalent of:
+...it includes the same code and dependencies as:
 
 ```bash
 pip install "typer-slim[standard]"
 ```
 
-The `standard` extra dependencies are `rich`, `shellingham`, `typer-cli`.
+The `standard` extra dependencies are `rich` and `shellingham`.
 
-**Note**: even if you don't install `typer-cli` you can still use it's functionality by calling `typer` as a module, e.g. `python -m typer`.
+**Note**: The `typer` command is only included in the `typer` package.
 
 ## License
 

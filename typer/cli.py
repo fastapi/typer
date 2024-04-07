@@ -189,12 +189,14 @@ def get_docs_for_click(
     indent: int = 0,
     name: str = "",
     call_prefix: str = "",
+    title: Optional[str] = None,
 ) -> str:
     docs = "#" * (1 + indent)
     command_name = name or obj.name
     if call_prefix:
         command_name = f"{call_prefix} {command_name}"
-    title = f"`{command_name}`" if command_name else "CLI"
+    if not title:
+        title = f"`{command_name}`" if command_name else "CLI"
     docs += f" {title}\n\n"
     if obj.help:
         docs += f"{obj.help}\n\n"
@@ -264,11 +266,16 @@ def get_docs_for_click(
 def docs(
     ctx: typer.Context,
     name: str = typer.Option("", help="The name of the CLI program to use in docs."),
-    output: Path = typer.Option(
+    output: Optional[Path] = typer.Option(
         None,
         help="An output file to write docs to, like README.md.",
         file_okay=True,
         dir_okay=False,
+    ),
+    title: Optional[str] = typer.Option(
+        None,
+        help="The title for the documentation page. If not provided, the name of "
+        "the program is used.",
     ),
 ) -> None:
     """
@@ -279,7 +286,7 @@ def docs(
         typer.echo("No Typer app found", err=True)
         raise typer.Abort()
     click_obj = typer.main.get_command(typer_obj)
-    docs = get_docs_for_click(obj=click_obj, ctx=ctx, name=name)
+    docs = get_docs_for_click(obj=click_obj, ctx=ctx, name=name, title=title)
     clean_docs = f"{docs.strip()}\n"
     if output:
         output.write_text(clean_docs)
