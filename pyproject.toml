@@ -3,15 +3,12 @@ requires = ["pdm-backend"]
 build-backend = "pdm.backend"
 
 [project]
-# pip install typer-slim: is only the Typer library, without extras
-# pip install typer: is typer-slim[standard], with extras and typer-cli
-name = "typer-slim"
+name = "typer"
 dynamic = ["version"]
 description = "Typer, build great CLIs. Easy to code. Based on Python type hints."
 authors = [
     {name = "Sebastián Ramírez", email = "tiangolo@gmail.com"},
 ]
-readme = "README.md"
 requires-python = ">=3.7"
 classifiers = [
     "Intended Audience :: Information Technology",
@@ -38,16 +35,12 @@ dependencies = [
     "click >= 8.0.0",
     "typing-extensions >= 3.7.4.3",
 ]
-
+readme = "README.md"
 [project.urls]
 Documentation = "https://typer.tiangolo.com/"
 homepage = "https://github.com/tiangolo/typer"
 
 [project.optional-dependencies]
-all = [
-    "shellingham >=1.3.0",
-    "rich >=10.11.0",
-]
 standard = [
     "shellingham >=1.3.0",
     "rich >=10.11.0",
@@ -64,6 +57,50 @@ source-includes = [
     "requirements*.txt",
     "scripts/",
     ]
+
+[tool.tiangolo._internal-slim-build]
+sync-dependencies = [
+    "typer-slim[standard]",
+    "typer-cli",
+    "typer"
+]
+
+[tool.tiangolo._internal-slim-build.packages.typer-slim.project]
+name = "typer-slim"
+
+[tool.tiangolo._internal-slim-build.packages.typer]
+include-optional-dependencies = ["standard"]
+
+[tool.tiangolo._internal-slim-build.packages.typer.project]
+optional-dependencies = {}
+
+[tool.tiangolo._internal-slim-build.packages.typer.project.scripts]
+typer = "typer.cli:main"
+
+[tool.tiangolo._internal-slim-build.packages.typer-cli.project]
+name = "typer-cli"
+readme = "typer-cli/README.md"
+dependencies = [
+    "typer",
+]
+optional-dependencies = {}
+
+[tool.tiangolo._internal-slim-build.packages.typer-cli.tool.pdm.build]
+# excludes needs to explicitly exclude the top level python packages,
+# otherwise PDM includes them by default
+# A "*" glob pattern can't be used here because in PDM internals, the patterns are put
+# in a set (unordered, order varies) and each excluded file is assigned one of the
+# glob patterns that matches, as the set is unordered, the matched pattern could be "*"
+# independent of the order here. And then the internal code would give it a lower score
+# than the one for a default included file.
+# By not using "*" and explicitly excluding the top level packages, they get a higher
+# score than the default inclusion
+excludes = ["typer", "tests", "pdm_build.py"]
+# source-includes needs to explicitly define some value because PDM will check the
+# truthy value of the list, and if empty, will include some defaults, including "tests",
+# an empty string doesn't match anything, but makes the list truthy, so that PDM
+# doesn't override it during the build.
+source-includes = [""]
 
 [tool.isort]
 profile = "black"

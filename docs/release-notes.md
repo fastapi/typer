@@ -1,14 +1,42 @@
 ## Latest Changes
 
+## 0.12.1
+
+Now you don't need to install `typer[all]`. When you install `typer` it comes with the default optional dependencies and the `typer` command.
+
+If you don't want the extra optional dependencies (`rich` and `shellingham`), you can install `typer-slim` instead.
+
+You can also install `typer-slim[standard]`, which includes the default optional dependencies, but not the `typer` command.
+
+Now the package `typer-cli` doesn't add anything on top of what `typer` has, it only depends on `typer`, and is there only for backwards compatibility, so that projects that depend on `typer-cli` can get the latest features of the `typer` command while they upgrade their dependencies to require `typer` directly.
+
 ### Features
 
 * ✨ Add support for `typer ./someprogram.py utils docs --title`. PR [#782](https://github.com/tiangolo/typer/pull/782) by [@tiangolo](https://github.com/tiangolo).
+
+### Fixes
+
+* 🐛 Fix broken installation when upgrading from `typer <0.12.0` to `typer >=0.12.0`, make `typer` independent of `typer-slim`, include `typer` command in `typer` package. PR [#791](https://github.com/tiangolo/typer/pull/791) by [@tiangolo](https://github.com/tiangolo).
+
+This fixes a problem that would break the `typer` installation directory when upgrading from `typer <0.12.0` to `typer >=0.12.0`, see issue [#790](https://github.com/tiangolo/typer/issues/790).
+
+By installing the latest version (`0.12.1`) it fixes it, for any previous version, even if the installation directory was already broken by the previous upgrade.
 
 ### Internal
 
 * 👷 Add cron to run test once a week on monday. PR [#783](https://github.com/tiangolo/typer/pull/783) by [@estebanx64](https://github.com/estebanx64).
 
 ## 0.12.0
+
+In version `0.12.0`, the `typer` package depends on `typer-slim[standard]` which includes the default dependencies (instead of `typer[all]`) and `typer-cli` (that provides the `typer` command).
+
+If you don't want the extra optional dependencies (`rich` and `shellingham`), you can install `typer-slim` instead.
+
+You can also install `typer-slim[standard]`, which includes the default optional dependencies, but not the `typer` command.
+
+In version `0.12.0` the `typer-cli` package only provides the `typer` command, but the code is still in the main code, so even without installing `typer-cli`, it can be called with `python -m typer`.
+
+This approach of having `typer` depend on `typer-slim[standard]` instead of including the whole code and dependencies itself caused an issue when upgrading from `typer <0.12.0` to `typer >=0.12.0`, see issue [#790](https://github.com/tiangolo/typer/issues/790). This is fixed in version `0.12.1`.
 
 ### Features
 

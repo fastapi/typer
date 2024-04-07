@@ -68,12 +68,12 @@ The first step is to install **Typer**:
 ```console
 $ pip install typer
 ---> 100%
-Successfully installed typer click shellingham rich typer-cli
+Successfully installed typer click shellingham rich
 ```
 
 </div>
 
-By default, `typer` comes with `rich`, `shellingham`, and `typer-cli`.
+By default, `typer` comes with `rich` and `shellingham`.
 
 !!! note
     If you are an advanced user and want to opt out of these default extra dependencies, you can instead install `typer-slim`.
@@ -82,7 +82,7 @@ By default, `typer` comes with `rich`, `shellingham`, and `typer-cli`.
     pip install typer
     ```
 
-    ...is the equivalent of:
+    ...includes the same optional dependencies as:
 
     ```bash
     pip install "typer-slim[standard]"
