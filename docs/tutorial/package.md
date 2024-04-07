@@ -97,7 +97,7 @@ You can see that you have a generated project structure that looks like:
 .
 ├── poetry.lock
 ├── pyproject.toml
-├── README.rst
+├── README.md
 ├── rick_portal_gun
 │   └── __init__.py
 └── tests
@@ -146,67 +146,12 @@ def load():
 
 ## Modify the README
 
-Let's change the README. By default it's a file `README.rst`.
-
-Let's change it to `README.md`. So, change the extension from `.rst` to `.md`.
-
-So that we can use Markdown instead of reStructuredText.
-
-And change the file to have something like:
+Let's change the README to have something like:
 
 ```Markdown
 # Portal Gun
 
 The awesome Portal Gun
-```
-
-## Modify your project metadata
-
-Edit your file `pyproject.toml`.
-
-It would look something like:
-
-```TOML
-[tool.poetry]
-name = "rick-portal-gun"
-version = "0.1.0"
-description = ""
-authors = ["Rick Sanchez <rick@example.com>"]
-
-[tool.poetry.dependencies]
-python = "^3.10"
-typer = {extras = ["all"], version = "^0.1.0"}
-
-[tool.poetry.dev-dependencies]
-pytest = "^5.2"
-
-[build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
-```
-
-We changed the default README, so let's make it use the new `README.md`.
-
-Add the line:
-
-```TOML hl_lines="6"
-[tool.poetry]
-name = "rick-portal-gun"
-version = "0.1.0"
-description = ""
-authors = ["Rick Sanchez <rick@example.com>"]
-readme = "README.md"
-
-[tool.poetry.dependencies]
-python = "^3.10"
-typer = {extras = ["all"], version = "^0.1.0"}
-
-[tool.poetry.dev-dependencies]
-pytest = "^5.2"
-
-[build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
 ```
 
 ## Add a "script"
@@ -468,7 +413,7 @@ The file would live right beside `__init__.py`:
 .
 ├── poetry.lock
 ├── pyproject.toml
-├── README.rst
+├── README.md
 ├── rick_portal_gun
 │   ├── __init__.py
 │   ├── __main__.py
