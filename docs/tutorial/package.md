@@ -146,8 +146,6 @@ def load():
 
 ## Modify the README
 
-The default README has a `.md` extension and supports Markdown syntax. It can be replaced with an `.rst` file (reStructuredText), along with the corresponding change in `pyproject.toml`'s project metadata.
-
 Let's change the README to have something like:
 
 ```Markdown
