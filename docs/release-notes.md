@@ -1,5 +1,9 @@
 ## Latest Changes
 
+### Fixes
+
+* 🐛 Add support for an argument of type `Optional[Tuple]` and default value `None`. PR [#757](https://github.com/tiangolo/typer/pull/757) by [@Asthestarsfalll](https://github.com/Asthestarsfalll).
+
 ### Docs
 
 * 🔧 Fix typo in Github template. PR [#793](https://github.com/tiangolo/typer/pull/793) by [@svlandeg](https://github.com/svlandeg).
