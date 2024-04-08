@@ -1,5 +1,7 @@
 ## Latest Changes
 
+## 0.12.2
+
 ### Features
 
 * ✨ Improve column help display, ensure commands column width is the same on all panels. PR [#567](https://github.com/tiangolo/typer/pull/567) by [@ssbarnea](https://github.com/ssbarnea).
