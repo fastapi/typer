@@ -34,7 +34,7 @@ $ python main.py --network capsule
 Usage: main.py [OPTIONS]
 Try "main.py --help" for help.
 
-Error: Invalid value for '--network': invalid choice: capsule. (choose from simple, conv, lstm)
+Error: Invalid value for '--network': 'capsule' is not one of 'simple', 'conv', 'lstm'.
 
 // Note that enums are case sensitive by default
 $ python main.py --network CONV
@@ -42,7 +42,7 @@ $ python main.py --network CONV
 Usage: main.py [OPTIONS]
 Try "main.py --help" for help.
 
-Error: Invalid value for '--network': invalid choice: CONV. (choose from simple, conv, lstm)
+Error: Invalid value for '--network': 'CONV' is not one of 'simple', 'conv', 'lstm'.
 ```
 
 </div>

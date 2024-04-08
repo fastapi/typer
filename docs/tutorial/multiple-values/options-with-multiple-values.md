@@ -95,7 +95,7 @@ The username Morty has 3 coins
 // Try with invalid values (not enough)
 $ python main.py --user Camila 50
 
-Error: --user option requires 3 arguments
+Error: Option '--user' requires 3 arguments
 ```
 
 </div>
