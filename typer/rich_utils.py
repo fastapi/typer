@@ -498,7 +498,6 @@ def _print_commands_panel(
     # available instead of allowing the command column to grow and misalign with
     # other panels.
     commands_table.add_column("Description", justify="left", no_wrap=False, ratio=10)
-    commands_table.add_column("xx", style="bold yellow", justify="left", no_wrap=False)
     rows: List[List[Union[RenderableType, None]]] = []
     deprecated_rows: List[Union[RenderableType, None]] = []
     for command in commands:
