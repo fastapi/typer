@@ -639,10 +639,13 @@ def rich_format_help(
                 panel_to_commands[panel_name].append(command)
 
         # Identify the longest command name in all panels
-        max_cmd_len = 0
-        for _, commands in panel_to_commands.items():
-            for command in commands:
-                max_cmd_len = max(max_cmd_len, len(command.name or ""))
+        max_cmd_len = max(
+            [
+                len(command.name or "")
+                for commands in panel_to_commands.values()
+                for command in commands
+            ]
+        )
 
         # Print each command group panel
         default_commands = panel_to_commands.get(COMMANDS_PANEL_TITLE, [])
