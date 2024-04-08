@@ -466,6 +466,7 @@ def _print_commands_panel(
     commands: List[click.Command],
     markup_mode: MarkupMode,
     console: Console,
+    cmd_len: int,
 ) -> None:
     t_styles: Dict[str, Any] = {
         "show_lines": STYLE_COMMANDS_TABLE_SHOW_LINES,
@@ -487,7 +488,16 @@ def _print_commands_panel(
     )
     # Define formatting in first column, as commands don't match highlighter
     # regex
-    commands_table.add_column(style="bold cyan", no_wrap=True)
+    commands_table.add_column(
+        style="bold cyan",
+        no_wrap=True,
+        width=cmd_len,
+    )
+
+    # A big ratio makes the description column be greedy and take all the space
+    # available instead of allowing the command column to grow and misalign with
+    # other panels.
+    commands_table.add_column("Description", justify="left", no_wrap=False, ratio=10)
     rows: List[List[Union[RenderableType, None]]] = []
     deprecated_rows: List[Union[RenderableType, None]] = []
     for command in commands:
@@ -628,6 +638,15 @@ def rich_format_help(
                 )
                 panel_to_commands[panel_name].append(command)
 
+        # Identify the longest command name in all panels
+        max_cmd_len = max(
+            [
+                len(command.name or "")
+                for commands in panel_to_commands.values()
+                for command in commands
+            ]
+        )
+
         # Print each command group panel
         default_commands = panel_to_commands.get(COMMANDS_PANEL_TITLE, [])
         _print_commands_panel(
@@ -635,6 +654,7 @@ def rich_format_help(
             commands=default_commands,
             markup_mode=markup_mode,
             console=console,
+            cmd_len=max_cmd_len,
         )
         for panel_name, commands in panel_to_commands.items():
             if panel_name == COMMANDS_PANEL_TITLE:
@@ -645,6 +665,7 @@ def rich_format_help(
                 commands=commands,
                 markup_mode=markup_mode,
                 console=console,
+                cmd_len=max_cmd_len,
             )
 
     # Epilogue if we have it
