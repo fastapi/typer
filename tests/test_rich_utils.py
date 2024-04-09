@@ -44,7 +44,7 @@ def test_rich_help_no_commands():
 
     @app.callback(invoke_without_command=True, no_args_is_help=True)
     def main() -> None:
-        return None
+        return None  # pragma: no cover
 
     result = runner.invoke(app, ["--help"])
 
