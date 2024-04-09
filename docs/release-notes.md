@@ -1,5 +1,9 @@
 ## Latest Changes
 
+### Fixes
+
+* 🐛 Fix Rich formatting with no commands. PR [#796](https://github.com/tiangolo/typer/pull/796) by [@svlandeg](https://github.com/svlandeg).
+
 ## 0.12.2
 
 ### Features
