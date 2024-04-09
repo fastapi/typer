@@ -644,7 +644,8 @@ def rich_format_help(
                 len(command.name or "")
                 for commands in panel_to_commands.values()
                 for command in commands
-            ]
+            ],
+            default=0,
         )
 
         # Print each command group panel
