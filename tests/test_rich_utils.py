@@ -39,7 +39,7 @@ def test_rich_utils_click_rewrapp():
 
 
 def test_rich_help_no_commands():
-    """Ensure that the help still works for a Typer instance wit no commands, but with a callback."""
+    """Ensure that the help still works for a Typer instance with no commands, but with a callback."""
     app = typer.Typer(help="My cool Typer app")
 
     @app.callback(invoke_without_command=True, no_args_is_help=True)
