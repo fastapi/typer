@@ -13,7 +13,7 @@ from uuid import UUID
 
 import click
 
-from ._typing import UNION_TYPES, get_args, get_origin
+from ._typing import get_args, get_origin, is_union
 from .completion import get_completion_inspect_parameters
 from .core import MarkupMode, TyperArgument, TyperCommand, TyperGroup, TyperOption
 from .models import (
@@ -830,7 +830,7 @@ def get_click_param(
 
     if origin is not None:
         # Handle SomeType | None and Optional[SomeType]
-        if origin in UNION_TYPES:
+        if is_union(origin):
             types = []
             for type_ in get_args(main_type):
                 if type_ is NoneType:
