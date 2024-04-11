@@ -13,7 +13,7 @@ from uuid import UUID
 
 import click
 
-from ._compat_utils import UNION_TYPES, get_args, get_origin
+from ._typing import UNION_TYPES, get_args, get_origin
 from .completion import get_completion_inspect_parameters
 from .core import MarkupMode, TyperArgument, TyperCommand, TyperGroup, TyperOption
 from .models import (
