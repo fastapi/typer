@@ -1,4 +1,3 @@
-import sys
 from enum import Enum
 from pathlib import Path
 from typing import Any, List, Optional, Tuple
@@ -7,6 +6,8 @@ import click
 import pytest
 import typer
 from typer.testing import CliRunner
+
+from .utils import needs_py310
 
 runner = CliRunner()
 
@@ -150,7 +151,7 @@ def test_custom_click_type():
     assert result.exit_code == 0
 
 
-@pytest.mark.skipif(sys.version_info < (3, 10), reason="requires python3.10 or higher")
+@needs_py310
 def test_optional_via_uniontype():
     app = typer.Typer()
 
