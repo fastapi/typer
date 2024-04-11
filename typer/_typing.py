@@ -40,6 +40,7 @@ except ImportError:
 
 try:
     from types import UnionType as TypesUnionType  # type: ignore
+
     UNION_TYPES = (TypesUnionType, Union)
 except ImportError:
     # python < 3.10 does not have UnionType (str | int, byte | bool and so on)
