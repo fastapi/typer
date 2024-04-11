@@ -2,13 +2,13 @@ You already saw how to add a help text for *CLI arguments* with the `help` param
 
 Let's now do the same for *CLI options*:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="7-8"
     {!> ../docs_src/options/help/tutorial001_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -67,13 +67,13 @@ The same as with *CLI arguments*, you can put the help for some *CLI options* in
 
 If you have installed Rich as described in the docs for [Printing and Colors](../printing.md){.internal-link target=_blank}, you can set the `rich_help_panel` parameter to the name of the panel you want for each *CLI option*:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="11  17"
     {!> ../docs_src/options/help/tutorial002_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -126,13 +126,13 @@ If you are in a hurry you can jump there, but otherwise, it would be better to c
 
 You can tell Typer to not show the default value in the help text with `show_default=False`:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="5"
     {!> ../docs_src/options/help/tutorial003_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -168,3 +168,45 @@ Options:
     In Click applications the default values are hidden by default. 🙈
 
     In **Typer** these default values are shown by default. 👀
+
+## Custom default string
+
+You can use the same `show_default` to pass a custom string (instead of a `bool`) to customize the default value to be shown in the help text:
+
+=== "Python 3.7+"
+
+    ```Python hl_lines="7"
+    {!> ../docs_src/options/help/tutorial004_an.py!}
+    ```
+
+=== "Python 3.7+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="6"
+    {!> ../docs_src/options/help/tutorial004.py!}
+    ```
+
+And it will be used in the help text:
+
+<div class="termy">
+
+```console
+$ python main.py
+
+Hello Wade Wilson
+
+// Show the help
+$ python main.py --help
+
+Usage: main.py [OPTIONS]
+
+Options:
+  --fullname TEXT       [default: (Deadpoolio the amazing's name)]
+  --help                Show this message and exit.
+
+// Notice how it shows "(Deadpoolio the amazing's name)" instead of the actual default of "Wade Wilson"
+```
+
+</div>

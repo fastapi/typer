@@ -30,6 +30,25 @@ def test_optional():
     assert "User: Camila" in result.output
 
 
+def test_optional_tuple():
+    app = typer.Typer()
+
+    @app.command()
+    def opt(number: Optional[Tuple[int, int]] = None):
+        if number:
+            print(f"Number: {number}")
+        else:
+            print("No number")
+
+    result = runner.invoke(app)
+    assert result.exit_code == 0
+    assert "No number" in result.output
+
+    result = runner.invoke(app, ["--number", "4", "2"])
+    assert result.exit_code == 0
+    assert "Number: (4, 2)" in result.output
+
+
 def test_no_type():
     app = typer.Typer()
 
@@ -99,7 +118,7 @@ def test_custom_parse():
 
     @app.command()
     def custom_parser(
-        hex_value: int = typer.Argument(None, parser=lambda x: int(x, 0))
+        hex_value: int = typer.Argument(None, parser=lambda x: int(x, 0)),
     ):
         assert hex_value == 0x56
 
@@ -123,7 +142,7 @@ def test_custom_click_type():
 
     @app.command()
     def custom_click_type(
-        hex_value: int = typer.Argument(None, click_type=BaseNumberParamType())
+        hex_value: int = typer.Argument(None, click_type=BaseNumberParamType()),
     ):
         assert hex_value == 0x56
 

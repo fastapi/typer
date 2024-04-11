@@ -211,6 +211,38 @@ Notice that the help text now shows the 2 commands: `create` and `delete`.
 !!! tip
     By default, the names of the commands are generated from the function name.
 
+## Show the help message if no command is given
+
+By default, we need to specify `--help` to get the command's help page.
+
+However, by setting `no_args_is_help=True` when defining the `typer.Typer()` application, the help function will be shown whenever no argument is given:
+
+```Python hl_lines="3"
+{!../docs_src/commands/index/tutorial003.py!}
+```
+
+Now we can run this:
+
+<div class="termy">
+
+```console
+// Check the help without having to type --help
+$ python main.py
+
+Usage: main.py [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  --install-completion  Install completion for the current shell.
+  --show-completion     Show completion for the current shell, to copy it or customize the installation.
+  --help                Show this message and exit.
+
+Commands:
+  create
+  delete
+```
+
+</div>
+
 ## Click Group
 
 If you come from Click, a `typer.Typer` app with subcommands is more or less the equivalent of a <a href="https://click.palletsprojects.com/en/7.x/quickstart/#nesting-commands" class="external-link" target="_blank">Click Group</a>.

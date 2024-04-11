@@ -38,7 +38,7 @@ $ python main.py july-19-1989
 
 Usage: main.py [OPTIONS] [%Y-%m-%d|%Y-%m-%dT%H:%M:%S|%Y-%m-%d%H:%M:%S]
 
-Error: Invalid value for '[%Y-%m-%d|%Y-%m-%dT%H:%M:%S|%Y-%m-%d %H:%M:%S]': invalid datetime format: july-19-1989. (choose from %Y-%m-%d, %Y-%m-%dT%H:%M:%S, %Y-%m-%d %H:%M:%S)
+Error: Invalid value for 'BIRTH:[%Y-%m-%d|%Y-%m-%dT%H:%M:%S|%Y-%m-%d %H:%M:%S]': 'july-19-1989' does not match the formats '%Y-%m-%d', '%Y-%m-%dT%H:%M:%S', '%Y-%m-%d %H:%M:%S'.
 ```
 
 </div>
@@ -58,13 +58,13 @@ For example, let's imagine that you want to accept an ISO formatted datetime, bu
 
 ...It's a crazy example, but let's say you also needed that strange format:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="11"
     {!> ../docs_src/parameter_types/datetime/tutorial002_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.

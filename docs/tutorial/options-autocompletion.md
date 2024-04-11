@@ -1,4 +1,4 @@
-As you have seen, apps built with **Typer** have completion in your shell that works when you create a Python package or using **Typer CLI**.
+As you have seen, apps built with **Typer** have completion in your shell that works when you create a Python package or using the `typer` command.
 
 It normally completes *CLI options*, *CLI arguments*, and subcommands (that you will learn about later).
 
@@ -8,19 +8,19 @@ But you can also provide auto completion for the **values** of *CLI options* and
 
 Before checking how to provide custom completions, let's check again how it works.
 
-After installing completion (for your own Python package or for **Typer CLI**), when you use your CLI program and start adding a *CLI option* with `--` an then hit <kbd>TAB</kbd>, your shell will show you the available *CLI options* (the same for *CLI arguments*, etc).
+After installing completion for your own Python package (or using the `typer` command), when you use your CLI program and start adding a *CLI option* with `--` an then hit <kbd>TAB</kbd>, your shell will show you the available *CLI options* (the same for *CLI arguments*, etc).
 
-To check it quickly without creating a new Python package, install [Typer CLI](../typer-cli.md){.internal-link target=_blank}.
+To check it quickly without creating a new Python package, use the `typer` command.
 
 Then let's create small example program:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python
     {!> ../docs_src/options_autocompletion/tutorial001_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -29,7 +29,7 @@ Then let's create small example program:
     {!> ../docs_src/options_autocompletion/tutorial001.py!}
     ```
 
-And let's try it with **Typer CLI** to get completion:
+And let's try it with the `typer` command to get completion:
 
 <div class="termy">
 
@@ -61,13 +61,13 @@ Right now we get completion for the *CLI option* names, but not for the values.
 
 We can provide completion for the values creating an `autocompletion` function, similar to the `callback` functions from [CLI Option Callback and Context](./options/callback-and-context.md){.internal-link target=_blank}:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="5-6  15"
     {!> ../docs_src/options_autocompletion/tutorial002_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -103,13 +103,13 @@ Modify the `complete_name()` function to receive a parameter of type `str`, it w
 
 Then we can check and return only the values that start with the incomplete value from the command line:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="7-12"
     {!> ../docs_src/options_autocompletion/tutorial003_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -152,13 +152,13 @@ In the `complete_name()` function, instead of providing one `str` per completion
 
 So, in the end, we return a `list` of `tuples` of `str`:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="4-8  11-17"
     {!> ../docs_src/options_autocompletion/tutorial004_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -200,13 +200,13 @@ Instead of creating and returning a list with values (`str` or `tuple`), we can 
 
 That way our function will be a <a href="https://docs.python.org/3.8/glossary.html#index-19" class="external-link" target="_blank">generator</a> that **Typer** (actually Click) can iterate:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="11-14"
     {!> ../docs_src/options_autocompletion/tutorial005_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -240,13 +240,13 @@ So, we will allow multiple `--name` *CLI options*.
 
 For this we use a `List` of `str`:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="9-14"
     {!> ../docs_src/options_autocompletion/tutorial006_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -278,13 +278,13 @@ But you can access the context by declaring a function parameter of type `typer.
 
 And from that context you can get the current values for each parameter.
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="13-14  16"
     {!> ../docs_src/options_autocompletion/tutorial007_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -358,13 +358,13 @@ You can print to "standard error" with a **Rich** `Console(stderr=True)`.
 
 Using `stderr=True` tells **Rich** that the output should be shown in "standard error".
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="13  16-17"
     {!> ../docs_src/options_autocompletion/tutorial008_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -410,13 +410,13 @@ Sebastian  -- The type hints guy.
 
 Of course, you can declare everything if you need it, the context, the raw *CLI parameters*, and the incomplete `str`:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="16"
     {!> ../docs_src/options_autocompletion/tutorial009_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.

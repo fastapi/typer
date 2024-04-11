@@ -49,7 +49,7 @@ Now let's see an alternative way to create the same *CLI argument*:
 
     If you have an older version, you would get errors when trying to use `Annotated`.
 
-    Make sure you Upgrade the Typer version to at least 0.9.0 before using `Annotated`.
+    Make sure you upgrade the Typer version to at least 0.9.0 before using `Annotated`.
 
 Before, you had this function parameter:
 
@@ -93,7 +93,7 @@ It's still not very useful, but it works correctly.
 And being able to declare a **required** *CLI argument* using
 
 ```Python
-name: Annoated[str, typer.Argument()]
+name: Annotated[str, typer.Argument()]
 ```
 
 ...that works exactly the same as
