@@ -21,7 +21,9 @@ def delete(
 
 @app.command()
 def delete_all(
-    force: bool = typer.Option(..., prompt="Are you sure you want to delete ALL users?")
+    force: bool = typer.Option(
+        ..., prompt="Are you sure you want to delete ALL users?"
+    ),
 ):
     if force:
         print("Deleting all users")

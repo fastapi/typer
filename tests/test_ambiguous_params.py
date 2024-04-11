@@ -35,10 +35,10 @@ def test_forbid_default_value_in_annotated_argument():
     with pytest.raises(AnnotatedParamWithDefaultValueError) as excinfo:
         runner.invoke(app)
 
-    assert vars(excinfo.value) == dict(
-        param_type=typer.models.ArgumentInfo,
-        argument_name="my_param",
-    )
+    assert vars(excinfo.value) == {
+        "param_type": typer.models.ArgumentInfo,
+        "argument_name": "my_param",
+    }
 
 
 def test_allow_options_to_have_names():
@@ -70,24 +70,26 @@ def test_forbid_annotated_param_and_default_param(param, param_info_type):
     with pytest.raises(MixedAnnotatedAndDefaultStyleError) as excinfo:
         runner.invoke(app)
 
-    assert vars(excinfo.value) == dict(
-        argument_name="my_param",
-        annotated_param_type=param_info_type,
-        default_param_type=param_info_type,
-    )
+    assert vars(excinfo.value) == {
+        "argument_name": "my_param",
+        "annotated_param_type": param_info_type,
+        "default_param_type": param_info_type,
+    }
 
 
 def test_forbid_multiple_typer_params_in_annotated():
     app = typer.Typer()
 
     @app.command()
-    def cmd(my_param: Annotated[str, typer.Argument(), typer.Argument()]):
+    def cmd(
+        my_param: Annotated[str, typer.Argument(), typer.Argument()],
+    ):
         ...  # pragma: no cover
 
     with pytest.raises(MultipleTyperAnnotationsError) as excinfo:
         runner.invoke(app)
 
-    assert vars(excinfo.value) == dict(argument_name="my_param")
+    assert vars(excinfo.value) == {"argument_name": "my_param"}
 
 
 def test_allow_multiple_non_typer_params_in_annotated():
@@ -117,16 +119,18 @@ def test_forbid_default_factory_and_default_value_in_annotated(param, param_info
     app = typer.Typer()
 
     @app.command()
-    def cmd(my_param: Annotated[str, param(default_factory=make_string)] = "hello"):
+    def cmd(
+        my_param: Annotated[str, param(default_factory=make_string)] = "hello",
+    ):
         ...  # pragma: no cover
 
     with pytest.raises(DefaultFactoryAndDefaultValueError) as excinfo:
         runner.invoke(app)
 
-    assert vars(excinfo.value) == dict(
-        argument_name="my_param",
-        param_type=param_info_type,
-    )
+    assert vars(excinfo.value) == {
+        "argument_name": "my_param",
+        "param_type": param_info_type,
+    }
 
 
 @pytest.mark.parametrize(
@@ -165,16 +169,18 @@ def test_forbid_default_and_default_factory_with_default_param(param, param_info
     app = typer.Typer()
 
     @app.command()
-    def cmd(my_param: str = param("hi", default_factory=make_string)):
+    def cmd(
+        my_param: str = param("hi", default_factory=make_string),
+    ):
         ...  # pragma: no cover
 
     with pytest.raises(DefaultFactoryAndDefaultValueError) as excinfo:
         runner.invoke(app)
 
-    assert vars(excinfo.value) == dict(
-        argument_name="my_param",
-        param_type=param_info_type,
-    )
+    assert vars(excinfo.value) == {
+        "argument_name": "my_param",
+        "param_type": param_info_type,
+    }
 
 
 @pytest.mark.parametrize(

@@ -2,13 +2,13 @@ You can declare a *CLI parameter* to be a standard Python <a href="https://docs.
 
 This is what you would do for directory paths, file paths, etc:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="1  8"
     {!> ../docs_src/parameter_types/path/tutorial001_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -70,13 +70,13 @@ You can perform several validations for `Path` *CLI parameters*:
 
 For example:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="11-16"
     {!> ../docs_src/parameter_types/path/tutorial002_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.

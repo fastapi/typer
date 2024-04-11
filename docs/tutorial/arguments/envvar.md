@@ -2,13 +2,13 @@ You can also configure a *CLI argument* to read a value from an environment vari
 
 To do that, use the `envvar` parameter for `typer.Argument()`:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="5"
     {!> ../docs_src/arguments/envvar/tutorial001_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -60,13 +60,13 @@ Hello Mr. Czernobog
 
 You are not restricted to a single environment variable, you can declare a list of environment variables that could be used to get a value if it was not passed in the command line:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="6"
     {!> ../docs_src/arguments/envvar/tutorial002_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -108,13 +108,13 @@ Hello Mr. Anubis
 
 By default, environment variables used will be shown in the help text, but you can disable them with `show_envvar=False`:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="7"
     {!> ../docs_src/arguments/envvar/tutorial003_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.

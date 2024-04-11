@@ -8,6 +8,7 @@ if TYPE_CHECKING:  # pragma: no cover
     import click.shell_completion
 
 
+# Overload for Option created with custom type 'parser'
 @overload
 def Option(
     # Parameter
@@ -29,7 +30,7 @@ def Option(
     # Custom type
     parser: Optional[Callable[[str], Any]] = None,
     # Option
-    show_default: bool = True,
+    show_default: Union[bool, str] = True,
     prompt: Union[bool, str] = False,
     confirmation_prompt: bool = False,
     prompt_required: bool = True,
@@ -71,6 +72,7 @@ def Option(
     ...
 
 
+# Overload for Option created with custom type 'click_type'
 @overload
 def Option(
     # Parameter
@@ -92,7 +94,7 @@ def Option(
     # Custom type
     click_type: Optional[click.ParamType] = None,
     # Option
-    show_default: bool = True,
+    show_default: Union[bool, str] = True,
     prompt: Union[bool, str] = False,
     confirmation_prompt: bool = False,
     prompt_required: bool = True,
@@ -155,7 +157,7 @@ def Option(
     parser: Optional[Callable[[str], Any]] = None,
     click_type: Optional[click.ParamType] = None,
     # Option
-    show_default: bool = True,
+    show_default: Union[bool, str] = True,
     prompt: Union[bool, str] = False,
     confirmation_prompt: bool = False,
     prompt_required: bool = True,
@@ -251,6 +253,7 @@ def Option(
     )
 
 
+# Overload for Argument created with custom type 'parser'
 @overload
 def Argument(
     # Parameter
@@ -268,6 +271,7 @@ def Argument(
         ]
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
+    default_factory: Optional[Callable[[], Any]] = None,
     # Custom type
     parser: Optional[Callable[[str], Any]] = None,
     # TyperArgument
@@ -305,6 +309,7 @@ def Argument(
     ...
 
 
+# Overload for Argument created with custom type 'click_type'
 @overload
 def Argument(
     # Parameter
@@ -322,6 +327,7 @@ def Argument(
         ]
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
+    default_factory: Optional[Callable[[], Any]] = None,
     # Custom type
     click_type: Optional[click.ParamType] = None,
     # TyperArgument

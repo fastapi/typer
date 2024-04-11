@@ -2,13 +2,13 @@ The same as before, you can add help for the commands in the docstrings and the 
 
 And the `typer.Typer()` application receives a parameter `help` that you can pass with the main help text for your CLI program:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="4  9-11  22  26-30  43  47-51  60-62"
     {!> ../docs_src/commands/help/tutorial001_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -201,13 +201,13 @@ Then you can use more formatting in the docstrings and the `help` parameter for 
 
 If you set `rich_markup_mode="rich"` when creating the `typer.Typer()` app, you will be able to use <a href="https://rich.readthedocs.io/en/stable/markup.html" class="external-link" target="_blank">Rich Console Markup</a> in the docstring, and even in the help for the *CLI arguments* and options:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="4  10  14-16  21  24  27"
     {!> ../docs_src/commands/help/tutorial004_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -277,13 +277,13 @@ $ python main.py delete --help
 
 If you set `rich_markup_mode="markdown"` when creating the `typer.Typer()` app, you will be able to use Markdown in the docstring:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="4  9  12-20  25  27-28"
     {!> ../docs_src/commands/help/tutorial005_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -363,7 +363,7 @@ If you installed <a href="https://rich.readthedocs.io/" class="external-link" ta
 
 To set the panel for a command you can pass the argument `rich_help_panel` with the name of the panel you want to use:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="22  30  38  46"
     {!> ../docs_src/commands/help/tutorial006.py!}
@@ -408,13 +408,13 @@ The same way, you can configure the panels for *CLI arguments* and *CLI options*
 
 And of course, in the same application you can also set the `rich_help_panel` for commands.
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="15  21  27  37"
     {!> ../docs_src/commands/help/tutorial007_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.

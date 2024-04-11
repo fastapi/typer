@@ -15,7 +15,7 @@ app.command()(mod.main)
 
 def test_main(tmpdir):
     binary_file = Path(tmpdir) / "config.txt"
-    if binary_file.exists():  # pragma no cover
+    if binary_file.exists():  # pragma: no cover
         binary_file.unlink()
     result = runner.invoke(app, ["--file", f"{binary_file}"])
     text = binary_file.read_text()
@@ -29,8 +29,7 @@ def test_main(tmpdir):
 def test_script():
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
     )
     assert "Usage" in result.stdout
