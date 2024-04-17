@@ -461,10 +461,9 @@ class TyperOption(click.core.Option):
         self.multiple_separator = multiple_separator
 
         if self.multiple_separator is not None:
-            if self.multiple_separator.strip() == "":
-                raise UnsupportedMultipleSeparatorError(
-                    self.name, self.multiple_separator
-                )
+            self.multiple_separator = self.multiple_separator.strip()
+            if len(self.multiple_separator) != 1:
+                raise UnsupportedMultipleSeparatorError(self.name, multiple_separator)
 
             if not isinstance(self.type, list):
                 raise MultipleSeparatorForNonListTypeError(self.name)
