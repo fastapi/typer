@@ -884,6 +884,9 @@ def get_click_param(
             param_decls.extend(parameter_info.param_decls)
         else:
             param_decls.append(default_option_declaration)
+
+        # Check the multiple separator option for validity
+
         return (
             TyperOption(
                 # Option
@@ -917,6 +920,7 @@ def get_click_param(
                 autocompletion=get_param_completion(parameter_info.autocompletion),
                 # Rich settings
                 rich_help_panel=parameter_info.rich_help_panel,
+                multiple_separator=parameter_info.multiple_separator,
             ),
             convertor,
         )

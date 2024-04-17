@@ -68,8 +68,7 @@ def Option(
     path_type: Union[None, Type[str], Type[bytes]] = None,
     # Rich settings
     rich_help_panel: Union[str, None] = None,
-) -> Any:
-    ...
+) -> Any: ...
 
 
 # Overload for Option created with custom type 'click_type'
@@ -132,8 +131,7 @@ def Option(
     path_type: Union[None, Type[str], Type[bytes]] = None,
     # Rich settings
     rich_help_panel: Union[str, None] = None,
-) -> Any:
-    ...
+) -> Any: ...
 
 
 def Option(
@@ -195,7 +193,10 @@ def Option(
     path_type: Union[None, Type[str], Type[bytes]] = None,
     # Rich settings
     rich_help_panel: Union[str, None] = None,
+    # Multiple values
+    multiple_separator: Optional[str] = None,
 ) -> Any:
+
     return OptionInfo(
         # Parameter
         default=default,
@@ -250,6 +251,7 @@ def Option(
         path_type=path_type,
         # Rich settings
         rich_help_panel=rich_help_panel,
+        multiple_separator=multiple_separator,
     )
 
 
@@ -305,8 +307,7 @@ def Argument(
     path_type: Union[None, Type[str], Type[bytes]] = None,
     # Rich settings
     rich_help_panel: Union[str, None] = None,
-) -> Any:
-    ...
+) -> Any: ...
 
 
 # Overload for Argument created with custom type 'click_type'
@@ -361,8 +362,7 @@ def Argument(
     path_type: Union[None, Type[str], Type[bytes]] = None,
     # Rich settings
     rich_help_panel: Union[str, None] = None,
-) -> Any:
-    ...
+) -> Any: ...
 
 
 def Argument(

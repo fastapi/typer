@@ -2,6 +2,7 @@ import errno
 import inspect
 import os
 import sys
+import typing as t
 from enum import Enum
 from gettext import gettext as _
 from typing import (
@@ -25,6 +26,9 @@ import click.parser
 import click.shell_completion
 import click.types
 import click.utils
+from click import OptionParser, Context
+
+from .utils import UnsupportedMultipleSeparatorError, MultipleSeparatorForNonListTypeError
 
 if sys.version_info >= (3, 8):
     from typing import Literal
@@ -419,6 +423,7 @@ class TyperOption(click.core.Option):
         show_envvar: bool = False,
         # Rich settings
         rich_help_panel: Union[str, None] = None,
+        multiple_separator: Optional[str] = None,
     ):
         super().__init__(
             param_decls=param_decls,
@@ -449,6 +454,27 @@ class TyperOption(click.core.Option):
         )
         _typer_param_setup_autocompletion_compat(self, autocompletion=autocompletion)
         self.rich_help_panel = rich_help_panel
+        self.original_type = type
+        self.multiple_separator = multiple_separator
+
+        if self.multiple_separator is not None:
+            if self.multiple_separator.strip() == '':
+                raise UnsupportedMultipleSeparatorError(self.name, self.multiple_separator)
+
+            if not isinstance(self.type, list):
+                raise MultipleSeparatorForNonListTypeError(self.name)
+
+    def _parse_separated_parameter_list(self, parameter_values: list[str]) -> list[str]:
+        values = []
+        for param_str_list in parameter_values:
+            values.extend(param_str_list.split(self.multiple_separator))
+        return values
+
+    def process_value(self, ctx: Context, value: t.Any) -> t.Any:
+        if self.multiple_separator is not None:
+            value = self._parse_separated_parameter_list(value)
+        return super().process_value(ctx, value)
+
 
     def _get_default_string(
         self,
