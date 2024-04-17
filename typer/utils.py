@@ -191,6 +191,7 @@ def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
         )
     return params
 
+
 class MultipleSeparatorForNonListTypeError(Exception):
     argument_name: str
 
@@ -203,6 +204,7 @@ class MultipleSeparatorForNonListTypeError(Exception):
             f"values for {self.argument_name!r}."
         )
 
+
 class UnsupportedMultipleSeparatorError(Exception):
     argument_name: str
     separator: str
@@ -214,5 +216,5 @@ class UnsupportedMultipleSeparatorError(Exception):
     def __str__(self) -> str:
         return (
             f"Error in definition of Option {self.argument_name!r}. "
-            f"Separator \"{self.separator}\" is not supported for multiple value splitting."
+            f'Separator "{self.separator}" is not supported for multiple value splitting.'
         )

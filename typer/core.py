@@ -26,9 +26,12 @@ import click.parser
 import click.shell_completion
 import click.types
 import click.utils
-from click import OptionParser, Context
+from click import Context
 
-from .utils import UnsupportedMultipleSeparatorError, MultipleSeparatorForNonListTypeError
+from .utils import (
+    MultipleSeparatorForNonListTypeError,
+    UnsupportedMultipleSeparatorError,
+)
 
 if sys.version_info >= (3, 8):
     from typing import Literal
@@ -458,8 +461,10 @@ class TyperOption(click.core.Option):
         self.multiple_separator = multiple_separator
 
         if self.multiple_separator is not None:
-            if self.multiple_separator.strip() == '':
-                raise UnsupportedMultipleSeparatorError(self.name, self.multiple_separator)
+            if self.multiple_separator.strip() == "":
+                raise UnsupportedMultipleSeparatorError(
+                    self.name, self.multiple_separator
+                )
 
             if not isinstance(self.type, list):
                 raise MultipleSeparatorForNonListTypeError(self.name)
@@ -474,7 +479,6 @@ class TyperOption(click.core.Option):
         if self.multiple_separator is not None:
             value = self._parse_separated_parameter_list(value)
         return super().process_value(ctx, value)
-
 
     def _get_default_string(
         self,

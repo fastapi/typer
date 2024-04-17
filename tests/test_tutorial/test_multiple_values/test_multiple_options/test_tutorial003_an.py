@@ -28,6 +28,7 @@ def test_2_number():
     assert result.exit_code == 0
     assert "The sum is 9.5" in result.output
 
+
 def test_3_number():
     result = runner.invoke(app, ["--number", "2, 3, 4.5", "--number", "5"])
     assert result.exit_code == 0

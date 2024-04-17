@@ -257,6 +257,7 @@ def test_split_opt():
     assert prefix == ""
     assert opt == "verbose"
 
+
 def test_multiple_options_separator_1_unsupported_separator():
     app = typer.Typer()
 
@@ -267,8 +268,10 @@ def test_multiple_options_separator_1_unsupported_separator():
     with pytest.raises(typer.UnsupportedMultipleSeparatorError) as exc_info:
         runner.invoke(app, [])
     assert (
-            str(exc_info.value) == "Error in definition of Option 'names'. Separator \"\t \n\" is not supported for multiple value splitting."
+        str(exc_info.value)
+        == "Error in definition of Option 'names'. Separator \"\t \n\" is not supported for multiple value splitting."
     )
+
 
 def test_multiple_options_separator_2_non_list_type():
     app = typer.Typer()
@@ -280,6 +283,7 @@ def test_multiple_options_separator_2_non_list_type():
     with pytest.raises(typer.MultipleSeparatorForNonListTypeError) as exc_info:
         runner.invoke(app, [])
     assert (
-            str(exc_info.value) == "Multiple values are supported for list[T] types only. Wrap type in list to"
-                                   " support multiple values for 'names'."
+        str(exc_info.value)
+        == "Multiple values are supported for list[T] types only. Wrap type in list to"
+        " support multiple values for 'names'."
     )

@@ -390,8 +390,6 @@ class OptionInfo(ParameterInfo):
         self.multiple_separator = multiple_separator
 
 
-
-
 class ArgumentInfo(ParameterInfo):
     def __init__(
         self,
