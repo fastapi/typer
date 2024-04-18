@@ -194,9 +194,9 @@ def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
 
 class MultipleSeparatorForNonListTypeError(Exception):
     argument_name: str
-    argument_type: Type
+    argument_type: Type[Any]
 
-    def __init__(self, argument_name: str, argument_type: Type):
+    def __init__(self, argument_name: str, argument_type: Type[Any]):
         self.argument_name = argument_name
         self.argument_type = argument_type
 
