@@ -33,6 +33,7 @@ def main(name: str = "morty"):
         }
     }
     print(name + 3)
+    print(deep_dict_or_json)
 
 
 if __name__ == "__main__":
