@@ -42,7 +42,7 @@ $ python main.py 7479706572-72756c6573
 Usage: main.py [OPTIONS] USER_ID
 Try "main.py --help" for help.
 
-Error: Invalid value for 'USER_ID': 7479706572-72756c6573 is not a valid UUID value
+Error: Invalid value for 'USER_ID': 7479706572-72756c6573 is not a valid UUID.
 ```
 
 </div>

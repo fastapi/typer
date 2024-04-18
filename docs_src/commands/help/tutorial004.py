@@ -7,10 +7,10 @@ app = typer.Typer(rich_markup_mode="rich")
 def create(
     username: str = typer.Argument(
         ..., help="The username to be [green]created[/green]"
-    )
+    ),
 ):
     """
-    [bold green]Create[/bold green] a new [italic]shinny[/italic] user. :sparkles:
+    [bold green]Create[/bold green] a new [italic]shiny[/italic] user. :sparkles:
 
     This requires a [underline]username[/underline].
     """

@@ -25,14 +25,6 @@ $ python main.py --help
 <b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS]                            </b>
 <b>                                                     </b>
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--install-completion</b></font>          Install completion  │
-<font color="#A5A5A1">│                               for the current     │</font>
-<font color="#A5A5A1">│                               shell.              │</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--show-completion</b></font>             Show completion for │
-<font color="#A5A5A1">│                               the current shell,  │</font>
-<font color="#A5A5A1">│                               to copy it or       │</font>
-<font color="#A5A5A1">│                               customize the       │</font>
-<font color="#A5A5A1">│                               installation.       │</font>
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                        Show this message   │
 <font color="#A5A5A1">│                               and exit.           │</font>
 <font color="#A5A5A1">╰───────────────────────────────────────────────────╯</font>
@@ -251,12 +243,6 @@ $ python main.py --help
 <font color="#A5A5A1">╰─────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ───────────────────────────────────────────────────────╮</font>
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--formal</b></font>                <font color="#AE81FF"><b>--no-formal</b></font>      [default: no-formal]   │
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--install-completion</b></font>                     Install completion for │
-<font color="#A5A5A1">│                                          the current shell.     │</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--show-completion</b></font>                        Show completion for    │
-<font color="#A5A5A1">│                                          the current shell, to  │</font>
-<font color="#A5A5A1">│                                          copy it or customize   │</font>
-<font color="#A5A5A1">│                                          the installation.      │</font>
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                                   Show this message and  │
 <font color="#A5A5A1">│                                          exit.                  │</font>
 <font color="#A5A5A1">╰─────────────────────────────────────────────────────────────────╯</font>
@@ -316,14 +302,6 @@ $ python main.py --help
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--lastname</b></font>                             <font color="#F4BF75"><b>TEXT</b></font>                       │
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--formal</b></font>                <font color="#AE81FF"><b>--no-formal</b></font>    <font color="#F4BF75"><b>    </b></font>  [default: no-formal] │
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--install-completion</b></font>                   <font color="#F4BF75"><b>    </b></font>  Install completion   │
-<font color="#A5A5A1">│                                              for the current      │</font>
-<font color="#A5A5A1">│                                              shell.               │</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--show-completion</b></font>                      <font color="#F4BF75"><b>    </b></font>  Show completion for  │
-<font color="#A5A5A1">│                                              the current shell,   │</font>
-<font color="#A5A5A1">│                                              to copy it or        │</font>
-<font color="#A5A5A1">│                                              customize the        │</font>
-<font color="#A5A5A1">│                                              installation.        │</font>
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                                 <font color="#F4BF75"><b>    </b></font>  Show this message    │
 <font color="#A5A5A1">│                                              and exit.            │</font>
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
@@ -394,14 +372,6 @@ $ python main.py --help
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--lastname</b></font>                             <font color="#F4BF75"><b>TEXT</b></font>                       │
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--formal</b></font>                <font color="#AE81FF"><b>--no-formal</b></font>    <font color="#F4BF75"><b>    </b></font>  [default: no-formal] │
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--install-completion</b></font>                   <font color="#F4BF75"><b>    </b></font>  Install completion   │
-<font color="#A5A5A1">│                                              for the current      │</font>
-<font color="#A5A5A1">│                                              shell.               │</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--show-completion</b></font>                      <font color="#F4BF75"><b>    </b></font>  Show completion for  │
-<font color="#A5A5A1">│                                              the current shell,   │</font>
-<font color="#A5A5A1">│                                              to copy it or        │</font>
-<font color="#A5A5A1">│                                              customize the        │</font>
-<font color="#A5A5A1">│                                              installation.        │</font>
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                                 <font color="#F4BF75"><b>    </b></font>  Show this message    │
 <font color="#A5A5A1">│                                              and exit.            │</font>
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
@@ -482,11 +452,11 @@ And we'll use ***CLI option*** to refer to those *CLI parameters* that depend on
 
 We will use ***CLI parameter*** to refer to both, *CLI arguments* and *CLI options*.
 
-## **Typer CLI**
+## The `typer` Command
 
-Now that you know the basics of **Typer**, you might want to install and use [Typer CLI](../typer-cli.md){.internal-link target=_blank}.
+When you install `typer`, by default it adds a `typer` command to your shell.
 
-**Typer CLI** is a tool to run your **Typer** scripts giving you ✨ auto completion ✨ in your terminal.
+This `typer` command allows you to run your scripts with ✨ auto completion ✨ in your terminal.
 
 As an alternative to running with Python:
 
@@ -500,7 +470,7 @@ Hello World
 
 </div>
 
-You can run with **Typer CLI**:
+You can run with the `typer` command:
 
 <div class="termy">
 
@@ -517,6 +487,6 @@ Hello World
 So you can use it to have auto completion for your own scripts as you continue with the tutorial.
 
 !!! tip
-    Your CLI application built with **Typer** won't need [Typer CLI](../typer-cli.md){.internal-link target=_blank} to have auto completion once you create a Python package.
+    Your CLI application built with **Typer** won't need the `typer` command to have auto completion once you create a Python package.
 
     But for short scripts and for learning, before creating a Python package, it might be useful.
