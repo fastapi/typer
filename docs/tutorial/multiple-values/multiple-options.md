@@ -87,3 +87,51 @@ The sum is 9.5
 ```
 
 </div>
+
+## Passing multiple values in a single argument
+
+Many users expect to be able to pass multiple arguments with a single .
+**Typer** supports this with the `multiple_separator` option for `typing.List[T]` types:
+
+=== "Python 3.7+"
+
+    ```Python hl_lines="7"
+    {!> ../docs_src/multiple_values/multiple_options/tutorial003_an.py!}
+    ```
+
+=== "Python 3.7+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="6"
+    {!> ../docs_src/multiple_values/multiple_options/tutorial003.py!}
+    ```
+
+Check it:
+
+<div class="termy">
+
+```console
+$ python main.py
+
+The sum is 0
+
+// Behaves
+$ python main.py --number 2
+
+The sum is 2.0
+
+// Values to the argument are split using the passed separator
+$ python main.py --number "2, 3, 4.5"
+
+// Supports passing the option multiple times. This joins all values to a single list
+$ python main.py --number "2, 3, 4.5" --number 5
+
+The sum is 14.5
+```
+
+</div>
+
+!!! warning
+    Only single-character non-whitespace separators are supported. Note that passing `--number 2, 3, 4.5` (without wrapping the value in "") does not work.
