@@ -37,3 +37,6 @@ from .models import FileText as FileText
 from .models import FileTextWrite as FileTextWrite
 from .params import Argument as Argument
 from .params import Option as Option
+
+from .utils import MultipleSeparatorForNonListTypeError
+from .utils import UnsupportedMultipleSeparatorError

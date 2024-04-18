@@ -284,6 +284,5 @@ def test_multiple_options_separator_2_non_list_type():
         runner.invoke(app, [])
     assert (
         str(exc_info.value)
-        == "Multiple values are supported for list[T] types only. Wrap type in list to"
-        " support multiple values for 'names'."
+        == "Multiple values are supported for List[T] types only. Annotate 'names' as List[str] to support multiple values."
     )

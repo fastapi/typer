@@ -194,15 +194,14 @@ def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
 
 class MultipleSeparatorForNonListTypeError(Exception):
     argument_name: str
+    argument_type: Type
 
-    def __init__(self, argument_name: str):
+    def __init__(self, argument_name: str, argument_type: Type):
         self.argument_name = argument_name
+        self.argument_type = argument_type
 
     def __str__(self) -> str:
-        return (
-            f"Multiple values are supported for list[T] types only. Wrap type in list to support multiple "
-            f"values for {self.argument_name!r}."
-        )
+        return f"Multiple values are supported for List[T] types only. Annotate {self.argument_name!r} as List[{self.argument_type.__name__}] to support multiple values."
 
 
 class UnsupportedMultipleSeparatorError(Exception):
