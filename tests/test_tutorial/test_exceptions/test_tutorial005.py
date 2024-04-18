@@ -20,8 +20,8 @@ def test_traceback_rich_pretty_width():
     )
     print(result.stderr)
 
-    assert "print(name + 3)" in result.stderr
-    assert 'TypeError: can only concatenate str (not "int") to str' in result.stderr
+    assert "print(name + deep_dict_or_json + 3)" in result.stderr
+    assert 'TypeError: can only concatenate str (not "dict") to str' in result.stderr
     assert "name = 'morty'" in result.stderr
 
 
