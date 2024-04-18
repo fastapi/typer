@@ -76,3 +76,25 @@ Aborted!
 ```
 
 </div>
+
+## Prompt with Rich
+
+If you installed Rich as described in [Printing and Colors](printing.md){.internal-link target=_blank}, you can use Rich to prompt the user for input:
+
+```Python hl_lines="2  6"
+{!../docs_src/prompt/tutorial004.py!}
+```
+
+And when you run it, it will look like:
+
+<div class="termy">
+
+```console
+$ python main.py
+
+# Enter your name 😎:$ Morty
+
+Hello Morty
+```
+
+</div>

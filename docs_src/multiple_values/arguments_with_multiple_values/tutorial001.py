@@ -7,8 +7,8 @@ import typer
 def main(files: List[Path], celebration: str):
     for path in files:
         if path.is_file():
-            typer.echo(f"This file exists: {path.name}")
-            typer.echo(celebration)
+            print(f"This file exists: {path.name}")
+            print(celebration)
 
 
 if __name__ == "__main__":

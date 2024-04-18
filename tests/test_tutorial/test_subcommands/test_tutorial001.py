@@ -1,4 +1,6 @@
+import os
 import subprocess
+import sys
 
 import pytest
 from typer.testing import CliRunner
@@ -10,7 +12,7 @@ runner = CliRunner()
 
 @pytest.fixture()
 def mod(monkeypatch):
-    with monkeypatch.context() as m:
+    with monkeypatch.context():
         monkeypatch.syspath_prepend(list(tutorial001.__path__)[0])
         from docs_src.subcommands.tutorial001 import main
 
@@ -26,7 +28,7 @@ def test_help(app):
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     assert "[OPTIONS] COMMAND [ARGS]..." in result.output
-    assert "Commands:" in result.output
+    assert "Commands" in result.output
     assert "items" in result.output
     assert "users" in result.output
 
@@ -35,7 +37,7 @@ def test_help_items(app):
     result = runner.invoke(app, ["items", "--help"])
     assert result.exit_code == 0
     assert "[OPTIONS] COMMAND [ARGS]..." in result.output
-    assert "Commands:" in result.output
+    assert "Commands" in result.output
     assert "create" in result.output
     assert "delete" in result.output
     assert "sell" in result.output
@@ -63,7 +65,7 @@ def test_help_users(app):
     result = runner.invoke(app, ["users", "--help"])
     assert result.exit_code == 0
     assert "[OPTIONS] COMMAND [ARGS]..." in result.output
-    assert "Commands:" in result.output
+    assert "Commands" in result.output
     assert "create" in result.output
     assert "delete" in result.output
     assert "sell" not in result.output
@@ -84,11 +86,14 @@ def test_users_delete(app):
 def test_scripts(mod):
     from docs_src.subcommands.tutorial001 import items, users
 
+    env = os.environ.copy()
+    env["PYTHONPATH"] = ":".join(list(tutorial001.__path__))
+
     for module in [mod, items, users]:
         result = subprocess.run(
-            ["coverage", "run", module.__file__, "--help"],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            [sys.executable, "-m", "coverage", "run", module.__file__, "--help"],
+            capture_output=True,
             encoding="utf-8",
+            env=env,
         )
         assert "Usage" in result.stdout

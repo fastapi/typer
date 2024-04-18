@@ -1,8 +1,8 @@
 import typer
 
 
-def main(name: str = typer.Argument(...)):
-    typer.echo(f"Hello {name}")
+def main(name: str = typer.Argument()):
+    print(f"Hello {name}")
 
 
 if __name__ == "__main__":

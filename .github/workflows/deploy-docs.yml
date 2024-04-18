@@ -1,29 +1,48 @@
-name: Build and Deploy to Netlify
+name: Deploy Docs
 on:
-  push:
-  pull_request:
-    types: [opened, synchronize]
+  workflow_run:
+    workflows:
+      - Build Docs
+    types:
+      - completed
+
 jobs:
-  build:
-    runs-on: ubuntu-18.04
+  deploy-docs:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python
-        uses: actions/setup-python@v1
-        with:
-          python-version: "3.7"
-      - name: Install Flit
-        run: python3.7 -m pip install flit
-      - name: Install docs extras
-        run: python3.7 -m flit install --extras doc
-      - name: Build MkDocs
-        run: python3.7 -m mkdocs build
-      - name: Deploy to Netlify
-        uses: nwtgck/actions-netlify@v1.0.3
-        with:
-          publish-dir: './site'
-          production-branch: master
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Dump GitHub context
         env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - uses: actions/checkout@v4
+      - name: Clean site
+        run: |
+          rm -rf ./site
+          mkdir ./site
+      - name: Download Artifact Docs
+        id: download
+        uses: dawidd6/action-download-artifact@v3.1.4
+        with:
+          if_no_artifact_found: ignore
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          workflow: build-docs.yml
+          run_id: ${{ github.event.workflow_run.id }}
+          name: docs-site
+          path: ./site/
+      - name: Deploy to Cloudflare Pages
+        if: steps.download.outputs.found_artifact == 'true'
+        id: deploy
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: typertiangolo
+          directory: './site'
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ ( github.event.workflow_run.head_repository.full_name == github.repository && github.event.workflow_run.head_branch == 'master' && 'main' ) || ( github.event.workflow_run.head_sha ) }}
+      - name: Comment Deploy
+        if: steps.deploy.outputs.url != ''
+        uses: ./.github/actions/comment-docs-preview-in-pr
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          deploy_url: "${{ steps.deploy.outputs.url }}"

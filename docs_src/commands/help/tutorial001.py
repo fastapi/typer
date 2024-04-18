@@ -8,7 +8,7 @@ def create(username: str):
     """
     Create a new user with USERNAME.
     """
-    typer.echo(f"Creating user: {username}")
+    print(f"Creating user: {username}")
 
 
 @app.command()
@@ -26,9 +26,9 @@ def delete(
     If --force is not used, will ask for confirmation.
     """
     if force:
-        typer.echo(f"Deleting user: {username}")
+        print(f"Deleting user: {username}")
     else:
-        typer.echo("Operation cancelled")
+        print("Operation cancelled")
 
 
 @app.command()
@@ -37,7 +37,7 @@ def delete_all(
         ...,
         prompt="Are you sure you want to delete ALL users?",
         help="Force deletion without confirmation.",
-    )
+    ),
 ):
     """
     Delete ALL users in the database.
@@ -45,9 +45,9 @@ def delete_all(
     If --force is not used, will ask for confirmation.
     """
     if force:
-        typer.echo("Deleting all users")
+        print("Deleting all users")
     else:
-        typer.echo("Operation cancelled")
+        print("Operation cancelled")
 
 
 @app.command()
@@ -55,7 +55,7 @@ def init():
     """
     Initialize the users database.
     """
-    typer.echo("Initializing user database")
+    print("Initializing user database")
 
 
 if __name__ == "__main__":
