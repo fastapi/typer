@@ -262,7 +262,7 @@ def test_multiple_options_separator_1_unsupported_separator():
     app = typer.Typer()
 
     @app.command()
-    def main(names: list[str] = typer.Option(..., multiple_separator="\t \n")):
+    def main(names: typing.List[str] = typer.Option(..., multiple_separator="\t \n")):
         print("Hello World")
 
     with pytest.raises(typer.UnsupportedMultipleSeparatorError) as exc_info:
