@@ -51,7 +51,6 @@ def test_completion_invalid_instruction():
         env={
             **os.environ,
             "_TUTORIAL001.PY_COMPLETE": "sourcebash",
-            "_TYPER_COMPLETE_TESTING": "True",
         },
     )
     assert result.returncode != 0
@@ -66,7 +65,6 @@ def test_completion_source_bash():
         env={
             **os.environ,
             "_TUTORIAL001.PY_COMPLETE": "source_bash",
-            "_TYPER_COMPLETE_TESTING": "True",
         },
     )
     assert (
@@ -83,7 +81,6 @@ def test_completion_source_invalid_shell():
         env={
             **os.environ,
             "_TUTORIAL001.PY_COMPLETE": "source_xxx",
-            "_TYPER_COMPLETE_TESTING": "True",
         },
     )
     assert "Shell xxx not supported." in result.stderr
@@ -97,7 +94,6 @@ def test_completion_source_invalid_instruction():
         env={
             **os.environ,
             "_TUTORIAL001.PY_COMPLETE": "explode_bash",
-            "_TYPER_COMPLETE_TESTING": "True",
         },
     )
     assert 'Completion instruction "explode" not supported.' in result.stderr
@@ -111,7 +107,6 @@ def test_completion_source_zsh():
         env={
             **os.environ,
             "_TUTORIAL001.PY_COMPLETE": "source_zsh",
-            "_TYPER_COMPLETE_TESTING": "True",
         },
     )
     assert "compdef _tutorial001py_completion tutorial001.py" in result.stdout
@@ -125,7 +120,6 @@ def test_completion_source_fish():
         env={
             **os.environ,
             "_TUTORIAL001.PY_COMPLETE": "source_fish",
-            "_TYPER_COMPLETE_TESTING": "True",
         },
     )
     assert "complete --command tutorial001.py --no-files" in result.stdout
@@ -139,7 +133,6 @@ def test_completion_source_powershell():
         env={
             **os.environ,
             "_TUTORIAL001.PY_COMPLETE": "source_powershell",
-            "_TYPER_COMPLETE_TESTING": "True",
         },
     )
     assert (
@@ -156,7 +149,6 @@ def test_completion_source_pwsh():
         env={
             **os.environ,
             "_TUTORIAL001.PY_COMPLETE": "source_pwsh",
-            "_TYPER_COMPLETE_TESTING": "True",
         },
     )
     assert (

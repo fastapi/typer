@@ -16,6 +16,11 @@ theme:
 repo_name: tiangolo/typer
 repo_url: https://github.com/tiangolo/typer
 edit_uri: ""
+plugins:
+  search: null
+  redirects:
+    redirect_maps:
+      typer-cli.md: tutorial/typer-command.md
 
 nav:
   - Typer: index.md
@@ -81,7 +86,7 @@ nav:
       - Using Click: tutorial/using-click.md
       - Building a Package: tutorial/package.md
       - tutorial/exceptions.md
-  - Typer CLI - completion for small scripts: typer-cli.md
+      - tutorial/typer-command.md
   - Alternatives, Inspiration and Comparisons: alternatives.md
   - Help Typer - Get Help: help-typer.md
   - Development - Contributing: contributing.md

@@ -67,13 +67,13 @@ Creating user: Camila
 // Now test the command delete
 $ python main.py delete Camila
 
-# Are you sure you want to delete the user? [y/N]: $ y
+# Are you sure you want to delete the user? [y/n]: $ y
 
 Deleting user: Camila
 
 $ python main.py delete Wade
 
-# Are you sure you want to delete the user? [y/N]: $ n
+# Are you sure you want to delete the user? [y/n]: $ n
 
 Operation cancelled
 
@@ -82,13 +82,13 @@ Operation cancelled
 
 $ python main.py delete-all
 
-# Are you sure you want to delete ALL users? [y/N]: $ y
+# Are you sure you want to delete ALL users? [y/n]: $ y
 
 Deleting all users
 
 $ python main.py delete-all
 
-# Are you sure you want to delete ALL users? [y/N]: $ n
+# Are you sure you want to delete ALL users? [y/n]: $ n
 
 Operation cancelled
 

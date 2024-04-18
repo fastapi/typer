@@ -48,7 +48,6 @@ def test_completion():
             **os.environ,
             "_COMPAT_CLICK7_8.PY_COMPLETE": "complete_zsh",
             "_TYPER_COMPLETE_ARGS": "compat_click7_8.py --nickname ",
-            "_TYPER_COMPLETE_TESTING": "True",
         },
     )
     assert "Jonny" in result.stdout

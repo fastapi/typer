@@ -1,4 +1,4 @@
-As you have seen, apps built with **Typer** have completion in your shell that works when you create a Python package or using **Typer CLI**.
+As you have seen, apps built with **Typer** have completion in your shell that works when you create a Python package or using the `typer` command.
 
 It normally completes *CLI options*, *CLI arguments*, and subcommands (that you will learn about later).
 
@@ -8,9 +8,9 @@ But you can also provide auto completion for the **values** of *CLI options* and
 
 Before checking how to provide custom completions, let's check again how it works.
 
-After installing completion (for your own Python package or for **Typer CLI**), when you use your CLI program and start adding a *CLI option* with `--` an then hit <kbd>TAB</kbd>, your shell will show you the available *CLI options* (the same for *CLI arguments*, etc).
+After installing completion for your own Python package (or using the `typer` command), when you use your CLI program and start adding a *CLI option* with `--` an then hit <kbd>TAB</kbd>, your shell will show you the available *CLI options* (the same for *CLI arguments*, etc).
 
-To check it quickly without creating a new Python package, install [Typer CLI](../typer-cli.md){.internal-link target=_blank}.
+To check it quickly without creating a new Python package, use the `typer` command.
 
 Then let's create small example program:
 
@@ -29,7 +29,7 @@ Then let's create small example program:
     {!> ../docs_src/options_autocompletion/tutorial001.py!}
     ```
 
-And let's try it with **Typer CLI** to get completion:
+And let's try it with the `typer` command to get completion:
 
 <div class="termy">
 
