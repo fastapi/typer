@@ -263,7 +263,7 @@ def test_multiple_options_separator_1_unsupported_separator():
 
     @app.command()
     def main(names: typing.List[str] = typer.Option(..., multiple_separator="\t \n")):
-        print("Hello World")
+        pass  # pragma: no cover
 
     with pytest.raises(typer.UnsupportedMultipleSeparatorError) as exc_info:
         runner.invoke(app, [])
@@ -278,7 +278,7 @@ def test_multiple_options_separator_2_non_list_type():
 
     @app.command()
     def main(names: str = typer.Option(..., multiple_separator=",")):
-        print("Hello World")
+        pass  # pragma: no cover
 
     with pytest.raises(typer.MultipleSeparatorForNonListTypeError) as exc_info:
         runner.invoke(app, [])
