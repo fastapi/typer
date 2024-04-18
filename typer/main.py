@@ -35,9 +35,9 @@ from .models import (
     TyperInfo,
 )
 from .utils import (
-    get_params_from_function,
-    UnsupportedMultipleSeparatorError,
     MultipleSeparatorForNonListTypeError,
+    UnsupportedMultipleSeparatorError,
+    get_params_from_function,
 )
 
 try:
