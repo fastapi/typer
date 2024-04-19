@@ -593,7 +593,7 @@ Uninstalling rick-portal-gun-0.1.0:
     /home/rick/.local/bin/rick-portal-gun
     /home/rick/.local/lib/python3.10/site-packages/rick_portal_gun-0.1.0.dist-info/*
     /home/rick/.local/lib/python3.10/site-packages/rick_portal_gun/*
-# Proceed (y/n)? $ y
+# Proceed (Y/n)? $ Y
     Successfully uninstalled rick-portal-gun-0.1.0
 ```
 
