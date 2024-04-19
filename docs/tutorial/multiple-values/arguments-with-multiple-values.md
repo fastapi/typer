@@ -72,7 +72,7 @@ Hello Ron
 // If you pass an invalid number of arguments you will get an error
 $ python main.py Draco Hagrid
 
-Error: argument names takes 3 values
+Error: Argument 'names' takes 3 values
 
 // And if you pass the exact number of values it will work correctly
 $ python main.py Draco Hagrid Dobby

@@ -102,15 +102,6 @@ excludes = ["typer", "tests", "pdm_build.py"]
 # doesn't override it during the build.
 source-includes = [""]
 
-[tool.isort]
-profile = "black"
-known_third_party = ["typer", "click"]
-skip_glob = [
-    "docs_src/subcommands/tutorial001/main.py",
-    "docs_src/subcommands/tutorial003/lands.py",
-    "docs_src/subcommands/tutorial003/main.py",
-    ]
-
 [tool.pytest.ini_options]
 addopts = [
   "--strict-config",

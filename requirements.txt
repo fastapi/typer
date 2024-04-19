@@ -1,4 +1,4 @@
--e .[all]
+-e .
 
 -r requirements-tests.txt
 -r requirements-docs.txt

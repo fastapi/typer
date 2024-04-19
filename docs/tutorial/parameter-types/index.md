@@ -50,7 +50,7 @@ $ python main.py Camila --age 15.3
 Usage: main.py [OPTIONS] NAME
 Try "main.py --help" for help.
 
-Error: Invalid value for '--age': 15.3 is not a valid integer
+Error: Invalid value for '--age': '15.3' is not a valid integer
 
 // Because 15.3 is not an INTEGER (it's a float)
 ```
