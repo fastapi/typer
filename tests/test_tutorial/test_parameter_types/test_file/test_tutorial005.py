@@ -1,4 +1,5 @@
 import subprocess
+import sys
 from pathlib import Path
 
 import typer
@@ -14,7 +15,7 @@ app.command()(mod.main)
 
 def test_main(tmpdir):
     config_file = Path(tmpdir) / "config.txt"
-    if config_file.exists():  # pragma no cover
+    if config_file.exists():  # pragma: no cover
         config_file.unlink()
         config_file.write_text("")
     result = runner.invoke(app, ["--config", f"{config_file}"])
@@ -29,9 +30,8 @@ def test_main(tmpdir):
 
 def test_script():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--help"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
+        capture_output=True,
         encoding="utf-8",
     )
     assert "Usage" in result.stdout

@@ -76,7 +76,7 @@ When you use `typer.run()`, **Typer** is doing more or less the same as above, i
 
     In our case, this decorator tells **Typer** that the function below is a "`command`".
 
-Both ways, with `typer.run()` and creating the explicit application, achieve the same.
+Both ways, with `typer.run()` and creating the explicit application, achieve almost the same.
 
 !!! tip
     If your use case is solved with just `typer.run()`, that's fine, you don't have to create the explicit `app` and use `@app.command()`, etc.
@@ -113,6 +113,49 @@ Options:
 ```
 
 </div>
+
+## CLI application completion
+
+There's a little detail that is worth noting here.
+
+Now the help shows two new *CLI options*:
+
+* `--install-completion`
+* `--show-completion`
+
+To get shell/tab completion, it's necessary to build a package that you and your users can install and **call directly**.
+
+So instead of running a Python script like:
+
+<div class="termy">
+
+```console
+$ python main.py
+
+✨ Some magic here ✨
+```
+
+</div>
+
+...It would be called like:
+
+<div class="termy">
+
+```console
+$ magic-app
+
+✨ Some magic here ✨
+```
+
+</div>
+
+Having a standalone program like that allows setting up shell/tab completion.
+
+The first step to be able to create an installable package like that is to use an explicit `typer.Typer()` app.
+
+Later you can learn all the process to create a standalone CLI application and [Build a Package](../package.md){.internal-link target=_blank}.
+
+But for now, it's just good to know that you are on that path. 😎
 
 ## A CLI application with multiple commands
 
@@ -167,6 +210,38 @@ Notice that the help text now shows the 2 commands: `create` and `delete`.
 
 !!! tip
     By default, the names of the commands are generated from the function name.
+
+## Show the help message if no command is given
+
+By default, we need to specify `--help` to get the command's help page.
+
+However, by setting `no_args_is_help=True` when defining the `typer.Typer()` application, the help function will be shown whenever no argument is given:
+
+```Python hl_lines="3"
+{!../docs_src/commands/index/tutorial003.py!}
+```
+
+Now we can run this:
+
+<div class="termy">
+
+```console
+// Check the help without having to type --help
+$ python main.py
+
+Usage: main.py [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  --install-completion  Install completion for the current shell.
+  --show-completion     Show completion for the current shell, to copy it or customize the installation.
+  --help                Show this message and exit.
+
+Commands:
+  create
+  delete
+```
+
+</div>
 
 ## Click Group
 

@@ -67,7 +67,7 @@ $ python main.py create --verbose Camila
 Usage: main.py create [OPTIONS] USERNAME
 Try "main.py create --help" for help.
 
-Error: no such option: --verbose
+Error: No such option: --verbose
 ```
 
 </div>

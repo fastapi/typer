@@ -1,0 +1,93 @@
+name: Build Docs
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types:
+      - opened
+      - synchronize
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    # Required permissions
+    permissions:
+      pull-requests: read
+    # Set job outputs to values from filter step
+    outputs:
+      docs: ${{ steps.filter.outputs.docs }}
+    steps:
+    - uses: actions/checkout@v4
+    # For pull requests it's not necessary to checkout the code but for master it is
+    - uses: dorny/paths-filter@v3
+      id: filter
+      with:
+        filters: |
+          docs:
+            - README.md
+            - docs/**
+            - docs_src/**
+            - requirements-docs.txt
+            - pyproject.toml
+            - mkdocs.yml
+            - mkdocs.insiders.yml
+            - .github/workflows/build-docs.yml
+            - .github/workflows/deploy-docs.yml
+
+  build-docs:
+    needs:
+      - changes
+    if: ${{ needs.changes.outputs.docs == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/cache@v3
+        id: cache
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ runner.os }}-python-docs-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml', 'requirements-docs.txt') }}-v02
+      - name: Install docs extras
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: pip install -r requirements-docs.txt
+      - name: Install Material for MkDocs Insiders
+        if: ( github.event_name != 'pull_request' || github.secret_source == 'Actions' ) && steps.cache.outputs.cache-hit != 'true'
+        run: |
+          pip install git+https://${{ secrets.TYPER_MKDOCS_MATERIAL_INSIDERS }}@github.com/squidfunk/mkdocs-material-insiders.git
+          pip install git+https://${{ secrets.TYPER_MKDOCS_MATERIAL_INSIDERS }}@github.com/pawamoy-insiders/griffe-typing-deprecated.git
+          pip install git+https://${{ secrets.TYPER_MKDOCS_MATERIAL_INSIDERS }}@github.com/pawamoy-insiders/mkdocstrings-python.git
+      - uses: actions/cache@v3
+        with:
+          key: mkdocs-cards-${{ github.ref }}-v1
+          path: .cache
+      - name: Build Docs
+        if: github.event_name == 'pull_request' && github.secret_source != 'Actions'
+        run: python -m mkdocs build
+      - name: Build Docs with Insiders
+        if: ( github.event_name != 'pull_request' || github.secret_source == 'Actions' )
+        run: python -m mkdocs build --config-file mkdocs.insiders.yml
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: docs-site
+          path: ./site/**
+
+  # https://github.com/marketplace/actions/alls-green#why
+  docs-all-green:  # This job does nothing and is only used for the branch protection
+    if: always()
+    needs:
+      - build-docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Decide whether the needed jobs succeeded or failed
+        uses: re-actors/alls-green@release/v1
+        with:
+          jobs: ${{ toJSON(needs) }}
+          allowed-skips: build-docs

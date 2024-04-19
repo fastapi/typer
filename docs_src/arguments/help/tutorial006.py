@@ -2,7 +2,7 @@ import typer
 
 
 def main(name: str = typer.Argument("World", metavar="✨username✨")):
-    typer.echo(f"Hello {name}")
+    print(f"Hello {name}")
 
 
 if __name__ == "__main__":

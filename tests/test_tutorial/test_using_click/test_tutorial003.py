@@ -1,4 +1,5 @@
 import subprocess
+import sys
 
 from click.testing import CliRunner
 
@@ -9,9 +10,15 @@ runner = CliRunner()
 
 def test_cli():
     result = runner.invoke(mod.typer_click_object, [])
-    assert "Usage" in result.stdout
-    assert "hello" in result.stdout
-    assert "top" in result.stdout
+    assert "Missing command" in result.stdout
+
+
+def test_help():
+    result = runner.invoke(mod.typer_click_object, ["--help"])
+    assert result.exit_code == 0
+    assert "Commands" in result.output
+    assert "top" in result.output
+    assert "hello" in result.output
 
 
 def test_typer():
@@ -26,9 +33,8 @@ def test_click():
 
 def test_script():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--help"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
+        capture_output=True,
         encoding="utf-8",
     )
     assert "Usage" in result.stdout

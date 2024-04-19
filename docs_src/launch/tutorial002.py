@@ -13,7 +13,7 @@ def main():
     if not config_path.is_file():
         config_path.write_text('{"version": "1.0.0"}')
     config_file_str = str(config_path)
-    typer.echo("Opening config directory")
+    print("Opening config directory")
     typer.launch(config_file_str, locate=True)
 
 

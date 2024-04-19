@@ -26,7 +26,7 @@ It inspired a lot of the ideas in **FastAPI** and **Typer**.
 !!! check "Inspired **Typer** to"
     Use function parameters to declare *CLI arguments* and *CLI options* as it simplifies a lot the development experience.
 
-### <a href="https://micheles.github.io/plac/" class="external-link" target="_blank">Plac</a>
+### <a href="https://plac.readthedocs.io/en/latest/" class="external-link" target="_blank">Plac</a>
 
 Plac is another library to create CLIs using parameters in functions, similar to Hug.
 
