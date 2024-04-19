@@ -26,14 +26,13 @@ def test_parse_custom_type():
 def test_parse_custom_type_with_default():
     result = runner.invoke(app, ["0"])
     assert "custom_arg is <CustomClass: value=00>" in result.output
-    assert "custom-opt is <CustomClass: value=YY>" in result.output
+    assert "custom-opt is <CustomClass: value=FooFoo>" in result.output
 
 
 def test_script():
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
     )
     assert "Usage" in result.stdout

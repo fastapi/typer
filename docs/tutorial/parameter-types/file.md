@@ -42,13 +42,13 @@ content = b"la cig\xc3\xbce\xc3\xb1a trae al ni\xc3\xb1o"
 
 You will get all the correct editor support, attributes, methods, etc for the file-like object:`
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="5"
     {!> ../docs_src/parameter_types/file/tutorial001_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -82,13 +82,13 @@ Config line: some more settings
 
 For writing text, you can use `typer.FileTextWrite`:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="5-6"
     {!> ../docs_src/parameter_types/file/tutorial002_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -136,13 +136,13 @@ You will receive `bytes` from it.
 
 It's useful for reading binary files like images:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="5"
     {!> ../docs_src/parameter_types/file/tutorial003_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -178,13 +178,13 @@ Have in mind that you have to pass `bytes` to its `.write()` method, not `str`.
 
 If you have a `str`, you have to encode it first to get `bytes`.
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="5"
     {!> ../docs_src/parameter_types/file/tutorial004_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -241,13 +241,13 @@ You can override the `mode` from the defaults above.
 
 For example, you could use `mode="a"` to write "appending" to the same file:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="5"
     {!> ../docs_src/parameter_types/file/tutorial005_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.

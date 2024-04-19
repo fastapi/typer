@@ -8,7 +8,7 @@ def main(
         typer.Argument(
             help="Who to greet", show_default="Deadpoolio the amazing's name"
         ),
-    ] = "Wade Wilson"
+    ] = "Wade Wilson",
 ):
     print(f"Hello {name}")
 
