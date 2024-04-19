@@ -60,7 +60,7 @@ Resolving dependencies... (1.2s)
 
 ---> 100%
 
-Package operations: 10 installs, 0 updates, 0 removals
+Package operations: 8 installs, 0 updates, 0 removals
 
   - Installing mdurl (0.1.2)
   - Installing markdown-it-py (3.0.0)
@@ -68,10 +68,8 @@ Package operations: 10 installs, 0 updates, 0 removals
   - Installing click (8.1.7)
   - Installing rich (13.7.1)
   - Installing shellingham (1.5.4)
-  - Installing typing-extensions (4.10.0)
-  - Installing typer-slim (0.12.0)
-  - Installing typer-cli (0.12.0)
-  - Installing typer (0.12.0)
+  - Installing typing-extensions (4.11.0)
+  - Installing typer (0.12.3)
 
 Writing lock file
 
@@ -611,16 +609,14 @@ $ pip install --user rick-portal-gun
 // Notice that it says "Downloading" 🚀
 Collecting rick-portal-gun
   Downloading rick_portal_gun-0.1.0-py3-none-any.whl.metadata (435 bytes)
-Requirement already satisfied: typer<0.13.0,>=0.12.0 in ./.local/lib/python3.10/site-packages (from rick-portal-gun==0.1.0) (0.12.0)
-Requirement already satisfied: typer-cli==0.12.0 in ./.local/lib/python3.10/site-packages (from typer<0.13.0,>=0.12.0->rick-portal-gun==0.1.0) (0.12.0)
-Requirement already satisfied: typer-slim[standard]==0.12.0 in ./.local/lib/python3.10/site-packages (from typer<0.13.0,>=0.12.0->rick-portal-gun==0.1.0) (0.12.0)
-Requirement already satisfied: typing-extensions>=3.7.4.3 in ./.local/lib/python3.10/site-packages (from typer-slim[standard]==0.12.0->typer<0.13.0,>=0.12.0->rick-portal-gun==0.1.0) (4.10.0)
-Requirement already satisfied: click>=8.0.0 in ./.local/lib/python3.10/site-packages (from typer-slim[standard]==0.12.0->typer<0.13.0,>=0.12.0->rick-portal-gun==0.1.0) (8.1.7)
-Requirement already satisfied: shellingham>=1.3.0 in ./.local/lib/python3.10/site-packages (from typer-slim[standard]==0.12.0->typer<0.13.0,>=0.12.0->rick-portal-gun==0.1.0) (1.5.4)
-Requirement already satisfied: rich>=10.11.0 in ./.local/lib/python3.10/site-packages (from typer-slim[standard]==0.12.0->typer<0.13.0,>=0.12.0->rick-portal-gun==0.1.0) (13.7.1)
-Requirement already satisfied: pygments<3.0.0,>=2.13.0 in ./.local/lib/python3.10/site-packages (from rich>=10.11.0->typer-slim[standard]==0.12.0->typer<0.13.0,>=0.12.0->rick-portal-gun==0.1.0) (2.17.2)
-Requirement already satisfied: markdown-it-py>=2.2.0 in ./.local/lib/python3.10/site-packages (from rich>=10.11.0->typer-slim[standard]==0.12.0->typer<0.13.0,>=0.12.0->rick-portal-gun==0.1.0) (3.0.0)
-Requirement already satisfied: mdurl~=0.1 in ./.local/lib/python3.10/site-packages (from markdown-it-py>=2.2.0->rich>=10.11.0->typer-slim[standard]==0.12.0->typer<0.13.0,>=0.12.0->rick-portal-gun==0.1.0) (0.1.2)
+Requirement already satisfied: typer<0.13.0,>=0.12.3 in ./.local/lib/python3.10/site-packages (from rick-portal-gun==0.1.0) (0.12.3)
+Requirement already satisfied: typing-extensions>=3.7.4.3 in ./.local/lib/python3.10/site-packages (from typer<0.13.0,>=0.12.3->rick-portal-gun==0.1.0) (4.11.0)
+Requirement already satisfied: click>=8.0.0 in ./.local/lib/python3.10/site-packages (from typer<0.13.0,>=0.12.3->rick-portal-gun==0.1.0) (8.1.7)
+Requirement already satisfied: shellingham>=1.3.0 in ./.local/lib/python3.10/site-packages (from typer<0.13.0,>=0.12.3->rick-portal-gun==0.1.0) (1.5.4)
+Requirement already satisfied: rich>=10.11.0 in ./.local/lib/python3.10/site-packages (from typer<0.13.0,>=0.12.3->rick-portal-gun==0.1.0) (13.7.1)
+Requirement already satisfied: pygments<3.0.0,>=2.13.0 in ./.local/lib/python3.10/site-packages (from rich>=10.11.0->typer<0.13.0,>=0.12.3->rick-portal-gun==0.1.0) (2.17.2)
+Requirement already satisfied: markdown-it-py>=2.2.0 in ./.local/lib/python3.10/site-packages (from rich>=10.11.0->typer<0.13.0,>=0.12.3->rick-portal-gun==0.1.0) (3.0.0)
+Requirement already satisfied: mdurl~=0.1 in ./.local/lib/python3.10/site-packages (from markdown-it-py>=2.2.0->rich>=10.11.0->typer<0.13.0,>=0.12.3->rick-portal-gun==0.1.0) (0.1.2)
 Downloading rick_portal_gun-0.1.0-py3-none-any.whl (1.8 kB)
 Installing collected packages: rick-portal-gun
 Successfully installed rick-portal-gun-0.1.0
