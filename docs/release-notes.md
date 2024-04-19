@@ -1,5 +1,21 @@
 ## Latest Changes
 
+### Internal
+
+* 🔧 Tweak development scripts and configs after migration to PDM, Ruff, etc.. PR [#797](https://github.com/tiangolo/typer/pull/797) by [@tiangolo](https://github.com/tiangolo).
+
+## 0.12.3
+
+### Fixes
+
+* 🐛 Fix Rich formatting with no commands. PR [#796](https://github.com/tiangolo/typer/pull/796) by [@svlandeg](https://github.com/svlandeg).
+
+## 0.12.2
+
+### Features
+
+* ✨ Improve column help display, ensure commands column width is the same on all panels. PR [#567](https://github.com/tiangolo/typer/pull/567) by [@ssbarnea](https://github.com/ssbarnea).
+
 ### Fixes
 
 * 🐛 Add support for an argument of type `Optional[Tuple]` and default value `None`. PR [#757](https://github.com/tiangolo/typer/pull/757) by [@Asthestarsfalll](https://github.com/Asthestarsfalll).
