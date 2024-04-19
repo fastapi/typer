@@ -194,7 +194,7 @@ def install_powershell(*, prog_name: str, complete_var: str, shell: str) -> Path
                 pass
         if path_obj is None:
             click.echo("Couldn't decode the path automatically", err=True)
-            raise
+            raise click.exceptions.Exit(1)
 
     path_obj = Path(path_str.strip())
     parent_dir: Path = path_obj.parent
