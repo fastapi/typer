@@ -125,9 +125,6 @@ source = [
     "tests",
     "typer"
 ]
-omit = [
-    "typer/_typing.py"
-]
 context = '${CONTEXT}'
 
 [tool.coverage.report]
@@ -188,9 +185,6 @@ ignore = [
 "docs_src/prompt/tutorial003.py" = ["F841"]
 # Loop control variable `x` not used within loop body
 "docs_src/using_click/tutorial001.py" = ["B007"]
-
-# TODO: refactor _typing.py, remove unnecessary code
-"typer/_typing.py" = ["UP036", "F822"]
 
 [tool.ruff.lint.isort]
 known-third-party = ["typer", "click"]
