@@ -12,7 +12,6 @@ from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, U
 from uuid import UUID
 
 import click
-from typer.pydantic_extension import wrap_pydantic_callback
 
 from .completion import get_completion_inspect_parameters
 from .core import MarkupMode, TyperArgument, TyperCommand, TyperGroup, TyperOption
@@ -35,6 +34,7 @@ from .models import (
     Required,
     TyperInfo,
 )
+from .pydantic_extension import wrap_pydantic_callback
 from .utils import get_params_from_function
 
 try:

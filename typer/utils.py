@@ -106,7 +106,7 @@ def _split_annotation_from_typer_annotations(
     ]
 
 
-def inspect_signature(func: Callable) -> inspect.Signature:
+def inspect_signature(func: Callable[..., Any]) -> inspect.Signature:
     if sys.version_info >= (3, 10):
         signature = inspect.signature(func, eval_str=True)
     else:
