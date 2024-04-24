@@ -1,12 +1,23 @@
 import inspect
 import sys
 from copy import copy
-from typing import Any, Callable, Dict, List, Tuple, Type, cast, get_type_hints
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    List,
+    Tuple,
+    Type,
+    TypeVar,
+    Union,
+    cast,
+    get_type_hints,
+)
 
 from typing_extensions import Annotated
 
 from ._typing import get_args, get_origin
-from .models import ArgumentInfo, OptionInfo, ParameterInfo, ParamMeta
+from .models import AnyType, ArgumentInfo, OptionInfo, ParameterInfo, ParamMeta
 
 
 def _param_type_to_user_string(param_type: Type[ParameterInfo]) -> str:
@@ -104,6 +115,34 @@ def _split_annotation_from_typer_annotations(
         for annotation in maybe_typer_annotations
         if isinstance(annotation, ParameterInfo)
     ]
+
+
+def lenient_issubclass(
+    cls: Any, class_or_tuple: Union[AnyType, Tuple[AnyType, ...]]
+) -> bool:
+    return isinstance(cls, type) and issubclass(cls, class_or_tuple)
+
+
+KeyType = TypeVar("KeyType")
+
+
+def deep_update(
+    mapping: dict[KeyType, Any], *updating_mappings: dict[KeyType, Any]
+) -> dict[KeyType, Any]:
+    # Copied from pydantic because they don't expose it publicly:
+    # https://github.com/pydantic/pydantic/blob/26129479a06960af9d02d3a948e51985fe59ed4b/pydantic/_internal/_utils.py#L103
+    updated_mapping = mapping.copy()
+    for updating_mapping in updating_mappings:
+        for k, v in updating_mapping.items():
+            if (
+                k in updated_mapping
+                and isinstance(updated_mapping[k], dict)
+                and isinstance(v, dict)
+            ):
+                updated_mapping[k] = deep_update(updated_mapping[k], v)
+            else:
+                updated_mapping[k] = v
+    return updated_mapping
 
 
 def inspect_signature(func: Callable[..., Any]) -> inspect.Signature:

@@ -16,7 +16,6 @@ import click
 from .completion import get_completion_inspect_parameters
 from .core import MarkupMode, TyperArgument, TyperCommand, TyperGroup, TyperOption
 from .models import (
-    AnyType,
     ArgumentInfo,
     CommandFunctionType,
     CommandInfo,
@@ -35,7 +34,7 @@ from .models import (
     TyperInfo,
 )
 from .pydantic_extension import wrap_pydantic_callback
-from .utils import get_params_from_function
+from .utils import get_params_from_function, lenient_issubclass
 
 try:
     import rich
@@ -788,12 +787,6 @@ def get_click_type(
             case_sensitive=parameter_info.case_sensitive,
         )
     raise RuntimeError(f"Type not yet supported: {annotation}")  # pragma: no cover
-
-
-def lenient_issubclass(
-    cls: Any, class_or_tuple: Union[AnyType, Tuple[AnyType, ...]]
-) -> bool:
-    return isinstance(cls, type) and issubclass(cls, class_or_tuple)
 
 
 def get_click_param(
