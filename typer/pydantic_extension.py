@@ -70,9 +70,7 @@ def wrap_pydantic_callback(callback: Callable[..., Any]) -> Callable[..., Any]:
                 _, qualifier = annotation.__metadata__
                 for part in reversed(qualifier):
                     kwarg_value = {part: kwarg_value}
-                raw_pydantic_objects = deep_update(
-                    raw_pydantic_objects, kwarg_value
-                )
+                raw_pydantic_objects = deep_update(raw_pydantic_objects, kwarg_value)
         for root_name, value in raw_pydantic_objects.items():
             converted_kwargs[root_name] = pydantic_roots[root_name](**value)
         return callback(*args, **converted_kwargs)
