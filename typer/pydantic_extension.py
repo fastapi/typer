@@ -78,4 +78,6 @@ def wrap_pydantic_callback(callback: Callable[..., Any]) -> Callable[..., Any]:
         return callback(*args, **converted_kwargs)
 
     wrapper.__signature__ = extended_signature  # type: ignore
+    # Copy annotations to make forward references work in Python <= 3.9
+    wrapper.__annotations__ = {k: v.annotation for k, v in extended_signature.parameters.items()}
     return wrapper
