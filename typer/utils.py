@@ -127,8 +127,8 @@ KeyType = TypeVar("KeyType")
 
 
 def deep_update(
-    mapping: dict[KeyType, Any], *updating_mappings: dict[KeyType, Any]
-) -> dict[KeyType, Any]:
+    mapping: Dict[KeyType, Any], *updating_mappings: Dict[KeyType, Any]
+) -> Dict[KeyType, Any]:
     # Copied from pydantic because they don't expose it publicly:
     # https://github.com/pydantic/pydantic/blob/26129479a06960af9d02d3a948e51985fe59ed4b/pydantic/_internal/_utils.py#L103
     updated_mapping = mapping.copy()

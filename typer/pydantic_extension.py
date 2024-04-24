@@ -1,5 +1,7 @@
 import inspect
-from typing import Annotated, Any, Callable, Dict, List
+from typing import Any, Callable, Dict, List
+
+from typing_extensions import Annotated
 
 from .params import Option
 from .utils import deep_update, inspect_signature, lenient_issubclass
