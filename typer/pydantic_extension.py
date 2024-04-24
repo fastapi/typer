@@ -1,4 +1,3 @@
-import copy
 import inspect
 from typing import Annotated, Callable
 
@@ -10,20 +9,24 @@ from .utils import inspect_signature
 
 import pydantic
     
+PYDANTIC_FIELD_SEPARATOR = "."
+
 def flatten_pydantic_model(model: pydantic.BaseModel, ancestors: list[str]) -> dict:
     from .main import lenient_issubclass
     pydantic_parameters = {}
     for field_name, field in model.model_fields.items():
         qualifier = [*ancestors, field_name]
-        sub_name = f"{'_'.join(qualifier)}"
+        sub_name = f"_pydantic_{'_'.join(qualifier)}"
         if lenient_issubclass(field.annotation, pydantic.BaseModel):
             pydantic_parameters.update(flatten_pydantic_model(field.annotation, qualifier))
         else:
+            default = field.default if field.default != PydanticUndefined else ...
+            typer_option = Option(f"--{PYDANTIC_FIELD_SEPARATOR.join(qualifier)}")
             pydantic_parameters[sub_name] = inspect.Parameter(
                 sub_name, 
-                inspect.Parameter.KEYWORD_ONLY, 
-                annotation=Annotated[field.annotation, Option(), qualifier], 
-                default=field.default if field.default != PydanticUndefined else inspect.Parameter.empty,
+                inspect.Parameter.KEYWORD_ONLY,
+                annotation=Annotated[field.annotation, typer_option, qualifier], 
+                default=default,
             )
     return pydantic_parameters
 
@@ -43,7 +46,7 @@ def wrap_pydantic_callback(callback: Callable) -> Callable:
             other_parameters[name] = parameter           
 
     extended_signature = inspect.Signature(
-        [*other_parameters.values(), *pydantic_parameters.values(),], 
+        [*other_parameters.values(), *pydantic_parameters.values()], 
         return_annotation=original_signature.return_annotation, 
     )
 
