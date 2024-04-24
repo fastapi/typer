@@ -1,5 +1,6 @@
-import pydantic
 import typer
+
+import pydantic
 
 
 class User(pydantic.BaseModel):

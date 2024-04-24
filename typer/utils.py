@@ -105,12 +105,14 @@ def _split_annotation_from_typer_annotations(
         if isinstance(annotation, ParameterInfo)
     ]
 
+
 def inspect_signature(func: Callable) -> inspect.Signature:
     if sys.version_info >= (3, 10):
         signature = inspect.signature(func, eval_str=True)
     else:
         signature = inspect.signature(func)
     return signature
+
 
 def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
     signature = inspect_signature(func)

@@ -17,11 +17,13 @@ def test_help():
     assert result.exit_code == 0
 
 
-
 def test_parse_pydantic_model():
     result = runner.invoke(app, ["1", "--user.id", "2", "--user.name", "John Doe"])
     assert "1 <class 'int'>" in result.output
-    assert "id=2 name='John Doe' <class 'docs_src.parameter_types.pydantic.tutorial001.User'>" in result.output
+    assert (
+        "id=2 name='John Doe' <class 'docs_src.parameter_types.pydantic.tutorial001.User'>"
+        in result.output
+    )
 
 
 def test_script():
