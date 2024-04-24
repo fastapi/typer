@@ -18,7 +18,17 @@ def test_help():
 
 
 def test_parse_pydantic_model():
-    result = runner.invoke(app, ["--person.name", "Jeff", "--person.pet.name", "Lassie", "--person.pet.species", "dog"])
+    result = runner.invoke(
+        app,
+        [
+            "--person.name",
+            "Jeff",
+            "--person.pet.name",
+            "Lassie",
+            "--person.pet.species",
+            "dog",
+        ],
+    )
     assert (
         "name='Jeff' age=None pet=Pet(name='Lassie', species='dog') <class 'docs_src.parameter_types.pydantic.tutorial002.Person'>"
         in result.output
