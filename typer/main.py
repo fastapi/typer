@@ -13,6 +13,8 @@ from uuid import UUID
 
 import click
 
+from typer.pydantic_extension import wrap_pydantic_callback
+
 from .completion import get_completion_inspect_parameters
 from .core import MarkupMode, TyperArgument, TyperCommand, TyperGroup, TyperOption
 from .models import (
@@ -572,17 +574,18 @@ def get_command_from_info(
         use_help = inspect.getdoc(command_info.callback)
     else:
         use_help = inspect.cleandoc(use_help)
+    callback = wrap_pydantic_callback(command_info.callback)
     (
         params,
         convertors,
         context_param_name,
-    ) = get_params_convertors_ctx_param_name_from_function(command_info.callback)
+    ) = get_params_convertors_ctx_param_name_from_function(callback)
     cls = command_info.cls or TyperCommand
     command = cls(
         name=name,
         context_settings=command_info.context_settings,
         callback=get_callback(
-            callback=command_info.callback,
+            callback=callback,
             params=params,
             convertors=convertors,
             context_param_name=context_param_name,
