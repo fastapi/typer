@@ -189,7 +189,7 @@ def install_powershell(*, prog_name: str, complete_var: str, shell: str) -> Path
                 break
             except UnicodeDecodeError:  # pragma: no cover
                 pass
-        if not path_str:
+        if not path_str:  # pragma: no cover
             click.echo("Couldn't decode the path automatically", err=True)
             raise click.exceptions.Exit(1)
     path_obj = Path(path_str.strip())
