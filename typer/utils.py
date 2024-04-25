@@ -192,7 +192,7 @@ def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
     return params
 
 
-class MultipleSeparatorForNonListTypeError(Exception):
+class SeparatorForNonListTypeError(Exception):
     argument_name: str
     argument_type: Type[Any]
 
@@ -204,7 +204,7 @@ class MultipleSeparatorForNonListTypeError(Exception):
         return f"Multiple values are supported for List[T] types only. Annotate {self.argument_name!r} as List[{self.argument_type.__name__}] to support multiple values."
 
 
-class UnsupportedMultipleSeparatorError(Exception):
+class UnsupportedSeparatorError(Exception):
     argument_name: str
     separator: str
 

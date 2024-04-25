@@ -421,7 +421,7 @@ class TyperOption(click.core.Option):
         show_envvar: bool = False,
         # Rich settings
         rich_help_panel: Union[str, None] = None,
-        multiple_separator: Optional[str] = None,
+        separator: Optional[str] = None,
     ):
         super().__init__(
             param_decls=param_decls,
@@ -453,16 +453,16 @@ class TyperOption(click.core.Option):
         _typer_param_setup_autocompletion_compat(self, autocompletion=autocompletion)
         self.rich_help_panel = rich_help_panel
         self.original_type = type
-        self.multiple_separator = multiple_separator
+        self.separator = separator
 
     def _parse_separated_parameter_list(self, parameter_values: List[str]) -> List[str]:
         values = []
         for param_str_list in parameter_values:
-            values.extend(param_str_list.split(self.multiple_separator))
+            values.extend(param_str_list.split(self.separator))
         return values
 
     def process_value(self, ctx: Context, value: t.Any) -> t.Any:
-        if self.multiple_separator is not None:
+        if self.separator is not None:
             value = self._parse_separated_parameter_list(value)
         return super().process_value(ctx, value)
 

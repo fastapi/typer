@@ -4,7 +4,7 @@ import typer
 from typing_extensions import Annotated
 
 
-def main(number: Annotated[List[float], typer.Option(multiple_separator=",")] = []):
+def main(number: Annotated[List[float], typer.Option(separator=",")] = []):
     print(f"The sum is {sum(number)}")
 
 

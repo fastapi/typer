@@ -35,8 +35,8 @@ from .models import (
     TyperInfo,
 )
 from .utils import (
-    MultipleSeparatorForNonListTypeError,
-    UnsupportedMultipleSeparatorError,
+    SeparatorForNonListTypeError,
+    UnsupportedSeparatorError,
     get_params_from_function,
 )
 
@@ -890,17 +890,15 @@ def get_click_param(
             param_decls.append(default_option_declaration)
 
         # Check the multiple separator option for validity
-        multiple_separator = None
-        if parameter_info.multiple_separator:
-            multiple_separator = parameter_info.multiple_separator.strip()
+        separator = None
+        if parameter_info.separator:
+            separator = parameter_info.separator.strip()
 
             if not is_list:
-                raise MultipleSeparatorForNonListTypeError(param.name, main_type)
+                raise SeparatorForNonListTypeError(param.name, main_type)
 
-            if len(multiple_separator) != 1:
-                raise UnsupportedMultipleSeparatorError(
-                    param.name, parameter_info.multiple_separator
-                )
+            if len(separator) != 1:
+                raise UnsupportedSeparatorError(param.name, parameter_info.separator)
 
         return (
             TyperOption(
@@ -935,7 +933,7 @@ def get_click_param(
                 autocompletion=get_param_completion(parameter_info.autocompletion),
                 # Rich settings
                 rich_help_panel=parameter_info.rich_help_panel,
-                multiple_separator=multiple_separator,
+                separator=separator,
             ),
             convertor,
         )

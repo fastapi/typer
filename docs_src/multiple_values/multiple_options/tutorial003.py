@@ -3,7 +3,7 @@ from typing import List
 import typer
 
 
-def main(number: List[float] = typer.Option([], multiple_separator=",")):
+def main(number: List[float] = typer.Option([], separator=",")):
     print(f"The sum is {sum(number)}")
 
 

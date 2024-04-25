@@ -38,8 +38,8 @@ from .models import FileTextWrite as FileTextWrite
 from .params import Argument as Argument
 from .params import Option as Option
 from .utils import (
-    MultipleSeparatorForNonListTypeError as MultipleSeparatorForNonListTypeError,
+    SeparatorForNonListTypeError as SeparatorForNonListTypeError,
 )
 from .utils import (
-    UnsupportedMultipleSeparatorError as UnsupportedMultipleSeparatorError,
+    UnsupportedSeparatorError as UnsupportedSeparatorError,
 )

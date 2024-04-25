@@ -91,7 +91,7 @@ The sum is 9.5
 ## Passing multiple values in a single argument
 
 Many users expect to be able to pass multiple arguments with a single .
-**Typer** supports this with the `multiple_separator` option for `typing.List[T]` types:
+**Typer** supports this with the `separator` option for `typing.List[T]` types:
 
 === "Python 3.7+"
 
