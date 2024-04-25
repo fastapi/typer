@@ -11,7 +11,7 @@ def test_show_completion():
         [
             "bash",
             "-c",
-            f"{sys.executable}  -m coverage run {mod.__file__} --show-completion",
+            f"'{sys.executable}' -m coverage run '{mod.__file__}' --show-completion",
         ],
         capture_output=True,
         encoding="utf-8",
