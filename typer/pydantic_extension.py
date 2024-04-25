@@ -14,17 +14,17 @@ except ImportError:
 PYDANTIC_FIELD_SEPARATOR = "."
 
 
-def flatten_pydantic_model(
+def _flatten_pydantic_model(
     model: "pydantic.BaseModel", ancestors: List[str]
 ) -> Dict[str, inspect.Parameter]:
-    if pydantic is None:
-        raise ImportError("Pydantic is required to use Pydantic models with Typer.")
+    # This function should only be called if pydantic is available
+    assert pydantic is not None
     pydantic_parameters = {}
     for field_name, field in model.model_fields.items():
         qualifier = [*ancestors, field_name]
         sub_name = f"_pydantic_{'_'.join(qualifier)}"
         if lenient_issubclass(field.annotation, pydantic.BaseModel):
-            params = flatten_pydantic_model(field.annotation, qualifier)  # type: ignore
+            params = _flatten_pydantic_model(field.annotation, qualifier)  # type: ignore
             pydantic_parameters.update(params)
         else:
             default = (
@@ -51,7 +51,7 @@ def wrap_pydantic_callback(callback: Callable[..., Any]) -> Callable[..., Any]:
     other_parameters = {}
     for name, parameter in original_signature.parameters.items():
         if lenient_issubclass(parameter.annotation, pydantic.BaseModel):
-            params = flatten_pydantic_model(parameter.annotation, [name])
+            params = _flatten_pydantic_model(parameter.annotation, [name])
             pydantic_parameters.update(params)
             pydantic_roots[name] = parameter.annotation
         else:

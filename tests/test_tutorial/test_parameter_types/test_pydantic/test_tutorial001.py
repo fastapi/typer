@@ -1,6 +1,7 @@
 import subprocess
 import sys
 
+import pytest
 import typer
 from typer.testing import CliRunner
 
@@ -33,3 +34,18 @@ def test_script():
         encoding="utf-8",
     )
     assert "Usage" in result.stdout
+
+
+def test_error_without_pydantic():
+    pydantic = typer.pydantic_extension.pydantic
+    typer.pydantic_extension.pydantic = None
+    with pytest.raises(
+        RuntimeError,
+        match="Type not yet supported: <class 'docs_src.parameter_types.pydantic.tutorial001.User'>",
+    ):
+        runner.invoke(
+            app,
+            ["1", "--user.id", "2", "--user.name", "John Doe"],
+            catch_exceptions=False,
+        )
+    typer.pydantic_extension.pydantic = pydantic
