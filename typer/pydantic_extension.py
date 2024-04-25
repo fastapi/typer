@@ -8,7 +8,7 @@ from .utils import deep_update, inspect_signature, lenient_issubclass
 
 try:
     import pydantic
-except ImportError:
+except ImportError:  # pragma: no cover
     pydantic = None  # type: ignore
 
 PYDANTIC_FIELD_SEPARATOR = "."
