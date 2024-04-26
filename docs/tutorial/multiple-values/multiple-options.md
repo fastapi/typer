@@ -90,8 +90,11 @@ The sum is 9.5
 
 ## Passing multiple values in a single argument
 
-Many users expect to be able to pass multiple arguments with a single .
-**Typer** supports this with the `separator` option for `typing.List[T]` types:
+Many users expect to be able to pass multiple arguments with a single option.
+**Typer** supports this with the `separator` option for `typing.List[T]` types.
+This feature makes it easy to parse multiple values from a single command-line argument into a list in your application.
+
+To use this feature, define a command-line option that accepts multiple values separated by a specific character (such as a comma). Here's an example of how to implement this:
 
 === "Python 3.7+"
 
