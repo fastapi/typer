@@ -20,6 +20,15 @@ repos:
         args:
         - --fix
     -   id: ruff-format
+-   repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.10.0
+    hooks:
+    -   id: mypy
+        files: ^typer/
+        additional_dependencies:
+          - "click"
+          - "rich"
+
 ci:
     autofix_commit_msg: 🎨 [pre-commit.ci] Auto format from pre-commit.com hooks
     autoupdate_commit_msg: ⬆ [pre-commit.ci] pre-commit autoupdate
