@@ -4,7 +4,82 @@ First, you might want to see the basic ways to [help Typer and get help](help-ty
 
 If you already cloned the repository and you know that you need to deep dive in the code, here are some guidelines to set up your environment.
 
-### Virtual environment with `venv`
+### Pre-commit hooks
+
+We use <a href="https://pre-commit.com/" class="external-link" target="_blank">pre-commit</a> to run checks and formatting before submitting code for review.
+
+#### Install pre-commit
+
+We recommend <a href="https://pipx.pypa.io/" class="external-link" target="_blank">pipx</a> to install pre-commit in an isolated environment.
+
+=== "pipx"
+
+    <div class="termy">
+
+    ```console
+    $ pipx install pre-commit
+    ```
+
+    </div>
+
+=== "pip"
+
+    <div class="termy">
+
+    ```console
+    $ pip install pre-commit
+    ```
+
+    </div>
+
+=== "Homebrew"
+
+    <div class="termy">
+
+    ```console
+    $ brew install pre-commit
+    ```
+
+    </div>
+
+=== "Conda"
+
+    <div class="termy">
+
+    ```console
+    $ conda install pre-commit
+    ```
+
+    </div>
+
+#### Activate hooks on the repository
+
+By activating the hooks we instruct git to run the checks before every commit.
+
+<div class="termy">
+
+```console
+$ pre-commit install
+```
+
+</div>
+
+!!! note
+    It's only needed once. From that point on, every time you commit, the pre-commit hooks will run, checking and formating the files you are committing.
+
+#### Run checks manually
+
+You can also manually run the checks on all files with:
+
+<div class="termy">
+
+```console
+$ pre-commit run --all-files
+```
+
+</div>
+
+### Virtual environment
 
 You can create a virtual environment in a directory using Python's `venv` module:
 
@@ -18,7 +93,7 @@ $ python -m venv env
 
 That will create a directory `./env/` with the Python binaries and then you will be able to install packages for that isolated environment.
 
-### Activate the environment
+#### Activate the environment
 
 Activate the new environment with:
 
@@ -87,53 +162,17 @@ If it shows the `pip` binary at `env/bin/pip` then it worked. 🎉
 
     This makes sure that if you use a terminal program installed by that package (like `flit`), you use the one from your local environment and not any other that could be installed globally.
 
-### Flit
+### Install Typer
 
-**Typer** uses <a href="https://flit.readthedocs.io/en/latest/index.html" class="external-link" target="_blank">Flit</a> to build, package and publish the project.
-
-After activating the environment as described above, install `flit`:
+With the virtual environment activated, you can install Typer in "editable" mode:
 
 <div class="termy">
 
 ```console
-$ pip install flit
-
----> 100%
+$ pip install --editable .
 ```
 
 </div>
-
-Now re-activate the environment to make sure you are using the `flit` you just installed (and not a global one).
-
-And now use `flit` to install the development dependencies:
-
-=== "Linux, macOS"
-
-    <div class="termy">
-
-    ```console
-    $ flit install --deps develop --symlink
-
-    ---> 100%
-    ```
-
-    </div>
-
-=== "Windows"
-
-    If you are on Windows, use `--pth-file` instead of `--symlink`:
-
-    <div class="termy">
-
-    ```console
-    $ flit install --deps develop --pth-file
-
-    ---> 100%
-    ```
-
-    </div>
-
-It will install all the dependencies and your local Typer in your local environment.
 
 #### Using your local Typer
 
@@ -142,36 +181,6 @@ If you create a Python file that imports and uses Typer, and run it with the Pyt
 And if you update that local Typer source code, as it is installed with `--symlink` (or `--pth-file` on Windows), when you run that Python file again, it will use the fresh version of Typer you just edited.
 
 That way, you don't have to "install" your local version to be able to test every change.
-
-### Format
-
-There is a script that you can run that will format and clean all your code:
-
-<div class="termy">
-
-```console
-$ bash scripts/format.sh
-```
-
-</div>
-
-It will also auto-sort all your imports.
-
-For it to sort them correctly, you need to have Typer installed locally in your environment, with the command in the section above using `--symlink` (or `--pth-file` on Windows).
-
-### Format imports
-
-There is another script that formats all the imports and makes sure you don't have unused imports:
-
-<div class="termy">
-
-```console
-$ bash scripts/format-imports.sh
-```
-
-</div>
-
-As it runs one command after the other and modifies and reverts many files, it takes a bit longer to run, so it might be easier to use `scripts/format.sh` frequently and `scripts/format-imports.sh` only before committing.
 
 ## Docs
 
@@ -217,6 +226,32 @@ It will serve the documentation on `http://127.0.0.1:8008`.
 That way, you can edit the documentation/source files and see the changes live.
 
 ## Tests
+
+Typer uses <a href="https://docs.pytest.org/" class="external-link" target="_blank">pytest</a> for testing.
+
+Make sure you have the development dependencies installed:
+
+<div class="termy">
+
+```console
+$ pip install -e requirements-tests.txt
+```
+
+</div>
+
+### Running tests
+
+To run the tests, you can use the `pytest` command:
+
+<div class="termy">
+
+```console
+$ pytest -v
+```
+
+</div>
+
+### Coverage report
 
 There is a script that you can run locally to test all the code and generate coverage reports in HTML:
 
