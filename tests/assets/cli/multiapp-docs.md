@@ -18,8 +18,8 @@ The end
 
 **Commands**:
 
-* `sub`
-* `top`: Top command
+* [`sub`](#multiapp-sub)
+* [`top`](#multiapp-top): Top command
 
 ## `multiapp sub`
 
@@ -35,9 +35,9 @@ $ multiapp sub [OPTIONS] COMMAND [ARGS]...
 
 **Commands**:
 
-* `bye`: Say bye
-* `hello`: Say Hello
-* `hi`: Say Hi
+* [`bye`](#multiapp-sub-bye): Say bye
+* [`hello`](#multiapp-sub-hello): Say Hello
+* [`hi`](#multiapp-sub-hi): Say Hi
 
 ### `multiapp sub bye`
 
