@@ -65,7 +65,7 @@ def test_markdown_pars():
         """
 
     result = runner.invoke(app, ["--help"])
-    lines = [l.strip() for l in result.stdout.split("\n")]
+    lines = [line.strip() for line in result.stdout.split("\n")]
     help_start = lines.index("First line")
     assert help_start != -1
     assert lines[help_start : help_start + 6] == [
