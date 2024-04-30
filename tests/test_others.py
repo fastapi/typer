@@ -263,11 +263,11 @@ def test_options_metadata_typer_default():
 
     @app.command()
     def c1():
-        pass  # pragma: nocover
+        pass  # pragma: no cover
 
     @app.command(options_metavar="[OPTS]")
     def c2():
-        pass  # pragma: nocover
+        pass  # pragma: no cover
 
     result = runner.invoke(app, ["c1", "--help"])
     assert "Usage: root c1 [options]" in result.stdout
