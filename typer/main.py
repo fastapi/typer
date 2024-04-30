@@ -243,7 +243,7 @@ class Typer:
                     epilog=epilog,
                     short_help=short_help,
                     options_metavar=(
-                        options_metavar or self._info_val("options_metavar")
+                        options_metavar or self._info_val_str("options_metavar")
                     ),
                     add_help_option=add_help_option,
                     no_args_is_help=no_args_is_help,
@@ -327,9 +327,11 @@ class Typer:
             )
             raise e
 
-    def _info_val(self, name: str):
+    def _info_val_str(self, name: str) -> str:
         val = getattr(self.info, name)
-        return val.value if isinstance(val, DefaultPlaceholder) else val
+        val_str = val.value if isinstance(val, DefaultPlaceholder) else val
+        assert isinstance(val_str, str)
+        return val_str
 
 
 def get_group(typer_instance: Typer) -> TyperGroup:
