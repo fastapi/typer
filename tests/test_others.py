@@ -256,3 +256,21 @@ def test_split_opt():
     prefix, opt = _split_opt("verbose")
     assert prefix == ""
     assert opt == "verbose"
+
+
+def test_options_metadata_typer_default():
+    app = typer.Typer(options_metavar="[options]")
+
+    @app.command()
+    def c1():
+        pass  # pragma: nocover
+
+    @app.command(options_metavar="[OPTS]")
+    def c2():
+        pass  # pragma: nocover
+
+    result = runner.invoke(app, ["c1", "--help"])
+    assert "Usage: root c1 [options]" in result.stdout
+
+    result = runner.invoke(app, ["c2", "--help"])
+    assert "Usage: root c2 [OPTS]" in result.stdout
