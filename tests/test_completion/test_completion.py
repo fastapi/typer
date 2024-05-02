@@ -11,7 +11,7 @@ def test_show_completion():
         [
             "bash",
             "-c",
-            f"{sys.executable}  -m coverage run {mod.__file__} --show-completion",
+            f"'{sys.executable}' -m coverage run '{mod.__file__}' --show-completion",
         ],
         capture_output=True,
         encoding="utf-8",
@@ -29,7 +29,7 @@ def test_install_completion():
         [
             "bash",
             "-c",
-            f"{sys.executable} -m coverage run {mod.__file__} --install-completion",
+            f"'{sys.executable}' -m coverage run '{mod.__file__}' --install-completion",
         ],
         capture_output=True,
         encoding="utf-8",
@@ -38,7 +38,7 @@ def test_install_completion():
     new_text = bash_completion_path.read_text()
     bash_completion_path.write_text(text)
     assert "source" in new_text
-    assert ".bash_completions/tutorial001.py.sh" in new_text
+    assert str(Path(".bash_completions/tutorial001.py.sh")) in new_text
     assert "completion installed in" in result.stdout
     assert "Completion will take effect once you restart the terminal" in result.stdout
 
