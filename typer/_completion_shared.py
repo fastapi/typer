@@ -106,7 +106,7 @@ def install_bash(*, prog_name: str, complete_var: str, shell: str) -> Path:
     rc_content = ""
     if rc_path.is_file():
         rc_content = rc_path.read_text()
-    completion_init_lines = [f"source '{completion_path}'"]
+    completion_init_lines = [f"source {completion_path}"]
     for line in completion_init_lines:
         if line not in rc_content:  # pragma: no cover
             rc_content += f"\n{line}"
