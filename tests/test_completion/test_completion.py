@@ -4,10 +4,13 @@ import sys
 from pathlib import Path
 
 import pytest
+
 from docs_src.commands.index import tutorial001 as mod
 
 
-@pytest.mark.skipif(not sys.platform.startswith("linux"), reason="Test designed for Linux/bash")
+@pytest.mark.skipif(
+    not sys.platform.startswith("linux"), reason="Test designed for Linux/bash"
+)
 def test_show_completion():
     result = subprocess.run(
         [
@@ -22,7 +25,9 @@ def test_show_completion():
     assert "_TUTORIAL001.PY_COMPLETE=complete_bash" in result.stdout
 
 
-@pytest.mark.skipif(not sys.platform.startswith("linux"), reason="Test designed for Linux/bash")
+@pytest.mark.skipif(
+    not sys.platform.startswith("linux"), reason="Test designed for Linux/bash"
+)
 def test_install_completion():
     bash_completion_path: Path = Path.home() / ".bashrc"
     text = ""
