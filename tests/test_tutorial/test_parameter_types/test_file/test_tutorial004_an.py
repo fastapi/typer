@@ -18,7 +18,7 @@ def test_main(tmpdir):
     if binary_file.exists():  # pragma: no cover
         binary_file.unlink()
     result = runner.invoke(app, ["--file", f"{binary_file}"])
-    text = binary_file.read_text()
+    text = binary_file.read_text(encoding="utf-8")
     binary_file.unlink()
     assert result.exit_code == 0
     assert "Binary file written" in result.output
