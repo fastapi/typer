@@ -4,7 +4,7 @@ import sys
 from collections import defaultdict
 from itertools import chain
 from pathlib import Path
-from typing import Any, DefaultDict, List, Optional
+from typing import Any, Dict, List, Optional
 
 import click
 import typer
@@ -243,7 +243,7 @@ def get_docs_for_click(
         group = obj
         commands = group.list_commands(ctx)
         if commands:
-            panel_to_commands: DefaultDict[str, List[click.Command]] = defaultdict(list)
+            panel_to_commands: Dict[str, List[click.Command]] = defaultdict(list)
             for command in commands:
                 command_obj = group.get_command(ctx, command)
                 assert command_obj
