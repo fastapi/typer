@@ -20,6 +20,7 @@ The end
 
 * `sub`
 * `top`: Top command
+* `trivial`: Trivial command
 
 ## `multiapp sub`
 
@@ -33,9 +34,12 @@ $ multiapp sub [OPTIONS] COMMAND [ARGS]...
 
 * `--help`: Show this message and exit.
 
-**Commands**:
+**Farewell**:
 
 * `bye`: Say bye
+
+**Greet**:
+
 * `hello`: Say Hello
 * `hi`: Say Hi
 
@@ -95,6 +99,20 @@ Top command
 
 ```console
 $ multiapp top [OPTIONS]
+```
+
+**Options**:
+
+* `--help`: Show this message and exit.
+
+## `multiapp trivial`
+
+Trivial command
+
+**Usage**:
+
+```console
+$ multiapp trivial [OPTIONS]
 ```
 
 **Options**:
