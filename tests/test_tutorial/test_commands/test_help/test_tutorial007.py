@@ -1,5 +1,6 @@
 import subprocess
 import sys
+import os
 
 from typer.testing import CliRunner
 
@@ -8,6 +9,8 @@ from docs_src.commands.help import tutorial007 as mod
 app = mod.app
 
 runner = CliRunner()
+
+ENV = {**os.environ, "PYTHONIOENCODING": "utf-8"}
 
 
 def test_main_help():
@@ -51,5 +54,6 @@ def test_script():
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
         capture_output=True,
         encoding="utf-8",
+        env=ENV,
     )
     assert "Usage" in result.stdout
