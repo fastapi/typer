@@ -117,13 +117,6 @@ filterwarnings = [
     'ignore::DeprecationWarning:xdist',
 ]
 
-[tool.coverage.paths]
-source = [
-    "docs_src",
-    "tests",
-    "typer"
-]
-
 [tool.coverage.run]
 parallel = true
 data_file = "coverage/.coverage"
@@ -136,6 +129,7 @@ omit = [
     "typer/_typing.py"
 ]
 context = '${CONTEXT}'
+relative_files = true
 
 [tool.coverage.report]
 exclude_lines = [
