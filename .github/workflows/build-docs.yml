@@ -74,7 +74,7 @@ jobs:
         if: ( github.event_name != 'pull_request' || github.secret_source == 'Actions' )
         run: python -m mkdocs build --config-file mkdocs.insiders.yml
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: docs-site
           path: ./site/**
