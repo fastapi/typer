@@ -10,8 +10,6 @@ app = mod.app
 
 runner = CliRunner()
 
-ENV = {**os.environ, "PYTHONIOENCODING": "utf-8"}
-
 
 def test_main_help():
     result = runner.invoke(app, ["--help"])
@@ -54,6 +52,6 @@ def test_script():
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
         capture_output=True,
         encoding="utf-8",
-        env=ENV,
+        env={**os.environ, "PYTHONIOENCODING": "utf-8"},
     )
     assert "Usage" in result.stdout
