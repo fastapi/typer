@@ -117,6 +117,13 @@ filterwarnings = [
     'ignore::DeprecationWarning:xdist',
 ]
 
+[tool.coverage.paths]
+source = [
+    "docs_src",
+    "tests",
+    "typer"
+]
+
 [tool.coverage.run]
 parallel = true
 data_file = "coverage/.coverage"
