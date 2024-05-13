@@ -137,6 +137,7 @@ exclude_lines = [
     'if __name__ == "__main__":',
     "if TYPE_CHECKING:",
 ]
+ignore_errors = true
 
 [tool.mypy]
 strict = true
