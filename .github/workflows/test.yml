@@ -62,7 +62,7 @@ jobs:
       - name: Store coverage files
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-${{ matrix.python-version }}
+          name: coverage-${{ matrix.python-version }}-${{ matrix.os }}
           path: coverage
 
   coverage-combine:
