@@ -46,7 +46,7 @@ jobs:
         id: cache
         with:
           path: ${{ env.pythonLocation }}
-          key: ${{ matrix.os }}-python-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml', 'requirements-tests.txt') }}
+          key: ${{ runner.os }}-python-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml', 'requirements-tests.txt') }}
       - name: Install Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: pip install -r requirements-tests.txt
@@ -57,12 +57,12 @@ jobs:
       - name: Test
         run: bash scripts/test.sh
         env:
-          COVERAGE_FILE: coverage/.coverage.${{ matrix.os }}-py${{ matrix.python-version }}
-          CONTEXT: ${{ matrix.os }}-py${{ matrix.python-version }}
+          COVERAGE_FILE: coverage/.coverage.${{ runner.os }}-py${{ matrix.python-version }}
+          CONTEXT: ${{ runner.os }}-py${{ matrix.python-version }}
       - name: Store coverage files
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-${{ matrix.os }}-${{ matrix.python-version }}
+          name: coverage-${{ runner.os }}-${{ matrix.python-version }}
           path: coverage
 
   coverage-combine:
