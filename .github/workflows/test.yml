@@ -43,6 +43,7 @@ jobs:
           # cache: "pip"
           # cache-dependency-path: pyproject.toml
       - uses: actions/cache@v3
+        if: ${{ runner.os != 'macOS' }}
         id: cache
         with:
           path: ${{ env.pythonLocation }}
