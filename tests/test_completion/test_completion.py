@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 
 from docs_src.commands.index import tutorial001 as mod
-from tests.utils import needs_linux
+from ..utils import needs_linux
 
 
 @needs_linux
