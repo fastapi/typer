@@ -129,6 +129,7 @@ omit = [
     "typer/_typing.py"
 ]
 context = '${CONTEXT}'
+relative_files = true
 
 [tool.coverage.report]
 exclude_lines = [
