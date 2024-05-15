@@ -114,6 +114,7 @@ def _generic_get_args(tp: Type[Any]) -> Tuple[Any, ...]:
         return (Any,) * tp._nparams
     return ()
 
+
 def get_args(tp: Type[Any]) -> Tuple[Any, ...]:
     """Get type arguments with all substitutions performed.
 
@@ -128,9 +129,7 @@ def get_args(tp: Type[Any]) -> Tuple[Any, ...]:
     if type(tp).__name__ in AnnotatedTypeNames:
         return tp.__args__ + tp.__metadata__
     # the fallback is needed for the same reasons as `get_origin` (see above)
-    return (
-        _typing_get_args(tp) or getattr(tp, "__args__", ()) or _generic_get_args(tp)
-    )
+    return _typing_get_args(tp) or getattr(tp, "__args__", ()) or _generic_get_args(tp)
 
 
 if sys.version_info[:2] == (3, 8):
@@ -374,6 +373,7 @@ def is_literal_type(type_: Type[Any]) -> bool:
         and hasattr(type_, "__values__")
         and type_ == Literal[type_.__values__]
     )
+
 
 def literal_values(type_: Type[Any]) -> Tuple[Any, ...]:
     return type_.__values__
