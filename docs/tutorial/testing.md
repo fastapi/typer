@@ -103,13 +103,13 @@ test_main.py <span style="color: green; white-space: pre;">.                    
 
 If you have a CLI with prompts, like:
 
-=== "Python 3.7+"
+=== "Python 3.8+"
 
     ```Python hl_lines="8"
     {!> ../docs_src/testing/app02_an/main.py!}
     ```
 
-=== "Python 3.7+ non-Annotated"
+=== "Python 3.8+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.

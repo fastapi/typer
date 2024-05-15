@@ -1,15 +1,19 @@
 # Copied from pydantic 1.9.2 (the latest version to support python 3.6.)
 # https://github.com/pydantic/pydantic/blob/v1.9.2/pydantic/typing.py
+# Edited after dropping support for python 3.7
 # mypy: ignore-errors
 
 import sys
+from collections.abc import Callable as Callable
 from os import PathLike
 from typing import (
     TYPE_CHECKING,
     AbstractSet,
     Any,
+    Callable as TypingCallable,
     ClassVar,
     Dict,
+    ForwardRef,
     Generator,
     List,
     Mapping,
@@ -22,6 +26,8 @@ from typing import (
     Union,
     _eval_type,
     cast,
+    get_args as _typing_get_args,
+    get_origin as _typing_get_origin,
     get_type_hints,
 )
 
@@ -45,28 +51,7 @@ except ImportError:
     TypesUnionType = ()
 
 
-if sys.version_info < (3, 7):
-    if TYPE_CHECKING:
-
-        class ForwardRef:
-            def __init__(self, arg: Any):
-                pass
-
-            def _eval_type(self, globalns: Any, localns: Any) -> Any:
-                pass
-
-    else:
-        from typing import _ForwardRef as ForwardRef
-else:
-    from typing import ForwardRef
-
-
-if sys.version_info < (3, 7):
-
-    def evaluate_forwardref(type_: ForwardRef, globalns: Any, localns: Any) -> Any:
-        return type_._eval_type(globalns, localns)
-
-elif sys.version_info < (3, 9):
+if sys.version_info[:2] == (3, 8):
 
     def evaluate_forwardref(type_: ForwardRef, globalns: Any, localns: Any) -> Any:
         return type_._evaluate(globalns, localns)
@@ -79,7 +64,7 @@ else:
         return cast(Any, type_)._evaluate(globalns, localns, set())
 
 
-if sys.version_info < (3, 9):
+if sys.version_info[:2] == (3, 8):
     # Ensure we always get all the whole `Annotated` hint, not just the annotated type.
     # For 3.6 to 3.8, `get_type_hints` doesn't recognize `typing_extensions.Annotated`,
     # so it already returns the full annotation
@@ -91,17 +76,8 @@ else:
         return get_type_hints(obj, globalns, localns, include_extras=True)
 
 
-if sys.version_info < (3, 7):
-    from typing import Callable as Callable
-
-    AnyCallable = Callable[..., Any]
-    NoArgAnyCallable = Callable[[], Any]
-else:
-    from collections.abc import Callable as Callable
-    from typing import Callable as TypingCallable
-
-    AnyCallable = TypingCallable[..., Any]
-    NoArgAnyCallable = TypingCallable[[], Any]
+AnyCallable = TypingCallable[..., Any]
+NoArgAnyCallable = TypingCallable[[], Any]
 
 
 # Annotated[...] is implemented by returning an instance of one of these classes, depending on
@@ -109,97 +85,49 @@ else:
 AnnotatedTypeNames = {"AnnotatedMeta", "_AnnotatedAlias"}
 
 
-if sys.version_info < (3, 8):
-
-    def get_origin(t: Type[Any]) -> Optional[Type[Any]]:
-        if type(t).__name__ in AnnotatedTypeNames:
-            return cast(
-                Type[Any], Annotated
-            )  # mypy complains about _SpecialForm in py3.6
-        return getattr(t, "__origin__", None)
-
-else:
-    from typing import get_origin as _typing_get_origin
-
-    def get_origin(tp: Type[Any]) -> Optional[Type[Any]]:
-        """
-        We can't directly use `typing.get_origin` since we need a fallback to support
-        custom generic classes like `ConstrainedList`
-        It should be useless once https://github.com/cython/cython/issues/3537 is
-        solved and https://github.com/samuelcolvin/pydantic/pull/1753 is merged.
-        """
-        if type(tp).__name__ in AnnotatedTypeNames:
-            return cast(Type[Any], Annotated)  # mypy complains about _SpecialForm
-        return _typing_get_origin(tp) or getattr(tp, "__origin__", None)
+def get_origin(tp: Type[Any]) -> Optional[Type[Any]]:
+    """
+    We can't directly use `typing.get_origin` since we need a fallback to support
+    custom generic classes like `ConstrainedList`
+    It should be useless once https://github.com/cython/cython/issues/3537 is
+    solved and https://github.com/samuelcolvin/pydantic/pull/1753 is merged.
+    """
+    if type(tp).__name__ in AnnotatedTypeNames:
+        return cast(Type[Any], Annotated)  # mypy complains about _SpecialForm
+    return _typing_get_origin(tp) or getattr(tp, "__origin__", None)
 
 
-if sys.version_info < (3, 7):  # noqa: C901 (ignore complexity)
+def _generic_get_args(tp: Type[Any]) -> Tuple[Any, ...]:
+    """
+    In python 3.9, `typing.Dict`, `typing.List`, ...
+    do have an empty `__args__` by default (instead of the generic ~T for example).
+    In order to still support `Dict` for example and consider it as `Dict[Any, Any]`,
+    we retrieve the `_nparams` value that tells us how many parameters it needs.
+    """
+    if hasattr(tp, "_nparams"):
+        return (Any,) * tp._nparams
+    return ()
 
-    def get_args(t: Type[Any]) -> Tuple[Any, ...]:
-        """Simplest get_args compatibility layer possible.
+def get_args(tp: Type[Any]) -> Tuple[Any, ...]:
+    """Get type arguments with all substitutions performed.
 
-        The Python 3.6 typing module does not have `_GenericAlias` so
-        this won't work for everything. In particular this will not
-        support the `generics` module (we don't support generic models in
-        python 3.6).
-
-        """
-        if type(t).__name__ in AnnotatedTypeNames:
-            return t.__args__ + t.__metadata__
-        return getattr(t, "__args__", ())
-
-elif sys.version_info < (3, 8):  # noqa: C901
-    from typing import _GenericAlias
-
-    def get_args(t: Type[Any]) -> Tuple[Any, ...]:
-        """Compatibility version of get_args for python 3.7.
-
-        Mostly compatible with the python 3.8 `typing` module version
-        and able to handle almost all use cases.
-        """
-        if type(t).__name__ in AnnotatedTypeNames:
-            return t.__args__ + t.__metadata__
-        if isinstance(t, _GenericAlias):
-            res = t.__args__
-            if t.__origin__ is Callable and res and res[0] is not Ellipsis:
-                res = (list(res[:-1]), res[-1])
-            return res
-        return getattr(t, "__args__", ())
-
-else:
-    from typing import get_args as _typing_get_args
-
-    def _generic_get_args(tp: Type[Any]) -> Tuple[Any, ...]:
-        """
-        In python 3.9, `typing.Dict`, `typing.List`, ...
-        do have an empty `__args__` by default (instead of the generic ~T for example).
-        In order to still support `Dict` for example and consider it as `Dict[Any, Any]`,
-        we retrieve the `_nparams` value that tells us how many parameters it needs.
-        """
-        if hasattr(tp, "_nparams"):
-            return (Any,) * tp._nparams
-        return ()
-
-    def get_args(tp: Type[Any]) -> Tuple[Any, ...]:
-        """Get type arguments with all substitutions performed.
-
-        For unions, basic simplifications used by Union constructor are performed.
-        Examples::
-            get_args(Dict[str, int]) == (str, int)
-            get_args(int) == ()
-            get_args(Union[int, Union[T, int], str][int]) == (int, str)
-            get_args(Union[int, Tuple[T, int]][str]) == (int, Tuple[str, int])
-            get_args(Callable[[], T][int]) == ([], int)
-        """
-        if type(tp).__name__ in AnnotatedTypeNames:
-            return tp.__args__ + tp.__metadata__
-        # the fallback is needed for the same reasons as `get_origin` (see above)
-        return (
-            _typing_get_args(tp) or getattr(tp, "__args__", ()) or _generic_get_args(tp)
-        )
+    For unions, basic simplifications used by Union constructor are performed.
+    Examples::
+        get_args(Dict[str, int]) == (str, int)
+        get_args(int) == ()
+        get_args(Union[int, Union[T, int], str][int]) == (int, str)
+        get_args(Union[int, Tuple[T, int]][str]) == (int, Tuple[str, int])
+        get_args(Callable[[], T][int]) == ([], int)
+    """
+    if type(tp).__name__ in AnnotatedTypeNames:
+        return tp.__args__ + tp.__metadata__
+    # the fallback is needed for the same reasons as `get_origin` (see above)
+    return (
+        _typing_get_args(tp) or getattr(tp, "__args__", ()) or _generic_get_args(tp)
+    )
 
 
-if sys.version_info < (3, 9):
+if sys.version_info[:2] == (3, 8):
 
     def convert_generics(tp: Type[Any]) -> Type[Any]:
         """Python 3.9 and older only supports generics from `typing` module.
@@ -275,7 +203,7 @@ else:
     WithArgsTypes = (typing._GenericAlias, types.GenericAlias, types.UnionType)
 
 
-if sys.version_info < (3, 9):
+if sys.version_info[:2] == (3, 8):
     StrPath = Union[str, PathLike]
 else:
     StrPath = Union[str, PathLike]
@@ -320,8 +248,6 @@ __all__ = (
     "is_new_type",
     "new_type_supertype",
     "is_classvar",
-    "update_field_forward_refs",
-    "update_model_forward_refs",
     "TupleGenerator",
     "DictStrAny",
     "DictAny",
@@ -351,17 +277,7 @@ NoneType = None.__class__
 NONE_TYPES: Tuple[Any, Any, Any] = (None, NoneType, Literal[None])
 
 
-if sys.version_info < (3, 8):
-    # Even though this implementation is slower, we need it for python 3.6/3.7:
-    # In python 3.6/3.7 "Literal" is not a builtin type and uses a different
-    # mechanism.
-    # for this reason `Literal[None] is Literal[None]` evaluates to `False`,
-    # breaking the faster implementation used for the other python versions.
-
-    def is_none_type(type_: Any) -> bool:
-        return type_ in NONE_TYPES
-
-elif sys.version_info[:2] == (3, 8):
+if sys.version_info[:2] == (3, 8):
     # We can use the fast implementation for 3.8 but there is a very weird bug
     # where it can fail for `Literal[None]`.
     # We just need to redefine a useless `Literal[None]` inside the function body to fix this
@@ -431,10 +347,8 @@ def resolve_annotations(
                 1,
             ):
                 value = ForwardRef(value, is_argument=False, is_class=True)
-            elif sys.version_info >= (3, 7):
-                value = ForwardRef(value, is_argument=False)
             else:
-                value = ForwardRef(value)
+                value = ForwardRef(value, is_argument=False)
         try:
             value = _eval_type(value, base_globals, None)
         except NameError:
@@ -448,25 +362,15 @@ def is_callable_type(type_: Type[Any]) -> bool:
     return type_ is Callable or get_origin(type_) is Callable
 
 
-if sys.version_info >= (3, 7):
+def is_literal_type(type_: Type[Any]) -> bool:
+    return (
+        Literal is not None
+        and hasattr(type_, "__values__")
+        and type_ == Literal[type_.__values__]
+    )
 
-    def is_literal_type(type_: Type[Any]) -> bool:
-        return Literal is not None and get_origin(type_) is Literal
-
-    def literal_values(type_: Type[Any]) -> Tuple[Any, ...]:
-        return get_args(type_)
-
-else:
-
-    def is_literal_type(type_: Type[Any]) -> bool:
-        return (
-            Literal is not None
-            and hasattr(type_, "__values__")
-            and type_ == Literal[type_.__values__]
-        )
-
-    def literal_values(type_: Type[Any]) -> Tuple[Any, ...]:
-        return type_.__values__
+def literal_values(type_: Type[Any]) -> Tuple[Any, ...]:
+    return type_.__values__
 
 
 def all_literal_values(type_: Type[Any]) -> Tuple[Any, ...]:
@@ -522,9 +426,7 @@ def _check_classvar(v: Optional[Type[Any]]) -> bool:
     if v is None:
         return False
 
-    return v.__class__ == ClassVar.__class__ and (
-        sys.version_info < (3, 7) or getattr(v, "_name", None) == "ClassVar"
-    )
+    return v.__class__ == ClassVar.__class__ and getattr(v, "_name", None) == "ClassVar"
 
 
 def is_classvar(ann_type: Type[Any]) -> bool:

@@ -20,7 +20,7 @@ jobs:
         python-version: [ "3.11" ]
         include:
           - os: ubuntu-latest
-            python-version: "3.7"
+            python-version: "3.8"
           - os: macos-latest
             python-version: "3.8"
           - os: windows-latest
