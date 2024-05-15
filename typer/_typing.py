@@ -10,7 +10,6 @@ from typing import (
     TYPE_CHECKING,
     AbstractSet,
     Any,
-    Callable as TypingCallable,
     ClassVar,
     Dict,
     ForwardRef,
@@ -26,9 +25,16 @@ from typing import (
     Union,
     _eval_type,
     cast,
-    get_args as _typing_get_args,
-    get_origin as _typing_get_origin,
     get_type_hints,
+)
+from typing import (
+    Callable as TypingCallable,
+)
+from typing import (
+    get_args as _typing_get_args,
+)
+from typing import (
+    get_origin as _typing_get_origin,
 )
 
 from typing_extensions import Annotated, Literal

@@ -20,7 +20,6 @@ from rich.table import Table
 from rich.text import Text
 from rich.theme import Theme
 
-
 # Default styles
 STYLE_OPTION = "bold cyan"
 STYLE_SWITCH = "bold green"
