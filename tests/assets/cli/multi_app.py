@@ -5,7 +5,7 @@ sub_app = typer.Typer()
 variable = "Some text"
 
 
-@sub_app.command(rich_help_panel="Greet")
+@sub_app.command()
 def hello(name: str = "World", age: int = typer.Option(0, help="The age of the user")):
     """
     Say Hello
@@ -38,11 +38,3 @@ def top():
     Top command
     """
     typer.echo("top")
-
-
-@app.command(rich_help_panel="Commands")
-def trivial():
-    """
-    Trivial command
-    """
-    typer.echo("trivial")
