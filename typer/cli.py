@@ -252,7 +252,8 @@ def get_docs_for_click(
                     or COMMANDS_PANEL_TITLE
                 )
                 panel_to_commands[panel_name].append(command_obj)
-            if default_command_objs := panel_to_commands.pop(COMMANDS_PANEL_TITLE, []):
+            default_command_objs = panel_to_commands.pop(COMMANDS_PANEL_TITLE, [])
+            if default_command_objs:
                 panel_to_commands = {
                     COMMANDS_PANEL_TITLE: default_command_objs,
                     **panel_to_commands,
@@ -261,7 +262,8 @@ def get_docs_for_click(
                 docs += f"**{panel_name}**:\n\n"
                 for command_obj in command_objs:
                     docs += f"* `{command_obj.name}`"
-                    if command_help := command_obj.get_short_help_str():
+                    command_help = command_obj.get_short_help_str()
+                    if command_help:
                         docs += f": {command_help}"
                     docs += "\n"
                 docs += "\n"
