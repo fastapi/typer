@@ -52,7 +52,7 @@ def test_rich_help_no_commands():
     assert "Show this message" in result.stdout
 
 
-def test_markdown_pars():
+def test_markdown_parse():
     app = typer.Typer(rich_markup_mode="markdown")
 
     @app.command()
