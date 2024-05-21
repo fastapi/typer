@@ -4,14 +4,13 @@
 
 import sys
 from os import PathLike
-from typing import (  # type: ignore
+from typing import (
     TYPE_CHECKING,
     AbstractSet,
     Any,
     ClassVar,
     Dict,
     Generator,
-    Iterable,
     List,
     Mapping,
     NewType,
@@ -253,7 +252,7 @@ else:
             return _UnionGenericAlias(origin, converted)
         else:
             try:
-                setattr(tp, "__args__", converted)
+                setattr(tp, "__args__", converted)  # noqa: B010
             except AttributeError:
                 pass
             return tp

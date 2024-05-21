@@ -6,13 +6,13 @@ It would show the version of your CLI program and then it would terminate it. Ev
 
 Let's see a first version of how it could look like:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="9-12  17-19"
     {!> ../docs_src/options/version/tutorial001_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -65,13 +65,13 @@ Awesome CLI Version: 0.1.0
 
 But now let's say that the `--name` *CLI option* that we declared before `--version` is required, and it has a callback that could exit the program:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="15-17  22-24"
     {!> ../docs_src/options/version/tutorial002_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -108,13 +108,13 @@ For those cases, we can mark a *CLI parameter* (a *CLI option* or *CLI argument*
 
 That will tell **Typer** (actually Click) that it should process this *CLI parameter* before the others:
 
-=== "Python 3.6+"
+=== "Python 3.7+"
 
     ```Python hl_lines="23-26"
     {!> ../docs_src/options/version/tutorial003_an.py!}
     ```
 
-=== "Python 3.6+ non-Annotated"
+=== "Python 3.7+ non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.

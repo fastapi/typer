@@ -17,7 +17,7 @@ from ._completion_shared import (
 
 try:
     import shellingham
-except ImportError:  # pragma: nocover
+except ImportError:  # pragma: no cover
     shellingham = None
 
 
