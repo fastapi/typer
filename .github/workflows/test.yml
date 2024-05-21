@@ -14,11 +14,23 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        python-version: [ "3.12" ]
+        include:
+          - os: ubuntu-latest
+            python-version: "3.7"
+          - os: macos-latest
+            python-version: "3.8"
+          - os: windows-latest
+            python-version: "3.9"
+          - os: ubuntu-latest
+            python-version: "3.10"
+          - os: macos-latest
+            python-version: "3.11"
       fail-fast: false
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Dump GitHub context
         env:
@@ -33,6 +45,7 @@ jobs:
           # cache: "pip"
           # cache-dependency-path: pyproject.toml
       - uses: actions/cache@v3
+        if: ${{ runner.os != 'macOS' }}
         id: cache
         with:
           path: ${{ env.pythonLocation }}
@@ -50,9 +63,9 @@ jobs:
           COVERAGE_FILE: coverage/.coverage.${{ runner.os }}-py${{ matrix.python-version }}
           CONTEXT: ${{ runner.os }}-py${{ matrix.python-version }}
       - name: Store coverage files
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: coverage
+          name: coverage-${{ runner.os }}-${{ matrix.python-version }}
           path: coverage
 
   coverage-combine:
@@ -71,17 +84,18 @@ jobs:
           # cache: "pip"
           # cache-dependency-path: pyproject.toml
       - name: Get coverage files
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
-          name: coverage
+          pattern: coverage-*
           path: coverage
+          merge-multiple: true
       - run: pip install coverage[toml]
       - run: ls -la coverage
       - run: coverage combine coverage
       - run: coverage report
       - run: coverage html --show-contexts --title "Coverage for ${{ github.sha }}"
       - name: Store coverage HTML
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-html
           path: htmlcov
