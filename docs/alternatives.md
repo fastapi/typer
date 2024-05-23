@@ -17,7 +17,7 @@ It provides a better alternative than reading the *CLI Parameters* as a `list` o
 !!! check "Inspired **Typer** to"
     Provide a better development experience than just reading *CLI Parameters* by hand.
 
-### <a href="https://www.hug.rest/" class="external-link" target="_blank">Hug</a>
+### <a href="https://hugapi.github.io/hug/" class="external-link" target="_blank">Hug</a>
 
 Hug is a library to create APIs and CLIs, it uses parameters in functions to declare the required data.
 
