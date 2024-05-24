@@ -722,4 +722,4 @@ def rich_to_html(input_text: str) -> str:
     with console.capture():
         console.print(input_text)  # TODO: use escape to fix things like "[required]" ?
 
-    return console.export_html(inline_styles=True, code_format="{code}")
+    return console.export_html(inline_styles=True, code_format="{code}").strip()
