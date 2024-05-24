@@ -12,7 +12,7 @@ app = typer.Typer()
 def main(
     name: str = typer.Option(
         "World", help="The name to say hi to.", autocompletion=complete_name
-    )
+    ),
 ):
     print(f"Hello {name}")
 

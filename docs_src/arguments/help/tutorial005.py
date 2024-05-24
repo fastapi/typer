@@ -4,7 +4,7 @@ import typer
 def main(
     name: str = typer.Argument(
         "Wade Wilson", help="Who to greet", show_default="Deadpoolio the amazing's name"
-    )
+    ),
 ):
     print(f"Hello {name}")
 

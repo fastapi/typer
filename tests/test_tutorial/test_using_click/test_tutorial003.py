@@ -10,8 +10,7 @@ runner = CliRunner()
 
 def test_cli():
     result = runner.invoke(mod.typer_click_object, [])
-    # TODO: when deprecating Click 7, remove second option
-    assert "Missing command" in result.stdout or "Usage" in result.stdout
+    assert "Missing command" in result.stdout
 
 
 def test_help():
@@ -35,8 +34,7 @@ def test_click():
 def test_script():
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
     )
     assert "Usage" in result.stdout

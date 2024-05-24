@@ -2,7 +2,7 @@ When you create a CLI program with **Typer** you probably want to create your ow
 
 That's what allows your users to install it and have it as an independent program that they can use in their terminal.
 
-And that's also required for shell auto completion to work (unless you use your program through [Typer CLI](../typer-cli.md){.internal-link target=_blank}).
+And that's also required for shell auto completion to work (unless you use your program through `typer` command).
 
 Nowadays, there are several ways and tools to create Python packages (what you install with `pip install something`).
 
@@ -97,7 +97,7 @@ You can see that you have a generated project structure that looks like:
 .
 ├── poetry.lock
 ├── pyproject.toml
-├── README.rst
+├── README.md
 ├── rick_portal_gun
 │   └── __init__.py
 └── tests
@@ -146,67 +146,12 @@ def load():
 
 ## Modify the README
 
-Let's change the README. By default it's a file `README.rst`.
-
-Let's change it to `README.md`. So, change the extension from `.rst` to `.md`.
-
-So that we can use Markdown instead of reStructuredText.
-
-And change the file to have something like:
+Let's change the README to have something like:
 
 ```Markdown
 # Portal Gun
 
 The awesome Portal Gun
-```
-
-## Modify your project metadata
-
-Edit your file `pyproject.toml`.
-
-It would look something like:
-
-```TOML
-[tool.poetry]
-name = "rick-portal-gun"
-version = "0.1.0"
-description = ""
-authors = ["Rick Sanchez <rick@example.com>"]
-
-[tool.poetry.dependencies]
-python = "^3.10"
-typer = {extras = ["all"], version = "^0.1.0"}
-
-[tool.poetry.dev-dependencies]
-pytest = "^5.2"
-
-[build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
-```
-
-We changed the default README, so let's make it use the new `README.md`.
-
-Add the line:
-
-```TOML hl_lines="6"
-[tool.poetry]
-name = "rick-portal-gun"
-version = "0.1.0"
-description = ""
-authors = ["Rick Sanchez <rick@example.com>"]
-readme = "README.md"
-
-[tool.poetry.dependencies]
-python = "^3.10"
-typer = {extras = ["all"], version = "^0.1.0"}
-
-[tool.poetry.dev-dependencies]
-pytest = "^5.2"
-
-[build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
 ```
 
 ## Add a "script"
@@ -468,7 +413,7 @@ The file would live right beside `__init__.py`:
 .
 ├── poetry.lock
 ├── pyproject.toml
-├── README.rst
+├── README.md
 ├── rick_portal_gun
 │   ├── __init__.py
 │   ├── __main__.py
@@ -701,11 +646,9 @@ Loading portal gun
 
 </div>
 
-## Generate docs with **Typer CLI** (optional)
+## Generate docs
 
-You can install and use [Typer CLI](../typer-cli.md){.internal-link target=_blank} to generate docs for your package.
-
-After installing it, you can use it to generate a new `README.md`:
+You can use the `typer` command to generate docs for your package that you can put in your `README.md`:
 
 <div class="termy">
 
@@ -720,6 +663,9 @@ Docs saved to: README.md
 You just have to pass it the module to import (`rick_portal_gun.main`) and it will detect the `typer.Typer` app automatically.
 
 By specifying the `--name` of the program it will be able to use it while generating the docs.
+
+!!! tip
+    If you installed `typer-slim` and don't have the `typer` command, you can use `python -m typer` instead.
 
 ### Publish a new version with the docs
 

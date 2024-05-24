@@ -1,12 +1,15 @@
 [build-system]
-requires = ["flit_core >=2,<3"]
-build-backend = "flit_core.buildapi"
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
 
-[tool.flit.metadata]
-module = "typer"
-author = "Sebastián Ramírez"
-author-email = "tiangolo@gmail.com"
-home-page = "https://github.com/tiangolo/typer"
+[project]
+name = "typer"
+dynamic = ["version"]
+description = "Typer, build great CLIs. Easy to code. Based on Python type hints."
+authors = [
+    {name = "Sebastián Ramírez", email = "tiangolo@gmail.com"},
+]
+requires-python = ">=3.7"
 classifiers = [
     "Intended Audience :: Information Technology",
     "Intended Audience :: System Administrators",
@@ -26,57 +29,79 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
-    "License :: OSI Approved :: MIT License"
-    ]
-requires = [
-    "click >= 7.1.1, <9.0.0",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+]
+dependencies = [
+    "click >= 8.0.0",
     "typing-extensions >= 3.7.4.3",
 ]
-description-file = "README.md"
-requires-python = ">=3.7"
-
-[tool.flit.metadata.urls]
+readme = "README.md"
+[project.urls]
 Documentation = "https://typer.tiangolo.com/"
+homepage = "https://github.com/tiangolo/typer"
 
-[tool.flit.metadata.requires-extra]
-test = [
-    "shellingham >=1.3.0,<2.0.0",
-    "pytest >=4.4.0,<8.0.0",
-    "pytest-cov >=2.10.0,<5.0.0",
-    "coverage >=6.2,<7.0",
-    "pytest-xdist >=1.32.0,<4.0.0",
-    "pytest-sugar >=0.9.4,<0.10.0",
-    "mypy ==0.971",
-    "black >=22.3.0,<23.0.0",
-    "isort >=5.0.6,<6.0.0",
-    "rich >=10.11.0,<14.0.0",
-]
-doc = [
-    "mkdocs >=1.1.2,<2.0.0",
-    "mkdocs-material >=8.1.4,<9.0.0",
-    "mdx-include >=1.4.1,<2.0.0",
-    "pillow >=9.3.0,<10.0.0",
-    "cairosvg >=2.5.2,<3.0.0",
-]
-dev = [
-    "autoflake >=1.3.1,<2.0.0",
-    "flake8 >=3.8.3,<4.0.0",
-    "pre-commit >=2.17.0,<3.0.0",
-]
-all = [
-    "colorama >=0.4.3,<0.5.0",
-    "shellingham >=1.3.0,<2.0.0",
-    "rich >=10.11.0,<14.0.0",
+[project.optional-dependencies]
+standard = [
+    "shellingham >=1.3.0",
+    "rich >=10.11.0",
 ]
 
-[tool.isort]
-profile = "black"
-known_third_party = ["typer", "click"]
-skip_glob = [
-    "docs_src/subcommands/tutorial001/main.py",
-    "docs_src/subcommands/tutorial003/lands.py",
-    "docs_src/subcommands/tutorial003/main.py",
+[tool.pdm]
+version = { source = "file", path = "typer/__init__.py" }
+distribution = true
+
+[tool.pdm.build]
+source-includes = [
+    "tests/",
+    "docs_src/",
+    "requirements*.txt",
+    "scripts/",
     ]
+
+[tool.tiangolo._internal-slim-build]
+sync-dependencies = [
+    "typer-slim[standard]",
+    "typer-cli",
+    "typer"
+]
+
+[tool.tiangolo._internal-slim-build.packages.typer-slim.project]
+name = "typer-slim"
+
+[tool.tiangolo._internal-slim-build.packages.typer]
+include-optional-dependencies = ["standard"]
+
+[tool.tiangolo._internal-slim-build.packages.typer.project]
+optional-dependencies = {}
+
+[tool.tiangolo._internal-slim-build.packages.typer.project.scripts]
+typer = "typer.cli:main"
+
+[tool.tiangolo._internal-slim-build.packages.typer-cli.project]
+name = "typer-cli"
+readme = "typer-cli/README.md"
+dependencies = [
+    "typer",
+]
+optional-dependencies = {}
+
+[tool.tiangolo._internal-slim-build.packages.typer-cli.tool.pdm.build]
+# excludes needs to explicitly exclude the top level python packages,
+# otherwise PDM includes them by default
+# A "*" glob pattern can't be used here because in PDM internals, the patterns are put
+# in a set (unordered, order varies) and each excluded file is assigned one of the
+# glob patterns that matches, as the set is unordered, the matched pattern could be "*"
+# independent of the order here. And then the internal code would give it a lower score
+# than the one for a default included file.
+# By not using "*" and explicitly excluding the top level packages, they get a higher
+# score than the default inclusion
+excludes = ["typer", "tests", "pdm_build.py"]
+# source-includes needs to explicitly define some value because PDM will check the
+# truthy value of the list, and if empty, will include some defaults, including "tests",
+# an empty string doesn't match anything, but makes the list truthy, so that PDM
+# doesn't override it during the build.
+source-includes = [""]
 
 [tool.pytest.ini_options]
 addopts = [
@@ -89,7 +114,91 @@ filterwarnings = [
     "error",
     # TODO: until I refactor completion to use the new shell_complete
     "ignore:'autocompletion' is renamed to 'shell_complete'. The old name is deprecated and will be removed in Click 8.1. See the docs about 'Parameter' for information about new behavior.:DeprecationWarning:typer",
-    'ignore:starlette.middleware.wsgi is deprecated and will be removed in a future release\..*:DeprecationWarning:starlette',
     # For pytest-xdist
     'ignore::DeprecationWarning:xdist',
 ]
+
+[tool.coverage.run]
+parallel = true
+data_file = "coverage/.coverage"
+source = [
+    "docs_src",
+    "tests",
+    "typer"
+]
+omit = [
+    "typer/_typing.py"
+]
+context = '${CONTEXT}'
+relative_files = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "@overload",
+    'if __name__ == "__main__":',
+    "if TYPE_CHECKING:",
+]
+
+[tool.mypy]
+strict = true
+
+[[tool.mypy.overrides]]
+module = "docs_src.*"
+disallow_incomplete_defs = false
+disallow_untyped_defs = false
+disallow_untyped_calls = false
+
+[[tool.mypy.overrides]]
+module = "shellingham"
+ignore_missing_imports = true
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP", # pyupgrade
+]
+ignore = [
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+    "W191", # indentation contains tabs
+]
+
+[tool.ruff.lint.per-file-ignores]
+# "__init__.py" = ["F401"]
+# This file is more readable without yield from
+"docs_src/progressbar/tutorial004.py" = ["UP028", "B007"]
+# Default mutable data structure
+"docs_src/options_autocompletion/tutorial006_an.py" = ["B006"]
+"docs_src/multiple_values/multiple_options/tutorial002_an.py" = ["B006"]
+"docs_src/options_autocompletion/tutorial007_an.py" = ["B006"]
+"docs_src/options_autocompletion/tutorial008_an.py" = ["B006"]
+"docs_src/options_autocompletion/tutorial009_an.py" = ["B006"]
+"docs_src/parameter_types/enum/tutorial003_an.py" = ["B006"]
+# Loop control variable `value` not used within loop body
+"docs_src/progressbar/tutorial001.py" = ["B007"]
+"docs_src/progressbar/tutorial003.py" = ["B007"]
+"docs_src/progressbar/tutorial005.py" = ["B007"]
+"docs_src/progressbar/tutorial006.py" = ["B007"]
+# Local variable `delete` is assigned to but never used
+"docs_src/prompt/tutorial003.py" = ["F841"]
+# Loop control variable `x` not used within loop body
+"docs_src/using_click/tutorial001.py" = ["B007"]
+
+# TODO: refactor _typing.py, remove unnecessary code
+"typer/_typing.py" = ["UP036", "F822"]
+
+[tool.ruff.lint.isort]
+known-third-party = ["typer", "click"]
+# For docs_src/subcommands/tutorial003/
+known-first-party = ["reigns", "towns", "lands", "items", "users"]
+
+[tool.ruff.lint.pyupgrade]
+# Preserve types, even if a file imports `from __future__ import annotations`.
+keep-runtime-typing = true
