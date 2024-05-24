@@ -49,7 +49,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         id: cache
         with:
           path: ${{ env.pythonLocation }}
@@ -63,7 +63,7 @@ jobs:
           pip install git+https://${{ secrets.TYPER_MKDOCS_MATERIAL_INSIDERS }}@github.com/squidfunk/mkdocs-material-insiders.git
           pip install git+https://${{ secrets.TYPER_MKDOCS_MATERIAL_INSIDERS }}@github.com/pawamoy-insiders/griffe-typing-deprecated.git
           pip install git+https://${{ secrets.TYPER_MKDOCS_MATERIAL_INSIDERS }}@github.com/pawamoy-insiders/mkdocstrings-python.git
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           key: mkdocs-cards-${{ github.ref }}-v1
           path: .cache
