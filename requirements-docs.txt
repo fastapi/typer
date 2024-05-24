@@ -10,7 +10,7 @@ jieba==0.42.1
 # For image processing by Material for MkDocs
 pillow==10.3.0
 # For image processing by Material for MkDocs
-cairosvg==2.7.0
+cairosvg==2.7.1
 mkdocstrings[python]==0.23.0
 griffe-typingdoc==0.2.2
 # For griffe, it formats with black
