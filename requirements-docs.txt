@@ -8,10 +8,10 @@ pyyaml >=5.3.1,<7.0.0
 # For Material for MkDocs, Chinese search
 jieba==0.42.1
 # For image processing by Material for MkDocs
-pillow==10.1.0
+pillow==10.3.0
 # For image processing by Material for MkDocs
 cairosvg==2.7.0
 mkdocstrings[python]==0.23.0
 griffe-typingdoc==0.2.2
 # For griffe, it formats with black
-black==23.3.0
+black==24.3.0
