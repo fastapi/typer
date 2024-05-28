@@ -155,9 +155,6 @@ def test_doc_html_output(tmp_path: Path):
         [
             sys.executable,
             "-m",
-            "coverage",
-            "run",
-            "-m",
             "typer",
             "tests.assets.cli.rich_formatted_app",
             "utils",
