@@ -163,7 +163,9 @@ def test_doc_html_output(tmp_path: Path):
         capture_output=True,
         encoding="utf-8",
     )
-    docs_path: Path = Path(__file__).parent.parent / "assets" / "cli" / "richformattedapp-docs.md"
+    docs_path: Path = (
+        Path(__file__).parent.parent / "assets" / "cli" / "richformattedapp-docs.md"
+    )
     docs = docs_path.read_text()
     written_docs = out_file.read_text()
     assert docs in written_docs
