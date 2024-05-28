@@ -175,7 +175,7 @@ def test_doc_html_output(tmp_path: Path):
         Path(__file__).parent.parent / "assets" / "cli" / "richformattedapp-docs.md"
     )
     docs = docs_path.read_text()
-    written_docs = out_file.read_text()
+    written_docs = out_file.read_text(encoding="utf-8")
     print(f"docs: {docs}")
     print(f"written_docs: {written_docs}")
     print(f"result stdout: {result.stdout}")
