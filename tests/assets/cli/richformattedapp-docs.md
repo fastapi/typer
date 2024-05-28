@@ -15,7 +15,7 @@ $ hello [OPTIONS] USER_1 [USER_2]
 
 **Options**:
 
-* `--force / --no-force`: Force the welcome <span style="color: #800000; text-decoration-color: #800000">message</span> 💥  [default: no-force]
+* `--force / --no-force`: Force the welcome <span style="color: #800000; text-decoration-color: #800000">message</span>  [default: no-force]
 * `--install-completion`: Install completion for the current shell.
 * `--show-completion`: Show completion for the current shell, to copy it or customize the installation.
 * `--help`: Show this message and exit.

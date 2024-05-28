@@ -12,7 +12,7 @@ def hello(
     ],
     user_2: Annotated[str, typer.Argument(help="The world")] = "The World",
     force: Annotated[
-        bool, typer.Option(help="Force the welcome [red]message[/red] :boom:")
+        bool, typer.Option(help="Force the welcome [red]message[/red]")
     ] = False,
 ):
     print(f"Hello {user_1} and {user_2}")
