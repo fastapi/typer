@@ -170,5 +170,9 @@ def test_doc_html_output(tmp_path: Path):
     )
     docs = docs_path.read_text()
     written_docs = out_file.read_text()
+    print(f"docs: {docs}")
+    print(f"written_docs: {written_docs}")
+    print(f"result stdout: {result.stdout}")
+    print(f"result stderr: {result.stderr}")
     assert docs in written_docs
     assert "Docs saved to:" in result.stdout
