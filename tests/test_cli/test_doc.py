@@ -21,7 +21,6 @@ def test_doc():
         ],
         capture_output=True,
         encoding="utf-8",
-        env={**os.environ, "PYTHONIOENCODING": "utf-8"},
     )
     docs_path: Path = Path(__file__).parent.parent / "assets/cli/multiapp-docs.md"
     docs = docs_path.read_text()
@@ -49,7 +48,6 @@ def test_doc_output(tmp_path: Path):
         ],
         capture_output=True,
         encoding="utf-8",
-        env={**os.environ, "PYTHONIOENCODING": "utf-8"},
     )
     docs_path: Path = Path(__file__).parent.parent / "assets/cli/multiapp-docs.md"
     docs = docs_path.read_text()
@@ -80,7 +78,6 @@ def test_doc_title_output(tmp_path: Path):
         ],
         capture_output=True,
         encoding="utf-8",
-        env={**os.environ, "PYTHONIOENCODING": "utf-8"},
     )
     docs_path: Path = Path(__file__).parent.parent / "assets/cli/multiapp-docs-title.md"
     docs = docs_path.read_text()
@@ -104,7 +101,6 @@ def test_doc_not_existing():
         ],
         capture_output=True,
         encoding="utf-8",
-        env={**os.environ, "PYTHONIOENCODING": "utf-8"},
     )
     assert "Could not import as Python module:" in result.stderr
 
@@ -124,7 +120,6 @@ def test_doc_no_typer():
         ],
         capture_output=True,
         encoding="utf-8",
-        env={**os.environ, "PYTHONIOENCODING": "utf-8"},
     )
     assert "No Typer app found" in result.stderr
 
@@ -144,7 +139,6 @@ def test_doc_file_not_existing():
         ],
         capture_output=True,
         encoding="utf-8",
-        env={**os.environ, "PYTHONIOENCODING": "utf-8"},
     )
     assert "Not a valid file or Python module:" in result.stderr
 
@@ -154,6 +148,9 @@ def test_doc_html_output(tmp_path: Path):
     result = subprocess.run(
         [
             sys.executable,
+            "-m",
+            "coverage",
+            "run",
             "-m",
             "typer",
             "tests.assets.cli.rich_formatted_app",
@@ -173,9 +170,5 @@ def test_doc_html_output(tmp_path: Path):
     )
     docs = docs_path.read_text(encoding="utf-8")
     written_docs = out_file.read_text(encoding="utf-8")
-    print(f"docs: {docs}")
-    print(f"written_docs: {written_docs}")
-    print(f"result stdout: {result.stdout}")
-    print(f"result stderr: {result.stderr}")
     assert docs in written_docs
     assert "Docs saved to:" in result.stdout
