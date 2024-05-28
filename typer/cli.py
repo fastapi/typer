@@ -273,7 +273,7 @@ def get_docs_for_click(
 
 
 def _parse_html(input_text: str) -> str:
-    if not has_rich:
+    if not has_rich:  # pragma: no cover
         return input_text
     return rich_utils.rich_to_html(input_text)
 
