@@ -15,7 +15,7 @@ def hello(
         bool, typer.Option(help="Force the welcome [red]message[/red]")
     ] = False,
 ):
-    print(f"Hello {user_1} and {user_2}")
+    print(f"Hello {user_1} and {user_2}")  # pragma: no cover
 
 
 if __name__ == "__main__":
