@@ -1,10 +1,10 @@
 import subprocess
 
 import pytest
-
 import typer
-from tests.utils import needs_py38
 from typer.testing import CliRunner
+
+from tests.utils import needs_py38
 
 runner = CliRunner()
 
