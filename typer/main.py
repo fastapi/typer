@@ -2,7 +2,6 @@ import inspect
 import os
 import sys
 import traceback
-import typing
 from datetime import datetime
 from enum import Enum
 from functools import update_wrapper
