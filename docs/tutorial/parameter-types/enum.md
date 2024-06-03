@@ -142,7 +142,7 @@ With Python 3.8+, you can also use `typing.Literal` to represent a set of possib
 
 === "Python 3.7+"
 
-    ```Python hl_lines="13"
+    ```Python hl_lines="6"
     {!> ../docs_src/parameter_types/enum/tutorial004_an.py!}
     ```
 
@@ -151,7 +151,7 @@ With Python 3.8+, you can also use `typing.Literal` to represent a set of possib
     !!! tip
         Prefer to use the `Annotated` version if possible.
 
-    ```Python hl_lines="13"
+    ```Python hl_lines="5"
     {!> ../docs_src/parameter_types/enum/tutorial004.py!}
     ```
 
