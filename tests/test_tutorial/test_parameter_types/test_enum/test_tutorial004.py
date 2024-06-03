@@ -13,7 +13,7 @@ runner = CliRunner()
 
 @pytest.fixture(scope="module")
 def mod():
-    from docs_src.parameter_types.enum import tutorial003 as mod
+    from docs_src.parameter_types.enum import tutorial004 as mod
 
     return mod
 
