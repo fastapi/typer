@@ -1,6 +1,5 @@
-from typing import Literal
-
 import typer
+from typer._typing import Literal
 
 
 def main(network: Literal["simple", "conv", "lstm"] = typer.Option("simple")):

@@ -1,7 +1,7 @@
-from typing import Literal
+from typing_extensions import Annotated
 
 import typer
-from typing_extensions import Annotated
+from typer._typing import Literal
 
 
 def main(
