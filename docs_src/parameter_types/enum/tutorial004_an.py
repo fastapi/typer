@@ -1,6 +1,5 @@
 import typer
-from typer._typing import Literal
-from typing_extensions import Annotated
+from typing_extensions import Annotated, Literal
 
 
 def main(
