@@ -3,7 +3,7 @@ from typing import Optional
 import typer
 
 
-def main(name: Optional[str] = typer.Argument(None)):
+def main(name: Optional[str] = typer.Argument(default=None)):
     if name is None:
         print("Hello World!")
     else:

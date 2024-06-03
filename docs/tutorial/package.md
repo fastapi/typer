@@ -2,7 +2,7 @@ When you create a CLI program with **Typer** you probably want to create your ow
 
 That's what allows your users to install it and have it as an independent program that they can use in their terminal.
 
-And that's also required for shell auto completion to work (unless you use your program through [Typer CLI](../typer-cli.md){.internal-link target=_blank}).
+And that's also required for shell auto completion to work (unless you use your program through `typer` command).
 
 Nowadays, there are several ways and tools to create Python packages (what you install with `pip install something`).
 
@@ -52,7 +52,7 @@ Add `typer[all]` to your dependencies:
 $ poetry add "typer[all]"
 
 // It creates a virtual environment for your project
-Creating virtualenv rick-portal-gun-w31dJa0b-py3.6 in /home/rick/.cache/pypoetry/virtualenvs
+Creating virtualenv rick-portal-gun-w31dJa0b-py3.10 in /home/rick/.cache/pypoetry/virtualenvs
 Using version ^0.1.0 for typer
 
 Updating dependencies
@@ -83,7 +83,7 @@ Package operations: 15 installs, 0 updates, 0 removals
 // Activate that new virtual environment
 $ poetry shell
 
-Spawning shell within /home/rick/.cache/pypoetry/virtualenvs/rick-portal-gun-w31dJa0b-py3.6
+Spawning shell within /home/rick/.cache/pypoetry/virtualenvs/rick-portal-gun-w31dJa0b-py3.10
 
 // Open an editor using this new environment, for example VS Code
 $ code ./
@@ -97,7 +97,7 @@ You can see that you have a generated project structure that looks like:
 .
 ├── poetry.lock
 ├── pyproject.toml
-├── README.rst
+├── README.md
 ├── rick_portal_gun
 │   └── __init__.py
 └── tests
@@ -146,67 +146,12 @@ def load():
 
 ## Modify the README
 
-Let's change the README. By default it's a file `README.rst`.
-
-Let's change it to `README.md`. So, change the extension from `.rst` to `.md`.
-
-So that we can use Markdown instead of reStructuredText.
-
-And change the file to have something like:
+Let's change the README to have something like:
 
 ```Markdown
 # Portal Gun
 
 The awesome Portal Gun
-```
-
-## Modify your project metadata
-
-Edit your file `pyproject.toml`.
-
-It would look something like:
-
-```TOML
-[tool.poetry]
-name = "rick-portal-gun"
-version = "0.1.0"
-description = ""
-authors = ["Rick Sanchez <rick@example.com>"]
-
-[tool.poetry.dependencies]
-python = "^3.6"
-typer = {extras = ["all"], version = "^0.1.0"}
-
-[tool.poetry.dev-dependencies]
-pytest = "^5.2"
-
-[build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
-```
-
-We changed the default README, so let's make it use the new `README.md`.
-
-Add the line:
-
-```TOML hl_lines="6"
-[tool.poetry]
-name = "rick-portal-gun"
-version = "0.1.0"
-description = ""
-authors = ["Rick Sanchez <rick@example.com>"]
-readme = "README.md"
-
-[tool.poetry.dependencies]
-python = "^3.6"
-typer = {extras = ["all"], version = "^0.1.0"}
-
-[tool.poetry.dev-dependencies]
-pytest = "^5.2"
-
-[build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
 ```
 
 ## Add a "script"
@@ -229,7 +174,7 @@ readme = "README.md"
 rick-portal-gun = "rick_portal_gun.main:app"
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.10"
 typer = {extras = ["all"], version = "^0.1.0"}
 
 [tool.poetry.dev-dependencies]
@@ -302,7 +247,7 @@ Your package is installed in the environment created by Poetry, but you can alre
 $ which rick-portal-gun
 
 // You get the one from your environment
-/home/rick/.cache/pypoetry/virtualenvs/rick-portal-gun-w31dJa0b-py3.6/bin/rick-portal-gun
+/home/rick/.cache/pypoetry/virtualenvs/rick-portal-gun-w31dJa0b-py3.10/bin/rick-portal-gun
 
 // Try it
 $ rick-portal-gun
@@ -468,10 +413,11 @@ The file would live right beside `__init__.py`:
 .
 ├── poetry.lock
 ├── pyproject.toml
-├── README.rst
+├── README.md
 ├── rick_portal_gun
 │   ├── __init__.py
-│   └── __main__.py
+│   ├── __main__.py
+│   └── main.py
 └── tests
     ├── __init__.py
     └── test_rick_portal_gun.py
@@ -659,8 +605,8 @@ Found existing installation: rick-portal-gun 0.1.0
 Uninstalling rick-portal-gun-0.1.0:
   Would remove:
     /home/user/.local/bin/rick-portal-gun
-    /home/user/.local/lib/python3.6/site-packages/rick_portal_gun-0.1.0.dist-info/*
-    /home/user/.local/lib/python3.6/site-packages/rick_portal_gun/*
+    /home/user/.local/lib/python3.10/site-packages/rick_portal_gun-0.1.0.dist-info/*
+    /home/user/.local/lib/python3.10/site-packages/rick_portal_gun/*
 # Proceed (y/n)? $ y
     Successfully uninstalled rick-portal-gun-0.1.0
 ```
@@ -677,10 +623,10 @@ $ pip install --user rick-portal-gun
 // Notice that it says "Downloading" 🚀
 Collecting rick-portal-gun
   Downloading rick_portal_gun-0.1.0-py3-none-any.whl (1.8 kB)
-Requirement already satisfied: typer[all]<0.0.12,>=0.0.11 in ./.local/lib/python3.6/site-packages (from rick-portal-gun) (0.0.11)
-Requirement already satisfied: click<7.2.0,>=7.1.1 in ./anaconda3/lib/python3.6/site-packages (from typer[all]<0.0.12,>=0.0.11->rick-portal-gun) (7.1.1)
-Requirement already satisfied: colorama; extra == "all" in ./anaconda3/lib/python3.6/site-packages (from typer[all]<0.0.12,>=0.0.11->rick-portal-gun) (0.4.3)
-Requirement already satisfied: shellingham; extra == "all" in ./anaconda3/lib/python3.6/site-packages (from typer[all]<0.0.12,>=0.0.11->rick-portal-gun) (1.3.1)
+Requirement already satisfied: typer[all]<0.0.12,>=0.0.11 in ./.local/lib/python3.10/site-packages (from rick-portal-gun) (0.0.11)
+Requirement already satisfied: click<7.2.0,>=7.1.1 in ./anaconda3/lib/python3.10/site-packages (from typer[all]<0.0.12,>=0.0.11->rick-portal-gun) (7.1.1)
+Requirement already satisfied: colorama; extra == "all" in ./anaconda3/lib/python3.10/site-packages (from typer[all]<0.0.12,>=0.0.11->rick-portal-gun) (0.4.3)
+Requirement already satisfied: shellingham; extra == "all" in ./anaconda3/lib/python3.10/site-packages (from typer[all]<0.0.12,>=0.0.11->rick-portal-gun) (1.3.1)
 Installing collected packages: rick-portal-gun
 Successfully installed rick-portal-gun-0.1.0
 ```
@@ -700,11 +646,9 @@ Loading portal gun
 
 </div>
 
-## Generate docs with **Typer CLI** (optional)
+## Generate docs
 
-You can install and use [Typer CLI](../typer-cli.md){.internal-link target=_blank} to generate docs for your package.
-
-After installing it, you can use it to generate a new `README.md`:
+You can use the `typer` command to generate docs for your package that you can put in your `README.md`:
 
 <div class="termy">
 
@@ -719,6 +663,9 @@ Docs saved to: README.md
 You just have to pass it the module to import (`rick_portal_gun.main`) and it will detect the `typer.Typer` app automatically.
 
 By specifying the `--name` of the program it will be able to use it while generating the docs.
+
+!!! tip
+    If you installed `typer-slim` and don't have the `typer` command, you can use `python -m typer` instead.
 
 ### Publish a new version with the docs
 
@@ -738,7 +685,7 @@ readme = "README.md"
 rick-portal-gun = "rick_portal_gun.main:app"
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.10"
 typer = {extras = ["all"], version = "^0.1.0"}
 
 [tool.poetry.dev-dependencies]

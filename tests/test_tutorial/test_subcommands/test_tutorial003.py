@@ -165,8 +165,7 @@ def test_scripts(mod):
     for module in [mod, items, lands, reigns, towns, users]:
         result = subprocess.run(
             [sys.executable, "-m", "coverage", "run", module.__file__, "--help"],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            capture_output=True,
             encoding="utf-8",
             env=env,
         )
