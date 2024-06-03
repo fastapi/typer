@@ -165,8 +165,6 @@ Usage: main.py [OPTIONS]
 
 Options:
   --network [simple|conv|lstm]  [default: simple]
-  --install-completion          Install completion for the current shell.
-  --show-completion             Show completion for the current shell, to copy it or customize the installation.
   --help                        Show this message and exit.
 
 // Try it
@@ -180,7 +178,7 @@ $ python main.py --network capsule
 Usage: main.py [OPTIONS]
 Try "main.py --help" for help.
 
-Error: Invalid value for '--network': invalid choice: capsule. (choose from simple, conv, lstm)
+Error: Invalid value for '--network': 'capsule' is not one of 'simple', 'conv', 'lstm'.
 ```
 
 </div>
