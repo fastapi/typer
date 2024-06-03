@@ -389,7 +389,7 @@ def resolve_annotations(
             ):
                 value = ForwardRef(value, is_argument=False, is_class=True)
             else:
-                value = ForwardRef(value)
+                value = ForwardRef(value, is_argument=False)
         try:
             value = _eval_type(value, base_globals, None)
         except NameError:
@@ -404,15 +404,11 @@ def is_callable_type(type_: Type[Any]) -> bool:
 
 
 def is_literal_type(type_: Type[Any]) -> bool:
-    return (
-        Literal is not None
-        and hasattr(type_, "__values__")
-        and type_ == Literal[type_.__values__]
-    )
+    return Literal is not None and get_origin(type_) is Literal
 
 
 def literal_values(type_: Type[Any]) -> Tuple[Any, ...]:
-    return type_.__values__
+    return get_args(type_)
 
 
 def all_literal_values(type_: Type[Any]) -> Tuple[Any, ...]:
