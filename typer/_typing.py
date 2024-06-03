@@ -66,7 +66,7 @@ else:
 
 if sys.version_info < (3, 9):
     # Ensure we always get all the whole `Annotated` hint, not just the annotated type.
-    # For 3.6 to 3.8, `get_type_hints` doesn't recognize `typing_extensions.Annotated`,
+    # For 3.7 to 3.8, `get_type_hints` doesn't recognize `typing_extensions.Annotated`,
     # so it already returns the full annotation
     get_all_type_hints = get_type_hints
 
@@ -309,8 +309,8 @@ NONE_TYPES: Tuple[Any, Any, Any] = (None, NoneType, Literal[None])
 
 
 if sys.version_info < (3, 8):
-    # Even though this implementation is slower, we need it for python 3.6/3.7:
-    # In python 3.6/3.7 "Literal" is not a builtin type and uses a different
+    # Even though this implementation is slower, we need it for python 3.7:
+    # In python 3.7 "Literal" is not a builtin type and uses a different
     # mechanism.
     # for this reason `Literal[None] is Literal[None]` evaluates to `False`,
     # breaking the faster implementation used for the other python versions.
