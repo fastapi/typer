@@ -1,12 +1,10 @@
 import subprocess
-import sys
 
 import pytest
+
 import typer
+from tests.utils import needs_py38
 from typer.testing import CliRunner
-
-pytestmark = pytest.mark.skipif(sys.version_info < (3, 8), reason="requires python3.8")
-
 
 runner = CliRunner()
 
@@ -25,18 +23,21 @@ def app(mod):
     return app
 
 
+@needs_py38
 def test_help(app):
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     assert "--network [simple|conv|lstm]" in result.output.replace("  ", "")
 
 
+@needs_py38
 def test_main(app):
     result = runner.invoke(app, ["--network", "conv"])
     assert result.exit_code == 0
     assert "Training neural network of type: conv" in result.output
 
 
+@needs_py38
 def test_invalid(app):
     result = runner.invoke(app, ["--network", "capsule"])
     assert result.exit_code != 0
@@ -50,6 +51,7 @@ def test_invalid(app):
     assert "lstm" in result.output
 
 
+@needs_py38
 def test_script(mod):
     result = subprocess.run(
         ["coverage", "run", mod.__file__, "--help"],
