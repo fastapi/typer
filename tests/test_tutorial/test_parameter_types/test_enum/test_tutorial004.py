@@ -1,44 +1,35 @@
 import subprocess
+import sys
 
-import pytest
 import typer
 from typer.testing import CliRunner
 
 from tests.utils import needs_py38
 
+from docs_src.parameter_types.enum import tutorial004 as mod
+
 runner = CliRunner()
 
-
-@pytest.fixture(scope="module")
-def mod():
-    from docs_src.parameter_types.enum import tutorial004 as mod
-
-    return mod
-
-
-@pytest.fixture(scope="module")
-def app(mod):
-    app = typer.Typer()
-    app.command()(mod.main)
-    return app
+app = typer.Typer()
+app.command()(mod.main)
 
 
 @needs_py38
-def test_help(app):
+def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     assert "--network [simple|conv|lstm]" in result.output.replace("  ", "")
 
 
 @needs_py38
-def test_main(app):
+def test_main():
     result = runner.invoke(app, ["--network", "conv"])
     assert result.exit_code == 0
     assert "Training neural network of type: conv" in result.output
 
 
 @needs_py38
-def test_invalid(app):
+def test_invalid():
     result = runner.invoke(app, ["--network", "capsule"])
     assert result.exit_code != 0
     assert (
@@ -52,11 +43,10 @@ def test_invalid(app):
 
 
 @needs_py38
-def test_script(mod):
+def test_script():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--help"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
+        capture_output=True,
         encoding="utf-8",
     )
     assert "Usage" in result.stdout
