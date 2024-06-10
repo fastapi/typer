@@ -313,7 +313,7 @@ class Typer:
             # raise custom_exc from e
             # but that means the last error shown is the custom exception, not the
             # actual error. This trick improves developer experience by showing the
-            # actual error last.
+            # actual error last
             setattr(
                 e,
                 _typer_developer_exception_attr_name,
@@ -435,7 +435,6 @@ def solve_typer_info_help(typer_info: TyperInfo) -> str:
 
 def solve_typer_info_defaults(typer_info: TyperInfo) -> TyperInfo:
     values: Dict[str, Any] = {}
-    name = None
     for name, value in typer_info.__dict__.items():
         # Priority 1: Value was set in app.add_typer()
         if not isinstance(value, DefaultPlaceholder):
