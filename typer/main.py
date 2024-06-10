@@ -435,7 +435,6 @@ def solve_typer_info_help(typer_info: TyperInfo) -> str:
 
 def solve_typer_info_defaults(typer_info: TyperInfo) -> TyperInfo:
     values: Dict[str, Any] = {}
-    name = None
     for name, value in typer_info.__dict__.items():
         # Priority 1: Value was set in app.add_typer()
         if not isinstance(value, DefaultPlaceholder):
