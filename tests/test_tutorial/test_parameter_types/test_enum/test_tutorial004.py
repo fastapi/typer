@@ -5,6 +5,7 @@ import typer
 from typer.testing import CliRunner
 
 from docs_src.parameter_types.enum import tutorial004 as mod
+
 from ....utils import needs_py38
 
 runner = CliRunner()
