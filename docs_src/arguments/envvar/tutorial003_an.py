@@ -5,7 +5,7 @@ from typing_extensions import Annotated
 def main(
     name: Annotated[
         str, typer.Argument(envvar="AWESOME_NAME", show_envvar=False)
-    ] = "World"
+    ] = "World",
 ):
     print(f"Hello Mr. {name}")
 

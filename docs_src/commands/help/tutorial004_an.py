@@ -8,7 +8,7 @@ app = typer.Typer(rich_markup_mode="rich")
 def create(
     username: Annotated[
         str, typer.Argument(help="The username to be [green]created[/green]")
-    ]
+    ],
 ):
     """
     [bold green]Create[/bold green] a new [italic]shinny[/italic] user. :sparkles:

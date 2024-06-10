@@ -6,7 +6,7 @@ app = typer.Typer(rich_markup_mode="markdown")
 
 @app.command()
 def create(
-    username: Annotated[str, typer.Argument(help="The username to be **created**")]
+    username: Annotated[str, typer.Argument(help="The username to be **created**")],
 ):
     """
     **Create** a new *shinny* user. :sparkles:
