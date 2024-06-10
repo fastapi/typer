@@ -14,7 +14,7 @@ def test_rich_markup_mode_default():
         """Main function"""
         print("Hello World")
 
-    assert app.rich_markup_mode == None
+    assert app.rich_markup_mode is None
 
     result = runner.invoke(app, ["--help"])
     assert all(c not in result.stdout for c in rounded)
