@@ -814,7 +814,7 @@ def get_click_param(
     else:
         default_value = param.default
         parameter_info = OptionInfo()
-    annotation: Any = Any
+    annotation: Any
     if not param.annotation == param.empty:
         annotation = param.annotation
     else:
