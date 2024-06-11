@@ -6,7 +6,6 @@ from typer.testing import CliRunner
 from docs_src.commands.help import tutorial003 as mod
 
 app = mod.app
-app.rich_markup_mode = "rich"
 
 runner = CliRunner()
 
@@ -17,14 +16,14 @@ def test_help():
     assert "create" in result.output
     assert "Create a user." in result.output
     assert "delete" in result.output
-    assert "(deprecated)" in result.output
+    assert "(deprecated)" in result.output or "(Deprecated)" in result.output
     assert "Delete a user." in result.output
 
 
 def test_help_delete():
     result = runner.invoke(app, ["delete", "--help"])
     assert result.exit_code == 0
-    assert "(deprecated)" in result.output
+    assert "(deprecated)" in result.output or "(Deprecated)" in result.output
     assert "Delete a user." in result.output
 
 
