@@ -657,7 +657,6 @@ class TyperCommand(click.core.Command):
         complete_var: Optional[str] = None,
         standalone_mode: bool = True,
         windows_expand_args: bool = True,
-        rich_markup_mode: MarkupMode = None,
         **extra: Any,
     ) -> Any:
         return _main(
@@ -667,7 +666,7 @@ class TyperCommand(click.core.Command):
             complete_var=complete_var,
             standalone_mode=standalone_mode,
             windows_expand_args=windows_expand_args,
-            rich_markup_mode=rich_markup_mode,
+            rich_markup_mode=self.rich_markup_mode,
             **extra,
         )
 
@@ -721,7 +720,6 @@ class TyperGroup(click.core.Group):
         complete_var: Optional[str] = None,
         standalone_mode: bool = True,
         windows_expand_args: bool = True,
-        rich_markup_mode: MarkupMode = None,
         **extra: Any,
     ) -> Any:
         return _main(
@@ -731,7 +729,7 @@ class TyperGroup(click.core.Group):
             complete_var=complete_var,
             standalone_mode=standalone_mode,
             windows_expand_args=windows_expand_args,
-            rich_markup_mode=rich_markup_mode,
+            rich_markup_mode=self.rich_markup_mode,
             **extra,
         )
 
