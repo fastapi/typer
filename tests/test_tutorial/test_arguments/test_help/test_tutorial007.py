@@ -1,6 +1,7 @@
 import subprocess
 import sys
 
+import typer
 import typer.core
 from typer.testing import CliRunner
 
