@@ -16,14 +16,14 @@ def test_help():
     assert "create" in result.output
     assert "Create a user." in result.output
     assert "delete" in result.output
-    assert "(Deprecated)" in result.output
+    assert "(deprecated)" in result.output or "(Deprecated)" in result.output
     assert "Delete a user." in result.output
 
 
 def test_help_delete():
     result = runner.invoke(app, ["delete", "--help"])
     assert result.exit_code == 0
-    assert "(Deprecated)" in result.output
+    assert "(deprecated)" in result.output or "(Deprecated)" in result.output
     assert "Delete a user." in result.output
 
 
