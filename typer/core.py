@@ -31,18 +31,18 @@ if sys.version_info >= (3, 8):
 else:
     from typing_extensions import Literal
 
+MarkupMode = Literal["markdown", "rich", None]
+
 try:
     import rich
 
     from . import rich_utils
 
-    DEFAULT_MARKUP_MODE = "rich"
+    DEFAULT_MARKUP_MODE: MarkupMode = "rich"
 
 except ImportError:  # pragma: no cover
     rich = None  # type: ignore
     DEFAULT_MARKUP_MODE = None
-
-MarkupMode = Literal["markdown", "rich", None]
 
 
 # Copy from click.parser._split_opt
