@@ -15,7 +15,10 @@ default_app_names = ("app", "cli", "main")
 default_func_names = ("main", "cli", "app")
 
 app = typer.Typer()
+run_app = typer.Typer(help="Run the provided Typer app.")
 utils_app = typer.Typer(help="Extra utility commands for Typer apps.")
+
+app.add_typer(run_app, name="run")
 app.add_typer(utils_app, name="utils")
 
 
