@@ -5,7 +5,7 @@ from pathlib import Path
 
 from docs_src.commands.index import tutorial001 as mod
 
-from ..utils import needs_linux, needs_cleaning
+from ..utils import needs_cleaning, needs_linux
 
 
 @needs_linux
