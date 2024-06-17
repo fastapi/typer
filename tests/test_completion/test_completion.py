@@ -5,44 +5,73 @@ from pathlib import Path
 
 from docs_src.commands.index import tutorial001 as mod
 
-from ..utils import needs_linux
+from ..utils import needs_linux, needs_cleaning
 
 
 @needs_linux
-def test_show_completion():
+def test_show_completion_flag():
     result = subprocess.run(
         [
             "bash",
             "-c",
-            f"'{sys.executable}' -m coverage run '{mod.__file__}' --show-completion",
+            "typer --show-completion",
         ],
         capture_output=True,
+        text=True,
         encoding="utf-8",
-        env={**os.environ, "SHELL": "/bin/bash", "_TYPER_COMPLETE_TESTING": "True"},
     )
-    assert "_TUTORIAL001.PY_COMPLETE=complete_bash" in result.stdout
+    curr_shell_path = os.environ["SHELL"]
+    # check for default user shell
+    shell = "bash"
+    if "zsh" in curr_shell_path:
+        shell = "zsh"
+    if "fish" in curr_shell_path:
+        shell = "fish"
+    if "pwsh" in curr_shell_path:
+        shell = "pwsh"
+    assert f"_TYPER_COMPLETE=complete_{shell}" in result.stdout
 
 
+@needs_cleaning
 @needs_linux
-def test_install_completion():
-    bash_completion_path: Path = Path.home() / ".bashrc"
+def test_install_completion_flag():
+    # NOTE: This test causes side-effects at runtime on your system shell config
+    curr_shell_path = os.environ["SHELL"]
+
+    completion_path: Path = Path.home() / ".bashrc"
+    if "zsh" in curr_shell_path:
+        completion_path: Path = Path.home() / ".zshrc"
+    if "fish" in curr_shell_path:
+        completion_path: Path = Path.home() / ".config/fish/completions/"
+
     text = ""
-    if bash_completion_path.is_file():  # pragma: no cover
-        text = bash_completion_path.read_text()
+    if completion_path.is_file():  # pragma: no cover
+        text = completion_path.read_text()
     result = subprocess.run(
         [
             "bash",
             "-c",
-            f"'{sys.executable}' -m coverage run '{mod.__file__}' --install-completion",
+            "typer --install-completion",
         ],
         capture_output=True,
         encoding="utf-8",
         env={**os.environ, "SHELL": "/bin/bash", "_TYPER_COMPLETE_TESTING": "True"},
     )
-    new_text = bash_completion_path.read_text()
-    bash_completion_path.write_text(text)
-    assert "source" in new_text
-    assert str(Path(".bash_completions/tutorial001.py.sh")) in new_text
+
+    shell_config_file = completion_path.read_text()
+    completion_path.write_text(text)
+
+    if "bash" in curr_shell_path:
+        # check .bashrc
+        assert "source" in shell_config_file
+        assert str(Path(".bash_completions/tutorial001.py.sh")) in shell_config_file
+    if "zsh" in curr_shell_path:
+        # check .zshrc
+        assert (
+            "\n\nautoload -Uz compinit\nzstyle ':completion:*' menu select\nfpath+=~/.zfunc\n"
+            in shell_config_file
+        )
+
     assert "completion installed in" in result.stdout
     assert "Completion will take effect once you restart the terminal" in result.stdout
 
