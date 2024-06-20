@@ -69,7 +69,7 @@ Options:
   --help                Show this message and exit.
 
 // Try it
-$ python --name Camila
+$ python main.py --name Camila
 
 Hello Camila
 ```
