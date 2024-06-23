@@ -13,7 +13,7 @@ def test_script():
             "typer",
             "tests/assets/cli/import_other.py",
             "run",
-            "Dr. Magic"
+            "Dr. Magic",
         ],
         capture_output=True,
         encoding="utf-8",
