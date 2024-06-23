@@ -19,3 +19,4 @@ def test_script():
         encoding="utf-8",
     )
     assert "Hello Dr. Magic" in result.stdout
+    assert "echo: Dr. Magic" in result.stdout
