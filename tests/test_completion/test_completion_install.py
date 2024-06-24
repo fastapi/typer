@@ -1,9 +1,11 @@
 import os
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 from unittest import mock
 
+import pytest
 import shellingham
 import typer
 from typer.testing import CliRunner
@@ -67,41 +69,52 @@ def test_completion_install_bash():
     )
 
 
-def test_completion_install_zsh():
-    completion_path: Path = Path.home() / ".zshrc"
-    text = ""
-    if not completion_path.is_file():  # pragma: no cover
-        completion_path.write_text('echo "custom .zshrc"')
-    if completion_path.is_file():
-        text = completion_path.read_text()
-    result = subprocess.run(
-        [
-            sys.executable,
-            "-m",
-            "coverage",
-            "run",
-            mod.__file__,
-            "--install-completion",
-            "zsh",
-        ],
-        capture_output=True,
-        encoding="utf-8",
-        env={
-            **os.environ,
-            "_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION": "True",
-        },
-    )
-    new_text = completion_path.read_text()
-    completion_path.write_text(text)
-    zfunc_fragment = "fpath+=~/.zfunc"
-    assert zfunc_fragment in new_text
-    assert "completion installed in" in result.stdout
-    assert "Completion will take effect once you restart the terminal" in result.stdout
-    install_source_path = Path.home() / ".zfunc/_tutorial001.py"
-    assert install_source_path.is_file()
-    install_content = install_source_path.read_text()
-    install_source_path.unlink()
-    assert "compdef _tutorial001py_completion tutorial001.py" in install_content
+@pytest.mark.parametrize(
+    ("environ_override", "expected_zsh_dir"),
+    (
+        ({}, Path.home()),
+        ({"ZDOTDIR": tempfile.gettempdir()}, Path(tempfile.gettempdir())),
+    ),
+    ids=("ZDOTDIR unset", "ZDOTDIR set"),
+)
+def test_completion_install_zsh(environ_override, expected_zsh_dir):
+    with mock.patch.dict(os.environ, environ_override, clear=True):
+        completion_path: Path = expected_zsh_dir / ".zshrc"
+        text = ""
+        if not completion_path.is_file():  # pragma: no cover
+            completion_path.write_text('echo "custom .zshrc"')
+        if completion_path.is_file():
+            text = completion_path.read_text()
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "coverage",
+                "run",
+                mod.__file__,
+                "--install-completion",
+                "zsh",
+            ],
+            capture_output=True,
+            encoding="utf-8",
+            env={
+                **os.environ,
+                "_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION": "True",
+            },
+        )
+        new_text = completion_path.read_text()
+        completion_path.write_text(text)
+        zfunc_fragment = f"fpath+={expected_zsh_dir}/.zfunc"
+        assert zfunc_fragment in new_text
+        assert "completion installed in" in result.stdout
+        assert (
+            "Completion will take effect once you restart the terminal" in result.stdout
+        )
+        install_source_path = expected_zsh_dir / ".zfunc/_tutorial001.py"
+        assert install_source_path.is_file()
+        install_content = install_source_path.read_text()
+        install_source_path.unlink()
+        assert "compdef _tutorial001py_completion tutorial001.py" in install_content
 
 
 def test_completion_install_fish():
