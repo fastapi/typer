@@ -234,3 +234,23 @@ def test_forbid_default_and_default_factory_with_default_param(param, param_info
 )
 def test_error_rendering(error, message):
     assert str(error) == message
+
+
+def test_options_with_flag_value():
+    app = typer.Typer()
+
+    @app.command()
+    def cmd(my_param: Annotated[str, typer.Option("--some-opt", is_flag=False, flag_value="flag")] = "default"):
+        print(my_param)
+
+    result = runner.invoke(app, [])
+    assert result.exit_code == 0, result.output
+    assert "default" in result.output
+
+    result = runner.invoke(app, ["--some-opt"])
+    assert result.exit_code == 0, result.output
+    assert "flag" in result.output
+
+    result = runner.invoke(app, ["--some-opt", "hello"])
+    assert result.exit_code == 0, result.output
+    assert "hello" in result.output
