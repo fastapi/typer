@@ -240,7 +240,11 @@ def test_options_with_flag_value():
     app = typer.Typer()
 
     @app.command()
-    def cmd(my_param: Annotated[str, typer.Option("--some-opt", is_flag=False, flag_value="flag")] = "default"):
+    def cmd(
+        my_param: Annotated[
+            str, typer.Option("--some-opt", is_flag=False, flag_value="flag")
+        ] = "default",
+    ):
         print(my_param)
 
     result = runner.invoke(app, [])
