@@ -128,16 +128,12 @@ def install_zsh(*, prog_name: str, complete_var: str, shell: str) -> Path:
     zshrc_content = ""
     if zshrc_path.is_file():
         zshrc_content = zshrc_path.read_text()
-    completion_init_lines = [
-        "autoload -Uz compinit",
-        "compinit",
-        "zstyle ':completion:*' menu select",
-        "fpath+=~/.zfunc",
-    ]
-    for line in completion_init_lines:
-        if line not in zshrc_content:  # pragma: no cover
-            zshrc_content += f"\n{line}"
-    zshrc_content += "\n"
+    if "autoload -Uz compinit" not in zshrc_content:  # pragma: nocover
+        zshrc_content += f"\nautoload -Uz compinit"
+    if "fpath+=~/.zfunc" not in zshrc_content:  # pragma: nocover
+        zshrc_content += f"\nfpath+=~/.zfunc\ncompinit"
+    if zshrc_content[-1] != "\n":
+        zshrc_content += "\n"
     zshrc_path.write_text(zshrc_content)
     # Install completion under ~/.zfunc/
     path_obj = Path.home() / f".zfunc/_{prog_name}"
