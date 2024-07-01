@@ -2,7 +2,7 @@ import typer
 
 
 def main(name: str = typer.Argument(..., help="The name of the user to greet")):
-    typer.echo(f"Hello {name}")
+    print(f"Hello {name}")
 
 
 if __name__ == "__main__":

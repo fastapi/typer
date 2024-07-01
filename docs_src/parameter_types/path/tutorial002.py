@@ -12,10 +12,10 @@ def main(
         writable=False,
         readable=True,
         resolve_path=True,
-    )
+    ),
 ):
     text = config.read_text()
-    typer.echo(f"Config file contents: {text}")
+    print(f"Config file contents: {text}")
 
 
 if __name__ == "__main__":

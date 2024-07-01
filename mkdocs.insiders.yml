@@ -1,0 +1,4 @@
+INHERIT: mkdocs.yml
+plugins:
+  social:
+  typeset:
