@@ -709,3 +709,9 @@ def rich_abort_error() -> None:
     """Print richly formatted abort error."""
     console = _get_rich_console(stderr=True)
     console.print(ABORTED_TEXT, style=STYLE_ABORTED)
+
+
+def print_with_rich(text: str) -> None:
+    """Print richly formatted message."""
+    console = _get_rich_console()
+    console.print(text)
