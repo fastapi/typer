@@ -149,7 +149,7 @@ def shell_complete(
 
     # Typer override to print the completion help msg with Rich
     if instruction == "complete":
-        if rich is None:
+        if not rich:  # pragma: no cover
             click.echo(comp.complete())
         else:
             from . import rich_utils
