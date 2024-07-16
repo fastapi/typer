@@ -53,7 +53,6 @@ $scriptblock = {
     $Env:%(autocomplete_var)s = "complete_powershell"
     $Env:_TYPER_COMPLETE_ARGS = $commandAst.ToString()
     $Env:_TYPER_COMPLETE_WORD_TO_COMPLETE = $wordToComplete
-    $Env:_TYPER_CURSOR_POSITION = $cursorPosition
     %(prog_name)s | ForEach-Object {
         $commandArray = $_ -Split ":::"
         $command = $commandArray[0]
@@ -64,7 +63,6 @@ $scriptblock = {
     $Env:%(autocomplete_var)s = ""
     $Env:_TYPER_COMPLETE_ARGS = ""
     $Env:_TYPER_COMPLETE_WORD_TO_COMPLETE = ""
-    $Env:_TYPER_CURSOR_POSITION = ""
 }
 Register-ArgumentCompleter -Native -CommandName %(prog_name)s -ScriptBlock $scriptblock
 """
