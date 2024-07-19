@@ -144,7 +144,7 @@ You also need to supply the default value as a string (not the enum):
 
 === "Python 3.7+"
 
-    ```Python hl_lines="14"
+    ```Python hl_lines="6 10"
     {!> ../docs_src/parameter_types/enum/tutorial004_an.py!}
     ```
 
@@ -153,7 +153,7 @@ You also need to supply the default value as a string (not the enum):
     !!! tip
         Prefer to use the `Annotated` version if possible.
 
-    ```Python hl_lines="5 9"
+    ```Python hl_lines="5 8"
     {!> ../docs_src/parameter_types/enum/tutorial004.py!}
     ```
 
