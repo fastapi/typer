@@ -85,7 +85,7 @@ Then you can call `pytest` in your directory and it will run your tests:
 $ pytest
 
 ================ test session starts ================
-platform linux -- Python 3.6.9, pytest-5.3.5, py-1.8.1, pluggy-0.13.1
+platform linux -- Python 3.10, pytest-5.3.5, py-1.8.1, pluggy-0.13.1
 rootdir: /home/user/code/superawesome-cli/app
 plugins: forked-1.1.3, xdist-1.31.0, cov-2.8.1
 collected 1 item
@@ -103,9 +103,20 @@ test_main.py <span style="color: green; white-space: pre;">.                    
 
 If you have a CLI with prompts, like:
 
-```Python hl_lines="7"
-{!../docs_src/testing/app02/main.py!}
-```
+=== "Python 3.7+"
+
+    ```Python hl_lines="8"
+    {!> ../docs_src/testing/app02_an/main.py!}
+    ```
+
+=== "Python 3.7+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="7"
+    {!> ../docs_src/testing/app02/main.py!}
+    ```
 
 That you would use like:
 

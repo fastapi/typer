@@ -1,3 +1,5 @@
+from typing import Optional
+
 import typer
 
 
@@ -8,7 +10,7 @@ def name_callback(value: str):
     return value
 
 
-def main(name: str = typer.Option(..., callback=name_callback)):
+def main(name: Optional[str] = typer.Option(default=None, callback=name_callback)):
     print(f"Hello {name}")
 
 
