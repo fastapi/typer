@@ -215,5 +215,5 @@ class UnsupportedSeparatorError(Exception):
     def __str__(self) -> str:
         return (
             f"Error in definition of Option {self.argument_name!r}. "
-            f'Separator "{self.separator}" is not supported for multiple value splitting.'
+            f'Only single-character non-whitespace separators are supported, but got "{self.separator}".'
         )
