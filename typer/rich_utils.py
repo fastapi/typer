@@ -92,6 +92,7 @@ OPTIONS_PANEL_TITLE = _("Options")
 COMMANDS_PANEL_TITLE = _("Commands")
 ERRORS_PANEL_TITLE = _("Error")
 ABORTED_TEXT = _("Aborted.")
+RICH_HELP = _("Try [blue]'{command_path} {help_option}'[/] for help.")
 
 MARKUP_MODE_MARKDOWN = "markdown"
 MARKUP_MODE_RICH = "rich"
@@ -691,7 +692,7 @@ def rich_format_error(self: click.ClickException) -> None:
 
     if ctx is not None and ctx.command.get_help_option(ctx) is not None:
         console.print(
-            f"Try [blue]'{ctx.command_path} {ctx.help_option_names[0]}'[/] for help.",
+            RICH_HELP.format(command_path=ctx.command_path, help_option=ctx.help_option_names[0]),
             style=STYLE_ERRORS_SUGGESTION,
         )
 
