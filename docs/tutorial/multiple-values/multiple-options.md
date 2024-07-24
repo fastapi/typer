@@ -90,8 +90,7 @@ The sum is 9.5
 
 ## Passing multiple values in a single argument
 
-Many users expect to be able to pass multiple arguments with a single option.
-**Typer** supports this with the `separator` option for `typing.List[T]` types.
+**Typer** supports passing multiple arguments with a single option, by using the `separator` parameter in combination with `typing.List[T]` types.
 This feature makes it easy to parse multiple values from a single command-line argument into a list in your application.
 
 To use this feature, define a command-line option that accepts multiple values separated by a specific character (such as a comma). Here's an example of how to implement this:
@@ -116,20 +115,28 @@ Check it:
 <div class="termy">
 
 ```console
+// With no optional CLI argument
 $ python main.py
 
 The sum is 0
 
-// Behaves
+// With one number argument
 $ python main.py --number 2
 
 The sum is 2.0
 
-// Values to the argument are split using the passed separator
+// With several number arguments, split using the separator defined by the Option argument
 $ python main.py --number "2, 3, 4.5"
 
+The sum is 9.5
+
+// You can remove the quotes if no whitespace is added between the numbers
+$ python main.py --number 2,3,4.5
+
+The sum is 9.5
+
 // Supports passing the option multiple times. This joins all values to a single list
-$ python main.py --number "2, 3, 4.5" --number 5
+$ python main.py --number 2,3,4.5 --number 5
 
 The sum is 14.5
 ```
@@ -137,4 +144,4 @@ The sum is 14.5
 </div>
 
 !!! warning
-    Only single-character non-whitespace separators are supported. Note that passing `--number 2, 3, 4.5` (without wrapping the value in "") does not work.
+    Only single-character non-whitespace separators are supported.
