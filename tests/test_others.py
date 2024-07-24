@@ -269,7 +269,7 @@ def test_multiple_options_separator_1_unsupported_separator():
         runner.invoke(app, [])
     assert (
         str(exc_info.value)
-        == "Error in definition of Option 'names'. Separator \"\t \n\" is not supported for multiple value splitting."
+        == "Error in definition of Option 'names'. Only single-character non-whitespace separators are supported, but got \"\t \n\"."
     )
 
 
