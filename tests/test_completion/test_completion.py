@@ -5,10 +5,10 @@ from pathlib import Path
 
 from docs_src.commands.index import tutorial001 as mod
 
-from ..utils import needs_linux
+from ..utils import needs_bash
 
 
-@needs_linux
+@needs_bash
 def test_show_completion():
     result = subprocess.run(
         [
@@ -23,7 +23,7 @@ def test_show_completion():
     assert "_TUTORIAL001.PY_COMPLETE=complete_bash" in result.stdout
 
 
-@needs_linux
+@needs_bash
 def test_install_completion():
     bash_completion_path: Path = Path.home() / ".bashrc"
     text = ""
