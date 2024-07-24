@@ -692,7 +692,9 @@ def rich_format_error(self: click.ClickException) -> None:
 
     if ctx is not None and ctx.command.get_help_option(ctx) is not None:
         console.print(
-            RICH_HELP.format(command_path=ctx.command_path, help_option=ctx.help_option_names[0]),
+            RICH_HELP.format(
+                command_path=ctx.command_path, help_option=ctx.help_option_names[0]
+            ),
             style=STYLE_ERRORS_SUGGESTION,
         )
 
