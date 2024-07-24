@@ -5,6 +5,7 @@ import pytest
 try:
     import shellingham
     from shellingham import ShellDetectionFailure
+
     shell = shellingham.detect_shell()[0]
 except ImportError:  # pragma: no cover
     shellingham = None
