@@ -14,6 +14,11 @@ Successfully installed typer rich pydantic
 $ pip install pydantic
 ---> 100%
 Successfully installed pydantic
+
+// Or if you want to use EmailStr
+$ pip install "pydantic[email]"
+---> 100%
+Successfully installed pydantic, email-validator
 ```
 
 </div>

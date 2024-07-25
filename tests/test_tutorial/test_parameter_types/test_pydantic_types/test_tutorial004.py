@@ -18,22 +18,25 @@ def test_help():
 
 
 def test_tuple():
-    result = runner.invoke(
-        app, ["--user", "Camila", "23", "camila@example.org", "https://example.com"]
-    )
+    result = runner.invoke(app, ["--server", "Example", "::1", "https://example.com"])
     assert result.exit_code == 0
-    assert "name: Camila" in result.output
-    assert "age: 23" in result.output
-    assert "email: camila@example.org" in result.output
+    assert "name: Example" in result.output
+    assert "address: ::1" in result.output
     assert "url: https://example.com" in result.output
 
 
-def test_tuple_invalid():
+def test_tuple_invalid_ip():
     result = runner.invoke(
-        app, ["--user", "Camila", "23", "invalid", "https://example.com"]
+        app, ["--server", "Invalid", "invalid", "https://example.com"]
     )
     assert result.exit_code != 0
-    assert "value is not a valid email address" in result.output
+    assert "value is not a valid IPv4 or IPv6 address" in result.output
+
+
+def test_tuple_invalid_url():
+    result = runner.invoke(app, ["--server", "Invalid", "::1", "invalid"])
+    assert result.exit_code != 0
+    assert "Input should be a valid URL" in result.output
 
 
 def test_script():

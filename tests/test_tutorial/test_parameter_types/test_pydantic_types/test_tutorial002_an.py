@@ -17,16 +17,16 @@ def test_help():
     assert result.exit_code == 0
 
 
-def test_email_opt():
-    result = runner.invoke(app, ["--email-opt", "tiangolo@gmail.com"])
+def test_url_opt():
+    result = runner.invoke(app, ["--url-opt", "https://typer.tiangolo.com"])
     assert result.exit_code == 0
-    assert "email_opt: tiangolo@gmail.com" in result.output
+    assert "url_opt: https://typer.tiangolo.com" in result.output
 
 
-def test_email_opt_invalid():
-    result = runner.invoke(app, ["--email-opt", "invalid"])
+def test_url_opt_invalid():
+    result = runner.invoke(app, ["--url-opt", "invalid"])
     assert result.exit_code != 0
-    assert "value is not a valid email address" in result.output
+    assert "Input should be a valid URL" in result.output
 
 
 def test_script():

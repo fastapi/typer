@@ -1,9 +1,9 @@
 import typer
-from pydantic import EmailStr
+from pydantic import AnyHttpUrl
 
 
-def main(email_arg: EmailStr):
-    typer.echo(f"email_arg: {email_arg}")
+def main(url_arg: AnyHttpUrl):
+    typer.echo(f"url_arg: {url_arg}")
 
 
 if __name__ == "__main__":

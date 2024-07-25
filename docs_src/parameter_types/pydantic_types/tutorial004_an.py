@@ -1,20 +1,19 @@
 from typing import Tuple
 
 import typer
-from pydantic import AnyHttpUrl, EmailStr
+from pydantic import AnyHttpUrl, IPvAnyAddress
 from typing_extensions import Annotated
 
 
 def main(
-    user: Annotated[
-        Tuple[str, int, EmailStr, AnyHttpUrl],
+    server: Annotated[
+        Tuple[str, IPvAnyAddress, AnyHttpUrl],
         typer.Option(help="User name, age, email and social media URL"),
     ],
 ):
-    name, age, email, url = user
+    name, address, url = server
     typer.echo(f"name: {name}")
-    typer.echo(f"age: {age}")
-    typer.echo(f"email: {email}")
+    typer.echo(f"address: {address}")
     typer.echo(f"url: {url}")
 
 

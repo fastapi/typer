@@ -17,16 +17,16 @@ def test_help():
     assert result.exit_code == 0
 
 
-def test_email_arg():
-    result = runner.invoke(app, ["tiangolo@gmail.com"])
+def test_url_arg():
+    result = runner.invoke(app, ["https://typer.tiangolo.com"])
     assert result.exit_code == 0
-    assert "email_arg: tiangolo@gmail.com" in result.output
+    assert "url_arg: https://typer.tiangolo.com" in result.output
 
 
-def test_email_arg_invalid():
+def test_url_arg_invalid():
     result = runner.invoke(app, ["invalid"])
     assert result.exit_code != 0
-    assert "value is not a valid email address" in result.output
+    assert "Input should be a valid URL" in result.output
 
 
 def test_script():

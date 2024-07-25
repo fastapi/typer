@@ -1,9 +1,9 @@
 import typer
-from pydantic import EmailStr
+from pydantic import AnyHttpUrl
 
 
-def main(email_opt: EmailStr = typer.Option("tiangolo@gmail.com")):
-    typer.echo(f"email_opt: {email_opt}")
+def main(url_opt: AnyHttpUrl = typer.Option("https://typer.tiangolo.com")):
+    typer.echo(f"url_opt: {url_opt}")
 
 
 if __name__ == "__main__":

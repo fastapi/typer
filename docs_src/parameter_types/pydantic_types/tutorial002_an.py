@@ -1,10 +1,10 @@
 import typer
-from pydantic import EmailStr
+from pydantic import AnyHttpUrl
 from typing_extensions import Annotated
 
 
-def main(email_opt: Annotated[EmailStr, typer.Option()] = "tiangolo@gmail.com"):
-    typer.echo(f"email_opt: {email_opt}")
+def main(url_opt: Annotated[AnyHttpUrl, typer.Option()] = "tiangolo@gmail.com"):
+    typer.echo(f"url_opt: {url_opt}")
 
 
 if __name__ == "__main__":
