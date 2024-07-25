@@ -21,13 +21,13 @@ Successfully installed pydantic
 
 You can then use them as parameter types.
 
-=== "Python 3.6+ Argument"
+=== "Python 3.7+ Argument"
 
     ```Python hl_lines="5"
     {!> ../docs_src/parameter_types/pydantic_types/tutorial001_an.py!}
     ```
 
-=== "Python 3.6+ Argument non-Annotated"
+=== "Python 3.7+ Argument non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -36,13 +36,13 @@ You can then use them as parameter types.
     {!> ../docs_src/parameter_types/pydantic_types/tutorial001.py!}
     ```
 
-=== "Python 3.6+ Option"
+=== "Python 3.7+ Option"
 
     ```Python hl_lines="5"
     {!> ../docs_src/parameter_types/pydantic_types/tutorial002_an.py!}
     ```
 
-=== "Python 3.6+ Option non-Annotated"
+=== "Python 3.7+ Option non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -53,13 +53,13 @@ You can then use them as parameter types.
 
 These types are also supported in lists or tuples
 
-=== "Python 3.6+ list"
+=== "Python 3.7+ list"
 
     ```Python hl_lines="6"
     {!> ../docs_src/parameter_types/pydantic_types/tutorial003_an.py!}
     ```
 
-=== "Python 3.6+ list non-Annotated"
+=== "Python 3.7+ list non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
@@ -68,13 +68,13 @@ These types are also supported in lists or tuples
     {!> ../docs_src/parameter_types/pydantic_types/tutorial003.py!}
     ```
 
-=== "Python 3.6+ tuple"
+=== "Python 3.7+ tuple"
 
     ```Python hl_lines="6"
     {!> ../docs_src/parameter_types/pydantic_types/tutorial004_an.py!}
     ```
 
-=== "Python 3.6+ tuple non-Annotated"
+=== "Python 3.7+ tuple non-Annotated"
 
     !!! tip
         Prefer to use the `Annotated` version if possible.
