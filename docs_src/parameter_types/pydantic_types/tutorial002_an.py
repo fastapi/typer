@@ -3,7 +3,7 @@ from pydantic import AnyHttpUrl
 from typing_extensions import Annotated
 
 
-def main(url_opt: Annotated[AnyHttpUrl, typer.Option()] = "tiangolo@gmail.com"):
+def main(url_opt: Annotated[AnyHttpUrl, typer.Option()] = "https://typer.tiangolo.com"):
     typer.echo(f"url_opt: {url_opt}")
 
 
