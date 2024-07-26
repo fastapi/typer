@@ -164,7 +164,7 @@
 
 Now you don't need to install `typer[all]`. When you install `typer` it comes with the default optional dependencies and the `typer` command.
 
-If you don't want the extra optional dependencies (`rich` and `shellingham`), you can install `typer-slim` instead.
+If you don't want the extra optional dependencies (`rich`, `shellingham` and `pydantic`), you can install `typer-slim` instead.
 
 You can also install `typer-slim[standard]`, which includes the default optional dependencies, but not the `typer` command.
 
@@ -190,7 +190,7 @@ By installing the latest version (`0.12.1`) it fixes it, for any previous versio
 
 In version `0.12.0`, the `typer` package depends on `typer-slim[standard]` which includes the default dependencies (instead of `typer[all]`) and `typer-cli` (that provides the `typer` command).
 
-If you don't want the extra optional dependencies (`rich` and `shellingham`), you can install `typer-slim` instead.
+If you don't want the extra optional dependencies (`rich`, `shellingham` and `pydantic`), you can install `typer-slim` instead.
 
 You can also install `typer-slim[standard]`, which includes the default optional dependencies, but not the `typer` command.
 

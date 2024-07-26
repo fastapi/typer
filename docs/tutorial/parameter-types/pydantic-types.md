@@ -1,14 +1,14 @@
 Pydantic types such as [AnyUrl](https://docs.pydantic.dev/latest/api/networks/#pydantic.networks.AnyUrl) or [EmailStr](https://docs.pydantic.dev/latest/api/networks/#pydantic.networks.EmailStr) can be very convenient to describe and validate some parameters.
 
-You can add pydantic from typer's optional dependencies
+Pydantic is installed automatically when installing Typer with its extra standard dependencies:
 
 <div class="termy">
 
 ```console
-// Pydantic comes with typer[standard]
-$ pip install "typer[standard]"
+// Pydantic comes with typer
+$ pip install typer
 ---> 100%
-Successfully installed typer rich pydantic
+Successfully installed typer rich shellingham pydantic
 
 // Alternatively, you can install Pydantic independently
 $ pip install pydantic
