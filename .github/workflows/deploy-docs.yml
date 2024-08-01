@@ -27,7 +27,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           path: ./site/
-          pattern: docs-site-*
+          pattern: docs-site
           merge-multiple: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ github.event.workflow_run.id }}
@@ -39,7 +39,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: fastapitiangolo
+          projectName: typertiangolo
           directory: './site'
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ ( github.event.workflow_run.head_repository.full_name == github.repository && github.event.workflow_run.head_branch == 'master' && 'main' ) || ( github.event.workflow_run.head_sha ) }}
