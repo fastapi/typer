@@ -6,6 +6,7 @@
 
 ### Internal
 
+* 🍱 Update Typer icon and logo. PR [#899](https://github.com/tiangolo/typer/pull/899) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Update issue-manager.yml GitHub Action permissions. PR [#897](https://github.com/tiangolo/typer/pull/897) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Refactor GitHub Action to comment docs deployment URLs and update token, preparing for GitHub org. PR [#896](https://github.com/tiangolo/typer/pull/896) by [@tiangolo](https://github.com/tiangolo).
 * 🔨 Update docs Termynal scripts to not include line nums for local dev. PR [#882](https://github.com/tiangolo/typer/pull/882) by [@tiangolo](https://github.com/tiangolo).
