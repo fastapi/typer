@@ -10,7 +10,7 @@ theme:
     accent: teal
   icon:
     repo: fontawesome/brands/github-alt
-  logo: img/icon-white.svg
+  logo: img/icon.svg
   favicon: img/favicon.png
 
 repo_name: tiangolo/typer
