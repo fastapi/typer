@@ -6,6 +6,7 @@
 
 ### Internal
 
+* ➖ Do not install jieba for MkDocs Material as there are no chinese translations. PR [#903](https://github.com/tiangolo/typer/pull/903) by [@tiangolo](https://github.com/tiangolo).
 * 🙈 Add MkDocs Material cache to gitignore. PR [#902](https://github.com/tiangolo/typer/pull/902) by [@tiangolo](https://github.com/tiangolo).
 * 🔨 Update lint script. PR [#901](https://github.com/tiangolo/typer/pull/901) by [@tiangolo](https://github.com/tiangolo).
 * 🔧 Update MkDocs configs and docs build setup. PR [#900](https://github.com/tiangolo/typer/pull/900) by [@tiangolo](https://github.com/tiangolo).
