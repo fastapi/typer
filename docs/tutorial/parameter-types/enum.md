@@ -51,20 +51,24 @@ Error: Invalid value for '--network': 'CONV' is not one of 'simple', 'conv', 'ls
 
 You can make an `Enum` (choice) *CLI parameter* be case-insensitive with the `case_sensitive` parameter:
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="15"
-    {!> ../docs_src/parameter_types/enum/tutorial002_an.py!}
-    ```
+```Python hl_lines="15"
+{!> ../docs_src/parameter_types/enum/tutorial002_an.py!}
+```
 
-=== "Python 3.7+ non-Annotated"
+////
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="13"
-    {!> ../docs_src/parameter_types/enum/tutorial002.py!}
-    ```
+!!! tip
+    Prefer to use the `Annotated` version if possible.
+
+```Python hl_lines="13"
+{!> ../docs_src/parameter_types/enum/tutorial002.py!}
+```
+
+////
 
 And then the values of the `Enum` will be checked no matter if lower case, upper case, or a mix:
 
@@ -88,20 +92,24 @@ Training neural network of type: lstm
 
 A *CLI parameter* can also take a list of `Enum` values:
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="14"
-    {!> ../docs_src/parameter_types/enum/tutorial003_an.py!}
-    ```
+```Python hl_lines="14"
+{!> ../docs_src/parameter_types/enum/tutorial003_an.py!}
+```
 
-=== "Python 3.7+ non-Annotated"
+////
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="13"
-    {!> ../docs_src/parameter_types/enum/tutorial003.py!}
-    ```
+!!! tip
+    Prefer to use the `Annotated` version if possible.
+
+```Python hl_lines="13"
+{!> ../docs_src/parameter_types/enum/tutorial003.py!}
+```
+
+////
 
 This works just like any other parameter value taking a list of things:
 

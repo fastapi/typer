@@ -4,20 +4,24 @@ You can set the number of values and types to anything you want, but it has to b
 
 For this, use the standard Python `typing.Tuple`:
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="1  7"
-    {!> ../docs_src/multiple_values/options_with_multiple_values/tutorial001_an.py!}
-    ```
+```Python hl_lines="1  7"
+{!> ../docs_src/multiple_values/options_with_multiple_values/tutorial001_an.py!}
+```
 
-=== "Python 3.7+ non-Annotated"
+////
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="1  6"
-    {!> ../docs_src/multiple_values/options_with_multiple_values/tutorial001.py!}
-    ```
+!!! tip
+    Prefer to use the `Annotated` version if possible.
+
+```Python hl_lines="1  6"
+{!> ../docs_src/multiple_values/options_with_multiple_values/tutorial001.py!}
+```
+
+////
 
 Each of the internal types defines the type of each value in the tuple.
 

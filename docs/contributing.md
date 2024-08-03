@@ -22,63 +22,73 @@ That will create a directory `./env/` with the Python binaries and then you will
 
 Activate the new environment with:
 
-=== "Linux, macOS"
+//// tab | Linux, macOS
 
-    <div class="termy">
+<div class="termy">
 
-    ```console
-    $ source ./env/bin/activate
-    ```
+```console
+$ source ./env/bin/activate
+```
 
-    </div>
+</div>
 
-=== "Windows PowerShell"
+////
 
-    <div class="termy">
+//// tab | Windows PowerShell
 
-    ```console
-    $ .\env\Scripts\Activate.ps1
-    ```
+<div class="termy">
 
-    </div>
+```console
+$ .\env\Scripts\Activate.ps1
+```
 
-=== "Windows Bash"
+</div>
 
-    Or if you use Bash for Windows (e.g. <a href="https://gitforwindows.org/" class="external-link" target="_blank">Git Bash</a>):
+////
 
-    <div class="termy">
+//// tab | Windows Bash
 
-    ```console
-    $ source ./env/Scripts/activate
-    ```
+Or if you use Bash for Windows (e.g. <a href="https://gitforwindows.org/" class="external-link" target="_blank">Git Bash</a>):
 
-    </div>
+<div class="termy">
+
+```console
+$ source ./env/Scripts/activate
+```
+
+</div>
+
+////
 
 To check it worked, use:
 
-=== "Linux, macOS, Windows Bash"
+//// tab | Linux, macOS, Windows Bash
 
-    <div class="termy">
+<div class="termy">
 
-    ```console
-    $ which pip
+```console
+$ which pip
 
-    some/directory/typer/env/bin/pip
-    ```
+some/directory/typer/env/bin/pip
+```
 
-    </div>
+</div>
 
-=== "Windows PowerShell"
+////
 
-    <div class="termy">
+//// tab | Windows PowerShell
 
-    ```console
-    $ Get-Command pip
+<div class="termy">
 
-    some/directory/typer/env/bin/pip
-    ```
+```console
+$ Get-Command pip
 
-    </div>
+some/directory/typer/env/bin/pip
+```
+
+</div>
+
+////
 
 If it shows the `pip` binary at `env/bin/pip` then it worked. 🎉
 
@@ -107,31 +117,35 @@ Now re-activate the environment to make sure you are using the `flit` you just i
 
 And now use `flit` to install the development dependencies:
 
-=== "Linux, macOS"
+//// tab | Linux, macOS
 
-    <div class="termy">
+<div class="termy">
 
-    ```console
-    $ flit install --deps develop --symlink
+```console
+$ flit install --deps develop --symlink
 
-    ---> 100%
-    ```
+---> 100%
+```
 
-    </div>
+</div>
 
-=== "Windows"
+////
 
-    If you are on Windows, use `--pth-file` instead of `--symlink`:
+//// tab | Windows
 
-    <div class="termy">
+If you are on Windows, use `--pth-file` instead of `--symlink`:
 
-    ```console
-    $ flit install --deps develop --pth-file
+<div class="termy">
 
-    ---> 100%
-    ```
+```console
+$ flit install --deps develop --pth-file
 
-    </div>
+---> 100%
+```
+
+</div>
+
+////
 
 It will install all the dependencies and your local Typer in your local environment.
 

@@ -11,27 +11,33 @@ To make a *CLI option* required, you can put `typer.Option()` inside of `Annotat
 
 Let's make `--lastname` a required *CLI option*:
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="5"
-    {!> ../docs_src/options/required/tutorial001_an.py!}
-    ```
+```Python hl_lines="5"
+{!> ../docs_src/options/required/tutorial001_an.py!}
+```
+
+////
 
 The same way as with `typer.Argument()`, the old style of using the function parameter default value is also supported, in that case you would just not pass anything to the `default` parameter.
 
-=== "Python 3.7+ non-Annotated"
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="4"
-    {!> ../docs_src/options/required/tutorial001.py!}
-    ```
+```Python hl_lines="4"
+{!> ../docs_src/options/required/tutorial001.py!}
+```
+
+////
 
 Or you can explictily pass `...` to `typer.Option(default=...)`:
 
-=== "Python 3.7+ non-Annotated"
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="4"
-    {!> ../docs_src/options/required/tutorial002.py!}
-    ```
+```Python hl_lines="4"
+{!> ../docs_src/options/required/tutorial002.py!}
+```
+
+////
 
 !!! info
     If you hadn't seen that `...` before: it is a special single value, it is <a href="https://docs.python.org/3/library/constants.html#Ellipsis" class="external-link" target="_blank">part of Python and is called "Ellipsis"</a>.

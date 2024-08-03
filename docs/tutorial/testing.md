@@ -103,20 +103,24 @@ test_main.py <span style="color: green; white-space: pre;">.                    
 
 If you have a CLI with prompts, like:
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="8"
-    {!> ../docs_src/testing/app02_an/main.py!}
-    ```
+```Python hl_lines="8"
+{!> ../docs_src/testing/app02_an/main.py!}
+```
 
-=== "Python 3.7+ non-Annotated"
+////
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="7"
-    {!> ../docs_src/testing/app02/main.py!}
-    ```
+!!! tip
+    Prefer to use the `Annotated` version if possible.
+
+```Python hl_lines="7"
+{!> ../docs_src/testing/app02/main.py!}
+```
+
+////
 
 That you would use like:
 

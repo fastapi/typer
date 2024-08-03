@@ -26,24 +26,28 @@ Let's say the function parameter name is `user_name` as above, but you want the 
 
 You can pass the *CLI option* name that you want to have in the following positional argument passed to `typer.Option()`:
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="5"
-    {!> ../docs_src/options/name/tutorial001_an.py!}
-    ```
+```Python hl_lines="5"
+{!> ../docs_src/options/name/tutorial001_an.py!}
+```
 
-    Here you are passing the string `"--name"` as the first positional argument to `typer.Option()`.
+Here you are passing the string `"--name"` as the first positional argument to `typer.Option()`.
 
-=== "Python 3.7+ non-Annotated"
+////
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="4"
-    {!> ../docs_src/options/name/tutorial001.py!}
-    ```
+!!! tip
+    Prefer to use the `Annotated` version if possible.
 
-    Here you are passing the string `"--name"` as the second positional argument to `typer.Option()`, as the first argument is `...` to mark it as required.
+```Python hl_lines="4"
+{!> ../docs_src/options/name/tutorial001.py!}
+```
+
+Here you are passing the string `"--name"` as the second positional argument to `typer.Option()`, as the first argument is `...` to mark it as required.
+
+////
 
 !!! info
     "<a href="https://docs.python.org/3.8/glossary.html#term-argument" class="external-link" target="_blank">Positional</a>" means that it's not a function argument with a keyword name.
@@ -194,20 +198,24 @@ You can overwrite the *CLI option* name to use as in the previous example, but y
 
 For example, extending the previous example, let's add a *CLI option* short name `-n`:
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="5"
-    {!> ../docs_src/options/name/tutorial002_an.py!}
-    ```
+```Python hl_lines="5"
+{!> ../docs_src/options/name/tutorial002_an.py!}
+```
 
-=== "Python 3.7+ non-Annotated"
+////
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="4"
-    {!> ../docs_src/options/name/tutorial002.py!}
-    ```
+!!! tip
+    Prefer to use the `Annotated` version if possible.
+
+```Python hl_lines="4"
+{!> ../docs_src/options/name/tutorial002.py!}
+```
+
+////
 
 Here we are overwriting the *CLI option* name that by default would be `--user-name`, and we are defining it to be `--name`. And we are also declaring a *CLI option* short name of `-n`.
 
@@ -238,20 +246,24 @@ Hello Camila
 
 If you only declare a short name like `-n` then that will be the only *CLI option* name. And neither `--name` nor `--user-name` will be available.
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="5"
-    {!> ../docs_src/options/name/tutorial003_an.py!}
-    ```
+```Python hl_lines="5"
+{!> ../docs_src/options/name/tutorial003_an.py!}
+```
 
-=== "Python 3.7+ non-Annotated"
+////
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="4"
-    {!> ../docs_src/options/name/tutorial003.py!}
-    ```
+!!! tip
+    Prefer to use the `Annotated` version if possible.
+
+```Python hl_lines="4"
+{!> ../docs_src/options/name/tutorial003.py!}
+```
+
+////
 
 Check it:
 
@@ -279,20 +291,24 @@ Hello Camila
 
 Continuing with the example above, as **Typer** allows you to declare a *CLI option* as having only a short name, if you want to have the default long name plus a short name, you have to declare both explicitly:
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="5"
-    {!> ../docs_src/options/name/tutorial004_an.py!}
-    ```
+```Python hl_lines="5"
+{!> ../docs_src/options/name/tutorial004_an.py!}
+```
 
-=== "Python 3.7+ non-Annotated"
+////
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="4"
-    {!> ../docs_src/options/name/tutorial004.py!}
-    ```
+!!! tip
+    Prefer to use the `Annotated` version if possible.
+
+```Python hl_lines="4"
+{!> ../docs_src/options/name/tutorial004.py!}
+```
+
+////
 
 Check it:
 
@@ -326,20 +342,24 @@ You can create multiple short names and use them together.
 
 You don't have to do anything special for it to work (apart from declaring those short versions):
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="6-7"
-    {!> ../docs_src/options/name/tutorial005_an.py!}
-    ```
+```Python hl_lines="6-7"
+{!> ../docs_src/options/name/tutorial005_an.py!}
+```
 
-=== "Python 3.7+ non-Annotated"
+////
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="5-6"
-    {!> ../docs_src/options/name/tutorial005.py!}
-    ```
+!!! tip
+    Prefer to use the `Annotated` version if possible.
+
+```Python hl_lines="5-6"
+{!> ../docs_src/options/name/tutorial005.py!}
+```
+
+////
 
 !!! tip
     Notice that, again, we are declaring the long and short version of the *CLI option* names.

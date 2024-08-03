@@ -31,20 +31,24 @@ woohoo!
 
 If you want a specific number of values and types, you can use a tuple, and it can even have default values:
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="8-10"
-    {!> ../docs_src/multiple_values/arguments_with_multiple_values/tutorial002_an.py!}
-    ```
+```Python hl_lines="8-10"
+{!> ../docs_src/multiple_values/arguments_with_multiple_values/tutorial002_an.py!}
+```
 
-=== "Python 3.7+ non-Annotated"
+////
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="7-8"
-    {!> ../docs_src/multiple_values/arguments_with_multiple_values/tutorial002.py!}
-    ```
+!!! tip
+    Prefer to use the `Annotated` version if possible.
+
+```Python hl_lines="7-8"
+{!> ../docs_src/multiple_values/arguments_with_multiple_values/tutorial002.py!}
+```
+
+////
 
 Check it:
 
