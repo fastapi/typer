@@ -18,8 +18,11 @@ We can do that by specifying the exact name we want:
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="4"
 {!> ../docs_src/parameter_types/bool/tutorial001.py!}
@@ -83,8 +86,11 @@ We can do that by passing a single `str` with the 2 names for the `bool` *CLI op
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="6"
 {!> ../docs_src/parameter_types/bool/tutorial002.py!}
@@ -141,8 +147,11 @@ For example, let's say we want `-f` for `--force` and `-F` for `--no-force`:
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="4"
 {!> ../docs_src/parameter_types/bool/tutorial003.py!}
@@ -194,8 +203,11 @@ To do that, use a space and a single `/` and pass the negative name after:
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="4"
 {!> ../docs_src/parameter_types/bool/tutorial004.py!}
@@ -203,10 +215,13 @@ To do that, use a space and a single `/` and pass the negative name after:
 
 ////
 
-!!! tip
-    Have in mind that it's a string with a preceding space and then a `/`.
+/// tip
 
-    So, it's `" /-S"` not `"/-S"`.
+Have in mind that it's a string with a preceding space and then a `/`.
+
+So, it's `" /-S"` not `"/-S"`.
+
+///
 
 Check it:
 

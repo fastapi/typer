@@ -126,5 +126,8 @@ Got extra arg: Berlin
 
 </div>
 
-!!! tip
-    Notice that it saves all the extra *CLI parameters* as a raw `list` of `str`, including the *CLI option* names and values, everything together.
+/// tip
+
+Notice that it saves all the extra *CLI parameters* as a raw `list` of `str`, including the *CLI option* names and values, everything together.
+
+///

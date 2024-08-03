@@ -16,8 +16,11 @@ For example, you could do some validation before the rest of the code is execute
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="6-9  12"
 {!> ../docs_src/options/callback/tutorial001.py!}
@@ -119,8 +122,11 @@ Let's say that when the callback is running, we want to show a message saying th
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="7"
 {!> ../docs_src/options/callback/tutorial002.py!}
@@ -171,8 +177,11 @@ The "context" has some additional data about the current execution of your progr
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="6-8"
 {!> ../docs_src/options/callback/tutorial003.py!}
@@ -220,8 +229,11 @@ The same way you can access the `typer.Context` by declaring a function paramete
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="6  9"
 {!> ../docs_src/options/callback/tutorial004.py!}

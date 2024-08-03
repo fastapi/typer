@@ -10,8 +10,11 @@ You can define numeric validations with `max` and `min` values for `int` and `fl
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="5-7"
 {!> ../docs_src/parameter_types/number/tutorial001.py!}
@@ -98,8 +101,11 @@ You can do it with the `clamp` parameter:
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="5-7"
 {!> ../docs_src/parameter_types/number/tutorial002.py!}
@@ -144,8 +150,11 @@ You can make a *CLI option* work as a counter with the `counter` parameter:
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="4"
 {!> ../docs_src/parameter_types/number/tutorial003.py!}

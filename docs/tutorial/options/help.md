@@ -12,8 +12,11 @@ Let's now do the same for *CLI options*:
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="6-7"
 {!> ../docs_src/options/help/tutorial001.py!}
@@ -81,8 +84,11 @@ If you have installed Rich as described in the docs for [Printing and Colors](..
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="8  11"
 {!> ../docs_src/options/help/tutorial002.py!}
@@ -144,8 +150,11 @@ You can tell Typer to not show the default value in the help text with `show_def
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="4"
 {!> ../docs_src/options/help/tutorial003.py!}
@@ -176,10 +185,13 @@ Options:
 
 </div>
 
-!!! note "Technical Details"
-    In Click applications the default values are hidden by default. 🙈
+/// note | Technical Details
 
-    In **Typer** these default values are shown by default. 👀
+In Click applications the default values are hidden by default. 🙈
+
+In **Typer** these default values are shown by default. 👀
+
+///
 
 ## Custom default string
 
@@ -195,8 +207,11 @@ You can use the same `show_default` to pass a custom string (instead of a `bool`
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="6"
 {!> ../docs_src/options/help/tutorial004.py!}

@@ -12,8 +12,11 @@ To do that, use the `envvar` parameter for `typer.Argument()`:
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="4"
 {!> ../docs_src/arguments/envvar/tutorial001.py!}
@@ -74,8 +77,11 @@ You are not restricted to a single environment variable, you can declare a list 
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="4"
 {!> ../docs_src/arguments/envvar/tutorial002.py!}
@@ -126,8 +132,11 @@ By default, environment variables used will be shown in the help text, but you c
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="4"
 {!> ../docs_src/arguments/envvar/tutorial003.py!}
@@ -160,7 +169,10 @@ Hello Mr. Wednesday
 
 </div>
 
-!!! note "Technical Details"
-    In Click applications the env vars are hidden by default. 🙈
+/// note | Technical Details
 
-    In **Typer** these env vars are shown by default. 👀
+In Click applications the env vars are hidden by default. 🙈
+
+In **Typer** these env vars are shown by default. 👀
+
+///

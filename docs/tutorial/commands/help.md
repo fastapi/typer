@@ -12,8 +12,11 @@ And the `typer.Typer()` application receives a parameter `help` that you can pas
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="3  8-10  20  23-27  39  42-46  55-57"
 {!> ../docs_src/commands/help/tutorial001.py!}
@@ -95,10 +98,13 @@ Options:
 
 </div>
 
-!!! tip
-    `typer.Typer()` receives several other parameters for other things, we'll see that later.
+/// tip
 
-    You will also see how to use "Callbacks" later, and those include a way to add this same help message in a function docstring.
+`typer.Typer()` receives several other parameters for other things, we'll see that later.
+
+You will also see how to use "Callbacks" later, and those include a way to add this same help message in a function docstring.
+
+///
 
 ## Overwrite command help
 
@@ -198,8 +204,11 @@ If you have **Rich** installed as described in [Printing and Colors](../printing
 
 Then you can use more formatting in the docstrings and the `help` parameter for *CLI arguments* and *CLI options*. You will see more about it below. 👇
 
-!!! info
-    By default, `rich_markup_mode` is `None`, which disables any rich text formatting.
+/// info
+
+By default, `rich_markup_mode` is `None`, which disables any rich text formatting.
+
+///
 
 ### Rich Markup
 
@@ -215,8 +224,11 @@ If you set `rich_markup_mode="rich"` when creating the `typer.Typer()` app, you 
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="3  9  13-15  20  22  24"
 {!> ../docs_src/commands/help/tutorial004.py!}
@@ -295,8 +307,11 @@ If you set `rich_markup_mode="markdown"` when creating the `typer.Typer()` app, 
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="3  7  9-17  22  24-25"
 {!> ../docs_src/commands/help/tutorial005.py!}
@@ -362,8 +377,11 @@ $ python main.py delete --help
 
 </div>
 
-!!! info
-    Notice that in Markdown you cannot define colors. For colors you might prefer to use Rich markup.
+/// info
+
+Notice that in Markdown you cannot define colors. For colors you might prefer to use Rich markup.
+
+///
 
 ## Help Panels
 
@@ -432,8 +450,11 @@ And of course, in the same application you can also set the `rich_help_panel` fo
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="12  16  21  30"
 {!> ../docs_src/commands/help/tutorial007.py!}

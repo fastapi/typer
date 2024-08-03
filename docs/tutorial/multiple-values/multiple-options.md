@@ -14,8 +14,11 @@ For this, use the standard Python `typing.List` to declare it as a `list` of `st
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="1  6"
 {!> ../docs_src/multiple_values/multiple_options/tutorial001.py!}
@@ -65,8 +68,11 @@ The same way, you can use other types and they will be converted by **Typer** to
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="6"
 {!> ../docs_src/multiple_values/multiple_options/tutorial002.py!}

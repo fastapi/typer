@@ -4,10 +4,13 @@ To define a *CLI parameter* that can take a value from a predefined set of value
 {!../docs_src/parameter_types/enum/tutorial001.py!}
 ```
 
-!!! tip
-    Notice that the function parameter `network` will be an `Enum`, not a `str`.
+/// tip
 
-    To get the `str` value in your function's code use `network.value`.
+Notice that the function parameter `network` will be an `Enum`, not a `str`.
+
+To get the `str` value in your function's code use `network.value`.
+
+///
 
 Check it:
 
@@ -61,8 +64,11 @@ You can make an `Enum` (choice) *CLI parameter* be case-insensitive with the `ca
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="13"
 {!> ../docs_src/parameter_types/enum/tutorial002.py!}
@@ -102,8 +108,11 @@ A *CLI parameter* can also take a list of `Enum` values:
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="13"
 {!> ../docs_src/parameter_types/enum/tutorial003.py!}

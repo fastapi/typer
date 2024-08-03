@@ -21,8 +21,11 @@ There are two ways to achieve this:
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="12-13  17-18"
 {!> ../docs_src/parameter_types/custom_types/tutorial001.py!}

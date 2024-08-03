@@ -1,9 +1,12 @@
 Apart from `Path` *CLI parameters* you can also declare some types of "files".
 
-!!! tip
-    In most of the cases you are probably fine just using `Path`.
+/// tip
 
-    You can read and write data with `Path` the same way.
+In most of the cases you are probably fine just using `Path`.
+
+You can read and write data with `Path` the same way.
+
+///
 
 The difference is that these types will give you a Python <a href="https://docs.python.org/3/glossary.html#term-file-object" class="external-link" target="_blank">file-like object</a> instead of a Python <a href="https://docs.python.org/3/library/pathlib.html#basic-use" class="external-link" target="_blank">Path</a>.
 
@@ -52,8 +55,11 @@ You will get all the correct editor support, attributes, methods, etc for the fi
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="4"
 {!> ../docs_src/parameter_types/file/tutorial001.py!}
@@ -96,8 +102,11 @@ For writing text, you can use `typer.FileTextWrite`:
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="4-5"
 {!> ../docs_src/parameter_types/file/tutorial002.py!}
@@ -131,10 +140,13 @@ Some config written by the app
 
 </div>
 
-!!! info "Technical Details"
-    `typer.FileTextWrite` is a just a convenience class.
+/// info | Technical Details
 
-    It's the same as using `typer.FileText` and setting `mode="w"`. You will learn about `mode` later below.
+`typer.FileTextWrite` is a just a convenience class.
+
+It's the same as using `typer.FileText` and setting `mode="w"`. You will learn about `mode` later below.
+
+///
 
 ## `FileBinaryRead`
 
@@ -154,8 +166,11 @@ It's useful for reading binary files like images:
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="4"
 {!> ../docs_src/parameter_types/file/tutorial003.py!}
@@ -200,8 +215,11 @@ If you have a `str`, you have to encode it first to get `bytes`.
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="4"
 {!> ../docs_src/parameter_types/file/tutorial004.py!}
@@ -267,8 +285,11 @@ For example, you could use `mode="a"` to write "appending" to the same file:
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="4"
 {!> ../docs_src/parameter_types/file/tutorial005.py!}
@@ -276,8 +297,11 @@ For example, you could use `mode="a"` to write "appending" to the same file:
 
 ////
 
-!!! tip
-    As you are manually setting `mode="a"`, you can use `typer.FileText` or `typer.FileTextWrite`, both will work.
+/// tip
+
+As you are manually setting `mode="a"`, you can use `typer.FileText` or `typer.FileTextWrite`, both will work.
+
+///
 
 Check it:
 
@@ -309,10 +333,13 @@ This is a single line
 
 ## About the different types
 
-!!! info
-    These are technical details about why the different types/classes provided by **Typer**.
+/// info
 
-    But you don't need this information to be able to use them. You can skip it.
+These are technical details about why the different types/classes provided by **Typer**.
+
+But you don't need this information to be able to use them. You can skip it.
+
+///
 
 **Typer** provides you these different types (classes) because they inherit directly from the actual Python implementation that will be provided underneath for each case.
 

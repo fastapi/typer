@@ -10,8 +10,11 @@ It's also possible to, instead of just showing an error, ask for the missing val
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="4"
 {!> ../docs_src/options/prompt/tutorial001.py!}
@@ -49,8 +52,11 @@ You can also set a custom prompt, passing the string that you want to use instea
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="5"
 {!> ../docs_src/options/prompt/tutorial002.py!}
@@ -92,8 +98,11 @@ Let's say it's a CLI app to delete a project:
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="4"
 {!> ../docs_src/options/prompt/tutorial003.py!}

@@ -16,8 +16,11 @@ Let's see a first version of how it could look like:
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="8-11  16-18"
 {!> ../docs_src/options/version/tutorial001.py!}
@@ -25,8 +28,11 @@ Let's see a first version of how it could look like:
 
 ////
 
-!!! tip
-    Notice that we don't have to get the `typer.Context` and check for `ctx.resilient_parsing` for completion to work, because we only print and modify the program when `--version` is passed, otherwise, nothing is printed or changed from the callback.
+/// tip
+
+Notice that we don't have to get the `typer.Context` and check for `ctx.resilient_parsing` for completion to work, because we only print and modify the program when `--version` is passed, otherwise, nothing is printed or changed from the callback.
+
+///
 
 If the `--version` *CLI option* is passed, we get a value `True` in the callback.
 
@@ -79,8 +85,11 @@ But now let's say that the `--name` *CLI option* that we declared before `--vers
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="14-16  21-23"
 {!> ../docs_src/options/version/tutorial002.py!}
@@ -101,14 +110,23 @@ Aborted!
 
 </div>
 
-!!! tip
-    We don't have to check for `ctx.resilient_parsing` in the `name_callback()` for completion to work, because we are not using `typer.echo()`, instead we are raising a `typer.BadParameter`.
+/// tip
 
-!!! note "Technical Details"
-    `typer.BadParameter` prints the error to "standard error", not to "standard output", and because the completion system only reads from "standard output", it won't break completion.
+We don't have to check for `ctx.resilient_parsing` in the `name_callback()` for completion to work, because we are not using `typer.echo()`, instead we are raising a `typer.BadParameter`.
 
-!!! info
-    If you need a refresher about what is "standard output" and "standard error" check the section in [Printing and Colors: "Standard Output" and "Standard Error"](../printing.md#standard-output-and-standard-error){.internal-link target=_blank}.
+///
+
+/// note | Technical Details
+
+`typer.BadParameter` prints the error to "standard error", not to "standard output", and because the completion system only reads from "standard output", it won't break completion.
+
+///
+
+/// info
+
+If you need a refresher about what is "standard output" and "standard error" check the section in [Printing and Colors: "Standard Output" and "Standard Error"](../printing.md#standard-output-and-standard-error){.internal-link target=_blank}.
+
+///
 
 ### Fix with `is_eager`
 
@@ -126,8 +144,11 @@ That will tell **Typer** (actually Click) that it should process this *CLI param
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="22-24"
 {!> ../docs_src/options/version/tutorial003.py!}

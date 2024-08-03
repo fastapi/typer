@@ -68,8 +68,11 @@ For example, let's imagine that you want to accept an ISO formatted datetime, bu
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="8"
 {!> ../docs_src/parameter_types/datetime/tutorial002.py!}
@@ -77,8 +80,11 @@ For example, let's imagine that you want to accept an ISO formatted datetime, bu
 
 ////
 
-!!! tip
-    Notice the last string in `formats`: `"%m/%d/%Y"`.
+/// tip
+
+Notice the last string in `formats`: `"%m/%d/%Y"`.
+
+///
 
 Check it:
 

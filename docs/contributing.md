@@ -92,10 +92,13 @@ some/directory/typer/env/bin/pip
 
 If it shows the `pip` binary at `env/bin/pip` then it worked. 🎉
 
-!!! tip
-    Every time you install a new package with `pip` under that environment, activate the environment again.
+/// tip
 
-    This makes sure that if you use a terminal program installed by that package (like `flit`), you use the one from your local environment and not any other that could be installed globally.
+Every time you install a new package with `pip` under that environment, activate the environment again.
+
+This makes sure that if you use a terminal program installed by that package (like `flit`), you use the one from your local environment and not any other that could be installed globally.
+
+///
 
 ### Flit
 

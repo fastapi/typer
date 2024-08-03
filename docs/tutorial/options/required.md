@@ -39,13 +39,19 @@ Or you can explictily pass `...` to `typer.Option(default=...)`:
 
 ////
 
-!!! info
-    If you hadn't seen that `...` before: it is a special single value, it is <a href="https://docs.python.org/3/library/constants.html#Ellipsis" class="external-link" target="_blank">part of Python and is called "Ellipsis"</a>.
+/// info
+
+If you hadn't seen that `...` before: it is a special single value, it is <a href="https://docs.python.org/3/library/constants.html#Ellipsis" class="external-link" target="_blank">part of Python and is called "Ellipsis"</a>.
+
+///
 
 That will tell **Typer** that it's still a *CLI option*, but it doesn't have a default value, and it's required.
 
-!!! tip
-    Again, prefer to use the `Annotated` version if possible. That way your code will mean the same in standard Python and in **Typer**.
+/// tip
+
+Again, prefer to use the `Annotated` version if possible. That way your code will mean the same in standard Python and in **Typer**.
+
+///
 
 And test it:
 

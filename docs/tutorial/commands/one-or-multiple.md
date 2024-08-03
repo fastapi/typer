@@ -35,8 +35,11 @@ Options:
 
 </div>
 
-!!! tip
-    Notice that it doesn't show a command `main`, even though the function name is `main`.
+/// tip
+
+Notice that it doesn't show a command `main`, even though the function name is `main`.
+
+///
 
 But if you add multiple commands, **Typer** will create one *CLI command* for each one of them:
 

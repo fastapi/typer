@@ -38,8 +38,11 @@ Here you are passing the string `"--name"` as the first positional argument to `
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="4"
 {!> ../docs_src/options/name/tutorial001.py!}
@@ -49,14 +52,17 @@ Here you are passing the string `"--name"` as the second positional argument to 
 
 ////
 
-!!! info
-    "<a href="https://docs.python.org/3.8/glossary.html#term-argument" class="external-link" target="_blank">Positional</a>" means that it's not a function argument with a keyword name.
+/// info
 
-    For example `show_default=True` is a keyword argument. "`show_default`" is the keyword.
+"<a href="https://docs.python.org/3.8/glossary.html#term-argument" class="external-link" target="_blank">Positional</a>" means that it's not a function argument with a keyword name.
 
-    But in `"--name"` there's no `option_name="--name"` or something similar, it's just the string value `"--name"` that goes in `typer.Option()`.
+For example `show_default=True` is a keyword argument. "`show_default`" is the keyword.
 
-    That's a "positional argument" in a function.
+But in `"--name"` there's no `option_name="--name"` or something similar, it's just the string value `"--name"` that goes in `typer.Option()`.
+
+That's a "positional argument" in a function.
+
+///
 
 Check it:
 
@@ -189,10 +195,13 @@ In **Typer** you can also define *CLI option* short names the same way you can c
 
 You can pass *positional* arguments to `typer.Option()` to define the *CLI option* name(s).
 
-!!! tip
-    Remember the *positional* function arguments are those that don't have a keyword.
+/// tip
 
-    All the other function arguments/parameters you pass to `typer.Option()` like `prompt=True` and `help="This option blah, blah"` require the keyword.
+Remember the *positional* function arguments are those that don't have a keyword.
+
+All the other function arguments/parameters you pass to `typer.Option()` like `prompt=True` and `help="This option blah, blah"` require the keyword.
+
+///
 
 You can overwrite the *CLI option* name to use as in the previous example, but you can also declare extra alternatives, including short names.
 
@@ -208,8 +217,11 @@ For example, extending the previous example, let's add a *CLI option* short name
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="4"
 {!> ../docs_src/options/name/tutorial002.py!}
@@ -256,8 +268,11 @@ If you only declare a short name like `-n` then that will be the only *CLI optio
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="4"
 {!> ../docs_src/options/name/tutorial003.py!}
@@ -301,8 +316,11 @@ Continuing with the example above, as **Typer** allows you to declare a *CLI opt
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="4"
 {!> ../docs_src/options/name/tutorial004.py!}
@@ -352,8 +370,11 @@ You don't have to do anything special for it to work (apart from declaring those
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="5-6"
 {!> ../docs_src/options/name/tutorial005.py!}
@@ -361,8 +382,11 @@ You don't have to do anything special for it to work (apart from declaring those
 
 ////
 
-!!! tip
-    Notice that, again, we are declaring the long and short version of the *CLI option* names.
+/// tip
+
+Notice that, again, we are declaring the long and short version of the *CLI option* names.
+
+///
 
 Check it:
 

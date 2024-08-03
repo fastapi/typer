@@ -10,8 +10,11 @@ Apart from having a prompt, you can make a *CLI option* have a `confirmation_pro
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="5"
 {!> ../docs_src/options/password/tutorial001.py!}
@@ -55,8 +58,11 @@ And if you combine it with `confirmation_prompt=True` you can easily receive a p
 
 //// tab | Python 3.7+ non-Annotated
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 ```Python hl_lines="6-8"
 {!> ../docs_src/options/password/tutorial002.py!}
