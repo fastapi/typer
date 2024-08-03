@@ -115,25 +115,31 @@ nav:
   - Release Notes: release-notes.md
 
 markdown_extensions:
-  - toc:
-      permalink: true
-  - markdown.extensions.codehilite:
-      guess_lang: false
-  - admonition
-  - codehilite
-  - extra
-  - pymdownx.superfences:
-      custom_fences:
-        - name: mermaid
-          class: mermaid
-          format: !!python/name:pymdownx.superfences.fence_code_format ''
-  - pymdownx.tabbed:
-      alternate_style: true
-  - mdx_include:
-      base_path: docs
-  # Enable while writing docs to simplify highlighting
-  # - pymdownx.highlight:
-  #     linenums: true
+  toc:
+    permalink: true
+  markdown.extensions.attr_list:
+  markdown.extensions.tables:
+  markdown.extensions.md_in_html:
+
+  pymdownx.superfences:
+    custom_fences:
+    - name: mermaid
+      class: mermaid
+      format: !!python/name:pymdownx.superfences.fence_code_format ''
+  pymdownx.betterem:
+  pymdownx.blocks.details:
+  pymdownx.blocks.admonition:
+    types:
+    - note
+    - info
+    - tip
+    - warning
+    - danger
+    - check
+  pymdownx.blocks.tab:
+    alternate_style: True
+  mdx_include:
+    base_path: docs
 
 extra:
   analytics:

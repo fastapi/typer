@@ -127,8 +127,11 @@ Selling item: Vase
 
 </div>
 
-!!! tip
-    Notice that we are still calling `$ python main.py` but now we are using the command `items`.
+/// tip
+
+Notice that we are still calling `$ python main.py` but now we are using the command `items`.
+
+///
 
 And now check the command `users`, with all its subcommands:
 
