@@ -67,13 +67,10 @@ jobs:
         with:
           key: mkdocs-cards-${{ github.ref }}-v1
           path: .cache
+      - name: Verify README
+        run: python ./scripts/docs.py verify-readme
       - name: Build Docs
-        if: github.event_name == 'pull_request' && github.secret_source != 'Actions'
-        run: python -m mkdocs build
-      - name: Build Docs with Insiders
-        if: ( github.event_name != 'pull_request' || github.secret_source == 'Actions' )
-        run: python -m mkdocs build --config-file mkdocs.insiders.yml
-
+        run: python ./scripts/docs.py build
       - uses: actions/upload-artifact@v4
         with:
           name: docs-site
