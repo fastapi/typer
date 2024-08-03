@@ -43,6 +43,13 @@ def generate_readme_content() -> str:
         raise RuntimeError("Couldn't find pre section (<style>) in index.md")
     frontmatter_end = match_pre.end()
     new_content = content[frontmatter_end:]
+    # Remove content between <!-- only-mkdocs --> and <!-- /only-mkdocs -->
+    new_content = re.sub(
+        r"<!-- only-mkdocs -->.*?<!-- /only-mkdocs -->",
+        "",
+        new_content,
+        flags=re.DOTALL,
+    )
     return new_content
 
 
