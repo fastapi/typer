@@ -7,13 +7,15 @@ theme:
   name: material
   custom_dir: docs/overrides
   palette:
-  - scheme: default
+  - media: '(prefers-color-scheme: light)'
+    scheme: default
     primary: black
     accent: teal
     toggle:
       icon: material/lightbulb
       name: Switch to dark mode
-  - scheme: slate
+  - media: '(prefers-color-scheme: dark)'
+    scheme: slate
     primary: black
     accent: teal
     toggle:
