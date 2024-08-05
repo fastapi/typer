@@ -50,6 +50,12 @@ def generate_readme_content() -> str:
         new_content,
         flags=re.DOTALL,
     )
+    new_content = re.sub(
+        r"<!-- only-readme\s*(.*)\s*/only-readme -->",
+        r"\1",
+        new_content,
+        flags=re.DOTALL,
+    )
     return new_content
 
 
