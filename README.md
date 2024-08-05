@@ -1,10 +1,9 @@
 <p align="center">
 <a href="https://typer.tiangolo.com">
-    <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="https://typer.tiangolo.com/img/logo-margin/logo-margin-white-vector.svg">
-        <img src="https://typer.tiangolo.com/img/logo-margin/logo-margin-vector.svg" alt="Typer">
-    </picture>
-
+<picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://typer.tiangolo.com/img/logo-margin/logo-margin-white-vector.svg">
+    <img src="https://typer.tiangolo.com/img/logo-margin/logo-margin-vector.svg" alt="Typer">
+</picture>
 
 </a>
 </p>

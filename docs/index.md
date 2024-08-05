@@ -4,16 +4,16 @@
 
 <p align="center">
 <a href="https://typer.tiangolo.com">
-    <!-- only-readme
-    <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="https://typer.tiangolo.com/img/logo-margin/logo-margin-white-vector.svg">
-        <img src="https://typer.tiangolo.com/img/logo-margin/logo-margin-vector.svg" alt="Typer">
-    </picture>
-    /only-readme -->
-    <!-- only-mkdocs -->
-    <img src="img/logo-margin/logo-margin-vector.svg#only-light" alt="Typer">
-    <img src="img/logo-margin/logo-margin-white-vector.svg#only-dark" alt="Typer">
-    <!-- /only-mkdocs -->
+<!-- only-readme
+<picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://typer.tiangolo.com/img/logo-margin/logo-margin-white-vector.svg">
+    <img src="https://typer.tiangolo.com/img/logo-margin/logo-margin-vector.svg" alt="Typer">
+</picture>
+/only-readme -->
+<!-- only-mkdocs -->
+<img src="img/logo-margin/logo-margin-vector.svg#only-light" alt="Typer">
+<img src="img/logo-margin/logo-margin-white-vector.svg#only-dark" alt="Typer">
+<!-- /only-mkdocs -->
 </a>
 </p>
 <p align="center">
