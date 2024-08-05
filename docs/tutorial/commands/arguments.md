@@ -28,12 +28,18 @@ Deleting user: Camila
 
 </div>
 
-!!! tip
-    Everything to the *right* of the *command* are *CLI parameters* (*CLI arguments* and *CLI options*) for that command.
+/// tip
 
-!!! note "Technical Details"
-    Actually, it's everything to the right of that command, *before any subcommand*.
+Everything to the *right* of the *command* are *CLI parameters* (*CLI arguments* and *CLI options*) for that command.
 
-    It's possible to have groups of *subcommands*, it's like if one *command* also had *subcommands*. And then those *subcommands* could have their own *CLI parameters*, taking their own *CLI parameters*.
+///
 
-    You will see about them later in another section.
+/// note | Technical Details
+
+Actually, it's everything to the right of that command, *before any subcommand*.
+
+It's possible to have groups of *subcommands*, it's like if one *command* also had *subcommands*. And then those *subcommands* could have their own *CLI parameters*, taking their own *CLI parameters*.
+
+You will see about them later in another section.
+
+///

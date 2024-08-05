@@ -2,9 +2,9 @@
 <svg
    id="svg8"
    version="1.1"
-   viewBox="0 0 591.16894 237.29972"
-   height="237.29971mm"
-   width="591.16895mm"
+   viewBox="0 0 158.75 158.75001"
+   height="600"
+   width="600"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -24,28 +24,18 @@
     </rdf:RDF>
   </metadata>
   <rect
-     y="1.4210855e-14"
-     x="7.1054274e-15"
+     y="0"
+     x="0"
      height="237.29971"
      width="591.16895"
      id="rect824"
-     style="opacity:0.98000004;fill:none;fill-opacity:1;stroke-width:0.42965442" />
+     style="opacity:0.98;fill:none;fill-opacity:1;stroke-width:0.429654" />
   <g
      id="g818"
-     transform="translate(-5.3444232)">
-    <text
-       id="text861"
-       y="147.41693"
-       x="234.27277"
-       style="font-style:normal;font-weight:normal;font-size:127.57px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:3.18925"
-       xml:space="preserve"><tspan
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono Bold';stroke-width:3.18925"
-         y="147.41693"
-         x="234.27277"
-         id="tspan859">Typer</tspan></text>
+     transform="translate(-5.3444239)">
     <g
        id="g18"
-       transform="translate(3.8685904)">
+       transform="matrix(0.95012767,0,0,0.95012767,-50.451989,-33.357519)">
       <rect
          style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.18399"
          id="rect17"

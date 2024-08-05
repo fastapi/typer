@@ -12,3 +12,4 @@ htmlcov
 .pytest_cache
 coverage.xml
 .coverage*
+.cache
