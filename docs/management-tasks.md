@@ -112,4 +112,4 @@ When a question in GitHub Discussions has been answered, mark the answer by clic
 
 Many of the current Discussion Questions were migrated from old issues. Many have the label `answered`, that means they were answered when they were issues, but now in GitHub Discussions, it's not known what is the actual response from the messages.
 
-You can filter discussions by [`Questions` that are `Unanswered`](https://github.com/tiangolo/typer/discussions/categories/questions?discussions_q=category:Questions+is:open+is:unanswered).
+You can filter discussions by <a href="https://github.com/tiangolo/typer/discussions/categories/questions?discussions_q=category:Questions+is:open+is:unanswered" class="external-link" target="_blank">`Questions` that are `Unanswered`</a>.
