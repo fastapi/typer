@@ -1,3 +1,5 @@
+# Nested SubCommands
+
 We'll now see how these same ideas can be extended for deeply nested commands.
 
 Let's imagine that the same *CLI program* from the previous examples now needs to handle `lands`.
@@ -278,10 +280,13 @@ Here are all the files if you want to review/copy them:
 {!../docs_src/subcommands/tutorial003/main.py!}
 ```
 
-!!! tip
-    All these files have an `if __name__ == "__main__"` block just to demonstrate how each of them can also be an independent *CLI app*.
+/// tip
 
-    But for your final application, only `main.py` would need it.
+All these files have an `if __name__ == "__main__"` block just to demonstrate how each of them can also be an independent *CLI app*.
+
+But for your final application, only `main.py` would need it.
+
+///
 
 ## Recap
 
@@ -289,7 +294,10 @@ That's it, you can just add **Typer** applications one inside another as much as
 
 You can probably achieve a simpler *CLI program* design that's easier to use than the example here. But if your requirements are complex, **Typer** helps you build your *CLI app* easily.
 
-!!! tip
-    Auto completion helps a lot, specially with complex programs.
+/// tip
 
-    Check the docs about adding auto completion to your *CLI apps*.
+Auto completion helps a lot, specially with complex programs.
+
+Check the docs about adding auto completion to your *CLI apps*.
+
+///
