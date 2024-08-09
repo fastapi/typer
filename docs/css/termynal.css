@@ -26,7 +26,6 @@
     position: relative;
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
-    line-height: 1.2;
 }
 
 [data-termynal]:before {

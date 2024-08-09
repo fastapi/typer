@@ -1,3 +1,7 @@
 plugins:
-  social:
   typeset:
+markdown_extensions:
+  material.extensions.preview:
+    targets:
+      include:
+        - ./*
