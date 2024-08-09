@@ -1,3 +1,5 @@
+# Commands
+
 We have seen how to create a CLI program with possibly several *CLI options* and *CLI arguments*.
 
 But **Typer** allows you to create CLI programs with several commands (also known as subcommands).

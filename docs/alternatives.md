@@ -1,3 +1,5 @@
+# Alternatives, Inspiration and Comparisons
+
 What inspired **Typer**, how it compares to other alternatives and what it learned from them.
 
 ## Intro

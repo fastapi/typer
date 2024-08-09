@@ -1,3 +1,5 @@
+# SubCommands in a Single File
+
 In some cases, it's possible that your application code needs to live on a single file.
 
 You can still use the same ideas:

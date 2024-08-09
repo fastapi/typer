@@ -1,3 +1,5 @@
+# Command CLI Options
+
 Commands can also have their own *CLI options*.
 
 In fact, each command can have different *CLI arguments* and *CLI options*:

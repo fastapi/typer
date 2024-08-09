@@ -1,3 +1,5 @@
+# Building a Package
+
 When you create a CLI program with **Typer** you probably want to create your own Python package.
 
 That's what allows your users to install it and have it as an independent program that they can use in their terminal.

@@ -1,3 +1,5 @@
+# Terminating
+
 There are some cases where you might want to terminate a command at some point, and stop all subsequent execution.
 
 It could be that your code determined that the program completed successfully, or it could be an operation aborted.

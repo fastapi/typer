@@ -18,7 +18,7 @@ jobs:
       docs: ${{ steps.filter.outputs.docs }}
     steps:
     - uses: actions/checkout@v4
-    # For pull requests it's not necessary to checkout the code but for master it is
+    # For pull requests it's not necessary to checkout the code but for the main branch it is
     - uses: dorny/paths-filter@v3
       id: filter
       with:
@@ -28,9 +28,12 @@ jobs:
             - docs/**
             - docs_src/**
             - requirements-docs.txt
+            - requirements-docs-insiders.txt
             - pyproject.toml
             - mkdocs.yml
             - mkdocs.insiders.yml
+            - mkdocs.maybe-insiders.yml
+            - mkdocs.no-insiders.yml
             - .github/workflows/build-docs.yml
             - .github/workflows/deploy-docs.yml
 
@@ -53,16 +56,15 @@ jobs:
         id: cache
         with:
           path: ${{ env.pythonLocation }}
-          key: ${{ runner.os }}-python-docs-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml', 'requirements-docs.txt') }}-v02
+          key: ${{ runner.os }}-python-docs-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml', 'requirements-docs.txt', 'requirements-docs-insiders.txt') }}-v02
       - name: Install docs extras
         if: steps.cache.outputs.cache-hit != 'true'
         run: pip install -r requirements-docs.txt
       - name: Install Material for MkDocs Insiders
         if: ( github.event_name != 'pull_request' || github.secret_source == 'Actions' ) && steps.cache.outputs.cache-hit != 'true'
-        run: |
-          pip install git+https://${{ secrets.TYPER_MKDOCS_MATERIAL_INSIDERS }}@github.com/squidfunk/mkdocs-material-insiders.git
-          pip install git+https://${{ secrets.TYPER_MKDOCS_MATERIAL_INSIDERS }}@github.com/pawamoy-insiders/griffe-typing-deprecated.git
-          pip install git+https://${{ secrets.TYPER_MKDOCS_MATERIAL_INSIDERS }}@github.com/pawamoy-insiders/mkdocstrings-python.git
+        run: pip install -r requirements-docs-insiders.txt
+        env:
+          TOKEN: ${{ secrets.TYPER_MKDOCS_MATERIAL_INSIDERS }}
       - uses: actions/cache@v4
         with:
           key: mkdocs-cards-${{ github.ref }}-v1

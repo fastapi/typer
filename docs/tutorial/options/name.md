@@ -1,3 +1,5 @@
+# CLI Option Name
+
 By default **Typer** will create a *CLI option* name from the function parameter.
 
 So, if you have a function with:

@@ -26,16 +26,28 @@ theme:
       icon: material/lightbulb-outline
       name: Switch to system preference
   features:
-  - search.suggest
-  - search.highlight
-  - content.tabs.link
-  - navigation.indexes
-  - content.tooltips
-  - navigation.path
   - content.code.annotate
   - content.code.copy
-  - content.code.select
+  # - content.code.select
+  - content.footnote.tooltips
+  - content.tabs.link
+  - content.tooltips
+  - navigation.footer
+  - navigation.indexes
+  - navigation.instant
+  - navigation.instant.prefetch
+  - navigation.instant.preview
+  - navigation.instant.progress
+  - navigation.path
   # - navigation.tabs
+  # - navigation.tabs.sticky
+  - navigation.top
+  - navigation.tracking
+  - search.highlight
+  - search.share
+  - search.suggest
+  - toc.follow
+
   icon:
     repo: fontawesome/brands/github-alt
   logo: img/icon.svg
@@ -43,107 +55,129 @@ theme:
   language: en
 repo_name: tiangolo/typer
 repo_url: https://github.com/tiangolo/typer
-edit_uri: ""
 plugins:
-  search: null
+  # Material for MkDocs
+  search:
+  social:
+  # Other plugins
   redirects:
     redirect_maps:
       typer-cli.md: tutorial/typer-command.md
 
 nav:
   - Typer: index.md
-  - Features: features.md
+  - features.md
   - Tutorial - User Guide:
-      - Tutorial - User Guide - Intro: tutorial/index.md
-      - First Steps: tutorial/first-steps.md
-      - Printing and Colors: tutorial/printing.md
-      - Terminating: tutorial/terminating.md
+      - tutorial/index.md
+      - tutorial/first-steps.md
+      - tutorial/printing.md
+      - tutorial/terminating.md
       - CLI Arguments:
-          - CLI Arguments Intro: tutorial/arguments/index.md
-          - Optional CLI Arguments: tutorial/arguments/optional.md
-          - CLI Arguments with Default: tutorial/arguments/default.md
-          - CLI Arguments with Help: tutorial/arguments/help.md
-          - CLI Arguments with Environment Variables: tutorial/arguments/envvar.md
-          - Other uses: tutorial/arguments/other-uses.md
+          - tutorial/arguments/index.md
+          - tutorial/arguments/optional.md
+          - tutorial/arguments/default.md
+          - tutorial/arguments/help.md
+          - tutorial/arguments/envvar.md
+          - tutorial/arguments/other-uses.md
       - CLI Options:
-          - CLI Options Intro: tutorial/options/index.md
-          - CLI Options with Help: tutorial/options/help.md
-          - Required CLI Options: tutorial/options/required.md
-          - CLI Option Prompt: tutorial/options/prompt.md
-          - Password CLI Option and Confirmation Prompt: tutorial/options/password.md
-          - CLI Option Name: tutorial/options/name.md
-          - CLI Option Callback and Context: tutorial/options/callback-and-context.md
-          - Version CLI Option, is_eager: tutorial/options/version.md
+          - tutorial/options/index.md
+          - tutorial/options/help.md
+          - tutorial/options/required.md
+          - tutorial/options/prompt.md
+          - tutorial/options/password.md
+          - tutorial/options/name.md
+          - tutorial/options/callback-and-context.md
+          - tutorial/options/version.md
       - Commands:
-          - Commands Intro: tutorial/commands/index.md
-          - Command CLI Arguments: tutorial/commands/arguments.md
-          - Command CLI Options: tutorial/commands/options.md
-          - Command Help: tutorial/commands/help.md
-          - Custom Command Name: tutorial/commands/name.md
-          - Typer Callback: tutorial/commands/callback.md
-          - One or Multiple Commands: tutorial/commands/one-or-multiple.md
-          - Using the Context: tutorial/commands/context.md
-      - CLI Option autocompletion: tutorial/options-autocompletion.md
+          - tutorial/commands/index.md
+          - tutorial/commands/arguments.md
+          - tutorial/commands/options.md
+          - tutorial/commands/help.md
+          - tutorial/commands/name.md
+          - tutorial/commands/callback.md
+          - tutorial/commands/one-or-multiple.md
+          - tutorial/commands/context.md
+      - tutorial/options-autocompletion.md
       - CLI Parameter Types:
-          - CLI Parameter Types Intro: tutorial/parameter-types/index.md
-          - Number: tutorial/parameter-types/number.md
-          - Boolean CLI Options: tutorial/parameter-types/bool.md
-          - UUID: tutorial/parameter-types/uuid.md
-          - DateTime: tutorial/parameter-types/datetime.md
-          - Enum - Choices: tutorial/parameter-types/enum.md
-          - Path: tutorial/parameter-types/path.md
-          - File: tutorial/parameter-types/file.md
-          - Custom Types: tutorial/parameter-types/custom-types.md
+          - tutorial/parameter-types/index.md
+          - tutorial/parameter-types/number.md
+          - tutorial/parameter-types/bool.md
+          - tutorial/parameter-types/uuid.md
+          - tutorial/parameter-types/datetime.md
+          - tutorial/parameter-types/enum.md
+          - tutorial/parameter-types/path.md
+          - tutorial/parameter-types/file.md
+          - tutorial/parameter-types/custom-types.md
       - SubCommands - Command Groups:
-          - SubCommands - Command Groups - Intro: tutorial/subcommands/index.md
-          - Add Typer: tutorial/subcommands/add-typer.md
-          - SubCommands in a Single File: tutorial/subcommands/single-file.md
-          - Nested SubCommands: tutorial/subcommands/nested-subcommands.md
-          - Sub-Typer Callback Override: tutorial/subcommands/callback-override.md
-          - SubCommand Name and Help: tutorial/subcommands/name-and-help.md
+          - tutorial/subcommands/index.md
+          - tutorial/subcommands/add-typer.md
+          - tutorial/subcommands/single-file.md
+          - tutorial/subcommands/nested-subcommands.md
+          - tutorial/subcommands/callback-override.md
+          - tutorial/subcommands/name-and-help.md
       - Multiple Values:
-          - Multiple Values Intro: tutorial/multiple-values/index.md
-          - Multiple CLI Options: tutorial/multiple-values/multiple-options.md
-          - CLI Options with Multiple Values: tutorial/multiple-values/options-with-multiple-values.md
-          - CLI Arguments with Multiple Values: tutorial/multiple-values/arguments-with-multiple-values.md
-      - Ask with Prompt: tutorial/prompt.md
-      - Progress Bar: tutorial/progressbar.md
-      - CLI Application Directory: tutorial/app-dir.md
-      - Launching Applications: tutorial/launch.md
-      - Testing: tutorial/testing.md
-      - Using Click: tutorial/using-click.md
-      - Building a Package: tutorial/package.md
+          - tutorial/multiple-values/index.md
+          - tutorial/multiple-values/multiple-options.md
+          - tutorial/multiple-values/options-with-multiple-values.md
+          - tutorial/multiple-values/arguments-with-multiple-values.md
+      - tutorial/prompt.md
+      - tutorial/progressbar.md
+      - tutorial/app-dir.md
+      - tutorial/launch.md
+      - tutorial/testing.md
+      - tutorial/using-click.md
+      - tutorial/package.md
       - tutorial/exceptions.md
       - tutorial/typer-command.md
-  - Alternatives, Inspiration and Comparisons: alternatives.md
-  - Help Typer - Get Help: help-typer.md
-  - Development - Contributing: contributing.md
-  - Release Notes: release-notes.md
+  - alternatives.md
+  - help-typer.md
+  - contributing.md
+  - release-notes.md
 
 markdown_extensions:
+  # Python Markdown
+  abbr:
+  attr_list:
+  footnotes:
+  md_in_html:
+  tables:
   toc:
     permalink: true
-  markdown.extensions.attr_list:
-  markdown.extensions.tables:
-  markdown.extensions.md_in_html:
 
+  # Python Markdown Extensions
+  pymdownx.betterem:
+    smart_enable: all
+  pymdownx.caret:
+  pymdownx.highlight:
+    line_spans: __span
+  pymdownx.inlinehilite:
+  pymdownx.keys:
+  pymdownx.mark:
   pymdownx.superfences:
     custom_fences:
     - name: mermaid
       class: mermaid
-      format: !!python/name:pymdownx.superfences.fence_code_format ''
-  pymdownx.betterem:
-  pymdownx.blocks.details:
+      format: !!python/name:pymdownx.superfences.fence_code_format
+  pymdownx.tilde:
+
+  # pymdownx blocks
   pymdownx.blocks.admonition:
     types:
     - note
-    - info
-    - tip
-    - warning
+    - attention
+    - caution
     - danger
-    - check
+    - error
+    - tip
+    - hint
+    - warning
+    # Custom types
+    - info
+  pymdownx.blocks.details:
   pymdownx.blocks.tab:
     alternate_style: True
+
+  # Other extensions
   mdx_include:
     base_path: docs
 
@@ -151,6 +185,19 @@ extra:
   analytics:
     provider: google
     property: G-T78C5GNRXK
+    feedback:
+      title: Was this page helpful?
+      ratings:
+        - icon: material/emoticon-happy-outline
+          name: This page was helpful
+          data: 1
+          note: >-
+            Thanks for your feedback!
+        - icon: material/emoticon-sad-outline
+          name: This page could be improved
+          data: 0
+          note: >-
+            Thanks for your feedback!
   social:
     - icon: fontawesome/brands/github-alt
       link: https://github.com/tiangolo/typer
@@ -172,3 +219,6 @@ extra_css:
 extra_javascript:
   - js/termynal.js
   - js/custom.js
+
+hooks:
+  - scripts/mkdocs_hooks.py
