@@ -53,8 +53,8 @@ theme:
   logo: img/icon.svg
   favicon: img/favicon.png
   language: en
-repo_name: tiangolo/typer
-repo_url: https://github.com/tiangolo/typer
+repo_name: fastapi/typer
+repo_url: https://github.com/fastapi/typer
 plugins:
   # Material for MkDocs
   search:
@@ -210,7 +210,7 @@ extra:
             Thanks for your feedback!
   social:
     - icon: fontawesome/brands/github-alt
-      link: https://github.com/tiangolo/typer
+      link: https://github.com/fastapi/typer
     - icon: fontawesome/brands/twitter
       link: https://twitter.com/tiangolo
     - icon: fontawesome/brands/linkedin

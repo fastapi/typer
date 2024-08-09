@@ -23,7 +23,7 @@ origin  git@github.com:yourusername/typer.git (fetch)
 origin  git@github.com:yourusername/typer.git (push)
 
 // git remote add takes 2 CLI arguments, a name and URL
-$ git remote add upstream https://github.com/tiangolo/typer.git
+$ git remote add upstream https://github.com/fastapi/typer.git
 
 // Doesn't output anything, but now you have another remote repository called upstream
 
@@ -32,8 +32,8 @@ $ git remote -v
 
 origin  git@github.com:yourusername/typer.git (fetch)
 origin  git@github.com:yourusername/typer.git (push)
-upstream        https://github.com/tiangolo/typer.git (fetch)
-upstream        https://github.com/tiangolo/typer.git (push)
+upstream        https://github.com/fastapi/typer.git (fetch)
+upstream        https://github.com/fastapi/typer.git (push)
 ```
 
 </div>
