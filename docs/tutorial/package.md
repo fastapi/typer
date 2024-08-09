@@ -1,3 +1,5 @@
+# Building a Package
+
 When you create a CLI program with **Typer** you probably want to create your own Python package.
 
 That's what allows your users to install it and have it as an independent program that they can use in their terminal.
@@ -10,8 +12,11 @@ You might even have your favorite already.
 
 Here's a very opinionated, short guide, showing one of the alternative ways of creating a Python package with a **Typer** app, from scratch.
 
-!!! tip
-    If you already have a favorite way of creating Python packages, feel free to skip this.
+/// tip
+
+If you already have a favorite way of creating Python packages, feel free to skip this.
+
+///
 
 ## Prerequisites
 
@@ -141,8 +146,11 @@ def load():
     typer.echo("Loading portal gun")
 ```
 
-!!! tip
-    As we are creating an installable Python package, there's no need to add a section with `if __name__ == "__main__":`.
+/// tip
+
+As we are creating an installable Python package, there's no need to add a section with `if __name__ == "__main__":`.
+
+///
 
 ## Modify the README
 
@@ -319,13 +327,19 @@ $ pip install --user /home/rock/code/rick-portal-gun/dist/rick_portal_gun-0.1.0-
 
 </div>
 
-!!! warning
-    The `--user` is important, that ensures you install it in your user's directory and not in the global system.
+/// warning
 
-    If you installed it in the global system (e.g. with `sudo`) you could install a version of a library (e.g. a sub-dependency) that is incompatible with your system.
+The `--user` is important, that ensures you install it in your user's directory and not in the global system.
 
-!!! tip
-    Bonus points if you use <a href="https://github.com/pipxproject/pipx" class="external-link" target="_blank">`pipx`</a> to install it while keeping an isolated environment for your Python CLI programs 🚀
+If you installed it in the global system (e.g. with `sudo`) you could install a version of a library (e.g. a sub-dependency) that is incompatible with your system.
+
+///
+
+/// tip
+
+Bonus points if you use <a href="https://github.com/pipxproject/pipx" class="external-link" target="_blank">`pipx`</a> to install it while keeping an isolated environment for your Python CLI programs 🚀
+
+///
 
 Now you have your CLI program installed. And you can use it freely:
 
@@ -353,8 +367,11 @@ Completion will take effect once you restart the terminal.
 
 </div>
 
-!!! tip
-    If you want to remove completion you can just delete the added line in that file.
+/// tip
+
+If you want to remove completion you can just delete the added line in that file.
+
+///
 
 And after you restart the terminal you will get completion for your new CLI program:
 
@@ -398,8 +415,11 @@ Here we pass `pip` as the value for `-m`, so, Python will execute the module `pi
 
 These two are more or less equivalent, the `install fastapi` will be passed to `pip`.
 
-!!! tip
-    In the case of `pip`, in many occasions it's actually recommended that you run it with `python -m`, because if you create a virtual environment with its own `python`, that will ensure that you use the `pip` from *that* environment.
+/// tip
+
+In the case of `pip`, in many occasions it's actually recommended that you run it with `python -m`, because if you create a virtual environment with its own `python`, that will ensure that you use the `pip` from *that* environment.
+
+///
 
 ### Add a `__main__.py`
 
@@ -456,8 +476,11 @@ Commands:
 
 </div>
 
-!!! tip
-    Notice that you have to pass the importable version of the package name, so `rick_portal_gun` instead of `rick-portal-gun`.
+/// tip
+
+Notice that you have to pass the importable version of the package name, so `rick_portal_gun` instead of `rick-portal-gun`.
+
+///
 
 That works! 🚀 Sort of... 🤔
 
@@ -481,8 +504,11 @@ from .main import app
 app(prog_name="rick-portal-gun")
 ```
 
-!!! tip
-    You can pass all the arguments and keyword arguments you could pass to a Click application, including `prog_name`.
+/// tip
+
+You can pass all the arguments and keyword arguments you could pass to a Click application, including `prog_name`.
+
+///
 
 <div class="termy">
 
@@ -664,8 +690,11 @@ You just have to pass it the module to import (`rick_portal_gun.main`) and it wi
 
 By specifying the `--name` of the program it will be able to use it while generating the docs.
 
-!!! tip
-    If you installed `typer-slim` and don't have the `typer` command, you can use `python -m typer` instead.
+/// tip
+
+If you installed `typer-slim` and don't have the `typer` command, you can use `python -m typer` instead.
+
+///
 
 ### Publish a new version with the docs
 

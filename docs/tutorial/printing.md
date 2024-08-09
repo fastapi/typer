@@ -1,3 +1,5 @@
+# Printing and Colors
+
 You can use the normal `print()` to show information on the screen:
 
 ```Python hl_lines="5"
@@ -136,19 +138,25 @@ And there's another "**virtual file**" called "**standard error**" that is norma
 
 But we can also "print" to "standard error". And both are shown on the terminal to the users.
 
-!!! info
-    If you use PowerShell it's quite possible that what you print to "standard error" won't be shown in the terminal.
+/// info
 
-    In PowerShell, to see "standard error" you would have to check the variable `$Error`.
+If you use PowerShell it's quite possible that what you print to "standard error" won't be shown in the terminal.
 
-    But it will work normally in Bash, Zsh, and Fish.
+In PowerShell, to see "standard error" you would have to check the variable `$Error`.
+
+But it will work normally in Bash, Zsh, and Fish.
+
+///
 
 ### Printing to "standard error"
 
 You can print to "standard error" creating a Rich `Console` with `stderr=True`.
 
-!!! tip
-    `stderr` is short for "standard error".
+/// tip
+
+`stderr` is short for "standard error".
+
+///
 
 Using `stderr=True` tells **Rich** that the output should be shown in "standard error".
 
@@ -182,10 +190,13 @@ But understanding that will come handy in the future, for example for autocomple
 
 ## Typer Echo
 
-!!! warning
-    In most of the cases, for displaying advanced information, it is recommended to use <a href="https://rich.readthedocs.io/" class="external-link" target="_blank">Rich</a>.
+/// warning
 
-    You can probably skip the rest of this section. 🎉😎
+In most of the cases, for displaying advanced information, it is recommended to use <a href="https://rich.readthedocs.io/" class="external-link" target="_blank">Rich</a>.
+
+You can probably skip the rest of this section. 🎉😎
+
+///
 
 **Typer** also has a small utility `typer.echo()` to print information on the screen, it comes directly from Click. But normally you shouldn't need it.
 
@@ -203,18 +214,27 @@ If you have some `bytes` objects, you would probably want to decode them intenti
 
 And if you want to print data with colors and other features, you are much better off with the more advanced tools in **Rich**.
 
-!!! info
-    `typer.echo()` comes directly from Click, you can read more about it in <a href="https://click.palletsprojects.com/en/7.x/quickstart/#echoing" class="external-link" target="_blank">Click's docs</a>.
+/// info
+
+`typer.echo()` comes directly from Click, you can read more about it in <a href="https://click.palletsprojects.com/en/7.x/quickstart/#echoing" class="external-link" target="_blank">Click's docs</a>.
+
+///
 
 ### Color
 
-!!! note "Technical Details"
-    The way color works in terminals is by using some codes (ANSI escape sequences) as part of the text.
+/// note | Technical Details
 
-    So, a colored text is still just a `str`.
+The way color works in terminals is by using some codes (ANSI escape sequences) as part of the text.
 
-!!! tip
-    Again, you are much better off using <a href="https://rich.readthedocs.io/" class="external-link" target="_blank">Rich</a> for this. 😎
+So, a colored text is still just a `str`.
+
+///
+
+/// tip
+
+Again, you are much better off using <a href="https://rich.readthedocs.io/" class="external-link" target="_blank">Rich</a> for this. 😎
+
+///
 
 You can create colored strings to output to the terminal with `typer.style()`, that gives you `str`s that you can then pass to `typer.echo()`:
 
@@ -222,10 +242,13 @@ You can create colored strings to output to the terminal with `typer.style()`, t
 {!../docs_src/printing/tutorial005.py!}
 ```
 
-!!! tip
-    The parameters `fg` and `bg` receive strings with the color names for the "**f**ore**g**round" and "**b**ack**g**round" colors. You could simply pass `fg="green"` and `bg="red"`.
+/// tip
 
-    But **Typer** provides them all as variables like `typer.colors.GREEN` just so you can use autocompletion while selecting them.
+The parameters `fg` and `bg` receive strings with the color names for the "**f**ore**g**round" and "**b**ack**g**round" colors. You could simply pass `fg="green"` and `bg="red"`.
+
+But **Typer** provides them all as variables like `typer.colors.GREEN` just so you can use autocompletion while selecting them.
+
+///
 
 Check it:
 
@@ -247,13 +270,19 @@ You can pass these function arguments to `typer.style()`:
 * `reverse`: enable or disable inverse rendering (foreground becomes background and the other way round).
 * `reset`: by default a reset-all code is added at the end of the string which means that styles do not carry over.  This can be disabled to compose styles.
 
-!!! info
-    You can read more about it in <a href="https://click.palletsprojects.com/en/7.x/api/#click.style" class="external-link" target="_blank">Click's docs about `style()`</a>
+/// info
+
+You can read more about it in <a href="https://click.palletsprojects.com/en/7.x/api/#click.style" class="external-link" target="_blank">Click's docs about `style()`</a>
+
+///
 
 ### `typer.secho()` - style and print
 
-!!! tip
-    In case you didn't see above, you are much better off using <a href="https://rich.readthedocs.io/" class="external-link" target="_blank">Rich</a> for this. 😎
+/// tip
+
+In case you didn't see above, you are much better off using <a href="https://rich.readthedocs.io/" class="external-link" target="_blank">Rich</a> for this. 😎
+
+///
 
 There's a shorter form to style and print at the same time with `typer.secho()` it's like `typer.echo()` but also adds style like `typer.style()`:
 
