@@ -1,3 +1,5 @@
+# Boolean CLI Options
+
 We have seen some examples of *CLI options* with `bool`, and how **Typer** creates `--something` and `--no-something` automatically.
 
 But we can customize those names.
@@ -8,20 +10,27 @@ Let's say that we want a `--force` *CLI option* only, we want to discard `--no-f
 
 We can do that by specifying the exact name we want:
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="5"
-    {!> ../docs_src/parameter_types/bool/tutorial001_an.py!}
-    ```
+```Python hl_lines="5"
+{!> ../docs_src/parameter_types/bool/tutorial001_an.py!}
+```
 
-=== "Python 3.7+ non-Annotated"
+////
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="4"
-    {!> ../docs_src/parameter_types/bool/tutorial001.py!}
-    ```
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
+
+```Python hl_lines="4"
+{!> ../docs_src/parameter_types/bool/tutorial001.py!}
+```
+
+////
 
 Now there's only a `--force` *CLI option*:
 
@@ -69,20 +78,27 @@ We might want to instead have `--accept` and `--reject`.
 
 We can do that by passing a single `str` with the 2 names for the `bool` *CLI option* separated by `/`:
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="7"
-    {!> ../docs_src/parameter_types/bool/tutorial002_an.py!}
-    ```
+```Python hl_lines="7"
+{!> ../docs_src/parameter_types/bool/tutorial002_an.py!}
+```
 
-=== "Python 3.7+ non-Annotated"
+////
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="6"
-    {!> ../docs_src/parameter_types/bool/tutorial002.py!}
-    ```
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
+
+```Python hl_lines="6"
+{!> ../docs_src/parameter_types/bool/tutorial002.py!}
+```
+
+////
 
 Check it:
 
@@ -123,20 +139,27 @@ The same way, you can declare short versions of the names for these *CLI options
 
 For example, let's say we want `-f` for `--force` and `-F` for `--no-force`:
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="5"
-    {!> ../docs_src/parameter_types/bool/tutorial003_an.py!}
-    ```
+```Python hl_lines="5"
+{!> ../docs_src/parameter_types/bool/tutorial003_an.py!}
+```
 
-=== "Python 3.7+ non-Annotated"
+////
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="4"
-    {!> ../docs_src/parameter_types/bool/tutorial003.py!}
-    ```
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
+
+```Python hl_lines="4"
+{!> ../docs_src/parameter_types/bool/tutorial003.py!}
+```
+
+////
 
 Check it:
 
@@ -172,25 +195,35 @@ If you want to (although it might not be a good idea), you can declare only *CLI
 
 To do that, use a space and a single `/` and pass the negative name after:
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="5"
-    {!> ../docs_src/parameter_types/bool/tutorial004_an.py!}
-    ```
+```Python hl_lines="5"
+{!> ../docs_src/parameter_types/bool/tutorial004_an.py!}
+```
 
-=== "Python 3.7+ non-Annotated"
+////
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="4"
-    {!> ../docs_src/parameter_types/bool/tutorial004.py!}
-    ```
+/// tip
 
-!!! tip
-    Have in mind that it's a string with a preceding space and then a `/`.
+Prefer to use the `Annotated` version if possible.
 
-    So, it's `" /-S"` not `"/-S"`.
+///
+
+```Python hl_lines="4"
+{!> ../docs_src/parameter_types/bool/tutorial004.py!}
+```
+
+////
+
+/// tip
+
+Have in mind that it's a string with a preceding space and then a `/`.
+
+So, it's `" /-S"` not `"/-S"`.
+
+///
 
 Check it:
 
