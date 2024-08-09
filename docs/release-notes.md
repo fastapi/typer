@@ -6,6 +6,10 @@
 
 * ✨ Add support for Python 3.12, tests in CI and official marker. PR [#807](https://github.com/tiangolo/typer/pull/807) by [@ivantodorovich](https://github.com/ivantodorovich).
 
+### Docs
+
+* 📝 Add docs for team and repo management. PR [#917](https://github.com/tiangolo/typer/pull/917) by [@tiangolo](https://github.com/tiangolo).
+
 ### Internal
 
 * 🔧 Update MkDocs previews. PR [#916](https://github.com/tiangolo/typer/pull/916) by [@tiangolo](https://github.com/tiangolo).
