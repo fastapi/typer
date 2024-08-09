@@ -129,9 +129,9 @@ def install_zsh(*, prog_name: str, complete_var: str, shell: str) -> Path:
     if zshrc_path.is_file():
         zshrc_content = zshrc_path.read_text()
     if "autoload -Uz compinit" not in zshrc_content:  # pragma: nocover
-        zshrc_content += f"\nautoload -Uz compinit"
+        zshrc_content += "\nautoload -Uz compinit"
     if "fpath+=~/.zfunc" not in zshrc_content:  # pragma: nocover
-        zshrc_content += f"\nfpath+=~/.zfunc\ncompinit"
+        zshrc_content += "\nfpath+=~/.zfunc\ncompinit"
     if zshrc_content[-1] != "\n":
         zshrc_content += "\n"
     zshrc_path.write_text(zshrc_content)
