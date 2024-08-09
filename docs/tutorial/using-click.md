@@ -1,7 +1,12 @@
-!!! warning
-    This is a more advanced topic, if you are starting with **Typer**, feel free to skip it.
+# Using Click
 
-    It will be mostly useful for people that already work with Click and have questions around it.
+/// warning
+
+This is a more advanced topic, if you are starting with **Typer**, feel free to skip it.
+
+It will be mostly useful for people that already work with Click and have questions around it.
+
+///
 
 **Typer** is powered by <a href="https://click.palletsprojects.com" class="external-link" target="_blank">Click</a>. It does all the work underneath.
 
@@ -47,8 +52,11 @@ For example:
 
 The `cli` variable is converted by Click from a function to a `Group` object. And the original `cli` function is used by that `Group` internally.
 
-!!! tip
-    The original `cli` function would be the equivalent of a [Typer Callback](./commands/callback.md){.internal-link target=_blank}.
+/// tip
+
+The original `cli` function would be the equivalent of a [Typer Callback](./commands/callback.md){.internal-link target=_blank}.
+
+///
 
 Then the `cli` variable, that now is a `Group` object, is used to add sub-commands.
 
@@ -66,8 +74,11 @@ But **Typer** creates a Click `Group` object if your app has any of:
 * A callback.
 * Sub-Typer apps (sub commands).
 
-!!! tip
-    If you want to learn more about this check the section [One or Multiple Commands](./commands/one-or-multiple.md){.internal-link target=_blank}.
+/// tip
+
+If you want to learn more about this check the section [One or Multiple Commands](./commands/one-or-multiple.md){.internal-link target=_blank}.
+
+///
 
 ### Combine Click and **Typer**
 
@@ -181,7 +192,10 @@ Most of the functionality provided by decorators in Click has an alternative way
 
 For example, to access the context, you can just declare a function parameter of type `typer.Context`.
 
-!!! tip
-    You can read more about using the context in the docs: [Commands: Using the Context](commands/context.md){.internal-link target=_blank}
+/// tip
+
+You can read more about using the context in the docs: [Commands: Using the Context](commands/context.md){.internal-link target=_blank}
+
+///
 
 But if you need to use something based on Click decorators, you can always generate a Click object using the methods described above, and use it as you would normally use Click.
