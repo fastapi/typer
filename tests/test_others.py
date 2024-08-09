@@ -30,7 +30,7 @@ def test_defaults_from_info():
     assert value
 
 
-def test_too_may_parsers():
+def test_too_many_parsers():
     def custom_parser(value: str) -> int:
         return int(value)  # pragma: no cover
 

@@ -1,19 +1,28 @@
+# Number
+
 You can define numeric validations with `max` and `min` values for `int` and `float` *CLI parameters*:
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="6-8"
-    {!> ../docs_src/parameter_types/number/tutorial001_an.py!}
-    ```
+```Python hl_lines="6-8"
+{!> ../docs_src/parameter_types/number/tutorial001_an.py!}
+```
 
-=== "Python 3.7+ non-Annotated"
+////
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="5-7"
-    {!> ../docs_src/parameter_types/number/tutorial001.py!}
-    ```
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
+
+```Python hl_lines="5-7"
+{!> ../docs_src/parameter_types/number/tutorial001.py!}
+```
+
+////
 
 *CLI arguments* and *CLI options* can both use these validations.
 
@@ -50,7 +59,7 @@ $ python main.py 1002
 Usage: main.py [OPTIONS] ID
 Try "main.py --help" for help.
 
-Error: Invalid value for 'ID': 1002 is not in the valid range of 0 to 1000.
+Error: Invalid value for 'ID': 1002 is not in the range 0<=x<=1000.
 
 // Pass an invalid age
 $ python main.py 5 --age 15
@@ -58,7 +67,7 @@ $ python main.py 5 --age 15
 Usage: main.py [OPTIONS] ID
 Try "main.py --help" for help.
 
-Error: Invalid value for '--age': 15 is smaller than the minimum valid value 18.
+Error: Invalid value for '--age': 15 is not in the range x>=18.
 
 // Pass an invalid score
 $ python main.py 5 --age 20 --score 100.5
@@ -66,7 +75,7 @@ $ python main.py 5 --age 20 --score 100.5
 Usage: main.py [OPTIONS] ID
 Try "main.py --help" for help.
 
-Error: Invalid value for '--score': 100.5 is bigger than the maximum valid value 100.
+Error: Invalid value for '--score': 100.5 is not in the range x<=100.
 
 // But as we didn't specify a minimum score, this is accepted
 $ python main.py 5 --age 20 --score -5
@@ -84,20 +93,27 @@ You might want to, instead of showing an error, use the closest minimum or maxim
 
 You can do it with the `clamp` parameter:
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="6-8"
-    {!> ../docs_src/parameter_types/number/tutorial002_an.py!}
-    ```
+```Python hl_lines="6-8"
+{!> ../docs_src/parameter_types/number/tutorial002_an.py!}
+```
 
-=== "Python 3.7+ non-Annotated"
+////
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="5-7"
-    {!> ../docs_src/parameter_types/number/tutorial002.py!}
-    ```
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
+
+```Python hl_lines="5-7"
+{!> ../docs_src/parameter_types/number/tutorial002.py!}
+```
+
+////
 
 And then, when you pass data that is out of the valid range, it will be "clamped", the closest valid value will be used:
 
@@ -110,7 +126,7 @@ $ python main.py 1002
 Usage: main.py [OPTIONS] ID
 Try "main.py --help" for help.
 
-Error: Invalid value for 'ID': 1002 is not in the valid range of 0 to 1000.
+Error: Invalid value for 'ID': 1002 is not in the range 0<=x<=1000.
 
 // But --rank and --score use clamp
 $ python main.py 5 --rank 11 --score -5
@@ -126,20 +142,27 @@ ID is 5
 
 You can make a *CLI option* work as a counter with the `counter` parameter:
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="5"
-    {!> ../docs_src/parameter_types/number/tutorial003_an.py!}
-    ```
+```Python hl_lines="5"
+{!> ../docs_src/parameter_types/number/tutorial003_an.py!}
+```
 
-=== "Python 3.7+ non-Annotated"
+////
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="4"
-    {!> ../docs_src/parameter_types/number/tutorial003.py!}
-    ```
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
+
+```Python hl_lines="4"
+{!> ../docs_src/parameter_types/number/tutorial003.py!}
+```
+
+////
 
 It means that the *CLI option* will be like a boolean flag, e.g. `--verbose`.
 

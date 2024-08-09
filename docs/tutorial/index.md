@@ -1,3 +1,5 @@
+# Tutorial - User Guide
+
 ## Python types
 
 If you need a refresher about how to use Python type hints, check the first part of <a href="https://fastapi.tiangolo.com/python-types/" class="external-link" target="_blank">FastAPI's Python types intro</a>.
@@ -68,22 +70,25 @@ The first step is to install **Typer**:
 ```console
 $ pip install typer
 ---> 100%
-Successfully installed typer click shellingham rich typer-cli
+Successfully installed typer click shellingham rich
 ```
 
 </div>
 
-By default, `typer` comes with `rich`, `shellingham`, and `typer-cli`.
+By default, `typer` comes with `rich` and `shellingham`.
 
-!!! note
-    If you are an advanced user and want to opt out of these default extra dependencies, you can instead install `typer-slim`.
+/// note
 
-    ```bash
-    pip install typer
-    ```
+If you are an advanced user and want to opt out of these default extra dependencies, you can instead install `typer-slim`.
 
-    ...is the equivalent of:
+```bash
+pip install typer
+```
 
-    ```bash
-    pip install "typer-slim[standard]"
-    ```
+...includes the same optional dependencies as:
+
+```bash
+pip install "typer-slim[standard]"
+```
+
+///

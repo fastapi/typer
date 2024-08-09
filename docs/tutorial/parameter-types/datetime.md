@@ -1,3 +1,5 @@
+# DateTime
+
 You can specify a *CLI parameter* as a Python <a href="https://docs.python.org/3/library/datetime.html" class="external-link" target="_blank">`datetime`</a>.
 
 Your function will receive a standard Python `datetime` object, and again, your editor will give you completion, etc.
@@ -38,7 +40,7 @@ $ python main.py july-19-1989
 
 Usage: main.py [OPTIONS] [%Y-%m-%d|%Y-%m-%dT%H:%M:%S|%Y-%m-%d%H:%M:%S]
 
-Error: Invalid value for '[%Y-%m-%d|%Y-%m-%dT%H:%M:%S|%Y-%m-%d %H:%M:%S]': invalid datetime format: july-19-1989. (choose from %Y-%m-%d, %Y-%m-%dT%H:%M:%S, %Y-%m-%d %H:%M:%S)
+Error: Invalid value for 'BIRTH:[%Y-%m-%d|%Y-%m-%dT%H:%M:%S|%Y-%m-%d %H:%M:%S]': 'july-19-1989' does not match the formats '%Y-%m-%d', '%Y-%m-%dT%H:%M:%S', '%Y-%m-%d %H:%M:%S'.
 ```
 
 </div>
@@ -58,23 +60,33 @@ For example, let's imagine that you want to accept an ISO formatted datetime, bu
 
 ...It's a crazy example, but let's say you also needed that strange format:
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="11"
-    {!> ../docs_src/parameter_types/datetime/tutorial002_an.py!}
-    ```
+```Python hl_lines="11"
+{!> ../docs_src/parameter_types/datetime/tutorial002_an.py!}
+```
 
-=== "Python 3.7+ non-Annotated"
+////
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="8"
-    {!> ../docs_src/parameter_types/datetime/tutorial002.py!}
-    ```
+/// tip
 
-!!! tip
-    Notice the last string in `formats`: `"%m/%d/%Y"`.
+Prefer to use the `Annotated` version if possible.
+
+///
+
+```Python hl_lines="8"
+{!> ../docs_src/parameter_types/datetime/tutorial002.py!}
+```
+
+////
+
+/// tip
+
+Notice the last string in `formats`: `"%m/%d/%Y"`.
+
+///
 
 Check it:
 

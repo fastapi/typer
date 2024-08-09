@@ -1,3 +1,5 @@
+# SubCommands - Command Groups
+
 You read before how to create a program with [Commands](../commands/index.md){.internal-link target=_blank}.
 
 Now we'll see how to create a *CLI program* with commands that have their own subcommands. Also known as command groups.

@@ -1,14 +1,102 @@
+# Release Notes
+
 ## Latest Changes
 
 ### Features
 
+* ✨ Add support for Python 3.12, tests in CI and official marker. PR [#807](https://github.com/tiangolo/typer/pull/807) by [@ivantodorovich](https://github.com/ivantodorovich).
+
+### Internal
+
+* 👷 Upgrade build docs configs. PR [#914](https://github.com/tiangolo/typer/pull/914) by [@tiangolo](https://github.com/tiangolo).
+* 🔧 Update MkDocs to have titles in Markdown files instead of config. PR [#913](https://github.com/tiangolo/typer/pull/913) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Add alls-green for test-redistribute. PR [#911](https://github.com/tiangolo/typer/pull/911) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Update docs-previews to handle no docs changes. PR [#912](https://github.com/tiangolo/typer/pull/912) by [@tiangolo](https://github.com/tiangolo).
+* 👷🏻 Show docs deployment status and preview URLs in comment. PR [#910](https://github.com/tiangolo/typer/pull/910) by [@tiangolo](https://github.com/tiangolo).
+* 🔧 Enable auto dark mode from system. PR [#908](https://github.com/tiangolo/typer/pull/908) by [@tiangolo](https://github.com/tiangolo).
+* 💄 Add dark mode logo. PR [#907](https://github.com/tiangolo/typer/pull/907) by [@tiangolo](https://github.com/tiangolo).
+* 🔧 Update tabs and admonitions with new syntax and new MkDocs features. PR [#906](https://github.com/tiangolo/typer/pull/906) by [@tiangolo](https://github.com/tiangolo).
+* 🔧 Enable MkDocs Material features. PR [#905](https://github.com/tiangolo/typer/pull/905) by [@tiangolo](https://github.com/tiangolo).
+* 🔧 Enable dark mode for docs. PR [#904](https://github.com/tiangolo/typer/pull/904) by [@tiangolo](https://github.com/tiangolo).
+* ➖ Do not install jieba for MkDocs Material as there are no chinese translations. PR [#903](https://github.com/tiangolo/typer/pull/903) by [@tiangolo](https://github.com/tiangolo).
+* 🙈 Add MkDocs Material cache to gitignore. PR [#902](https://github.com/tiangolo/typer/pull/902) by [@tiangolo](https://github.com/tiangolo).
+* 🔨 Update lint script. PR [#901](https://github.com/tiangolo/typer/pull/901) by [@tiangolo](https://github.com/tiangolo).
+* 🔧 Update MkDocs configs and docs build setup. PR [#900](https://github.com/tiangolo/typer/pull/900) by [@tiangolo](https://github.com/tiangolo).
+* ⬆ Bump actions/cache from 3 to 4. PR [#839](https://github.com/tiangolo/typer/pull/839) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 🍱 Update Typer icon and logo. PR [#899](https://github.com/tiangolo/typer/pull/899) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Update issue-manager.yml GitHub Action permissions. PR [#897](https://github.com/tiangolo/typer/pull/897) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Refactor GitHub Action to comment docs deployment URLs and update token, preparing for GitHub org. PR [#896](https://github.com/tiangolo/typer/pull/896) by [@tiangolo](https://github.com/tiangolo).
+* 🔨 Update docs Termynal scripts to not include line nums for local dev. PR [#882](https://github.com/tiangolo/typer/pull/882) by [@tiangolo](https://github.com/tiangolo).
+* ⬆ Bump black from 23.3.0 to 24.3.0. PR [#837](https://github.com/tiangolo/typer/pull/837) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pillow from 10.1.0 to 10.3.0. PR [#836](https://github.com/tiangolo/typer/pull/836) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ✅ Add CI configs to run tests on Windows and MacOS. PR [#824](https://github.com/tiangolo/typer/pull/824) by [@svlandeg](https://github.com/svlandeg).
+* 👷 Update GitHub Actions to upload and download artifacts. PR [#829](https://github.com/tiangolo/typer/pull/829) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Tweak CI for test-redistribute, add needed env vars for slim. PR [#827](https://github.com/tiangolo/typer/pull/827) by [@tiangolo](https://github.com/tiangolo).
+* ✅ Generalize test suite to run on Windows. PR [#810](https://github.com/tiangolo/typer/pull/810) by [@svlandeg](https://github.com/svlandeg).
+* ✅ Add `__init__.py` files to fix test suite. PR [#809](https://github.com/tiangolo/typer/pull/809) by [@svlandeg](https://github.com/svlandeg).
+* 🔧 Update MkDocs Material, enable plugins. PR [#813](https://github.com/tiangolo/typer/pull/813) by [@tiangolo](https://github.com/tiangolo).
+* 🔧 Tweak development scripts and configs after migration to PDM, Ruff, etc.. PR [#797](https://github.com/tiangolo/typer/pull/797) by [@tiangolo](https://github.com/tiangolo).
+
+## 0.12.3
+
+### Fixes
+
+* 🐛 Fix Rich formatting with no commands. PR [#796](https://github.com/tiangolo/typer/pull/796) by [@svlandeg](https://github.com/svlandeg).
+
+## 0.12.2
+
+### Features
+
+* ✨ Improve column help display, ensure commands column width is the same on all panels. PR [#567](https://github.com/tiangolo/typer/pull/567) by [@ssbarnea](https://github.com/ssbarnea).
+
+### Fixes
+
+* 🐛 Add support for an argument of type `Optional[Tuple]` and default value `None`. PR [#757](https://github.com/tiangolo/typer/pull/757) by [@Asthestarsfalll](https://github.com/Asthestarsfalll).
+
+### Docs
+
+* 🔧 Fix typo in Github template. PR [#793](https://github.com/tiangolo/typer/pull/793) by [@svlandeg](https://github.com/svlandeg).
+* 📝 Fix typos in documentation. PR [#761](https://github.com/tiangolo/typer/pull/761) by [@svlandeg](https://github.com/svlandeg).
+* 📝 Update console output with Click 8 messages. PR [#789](https://github.com/tiangolo/typer/pull/789) by [@svlandeg](https://github.com/svlandeg).
+* 📝 Remove references to a .rst README generated by poetry new. PR [#632](https://github.com/tiangolo/typer/pull/632) by [@jonasmmiguel](https://github.com/jonasmmiguel).
+
+## 0.12.1
+
+Now you don't need to install `typer[all]`. When you install `typer` it comes with the default optional dependencies and the `typer` command.
+
+If you don't want the extra optional dependencies (`rich` and `shellingham`), you can install `typer-slim` instead.
+
+You can also install `typer-slim[standard]`, which includes the default optional dependencies, but not the `typer` command.
+
+Now the package `typer-cli` doesn't add anything on top of what `typer` has, it only depends on `typer`, and is there only for backwards compatibility, so that projects that depend on `typer-cli` can get the latest features of the `typer` command while they upgrade their dependencies to require `typer` directly.
+
+### Features
+
 * ✨ Add support for `typer ./someprogram.py utils docs --title`. PR [#782](https://github.com/tiangolo/typer/pull/782) by [@tiangolo](https://github.com/tiangolo).
+
+### Fixes
+
+* 🐛 Fix broken installation when upgrading from `typer <0.12.0` to `typer >=0.12.0`, make `typer` independent of `typer-slim`, include `typer` command in `typer` package. PR [#791](https://github.com/tiangolo/typer/pull/791) by [@tiangolo](https://github.com/tiangolo).
+
+This fixes a problem that would break the `typer` installation directory when upgrading from `typer <0.12.0` to `typer >=0.12.0`, see issue [#790](https://github.com/tiangolo/typer/issues/790).
+
+By installing the latest version (`0.12.1`) it fixes it, for any previous version, even if the installation directory was already broken by the previous upgrade.
 
 ### Internal
 
 * 👷 Add cron to run test once a week on monday. PR [#783](https://github.com/tiangolo/typer/pull/783) by [@estebanx64](https://github.com/estebanx64).
 
 ## 0.12.0
+
+In version `0.12.0`, the `typer` package depends on `typer-slim[standard]` which includes the default dependencies (instead of `typer[all]`) and `typer-cli` (that provides the `typer` command).
+
+If you don't want the extra optional dependencies (`rich` and `shellingham`), you can install `typer-slim` instead.
+
+You can also install `typer-slim[standard]`, which includes the default optional dependencies, but not the `typer` command.
+
+In version `0.12.0` the `typer-cli` package only provides the `typer` command, but the code is still in the main code, so even without installing `typer-cli`, it can be called with `python -m typer`.
+
+This approach of having `typer` depend on `typer-slim[standard]` instead of including the whole code and dependencies itself caused an issue when upgrading from `typer <0.12.0` to `typer >=0.12.0`, see issue [#790](https://github.com/tiangolo/typer/issues/790). This is fixed in version `0.12.1`.
 
 ### Features
 
