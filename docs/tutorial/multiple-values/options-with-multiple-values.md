@@ -1,23 +1,32 @@
+# CLI Options with Multiple Values
+
 You can also declare a *CLI option* that takes several values of different types.
 
 You can set the number of values and types to anything you want, but it has to be a fixed number of values.
 
 For this, use the standard Python `typing.Tuple`:
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="1  7"
-    {!> ../docs_src/multiple_values/options_with_multiple_values/tutorial001_an.py!}
-    ```
+```Python hl_lines="1  7"
+{!> ../docs_src/multiple_values/options_with_multiple_values/tutorial001_an.py!}
+```
 
-=== "Python 3.7+ non-Annotated"
+////
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="1  6"
-    {!> ../docs_src/multiple_values/options_with_multiple_values/tutorial001.py!}
-    ```
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
+
+```Python hl_lines="1  6"
+{!> ../docs_src/multiple_values/options_with_multiple_values/tutorial001.py!}
+```
+
+////
 
 Each of the internal types defines the type of each value in the tuple.
 
@@ -59,10 +68,13 @@ coins = user[1]
 is_wizard = user[2]
 ```
 
-!!! tip
-    Notice that the default is a tuple with `(None, None, None)`.
+/// tip
 
-    You cannot simply use `None` here as the default because <a href="https://github.com/pallets/click/issues/472" class="external-link" target="_blank">Click doesn't support it</a>.
+Notice that the default is a tuple with `(None, None, None)`.
+
+You cannot simply use `None` here as the default because <a href="https://github.com/pallets/click/issues/472" class="external-link" target="_blank">Click doesn't support it</a>.
+
+///
 
 ## Check it
 
