@@ -1,3 +1,5 @@
+# Progress Bar
+
 If you are executing an operation that can take some time, you can inform it to the user. 🤓
 
 ## Progress Bar
@@ -71,19 +73,27 @@ You can learn more about it in the <a href="https://rich.readthedocs.io/en/stabl
 
 If you can, you should use **Rich** as explained above, it has more features, it's more advanced, and can display information more beautifully. ✨
 
-!!! tip
-    If you can use Rich, use the information above, the Rich docs, and skip the rest of this page. 😎
+/// tip
+
+If you can use Rich, use the information above, the Rich docs, and skip the rest of this page. 😎
+
+///
 
 But if you can't use Rich, Typer (actually Click) comes with a simple utility to show progress bars.
 
-!!! info
-    `typer.progressbar()` comes directly from Click, you can read more about it in <a href="https://click.palletsprojects.com/en/8.1.x/utils/#showing-progress-bars" class="external-link" target="_blank">Click's docs</a>.
+/// info
 
+`typer.progressbar()` comes directly from Click, you can read more about it in <a href="https://click.palletsprojects.com/en/8.1.x/utils/#showing-progress-bars" class="external-link" target="_blank">Click's docs</a>.
+
+///
 
 ### Use `typer.progressbar`
 
-!!! tip
-    Remember, you are much better off using <a href="https://rich.readthedocs.io/" class="external-link" target="_blank">Rich</a> for this. 😎
+/// tip
+
+Remember, you are much better off using <a href="https://rich.readthedocs.io/" class="external-link" target="_blank">Rich</a> for this. 😎
+
+///
 
 You can use `typer.progressbar()` with a `with` statement, as in:
 
@@ -119,13 +129,19 @@ with typer.progressbar(users) as progress:
         typer.echo(user)
 ```
 
-!!! tip
-    Notice that there are 2 levels of code blocks. One for the `with` statement and one for the `for` statement.
+/// tip
 
-!!! info
-    This is mostly useful for operations that take some time.
+Notice that there are 2 levels of code blocks. One for the `with` statement and one for the `for` statement.
 
-    In the example above we are faking it with `time.sleep()`.
+///
+
+/// info
+
+This is mostly useful for operations that take some time.
+
+In the example above we are faking it with `time.sleep()`.
+
+///
 
 Check it:
 
@@ -143,8 +159,11 @@ Processed 100 things.
 
 ### Setting a Progress Bar `length`
 
-!!! tip
-    Remember, you are much better off using <a href="https://rich.readthedocs.io/" class="external-link" target="_blank">Rich</a> for this. 😎
+/// tip
+
+Remember, you are much better off using <a href="https://rich.readthedocs.io/" class="external-link" target="_blank">Rich</a> for this. 😎
+
+///
 
 The progress bar is generated from the length of the iterable (e.g. the list of users).
 
@@ -192,8 +211,11 @@ would print each of the "user IDs" (here it's just the numbers from `0` to `99`)
 
 ### Add a `label`
 
-!!! tip
-    Remember, you are much better off using <a href="https://rich.readthedocs.io/" class="external-link" target="_blank">Rich</a> for this. 😎
+/// tip
+
+Remember, you are much better off using <a href="https://rich.readthedocs.io/" class="external-link" target="_blank">Rich</a> for this. 😎
+
+///
 
 You can also set a `label`:
 

@@ -1,3 +1,5 @@
+# Alternatives, Inspiration and Comparisons
+
 What inspired **Typer**, how it compares to other alternatives and what it learned from them.
 
 ## Intro
@@ -14,8 +16,11 @@ There have been many tools created before that have helped inspire its creation.
 
 It provides a better alternative than reading the *CLI Parameters* as a `list` of `str` and parsing everything by hand.
 
-!!! check "Inspired **Typer** to"
-    Provide a better development experience than just reading *CLI Parameters* by hand.
+/// check | Inspired **Typer** to
+
+Provide a better development experience than just reading *CLI Parameters* by hand.
+
+///
 
 ### <a href="https://www.hug.rest/" class="external-link" target="_blank">Hug</a>
 
@@ -23,15 +28,21 @@ Hug is a library to create APIs and CLIs, it uses parameters in functions to dec
 
 It inspired a lot of the ideas in **FastAPI** and **Typer**.
 
-!!! check "Inspired **Typer** to"
-    Use function parameters to declare *CLI arguments* and *CLI options* as it simplifies a lot the development experience.
+/// check | Inspired **Typer** to
+
+Use function parameters to declare *CLI arguments* and *CLI options* as it simplifies a lot the development experience.
+
+///
 
 ### <a href="https://plac.readthedocs.io/en/latest/" class="external-link" target="_blank">Plac</a>
 
 Plac is another library to create CLIs using parameters in functions, similar to Hug.
 
-!!! check "Inspired **Typer** to"
-    Provide a simple way to use a function as a command line app, without having to create a complete app, with `typer.run(some_function)`.
+/// check | Inspired **Typer** to
+
+Provide a simple way to use a function as a command line app, without having to create a complete app, with `typer.run(some_function)`.
+
+///
 
 ### <a href="https://pydantic-docs.helpmanual.io/" class="external-link" target="_blank">Pydantic</a>
 
@@ -41,8 +52,11 @@ It powers **FastAPI** underneath.
 
 It is not used by **Typer**, but it inspired a lot of the design (through **FastAPI**).
 
-!!! check "Inspired **Typer** to"
-    Use standard Python type annotations to declare types instead of library-specific types or classes and use them for data validation and documentation.
+/// check | Inspired **Typer** to
+
+Use standard Python type annotations to declare types instead of library-specific types or classes and use them for data validation and documentation.
+
+///
 
 ### <a href="https://click.palletsprojects.com" class="external-link" target="_blank">Click</a>
 
@@ -56,12 +70,15 @@ It uses decorators on top of functions to modify the actual value of those funct
 
 It was built with some great ideas and design using the features available in the language at the time (Python 2.x).
 
-!!! check "**Typer** uses it for"
-    Everything. 🚀
+/// check | **Typer** uses it for
 
-    **Typer** mainly adds a layer on top of Click, making the code simpler and easier to use, with autocompletion everywhere, etc, but providing all the powerful features of Click underneath.
+Everything. 🚀
 
-    As someone pointed out: <em><a href="https://twitter.com/fishnets88/status/1210126833745838080" class="external-link" target="_blank">"Nice to see it is built on Click but adds the type stuff. Me gusta!"</a></em>
+**Typer** mainly adds a layer on top of Click, making the code simpler and easier to use, with autocompletion everywhere, etc, but providing all the powerful features of Click underneath.
+
+As someone pointed out: <em><a href="https://twitter.com/fishnets88/status/1210126833745838080" class="external-link" target="_blank">"Nice to see it is built on Click but adds the type stuff. Me gusta!"</a></em>
+
+///
 
 ### <a href="https://github.com/click-contrib/click-completion" class="external-link" target="_blank">`click-completion`</a>
 
@@ -71,8 +88,11 @@ Previous versions of **Typer** had deep integrations with `click-completion` and
 
 And now **Typer** improved it to have new features, tests, some bug fixes (for issues in plain `click-completion` and Click), and better support for shells, including modern versions of PowerShell (e.g. the default versions that come with Windows 10).
 
-!!! check "Inspired **Typer** to"
-    Provide auto completion for all the shells.
+/// check | Inspired **Typer** to
+
+Provide auto completion for all the shells.
+
+///
 
 ### <a href="https://fastapi.tiangolo.com/" class="external-link" target="_blank">FastAPI</a>
 
