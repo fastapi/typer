@@ -1,3 +1,5 @@
+# Command Help
+
 The same as before, you can add help for the commands in the docstrings and the *CLI options*.
 
 And the `typer.Typer()` application receives a parameter `help` that you can pass with the main help text for your CLI program:

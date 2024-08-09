@@ -1,3 +1,5 @@
+# CLI Option autocompletion
+
 As you have seen, apps built with **Typer** have completion in your shell that works when you create a Python package or using the `typer` command.
 
 It normally completes *CLI options*, *CLI arguments*, and subcommands (that you will learn about later).

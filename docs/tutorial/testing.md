@@ -1,3 +1,5 @@
+# Testing
+
 Testing **Typer** applications is very easy with <a href="https://docs.pytest.org/en/latest/" class="external-link" target="_blank">pytest</a>.
 
 Let's say you have an application `app/main.py` with:

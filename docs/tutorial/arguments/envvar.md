@@ -1,3 +1,5 @@
+# CLI Arguments with Environment Variables
+
 You can also configure a *CLI argument* to read a value from an environment variable if it is not provided in the command line as a *CLI argument*.
 
 To do that, use the `envvar` parameter for `typer.Argument()`:

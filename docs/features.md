@@ -1,3 +1,5 @@
+# Features
+
 ## Design based on **FastAPI**
 
 <a href="https://fastapi.tiangolo.com" target="_blank"><img src="https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png" style="width: 20%;"></a>

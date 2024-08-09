@@ -1,3 +1,5 @@
+# CLI Option Callback and Context
+
 In some occasions you might want to have some custom logic for a specific *CLI parameter* (for a *CLI option*  or *CLI argument*) that is executed with the value received from the terminal.
 
 In those cases you can use a *CLI parameter* callback function.

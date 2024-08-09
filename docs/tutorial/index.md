@@ -1,3 +1,5 @@
+# Tutorial - User Guide
+
 ## Python types
 
 If you need a refresher about how to use Python type hints, check the first part of <a href="https://fastapi.tiangolo.com/python-types/" class="external-link" target="_blank">FastAPI's Python types intro</a>.

@@ -1,3 +1,5 @@
+# Nested SubCommands
+
 We'll now see how these same ideas can be extended for deeply nested commands.
 
 Let's imagine that the same *CLI program* from the previous examples now needs to handle `lands`.

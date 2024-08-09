@@ -1,3 +1,5 @@
+# Version CLI Option, `is_eager`
+
 You could use a callback to implement a `--version` *CLI option*.
 
 It would show the version of your CLI program and then it would terminate it. Even before any other *CLI parameter* is processed.
