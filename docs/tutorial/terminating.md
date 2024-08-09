@@ -1,3 +1,5 @@
+# Terminating
+
 There are some cases where you might want to terminate a command at some point, and stop all subsequent execution.
 
 It could be that your code determined that the program completed successfully, or it could be an operation aborted.
@@ -40,12 +42,15 @@ The user already exists
 
 </div>
 
-!!! tip
-    Even though you are raising an exception, it doesn't necessarily mean there's an error.
+/// tip
 
-    This is done with an exception because it works as an "error" and stops all execution.
+Even though you are raising an exception, it doesn't necessarily mean there's an error.
 
-    But then **Typer** (actually Click) catches it and just terminates the program normally.
+This is done with an exception because it works as an "error" and stops all execution.
+
+But then **Typer** (actually Click) catches it and just terminates the program normally.
+
+///
 
 ## Exit with an error
 
@@ -86,8 +91,11 @@ $ echo $?
 
 </div>
 
-!!! tip
-    The error code might be used by other programs (for example a Bash script) that execute your CLI program.
+/// tip
+
+The error code might be used by other programs (for example a Bash script) that execute your CLI program.
+
+///
 
 ## Abort
 
