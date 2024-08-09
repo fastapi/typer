@@ -16,7 +16,7 @@ def test_traceback_rich_pretty_width():
         [sys.executable, "-m", "coverage", "run", str(file_path)],
         capture_output=True,
         encoding="utf-8",
-        env={**os.environ, "_TYPER_STANDARD_TRACEBACK": ""},
+        env={**os.environ, "_TYPER_STANDARD_TRACEBACK": "", "PYTHONIOENCODING": "utf-8"},
     )
     print(result.stderr)
 
