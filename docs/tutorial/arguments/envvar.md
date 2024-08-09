@@ -1,21 +1,30 @@
+# CLI Arguments with Environment Variables
+
 You can also configure a *CLI argument* to read a value from an environment variable if it is not provided in the command line as a *CLI argument*.
 
 To do that, use the `envvar` parameter for `typer.Argument()`:
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="5"
-    {!> ../docs_src/arguments/envvar/tutorial001_an.py!}
-    ```
+```Python hl_lines="5"
+{!> ../docs_src/arguments/envvar/tutorial001_an.py!}
+```
 
-=== "Python 3.7+ non-Annotated"
+////
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="4"
-    {!> ../docs_src/arguments/envvar/tutorial001.py!}
-    ```
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
+
+```Python hl_lines="4"
+{!> ../docs_src/arguments/envvar/tutorial001.py!}
+```
+
+////
 
 In this case, the *CLI argument* `name` will have a default value of `"World"`, but will also read any value passed to the environment variable `AWESOME_NAME` if no value is provided in the command line:
 
@@ -60,20 +69,27 @@ Hello Mr. Czernobog
 
 You are not restricted to a single environment variable, you can declare a list of environment variables that could be used to get a value if it was not passed in the command line:
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="6"
-    {!> ../docs_src/arguments/envvar/tutorial002_an.py!}
-    ```
+```Python hl_lines="6"
+{!> ../docs_src/arguments/envvar/tutorial002_an.py!}
+```
 
-=== "Python 3.7+ non-Annotated"
+////
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="4"
-    {!> ../docs_src/arguments/envvar/tutorial002.py!}
-    ```
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
+
+```Python hl_lines="4"
+{!> ../docs_src/arguments/envvar/tutorial002.py!}
+```
+
+////
 
 Check it:
 
@@ -108,20 +124,27 @@ Hello Mr. Anubis
 
 By default, environment variables used will be shown in the help text, but you can disable them with `show_envvar=False`:
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="7"
-    {!> ../docs_src/arguments/envvar/tutorial003_an.py!}
-    ```
+```Python hl_lines="7"
+{!> ../docs_src/arguments/envvar/tutorial003_an.py!}
+```
 
-=== "Python 3.7+ non-Annotated"
+////
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="4"
-    {!> ../docs_src/arguments/envvar/tutorial003.py!}
-    ```
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
+
+```Python hl_lines="4"
+{!> ../docs_src/arguments/envvar/tutorial003.py!}
+```
+
+////
 
 Check it:
 
@@ -148,7 +171,10 @@ Hello Mr. Wednesday
 
 </div>
 
-!!! note "Technical Details"
-    In Click applications the env vars are hidden by default. 🙈
+/// note | Technical Details
 
-    In **Typer** these env vars are shown by default. 👀
+In Click applications the env vars are hidden by default. 🙈
+
+In **Typer** these env vars are shown by default. 👀
+
+///
