@@ -261,12 +261,15 @@ $ typer some_script.py utils docs
 
 </div>
 
-!!! tip
-    If you installed only `typer-slim` and you don't have the `typer` command, you can still generate docs with:
+/// tip
 
-    ```console
-    $ python -m typer some_script.py utils docs
-    ```
+If you installed only `typer-slim` and you don't have the `typer` command, you can still generate docs with:
+
+```console
+$ python -m typer some_script.py utils docs
+```
+
+///
 
 **Options**:
 
