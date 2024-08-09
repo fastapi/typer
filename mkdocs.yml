@@ -39,8 +39,8 @@ theme:
   # - navigation.instant.preview
   - navigation.instant.progress
   - navigation.path
-  # - navigation.tabs
-  # - navigation.tabs.sticky
+  - navigation.tabs
+  - navigation.tabs.sticky
   - navigation.top
   - navigation.tracking
   - search.highlight
@@ -60,6 +60,9 @@ plugins:
   search:
   social:
   # Other plugins
+  macros:
+    include_yaml:
+    - members: data/members.yml
   redirects:
     redirect_maps:
       typer-cli.md: tutorial/typer-command.md
@@ -129,9 +132,15 @@ nav:
       - tutorial/package.md
       - tutorial/exceptions.md
       - tutorial/typer-command.md
-  - alternatives.md
-  - help-typer.md
-  - contributing.md
+  - Resources:
+    - resources/index.md
+    - help-typer.md
+    - contributing.md
+    - management-tasks.md
+  - About:
+    - about/index.md
+    - alternatives.md
+    - management.md
   - release-notes.md
 
 markdown_extensions:
@@ -173,6 +182,7 @@ markdown_extensions:
     - warning
     # Custom types
     - info
+    - check
   pymdownx.blocks.details:
   pymdownx.blocks.tab:
     alternate_style: True

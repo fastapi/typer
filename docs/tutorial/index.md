@@ -1,4 +1,10 @@
-# Tutorial - User Guide
+# Learn
+
+Learn how to use **Typer** in this step-by-step **Tutorial** - **User Guide**.
+
+It covers everything you need to know from the **simplest scripts** to **complex CLI applications**.
+
+You could consider this a **book**, a **course**, the **official** and recommended way to learn **Typer**. 😎
 
 ## Python types
 
