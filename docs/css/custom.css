@@ -8,6 +8,10 @@
     white-space: pre-wrap;
 }
 
+.termy .linenos {
+    display: none;
+}
+
 a.external-link::after {
     /* \00A0 is a non-breaking space
         to make the mark be on the same line as the link
@@ -20,4 +24,8 @@ a.internal-link::after {
         to make the mark be on the same line as the link
     */
     content: "\00A0↪";
+}
+
+.shadow {
+    box-shadow: 5px 5px 10px #999;
 }

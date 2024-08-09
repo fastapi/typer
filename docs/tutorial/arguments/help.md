@@ -1,3 +1,5 @@
+# CLI Arguments with Help
+
 In the *First Steps* section you saw how to add help for a CLI app/command by adding it to a function's <abbr title="a multi-line string as the first expression inside a function (not assigned to any variable) used for documentation">docstring</abbr>.
 
 Here's how that last example looked like:
@@ -12,20 +14,27 @@ Now that you also know how to use `typer.Argument()`, let's use it to add docume
 
 You can use the `help` parameter to add a help text for a *CLI argument*:
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="5"
-    {!> ../docs_src/arguments/help/tutorial001_an.py!}
-    ```
+```Python hl_lines="5"
+{!> ../docs_src/arguments/help/tutorial001_an.py!}
+```
 
-=== "Python 3.7+ non-Annotated"
+////
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="4"
-    {!> ../docs_src/arguments/help/tutorial001.py!}
-    ```
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
+
+```Python hl_lines="4"
+{!> ../docs_src/arguments/help/tutorial001.py!}
+```
+
+////
 
 And it will be used in the automatic `--help` option:
 
@@ -50,20 +59,27 @@ Options:
 
 And of course, you can also combine that `help` with the <abbr title="a multi-line string as the first expression inside a function (not assigned to any variable) used for documentation">docstring</abbr>:
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="5-8"
-    {!> ../docs_src/arguments/help/tutorial002_an.py!}
-    ```
+```Python hl_lines="5-8"
+{!> ../docs_src/arguments/help/tutorial002_an.py!}
+```
 
-=== "Python 3.7+ non-Annotated"
+////
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="4-7"
-    {!> ../docs_src/arguments/help/tutorial002.py!}
-    ```
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
+
+```Python hl_lines="4-7"
+{!> ../docs_src/arguments/help/tutorial002.py!}
+```
+
+////
 
 And the `--help` option will combine all the information:
 
@@ -90,20 +106,27 @@ Options:
 
 If you have a *CLI argument* with a default value, like `"World"`:
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="5"
-    {!> ../docs_src/arguments/help/tutorial003_an.py!}
-    ```
+```Python hl_lines="5"
+{!> ../docs_src/arguments/help/tutorial003_an.py!}
+```
 
-=== "Python 3.7+ non-Annotated"
+////
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="4"
-    {!> ../docs_src/arguments/help/tutorial003.py!}
-    ```
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
+
+```Python hl_lines="4"
+{!> ../docs_src/arguments/help/tutorial003.py!}
+```
+
+////
 
 It will show that default value in the help text:
 
@@ -128,20 +151,27 @@ Options:
 
 But you can disable that if you want to, with `show_default=False`:
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="7"
-    {!> ../docs_src/arguments/help/tutorial004_an.py!}
-    ```
+```Python hl_lines="7"
+{!> ../docs_src/arguments/help/tutorial004_an.py!}
+```
 
-=== "Python 3.7+ non-Annotated"
+////
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="4"
-    {!> ../docs_src/arguments/help/tutorial004.py!}
-    ```
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
+
+```Python hl_lines="4"
+{!> ../docs_src/arguments/help/tutorial004.py!}
+```
+
+////
 
 And then it won't show the default value:
 
@@ -164,29 +194,39 @@ Options:
 
 </div>
 
-!!! note "Technical Details"
-    In Click applications the default values are hidden by default. 🙈
+/// note | Technical Details
 
-    In **Typer** these default values are shown by default. 👀
+In Click applications the default values are hidden by default. 🙈
+
+In **Typer** these default values are shown by default. 👀
+
+///
 
 ## Custom default string
 
 You can use the same `show_default` to pass a custom string (instead of a `bool`) to customize the default value to be shown in the help text:
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="9"
-    {!> ../docs_src/arguments/help/tutorial005_an.py!}
-    ```
+```Python hl_lines="9"
+{!> ../docs_src/arguments/help/tutorial005_an.py!}
+```
 
-=== "Python 3.7+ non-Annotated"
+////
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="6"
-    {!> ../docs_src/arguments/help/tutorial005.py!}
-    ```
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
+
+```Python hl_lines="6"
+{!> ../docs_src/arguments/help/tutorial005.py!}
+```
+
+////
 
 And it will be used in the help text:
 
@@ -231,20 +271,27 @@ But you can customize it with the `metavar` parameter for `typer.Argument()`.
 
 For example, let's say you don't want to have the default of `NAME`, you want to have `username`, in lowercase, and you really want ✨ emojis ✨ everywhere:
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="5"
-    {!> ../docs_src/arguments/help/tutorial006_an.py!}
-    ```
+```Python hl_lines="5"
+{!> ../docs_src/arguments/help/tutorial006_an.py!}
+```
 
-=== "Python 3.7+ non-Annotated"
+////
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="4"
-    {!> ../docs_src/arguments/help/tutorial006.py!}
-    ```
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
+
+```Python hl_lines="4"
+{!> ../docs_src/arguments/help/tutorial006.py!}
+```
+
+////
 
 Now the generated help text will have `✨username✨` instead of `NAME`:
 
@@ -270,20 +317,27 @@ You might want to show the help information for *CLI arguments* in different pan
 
 If you have installed Rich as described in the docs for [Printing and Colors](../printing.md){.internal-link target=_blank}, you can set the `rich_help_panel` parameter to the name of the panel where you want this *CLI argument* to be shown:
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="8  12"
-    {!> ../docs_src/arguments/help/tutorial007_an.py!}
-    ```
+```Python hl_lines="8  12"
+{!> ../docs_src/arguments/help/tutorial007_an.py!}
+```
 
-=== "Python 3.7+ non-Annotated"
+////
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="7  10"
-    {!> ../docs_src/arguments/help/tutorial007.py!}
-    ```
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
+
+```Python hl_lines="7  10"
+{!> ../docs_src/arguments/help/tutorial007.py!}
+```
+
+////
 
 Then, if you check the `--help` option, you will see a default panel named "`Arguments`" for the *CLI arguments* that don't have a custom `rich_help_panel`.
 
@@ -326,20 +380,27 @@ If you want, you can make a *CLI argument* **not** show up in the `Arguments` se
 
 You will probably not want to do this normally, but it's possible:
 
-=== "Python 3.7+"
+//// tab | Python 3.7+
 
-    ```Python hl_lines="5"
-    {!> ../docs_src/arguments/help/tutorial008_an.py!}
-    ```
+```Python hl_lines="5"
+{!> ../docs_src/arguments/help/tutorial008_an.py!}
+```
 
-=== "Python 3.7+ non-Annotated"
+////
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+//// tab | Python 3.7+ non-Annotated
 
-    ```Python hl_lines="4"
-    {!> ../docs_src/arguments/help/tutorial008.py!}
-    ```
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
+
+```Python hl_lines="4"
+{!> ../docs_src/arguments/help/tutorial008.py!}
+```
+
+////
 
 Check it:
 
@@ -359,10 +420,13 @@ Options:
 
 </div>
 
-!!! info
-    Have in mind that the *CLI argument* will still show up in the first line with `Usage`.
+/// info
 
-    But it won't show up in the main help text under the `Arguments` section.
+Have in mind that the *CLI argument* will still show up in the first line with `Usage`.
+
+But it won't show up in the main help text under the `Arguments` section.
+
+///
 
 ### Help text for *CLI arguments* in Click
 
@@ -384,5 +448,8 @@ This is also to help you create CLI programs that are ✨ awesome ✨ *by defaul
 
 If you want to keep Click's convention in a **Typer** app, you can do it with the `hidden` parameter as described above.
 
-!!! note "Technical Details"
-    To support `help` in *CLI arguments* **Typer** does a lot of internal work in its own sub-classes of Click's internal classes.
+/// note | Technical Details
+
+To support `help` in *CLI arguments* **Typer** does a lot of internal work in its own sub-classes of Click's internal classes.
+
+///
