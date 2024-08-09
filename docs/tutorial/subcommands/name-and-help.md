@@ -1,3 +1,5 @@
+# SubCommand Name and Help
+
 When adding a Typer app to another we have seen how to set the `name` to use for the command.
 
 For example to set the command to `users`:

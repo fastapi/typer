@@ -1,3 +1,5 @@
+# Number
+
 You can define numeric validations with `max` and `min` values for `int` and `float` *CLI parameters*:
 
 //// tab | Python 3.7+

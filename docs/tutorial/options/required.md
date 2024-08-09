@@ -1,3 +1,5 @@
+# Required CLI Options
+
 We said before that *by default*:
 
 * *CLI options* are **optional**

@@ -1,3 +1,5 @@
+# Printing and Colors
+
 You can use the normal `print()` to show information on the screen:
 
 ```Python hl_lines="5"

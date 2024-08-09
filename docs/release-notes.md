@@ -1,3 +1,5 @@
+# Release Notes
+
 ## Latest Changes
 
 ### Features

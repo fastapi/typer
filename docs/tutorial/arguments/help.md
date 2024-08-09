@@ -1,3 +1,5 @@
+# CLI Arguments with Help
+
 In the *First Steps* section you saw how to add help for a CLI app/command by adding it to a function's <abbr title="a multi-line string as the first expression inside a function (not assigned to any variable) used for documentation">docstring</abbr>.
 
 Here's how that last example looked like:

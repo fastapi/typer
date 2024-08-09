@@ -1,3 +1,5 @@
+# CLI Options with Help
+
 You already saw how to add a help text for *CLI arguments* with the `help` parameter.
 
 Let's now do the same for *CLI options*:

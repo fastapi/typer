@@ -1,3 +1,5 @@
+# CLI Arguments with Default
+
 We can also use the same `typer.Argument()` to set a default value.
 
 That way the *CLI argument* will be optional *and also* have a default value.

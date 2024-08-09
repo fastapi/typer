@@ -1,3 +1,5 @@
+# Help Typer - Get Help
+
 Are you liking **Typer**?
 
 Would you like to help Typer, other users, and the author?

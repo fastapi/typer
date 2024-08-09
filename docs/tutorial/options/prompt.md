@@ -1,3 +1,5 @@
+# CLI Option Prompt
+
 It's also possible to, instead of just showing an error, ask for the missing value with `prompt=True`:
 
 //// tab | Python 3.7+

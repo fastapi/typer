@@ -1,3 +1,5 @@
+# CLI Parameter Types
+
 You can use several data types for the *CLI options* and *CLI arguments*, and you can add data validation requirements too.
 
 ## Data conversion
