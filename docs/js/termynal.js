@@ -249,7 +249,6 @@ class Termynal {
                 attrs += `${this.pfx}-${prop}="${line[prop]}" `
             }
         }
-
         return attrs;
     }
 }
