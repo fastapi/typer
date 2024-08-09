@@ -1,3 +1,5 @@
+# SubCommand Name and Help
+
 When adding a Typer app to another we have seen how to set the `name` to use for the command.
 
 For example to set the command to `users`:
@@ -52,10 +54,13 @@ We can set the `name` and `help` in several places, each one taking precedence o
 
 Let's see those locations.
 
-!!! tip
-    There are other attributes that can be set in that same way in the same places we'll see next.
+/// tip
 
-    But those are documented later in another section.
+There are other attributes that can be set in that same way in the same places we'll see next.
+
+But those are documented later in another section.
+
+///
 
 ## Inferring name and help from callback
 
@@ -296,8 +301,11 @@ But if you set the name and help text explicitly, that has a higher priority tha
 
 Let's now see the places where you can set the command name and help text, from lowest priority to highest.
 
-!!! tip
-    Setting the name and help text explicitly always has a higher precedence than inferring from a callback function.
+/// tip
+
+Setting the name and help text explicitly always has a higher precedence than inferring from a callback function.
+
+///
 
 ### Name and help in `typer.Typer()`
 
@@ -311,8 +319,11 @@ You can set it when creating a new `typer.Typer()`:
 {!../docs_src/subcommands/name_help/tutorial006.py!}
 ```
 
-!!! info
-    The rest of the callbacks and overrides are there only to show you that they don't affect the name and help text when you set it explicitly.
+/// info
+
+The rest of the callbacks and overrides are there only to show you that they don't affect the name and help text when you set it explicitly.
+
+///
 
 We set an explicit name `exp-users`, and an explicit help `Explicit help.`.
 
