@@ -8,6 +8,7 @@
 
 ### Docs
 
+* 📝 Update docs links, from tiangolo to new fastapi org. PR [#919](https://github.com/fastapi/typer/pull/919) by [@tiangolo](https://github.com/tiangolo).
 * 📝 Add docs for team and repo management. PR [#917](https://github.com/tiangolo/typer/pull/917) by [@tiangolo](https://github.com/tiangolo).
 
 ### Internal
