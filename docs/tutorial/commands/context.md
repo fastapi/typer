@@ -1,3 +1,5 @@
+# Using the Context
+
 When you create a **Typer** application it uses Click underneath. And every Click application has a special object called a <a href="https://click.palletsprojects.com/en/8.1.x/commands/#nested-handling-and-contexts" class="external-link" target="_blank">"Context"</a> that is normally hidden.
 
 But you can access the context by declaring a function parameter of type `typer.Context`.
@@ -126,5 +128,8 @@ Got extra arg: Berlin
 
 </div>
 
-!!! tip
-    Notice that it saves all the extra *CLI parameters* as a raw `list` of `str`, including the *CLI option* names and values, everything together.
+/// tip
+
+Notice that it saves all the extra *CLI parameters* as a raw `list` of `str`, including the *CLI option* names and values, everything together.
+
+///
