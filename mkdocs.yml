@@ -60,6 +60,9 @@ plugins:
   search:
   social:
   # Other plugins
+  macros:
+    include_yaml:
+    - members: data/members.yml
   redirects:
     redirect_maps:
       typer-cli.md: tutorial/typer-command.md
