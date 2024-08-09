@@ -52,9 +52,9 @@ def test_completion_install_bash():
     )
     new_text = bash_completion_path.read_text()
     bash_completion_path.write_text(text)
-    install_source = ".bash_completions/tutorial001.py.sh"
-    assert install_source not in text
-    assert install_source in new_text
+    install_source = Path(".bash_completions/tutorial001.py.sh")
+    assert str(install_source) not in text
+    assert str(install_source) in new_text
     assert "completion installed in" in result.stdout
     assert "Completion will take effect once you restart the terminal" in result.stdout
     install_source_path = Path.home() / install_source
