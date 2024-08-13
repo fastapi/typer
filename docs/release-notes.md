@@ -13,6 +13,7 @@
 
 ### Internal
 
+* 👷 Add GitHub Action labeler. PR [#924](https://github.com/fastapi/typer/pull/924) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Add GitHub Action add-to-project. PR [#922](https://github.com/fastapi/typer/pull/922) by [@tiangolo](https://github.com/tiangolo).
 * 🔨 Update docs.py script to enable dirty reload conditionally. PR [#918](https://github.com/tiangolo/typer/pull/918) by [@tiangolo](https://github.com/tiangolo).
 * 🔧 Update MkDocs previews. PR [#916](https://github.com/tiangolo/typer/pull/916) by [@tiangolo](https://github.com/tiangolo).
