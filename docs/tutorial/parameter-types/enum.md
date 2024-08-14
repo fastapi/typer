@@ -129,8 +129,8 @@ This works just like any other parameter value taking a list of things:
 
 ### Using Enum names instead of values
 
-Some times you want to accept `Enum` names from command line and convert 
-that into `Enum` values in command handler. You can enable this with 
+Some times you want to accept `Enum` names from command line and convert
+that into `Enum` values in command handler. You can enable this with
 `names=True` parameter:
 
 ```Python hl_lines="14"
