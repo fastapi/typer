@@ -1,4 +1,5 @@
 import subprocess
+import sys
 
 import typer
 from typer.testing import CliRunner
@@ -22,16 +23,15 @@ def test_invalid_uuid():
     result = runner.invoke(app, ["7479706572-72756c6573"])
     assert result.exit_code != 0
     assert (
-        "Error: Invalid value for 'USER_ID': 7479706572-72756c6573 is not a valid UUID value"
+        "Invalid value for 'USER_ID': '7479706572-72756c6573' is not a valid UUID"
         in result.output
     )
 
 
 def test_script():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--help"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
+        capture_output=True,
         encoding="utf-8",
     )
     assert "Usage" in result.stdout

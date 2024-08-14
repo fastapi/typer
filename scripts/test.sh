@@ -3,7 +3,9 @@
 set -e
 set -x
 
-bash ./scripts/test-files.sh
-bash ./scripts/lint.sh
-# Use xdist-pytest --forked to ensure modified sys.path to import relative modules in examples keeps working
-pytest --cov=typer --cov=tests --cov=docs_src --cov-report=term-missing --cov-report=xml -o console_output_style=progress --forked --numprocesses=auto ${@}
+# For tests, a large terminal width
+export TERMINAL_WIDTH=3000
+# Force disable terminal for tests inside of pytest, takes precedence over GITHUB_ACTIONS env var
+export _TYPER_FORCE_DISABLE_TERMINAL=1
+# It seems xdist-pytest ensures modified sys.path to import relative modules in examples keeps working
+pytest --cov --cov-report=term-missing -o console_output_style=progress --numprocesses=auto ${@}

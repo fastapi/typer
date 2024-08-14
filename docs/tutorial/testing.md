@@ -1,3 +1,5 @@
+# Testing
+
 Testing **Typer** applications is very easy with <a href="https://docs.pytest.org/en/latest/" class="external-link" target="_blank">pytest</a>.
 
 Let's say you have an application `app/main.py` with:
@@ -37,8 +39,11 @@ This runner is what will "invoke" or "call" your command line application.
 {!../docs_src/testing/app01/test_main.py!}
 ```
 
-!!! tip
-    It's important that the name of the file starts with `test_`, that way pytest will be able to detect it and use it automatically.
+/// tip
+
+It's important that the name of the file starts with `test_`, that way pytest will be able to detect it and use it automatically.
+
+///
 
 ### Call the app
 
@@ -54,8 +59,11 @@ The second parameter is a `list` of `str`, with all the text you would pass in t
 {!../docs_src/testing/app01/test_main.py!}
 ```
 
-!!! tip
-    The name of the function has to start with `test_`, that way pytest can detect it and use it automatically.
+/// tip
+
+The name of the function has to start with `test_`, that way pytest can detect it and use it automatically.
+
+///
 
 ### Check the result
 
@@ -69,11 +77,17 @@ Here we are checking that the exit code is 0, as it is for programs that exit wi
 
 Then we check that the text printed to "standard output" contains the text that our CLI program prints.
 
-!!! tip
-    You could also check `result.stderr` for "standard error".
+/// tip
 
-!!! info
-    If you need a refresher about what is "standard output" and "standard error" check the section in [Printing and Colors: "Standard Output" and "Standard Error"](printing.md#standard-output-and-standard-error){.internal-link target=_blank}.
+You could also check `result.stderr` for "standard error" independently from "standard output" if your `CliRunner` instance is created with the `mix_stderr=False` argument.
+
+///
+
+/// info
+
+If you need a refresher about what is "standard output" and "standard error" check the section in [Printing and Colors: "Standard Output" and "Standard Error"](printing.md#standard-output-and-standard-error){.internal-link target=_blank}.
+
+///
 
 ### Call `pytest`
 
@@ -85,7 +99,7 @@ Then you can call `pytest` in your directory and it will run your tests:
 $ pytest
 
 ================ test session starts ================
-platform linux -- Python 3.6.9, pytest-5.3.5, py-1.8.1, pluggy-0.13.1
+platform linux -- Python 3.10, pytest-5.3.5, py-1.8.1, pluggy-0.13.1
 rootdir: /home/user/code/superawesome-cli/app
 plugins: forked-1.1.3, xdist-1.31.0, cov-2.8.1
 collected 1 item
@@ -103,9 +117,27 @@ test_main.py <span style="color: green; white-space: pre;">.                    
 
 If you have a CLI with prompts, like:
 
-```Python hl_lines="7"
-{!../docs_src/testing/app02/main.py!}
+//// tab | Python 3.7+
+
+```Python hl_lines="8"
+{!> ../docs_src/testing/app02_an/main.py!}
 ```
+
+////
+
+//// tab | Python 3.7+ non-Annotated
+
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
+
+```Python hl_lines="7"
+{!> ../docs_src/testing/app02/main.py!}
+```
+
+////
 
 That you would use like:
 
@@ -125,8 +157,11 @@ You can test the input typed in the terminal using `input="camila@example.com\n"
 
 This is because what you type in the terminal goes to "**standard input**" and is handled by the operating system as if it was a "virtual file".
 
-!!! info
-    If you need a refresher about what is "standard output", "standard error", and "standard input" check the section in [Printing and Colors: "Standard Output" and "Standard Error"](printing.md#standard-output-and-standard-error){.internal-link target=_blank}.
+/// info
+
+If you need a refresher about what is "standard output", "standard error", and "standard input" check the section in [Printing and Colors: "Standard Output" and "Standard Error"](printing.md#standard-output-and-standard-error){.internal-link target=_blank}.
+
+///
 
 When you hit the <kbd>ENTER</kbd> key after typing the email, that is just a "new line character". And in Python that is represented with `"\n"`.
 

@@ -1,17 +1,17 @@
-import enum
-import logging
+from enum import Enum
+from typing import List
 
 import typer
 
 
-class LogLevel(enum.Enum):
-    debug = logging.DEBUG
-    info = logging.INFO
-    warning = logging.WARNING
+class Food(str, Enum):
+    food_1 = "Eggs"
+    food_2 = "Bacon"
+    food_3 = "Cheese"
 
 
-def main(log_level: LogLevel = typer.Option(LogLevel.warning, names=True)):
-    typer.echo(f"Log level set to: {logging.getLevelName(log_level.value)}")
+def main(groceries: List[Food] = typer.Option([Food.food_1, Food.food_3])):
+    print(f"Buying groceries: {', '.join([f.value for f in groceries])}")
 
 
 if __name__ == "__main__":
