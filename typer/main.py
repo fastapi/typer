@@ -672,6 +672,7 @@ def generate_enum_name_convertor(enum: Type[Enum]) -> Callable[..., Any]:
 
     return convertor
 
+
 def get_callback(
     *,
     callback: Optional[Callable[..., Any]] = None,
