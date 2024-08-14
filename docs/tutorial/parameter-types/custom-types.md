@@ -1,3 +1,5 @@
+# Custom Types
+
 You can easily use your own custom types in your **Typer** applications.
 
 The way to do it is by providing a way to <abbr title="convert from some plain format, like the input text in the CLI, into Python objects">parse</abbr> input into your own types.

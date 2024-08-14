@@ -110,4 +110,6 @@ async function main() {
     setupTermynal()
 }
 
-main()
+document$.subscribe(() => {
+    main()
+})

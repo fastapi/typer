@@ -1,3 +1,5 @@
+# Using Click
+
 /// warning
 
 This is a more advanced topic, if you are starting with **Typer**, feel free to skip it.

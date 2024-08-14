@@ -1,3 +1,5 @@
+# Development - Contributing
+
 First, you might want to see the basic ways to [help Typer and get help](help-typer.md){.internal-link target=_blank}.
 
 ## Developing

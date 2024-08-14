@@ -39,7 +39,7 @@ dependencies = [
 readme = "README.md"
 [project.urls]
 Documentation = "https://typer.tiangolo.com/"
-homepage = "https://github.com/tiangolo/typer"
+homepage = "https://github.com/fastapi/typer"
 
 [project.optional-dependencies]
 standard = [

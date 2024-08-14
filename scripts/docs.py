@@ -7,10 +7,6 @@ from http.server import HTTPServer, SimpleHTTPRequestHandler
 from importlib import metadata
 from pathlib import Path
 
-import mkdocs.commands.build
-import mkdocs.commands.serve
-import mkdocs.config
-import mkdocs.utils
 import typer
 
 logging.basicConfig(level=logging.INFO)
@@ -88,7 +84,7 @@ def verify_readme() -> None:
 
 
 @app.command()
-def live() -> None:
+def live(dirty: bool = False) -> None:
     """
     Serve with livereload a docs site for a specific language.
 
@@ -99,8 +95,10 @@ def live() -> None:
     en.
     """
     # Enable line numbers during local development to make it easier to highlight
-    os.environ["LINENUMS"] = "true"
-    mkdocs.commands.serve.serve(dev_addr="127.0.0.1:8008")
+    args = ["mkdocs", "serve", "--dev-addr", "127.0.0.1:8008"]
+    if dirty:
+        args.append("--dirty")
+    subprocess.run(args, env={**os.environ, "LINENUMS": "true"}, check=True)
 
 
 @app.command()

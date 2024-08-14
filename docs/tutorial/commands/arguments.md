@@ -1,3 +1,5 @@
+# Command CLI Arguments
+
 The same way as with a CLI application with a single command, subcommands (or just "commands") can also have their own *CLI arguments*:
 
 ```Python hl_lines="7  12"

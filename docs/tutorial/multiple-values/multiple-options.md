@@ -1,3 +1,5 @@
+# Multiple CLI Options
+
 You can declare a *CLI option* that can be used multiple times, and then get all the values.
 
 For example, let's say you want to accept several users in a single execution.

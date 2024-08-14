@@ -1,3 +1,5 @@
+# Add Typer
+
 We'll start with the core idea.
 
 To add a `typer.Typer()` app inside of another.

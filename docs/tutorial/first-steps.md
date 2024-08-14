@@ -1,3 +1,5 @@
+# First Steps
+
 ## The simplest example
 
 The simplest **Typer** file could look like this:

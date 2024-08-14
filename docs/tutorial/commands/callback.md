@@ -1,3 +1,5 @@
+# Typer Callback
+
 When you create an `app = typer.Typer()` it works as a group of commands.
 
 And you can create multiple commands with it.

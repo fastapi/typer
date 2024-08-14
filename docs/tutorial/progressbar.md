@@ -1,3 +1,5 @@
+# Progress Bar
+
 If you are executing an operation that can take some time, you can inform it to the user. 🤓
 
 ## Progress Bar

@@ -1,3 +1,5 @@
+# Password CLI Option and Confirmation Prompt
+
 Apart from having a prompt, you can make a *CLI option* have a `confirmation_prompt=True`:
 
 //// tab | Python 3.7+

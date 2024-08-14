@@ -1,3 +1,5 @@
+# Enum - Choices
+
 To define a *CLI parameter* that can take a value from a predefined set of values you can use a standard Python <a href="https://docs.python.org/3/library/enum.html" class="external-link" target="_blank">`enum.Enum`</a>:
 
 ```Python hl_lines="1  6 7 8 9  12 13"
