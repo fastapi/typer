@@ -1,6 +1,7 @@
 import os
 import subprocess
 import sys
+import typing
 from pathlib import Path
 from unittest import mock
 
@@ -9,8 +10,9 @@ import pytest
 import shellingham
 import typer
 import typer.completion
+from typer.core import _split_opt
 from typer.main import solve_typer_info_defaults, solve_typer_info_help
-from typer.models import TyperInfo
+from typer.models import ParameterInfo, TyperInfo
 from typer.testing import CliRunner
 
 runner = CliRunner()
@@ -26,6 +28,50 @@ def test_defaults_from_info():
     # Mainly for coverage/completeness
     value = solve_typer_info_defaults(TyperInfo())
     assert value
+
+
+def test_too_many_parsers():
+    def custom_parser(value: str) -> int:
+        return int(value)  # pragma: no cover
+
+    class CustomClickParser(click.ParamType):
+        name = "custom_parser"
+
+        def convert(
+            self,
+            value: str,
+            param: typing.Optional[click.Parameter],
+            ctx: typing.Optional[click.Context],
+        ) -> typing.Any:
+            return int(value)  # pragma: no cover
+
+    expected_error = (
+        "Multiple custom type parsers provided. "
+        "`parser` and `click_type` may not both be provided."
+    )
+
+    with pytest.raises(ValueError, match=expected_error):
+        ParameterInfo(parser=custom_parser, click_type=CustomClickParser())
+
+
+def test_valid_parser_permutations():
+    def custom_parser(value: str) -> int:
+        return int(value)  # pragma: no cover
+
+    class CustomClickParser(click.ParamType):
+        name = "custom_parser"
+
+        def convert(
+            self,
+            value: str,
+            param: typing.Optional[click.Parameter],
+            ctx: typing.Optional[click.Context],
+        ) -> typing.Any:
+            return int(value)  # pragma: no cover
+
+    ParameterInfo()
+    ParameterInfo(parser=custom_parser)
+    ParameterInfo(click_type=CustomClickParser())
 
 
 def test_install_invalid_shell():
@@ -48,11 +94,11 @@ def test_callback_too_many_parameters():
     app = typer.Typer()
 
     def name_callback(ctx, param, val1, val2):
-        pass  # pragma: nocover
+        pass  # pragma: no cover
 
     @app.command()
     def main(name: str = typer.Option(..., callback=name_callback)):
-        pass  # pragma: nocover
+        pass  # pragma: no cover
 
     with pytest.raises(click.ClickException) as exc_info:
         runner.invoke(app, ["--name", "Camila"])
@@ -99,30 +145,23 @@ def test_completion_untyped_parameters():
     file_path = Path(__file__).parent / "assets/completion_no_types.py"
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", str(file_path)],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
         env={
             **os.environ,
             "_COMPLETION_NO_TYPES.PY_COMPLETE": "complete_zsh",
             "_TYPER_COMPLETE_ARGS": "completion_no_types.py --name Sebastian --name Ca",
-            "_TYPER_COMPLETE_TESTING": "True",
         },
     )
     assert "info name is: completion_no_types.py" in result.stderr
-    # TODO: when deprecating Click 7, remove second option
-    assert (
-        "args is: []" in result.stderr
-        or "args is: ['--name', 'Sebastian', '--name']" in result.stderr
-    )
+    assert "args is: []" in result.stderr
     assert "incomplete is: Ca" in result.stderr
     assert '"Camila":"The reader of books."' in result.stdout
     assert '"Carlos":"The writer of scripts."' in result.stdout
 
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", str(file_path)],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
     )
     assert "Hello World" in result.stdout
@@ -132,30 +171,23 @@ def test_completion_untyped_parameters_different_order_correct_names():
     file_path = Path(__file__).parent / "assets/completion_no_types_order.py"
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", str(file_path)],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
         env={
             **os.environ,
             "_COMPLETION_NO_TYPES_ORDER.PY_COMPLETE": "complete_zsh",
             "_TYPER_COMPLETE_ARGS": "completion_no_types_order.py --name Sebastian --name Ca",
-            "_TYPER_COMPLETE_TESTING": "True",
         },
     )
     assert "info name is: completion_no_types_order.py" in result.stderr
-    # TODO: when deprecating Click 7, remove second option
-    assert (
-        "args is: []" in result.stderr
-        or "args is: ['--name', 'Sebastian', '--name']" in result.stderr
-    )
+    assert "args is: []" in result.stderr
     assert "incomplete is: Ca" in result.stderr
     assert '"Camila":"The reader of books."' in result.stdout
     assert '"Carlos":"The writer of scripts."' in result.stdout
 
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", str(file_path)],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
     )
     assert "Hello World" in result.stdout
@@ -165,11 +197,11 @@ def test_autocompletion_too_many_parameters():
     app = typer.Typer()
 
     def name_callback(ctx, args, incomplete, val2):
-        pass  # pragma: nocover
+        pass  # pragma: no cover
 
     @app.command()
     def main(name: str = typer.Option(..., autocompletion=name_callback)):
-        pass  # pragma: nocover
+        pass  # pragma: no cover
 
     with pytest.raises(click.ClickException) as exc_info:
         runner.invoke(app, ["--name", "Camila"])
@@ -188,12 +220,8 @@ def test_forward_references():
         print(f"arg5: {type(arg5)} {arg5}")
 
     result = runner.invoke(app, ["Hello", "2", "invalid"])
-    # TODO: when deprecating Click 7, remove second option
 
-    assert (
-        "Invalid value for 'ARG3': 'invalid' is not a valid integer" in result.stdout
-        or "Invalid value for 'ARG3': invalid is not a valid integer" in result.stdout
-    )
+    assert "Invalid value for 'ARG3': 'invalid' is not a valid integer" in result.stdout
     result = runner.invoke(app, ["Hello", "2", "3", "--arg4", "--arg5"])
     assert (
         "arg1: <class 'str'> Hello\narg2: <class 'int'> 2\narg3: <class 'int'> 3\narg4: <class 'bool'> True\narg5: <class 'bool'> True\n"
@@ -202,11 +230,29 @@ def test_forward_references():
 
 
 def test_context_settings_inheritance_single_command():
-    app = typer.Typer(context_settings=dict(help_option_names=["-h", "--help"]))
+    app = typer.Typer(context_settings={"help_option_names": ["-h", "--help"]})
 
     @app.command()
     def main(name: str):
-        pass  # pragma: nocover
+        pass  # pragma: no cover
 
     result = runner.invoke(app, ["main", "-h"])
     assert "Show this message and exit." in result.stdout
+
+
+def test_split_opt():
+    prefix, opt = _split_opt("--verbose")
+    assert prefix == "--"
+    assert opt == "verbose"
+
+    prefix, opt = _split_opt("//verbose")
+    assert prefix == "//"
+    assert opt == "verbose"
+
+    prefix, opt = _split_opt("-verbose")
+    assert prefix == "-"
+    assert opt == "verbose"
+
+    prefix, opt = _split_opt("verbose")
+    assert prefix == ""
+    assert opt == "verbose"

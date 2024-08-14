@@ -18,20 +18,14 @@ app.command()(mod.main)
 def test_completion_install_no_shell():
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--install-completion"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
         env={
             **os.environ,
-            "_TYPER_COMPLETE_TESTING": "True",
             "_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION": "True",
         },
     )
-    # TODO: when deprecating Click 7, remove second option
-    assert (
-        "Option '--install-completion' requires an argument" in result.stderr
-        or "--install-completion option requires an argument" in result.stderr
-    )
+    assert "Option '--install-completion' requires an argument" in result.stderr
 
 
 def test_completion_install_bash():
@@ -49,20 +43,18 @@ def test_completion_install_bash():
             "--install-completion",
             "bash",
         ],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
         env={
             **os.environ,
-            "_TYPER_COMPLETE_TESTING": "True",
             "_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION": "True",
         },
     )
     new_text = bash_completion_path.read_text()
     bash_completion_path.write_text(text)
-    install_source = ".bash_completions/tutorial001.py.sh"
-    assert install_source not in text
-    assert install_source in new_text
+    install_source = Path(".bash_completions/tutorial001.py.sh")
+    assert str(install_source) not in text
+    assert str(install_source) in new_text
     assert "completion installed in" in result.stdout
     assert "Completion will take effect once you restart the terminal" in result.stdout
     install_source_path = Path.home() / install_source
@@ -78,7 +70,7 @@ def test_completion_install_bash():
 def test_completion_install_zsh():
     completion_path: Path = Path.home() / ".zshrc"
     text = ""
-    if not completion_path.is_file():  # pragma: nocover
+    if not completion_path.is_file():  # pragma: no cover
         completion_path.write_text('echo "custom .zshrc"')
     if completion_path.is_file():
         text = completion_path.read_text()
@@ -92,12 +84,10 @@ def test_completion_install_zsh():
             "--install-completion",
             "zsh",
         ],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
         env={
             **os.environ,
-            "_TYPER_COMPLETE_TESTING": "True",
             "_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION": "True",
         },
     )
@@ -129,12 +119,10 @@ def test_completion_install_fish():
             "--install-completion",
             "fish",
         ],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
         env={
             **os.environ,
-            "_TYPER_COMPLETE_TESTING": "True",
             "_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION": "True",
         },
     )
@@ -152,11 +140,11 @@ app.command()(mod.main)
 
 def test_completion_install_powershell():
     completion_path: Path = (
-        Path.home() / f".config/powershell/Microsoft.PowerShell_profile.ps1"
+        Path.home() / ".config/powershell/Microsoft.PowerShell_profile.ps1"
     )
     completion_path_bytes = f"{completion_path}\n".encode("windows-1252")
     text = ""
-    if completion_path.is_file():  # pragma: nocover
+    if completion_path.is_file():  # pragma: no cover
         text = completion_path.read_text()
 
     with mock.patch.object(
