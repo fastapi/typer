@@ -39,7 +39,7 @@ dependencies = [
 readme = "README.md"
 [project.urls]
 Homepage = "https://github.com/fastapi/typer"
-Documentation = "https://typer.tiangolo.com/"
+Documentation = "https://typer.tiangolo.com"
 Repository = "https://github.com/fastapi/typer"
 Issues = "https://github.com/fastapi/typer/issues"
 Changelog = "https://typer.tiangolo.com/release-notes/"
