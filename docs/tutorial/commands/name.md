@@ -1,3 +1,5 @@
+# Custom Command Name
+
 By default, the command names are generated from the function name.
 
 So, if your function is something like:

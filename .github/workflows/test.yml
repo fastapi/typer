@@ -44,7 +44,7 @@ jobs:
           # Issue ref: https://github.com/actions/setup-python/issues/436
           # cache: "pip"
           # cache-dependency-path: pyproject.toml
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         if: ${{ runner.os != 'macOS' }}
         id: cache
         with:

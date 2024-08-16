@@ -5,14 +5,14 @@
     <em>Typer, build great CLIs. Easy to code. Based on Python type hints.</em>
 </p>
 <p align="center">
-<a href="https://github.com/tiangolo/typer/actions?query=workflow%3ATest" target="_blank">
-    <img src="https://github.com/tiangolo/typer/workflows/Test/badge.svg" alt="Test">
+<a href="https://github.com/fastapi/typer/actions?query=workflow%3ATest" target="_blank">
+    <img src="https://github.com/fastapi/typer/workflows/Test/badge.svg" alt="Test">
 </a>
-<a href="https://github.com/tiangolo/typer/actions?query=workflow%3APublish" target="_blank">
-    <img src="https://github.com/tiangolo/typer/workflows/Publish/badge.svg" alt="Publish">
+<a href="https://github.com/fastapi/typer/actions?query=workflow%3APublish" target="_blank">
+    <img src="https://github.com/fastapi/typer/workflows/Publish/badge.svg" alt="Publish">
 </a>
-<a href="https://coverage-badge.samuelcolvin.workers.dev/redirect/tiangolo/typer" target="_blank">
-    <img src="https://coverage-badge.samuelcolvin.workers.dev/tiangolo/typer.svg" alt="Coverage">
+<a href="https://coverage-badge.samuelcolvin.workers.dev/redirect/fastapi/typer" target="_blank">
+    <img src="https://coverage-badge.samuelcolvin.workers.dev/fastapi/typer.svg" alt="Coverage">
 <a href="https://pypi.org/project/typer" target="_blank">
     <img src="https://img.shields.io/pypi/v/typer?color=%2334D058&label=pypi%20package" alt="Package version">
 </a>
@@ -22,7 +22,7 @@
 
 **Documentation**: <a href="https://typer.tiangolo.com" target="_blank">https://typer.tiangolo.com/tutorial/typer-command/</a>
 
-**Source Code**: <a href="https://github.com/tiangolo/typer" target="_blank">https://github.com/tiangolo/typer</a>
+**Source Code**: <a href="https://github.com/fastapi/typer" target="_blank">https://github.com/fastapi/typer</a>
 
 ---
 
