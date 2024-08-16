@@ -4,5 +4,5 @@ set -e
 set -x
 
 mypy typer
-black typer tests docs_src --check
-isort typer tests docs_src --check-only
+ruff check typer tests docs_src scripts
+ruff format typer tests docs_src scripts --check

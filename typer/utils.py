@@ -1,8 +1,9 @@
 import inspect
+import sys
 from copy import copy
-from typing import Any, Callable, Dict, List, Tuple, Type, cast, get_type_hints
+from typing import Any, Callable, Dict, List, Tuple, Type, cast
 
-from typing_extensions import Annotated
+from typing_extensions import Annotated, get_type_hints
 
 from ._typing import get_args, get_origin
 from .models import ArgumentInfo, OptionInfo, ParameterInfo, ParamMeta
@@ -106,7 +107,11 @@ def _split_annotation_from_typer_annotations(
 
 
 def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
-    signature = inspect.signature(func)
+    if sys.version_info >= (3, 10):
+        signature = inspect.signature(func, eval_str=True)
+    else:
+        signature = inspect.signature(func)
+
     type_hints = get_type_hints(func)
     params = {}
     for param in signature.parameters.values():

@@ -10,7 +10,7 @@ class NeuralNetwork(str, Enum):
 
 
 def main(
-    network: NeuralNetwork = typer.Option(NeuralNetwork.simple, case_sensitive=False)
+    network: NeuralNetwork = typer.Option(NeuralNetwork.simple, case_sensitive=False),
 ):
     print(f"Training neural network of type: {network.value}")
 

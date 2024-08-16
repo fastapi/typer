@@ -26,7 +26,7 @@ def delete(
 def delete_all(
     force: Annotated[
         bool, typer.Option(prompt="Are you sure you want to delete ALL users?")
-    ]
+    ],
 ):
     if force:
         print("Deleting all users")
