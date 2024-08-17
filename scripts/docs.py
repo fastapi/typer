@@ -78,7 +78,7 @@ def verify_readme() -> None:
 
 
 @app.command()
-def live() -> None:
+def live(dirty: bool = False) -> None:
     """
     Serve with livereload a docs site for a specific language.
 
@@ -89,11 +89,10 @@ def live() -> None:
     en.
     """
     # Enable line numbers during local development to make it easier to highlight
-    subprocess.run(
-        ["mkdocs", "serve", "--dev-addr", "127.0.0.1:8008", "--dirty"],
-        env={**os.environ, "LINENUMS": "true"},
-        check=True,
-    )
+    args = ["mkdocs", "serve", "--dev-addr", "127.0.0.1:8008"]
+    if dirty:
+        args.append("--dirty")
+    subprocess.run(args, env={**os.environ, "LINENUMS": "true"}, check=True)
 
 
 @app.command()
