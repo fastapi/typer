@@ -128,12 +128,16 @@ def install_zsh(*, prog_name: str, complete_var: str, shell: str) -> Path:
     zshrc_content = ""
     if zshrc_path.is_file():
         zshrc_content = zshrc_path.read_text()
-    if "autoload -Uz compinit" not in zshrc_content:  # pragma: nocover
-        zshrc_content += "\nautoload -Uz compinit"
-    if "fpath+=~/.zfunc" not in zshrc_content:  # pragma: nocover
-        zshrc_content += "\nfpath+=~/.zfunc\ncompinit"
-    if zshrc_content[-1] != "\n":
-        zshrc_content += "\n"
+    completion_line = "fpath+=~/.zfunc; autoload -Uz compinit; compinit"
+    if completion_line not in zshrc_content:
+        zshrc_content += f"\n{completion_line}\n"
+    style_line = "zstyle ':completion:*' menu select"
+    # TODO: consider setting the style only for the current program
+    # style_line = f"zstyle ':completion:*:*:{prog_name}:*' menu select"
+    # Install zstyle completion config only if the user doesn't have a customization
+    if "zstyle" not in zshrc_content:
+        zshrc_content += f"\n{style_line}\n"
+    zshrc_content = f"{zshrc_content.strip()}\n"
     zshrc_path.write_text(zshrc_content)
     # Install completion under ~/.zfunc/
     path_obj = Path.home() / f".zfunc/_{prog_name}"
