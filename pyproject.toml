@@ -133,6 +133,7 @@ omit = [
     "typer/_typing.py"
 ]
 context = '${CONTEXT}'
+dynamic_context = "test_function"
 relative_files = true
 
 [tool.coverage.report]
