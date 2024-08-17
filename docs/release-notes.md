@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.12.4
+
 ### Features
 
 * ✨ Add support for Python 3.12, tests in CI and official marker. PR [#807](https://github.com/tiangolo/typer/pull/807) by [@ivantodorovich](https://github.com/ivantodorovich).
