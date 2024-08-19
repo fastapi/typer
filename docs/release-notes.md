@@ -2,9 +2,26 @@
 
 ## Latest Changes
 
+### Internal
+
+* 🙈 Remove extra line in .gitignore. PR [#936](https://github.com/fastapi/typer/pull/936) by [@tiangolo](https://github.com/tiangolo).
+* ⬆ Update pytest-cov requirement from <5.0.0,>=2.10.0 to >=2.10.0,<6.0.0. PR [#844](https://github.com/fastapi/typer/pull/844) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pypa/gh-action-pypi-publish from 1.8.11 to 1.9.0. PR [#865](https://github.com/fastapi/typer/pull/865) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Update pytest requirement from <8.0.0,>=4.4.0 to >=4.4.0,<9.0.0. PR [#915](https://github.com/fastapi/typer/pull/915) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Update pytest-sugar requirement from <0.10.0,>=0.9.4 to >=0.9.4,<1.1.0. PR [#841](https://github.com/fastapi/typer/pull/841) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
+## 0.12.4
+
 ### Features
 
 * ✨ Add support for Python 3.12, tests in CI and official marker. PR [#807](https://github.com/tiangolo/typer/pull/807) by [@ivantodorovich](https://github.com/ivantodorovich).
+
+### Fixes
+
+* 🐛 Fix support for `UnionType` (e.g. `str | None`) with Python 3.11. PR [#548](https://github.com/fastapi/typer/pull/548) by [@jonaslb](https://github.com/jonaslb).
+* 🐛 Fix `zsh` autocompletion installation. PR [#237](https://github.com/fastapi/typer/pull/237) by [@alexjurkiewicz](https://github.com/alexjurkiewicz).
+* 🐛 Fix usage of `Annotated` with future annotations in Python 3.7+. PR [#814](https://github.com/fastapi/typer/pull/814) by [@ivantodorovich](https://github.com/ivantodorovich).
+* 🐛 Fix `shell_complete` not working for Arguments. PR [#737](https://github.com/fastapi/typer/pull/737) by [@bckohan](https://github.com/bckohan).
 
 ### Docs
 
