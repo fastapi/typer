@@ -7,6 +7,8 @@ import pytest
 import typer
 from typer.testing import CliRunner
 
+from .utils import needs_py310
+
 runner = CliRunner()
 
 
@@ -15,6 +17,26 @@ def test_optional():
 
     @app.command()
     def opt(user: Optional[str] = None):
+        if user:
+            print(f"User: {user}")
+        else:
+            print("No user")
+
+    result = runner.invoke(app)
+    assert result.exit_code == 0
+    assert "No user" in result.output
+
+    result = runner.invoke(app, ["--user", "Camila"])
+    assert result.exit_code == 0
+    assert "User: Camila" in result.output
+
+
+@needs_py310
+def test_union_type_optional():
+    app = typer.Typer()
+
+    @app.command()
+    def opt(user: str | None = None):
         if user:
             print(f"User: {user}")
         else:

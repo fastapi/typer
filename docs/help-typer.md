@@ -22,13 +22,13 @@ You can subscribe to the (infrequent) [**FastAPI and friends** newsletter](/news
 
 ## Star **Typer** in GitHub
 
-You can "star" Typer in GitHub (clicking the star button at the top right): <a href="https://github.com/tiangolo/typer" class="external-link" target="_blank">https://github.com/tiangolo/typer</a>.
+You can "star" Typer in GitHub (clicking the star button at the top right): <a href="https://github.com/fastapi/typer" class="external-link" target="_blank">https://github.com/fastapi/typer</a>.
 
 By adding a star, other users will be able to find it more easily and see that it has been already useful for others.
 
 ## Watch the GitHub repository for releases
 
-You can "watch" Typer in GitHub (clicking the "watch" button at the top right): <a href="https://github.com/tiangolo/typer" class="external-link" target="_blank">https://github.com/tiangolo/typer</a>.
+You can "watch" Typer in GitHub (clicking the "watch" button at the top right): <a href="https://github.com/fastapi/typer" class="external-link" target="_blank">https://github.com/fastapi/typer</a>.
 
 There you can select "Releases only".
 
@@ -54,7 +54,7 @@ You can:
 
 ## Tweet about **Typer**
 
-<a href="https://twitter.com/compose/tweet?text=I'm loving Typer because... https://github.com/tiangolo/typer cc @tiangolo" class="external-link" target="_blank">Tweet about **Typer**</a> and let me and others know why you like it.
+<a href="https://twitter.com/compose/tweet?text=I'm loving Typer because... https://github.com/fastapi/typer cc @tiangolo" class="external-link" target="_blank">Tweet about **Typer**</a> and let me and others know why you like it.
 
 I love to hear about how **Typer** is being used, what have you liked in it, in which project/company you are using it, etc.
 
@@ -62,8 +62,8 @@ I love to hear about how **Typer** is being used, what have you liked in it, in 
 
 You can try and help others with their questions in:
 
-* <a href="https://github.com/tiangolo/typer/discussions/categories/questions?discussions_q=category%3AQuestions+is%3Aunanswered" class="external-link" target="_blank">GitHub Discussions</a>
-* <a href="https://github.com/tiangolo/typer/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3Aquestion+-label%3Aanswered+" class="external-link" target="_blank">GitHub Issues</a>
+* <a href="https://github.com/fastapi/typer/discussions/categories/questions?discussions_q=category%3AQuestions+is%3Aunanswered" class="external-link" target="_blank">GitHub Discussions</a>
+* <a href="https://github.com/fastapi/typer/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3Aquestion+-label%3Aanswered+" class="external-link" target="_blank">GitHub Issues</a>
 
 In many cases you might already know the answer for those questions. 🤓
 
@@ -112,7 +112,7 @@ If they reply, there's a high chance you would have solved their problem, congra
 
 ## Watch the GitHub repository
 
-You can "watch" Typer in GitHub (clicking the "watch" button at the top right): <a href="https://github.com/tiangolo/typer" class="external-link" target="_blank">https://github.com/tiangolo/typer</a>.
+You can "watch" Typer in GitHub (clicking the "watch" button at the top right): <a href="https://github.com/fastapi/typer" class="external-link" target="_blank">https://github.com/fastapi/typer</a>.
 
 If you select "Watching" instead of "Releases only" you will receive notifications when someone creates a new issue or question. You can also specify that you only want to be notified about new issues, or discussions, or PRs, etc.
 
@@ -120,7 +120,7 @@ Then you can try and help them solve those questions.
 
 ## Ask Questions
 
-You can <a href="https://github.com/tiangolo/typer/discussions/new?category=questions" class="external-link" target="_blank">create a new question</a> in the GitHub repository, for example to:
+You can <a href="https://github.com/fastapi/typer/discussions/new?category=questions" class="external-link" target="_blank">create a new question</a> in the GitHub repository, for example to:
 
 * Ask a **question** or ask about a **problem**.
 * Suggest a new **feature**.
@@ -214,7 +214,7 @@ Join the 👥 <a href="https://discord.gg/VQjSZaeJmf" class="external-link" targ
 
 /// tip
 
-For questions, ask them in <a href="https://github.com/tiangolo/typer/discussions/new?category=questions" class="external-link" target="_blank">GitHub Discussions</a>, there's a much better chance you will receive help there.
+For questions, ask them in <a href="https://github.com/fastapi/typer/discussions/new?category=questions" class="external-link" target="_blank">GitHub Discussions</a>, there's a much better chance you will receive help there.
 
 Use the chat only for other general conversations.
 
