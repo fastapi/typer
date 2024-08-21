@@ -738,3 +738,9 @@ class TyperGroup(click.core.Group):
             ctx=ctx,
             markup_mode=self.rich_markup_mode,
         )
+
+    def list_commands(self, ctx: click.Context) -> list[str]:
+        """Returns a list of subcommand names.
+         Note that in Click's Group class, these are sorted.
+         In Typer, we wish to maintain the original order of creation (cf Issue #933)"""
+        return self.commands
