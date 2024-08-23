@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Docs
+
+* 📝 Add docs for virtual environments, environment variables, and update contributing. PR [#946](https://github.com/fastapi/typer/pull/946) by [@tiangolo](https://github.com/tiangolo).
+
 ### Internal
 
 * 🙈 Remove extra line in .gitignore. PR [#936](https://github.com/fastapi/typer/pull/936) by [@tiangolo](https://github.com/tiangolo).
