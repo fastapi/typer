@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   issue-manager:
-    if: github.repository_owner == 'tiangolo'
+    if: github.repository_owner == 'fastapi'
     runs-on: ubuntu-latest
     steps:
       - name: Dump GitHub context
