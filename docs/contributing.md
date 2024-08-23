@@ -8,7 +8,7 @@ If you already cloned the <a href="https://github.com/fastapi/typer" class="exte
 
 ### Virtual Environment
 
-Follow the instructions to create and activate a [virtual environment](virtual-environments.md){.internal-link target=_blank} for the internal code of `fastapi`.
+Follow the instructions to create and activate a [virtual environment](virtual-environments.md){.internal-link target=_blank} for the internal code of `typer`.
 
 ### Install Requirements Using `pip`
 
