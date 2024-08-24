@@ -1,0 +1,7 @@
+services:
+  typer:
+    build: .
+    volumes:
+      - ../../:/code
+    working_dir: /code
+    command: sleep infinity
