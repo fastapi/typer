@@ -246,5 +246,5 @@ Check it:
 <div class="use-termynal">
 <span data-ty="input">python main.py</span>
 <span data-ty="progress" data-ty-prompt="Batches"></span>
-<span data-ty>Processed 100 things in batches.</span>
+<span data-ty>Processed 1000 things in batches.</span>
 </div>
