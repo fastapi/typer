@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Features
+
+* 🚸 Improve assertion error message if a group is not a valid subclass. PR [#425](https://github.com/fastapi/typer/pull/425) by [@chrisburr](https://github.com/chrisburr).
+
 ### Docs
 
 * 📝 Update the Progress Bar tutorial with correct output. PR [#199](https://github.com/fastapi/typer/pull/199) by [@n1ckdm](https://github.com/n1ckdm).
