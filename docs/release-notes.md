@@ -12,6 +12,7 @@
 
 ### Docs
 
+* ♻️ Use F-strings in Click examples in docs. PR [#891](https://github.com/fastapi/typer/pull/891) by [@svlandeg](https://github.com/svlandeg).
 * 📝Add missing `main.py` in tutorial on CLI option names. PR [#868](https://github.com/fastapi/typer/pull/868) by [@fsramalho](https://github.com/fsramalho).
 * 📝 Fix broken link. PR [#835](https://github.com/fastapi/typer/pull/835) by [@OhioDschungel6](https://github.com/OhioDschungel6).
 * 📝 Update package docs with the latest versions of Typer and Poetry. PR [#781](https://github.com/fastapi/typer/pull/781) by [@kinuax](https://github.com/kinuax).
