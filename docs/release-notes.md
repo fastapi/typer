@@ -25,6 +25,7 @@
 
 ### Internal
 
+* ⬆ Bump mkdocs-material from 9.5.18 to 9.5.33. PR [#945](https://github.com/fastapi/typer/pull/945) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pillow from 10.3.0 to 10.4.0. PR [#939](https://github.com/fastapi/typer/pull/939) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * 👷 Fix issue-manager. PR [#948](https://github.com/fastapi/typer/pull/948) by [@tiangolo](https://github.com/tiangolo).
 * 🙈 Remove extra line in .gitignore. PR [#936](https://github.com/fastapi/typer/pull/936) by [@tiangolo](https://github.com/tiangolo).
