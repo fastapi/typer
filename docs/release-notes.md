@@ -6,6 +6,10 @@
 
 * 🚸 Improve assertion error message if a group is not a valid subclass. PR [#425](https://github.com/fastapi/typer/pull/425) by [@chrisburr](https://github.com/chrisburr).
 
+### Refactors
+
+* 🔥 Clean up redundant code. PR [#858](https://github.com/fastapi/typer/pull/858) by [@svlandeg](https://github.com/svlandeg).
+
 ### Docs
 
 * 📝 Fix broken link. PR [#835](https://github.com/fastapi/typer/pull/835) by [@OhioDschungel6](https://github.com/OhioDschungel6).
