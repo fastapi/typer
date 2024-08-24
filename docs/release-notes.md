@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.12.5
+
 ### Features
 
 * 💄 Unify the width of the Rich console for help and errors. PR [#788](https://github.com/fastapi/typer/pull/788) by [@racinmat](https://github.com/racinmat).
