@@ -15,7 +15,14 @@ import click
 
 from ._typing import get_args, get_origin, is_union
 from .completion import get_completion_inspect_parameters
-from .core import MarkupMode, TyperArgument, TyperCommand, TyperGroup, TyperOption
+from .core import (
+    DEFAULT_MARKUP_MODE,
+    MarkupMode,
+    TyperArgument,
+    TyperCommand,
+    TyperGroup,
+    TyperOption,
+)
 from .models import (
     AnyType,
     ArgumentInfo,
@@ -137,7 +144,7 @@ class Typer:
         deprecated: bool = Default(False),
         add_completion: bool = True,
         # Rich settings
-        rich_markup_mode: MarkupMode = None,
+        rich_markup_mode: MarkupMode = Default(DEFAULT_MARKUP_MODE),
         rich_help_panel: Union[str, None] = Default(None),
         pretty_exceptions_enable: bool = True,
         pretty_exceptions_show_locals: bool = True,
