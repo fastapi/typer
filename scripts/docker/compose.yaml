@@ -1,7 +1,8 @@
 services:
   typer:
-    build: .
+    build:
+      context: ../../
+      dockerfile: scripts/docker/Dockerfile
     volumes:
       - ../../:/code
-    working_dir: /code
     command: sleep infinity
