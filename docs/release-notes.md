@@ -8,6 +8,7 @@
 
 ### Docs
 
+* 📝 Fix broken link. PR [#835](https://github.com/fastapi/typer/pull/835) by [@OhioDschungel6](https://github.com/OhioDschungel6).
 * 📝 Update package docs with the latest versions of Typer and Poetry. PR [#781](https://github.com/fastapi/typer/pull/781) by [@kinuax](https://github.com/kinuax).
 * 📝 Update the Progress Bar tutorial with correct output. PR [#199](https://github.com/fastapi/typer/pull/199) by [@n1ckdm](https://github.com/n1ckdm).
 * 📝 Add docs and scripts to test completion in different shells. PR [#953](https://github.com/fastapi/typer/pull/953) by [@tiangolo](https://github.com/tiangolo).
