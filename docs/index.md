@@ -52,6 +52,8 @@ The key features are:
 
 ## Installation
 
+Create and activate a <a href="https://typer.tiangolo.com/virtual-environments/" class="external-link" target="_blank">virtual environment</a> and then install **Typer**:
+
 <div class="termy">
 
 ```console
