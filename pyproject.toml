@@ -29,6 +29,7 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "License :: OSI Approved :: MIT License",
 ]
 dependencies = [
@@ -37,8 +38,11 @@ dependencies = [
 ]
 readme = "README.md"
 [project.urls]
-Documentation = "https://typer.tiangolo.com/"
-homepage = "https://github.com/tiangolo/typer"
+Homepage = "https://github.com/fastapi/typer"
+Documentation = "https://typer.tiangolo.com"
+Repository = "https://github.com/fastapi/typer"
+Issues = "https://github.com/fastapi/typer/issues"
+Changelog = "https://typer.tiangolo.com/release-notes/"
 
 [project.optional-dependencies]
 standard = [
@@ -126,6 +130,7 @@ source = [
     "typer"
 ]
 context = '${CONTEXT}'
+relative_files = true
 
 [tool.coverage.report]
 exclude_lines = [

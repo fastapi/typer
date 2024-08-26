@@ -13,8 +13,16 @@ from uuid import UUID
 
 import click
 
+from ._typing import get_args, get_origin, is_union
 from .completion import get_completion_inspect_parameters
-from .core import MarkupMode, TyperArgument, TyperCommand, TyperGroup, TyperOption
+from .core import (
+    DEFAULT_MARKUP_MODE,
+    MarkupMode,
+    TyperArgument,
+    TyperCommand,
+    TyperGroup,
+    TyperOption,
+)
 from .models import (
     AnyType,
     ArgumentInfo,
@@ -38,10 +46,11 @@ from .utils import get_params_from_function
 
 try:
     import rich
-    from rich.console import Console
     from rich.traceback import Traceback
 
-    console_stderr = Console(stderr=True)
+    from . import rich_utils
+
+    console_stderr = rich_utils._get_rich_console(stderr=True)
 
 except ImportError:  # pragma: no cover
     rich = None  # type: ignore
@@ -69,12 +78,15 @@ def except_hook(
     supress_internal_dir_names = [typer_path, click_path]
     exc = exc_value
     if rich:
+        from .rich_utils import MAX_WIDTH
+
         rich_tb = Traceback.from_exception(
             type(exc),
             exc,
             exc.__traceback__,
             show_locals=exception_config.pretty_exceptions_show_locals,
             suppress=supress_internal_dir_names,
+            width=MAX_WIDTH,
         )
         console_stderr.print(rich_tb)
         return
@@ -132,7 +144,7 @@ class Typer:
         deprecated: bool = Default(False),
         add_completion: bool = True,
         # Rich settings
-        rich_markup_mode: MarkupMode = None,
+        rich_markup_mode: MarkupMode = Default(DEFAULT_MARKUP_MODE),
         rich_help_panel: Union[str, None] = Default(None),
         pretty_exceptions_enable: bool = True,
         pretty_exceptions_show_locals: bool = True,
@@ -435,7 +447,6 @@ def solve_typer_info_help(typer_info: TyperInfo) -> str:
 
 def solve_typer_info_defaults(typer_info: TyperInfo) -> TyperInfo:
     values: Dict[str, Any] = {}
-    name = None
     for name, value in typer_info.__dict__.items():
         # Priority 1: Value was set in app.add_typer()
         if not isinstance(value, DefaultPlaceholder):
@@ -504,7 +515,7 @@ def get_group_from_info(
         context_param_name,
     ) = get_params_convertors_ctx_param_name_from_function(solved_info.callback)
     cls = solved_info.cls or TyperGroup
-    assert issubclass(cls, TyperGroup)
+    assert issubclass(cls, TyperGroup), f"{cls} should be a subclass of {TyperGroup}"
     group = cls(
         name=solved_info.name or "",
         commands=commands,
@@ -815,7 +826,7 @@ def get_click_param(
     else:
         default_value = param.default
         parameter_info = OptionInfo()
-    annotation: Any = Any
+    annotation: Any
     if not param.annotation == param.empty:
         annotation = param.annotation
     else:
@@ -825,30 +836,31 @@ def get_click_param(
     is_tuple = False
     parameter_type: Any = None
     is_flag = None
-    origin = getattr(main_type, "__origin__", None)
+    origin = get_origin(main_type)
+
     if origin is not None:
-        # Handle Optional[SomeType]
-        if origin is Union:
+        # Handle SomeType | None and Optional[SomeType]
+        if is_union(origin):
             types = []
-            for type_ in main_type.__args__:
+            for type_ in get_args(main_type):
                 if type_ is NoneType:
                     continue
                 types.append(type_)
             assert len(types) == 1, "Typer Currently doesn't support Union types"
             main_type = types[0]
-            origin = getattr(main_type, "__origin__", None)
+            origin = get_origin(main_type)
         # Handle Tuples and Lists
         if lenient_issubclass(origin, List):
-            main_type = main_type.__args__[0]
-            assert not getattr(
-                main_type, "__origin__", None
+            main_type = get_args(main_type)[0]
+            assert not get_origin(
+                main_type
             ), "List types with complex sub-types are not currently supported"
             is_list = True
         elif lenient_issubclass(origin, Tuple):  # type: ignore
             types = []
-            for type_ in main_type.__args__:
-                assert not getattr(
-                    type_, "__origin__", None
+            for type_ in get_args(main_type):
+                assert not get_origin(
+                    type_
                 ), "Tuple types with complex sub-types are not currently supported"
                 types.append(
                     get_click_type(annotation=type_, parameter_info=parameter_info)
@@ -865,7 +877,7 @@ def get_click_param(
             convertor=convertor, default_value=default_value
         )
     if is_tuple:
-        convertor = generate_tuple_convertor(main_type.__args__)
+        convertor = generate_tuple_convertor(get_args(main_type))
     if isinstance(parameter_info, OptionInfo):
         if main_type is bool and parameter_info.is_flag is not False:
             is_flag = True
@@ -947,6 +959,7 @@ def get_click_param(
                 expose_value=parameter_info.expose_value,
                 is_eager=parameter_info.is_eager,
                 envvar=parameter_info.envvar,
+                shell_complete=parameter_info.shell_complete,
                 autocompletion=get_param_completion(parameter_info.autocompletion),
                 # Rich settings
                 rich_help_panel=parameter_info.rich_help_panel,
@@ -1019,7 +1032,7 @@ def get_param_completion(
     incomplete_name = None
     unassigned_params = list(parameters.values())
     for param_sig in unassigned_params[:]:
-        origin = getattr(param_sig.annotation, "__origin__", None)
+        origin = get_origin(param_sig.annotation)
         if lenient_issubclass(param_sig.annotation, click.Context):
             ctx_name = param_sig.name
             unassigned_params.remove(param_sig)
