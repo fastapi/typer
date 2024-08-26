@@ -6,7 +6,7 @@ It covers everything you need to know from the **simplest scripts** to **complex
 
 You could consider this a **book**, a **course**, the **official** and recommended way to learn **Typer**. 😎
 
-## Python types
+## Python Types
 
 If you need a refresher about how to use Python type hints, check the first part of <a href="https://fastapi.tiangolo.com/python-types/" class="external-link" target="_blank">FastAPI's Python types intro</a>.
 
@@ -31,17 +31,15 @@ These type hints are what give you autocomplete in your editor and several other
 
 **Typer** is based on these type hints.
 
-## Intro
+## About this Tutorial
 
 This tutorial shows you how to use **Typer** with all its features, step by step.
 
 Each section gradually builds on the previous ones, but it's structured to separate topics, so that you can go directly to any specific one to solve your specific CLI needs.
 
-It is also built to work as a future reference.
+It is also built to work as a future reference so you can come back and see exactly what you need.
 
-So you can come back and see exactly what you need.
-
-## Run the code
+## Run the Code
 
 All the code blocks can be copied and used directly (they are tested Python files).
 
@@ -59,42 +57,8 @@ $ python main.py
 
 It is **HIGHLY encouraged** that you write or copy the code, edit it and run it locally.
 
-Using it in your editor is what really shows you the benefits of **Typer**, seeing how little code you have to write, all the type checks, autocompletion, etc.
+Using it in your editor is what really shows you the benefits of **Typer**, seeing how little code you have to write, all the **inline errors**, **autocompletion**, etc.
 
-And running the examples is what will really help you understand what is going on.
+And running the examples is what will really help you **understand** what is going on.
 
-You can learn a lot more by running some examples and playing around with them than by reading all the docs here.
-
----
-
-## Install **Typer**
-
-The first step is to install **Typer**:
-
-<div class="termy">
-
-```console
-$ pip install typer
----> 100%
-Successfully installed typer click shellingham rich
-```
-
-</div>
-
-By default, `typer` comes with `rich` and `shellingham`.
-
-/// note
-
-If you are an advanced user and want to opt out of these default extra dependencies, you can instead install `typer-slim`.
-
-```bash
-pip install typer
-```
-
-...includes the same optional dependencies as:
-
-```bash
-pip install "typer-slim[standard]"
-```
-
-///
+You can learn a lot more by **running some examples** and **playing around** with them than by reading all the docs here.

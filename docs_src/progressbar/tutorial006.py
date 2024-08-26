@@ -9,6 +9,8 @@ def main():
         for batch in range(4):
             # Fake processing time
             time.sleep(1)
+            # Increment by 250 on each loop iteration
+            # (it will take 4 seconds to reach 1000)
             progress.update(250)
     print(f"Processed {total} things in batches.")
 

@@ -208,7 +208,7 @@ Then you can use more formatting in the docstrings and the `help` parameter for 
 
 /// info
 
-By default, `rich_markup_mode` is `None`, which disables any rich text formatting.
+By default, `rich_markup_mode` is `None` if Rich is not installed, and `"rich"` if it is installed. In the latter case, you can set `rich_markup_mode` to `None` to disable rich text formatting.
 
 ///
 

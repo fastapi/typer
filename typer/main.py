@@ -15,7 +15,14 @@ import click
 
 from ._typing import get_args, get_origin, is_union
 from .completion import get_completion_inspect_parameters
-from .core import MarkupMode, TyperArgument, TyperCommand, TyperGroup, TyperOption
+from .core import (
+    DEFAULT_MARKUP_MODE,
+    MarkupMode,
+    TyperArgument,
+    TyperCommand,
+    TyperGroup,
+    TyperOption,
+)
 from .models import (
     AnyType,
     ArgumentInfo,
@@ -39,10 +46,11 @@ from .utils import get_params_from_function
 
 try:
     import rich
-    from rich.console import Console
     from rich.traceback import Traceback
 
-    console_stderr = Console(stderr=True)
+    from . import rich_utils
+
+    console_stderr = rich_utils._get_rich_console(stderr=True)
 
 except ImportError:  # pragma: no cover
     rich = None  # type: ignore
@@ -70,12 +78,15 @@ def except_hook(
     supress_internal_dir_names = [typer_path, click_path]
     exc = exc_value
     if rich:
+        from .rich_utils import MAX_WIDTH
+
         rich_tb = Traceback.from_exception(
             type(exc),
             exc,
             exc.__traceback__,
             show_locals=exception_config.pretty_exceptions_show_locals,
             suppress=supress_internal_dir_names,
+            width=MAX_WIDTH,
         )
         console_stderr.print(rich_tb)
         return
@@ -133,7 +144,7 @@ class Typer:
         deprecated: bool = Default(False),
         add_completion: bool = True,
         # Rich settings
-        rich_markup_mode: MarkupMode = None,
+        rich_markup_mode: MarkupMode = Default(DEFAULT_MARKUP_MODE),
         rich_help_panel: Union[str, None] = Default(None),
         pretty_exceptions_enable: bool = True,
         pretty_exceptions_show_locals: bool = True,
@@ -436,7 +447,6 @@ def solve_typer_info_help(typer_info: TyperInfo) -> str:
 
 def solve_typer_info_defaults(typer_info: TyperInfo) -> TyperInfo:
     values: Dict[str, Any] = {}
-    name = None
     for name, value in typer_info.__dict__.items():
         # Priority 1: Value was set in app.add_typer()
         if not isinstance(value, DefaultPlaceholder):
@@ -505,7 +515,7 @@ def get_group_from_info(
         context_param_name,
     ) = get_params_convertors_ctx_param_name_from_function(solved_info.callback)
     cls = solved_info.cls or TyperGroup
-    assert issubclass(cls, TyperGroup)
+    assert issubclass(cls, TyperGroup), f"{cls} should be a subclass of {TyperGroup}"
     group = cls(
         name=solved_info.name or "",
         commands=commands,
@@ -816,7 +826,7 @@ def get_click_param(
     else:
         default_value = param.default
         parameter_info = OptionInfo()
-    annotation: Any = Any
+    annotation: Any
     if not param.annotation == param.empty:
         annotation = param.annotation
     else:
