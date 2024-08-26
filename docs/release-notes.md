@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Internal
+
+* 👷 Update `latest-changes` GitHub Action. PR [#955](https://github.com/fastapi/typer/pull/955) by [@tiangolo](https://github.com/tiangolo).
+
 ## 0.12.5
 
 ### Features
