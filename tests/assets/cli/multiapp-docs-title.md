@@ -18,8 +18,22 @@ The end
 
 **Commands**:
 
-* `sub`
 * `top`: Top command
+* `sub`
+
+## `multiapp top`
+
+Top command
+
+**Usage**:
+
+```console
+$ multiapp top [OPTIONS]
+```
+
+**Options**:
+
+* `--help`: Show this message and exit.
 
 ## `multiapp sub`
 
@@ -35,23 +49,9 @@ $ multiapp sub [OPTIONS] COMMAND [ARGS]...
 
 **Commands**:
 
-* `bye`: Say bye
 * `hello`: Say Hello
 * `hi`: Say Hi
-
-### `multiapp sub bye`
-
-Say bye
-
-**Usage**:
-
-```console
-$ multiapp sub bye [OPTIONS]
-```
-
-**Options**:
-
-* `--help`: Show this message and exit.
+* `bye`: Say bye
 
 ### `multiapp sub hello`
 
@@ -87,14 +87,14 @@ $ multiapp sub hi [OPTIONS] [USER]
 
 * `--help`: Show this message and exit.
 
-## `multiapp top`
+### `multiapp sub bye`
 
-Top command
+Say bye
 
 **Usage**:
 
 ```console
-$ multiapp top [OPTIONS]
+$ multiapp sub bye [OPTIONS]
 ```
 
 **Options**:
