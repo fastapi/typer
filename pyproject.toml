@@ -129,6 +129,9 @@ source = [
     "tests",
     "typer"
 ]
+omit = [
+    "typer/_typing.py"
+]
 context = '${CONTEXT}'
 relative_files = true
 
