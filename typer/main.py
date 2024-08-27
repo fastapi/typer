@@ -78,8 +78,6 @@ def except_hook(
     supress_internal_dir_names = [typer_path, click_path]
     exc = exc_value
     if rich:
-        from .rich_utils import MAX_WIDTH
-
         rich_tb = Traceback.from_exception(
             type(exc),
             exc,
