@@ -205,7 +205,8 @@ $ python main.py
 
 ## Set Output Width
 
-If you want to control the width of the yellow and red Rich exception borders, you can set the parameter `pretty_exceptions_width` to a specific integer (it's 100 by default):
+If you want to control the width of the yellow and red Rich exception borders, you can set the parameter `pretty_exceptions_width` to a specific integer 
+(by default it's the maximum console width if it can be determined, or otherwise 100):
 
 ```Python hl_lines="3"
 {!../docs_src/exceptions/tutorial005.py!}

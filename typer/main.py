@@ -50,10 +50,13 @@ try:
 
     from . import rich_utils
 
+    DEFAULT_WIDTH = rich_utils.MAX_WIDTH or 100
+
     console_stderr = rich_utils._get_rich_console(stderr=True)
 
 except ImportError:  # pragma: no cover
     rich = None  # type: ignore
+    DEFAULT_WIDTH = 100
 
 _original_except_hook = sys.excepthook
 _typer_developer_exception_attr_name = "__typer_developer_exception__"
@@ -147,7 +150,7 @@ class Typer:
         pretty_exceptions_enable: bool = True,
         pretty_exceptions_show_locals: bool = True,
         pretty_exceptions_short: bool = True,
-        pretty_exceptions_width: int = 100,
+        pretty_exceptions_width: int = DEFAULT_WIDTH,
     ):
         self._add_completion = add_completion
         self.rich_markup_mode: MarkupMode = rich_markup_mode
