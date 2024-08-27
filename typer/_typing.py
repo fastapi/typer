@@ -3,6 +3,7 @@
 # mypy: ignore-errors
 
 import sys
+from collections.abc import Callable as Callable
 from os import PathLike
 from typing import (
     TYPE_CHECKING,
@@ -10,6 +11,7 @@ from typing import (
     Any,
     ClassVar,
     Dict,
+    ForwardRef,
     Generator,
     List,
     Mapping,
@@ -24,8 +26,12 @@ from typing import (
     cast,
     get_type_hints,
 )
+from typing import Callable as TypingCallable
 
 from typing_extensions import Annotated, Literal
+
+AnyCallable = TypingCallable[..., Any]
+NoArgAnyCallable = TypingCallable[[], Any]
 
 try:
     from typing import _TypingBase as typing_base  # type: ignore
@@ -45,28 +51,7 @@ except ImportError:
     TypesUnionType = ()
 
 
-if sys.version_info < (3, 7):
-    if TYPE_CHECKING:
-
-        class ForwardRef:
-            def __init__(self, arg: Any):
-                pass
-
-            def _eval_type(self, globalns: Any, localns: Any) -> Any:
-                pass
-
-    else:
-        from typing import _ForwardRef as ForwardRef
-else:
-    from typing import ForwardRef
-
-
-if sys.version_info < (3, 7):
-
-    def evaluate_forwardref(type_: ForwardRef, globalns: Any, localns: Any) -> Any:
-        return type_._eval_type(globalns, localns)
-
-elif sys.version_info < (3, 9):
+if sys.version_info < (3, 9):
 
     def evaluate_forwardref(type_: ForwardRef, globalns: Any, localns: Any) -> Any:
         return type_._evaluate(globalns, localns)
@@ -81,7 +66,7 @@ else:
 
 if sys.version_info < (3, 9):
     # Ensure we always get all the whole `Annotated` hint, not just the annotated type.
-    # For 3.6 to 3.8, `get_type_hints` doesn't recognize `typing_extensions.Annotated`,
+    # For 3.7 to 3.8, `get_type_hints` doesn't recognize `typing_extensions.Annotated`,
     # so it already returns the full annotation
     get_all_type_hints = get_type_hints
 
@@ -89,19 +74,6 @@ else:
 
     def get_all_type_hints(obj: Any, globalns: Any = None, localns: Any = None) -> Any:
         return get_type_hints(obj, globalns, localns, include_extras=True)
-
-
-if sys.version_info < (3, 7):
-    from typing import Callable as Callable
-
-    AnyCallable = Callable[..., Any]
-    NoArgAnyCallable = Callable[[], Any]
-else:
-    from collections.abc import Callable as Callable
-    from typing import Callable as TypingCallable
-
-    AnyCallable = TypingCallable[..., Any]
-    NoArgAnyCallable = TypingCallable[[], Any]
 
 
 # Annotated[...] is implemented by returning an instance of one of these classes, depending on
@@ -133,22 +105,7 @@ else:
         return _typing_get_origin(tp) or getattr(tp, "__origin__", None)
 
 
-if sys.version_info < (3, 7):  # noqa: C901 (ignore complexity)
-
-    def get_args(t: Type[Any]) -> Tuple[Any, ...]:
-        """Simplest get_args compatibility layer possible.
-
-        The Python 3.6 typing module does not have `_GenericAlias` so
-        this won't work for everything. In particular this will not
-        support the `generics` module (we don't support generic models in
-        python 3.6).
-
-        """
-        if type(t).__name__ in AnnotatedTypeNames:
-            return t.__args__ + t.__metadata__
-        return getattr(t, "__args__", ())
-
-elif sys.version_info < (3, 8):  # noqa: C901
+if sys.version_info < (3, 8):  # noqa: C901
     from typing import _GenericAlias
 
     def get_args(t: Type[Any]) -> Tuple[Any, ...]:
@@ -352,8 +309,8 @@ NONE_TYPES: Tuple[Any, Any, Any] = (None, NoneType, Literal[None])
 
 
 if sys.version_info < (3, 8):
-    # Even though this implementation is slower, we need it for python 3.6/3.7:
-    # In python 3.6/3.7 "Literal" is not a builtin type and uses a different
+    # Even though this implementation is slower, we need it for python 3.7:
+    # In python 3.7 "Literal" is not a builtin type and uses a different
     # mechanism.
     # for this reason `Literal[None] is Literal[None]` evaluates to `False`,
     # breaking the faster implementation used for the other python versions.
@@ -431,10 +388,8 @@ def resolve_annotations(
                 1,
             ):
                 value = ForwardRef(value, is_argument=False, is_class=True)
-            elif sys.version_info >= (3, 7):
-                value = ForwardRef(value, is_argument=False)
             else:
-                value = ForwardRef(value)
+                value = ForwardRef(value, is_argument=False)
         try:
             value = _eval_type(value, base_globals, None)
         except NameError:
@@ -448,25 +403,12 @@ def is_callable_type(type_: Type[Any]) -> bool:
     return type_ is Callable or get_origin(type_) is Callable
 
 
-if sys.version_info >= (3, 7):
+def is_literal_type(type_: Type[Any]) -> bool:
+    return Literal is not None and get_origin(type_) is Literal
 
-    def is_literal_type(type_: Type[Any]) -> bool:
-        return Literal is not None and get_origin(type_) is Literal
 
-    def literal_values(type_: Type[Any]) -> Tuple[Any, ...]:
-        return get_args(type_)
-
-else:
-
-    def is_literal_type(type_: Type[Any]) -> bool:
-        return (
-            Literal is not None
-            and hasattr(type_, "__values__")
-            and type_ == Literal[type_.__values__]
-        )
-
-    def literal_values(type_: Type[Any]) -> Tuple[Any, ...]:
-        return type_.__values__
+def literal_values(type_: Type[Any]) -> Tuple[Any, ...]:
+    return get_args(type_)
 
 
 def all_literal_values(type_: Type[Any]) -> Tuple[Any, ...]:
@@ -522,9 +464,7 @@ def _check_classvar(v: Optional[Type[Any]]) -> bool:
     if v is None:
         return False
 
-    return v.__class__ == ClassVar.__class__ and (
-        sys.version_info < (3, 7) or getattr(v, "_name", None) == "ClassVar"
-    )
+    return v.__class__ == ClassVar.__class__ and getattr(v, "_name", None) == "ClassVar"
 
 
 def is_classvar(ann_type: Type[Any]) -> bool:

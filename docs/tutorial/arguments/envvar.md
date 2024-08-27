@@ -2,6 +2,12 @@
 
 You can also configure a *CLI argument* to read a value from an environment variable if it is not provided in the command line as a *CLI argument*.
 
+/// tip
+
+You can learn more about environment variables in the [Environment Variables](../../environment-variables.md){.internal-link target=_blank} page.
+
+///
+
 To do that, use the `envvar` parameter for `typer.Argument()`:
 
 //// tab | Python 3.7+
