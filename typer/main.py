@@ -150,7 +150,7 @@ class Typer:
         pretty_exceptions_enable: bool = True,
         pretty_exceptions_show_locals: bool = True,
         pretty_exceptions_short: bool = True,
-        pretty_exceptions_width: int = DEFAULT_WIDTH,
+        pretty_exceptions_width: Union[int, None] = DEFAULT_WIDTH,
     ):
         self._add_completion = add_completion
         self.rich_markup_mode: MarkupMode = rich_markup_mode

@@ -513,7 +513,7 @@ class DeveloperExceptionConfig:
         pretty_exceptions_enable: bool = True,
         pretty_exceptions_show_locals: bool = True,
         pretty_exceptions_short: bool = True,
-        pretty_exceptions_width: int = 100,
+        pretty_exceptions_width: Union[int, None] = 100,
     ) -> None:
         self.pretty_exceptions_enable = pretty_exceptions_enable
         self.pretty_exceptions_show_locals = pretty_exceptions_show_locals
