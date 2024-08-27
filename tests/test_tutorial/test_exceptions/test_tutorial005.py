@@ -22,7 +22,6 @@ def test_traceback_rich_pretty_width():
             "PYTHONIOENCODING": "utf-8",
         },
     )
-    print(result.stderr)
 
     assert "print(name + deep_dict_or_json + 3)" in result.stderr
     assert 'TypeError: can only concatenate str (not "dict") to str' in result.stderr
