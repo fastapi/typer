@@ -50,7 +50,7 @@ try:
 
     from . import rich_utils
 
-    DEFAULT_WIDTH = rich_utils.MAX_WIDTH or 100
+    DEFAULT_WIDTH = rich_utils.MAX_WIDTH
 
     console_stderr = rich_utils._get_rich_console(stderr=True)
 
