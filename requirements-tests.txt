@@ -1,10 +1,10 @@
 -e .
 
-pytest >=4.4.0,<8.0.0
-pytest-cov >=2.10.0,<5.0.0
+pytest >=4.4.0,<9.0.0
+pytest-cov >=2.10.0,<6.0.0
 coverage[toml] >=6.2,<8.0
 pytest-xdist >=1.32.0,<4.0.0
-pytest-sugar >=0.9.4,<0.10.0
+pytest-sugar >=0.9.4,<1.1.0
 mypy ==1.4.1
 ruff ==0.2.0
 # Needed explicitly by typer-slim

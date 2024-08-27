@@ -257,6 +257,39 @@ Commands:
 
 </div>
 
+
+## Sorting of the commands
+
+Note that by design, **Typer** shows the commands in the order they've been declared.
+
+So, if we take our original example, with `create` and `delete` commands, and reverse the order in the Python file:
+
+```Python hl_lines="7  12"
+{!../docs_src/commands/index/tutorial004.py!}
+```
+
+Then we will see the `delete` command first in the help output:
+
+<div class="termy">
+
+```console
+// Check the help
+$ python main.py --help
+
+Usage: main.py [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  --install-completion  Install completion for the current shell.
+  --show-completion     Show completion for the current shell, to copy it or customize the installation.
+  --help                Show this message and exit.
+
+Commands:
+  delete
+  create
+```
+
+</div>
+
 ## Click Group
 
 If you come from Click, a `typer.Typer` app with subcommands is more or less the equivalent of a <a href="https://click.palletsprojects.com/en/7.x/quickstart/#nesting-commands" class="external-link" target="_blank">Click Group</a>.

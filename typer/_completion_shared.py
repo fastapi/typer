@@ -100,13 +100,13 @@ def install_bash(*, prog_name: str, complete_var: str, shell: str) -> Path:
     # It seems bash-completion is the official completion system for bash:
     # Ref: https://www.gnu.org/software/bash/manual/html_node/A-Programmable-Completion-Example.html
     # But installing in the locations from the docs doesn't seem to have effect
-    completion_path = Path.home() / f".bash_completions/{prog_name}.sh"
+    completion_path = Path.home() / ".bash_completions" / f"{prog_name}.sh"
     rc_path = Path.home() / ".bashrc"
     rc_path.parent.mkdir(parents=True, exist_ok=True)
     rc_content = ""
     if rc_path.is_file():
         rc_content = rc_path.read_text()
-    completion_init_lines = [f"source {completion_path}"]
+    completion_init_lines = [f"source '{completion_path}'"]
     for line in completion_init_lines:
         if line not in rc_content:  # pragma: no cover
             rc_content += f"\n{line}"
@@ -128,16 +128,16 @@ def install_zsh(*, prog_name: str, complete_var: str, shell: str) -> Path:
     zshrc_content = ""
     if zshrc_path.is_file():
         zshrc_content = zshrc_path.read_text()
-    completion_init_lines = [
-        "autoload -Uz compinit",
-        "compinit",
-        "zstyle ':completion:*' menu select",
-        "fpath+=~/.zfunc",
-    ]
-    for line in completion_init_lines:
-        if line not in zshrc_content:  # pragma: no cover
-            zshrc_content += f"\n{line}"
-    zshrc_content += "\n"
+    completion_line = "fpath+=~/.zfunc; autoload -Uz compinit; compinit"
+    if completion_line not in zshrc_content:
+        zshrc_content += f"\n{completion_line}\n"
+    style_line = "zstyle ':completion:*' menu select"
+    # TODO: consider setting the style only for the current program
+    # style_line = f"zstyle ':completion:*:*:{prog_name}:*' menu select"
+    # Install zstyle completion config only if the user doesn't have a customization
+    if "zstyle" not in zshrc_content:
+        zshrc_content += f"\n{style_line}\n"
+    zshrc_content = f"{zshrc_content.strip()}\n"
     zshrc_path.write_text(zshrc_content)
     # Install completion under ~/.zfunc/
     path_obj = Path.home() / f".zfunc/_{prog_name}"
