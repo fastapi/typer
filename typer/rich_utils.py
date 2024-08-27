@@ -68,9 +68,9 @@ STYLE_ERRORS_SUGGESTION = "dim"
 STYLE_ABORTED = "red"
 _TERMINAL_WIDTH = getenv("TERMINAL_WIDTH")
 MAX_WIDTH = int(_TERMINAL_WIDTH) if _TERMINAL_WIDTH else None
-COLOR_SYSTEM: Optional[
-    Literal["auto", "standard", "256", "truecolor", "windows"]
-] = "auto"  # Set to None to disable colors
+COLOR_SYSTEM: Optional[Literal["auto", "standard", "256", "truecolor", "windows"]] = (
+    "auto"  # Set to None to disable colors
+)
 _TYPER_FORCE_DISABLE_TERMINAL = getenv("_TYPER_FORCE_DISABLE_TERMINAL")
 FORCE_TERMINAL = (
     True
