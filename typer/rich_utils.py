@@ -144,7 +144,7 @@ def _get_rich_console(stderr: bool = False) -> Console:
     )
 
 
-def _make_rich_text(
+def _make_rich_rext(
     *, text: str, style: str = "", markup_mode: MarkupMode
 ) -> Union[Markdown, Text]:
     """Take a string, remove indentations, and return styled text.
@@ -195,7 +195,7 @@ def _get_help_text(
     # Remove single linebreaks
     if markup_mode != MARKUP_MODE_MARKDOWN and not first_line.startswith("\b"):
         first_line = first_line.replace("\n", " ")
-    yield _make_rich_text(
+    yield _make_rich_rext(
         text=first_line.strip(),
         style=STYLE_HELPTEXT_FIRST_LINE,
         markup_mode=markup_mode,
@@ -218,7 +218,7 @@ def _get_help_text(
             # Join with double linebreaks if markdown
             remaining_lines = "\n\n".join(remaining_paragraphs)
 
-        yield _make_rich_text(
+        yield _make_rich_rext(
             text=remaining_lines,
             style=STYLE_HELPTEXT,
             markup_mode=markup_mode,
@@ -273,7 +273,7 @@ def _get_parameter_help(
                 for x in paragraphs
             ]
         items.append(
-            _make_rich_text(
+            _make_rich_rext(
                 text="\n".join(paragraphs).strip(),
                 style=STYLE_OPTION_HELP,
                 markup_mode=markup_mode,
@@ -332,7 +332,7 @@ def _make_command_help(
         paragraphs[0] = paragraphs[0].replace("\n", " ")
     elif paragraphs[0].startswith("\b"):
         paragraphs[0] = paragraphs[0].replace("\b\n", "")
-    return _make_rich_text(
+    return _make_rich_rext(
         text=paragraphs[0].strip(),
         style=STYLE_OPTION_HELP,
         markup_mode=markup_mode,
@@ -675,7 +675,7 @@ def rich_format_help(
         # Remove single linebreaks, replace double with single
         lines = obj.epilog.split("\n\n")
         epilogue = "\n".join([x.replace("\n", " ").strip() for x in lines])
-        epilogue_text = _make_rich_text(text=epilogue, markup_mode=markup_mode)
+        epilogue_text = _make_rich_rext(text=epilogue, markup_mode=markup_mode)
         console.print(Padding(Align(epilogue_text, pad=False), 1))
 
 
