@@ -715,9 +715,9 @@ def get_click_type(
     elif parameter_info.parser is not None:
         return click.types.FuncParamType(parameter_info.parser)
 
-    elif annotation == str:
+    elif annotation is str:
         return click.STRING
-    elif annotation == int:
+    elif annotation is int:
         if parameter_info.min is not None or parameter_info.max is not None:
             min_ = None
             max_ = None
@@ -728,7 +728,7 @@ def get_click_type(
             return click.IntRange(min=min_, max=max_, clamp=parameter_info.clamp)
         else:
             return click.INT
-    elif annotation == float:
+    elif annotation is float:
         if parameter_info.min is not None or parameter_info.max is not None:
             return click.FloatRange(
                 min=parameter_info.min,
@@ -737,7 +737,7 @@ def get_click_type(
             )
         else:
             return click.FLOAT
-    elif annotation == bool:
+    elif annotation is bool:
         return click.BOOL
     elif annotation == UUID:
         return click.UUID
