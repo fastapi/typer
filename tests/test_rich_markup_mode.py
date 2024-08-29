@@ -73,9 +73,9 @@ def test_markup_mode_newline_pr815(mode: str, lines: List[str]):
     result_lines = [line.strip() for line in result.stdout.split("\n")]
     assert any(c in result.stdout for c in rounded)
     help_start = result_lines.index("First line")
-    options_start = [i for i, row in enumerate(result_lines) if "Arguments" in row][0]
+    arg_start = [i for i, row in enumerate(result_lines) if "Arguments" in row][0]
     assert help_start != -1
-    assert result_lines[help_start:options_start] == lines
+    assert result_lines[help_start:arg_start] == lines
 
 
 @pytest.mark.parametrize(
@@ -108,6 +108,6 @@ def test_markup_mode_newline_issue447(mode: str, lines: List[str]):
     result_lines = [line.strip() for line in result.stdout.split("\n")]
     assert any(c in result.stdout for c in rounded)
     help_start = result_lines.index("First line")
-    options_start = [i for i, row in enumerate(result_lines) if "Arguments" in row][0]
+    arg_start = [i for i, row in enumerate(result_lines) if "Arguments" in row][0]
     assert help_start != -1
-    assert result_lines[help_start:options_start] == lines
+    assert result_lines[help_start:arg_start] == lines
