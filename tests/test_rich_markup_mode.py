@@ -55,22 +55,25 @@ def test_markup_mode_newline_pr815(mode: str, lines: List[str]):
     app = typer.Typer(rich_markup_mode=mode)
 
     @app.command()
-    def main():
+    def main(arg: str):
         """First line
 
         Line 1
 
         Line 2
         """
-        pass
+        print(f"Hello {arg}")
 
     assert app.rich_markup_mode == mode
+
+    result = runner.invoke(app, ["World"])
+    assert "Hello World" in result.stdout
 
     result = runner.invoke(app, ["--help"])
     result_lines = [line.strip() for line in result.stdout.split("\n")]
     assert any(c in result.stdout for c in rounded)
     help_start = result_lines.index("First line")
-    options_start = [i for i, row in enumerate(result_lines) if "Options" in row][0]
+    options_start = [i for i, row in enumerate(result_lines) if "Arguments" in row][0]
     assert help_start != -1
     assert result_lines[help_start:options_start] == lines
 
@@ -87,21 +90,24 @@ def test_markup_mode_newline_issue447(mode: str, lines: List[str]):
     app = typer.Typer(rich_markup_mode=mode)
 
     @app.command()
-    def main():
+    def main(arg: str):
         """First line
 
         Line 1
         Line 2
         Line 3
         """
-        pass
+        print(f"Hello {arg}")
 
     assert app.rich_markup_mode == mode
+
+    result = runner.invoke(app, ["World"])
+    assert "Hello World" in result.stdout
 
     result = runner.invoke(app, ["--help"])
     result_lines = [line.strip() for line in result.stdout.split("\n")]
     assert any(c in result.stdout for c in rounded)
     help_start = result_lines.index("First line")
-    options_start = [i for i, row in enumerate(result_lines) if "Options" in row][0]
+    options_start = [i for i, row in enumerate(result_lines) if "Arguments" in row][0]
     assert help_start != -1
     assert result_lines[help_start:options_start] == lines
