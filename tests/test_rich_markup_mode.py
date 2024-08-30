@@ -46,9 +46,9 @@ def test_rich_markup_mode_rich():
 @pytest.mark.parametrize(
     "mode,lines",
     [
-        ("markdown", ["First line", "", "Line 1", "", "Line 2", ""]),
-        ("rich", ["First line", "", "Line 1", "", "Line 2", ""]),
-        ("none", ["First line", "", "Line 1", "Line 2", ""]),
+        ("markdown", ["First line", "Line 1", "", "Line 2", "", "Line 3", ""]),
+        ("rich", ["First line", "", "Line 1", "", "Line 2", "", "Line 3", ""]),
+        ("none", ["First line", "", "Line 1", "Line 2", "Line 3", ""]),
     ],
 )
 def test_markup_mode_newline_pr815(mode: str, lines: List[str]):
@@ -61,6 +61,8 @@ def test_markup_mode_newline_pr815(mode: str, lines: List[str]):
         Line 1
 
         Line 2
+
+        Line 3
         """
         print(f"Hello {arg}")
 
@@ -81,7 +83,7 @@ def test_markup_mode_newline_pr815(mode: str, lines: List[str]):
 @pytest.mark.parametrize(
     "mode,lines",
     [
-        ("markdown", ["First line", "", "Line 1 Line 2 Line 3", ""]),
+        ("markdown", ["First line", "Line 1 Line 2 Line 3", ""]),
         ("rich", ["First line", "", "Line 1", "Line 2", "Line 3", ""]),
         ("none", ["First line", "", "Line 1 Line 2 Line 3", ""]),
     ],
@@ -116,7 +118,7 @@ def test_markup_mode_newline_issue447(mode: str, lines: List[str]):
 @pytest.mark.parametrize(
     "mode,lines",
     [
-        ("markdown", ["First line", "", "", "• 1", "• 2", "• 3", ""]),
+        ("markdown", ["First line", "", "• 1", "• 2", "• 3", ""]),
         ("rich", ["First line", "", "- 1", "- 2", "- 3", ""]),
         ("none", ["First line", "", "- 1 - 2 - 3", ""]),
     ],
@@ -151,7 +153,7 @@ def test_markup_mode_bullets(mode: str, lines: List[str]):
 @pytest.mark.parametrize(
     "mode,lines",
     [
-        ("markdown", ["First line", "", "", "• 1", "• 2", "• a", "• b", "• 3", ""]),
+        ("markdown", ["First line", "", "• 1", "• 2", "• a", "• b", "• 3", ""]),
         ("rich", ["First line", "", "- 1", "- 2", "- a", "- b", "- 3", ""]),
         ("none", ["First line", "", "- 1 - 2   - a   - b - 3", ""]),
     ],

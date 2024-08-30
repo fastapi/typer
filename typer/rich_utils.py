@@ -203,7 +203,8 @@ def _get_help_text(
 
     # Get remaining lines, remove single line breaks and format as dim
     if remaining_paragraphs:
-        yield Text("")
+        if markup_mode not in MARKUP_MODE_MARKDOWN:
+            yield Text("")
         if markup_mode not in (MARKUP_MODE_RICH, MARKUP_MODE_MARKDOWN):
             # Remove single linebreaks
             remaining_paragraphs = [
@@ -215,7 +216,7 @@ def _get_help_text(
             # Join back together
             remaining_lines = "\n".join(remaining_paragraphs)
         else:
-            # Join with double linebreaks if markdown
+            # Join with double linebreaks if markdown or Rich markup
             remaining_lines = "\n\n".join(remaining_paragraphs)
 
         yield _make_rich_text(
