@@ -3,9 +3,18 @@ import sys
 from copy import copy
 from typing import Any, Callable, Dict, List, Tuple, Type, cast
 
-from typing_extensions import Annotated, get_args, get_origin, get_type_hints
+from typing_extensions import (
+    Annotated,
+    TypeAliasType,
+    TypeVar,
+    get_args,
+    get_origin,
+    get_type_hints,
+)
 
 from .models import ArgumentInfo, OptionInfo, ParameterInfo, ParamMeta
+
+T = TypeVar("T")
 
 
 def _param_type_to_user_string(param_type: Type[ParameterInfo]) -> str:
@@ -189,3 +198,24 @@ def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
             name=param.name, default=default, annotation=annotation
         )
     return params
+
+
+def get_original_type(alias: TypeAliasType) -> T:
+    """Return the original type of an alias.
+
+    Examples
+    --------
+    >>> Name = TypeAliasType(name="Name", value=str)
+    >>> Surname = TypeAliasType(name="Surname", value=Name)
+    >>> get_original_type(Name)
+    str
+    >>> get_original_type(Surname)
+    str
+    >>> get_original_type(int)
+    int
+    """
+    otype = alias
+    while isinstance(otype, TypeAliasType):
+        otype = otype.__value__
+
+    return otype
