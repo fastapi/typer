@@ -15,6 +15,7 @@ from typing_extensions import (
 from .models import ArgumentInfo, OptionInfo, ParameterInfo, ParamMeta
 
 T = TypeVar("T")
+TypeAliasTypeVar = TypeAliasType("TypeAliasTypeVar", value=T, type_params=(T,))
 
 
 def _param_type_to_user_string(param_type: Type[ParameterInfo]) -> str:
@@ -200,7 +201,7 @@ def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
     return params
 
 
-def get_original_type(alias: TypeAliasType) -> T:
+def get_original_type(alias: TypeAliasTypeVar[T]) -> T:
     """Return the original type of an alias.
 
     Examples
