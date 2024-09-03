@@ -149,7 +149,7 @@ def _make_rich_text(
 ) -> Union[Markdown, Text]:
     """Take a string, remove indentations, and return styled text.
 
-    By default, the text is not parsed for any special formatting. as a Rich Text with the request style.
+    By default, the text is not parsed for any special formatting.
     If `markup_mode` is `"rich"`, the text is parsed for Rich markup strings.
     If `markup_mode` is `"markdown"`, parse as Markdown.
     """
