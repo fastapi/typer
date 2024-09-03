@@ -60,7 +60,7 @@ try:
     import pydantic
 
     def is_pydantic_type(type_: Any) -> bool:
-        if get_origin(type_) is Annotated:  # type: ignore
+        if get_origin(type_) is Annotated:
             return is_pydantic_type(get_args(type_)[0])
         return type_.__module__.startswith("pydantic") and not lenient_issubclass(
             type_, pydantic.BaseModel
