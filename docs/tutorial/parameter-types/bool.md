@@ -10,7 +10,7 @@ Let's say that we want a `--force` *CLI option* only, we want to discard `--no-f
 
 We can do that by specifying the exact name we want:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="5"
 {!> ../docs_src/parameter_types/bool/tutorial001_an.py!}
@@ -18,7 +18,7 @@ We can do that by specifying the exact name we want:
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -78,7 +78,7 @@ We might want to instead have `--accept` and `--reject`.
 
 We can do that by passing a single `str` with the 2 names for the `bool` *CLI option* separated by `/`:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="7"
 {!> ../docs_src/parameter_types/bool/tutorial002_an.py!}
@@ -86,7 +86,7 @@ We can do that by passing a single `str` with the 2 names for the `bool` *CLI op
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -139,7 +139,7 @@ The same way, you can declare short versions of the names for these *CLI options
 
 For example, let's say we want `-f` for `--force` and `-F` for `--no-force`:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="5"
 {!> ../docs_src/parameter_types/bool/tutorial003_an.py!}
@@ -147,7 +147,7 @@ For example, let's say we want `-f` for `--force` and `-F` for `--no-force`:
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -195,7 +195,7 @@ If you want to (although it might not be a good idea), you can declare only *CLI
 
 To do that, use a space and a single `/` and pass the negative name after:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="5"
 {!> ../docs_src/parameter_types/bool/tutorial004_an.py!}
@@ -203,7 +203,7 @@ To do that, use a space and a single `/` and pass the negative name after:
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 

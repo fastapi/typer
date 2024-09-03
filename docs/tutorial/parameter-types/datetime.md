@@ -60,7 +60,7 @@ For example, let's imagine that you want to accept an ISO formatted datetime, bu
 
 ...It's a crazy example, but let's say you also needed that strange format:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="11"
 {!> ../docs_src/parameter_types/datetime/tutorial002_an.py!}
@@ -68,7 +68,7 @@ For example, let's imagine that you want to accept an ISO formatted datetime, bu
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 

@@ -39,7 +39,7 @@ A `List` can only be used in the last command (if there are subcommands), as thi
 
 If you want a specific number of values and types, you can use a tuple, and it can even have default values:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="8-10"
 {!> ../docs_src/multiple_values/arguments_with_multiple_values/tutorial002_an.py!}
@@ -47,7 +47,7 @@ If you want a specific number of values and types, you can use a tuple, and it c
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 

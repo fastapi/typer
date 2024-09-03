@@ -13,7 +13,7 @@ There are two ways to achieve this:
 
 `typer.Argument` and `typer.Option` can create custom parameter types with a `parser` <abbr title="something that can be called like a function">callable</abbr>.
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="13-14  18-19"
 {!> ../docs_src/parameter_types/custom_types/tutorial001_an.py!}
@@ -21,7 +21,7 @@ There are two ways to achieve this:
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -41,7 +41,7 @@ The function (or callable) that you pass to the parameter `parser` will receive 
 
 If you already have a <a href="https://click.palletsprojects.com/en/8.1.x/parameters/#implementing-custom-types" class="external-link" target="_blank">Click Custom Type</a>, you can use it in `typer.Argument()` and `typer.Option()` with the `click_type` parameter.
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="14-18  22-25"
 {!> ../docs_src/parameter_types/custom_types/tutorial002_an.py!}
