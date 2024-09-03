@@ -1,3 +1,5 @@
+# Sub-Typer Callback Override
+
 When creating a **Typer** app you can define a callback function, it always executes and defines the *CLI arguments* and *CLI options* that go before a command.
 
 When adding a Typer app inside of another, the sub-Typer can also have its own callback.
