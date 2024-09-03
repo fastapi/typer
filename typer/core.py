@@ -27,11 +27,6 @@ import click.shell_completion
 import click.types
 import click.utils
 
-if sys.version_info >= (3, 8):
-    from typing import Literal
-else:
-    from typing_extensions import Literal
-
 MarkupMode = Literal["markdown", "rich", None]
 
 try:
