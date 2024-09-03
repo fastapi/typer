@@ -13,6 +13,7 @@
 
 ### Internal
 
+* ⬆ Bump mkdocs-material from 9.5.33 to 9.5.34. PR [#963](https://github.com/fastapi/typer/pull/963) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pypa/gh-action-pypi-publish from 1.9.0 to 1.10.1. PR [#973](https://github.com/fastapi/typer/pull/973) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#966](https://github.com/fastapi/typer/pull/966) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * 💚 Set `include-hidden-files` to `True` when using the `upload-artifact` GH action. PR [#967](https://github.com/fastapi/typer/pull/967) by [@svlandeg](https://github.com/svlandeg).
