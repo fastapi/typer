@@ -14,7 +14,7 @@ After installing completion for your own Python package (or using the `typer` co
 
 To check it quickly without creating a new Python package, use the `typer` command.
 
-Then let's create small example program:
+Then let's create a small example program:
 
 //// tab | Python 3.7+
 
