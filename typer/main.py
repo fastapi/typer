@@ -8,7 +8,17 @@ from functools import update_wrapper
 from pathlib import Path
 from traceback import FrameSummary, StackSummary
 from types import TracebackType
-from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, Union
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    List,
+    Optional,
+    Sequence,
+    Tuple,
+    Type,
+    Union,
+)
 from uuid import UUID
 
 import click
@@ -69,14 +79,11 @@ try:
     def pydantic_convertor(type_: type) -> Callable[[str], Any]:
         """Create a convertor for a parameter annotated with a pydantic type."""
         T: TypeAlias = type_  # type: ignore[valid-type]
-
-        @pydantic.validate_call
-        def internal_convertor(value: T) -> T:
-            return value
+        adapter: pydantic.TypeAdapter[T] = pydantic.TypeAdapter(type_)
 
         def convertor(value: str) -> T:
             try:
-                return internal_convertor(value)
+                return adapter.validate_python(value)
             except pydantic.ValidationError as e:
                 error_message = e.errors(
                     include_context=False, include_input=False, include_url=False
