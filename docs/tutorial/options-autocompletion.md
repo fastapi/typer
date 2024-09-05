@@ -567,7 +567,7 @@ It doesn't matter how you name them, in which order, or which ones of the 3 opti
 
 ## Comparison to Click functionality
 
-Note that Click 7 had a similar [`autocompletion` function](https://click.palletsprojects.com/en/7.x/bashcomplete/), but it worked slightly differently. 
+Note that Click 7 had a similar [`autocompletion` function](https://click.palletsprojects.com/en/7.x/bashcomplete/), but it worked slightly differently.
 
 It required the callback function to take exactly the 3 keyword arguments `ctx`, `args` and `incomplete` in that exact order, instead of matching them dynamically based on types, as Typer does.
 

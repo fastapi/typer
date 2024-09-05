@@ -64,6 +64,7 @@ def _typer_param_setup_autocompletion_compat(
 ) -> None:
     if autocompletion is None and self._custom_shell_complete is not None:
         import warnings
+
         warnings.warn(
             "In Typer, only the parameter 'autocompletion' is supported. "
             "The usage of 'shell_complete' will be deprecated in upcoming versions. ",
