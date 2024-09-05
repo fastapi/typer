@@ -67,7 +67,7 @@ def _typer_param_setup_autocompletion_compat(
 
         warnings.warn(
             "In Typer, only the parameter 'autocompletion' is supported. "
-            "The usage of 'shell_complete' will be deprecated in upcoming versions. ",
+            "The support for 'shell_complete' is deprecated and will be removed in upcoming versions. ",
             DeprecationWarning,
             stacklevel=2,
         )
