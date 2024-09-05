@@ -62,13 +62,11 @@ def _typer_param_setup_autocompletion_compat(
         Callable[[click.Context, List[str], str], List[Union[Tuple[str, str], str]]]
     ] = None,
 ) -> None:
-    if autocompletion is not None and self._custom_shell_complete is None:
+    if autocompletion is None and self._custom_shell_complete is not None:
         import warnings
-
         warnings.warn(
-            "'autocompletion' is renamed to 'shell_complete'. The old name is"
-            " deprecated and will be removed in Click 8.1. See the docs about"
-            " 'Parameter' for information about new behavior.",
+            "In Typer, only the parameter 'autocompletion' is supported. "
+            "The usage of 'shell_complete' will be deprecated in upcoming versions. ",
             DeprecationWarning,
             stacklevel=2,
         )
