@@ -62,7 +62,7 @@ def _typer_param_setup_autocompletion_compat(
         Callable[[click.Context, List[str], str], List[Union[Tuple[str, str], str]]]
     ] = None,
 ) -> None:
-    if autocompletion is None and self._custom_shell_complete is not None:
+    if self._custom_shell_complete is not None:
         import warnings
 
         warnings.warn(
@@ -71,6 +71,8 @@ def _typer_param_setup_autocompletion_compat(
             DeprecationWarning,
             stacklevel=2,
         )
+
+    if autocompletion is not None:
 
         def compat_autocompletion(
             ctx: click.Context, param: click.core.Parameter, incomplete: str
