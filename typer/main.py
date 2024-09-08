@@ -821,14 +821,14 @@ def get_click_param(
             required = True
         else:
             default_value = parameter_info.default
-    elif param.default == Required or param.default == param.empty:
+    elif param.default == Required or param.default is param.empty:
         required = True
         parameter_info = ArgumentInfo()
     else:
         default_value = param.default
         parameter_info = OptionInfo()
     annotation: Any
-    if not param.annotation == param.empty:
+    if param.annotation is not param.empty:
         annotation = param.annotation
     else:
         annotation = str
