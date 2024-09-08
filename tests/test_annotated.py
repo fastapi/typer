@@ -77,10 +77,12 @@ def test_annotated_option_with_argname_doesnt_mutate_multiple_calls():
     assert result.exit_code == 0, result.output
     assert "Forcing operation" in result.output
 
+
 def test_default_with_class_with_custom_eq():
     app = typer.Typer()
 
     from typer.models import ParamMeta
+
     class StupidClass:
         def __init__(self, a):
             self.a = a
@@ -97,9 +99,9 @@ def test_default_with_class_with_custom_eq():
             return not self.__eq__(other)
 
     @app.command()
-    def cmd(val = StupidClass(42)):
+    def cmd(val=StupidClass(42)):
         print(val)
-    
+
     result = runner.invoke(app)
     assert result.exit_code == 0, result.output
     assert "StupidClass" in result.output
