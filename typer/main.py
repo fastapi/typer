@@ -42,6 +42,7 @@ from .models import (
     ParamMeta,
     Required,
     TyperInfo,
+    DictParamType,
 )
 from .utils import get_params_from_function
 
@@ -716,8 +717,10 @@ def get_click_type(
     elif parameter_info.parser is not None:
         return click.types.FuncParamType(parameter_info.parser)
 
-    elif annotation is str:
+    elif annotation in [str, bytes]:
         return click.STRING
+    elif annotation is dict:
+        return DictParamType()
     elif annotation is int:
         if parameter_info.min is not None or parameter_info.max is not None:
             min_ = None
