@@ -18,8 +18,6 @@ import click
 import click.shell_completion
 
 if TYPE_CHECKING:  # pragma: no cover
-    from click.core import Parameter
-
     from .core import TyperCommand, TyperGroup
     from .main import Typer
 
