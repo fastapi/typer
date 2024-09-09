@@ -58,7 +58,10 @@ class DictParamType(click.ParamType):
     name = "dict"
 
     def convert(
-        self, value: Any, param: Optional["Parameter"], ctx: Optional["Context"]
+        self,
+        value: Any,
+        param: Optional["click.Parameter"],
+        ctx: Optional["click.Context"],
     ) -> Any:
         if isinstance(value, dict):
             return value
