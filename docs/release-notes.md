@@ -13,6 +13,7 @@
 
 ### Internal
 
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#982](https://github.com/fastapi/typer/pull/982) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * ⬆ Bump tiangolo/issue-manager from 0.5.0 to 0.5.1. PR [#980](https://github.com/fastapi/typer/pull/980) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * 👷 Update `issue-manager.yml`. PR [#978](https://github.com/fastapi/typer/pull/978) by [@tiangolo](https://github.com/tiangolo).
 * ⬆ Bump ruff from 0.6.3 to 0.6.4. PR [#975](https://github.com/fastapi/typer/pull/975) by [@dependabot[bot]](https://github.com/apps/dependabot).
