@@ -18,9 +18,10 @@ import click
 import click.shell_completion
 
 if TYPE_CHECKING:  # pragma: no cover
+    from click.core import Parameter
+
     from .core import TyperCommand, TyperGroup
     from .main import Typer
-    from click.core import Parameter
 
 NoneType = type(None)
 
@@ -57,10 +58,7 @@ class DictParamType(click.ParamType):
     name = "dict"
 
     def convert(
-        self,
-        value: Any,
-        param: Optional["Parameter"],
-        ctx: Optional["Context"]
+        self, value: Any, param: Optional["Parameter"], ctx: Optional["Context"]
     ) -> Any:
         if isinstance(value, dict):
             return value

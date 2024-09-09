@@ -32,6 +32,7 @@ from .models import (
     Default,
     DefaultPlaceholder,
     DeveloperExceptionConfig,
+    DictParamType,
     FileBinaryRead,
     FileBinaryWrite,
     FileText,
@@ -42,7 +43,6 @@ from .models import (
     ParamMeta,
     Required,
     TyperInfo,
-    DictParamType,
 )
 from .utils import get_params_from_function
 
