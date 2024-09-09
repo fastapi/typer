@@ -102,6 +102,9 @@ def test_default_with_class_with_custom_eq():
     def cmd(val=StupidClass(42)):
         print(val)
 
+    assert StupidClass(666) == ParamMeta.empty
+    assert StupidClass(666) != StupidClass(1)
+
     result = runner.invoke(app)
     assert result.exit_code == 0, result.output
     assert "StupidClass" in result.output
