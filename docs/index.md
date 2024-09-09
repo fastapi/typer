@@ -52,7 +52,7 @@ The key features are:
 
 ## Installation
 
-Create and activate a <a href="https://typer.tiangolo.com/virtual-environments/" class="external-link" target="_blank">virtual environment</a> and then install **Typer**:
+Create and activate a <a href="/virtual-environments/" class="external-link" target="_blank">virtual environment</a> and then install **Typer**:
 
 <div class="termy">
 
@@ -352,7 +352,7 @@ And similarly for **files**, **paths**, **enums** (choices), etc. And there are 
 
 **Your users get**: automatic **`--help`**, **auto-completion** in their terminal (Bash, Zsh, Fish, PowerShell) when they install your package or when using the `typer` command.
 
-For a more complete example including more features, see the <a href="https://typer.tiangolo.com/tutorial/">Tutorial - User Guide</a>.
+For a more complete example including more features, see the <a href="/tutorial/">Tutorial - User Guide</a>.
 
 ## Dependencies
 
