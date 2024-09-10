@@ -1,6 +1,6 @@
+import json
 import subprocess
 import sys
-import json
 
 import typer
 from typer.testing import CliRunner

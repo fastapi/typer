@@ -1,6 +1,7 @@
 import json
-import typer
 from typing import Annotated
+
+import typer
 
 
 def main(user_info: Annotated[dict, typer.Option()]):
