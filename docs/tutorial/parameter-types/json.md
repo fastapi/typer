@@ -12,7 +12,7 @@ data = json.loads(user_input)
 
 ## Usage
 
-You will get all the correct editor support, attributes, methods, etc for the dict object:`
+You will get all the correct editor support, attributes, methods, etc for the dict object:
 
 //// tab | Python 3.7+
 
