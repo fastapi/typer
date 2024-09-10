@@ -1,7 +1,7 @@
 import json
-from typing_extensions import Annotated
 
 import typer
+from typing_extensions import Annotated
 
 
 def main(user_info: Annotated[dict, typer.Option()]):
