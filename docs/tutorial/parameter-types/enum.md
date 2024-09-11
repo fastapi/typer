@@ -183,4 +183,10 @@ This can be particularly useful if the enum values are not strings:
 {!../docs_src/parameter_types/enum/tutorial005.py!}
 ```
 
+```console
+$ python main.py --access protected
+
+Access level: protected (2)
+```
+
 

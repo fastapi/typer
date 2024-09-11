@@ -11,7 +11,7 @@ class Access(enum.IntEnum):
 
 
 def main(access: Access = typer.Option(Access.private, enum_by_name=True)):
-    typer.echo(f"Access level: {access.name}")
+    typer.echo(f"Access level: {access.name} ({access.value})")
 
 
 if __name__ == "__main__":
