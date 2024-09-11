@@ -126,36 +126,6 @@ This works just like any other parameter value taking a list of things:
 
 <div class="termy">
 
-
-### Using Enum names instead of values
-
-Some times you want to accept `Enum` names from command line and convert
-that into `Enum` values in command handler. You can enable this with
-`names=True` parameter:
-
-```Python hl_lines="14"
-{!../docs_src/parameter_types/enum/tutorial004.py!}
-```
-
-And then the names of the `Enum` will be used instead of values:
-
-<div class="termy">
-
-```console
-$ python main.py --log-level debug
-
-Log level set to DEBUG
-```
-
-</div>
-
-If `IntEnum` type is given, then enum names are used implicitly.
-
-```Python hl_lines="14"
-{!../docs_src/parameter_types/enum/tutorial005.py!}
-```
-
-
 ```console
 $ python main.py --help
 
@@ -183,3 +153,34 @@ Buying groceries: Eggs, Bacon
 ```
 
 </div>
+
+
+### Using Enum names instead of values
+
+Some times you want to accept `Enum` names from the command line and convert
+that into `Enum` values in the command handler. You can enable this by setting
+`enum_by_name=True`:
+
+```Python hl_lines="14"
+{!../docs_src/parameter_types/enum/tutorial004.py!}
+```
+
+And then the names of the `Enum` will be used instead of values:
+
+<div class="termy">
+
+```console
+$ python main.py --log-level debug
+
+Log level set to DEBUG
+```
+
+</div>
+
+This can be particularly useful if the enum values are not strings:
+
+```Python hl_lines="7-10, 13"
+{!../docs_src/parameter_types/enum/tutorial005.py!}
+```
+
+

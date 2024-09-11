@@ -644,6 +644,18 @@ def generate_enum_convertor(enum: Type[Enum]) -> Callable[[Any], Any]:
     return convertor
 
 
+def generate_enum_name_convertor(enum: Type[Enum]) -> Callable[..., Any]:
+    lower_name_map = {str(item.name).lower(): item for item in enum}
+
+    def convertor(value: Any) -> Any:
+        if value is not None:
+            low = str(value).lower()
+            if low in lower_name_map:
+                return lower_name_map[low]
+
+    return convertor
+
+
 def generate_list_convertor(
     convertor: Optional[Callable[[Any], Any]], default_value: Optional[Any]
 ) -> Callable[[Sequence[Any]], Optional[List[Any]]]:
@@ -671,18 +683,6 @@ def generate_tuple_convertor(
         )
 
     return internal_convertor
-
-
-def generate_enum_name_convertor(enum: Type[Enum]) -> Callable[..., Any]:
-    lower_name_map = {str(item.name).lower(): item for item in enum}
-
-    def convertor(value: Any) -> Any:
-        if value is not None:
-            low = str(value).lower()
-            if low in lower_name_map:
-                return lower_name_map[low]
-
-    return convertor
 
 
 def get_callback(
@@ -805,7 +805,7 @@ def get_click_type(
             atomic=parameter_info.atomic,
         )
     elif lenient_issubclass(annotation, Enum):
-        if use_enum_names(parameter_info, annotation):
+        if parameter_info.enum_by_name:
             choices = [item.name for item in annotation]
         else:
             choices = [item.value for item in annotation]
@@ -817,15 +817,6 @@ def lenient_issubclass(
     cls: Any, class_or_tuple: Union[AnyType, Tuple[AnyType, ...]]
 ) -> bool:
     return isinstance(cls, type) and issubclass(cls, class_or_tuple)
-
-
-def use_enum_names(parameter_info: ParameterInfo, annotation: Type[Enum]) -> bool:
-    """Check if Enum names or values should be used
-
-    If ParameterInfo.names is explicitly set to True, always use names, but also
-    try to guess if names should be used in cases, when Enum is ant IntEnum.
-    """
-    return parameter_info.names or issubclass(annotation, int)
 
 
 def get_click_param(
@@ -895,17 +886,17 @@ def get_click_param(
             annotation=main_type, parameter_info=parameter_info
         )
     convertor = determine_type_convertor(main_type)
+    if lenient_issubclass(main_type, Enum):
+        if parameter_info.enum_by_name:
+            convertor = generate_enum_name_convertor(main_type)
+        else:
+            convertor = generate_enum_convertor(main_type)
     if is_list:
         convertor = generate_list_convertor(
             convertor=convertor, default_value=default_value
         )
     if is_tuple:
         convertor = generate_tuple_convertor(get_args(main_type))
-    if lenient_issubclass(main_type, Enum):
-        if use_enum_names(parameter_info, main_type):
-            convertor = generate_enum_name_convertor(main_type)
-        else:
-            convertor = generate_enum_convertor(main_type)
     if isinstance(parameter_info, OptionInfo):
         if main_type is bool and parameter_info.is_flag is not False:
             is_flag = True

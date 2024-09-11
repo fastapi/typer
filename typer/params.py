@@ -45,7 +45,7 @@ def Option(
     show_envvar: bool = True,
     # Choice
     case_sensitive: bool = True,
-    names: bool = False,
+    enum_by_name: bool = False,
     # Numbers
     min: Optional[Union[int, float]] = None,
     max: Optional[Union[int, float]] = None,
@@ -109,7 +109,7 @@ def Option(
     show_envvar: bool = True,
     # Choice
     case_sensitive: bool = True,
-    names: bool = False,
+    enum_by_name: bool = False,
     # Numbers
     min: Optional[Union[int, float]] = None,
     max: Optional[Union[int, float]] = None,
@@ -172,7 +172,7 @@ def Option(
     show_envvar: bool = True,
     # Choice
     case_sensitive: bool = True,
-    names: bool = False,
+    enum_by_name: bool = False,
     # Numbers
     min: Optional[Union[int, float]] = None,
     max: Optional[Union[int, float]] = None,
@@ -228,7 +228,7 @@ def Option(
         show_envvar=show_envvar,
         # Choice
         case_sensitive=case_sensitive,
-        names=names,
+        enum_by_name=enum_by_name,
         # Numbers
         min=min,
         max=max,
@@ -284,7 +284,7 @@ def Argument(
     hidden: bool = False,
     # Choice
     case_sensitive: bool = True,
-    names: bool = False,
+    enum_by_name: bool = False,
     # Numbers
     min: Optional[Union[int, float]] = None,
     max: Optional[Union[int, float]] = None,
@@ -340,7 +340,7 @@ def Argument(
     hidden: bool = False,
     # Choice
     case_sensitive: bool = True,
-    names: bool = False,
+    enum_by_name: bool = False,
     # Numbers
     min: Optional[Union[int, float]] = None,
     max: Optional[Union[int, float]] = None,
@@ -395,7 +395,7 @@ def Argument(
     hidden: bool = False,
     # Choice
     case_sensitive: bool = True,
-    names: bool = False,
+    enum_by_name: bool = False,
     # Numbers
     min: Optional[Union[int, float]] = None,
     max: Optional[Union[int, float]] = None,
@@ -445,7 +445,7 @@ def Argument(
         hidden=hidden,
         # Choice
         case_sensitive=case_sensitive,
-        names=names,
+        enum_by_name=enum_by_name,
         # Numbers
         min=min,
         max=max,
