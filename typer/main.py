@@ -616,7 +616,9 @@ def get_command_from_info(
     return command
 
 
-def determine_type_convertor(type_: Any, enum_by_name: bool) -> Optional[Callable[[Any], Any]]:
+def determine_type_convertor(
+    type_: Any, enum_by_name: bool
+) -> Optional[Callable[[Any], Any]]:
     convertor: Optional[Callable[[Any], Any]] = None
     if lenient_issubclass(type_, Path):
         convertor = param_path_convertor
@@ -671,7 +673,8 @@ def generate_list_convertor(
 
 
 def generate_tuple_convertor(
-    types: Sequence[Any], enum_by_name: bool,
+    types: Sequence[Any],
+    enum_by_name: bool,
 ) -> Callable[[Optional[Tuple[Any, ...]]], Optional[Tuple[Any, ...]]]:
     convertors = [determine_type_convertor(type_, enum_by_name) for type_ in types]
 
