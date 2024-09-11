@@ -72,6 +72,9 @@ nav:
   - features.md
   - Tutorial - User Guide:
       - tutorial/index.md
+      - environment-variables.md
+      - virtual-environments.md
+      - tutorial/install.md
       - tutorial/first-steps.md
       - tutorial/printing.md
       - tutorial/terminating.md
