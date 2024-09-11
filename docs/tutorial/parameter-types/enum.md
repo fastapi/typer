@@ -188,5 +188,3 @@ $ python main.py --access protected
 
 Access level: protected (2)
 ```
-
-
