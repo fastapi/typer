@@ -10,7 +10,11 @@ class Food(str, Enum):
     f3 = "Cheese"
 
 
-def main(user: Tuple[str, int, bool, Food] = typer.Option((None, None, None, "f1"), enum_by_name=True)):
+def main(
+    user: Tuple[str, int, bool, Food] = typer.Option(
+        (None, None, None, "f1"), enum_by_name=True
+    ),
+):
     username, coins, is_wizard, food = user
     if not username:
         print("No user provided")
