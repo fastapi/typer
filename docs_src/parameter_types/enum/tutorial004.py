@@ -10,7 +10,7 @@ class LogLevel(enum.Enum):
     warning = logging.WARNING
 
 
-def main(log_level: LogLevel = typer.Option(LogLevel.warning, enum_by_name=True)):
+def main(log_level: LogLevel = typer.Option("warning", enum_by_name=True)):
     typer.echo(f"Log level set to: {logging.getLevelName(log_level.value)}")
 
 

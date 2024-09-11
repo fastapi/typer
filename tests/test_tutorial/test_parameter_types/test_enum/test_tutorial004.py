@@ -11,6 +11,12 @@ app = typer.Typer()
 app.command()(mod.main)
 
 
+def test_enum_names_default():
+    result = runner.invoke(app)
+    assert result.exit_code == 0
+    assert "Log level set to: WARNING" in result.output
+
+
 def test_enum_names():
     result = runner.invoke(app, ["--log-level", "debug"])
     assert result.exit_code == 0

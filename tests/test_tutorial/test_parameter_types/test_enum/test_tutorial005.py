@@ -11,10 +11,16 @@ app = typer.Typer()
 app.command()(mod.main)
 
 
+def test_int_enum_default():
+    result = runner.invoke(app)
+    assert result.exit_code == 0
+    assert "Access level: private (1)" in result.output
+
+
 def test_int_enum():
     result = runner.invoke(app, ["--access", "open"])
     assert result.exit_code == 0
-    assert "Access level: open" in result.output
+    assert "Access level: open (4)" in result.output
 
 
 def test_script():
