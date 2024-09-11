@@ -11,7 +11,14 @@ class Food(str, Enum):
     f3 = "Cheese"
 
 
-def main(user: Annotated[Tuple[str, int, bool, Food], typer.Option()] = (None, None, None, Food.f1)):
+def main(
+    user: Annotated[Tuple[str, int, bool, Food], typer.Option()] = (
+        None,
+        None,
+        None,
+        Food.f1,
+    ),
+):
     username, coins, is_wizard, food = user
     if not username:
         print("No user provided")

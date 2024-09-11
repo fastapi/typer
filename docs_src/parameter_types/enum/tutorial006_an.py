@@ -11,7 +11,9 @@ class Food(str, Enum):
     f3 = "Cheese"
 
 
-def main(groceries: Annotated[List[Food], typer.Option(enum_by_name=True)] = ["f1", "f3"]):
+def main(
+    groceries: Annotated[List[Food], typer.Option(enum_by_name=True)] = ["f1", "f3"],
+):
     print(f"Buying groceries: {', '.join([f.value for f in groceries])}")
 
 
