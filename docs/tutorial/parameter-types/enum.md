@@ -182,5 +182,3 @@ This can be particularly useful if the enum values are not strings:
 ```Python hl_lines="7-10, 13"
 {!../docs_src/parameter_types/enum/tutorial005.py!}
 ```
-
-
