@@ -18,7 +18,10 @@ def main(
     ),
 ):
     for name in names:
-        print(f"Hello {name}")
+        if isinstance(name, Enum):
+            print(f"Hello {name.value}")
+        else:
+            print(f"Hello {name}")
 
 
 if __name__ == "__main__":
