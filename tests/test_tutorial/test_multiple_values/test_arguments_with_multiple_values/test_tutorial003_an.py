@@ -37,7 +37,7 @@ def test_invalid_args():
 
 
 def test_valid_args():
-    result = runner.invoke(app, ["Draco", "Hagrid", "Dobby", "hero1"])
+    result = runner.invoke(app, ["Draco", "Hagrid", "Dobby", "HERO1"])
     assert result.exit_code == 0
     assert "Hello Draco" in result.stdout
     assert "Hello Hagrid" in result.stdout

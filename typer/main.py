@@ -650,13 +650,13 @@ def generate_enum_convertor(enum: Type[Enum]) -> Callable[[Any], Any]:
 
 
 def generate_enum_name_convertor(enum: Type[Enum]) -> Callable[..., Any]:
-    lower_name_map = {str(item.name).lower(): item for item in enum}
+    val_map = {str(item.name): item for item in enum}
 
     def convertor(value: Any) -> Any:
         if value is not None:
-            low = str(value).lower()
-            if low in lower_name_map:
-                return lower_name_map[low]
+            val = str(value)
+            if val in val_map:
+                return val_map[val]
 
     return convertor
 
