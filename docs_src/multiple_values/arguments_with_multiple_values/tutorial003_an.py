@@ -14,7 +14,11 @@ class SuperHero(str, Enum):
 def main(
     names: Annotated[
         Tuple[str, str, str, SuperHero],
-        typer.Argument(enum_by_name=True, help="Select 4 characters to play with", case_sensitive=False),
+        typer.Argument(
+            enum_by_name=True,
+            help="Select 4 characters to play with",
+            case_sensitive=False,
+        ),
     ] = ("Harry", "Hermione", "Ron", "hero3"),
 ):
     for name in names:
