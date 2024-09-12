@@ -98,7 +98,7 @@ Training neural network of type: lstm
 
 ### Using Enum names instead of values
 
-Some times you want to accept `Enum` names from the command line and convert
+Sometimes you want to accept `Enum` names from the command line and convert
 that into `Enum` values in the command handler. You can enable this by setting
 `enum_by_name=True`:
 
