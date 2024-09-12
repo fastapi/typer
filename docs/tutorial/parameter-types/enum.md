@@ -140,7 +140,7 @@ This can be particularly useful if the enum values are not strings:
 
 //// tab | Python 3.7+
 
-```Python hl_lines="8-11, 14"
+```Python hl_lines="8-11 14"
 {!> ../docs_src/parameter_types/enum/tutorial005_an.py!}
 ```
 
@@ -154,7 +154,7 @@ Prefer to use the `Annotated` version if possible.
 
 ///
 
-```Python hl_lines="7-10, 13"
+```Python hl_lines="7-10 13"
 {!../docs_src/parameter_types/enum/tutorial005.py!}
 ```
 
