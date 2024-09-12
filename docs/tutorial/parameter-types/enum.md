@@ -96,6 +96,77 @@ Training neural network of type: lstm
 
 </div>
 
+### Using Enum names instead of values
+
+Some times you want to accept `Enum` names from the command line and convert
+that into `Enum` values in the command handler. You can enable this by setting
+`enum_by_name=True`:
+
+//// tab | Python 3.7+
+
+```Python hl_lines="14"
+{!> ../docs_src/parameter_types/enum/tutorial004_an.py!}
+```
+
+////
+
+//// tab | Python 3.7+ non-Annotated
+
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
+
+```Python hl_lines="13"
+{!> ../docs_src/parameter_types/enum/tutorial004.py!}
+```
+
+////
+
+And then the names of the `Enum` will be used instead of values:
+
+<div class="termy">
+
+```console
+$ python main.py --log-level debug
+
+Log level set to DEBUG
+```
+
+</div>
+
+This can be particularly useful if the enum values are not strings:
+
+//// tab | Python 3.7+
+
+```Python hl_lines="8-11, 14"
+{!> ../docs_src/parameter_types/enum/tutorial005_an.py!}
+```
+
+////
+
+//// tab | Python 3.7+ non-Annotated
+
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
+
+```Python hl_lines="7-10, 13"
+{!../docs_src/parameter_types/enum/tutorial005.py!}
+```
+
+////
+
+```console
+$ python main.py --access protected
+
+Access level: protected (2)
+```
+
+
 ### List of Enum values
 
 A *CLI parameter* can also take a list of `Enum` values:
@@ -154,37 +225,44 @@ Buying groceries: Eggs, Bacon
 
 </div>
 
+You can also combine `enum_by_name=True` with a list of enums:
 
-### Using Enum names instead of values
+//// tab | Python 3.7+
 
-Some times you want to accept `Enum` names from the command line and convert
-that into `Enum` values in the command handler. You can enable this by setting
-`enum_by_name=True`:
-
-```Python hl_lines="14"
-{!../docs_src/parameter_types/enum/tutorial004.py!}
+```Python hl_lines="15"
+{!> ../docs_src/parameter_types/enum/tutorial006_an.py!}
 ```
 
-And then the names of the `Enum` will be used instead of values:
+////
+
+//// tab | Python 3.7+ non-Annotated
+
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
+
+```Python hl_lines="13"
+{!> ../docs_src/parameter_types/enum/tutorial006.py!}
+```
+
+////
+
+This works exactly the same, but you're using the enum names instead of values:
 
 <div class="termy">
 
 ```console
-$ python main.py --log-level debug
+// Try it with a single value
+$ python main.py --groceries "f1"
 
-Log level set to DEBUG
+Buying groceries: Eggs
+
+// Try it with multiple values
+$ python main.py --groceries "f1" --groceries "f2"
+
+Buying groceries: Eggs, Bacon
 ```
 
 </div>
-
-This can be particularly useful if the enum values are not strings:
-
-```Python hl_lines="7-10, 13"
-{!../docs_src/parameter_types/enum/tutorial005.py!}
-```
-
-```console
-$ python main.py --access protected
-
-Access level: protected (2)
-```
