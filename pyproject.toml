@@ -184,6 +184,7 @@ ignore = [
 "docs_src/options_autocompletion/tutorial008_an.py" = ["B006"]
 "docs_src/options_autocompletion/tutorial009_an.py" = ["B006"]
 "docs_src/parameter_types/enum/tutorial003_an.py" = ["B006"]
+"docs_src/parameter_types/enum/tutorial006_an.py" = ["B006"]
 # Loop control variable `value` not used within loop body
 "docs_src/progressbar/tutorial001.py" = ["B007"]
 "docs_src/progressbar/tutorial003.py" = ["B007"]
