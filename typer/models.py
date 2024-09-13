@@ -384,7 +384,7 @@ class OptionInfo(ParameterInfo):
 
             warnings.warn(
                 "The 'is_flag' and 'flag_value' parameters are not supported by Typer "
-                " and will be removed entirely in a future release.",
+                "and will be removed entirely in a future release.",
                 DeprecationWarning,
                 stacklevel=2,
             )
