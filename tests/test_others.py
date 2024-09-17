@@ -291,4 +291,4 @@ def test_json_param_type_convert_dict_input():
 
 
 def test_dict_param_tyoe_name():
-    assert repr(DictParamType) == "DICT"
+    assert repr(DictParamType()) == "DICT"
