@@ -13,7 +13,7 @@ import typer
 import typer.completion
 from typer.core import _split_opt
 from typer.main import solve_typer_info_defaults, solve_typer_info_help
-from typer.models import ParameterInfo, TyperInfo, DictParamType
+from typer.models import DictParamType, ParameterInfo, TyperInfo
 from typer.testing import CliRunner
 
 runner = CliRunner()
