@@ -42,6 +42,9 @@ class BashComplete(click.shell_completion.BashComplete):
         except IndexError:
             incomplete = ""
 
+        obj = self.ctx_args.setdefault("obj", {})
+        if isinstance(obj, dict):
+            obj.setdefault("args", args)
         return args, incomplete
 
     def format_completion(self, item: click.shell_completion.CompletionItem) -> str:
@@ -77,6 +80,11 @@ class ZshComplete(click.shell_completion.ZshComplete):
             args = args[:-1]
         else:
             incomplete = ""
+
+        obj = self.ctx_args.setdefault("obj", {})
+        if isinstance(obj, dict):
+            obj.setdefault("args", args)
+
         return args, incomplete
 
     def format_completion(self, item: click.shell_completion.CompletionItem) -> str:
@@ -128,6 +136,11 @@ class FishComplete(click.shell_completion.FishComplete):
             args = args[:-1]
         else:
             incomplete = ""
+
+        obj = self.ctx_args.setdefault("obj", {})
+        if isinstance(obj, dict):
+            obj.setdefault("args", args)
+
         return args, incomplete
 
     def format_completion(self, item: click.shell_completion.CompletionItem) -> str:
@@ -177,6 +190,11 @@ class PowerShellComplete(click.shell_completion.ShellComplete):
         incomplete = os.getenv("_TYPER_COMPLETE_WORD_TO_COMPLETE", "")
         cwords = click.parser.split_arg_string(completion_args)
         args = cwords[1:-1] if incomplete else cwords[1:]
+
+        obj = self.ctx_args.setdefault("obj", {})
+        if isinstance(obj, dict):
+            obj.setdefault("args", args)
+
         return args, incomplete
 
     def format_completion(self, item: click.shell_completion.CompletionItem) -> str:

@@ -23,7 +23,6 @@ def test_completion():
     assert '"Camila":"The reader of books."' in result.stdout
     assert '"Carlos":"The writer of scripts."' in result.stdout
     assert '"Sebastian":"The type hints guy."' not in result.stdout
-    assert "[]" in result.stderr
 
 
 def test_1():

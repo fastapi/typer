@@ -59,7 +59,10 @@ def _typer_param_setup_autocompletion_compat(
     self: click.Parameter,
     *,
     autocompletion: Optional[
-        Callable[[click.Context, List[str], str], List[Union[Tuple[str, str], str]]]
+        Callable[
+            [click.Context, click.core.Parameter, str],
+            List[Union[Tuple[str, str], str, "click.shell_completion.CompletionItem"]],
+        ]
     ] = None,
 ) -> None:
     if self._custom_shell_complete is not None:
@@ -81,9 +84,11 @@ def _typer_param_setup_autocompletion_compat(
 
             out = []
 
-            for c in autocompletion(ctx, [], incomplete):
+            for c in autocompletion(ctx, param, incomplete):
                 if isinstance(c, tuple):
                     use_completion = CompletionItem(c[0], help=c[1])
+                elif isinstance(c, CompletionItem):
+                    use_completion = c
                 else:
                     assert isinstance(c, str)
                     use_completion = CompletionItem(c)
