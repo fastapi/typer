@@ -44,7 +44,7 @@ jobs:
           # Issue ref: https://github.com/actions/setup-python/issues/436
           # cache: "pip"
           # cache-dependency-path: pyproject.toml
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         if: ${{ runner.os != 'macOS' }}
         id: cache
         with:
@@ -67,6 +67,7 @@ jobs:
         with:
           name: coverage-${{ runner.os }}-${{ matrix.python-version }}
           path: coverage
+          include-hidden-files: true
 
   coverage-combine:
     needs: [test]
@@ -99,6 +100,7 @@ jobs:
         with:
           name: coverage-html
           path: htmlcov
+          include-hidden-files: true
 
   # https://github.com/marketplace/actions/alls-green#why
   check:  # This job does nothing and is only used for the branch protection

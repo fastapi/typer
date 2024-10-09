@@ -133,11 +133,6 @@ def test_completion_install_fish():
     assert "Completion will take effect once you restart the terminal" in result.stdout
 
 
-runner = CliRunner()
-app = typer.Typer()
-app.command()(mod.main)
-
-
 def test_completion_install_powershell():
     completion_path: Path = (
         Path.home() / ".config/powershell/Microsoft.PowerShell_profile.ps1"
