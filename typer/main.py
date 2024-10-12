@@ -651,7 +651,7 @@ def generate_list_convertor(
     convertor: Optional[Callable[[Any], Any]], default_value: Optional[Any]
 ) -> Callable[[Sequence[Any]], Optional[List[Any]]]:
     def internal_convertor(value: Sequence[Any]) -> Optional[List[Any]]:
-        if default_value is None and len(value) == 0:
+        if default_value is None and (value is None or len(value) == 0):
             return None
         return [convertor(v) if convertor else v for v in value]
 
