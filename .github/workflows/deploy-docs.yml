@@ -12,6 +12,9 @@ permissions:
   pull-requests: write
   statuses: write
 
+env:
+  UV_SYSTEM_PYTHON: 1
+
 jobs:
   deploy-docs:
     runs-on: ubuntu-latest
