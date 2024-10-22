@@ -113,7 +113,7 @@ name: str
 
 Now, finally what we came for, an optional *CLI argument*.
 
-To make a *CLI argument* optional, use `typer.Argument()` and pass a different "default" as the first parameter to `typer.Argument()`, for example `None`:
+To make a *CLI argument* optional, use `typer.Argument()` and make sure to provide a "default" value, for example `None`:
 
 ```Python hl_lines="7"
 {!../docs_src/arguments/optional/tutorial002_an.py!}
