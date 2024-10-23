@@ -31,7 +31,7 @@ The same way as with `typer.Argument()`, the old style of using the function par
 
 ////
 
-Or you can explictily pass `...` to `typer.Option(default=...)`:
+Or you can explicitly pass `...` to `typer.Option(default=...)`:
 
 //// tab | Python 3.7+ non-Annotated
 
