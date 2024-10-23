@@ -19,6 +19,7 @@ def Option(
     expose_value: bool = True,
     is_eager: bool = False,
     envvar: Optional[Union[str, List[str]]] = None,
+    # Note that shell_complete is not fully supported and will be removed in future versions
     shell_complete: Optional[
         Callable[
             [click.Context, click.Parameter, str],
@@ -82,6 +83,7 @@ def Option(
     expose_value: bool = True,
     is_eager: bool = False,
     envvar: Optional[Union[str, List[str]]] = None,
+    # Note that shell_complete is not fully supported and will be removed in future versions
     shell_complete: Optional[
         Callable[
             [click.Context, click.Parameter, str],
@@ -143,6 +145,7 @@ def Option(
     expose_value: bool = True,
     is_eager: bool = False,
     envvar: Optional[Union[str, List[str]]] = None,
+    # Note that shell_complete is not fully supported and will be removed in future versions
     shell_complete: Optional[
         Callable[
             [click.Context, click.Parameter, str],
@@ -262,6 +265,7 @@ def Argument(
     expose_value: bool = True,
     is_eager: bool = False,
     envvar: Optional[Union[str, List[str]]] = None,
+    # Note that shell_complete is not fully supported and will be removed in future versions
     shell_complete: Optional[
         Callable[
             [click.Context, click.Parameter, str],
@@ -317,6 +321,7 @@ def Argument(
     expose_value: bool = True,
     is_eager: bool = False,
     envvar: Optional[Union[str, List[str]]] = None,
+    # Note that shell_complete is not fully supported and will be removed in future versions
     shell_complete: Optional[
         Callable[
             [click.Context, click.Parameter, str],
@@ -370,6 +375,7 @@ def Argument(
     expose_value: bool = True,
     is_eager: bool = False,
     envvar: Optional[Union[str, List[str]]] = None,
+    # Note that shell_complete is not fully supported and will be removed in future versions
     shell_complete: Optional[
         Callable[
             [click.Context, click.Parameter, str],

@@ -115,8 +115,6 @@ xfail_strict = true
 junit_family = "xunit2"
 filterwarnings = [
     "error",
-    # TODO: until I refactor completion to use the new shell_complete
-    "ignore:'autocompletion' is renamed to 'shell_complete'. The old name is deprecated and will be removed in Click 8.1. See the docs about 'Parameter' for information about new behavior.:DeprecationWarning:typer",
     # For pytest-xdist
     'ignore::DeprecationWarning:xdist',
 ]

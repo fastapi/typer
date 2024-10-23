@@ -74,7 +74,7 @@ This command generates a directory `./htmlcov/`, if you open the file `./htmlcov
 
 To try and test the completion for different shells and check that they are working you can use a Docker container.
 
-There's a `Dockerfile` and a a Docker Compose file `compose.yaml` at `./scripts/docker/`.
+There's a `Dockerfile` and a Docker Compose file `compose.yaml` at `./scripts/docker/`.
 
 It has installed `bash`, `zsh`, `fish`, and `pwsh` (PowerShell for Linux).
 
@@ -237,9 +237,9 @@ That way, you can edit the documentation/source files and see the changes live.
 
 /// tip
 
-Alternatively, you can perform the same steps that scripts does manually.
+Alternatively, you can perform the same steps that script does manually.
 
-Go into the docs director at `docs/`:
+Go into the docs directory at `docs/`:
 
 ```console
 $ cd docs/

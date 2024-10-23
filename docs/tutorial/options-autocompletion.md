@@ -14,7 +14,7 @@ After installing completion for your own Python package (or using the `typer` co
 
 To check it quickly without creating a new Python package, use the `typer` command.
 
-Then let's create small example program:
+Then let's create a small example program:
 
 //// tab | Python 3.7+
 
@@ -564,3 +564,13 @@ You can declare function parameters of these types:
 * `List[str]`: for the raw *CLI parameters*.
 
 It doesn't matter how you name them, in which order, or which ones of the 3 options you declare. It will all "**just work**" ✨
+
+## Comparison to Click functionality
+
+Note that Click 7 had a similar [`autocompletion` function](https://click.palletsprojects.com/en/7.x/bashcomplete/), but it worked slightly differently.
+
+It required the callback function to take exactly the 3 arguments `ctx`, `args` and `incomplete` in that exact order, instead of matching them dynamically based on types, as Typer does.
+
+Since Click 8, this functionality has been replaced by [`shell_complete`](https://click.palletsprojects.com/en/8.1.x/api/#click.ParamType.shell_complete), which still depends on the exact order of arguments for the callback function.
+
+However, Typer continues to use the `autocompletion` functionality as described on this page.
