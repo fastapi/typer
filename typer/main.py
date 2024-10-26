@@ -70,7 +70,6 @@ def except_hook(
     if (
         standard_traceback
         or not exception_config
-        or not exception_config.pretty_exceptions_enable
     ):
         _original_except_hook(exc_type, exc_value, tb)
         return
@@ -316,27 +315,29 @@ class Typer:
         )
 
     def __call__(self, *args: Any, **kwargs: Any) -> Any:
-        if sys.excepthook != except_hook:
-            sys.excepthook = except_hook
-        try:
-            return get_command(self)(*args, **kwargs)
-        except Exception as e:
-            # Set a custom attribute to tell the hook to show nice exceptions for user
-            # code. An alternative/first implementation was a custom exception with
-            # raise custom_exc from e
-            # but that means the last error shown is the custom exception, not the
-            # actual error. This trick improves developer experience by showing the
-            # actual error last.
-            setattr(
-                e,
-                _typer_developer_exception_attr_name,
-                DeveloperExceptionConfig(
-                    pretty_exceptions_enable=self.pretty_exceptions_enable,
-                    pretty_exceptions_show_locals=self.pretty_exceptions_show_locals,
-                    pretty_exceptions_short=self.pretty_exceptions_short,
-                ),
-            )
-            raise e
+        if self.pretty_exceptions_enable:
+            if sys.excepthook != except_hook:
+                sys.excepthook = except_hook
+            try:
+                return get_command(self)(*args, **kwargs)
+            except Exception as e:
+                # Set a custom attribute to tell the hook to show nice exceptions for user
+                # code. An alternative/first implementation was a custom exception with
+                # raise custom_exc from e
+                # but that means the last error shown is the custom exception, not the
+                # actual error. This trick improves developer experience by showing the
+                # actual error last.
+                setattr(
+                    e,
+                    _typer_developer_exception_attr_name,
+                    DeveloperExceptionConfig(
+                        pretty_exceptions_show_locals=self.pretty_exceptions_show_locals,
+                        pretty_exceptions_short=self.pretty_exceptions_short,
+                    ),
+                )
+                raise e
+            else:
+                return get_command(self)(*args, **kwargs)
 
 
 def get_group(typer_instance: Typer) -> TyperGroup:
