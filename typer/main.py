@@ -67,10 +67,7 @@ def except_hook(
         exc_value, _typer_developer_exception_attr_name, None
     )
     standard_traceback = os.getenv("_TYPER_STANDARD_TRACEBACK")
-    if (
-        standard_traceback
-        or not exception_config
-    ):
+    if standard_traceback or not exception_config:
         _original_except_hook(exc_type, exc_value, tb)
         return
     typer_path = os.path.dirname(__file__)
