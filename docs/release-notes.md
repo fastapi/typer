@@ -13,6 +13,7 @@
 
 ### Internal
 
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1032](https://github.com/fastapi/typer/pull/1032) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * ⬆ Bump ruff from 0.7.0 to 0.7.1. PR [#1029](https://github.com/fastapi/typer/pull/1029) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pillow from 10.4.0 to 11.0.0. PR [#1023](https://github.com/fastapi/typer/pull/1023) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump mkdocs-material from 9.5.35 to 9.5.42. PR [#1027](https://github.com/fastapi/typer/pull/1027) by [@dependabot[bot]](https://github.com/apps/dependabot).
