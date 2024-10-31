@@ -12,7 +12,6 @@ from click.termui import confirm as confirm
 from click.termui import echo_via_pager as echo_via_pager
 from click.termui import edit as edit
 from click.termui import getchar as getchar
-from click.termui import launch as launch
 from click.termui import pause as pause
 from click.termui import progressbar as progressbar
 from click.termui import prompt as prompt
@@ -27,6 +26,7 @@ from click.utils import get_text_stream as get_text_stream
 from click.utils import open_file as open_file
 
 from . import colors as colors
+from .launch import launch as launch
 from .main import Typer as Typer
 from .main import run as run
 from .models import CallbackParam as CallbackParam
@@ -37,4 +37,3 @@ from .models import FileText as FileText
 from .models import FileTextWrite as FileTextWrite
 from .params import Argument as Argument
 from .params import Option as Option
-from .browser import open_browser as open_browser
