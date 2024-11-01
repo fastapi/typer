@@ -10,7 +10,7 @@ def users():
 
 
 users_app = typer.Typer(callback=users)
-app.add_typer(users_app, name="users")
+app.add_typer(users_app)
 
 
 @users_app.command()

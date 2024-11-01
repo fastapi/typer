@@ -18,7 +18,7 @@ def new_users():
     """
 
 
-app.add_typer(users_app, callback=new_users, name="users")
+app.add_typer(users_app, callback=new_users)
 
 
 @users_app.callback("call-users", help="Help from callback for users.")

@@ -3,7 +3,7 @@ import typer
 app = typer.Typer()
 
 users_app = typer.Typer()
-app.add_typer(users_app, name="users")
+app.add_typer(users_app)
 
 
 @users_app.callback()
