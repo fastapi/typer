@@ -1112,8 +1112,8 @@ def launch(url: str, wait: bool = False, locate: bool = False) -> int:
 
     Examples::
 
-        typer.launch('https://click.palletsprojects.com/')
-        typer.launch('/my/downloaded/file', locate=True)
+        typer.launch("https://typer.tiangolo.com/")
+        typer.launch("/my/downloaded/file", locate=True)
 
     :param url: URL or filename of the thing to launch.
     :param wait: Wait for the program to exit before returning. This
