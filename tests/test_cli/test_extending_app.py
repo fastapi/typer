@@ -99,6 +99,7 @@ def test_script_sub_command_help():
     )
     assert "sub-sub-command" in result.stdout
 
+
 def test_script_sub_sub_command():
     result = subprocess.run(
         [
