@@ -294,6 +294,7 @@ class Typer:
     ) -> None:
         if not name:
             self.registered_commands += typer_instance.registered_commands
+            self.registered_groups += typer_instance.registered_groups
         else:
             self.registered_groups.append(
                 TyperInfo(
