@@ -292,32 +292,28 @@ class Typer:
         # Rich settings
         rich_help_panel: Union[str, None] = Default(None),
     ) -> None:
-        if not name:
-            self.registered_commands += typer_instance.registered_commands
-            self.registered_groups += typer_instance.registered_groups
-        else:
-            self.registered_groups.append(
-                TyperInfo(
-                    typer_instance,
-                    name=name,
-                    cls=cls,
-                    invoke_without_command=invoke_without_command,
-                    no_args_is_help=no_args_is_help,
-                    subcommand_metavar=subcommand_metavar,
-                    chain=chain,
-                    result_callback=result_callback,
-                    context_settings=context_settings,
-                    callback=callback,
-                    help=help,
-                    epilog=epilog,
-                    short_help=short_help,
-                    options_metavar=options_metavar,
-                    add_help_option=add_help_option,
-                    hidden=hidden,
-                    deprecated=deprecated,
-                    rich_help_panel=rich_help_panel,
-                )
+        self.registered_groups.append(
+            TyperInfo(
+                typer_instance,
+                name=name,
+                cls=cls,
+                invoke_without_command=invoke_without_command,
+                no_args_is_help=no_args_is_help,
+                subcommand_metavar=subcommand_metavar,
+                chain=chain,
+                result_callback=result_callback,
+                context_settings=context_settings,
+                callback=callback,
+                help=help,
+                epilog=epilog,
+                short_help=short_help,
+                options_metavar=options_metavar,
+                add_help_option=add_help_option,
+                hidden=hidden,
+                deprecated=deprecated,
+                rich_help_panel=rich_help_panel,
             )
+        )
 
     def __call__(self, *args: Any, **kwargs: Any) -> Any:
         if sys.excepthook != except_hook:
@@ -505,6 +501,7 @@ def get_group_from_info(
         )
         if command.name:
             commands[command.name] = command
+    # TODO: if a group has no name, then what?
     for sub_group_info in group_info.typer_instance.registered_groups:
         sub_group = get_group_from_info(
             sub_group_info,
@@ -514,8 +511,9 @@ def get_group_from_info(
         if sub_group.name:
             commands[sub_group.name] = sub_group
         else:
-            # TODO: should we do something in this case?
-            ...
+            # TODO: also subgroups?
+            for sub_command_name, sub_command in sub_group.commands.items():
+                commands[sub_command_name] = sub_command
     solved_info = solve_typer_info_defaults(group_info)
     (
         params,
