@@ -501,7 +501,6 @@ def get_group_from_info(
         )
         if command.name:
             commands[command.name] = command
-    # TODO: if a group has no name, then what?
     for sub_group_info in group_info.typer_instance.registered_groups:
         sub_group = get_group_from_info(
             sub_group_info,
@@ -511,7 +510,6 @@ def get_group_from_info(
         if sub_group.name:
             commands[sub_group.name] = sub_group
         else:
-            # TODO: also subgroups?
             for sub_command_name, sub_command in sub_group.commands.items():
                 commands[sub_command_name] = sub_command
     solved_info = solve_typer_info_defaults(group_info)
