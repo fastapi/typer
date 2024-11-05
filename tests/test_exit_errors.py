@@ -18,6 +18,7 @@ def test_eoferror():
     result = runner.invoke(app)
     assert result.exit_code == 1
 
+
 def test_keyboardinterrupt():
     # Mainly for coverage/completeness
     app = typer.Typer()
@@ -29,6 +30,7 @@ def test_keyboardinterrupt():
     result = runner.invoke(app)
     assert result.exit_code == 130
     assert result.stdout == ""
+
 
 def test_oserror():
     # Mainly for coverage/completeness
