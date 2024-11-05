@@ -209,7 +209,7 @@ def _main(
             click.echo(file=sys.stderr)
             raise click.Abort() from e
         except KeyboardInterrupt as e:
-            raise click.exceptions.Exit() from e
+            raise click.exceptions.Exit(130) from e
         except click.ClickException as e:
             if not standalone_mode:
                 raise
