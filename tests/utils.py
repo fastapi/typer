@@ -1,4 +1,5 @@
 import sys
+from os import getenv
 
 import pytest
 
@@ -24,4 +25,9 @@ needs_linux = pytest.mark.skipif(
 
 needs_bash = pytest.mark.skipif(
     not shellingham or not shell or "bash" not in shell, reason="Test requires Bash"
+)
+
+requires_completion_permission = pytest.mark.skipif(
+    not getenv("_TYPER_RUN_INSTALL_COMPLETION_TESTS", False),
+    reason="Test requires permission to run completion installation tests",
 )
