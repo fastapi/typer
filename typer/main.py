@@ -880,7 +880,7 @@ def get_click_param(
     if is_tuple:
         convertor = generate_tuple_convertor(get_args(main_type))
     if isinstance(parameter_info, OptionInfo):
-        if main_type is bool and parameter_info.is_flag is not False:
+        if main_type is bool:
             is_flag = True
             # Click doesn't accept a flag of type bool, only None, and then it sets it
             # to bool internally
@@ -907,7 +907,6 @@ def get_click_param(
                 prompt_required=parameter_info.prompt_required,
                 hide_input=parameter_info.hide_input,
                 is_flag=is_flag,
-                flag_value=parameter_info.flag_value,
                 multiple=is_list,
                 count=parameter_info.count,
                 allow_from_autoenv=parameter_info.allow_from_autoenv,
