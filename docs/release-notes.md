@@ -8,6 +8,7 @@
 
 ### Fixes
 
+* 🐛 Fix equality check for custom classes. PR [#979](https://github.com/fastapi/typer/pull/979) by [@AryazE](https://github.com/AryazE).
 * 🐛 Allow colon in zsh autocomplete values and descriptions. PR [#988](https://github.com/fastapi/typer/pull/988) by [@snapbug](https://github.com/snapbug).
 
 ### Refactors
