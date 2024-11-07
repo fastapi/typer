@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.13.0
+
 ### Features
 
 * ✨ Handle `KeyboardInterrupt` separately from other exceptions. PR [#1039](https://github.com/fastapi/typer/pull/1039) by [@patrick91](https://github.com/patrick91).
