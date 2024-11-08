@@ -512,7 +512,7 @@ def get_group_from_info(
     solved_info = solve_typer_info_defaults(group_info)
     (
         params,
-        converters,
+        convertors,
         context_param_name,
     ) = get_params_convertors_ctx_param_name_from_function(solved_info.callback)
     cls = solved_info.cls or TyperGroup
@@ -529,7 +529,7 @@ def get_group_from_info(
         callback=get_callback(
             callback=solved_info.callback,
             params=params,
-            converters=converters,
+            convertors=convertors,
             context_param_name=context_param_name,
             pretty_exceptions_short=pretty_exceptions_short,
         ),
@@ -556,7 +556,7 @@ def get_params_convertors_ctx_param_name_from_function(
     callback: Optional[Callable[..., Any]],
 ) -> Tuple[List[Union[click.Argument, click.Option]], Dict[str, Any], Optional[str]]:
     params = []
-    converters = {}
+    convertors = {}
     context_param_name = None
     if callback:
         parameters = get_params_from_function(callback)
@@ -564,11 +564,11 @@ def get_params_convertors_ctx_param_name_from_function(
             if lenient_issubclass(param.annotation, click.Context):
                 context_param_name = param_name
                 continue
-            click_param, converter = get_click_param(param)
-            if converter:
-                converters[param_name] = converter
+            click_param, convertor = get_click_param(param)
+            if convertor:
+                convertors[param_name] = convertor
             params.append(click_param)
-    return params, converters, context_param_name
+    return params, convertors, context_param_name
 
 
 def get_command_from_info(
@@ -586,7 +586,7 @@ def get_command_from_info(
         use_help = inspect.cleandoc(use_help)
     (
         params,
-        converters,
+        convertors,
         context_param_name,
     ) = get_params_convertors_ctx_param_name_from_function(command_info.callback)
     cls = command_info.cls or TyperCommand
@@ -596,7 +596,7 @@ def get_command_from_info(
         callback=get_callback(
             callback=command_info.callback,
             params=params,
-            converters=converters,
+            convertors=convertors,
             context_param_name=context_param_name,
             pretty_exceptions_short=pretty_exceptions_short,
         ),
@@ -617,12 +617,12 @@ def get_command_from_info(
 
 
 def determine_type_convertor(type_: Any) -> Optional[Callable[[Any], Any]]:
-    converter: Optional[Callable[[Any], Any]] = None
+    convertor: Optional[Callable[[Any], Any]] = None
     if lenient_issubclass(type_, Path):
-        converter = param_path_convertor
+        convertor = param_path_convertor
     if lenient_issubclass(type_, Enum):
-        converter = generate_enum_convertor(type_)
-    return converter
+        convertor = generate_enum_convertor(type_)
+    return convertor
 
 
 def param_path_convertor(value: Optional[str] = None) -> Optional[Path]:
@@ -634,23 +634,23 @@ def param_path_convertor(value: Optional[str] = None) -> Optional[Path]:
 def generate_enum_convertor(enum: Type[Enum]) -> Callable[[Any], Any]:
     val_map = {str(val.value): val for val in enum}
 
-    def converter(value: Any) -> Any:
+    def convertor(value: Any) -> Any:
         if value is not None:
             val = str(value)
             if val in val_map:
                 key = val_map[val]
                 return enum(key)
 
-    return converter
+    return convertor
 
 
 def generate_list_convertor(
-    converter: Optional[Callable[[Any], Any]], default_value: Optional[Any]
+    convertor: Optional[Callable[[Any], Any]], default_value: Optional[Any]
 ) -> Callable[[Sequence[Any]], Optional[List[Any]]]:
     def internal_convertor(value: Sequence[Any]) -> Optional[List[Any]]:
         if default_value is None and len(value) == 0:
             return None
-        return [converter(v) if converter else v for v in value]
+        return [convertor(v) if convertor else v for v in value]
 
     return internal_convertor
 
@@ -658,7 +658,7 @@ def generate_list_convertor(
 def generate_tuple_convertor(
     types: Sequence[Any],
 ) -> Callable[[Optional[Tuple[Any, ...]]], Optional[Tuple[Any, ...]]]:
-    converters = [determine_type_convertor(type_) for type_ in types]
+    convertors = [determine_type_convertor(type_) for type_ in types]
 
     def internal_convertor(
         param_args: Optional[Tuple[Any, ...]],
@@ -666,8 +666,8 @@ def generate_tuple_convertor(
         if param_args is None:
             return None
         return tuple(
-            converter(arg) if converter else arg
-            for (converter, arg) in zip(converters, param_args)
+            convertor(arg) if convertor else arg
+            for (convertor, arg) in zip(convertors, param_args)
         )
 
     return internal_convertor
@@ -677,11 +677,11 @@ def get_callback(
     *,
     callback: Optional[Callable[..., Any]] = None,
     params: Sequence[click.Parameter] = [],
-    converters: Optional[Dict[str, Callable[[str], Any]]] = None,
+    convertors: Optional[Dict[str, Callable[[str], Any]]] = None,
     context_param_name: Optional[str] = None,
     pretty_exceptions_short: bool,
 ) -> Optional[Callable[..., Any]]:
-    use_convertors = converters or {}
+    use_convertors = convertors or {}
     if not callback:
         return None
     parameters = get_params_from_function(callback)
@@ -872,13 +872,13 @@ def get_click_param(
         parameter_type = get_click_type(
             annotation=main_type, parameter_info=parameter_info
         )
-    converter = determine_type_convertor(main_type)
+    convertor = determine_type_convertor(main_type)
     if is_list:
-        converter = generate_list_convertor(
-            converter=converter, default_value=default_value
+        convertor = generate_list_convertor(
+            convertor=convertor, default_value=default_value
         )
     if is_tuple:
-        converter = generate_tuple_convertor(get_args(main_type))
+        convertor = generate_tuple_convertor(get_args(main_type))
     if isinstance(parameter_info, OptionInfo):
         if main_type is bool and parameter_info.is_flag is not False:
             is_flag = True
@@ -920,7 +920,7 @@ def get_click_param(
                 required=required,
                 default=default_value,
                 callback=get_param_callback(
-                    callback=parameter_info.callback, converter=converter
+                    callback=parameter_info.callback, convertor=convertor
                 ),
                 metavar=parameter_info.metavar,
                 expose_value=parameter_info.expose_value,
@@ -931,7 +931,7 @@ def get_click_param(
                 # Rich settings
                 rich_help_panel=parameter_info.rich_help_panel,
             ),
-            converter,
+            convertor,
         )
     elif isinstance(parameter_info, ArgumentInfo):
         param_decls = [param.name]
@@ -954,7 +954,7 @@ def get_click_param(
                 # Parameter
                 default=default_value,
                 callback=get_param_callback(
-                    callback=parameter_info.callback, converter=converter
+                    callback=parameter_info.callback, convertor=convertor
                 ),
                 metavar=parameter_info.metavar,
                 expose_value=parameter_info.expose_value,
@@ -965,7 +965,7 @@ def get_click_param(
                 # Rich settings
                 rich_help_panel=parameter_info.rich_help_panel,
             ),
-            converter,
+            convertor,
         )
     raise AssertionError("A click.Parameter should be returned")  # pragma: no cover
 
@@ -973,7 +973,7 @@ def get_click_param(
 def get_param_callback(
     *,
     callback: Optional[Callable[..., Any]] = None,
-    converter: Optional[Callable[..., Any]] = None,
+    convertor: Optional[Callable[..., Any]] = None,
 ) -> Optional[Callable[..., Any]]:
     if not callback:
         return None
@@ -1011,8 +1011,8 @@ def get_param_callback(
         if click_param_name:
             use_params[click_param_name] = param
         if value_name:
-            if converter:
-                use_value = converter(value)
+            if convertor:
+                use_value = convertor(value)
             else:
                 use_value = value
             use_params[value_name] = use_value
