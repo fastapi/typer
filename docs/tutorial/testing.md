@@ -77,11 +77,9 @@ Here we are checking that the exit code is 0, as it is for programs that exit wi
 
 Then we check that the text printed to "standard output" contains the text that our CLI program prints.
 
-### Check the result for standard error
-
 /// tip
 
-Checking for output sent to standard error? Make sure your `CliRunner` instance is created with the `mix_stderr=False` argument. You need this to be able to access `result.stderr` in tests.
+**Checking for output sent to standard error?** Make sure your `CliRunner` instance is created with the `mix_stderr=False` argument. You need this to be able to access `result.stderr` in tests.
 
 ///
 
