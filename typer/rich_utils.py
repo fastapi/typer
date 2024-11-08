@@ -149,12 +149,9 @@ def _make_rich_text(
 ) -> Union[Markdown, Text]:
     """Take a string, remove indentations, and return styled text.
 
-    By default, return the text as a Rich Text with the request style.
-    If `rich_markdown_enable` is `True`, also parse the text for Rich markup strings.
-    If `rich_markup_enable` is `True`, parse as Markdown.
-
-    Only one of `rich_markdown_enable` or `rich_markup_enable` can be True.
-    If both are True, `rich_markdown_enable` takes precedence.
+    By default, the text is not parsed for any special formatting.
+    If `markup_mode` is `"rich"`, the text is parsed for Rich markup strings.
+    If `markup_mode` is `"markdown"`, parse as Markdown.
     """
     # Remove indentations from input text
     text = inspect.cleandoc(text)

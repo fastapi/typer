@@ -68,7 +68,6 @@ def _install_completion_placeholder_function(
     install_completion: bool = Option(
         None,
         "--install-completion",
-        is_flag=True,
         callback=install_callback,
         expose_value=False,
         help="Install completion for the current shell.",
@@ -76,7 +75,6 @@ def _install_completion_placeholder_function(
     show_completion: bool = Option(
         None,
         "--show-completion",
-        is_flag=True,
         callback=show_callback,
         expose_value=False,
         help="Show completion for the current shell, to copy it or customize the installation.",
