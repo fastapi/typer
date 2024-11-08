@@ -177,6 +177,7 @@ def test_completion_untyped_parameters():
     )
     assert "info name is: completion_no_types.py" in result.stderr
     assert "args is: ['--name', 'Sebastian', '--name']" in result.stderr
+    assert "param is: name" in result.stderr
     assert "incomplete is: Ca" in result.stderr
     assert '"Camila":"The reader of books."' in result.stdout
     assert '"Carlos":"The writer of scripts."' in result.stdout
@@ -203,6 +204,7 @@ def test_completion_untyped_parameters_different_order_correct_names():
     )
     assert "info name is: completion_no_types_order.py" in result.stderr
     assert "args is: ['--name', 'Sebastian', '--name']" in result.stderr
+    assert "param is: name" in result.stderr
     assert "incomplete is: Ca" in result.stderr
     assert '"Camila":"The reader of books."' in result.stdout
     assert '"Carlos":"The writer of scripts."' in result.stdout
