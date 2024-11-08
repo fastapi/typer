@@ -214,7 +214,7 @@ Hello Sebastian
 
 And the same way as before, we want to provide **completion** for those names. But we don't want to provide the **same names** for completion if they were already given in previous parameters.
 
-For that, we will access and use the "Context". When you create a **Typer** application it uses Click underneath. And every Click application has a special object called a <a href="https://click.palletsprojects.com/en/7.x/commands/#nested-handling-and-contexts" class="external-link" target="_blank">"Context"</a> that is normally hidden.
+For that, we will access and use the "Context". When you create a **Typer** application it uses Click underneath. And every Click application has a special object called a <a href="https://click.palletsprojects.com/en/stable/commands/#nested-handling-and-contexts" class="external-link" target="_blank">"Context"</a> that is normally hidden.
 
 But you can access the context by declaring a function parameter of type `typer.Context`.
 
@@ -263,6 +263,56 @@ Carlos  -- The writer of scripts.
 It's quite possible that if there's only one option left, your shell will complete it right away instead of showing the option with the help text, to save you more typing.
 
 ///
+
+## Reusing generic completer functions
+
+You may want to reuse completer functions across CLI applications or within the same CLI application. If you need to filter out previously supplied parameters the completer function will first have to determine which parameter it is being asked to complete.
+
+We can declare a parameter of type <a href="https://click.palletsprojects.com/en/stable/api/#click.Parameter" class="external-link" target="_blank">click.Parameter</a> along with the `click.Context` in our completer function to determine this. For example, lets revisit our above context example where we filter out duplicates but add a second greeter argument that reuses the same completer function:
+
+//// tab | Python 3.7+
+
+```Python hl_lines="15-16"
+{!> ../docs_src/options_autocompletion/tutorial010_an.py!}
+```
+
+////
+
+//// tab | Python 3.7+ non-Annotated
+
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
+
+```Python hl_lines="14-15"
+{!> ../docs_src/options_autocompletion/tutorial010.py!}
+```
+
+////
+
+/// tip
+
+You may also return <a href="https://click.palletsprojects.com/en/stable/api/#click.shell_completion.CompletionItem" class="external-link" target="_blank">click.shell_completion.CompletionItem</a> objects from completer functions instead of 2-tuples.
+
+///
+
+
+Check it:
+
+<div class="termy">
+
+```console
+$ typer ./main.py run --name Sebastian --greeter Camila --greeter [TAB][TAB]
+
+// Our function returns Sebastian too because it is completing greeter
+Carlos     -- The writer of scripts.
+Sebastian  -- The type hints guy.
+```
+
+</div>
+
 
 ## Getting the raw *CLI parameters*
 
@@ -381,6 +431,7 @@ You can declare function parameters of these types:
 
 * `str`: for the incomplete value.
 * `typer.Context`: for the current context.
+* `click.Parameter`: for the CLI parameter being completed.
 * `List[str]`: for the raw *CLI parameters*.
 
 It doesn't matter how you name them, in which order, or which ones of the 3 options you declare. It will all "**just work**" ✨

@@ -1034,7 +1034,7 @@ def get_param_completion(
         elif lenient_issubclass(origin, List):
             args_name = param_sig.name
             unassigned_params.remove(param_sig)
-        elif lenient_issubclass(param_sig.annotation, click.core.Parameter):
+        elif lenient_issubclass(param_sig.annotation, click.Parameter):
             param_name = param_sig.name
             unassigned_params.remove(param_sig)
         elif lenient_issubclass(param_sig.annotation, str):
