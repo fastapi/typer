@@ -13,7 +13,10 @@ from typing import (
     Union,
 )
 
-from typing_extensions import Literal, get_args, get_origin
+if sys.version_info >= (3, 9):
+    from typing import Literal, get_args, get_origin
+else:
+    from typing_extensions import Literal, get_args, get_origin
 
 if sys.version_info < (3, 10):
 
