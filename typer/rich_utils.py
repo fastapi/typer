@@ -1,7 +1,6 @@
 # Extracted and modified from https://github.com/ewels/rich-click
 
 import inspect
-import sys
 from collections import defaultdict
 from gettext import gettext as _
 from os import getenv
