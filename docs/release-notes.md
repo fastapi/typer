@@ -4,6 +4,7 @@
 
 ### Internal
 
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1047](https://github.com/fastapi/typer/pull/1047) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * ⬆ Bump ruff from 0.7.2 to 0.7.3. PR [#1046](https://github.com/fastapi/typer/pull/1046) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump tiangolo/latest-changes from 0.3.1 to 0.3.2. PR [#1044](https://github.com/fastapi/typer/pull/1044) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Update pytest-cov requirement from <6.0.0,>=2.10.0 to >=2.10.0,<7.0.0. PR [#1033](https://github.com/fastapi/typer/pull/1033) by [@dependabot[bot]](https://github.com/apps/dependabot).
