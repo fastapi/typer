@@ -14,9 +14,15 @@ from typing import (
 )
 
 if sys.version_info >= (3, 9):
-    from typing import Literal, get_args, get_origin
+    from typing import Annotated, Literal, get_args, get_origin, get_type_hints
 else:
-    from typing_extensions import Literal, get_args, get_origin
+    from typing_extensions import (
+        Annotated,
+        Literal,
+        get_args,
+        get_origin,
+        get_type_hints,
+    )
 
 if sys.version_info < (3, 10):
 
@@ -37,6 +43,11 @@ __all__ = (
     "is_literal_type",
     "all_literal_values",
     "is_union",
+    "Annotated",
+    "Literal",
+    "get_args",
+    "get_origin",
+    "get_type_hints",
 )
 
 

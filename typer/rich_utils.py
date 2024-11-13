@@ -21,10 +21,7 @@ from rich.table import Table
 from rich.text import Text
 from rich.theme import Theme
 
-if sys.version_info >= (3, 8):
-    from typing import Literal
-else:
-    from typing_extensions import Literal
+from ._typing import Literal
 
 # Default styles
 STYLE_OPTION = "bold cyan"
