@@ -2,7 +2,7 @@
 
 Apart from having a prompt, you can make a *CLI option* have a `confirmation_prompt=True`:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="7"
 {!> ../docs_src/options/password/tutorial001_an.py!}
@@ -10,7 +10,7 @@ Apart from having a prompt, you can make a *CLI option* have a `confirmation_pro
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -50,7 +50,7 @@ You can achieve the same using `hide_input=True`.
 
 And if you combine it with `confirmation_prompt=True` you can easily receive a password with double confirmation:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="8"
 {!> ../docs_src/options/password/tutorial002_an.py!}
@@ -58,7 +58,7 @@ And if you combine it with `confirmation_prompt=True` you can easily receive a p
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 

@@ -4,7 +4,7 @@ You can declare a *CLI parameter* to be a standard Python <a href="https://docs.
 
 This is what you would do for directory paths, file paths, etc:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="1  8"
 {!> ../docs_src/parameter_types/path/tutorial001_an.py!}
@@ -12,7 +12,7 @@ This is what you would do for directory paths, file paths, etc:
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -85,7 +85,7 @@ All these parameters come directly from <a href="https://click.palletsprojects.c
 
 For example:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="11-16"
 {!> ../docs_src/parameter_types/path/tutorial002_an.py!}
@@ -93,7 +93,7 @@ For example:
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 

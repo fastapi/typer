@@ -56,7 +56,7 @@ Error: Invalid value for '--network': 'CONV' is not one of 'simple', 'conv', 'ls
 
 You can make an `Enum` (choice) *CLI parameter* be case-insensitive with the `case_sensitive` parameter:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="15"
 {!> ../docs_src/parameter_types/enum/tutorial002_an.py!}
@@ -64,7 +64,7 @@ You can make an `Enum` (choice) *CLI parameter* be case-insensitive with the `ca
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -100,7 +100,7 @@ Training neural network of type: lstm
 
 A *CLI parameter* can also take a list of `Enum` values:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="14"
 {!> ../docs_src/parameter_types/enum/tutorial003_an.py!}
@@ -108,7 +108,7 @@ A *CLI parameter* can also take a list of `Enum` values:
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 

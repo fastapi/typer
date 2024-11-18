@@ -4,7 +4,7 @@ Commands can also have their own *CLI options*.
 
 In fact, each command can have different *CLI arguments* and *CLI options*:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="8  14-17  27-29  38"
 {!> ../docs_src/commands/options/tutorial001_an.py!}
@@ -12,7 +12,7 @@ In fact, each command can have different *CLI arguments* and *CLI options*:
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 

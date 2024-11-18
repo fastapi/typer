@@ -1,11 +1,10 @@
 # Extracted and modified from https://github.com/ewels/rich-click
 
 import inspect
-import sys
 from collections import defaultdict
 from gettext import gettext as _
 from os import getenv
-from typing import Any, DefaultDict, Dict, Iterable, List, Optional, Union
+from typing import Any, DefaultDict, Dict, Iterable, List, Literal, Optional, Union
 
 import click
 from rich import box
@@ -20,11 +19,6 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 from rich.theme import Theme
-
-if sys.version_info >= (3, 8):
-    from typing import Literal
-else:
-    from typing_extensions import Literal
 
 # Default styles
 STYLE_OPTION = "bold cyan"

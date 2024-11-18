@@ -6,7 +6,7 @@ For example, let's say you want to accept several users in a single execution.
 
 For this, use the standard Python `typing.List` to declare it as a `list` of `str`:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="1  7"
 {!> ../docs_src/multiple_values/multiple_options/tutorial001_an.py!}
@@ -14,7 +14,7 @@ For this, use the standard Python `typing.List` to declare it as a `list` of `st
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -60,7 +60,7 @@ Processing user: Morty
 
 The same way, you can use other types and they will be converted by **Typer** to their declared type:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="7"
 {!> ../docs_src/multiple_values/multiple_options/tutorial002_an.py!}
@@ -68,7 +68,7 @@ The same way, you can use other types and they will be converted by **Typer** to
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 

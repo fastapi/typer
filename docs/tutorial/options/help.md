@@ -4,7 +4,7 @@ You already saw how to add a help text for *CLI arguments* with the `help` param
 
 Let's now do the same for *CLI options*:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="7-8"
 {!> ../docs_src/options/help/tutorial001_an.py!}
@@ -12,7 +12,7 @@ Let's now do the same for *CLI options*:
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -76,7 +76,7 @@ The same as with *CLI arguments*, you can put the help for some *CLI options* in
 
 If you have installed Rich as described in the docs for [Printing and Colors](../printing.md){.internal-link target=_blank}, you can set the `rich_help_panel` parameter to the name of the panel you want for each *CLI option*:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="11  17"
 {!> ../docs_src/options/help/tutorial002_an.py!}
@@ -84,7 +84,7 @@ If you have installed Rich as described in the docs for [Printing and Colors](..
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -142,7 +142,7 @@ If you are in a hurry you can jump there, but otherwise, it would be better to c
 
 You can tell Typer to not show the default value in the help text with `show_default=False`:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="5"
 {!> ../docs_src/options/help/tutorial003_an.py!}
@@ -150,7 +150,7 @@ You can tell Typer to not show the default value in the help text with `show_def
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -199,7 +199,7 @@ In **Typer** these default values are shown by default. 👀
 
 You can use the same `show_default` to pass a custom string (instead of a `bool`) to customize the default value to be shown in the help text:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="7"
 {!> ../docs_src/options/help/tutorial004_an.py!}
@@ -207,7 +207,7 @@ You can use the same `show_default` to pass a custom string (instead of a `bool`
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 

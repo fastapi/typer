@@ -10,7 +10,7 @@ You can learn more about environment variables in the [Environment Variables](..
 
 To do that, use the `envvar` parameter for `typer.Argument()`:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="5"
 {!> ../docs_src/arguments/envvar/tutorial001_an.py!}
@@ -18,7 +18,7 @@ To do that, use the `envvar` parameter for `typer.Argument()`:
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -75,7 +75,7 @@ Hello Mr. Czernobog
 
 You are not restricted to a single environment variable, you can declare a list of environment variables that could be used to get a value if it was not passed in the command line:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="6"
 {!> ../docs_src/arguments/envvar/tutorial002_an.py!}
@@ -83,7 +83,7 @@ You are not restricted to a single environment variable, you can declare a list 
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -130,7 +130,7 @@ Hello Mr. Anubis
 
 By default, environment variables used will be shown in the help text, but you can disable them with `show_envvar=False`:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="7"
 {!> ../docs_src/arguments/envvar/tutorial003_an.py!}
@@ -138,7 +138,7 @@ By default, environment variables used will be shown in the help text, but you c
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 

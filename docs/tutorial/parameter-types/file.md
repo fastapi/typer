@@ -47,7 +47,7 @@ content = b"la cig\xc3\xbce\xc3\xb1a trae al ni\xc3\xb1o"
 
 You will get all the correct editor support, attributes, methods, etc for the file-like object:`
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="5"
 {!> ../docs_src/parameter_types/file/tutorial001_an.py!}
@@ -55,7 +55,7 @@ You will get all the correct editor support, attributes, methods, etc for the fi
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -94,7 +94,7 @@ Config line: some more settings
 
 For writing text, you can use `typer.FileTextWrite`:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="5-6"
 {!> ../docs_src/parameter_types/file/tutorial002_an.py!}
@@ -102,7 +102,7 @@ For writing text, you can use `typer.FileTextWrite`:
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -158,7 +158,7 @@ You will receive `bytes` from it.
 
 It's useful for reading binary files like images:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="5"
 {!> ../docs_src/parameter_types/file/tutorial003_an.py!}
@@ -166,7 +166,7 @@ It's useful for reading binary files like images:
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -207,7 +207,7 @@ Have in mind that you have to pass `bytes` to its `.write()` method, not `str`.
 
 If you have a `str`, you have to encode it first to get `bytes`.
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="5"
 {!> ../docs_src/parameter_types/file/tutorial004_an.py!}
@@ -215,7 +215,7 @@ If you have a `str`, you have to encode it first to get `bytes`.
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -277,7 +277,7 @@ You can override the `mode` from the defaults above.
 
 For example, you could use `mode="a"` to write "appending" to the same file:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="5"
 {!> ../docs_src/parameter_types/file/tutorial005_an.py!}
@@ -285,7 +285,7 @@ For example, you could use `mode="a"` to write "appending" to the same file:
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 

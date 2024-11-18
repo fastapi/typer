@@ -2,7 +2,7 @@
 
 It's also possible to, instead of just showing an error, ask for the missing value with `prompt=True`:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="5"
 {!> ../docs_src/options/prompt/tutorial001_an.py!}
@@ -10,7 +10,7 @@ It's also possible to, instead of just showing an error, ask for the missing val
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -44,7 +44,7 @@ Hello Camila Gutiérrez
 
 You can also set a custom prompt, passing the string that you want to use instead of just `True`:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="7"
 {!> ../docs_src/options/prompt/tutorial002_an.py!}
@@ -52,7 +52,7 @@ You can also set a custom prompt, passing the string that you want to use instea
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -90,7 +90,7 @@ You can do it passing the parameter `confirmation_prompt=True`.
 
 Let's say it's a CLI app to delete a project:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="6"
 {!> ../docs_src/options/prompt/tutorial003_an.py!}
@@ -98,7 +98,7 @@ Let's say it's a CLI app to delete a project:
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 

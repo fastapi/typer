@@ -8,7 +8,7 @@ In those cases you can use a *CLI parameter* callback function.
 
 For example, you could do some validation before the rest of the code is executed.
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="7-10  13"
 {!> ../docs_src/options/callback/tutorial001_an.py!}
@@ -16,7 +16,7 @@ For example, you could do some validation before the rest of the code is execute
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -114,7 +114,7 @@ But the main **important point** is that it is all based on values printed by yo
 
 Let's say that when the callback is running, we want to show a message saying that it's validating the name:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="8"
 {!> ../docs_src/options/callback/tutorial002_an.py!}
@@ -122,7 +122,7 @@ Let's say that when the callback is running, we want to show a message saying th
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -169,7 +169,7 @@ But you can access the context by declaring a function parameter of type `typer.
 
 The "context" has some additional data about the current execution of your program:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="7-9"
 {!> ../docs_src/options/callback/tutorial003_an.py!}
@@ -177,7 +177,7 @@ The "context" has some additional data about the current execution of your progr
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -221,7 +221,7 @@ Hello Camila
 
 The same way you can access the `typer.Context` by declaring a function parameter with its value, you can declare another function parameter with type `typer.CallbackParam` to get the specific Click `Parameter` object.
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="7  10"
 {!> ../docs_src/options/callback/tutorial004_an.py!}
@@ -229,7 +229,7 @@ The same way you can access the `typer.Context` by declaring a function paramete
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 

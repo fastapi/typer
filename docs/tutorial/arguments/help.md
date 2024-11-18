@@ -14,7 +14,7 @@ Now that you also know how to use `typer.Argument()`, let's use it to add docume
 
 You can use the `help` parameter to add a help text for a *CLI argument*:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="5"
 {!> ../docs_src/arguments/help/tutorial001_an.py!}
@@ -22,7 +22,7 @@ You can use the `help` parameter to add a help text for a *CLI argument*:
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -59,7 +59,7 @@ Options:
 
 And of course, you can also combine that `help` with the <abbr title="a multi-line string as the first expression inside a function (not assigned to any variable) used for documentation">docstring</abbr>:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="5-8"
 {!> ../docs_src/arguments/help/tutorial002_an.py!}
@@ -67,7 +67,7 @@ And of course, you can also combine that `help` with the <abbr title="a multi-li
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -106,7 +106,7 @@ Options:
 
 If you have a *CLI argument* with a default value, like `"World"`:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="5"
 {!> ../docs_src/arguments/help/tutorial003_an.py!}
@@ -114,7 +114,7 @@ If you have a *CLI argument* with a default value, like `"World"`:
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -151,7 +151,7 @@ Options:
 
 But you can disable that if you want to, with `show_default=False`:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="7"
 {!> ../docs_src/arguments/help/tutorial004_an.py!}
@@ -159,7 +159,7 @@ But you can disable that if you want to, with `show_default=False`:
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -206,7 +206,7 @@ In **Typer** these default values are shown by default. 👀
 
 You can use the same `show_default` to pass a custom string (instead of a `bool`) to customize the default value to be shown in the help text:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="9"
 {!> ../docs_src/arguments/help/tutorial005_an.py!}
@@ -214,7 +214,7 @@ You can use the same `show_default` to pass a custom string (instead of a `bool`
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -271,7 +271,7 @@ But you can customize it with the `metavar` parameter for `typer.Argument()`.
 
 For example, let's say you don't want to have the default of `NAME`, you want to have `username`, in lowercase, and you really want ✨ emojis ✨ everywhere:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="5"
 {!> ../docs_src/arguments/help/tutorial006_an.py!}
@@ -279,7 +279,7 @@ For example, let's say you don't want to have the default of `NAME`, you want to
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -317,7 +317,7 @@ You might want to show the help information for *CLI arguments* in different pan
 
 If you have installed Rich as described in the docs for [Printing and Colors](../printing.md){.internal-link target=_blank}, you can set the `rich_help_panel` parameter to the name of the panel where you want this *CLI argument* to be shown:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="8  12"
 {!> ../docs_src/arguments/help/tutorial007_an.py!}
@@ -325,7 +325,7 @@ If you have installed Rich as described in the docs for [Printing and Colors](..
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -380,7 +380,7 @@ If you want, you can make a *CLI argument* **not** show up in the `Arguments` se
 
 You will probably not want to do this normally, but it's possible:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="5"
 {!> ../docs_src/arguments/help/tutorial008_an.py!}
@@ -388,7 +388,7 @@ You will probably not want to do this normally, but it's possible:
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 

@@ -6,7 +6,7 @@ You can set the number of values and types to anything you want, but it has to b
 
 For this, use the standard Python `typing.Tuple`:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="1  7"
 {!> ../docs_src/multiple_values/options_with_multiple_values/tutorial001_an.py!}
@@ -14,7 +14,7 @@ For this, use the standard Python `typing.Tuple`:
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 

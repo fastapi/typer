@@ -2,7 +2,7 @@
 
 You can define numeric validations with `max` and `min` values for `int` and `float` *CLI parameters*:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="6-8"
 {!> ../docs_src/parameter_types/number/tutorial001_an.py!}
@@ -10,7 +10,7 @@ You can define numeric validations with `max` and `min` values for `int` and `fl
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -93,7 +93,7 @@ You might want to, instead of showing an error, use the closest minimum or maxim
 
 You can do it with the `clamp` parameter:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="6-8"
 {!> ../docs_src/parameter_types/number/tutorial002_an.py!}
@@ -101,7 +101,7 @@ You can do it with the `clamp` parameter:
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -142,7 +142,7 @@ ID is 5
 
 You can make a *CLI option* work as a counter with the `counter` parameter:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="5"
 {!> ../docs_src/parameter_types/number/tutorial003_an.py!}
@@ -150,7 +150,7 @@ You can make a *CLI option* work as a counter with the `counter` parameter:
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 

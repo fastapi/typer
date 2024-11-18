@@ -8,7 +8,7 @@ It would show the version of your CLI program and then it would terminate it. Ev
 
 Let's see a first version of how it could look like:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="9-12  17-19"
 {!> ../docs_src/options/version/tutorial001_an.py!}
@@ -16,7 +16,7 @@ Let's see a first version of how it could look like:
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -77,7 +77,7 @@ Awesome CLI Version: 0.1.0
 
 But now let's say that the `--name` *CLI option* that we declared before `--version` is required, and it has a callback that could exit the program:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="15-17  22-24"
 {!> ../docs_src/options/version/tutorial002_an.py!}
@@ -85,7 +85,7 @@ But now let's say that the `--name` *CLI option* that we declared before `--vers
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -136,7 +136,7 @@ For those cases, we can mark a *CLI parameter* (a *CLI option* or *CLI argument*
 
 That will tell **Typer** (actually Click) that it should process this *CLI parameter* before the others:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="23-26"
 {!> ../docs_src/options/version/tutorial003_an.py!}
@@ -144,7 +144,7 @@ That will tell **Typer** (actually Click) that it should process this *CLI param
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 

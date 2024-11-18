@@ -28,7 +28,7 @@ Let's say the function parameter name is `user_name` as above, but you want the 
 
 You can pass the *CLI option* name that you want to have in the following positional argument passed to `typer.Option()`:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="5"
 {!> ../docs_src/options/name/tutorial001_an.py!}
@@ -38,7 +38,7 @@ Here you are passing the string `"--name"` as the first positional argument to `
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -209,7 +209,7 @@ You can overwrite the *CLI option* name to use as in the previous example, but y
 
 For example, extending the previous example, let's add a *CLI option* short name `-n`:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="5"
 {!> ../docs_src/options/name/tutorial002_an.py!}
@@ -217,7 +217,7 @@ For example, extending the previous example, let's add a *CLI option* short name
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -260,7 +260,7 @@ Hello Camila
 
 If you only declare a short name like `-n` then that will be the only *CLI option* name. And neither `--name` nor `--user-name` will be available.
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="5"
 {!> ../docs_src/options/name/tutorial003_an.py!}
@@ -268,7 +268,7 @@ If you only declare a short name like `-n` then that will be the only *CLI optio
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -308,7 +308,7 @@ Hello Camila
 
 Continuing with the example above, as **Typer** allows you to declare a *CLI option* as having only a short name, if you want to have the default long name plus a short name, you have to declare both explicitly:
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="5"
 {!> ../docs_src/options/name/tutorial004_an.py!}
@@ -316,7 +316,7 @@ Continuing with the example above, as **Typer** allows you to declare a *CLI opt
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
@@ -362,7 +362,7 @@ You can create multiple short names and use them together.
 
 You don't have to do anything special for it to work (apart from declaring those short versions):
 
-//// tab | Python 3.7+
+//// tab | Python 3.8+
 
 ```Python hl_lines="6-7"
 {!> ../docs_src/options/name/tutorial005_an.py!}
@@ -370,7 +370,7 @@ You don't have to do anything special for it to work (apart from declaring those
 
 ////
 
-//// tab | Python 3.7+ non-Annotated
+//// tab | Python 3.8+ non-Annotated
 
 /// tip
 
