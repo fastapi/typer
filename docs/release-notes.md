@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.13.1
+
 ### Features
 
 * ✨ Remove Rich tags when showing completion text. PR [#877](https://github.com/fastapi/typer/pull/877) by [@svlandeg](https://github.com/svlandeg).
