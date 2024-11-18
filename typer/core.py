@@ -366,8 +366,13 @@ class TyperArgument(click.core.Argument):
         if self.required:
             extra.append(_("required"))
         if extra:
-            extra_str = ";".join(extra)
-            help = f"{help}  [{extra_str}]" if help else f"[{extra_str}]"
+            extra_str = "; ".join(extra)
+            extra_str = f"[{extra_str}]"
+            if rich is not None:
+                # This is needed for when we want to export to HTML
+                extra_str = rich.markup.escape(extra_str).strip()
+
+            help = f"{help}  {extra_str}" if help else f"{extra_str}"
         return name, help
 
     def make_metavar(self) -> str:
@@ -554,7 +559,12 @@ class TyperOption(click.core.Option):
 
         if extra:
             extra_str = "; ".join(extra)
-            help = f"{help}  [{extra_str}]" if help else f"[{extra_str}]"
+            extra_str = f"[{extra_str}]"
+            if rich is not None:
+                # This is needed for when we want to export to HTML
+                extra_str = rich.markup.escape(extra_str).strip()
+
+            help = f"{help}  {extra_str}" if help else f"{extra_str}"
 
         return ("; " if any_prefix_is_slash else " / ").join(rv), help
 
