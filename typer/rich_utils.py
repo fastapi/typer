@@ -712,6 +712,12 @@ def rich_abort_error() -> None:
     console.print(ABORTED_TEXT, style=STYLE_ABORTED)
 
 
+def print_with_rich(text: str) -> None:
+    """Print richly formatted message."""
+    console = _get_rich_console()
+    console.print(text)
+
+
 def rich_to_html(input_text: str) -> str:
     """Print the HTML version of a rich-formatted input string.
 
