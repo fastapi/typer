@@ -35,6 +35,7 @@ def Option(
     confirmation_prompt: bool = False,
     prompt_required: bool = True,
     hide_input: bool = False,
+    # TODO: remove is_flag and flag_value in a future release
     is_flag: Optional[bool] = None,
     flag_value: Optional[Any] = None,
     count: bool = False,
@@ -68,8 +69,7 @@ def Option(
     path_type: Union[None, Type[str], Type[bytes]] = None,
     # Rich settings
     rich_help_panel: Union[str, None] = None,
-) -> Any:
-    ...
+) -> Any: ...
 
 
 # Overload for Option created with custom type 'click_type'
@@ -99,6 +99,7 @@ def Option(
     confirmation_prompt: bool = False,
     prompt_required: bool = True,
     hide_input: bool = False,
+    # TODO: remove is_flag and flag_value in a future release
     is_flag: Optional[bool] = None,
     flag_value: Optional[Any] = None,
     count: bool = False,
@@ -132,8 +133,7 @@ def Option(
     path_type: Union[None, Type[str], Type[bytes]] = None,
     # Rich settings
     rich_help_panel: Union[str, None] = None,
-) -> Any:
-    ...
+) -> Any: ...
 
 
 def Option(
@@ -162,6 +162,7 @@ def Option(
     confirmation_prompt: bool = False,
     prompt_required: bool = True,
     hide_input: bool = False,
+    # TODO: remove is_flag and flag_value in a future release
     is_flag: Optional[bool] = None,
     flag_value: Optional[Any] = None,
     count: bool = False,
@@ -305,8 +306,7 @@ def Argument(
     path_type: Union[None, Type[str], Type[bytes]] = None,
     # Rich settings
     rich_help_panel: Union[str, None] = None,
-) -> Any:
-    ...
+) -> Any: ...
 
 
 # Overload for Argument created with custom type 'click_type'
@@ -361,8 +361,7 @@ def Argument(
     path_type: Union[None, Type[str], Type[bytes]] = None,
     # Rich settings
     rich_help_panel: Union[str, None] = None,
-) -> Any:
-    ...
+) -> Any: ...
 
 
 def Argument(

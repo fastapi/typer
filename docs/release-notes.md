@@ -4,10 +4,149 @@
 
 ### Features
 
-* ✨ Add support for Python 3.12, tests in CI and official marker. PR [#807](https://github.com/tiangolo/typer/pull/807) by [@ivantodorovich](https://github.com/ivantodorovich).
+* ✨ Render Rich markup as HTML in Markdown docs. PR [#847](https://github.com/fastapi/typer/pull/847) by [@svlandeg](https://github.com/svlandeg).
+* ✨ Support cp850 encoding for auto-completion in PowerShell. PR [#808](https://github.com/fastapi/typer/pull/808) by [@svlandeg](https://github.com/svlandeg).
+* ✨ Allow gettext translation of help message. PR [#886](https://github.com/fastapi/typer/pull/886) by [@svlandeg](https://github.com/svlandeg).
 
 ### Internal
 
+* ⬆ Bump ruff from 0.7.3 to 0.7.4. PR [#1051](https://github.com/fastapi/typer/pull/1051) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1047](https://github.com/fastapi/typer/pull/1047) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump ruff from 0.7.2 to 0.7.3. PR [#1046](https://github.com/fastapi/typer/pull/1046) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump tiangolo/latest-changes from 0.3.1 to 0.3.2. PR [#1044](https://github.com/fastapi/typer/pull/1044) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Update pytest-cov requirement from <6.0.0,>=2.10.0 to >=2.10.0,<7.0.0. PR [#1033](https://github.com/fastapi/typer/pull/1033) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
+## 0.13.0
+
+### Features
+
+* ✨ Handle `KeyboardInterrupt` separately from other exceptions. PR [#1039](https://github.com/fastapi/typer/pull/1039) by [@patrick91](https://github.com/patrick91).
+* ✨ Update `launch` to not print anything when opening urls. PR [#1035](https://github.com/fastapi/typer/pull/1035) by [@patrick91](https://github.com/patrick91).
+* ✨ Show help items in order of definition. PR [#944](https://github.com/fastapi/typer/pull/944) by [@svlandeg](https://github.com/svlandeg).
+
+### Fixes
+
+* 🐛 Fix equality check for custom classes. PR [#979](https://github.com/fastapi/typer/pull/979) by [@AryazE](https://github.com/AryazE).
+* 🐛 Allow colon in zsh autocomplete values and descriptions. PR [#988](https://github.com/fastapi/typer/pull/988) by [@snapbug](https://github.com/snapbug).
+
+### Refactors
+
+* 🗑️ Deprecate support for `is_flag` and `flag_value` parameters. PR [#987](https://github.com/fastapi/typer/pull/987) by [@svlandeg](https://github.com/svlandeg).
+* 🔥 Remove unused functionality from `_typing.py` file. PR [#805](https://github.com/fastapi/typer/pull/805) by [@ivantodorovich](https://github.com/ivantodorovich).
+* ✏️ Fix typo in function name `_make_rich_text`. PR [#959](https://github.com/fastapi/typer/pull/959) by [@svlandeg](https://github.com/svlandeg).
+
+### Internal
+
+* ✅ Only run completion installation tests when the env var `_TYPER_RUN_INSTALL_COMPLETION_TESTS` is set. PR [#995](https://github.com/fastapi/typer/pull/995) by [@svlandeg](https://github.com/svlandeg).
+* 📝 Update the docstring of the `_make_rich_text` method. PR [#972](https://github.com/fastapi/typer/pull/972) by [@svlandeg](https://github.com/svlandeg).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1040](https://github.com/fastapi/typer/pull/1040) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump mkdocs-material from 9.5.42 to 9.5.44. PR [#1042](https://github.com/fastapi/typer/pull/1042) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.7.1 to 0.7.2. PR [#1038](https://github.com/fastapi/typer/pull/1038) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mkdocs-macros-plugin from 1.3.6 to 1.3.7. PR [#1031](https://github.com/fastapi/typer/pull/1031) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1032](https://github.com/fastapi/typer/pull/1032) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump ruff from 0.7.0 to 0.7.1. PR [#1029](https://github.com/fastapi/typer/pull/1029) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pillow from 10.4.0 to 11.0.0. PR [#1023](https://github.com/fastapi/typer/pull/1023) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mkdocs-material from 9.5.35 to 9.5.42. PR [#1027](https://github.com/fastapi/typer/pull/1027) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.6.5 to 0.7.0. PR [#1026](https://github.com/fastapi/typer/pull/1026) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mkdocs-macros-plugin from 1.2.0 to 1.3.6. PR [#1025](https://github.com/fastapi/typer/pull/1025) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Update pre-commit requirement from <4.0.0,>=2.17.0 to >=2.17.0,<5.0.0. PR [#1012](https://github.com/fastapi/typer/pull/1012) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pypa/gh-action-pypi-publish from 1.10.1 to 1.10.3. PR [#1009](https://github.com/fastapi/typer/pull/1009) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1001](https://github.com/fastapi/typer/pull/1001) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* 👷 Update Deploy docs CI to use uv. PR [#1021](https://github.com/fastapi/typer/pull/1021) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Fix smokeshow, checkout files on CI. PR [#1020](https://github.com/fastapi/typer/pull/1020) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Use uv in CI. PR [#1019](https://github.com/fastapi/typer/pull/1019) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Update `labeler.yml`. PR [#1014](https://github.com/fastapi/typer/pull/1014) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Update worfkow deploy-docs-notify URL. PR [#1011](https://github.com/fastapi/typer/pull/1011) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Upgrade Cloudflare GitHub Action. PR [#1010](https://github.com/fastapi/typer/pull/1010) by [@tiangolo](https://github.com/tiangolo).
+* ⬆ Bump mkdocs-macros-plugin from 1.0.5 to 1.2.0. PR [#992](https://github.com/fastapi/typer/pull/992) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.6.4 to 0.6.5. PR [#991](https://github.com/fastapi/typer/pull/991) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mkdocs-material from 9.5.34 to 9.5.35. PR [#996](https://github.com/fastapi/typer/pull/996) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#993](https://github.com/fastapi/typer/pull/993) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#982](https://github.com/fastapi/typer/pull/982) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump tiangolo/issue-manager from 0.5.0 to 0.5.1. PR [#980](https://github.com/fastapi/typer/pull/980) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 👷 Update `issue-manager.yml`. PR [#978](https://github.com/fastapi/typer/pull/978) by [@tiangolo](https://github.com/tiangolo).
+* ⬆ Bump ruff from 0.6.3 to 0.6.4. PR [#975](https://github.com/fastapi/typer/pull/975) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mkdocs-material from 9.5.33 to 9.5.34. PR [#963](https://github.com/fastapi/typer/pull/963) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pypa/gh-action-pypi-publish from 1.9.0 to 1.10.1. PR [#973](https://github.com/fastapi/typer/pull/973) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#966](https://github.com/fastapi/typer/pull/966) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* 💚 Set `include-hidden-files` to `True` when using the `upload-artifact` GH action. PR [#967](https://github.com/fastapi/typer/pull/967) by [@svlandeg](https://github.com/svlandeg).
+* ⬆ Bump ruff from 0.6.1 to 0.6.3. PR [#961](https://github.com/fastapi/typer/pull/961) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#689](https://github.com/fastapi/typer/pull/689) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump ruff from 0.2.0 to 0.6.1. PR [#938](https://github.com/fastapi/typer/pull/938) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 👷 Update `latest-changes` GitHub Action. PR [#955](https://github.com/fastapi/typer/pull/955) by [@tiangolo](https://github.com/tiangolo).
+
+## 0.12.5
+
+### Features
+
+* 💄 Unify the width of the Rich console for help and errors. PR [#788](https://github.com/fastapi/typer/pull/788) by [@racinmat](https://github.com/racinmat).
+* 🚸 Improve assertion error message if a group is not a valid subclass. PR [#425](https://github.com/fastapi/typer/pull/425) by [@chrisburr](https://github.com/chrisburr).
+
+### Fixes
+
+* 🐛 Ensure `rich_markup_mode=None` disables Rich formatting. PR [#859](https://github.com/fastapi/typer/pull/859) by [@svlandeg](https://github.com/svlandeg).
+* 🐛  Fix sourcing of completion path for Git Bash. PR [#801](https://github.com/fastapi/typer/pull/801) by [@svlandeg](https://github.com/svlandeg).
+* 🐛 Fix PowerShell completion with incomplete word. PR [#360](https://github.com/fastapi/typer/pull/360) by [@patricksurry](https://github.com/patricksurry).
+
+### Refactors
+
+* 🔥 Remove Python 3.6 specific code paths. PR [#850](https://github.com/fastapi/typer/pull/850) by [@svlandeg](https://github.com/svlandeg).
+* 🔥 Clean up redundant code. PR [#858](https://github.com/fastapi/typer/pull/858) by [@svlandeg](https://github.com/svlandeg).
+
+### Docs
+
+* ♻️ Use F-strings in Click examples in docs. PR [#891](https://github.com/fastapi/typer/pull/891) by [@svlandeg](https://github.com/svlandeg).
+* 📝Add missing `main.py` in tutorial on CLI option names. PR [#868](https://github.com/fastapi/typer/pull/868) by [@fsramalho](https://github.com/fsramalho).
+* 📝 Fix broken link. PR [#835](https://github.com/fastapi/typer/pull/835) by [@OhioDschungel6](https://github.com/OhioDschungel6).
+* 📝 Update package docs with the latest versions of Typer and Poetry. PR [#781](https://github.com/fastapi/typer/pull/781) by [@kinuax](https://github.com/kinuax).
+* 📝 Update the Progress Bar tutorial with correct output. PR [#199](https://github.com/fastapi/typer/pull/199) by [@n1ckdm](https://github.com/n1ckdm).
+* 📝 Add docs and scripts to test completion in different shells. PR [#953](https://github.com/fastapi/typer/pull/953) by [@tiangolo](https://github.com/tiangolo).
+* ✏️ Fix a typo in `docs/virtual-environments.md`. PR [#952](https://github.com/fastapi/typer/pull/952) by [@tiangolo](https://github.com/tiangolo).
+* ✏️ Fix typo in `docs/contributing.md`. PR [#947](https://github.com/fastapi/typer/pull/947) by [@tiangolo](https://github.com/tiangolo).
+* 📝 Add docs for virtual environments, environment variables, and update contributing. PR [#946](https://github.com/fastapi/typer/pull/946) by [@tiangolo](https://github.com/tiangolo).
+
+### Internal
+
+* 🔨 Pre-install dependencies in Docker so that testing in Docker is faster. PR [#954](https://github.com/fastapi/typer/pull/954) by [@tiangolo](https://github.com/tiangolo).
+* ✅ Add `needs_bash` test fixture. PR [#888](https://github.com/fastapi/typer/pull/888) by [@svlandeg](https://github.com/svlandeg).
+* ⬆ Bump mkdocs-material from 9.5.18 to 9.5.33. PR [#945](https://github.com/fastapi/typer/pull/945) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pillow from 10.3.0 to 10.4.0. PR [#939](https://github.com/fastapi/typer/pull/939) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 👷 Fix issue-manager. PR [#948](https://github.com/fastapi/typer/pull/948) by [@tiangolo](https://github.com/tiangolo).
+* 🙈 Remove extra line in .gitignore. PR [#936](https://github.com/fastapi/typer/pull/936) by [@tiangolo](https://github.com/tiangolo).
+* ⬆ Update pytest-cov requirement from <5.0.0,>=2.10.0 to >=2.10.0,<6.0.0. PR [#844](https://github.com/fastapi/typer/pull/844) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pypa/gh-action-pypi-publish from 1.8.11 to 1.9.0. PR [#865](https://github.com/fastapi/typer/pull/865) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Update pytest requirement from <8.0.0,>=4.4.0 to >=4.4.0,<9.0.0. PR [#915](https://github.com/fastapi/typer/pull/915) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Update pytest-sugar requirement from <0.10.0,>=0.9.4 to >=0.9.4,<1.1.0. PR [#841](https://github.com/fastapi/typer/pull/841) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
+## 0.12.4
+
+### Features
+
+* ✨ Add support for Python 3.12, tests in CI and official marker. PR [#807](https://github.com/tiangolo/typer/pull/807) by [@ivantodorovich](https://github.com/ivantodorovich).
+
+### Fixes
+
+* 🐛 Fix support for `UnionType` (e.g. `str | None`) with Python 3.11. PR [#548](https://github.com/fastapi/typer/pull/548) by [@jonaslb](https://github.com/jonaslb).
+* 🐛 Fix `zsh` autocompletion installation. PR [#237](https://github.com/fastapi/typer/pull/237) by [@alexjurkiewicz](https://github.com/alexjurkiewicz).
+* 🐛 Fix usage of `Annotated` with future annotations in Python 3.7+. PR [#814](https://github.com/fastapi/typer/pull/814) by [@ivantodorovich](https://github.com/ivantodorovich).
+* 🐛 Fix `shell_complete` not working for Arguments. PR [#737](https://github.com/fastapi/typer/pull/737) by [@bckohan](https://github.com/bckohan).
+
+### Docs
+
+* 📝 Update docs links, from tiangolo to new fastapi org. PR [#919](https://github.com/fastapi/typer/pull/919) by [@tiangolo](https://github.com/tiangolo).
+* 📝 Add docs for team and repo management. PR [#917](https://github.com/tiangolo/typer/pull/917) by [@tiangolo](https://github.com/tiangolo).
+
+### Internal
+
+* 🔧 Add URLs to `pyproject.toml`, show up in PyPI. PR [#931](https://github.com/fastapi/typer/pull/931) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Do not sync labels as it overrides manually added labels. PR [#930](https://github.com/fastapi/typer/pull/930) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Update labeler GitHub Action to add only one label. PR [#927](https://github.com/fastapi/typer/pull/927) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Update labeler GitHub Actions permissions and dependencies. PR [#926](https://github.com/fastapi/typer/pull/926) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Add GitHub Action label-checker. PR [#925](https://github.com/fastapi/typer/pull/925) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Add GitHub Action labeler. PR [#924](https://github.com/fastapi/typer/pull/924) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Add GitHub Action add-to-project. PR [#922](https://github.com/fastapi/typer/pull/922) by [@tiangolo](https://github.com/tiangolo).
+* 🔨 Update docs.py script to enable dirty reload conditionally. PR [#918](https://github.com/tiangolo/typer/pull/918) by [@tiangolo](https://github.com/tiangolo).
+* 🔧 Update MkDocs previews. PR [#916](https://github.com/tiangolo/typer/pull/916) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Upgrade build docs configs. PR [#914](https://github.com/tiangolo/typer/pull/914) by [@tiangolo](https://github.com/tiangolo).
 * 🔧 Update MkDocs to have titles in Markdown files instead of config. PR [#913](https://github.com/tiangolo/typer/pull/913) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Add alls-green for test-redistribute. PR [#911](https://github.com/tiangolo/typer/pull/911) by [@tiangolo](https://github.com/tiangolo).

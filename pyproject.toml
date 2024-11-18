@@ -38,8 +38,11 @@ dependencies = [
 ]
 readme = "README.md"
 [project.urls]
-Documentation = "https://typer.tiangolo.com/"
-homepage = "https://github.com/tiangolo/typer"
+Homepage = "https://github.com/fastapi/typer"
+Documentation = "https://typer.tiangolo.com"
+Repository = "https://github.com/fastapi/typer"
+Issues = "https://github.com/fastapi/typer/issues"
+Changelog = "https://typer.tiangolo.com/release-notes/"
 
 [project.optional-dependencies]
 standard = [
@@ -190,9 +193,6 @@ ignore = [
 "docs_src/prompt/tutorial003.py" = ["F841"]
 # Loop control variable `x` not used within loop body
 "docs_src/using_click/tutorial001.py" = ["B007"]
-
-# TODO: refactor _typing.py, remove unnecessary code
-"typer/_typing.py" = ["UP036", "F822"]
 
 [tool.ruff.lint.isort]
 known-third-party = ["typer", "click"]

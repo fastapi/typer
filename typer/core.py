@@ -31,15 +31,18 @@ if sys.version_info >= (3, 8):
 else:
     from typing_extensions import Literal
 
+MarkupMode = Literal["markdown", "rich", None]
+
 try:
     import rich
 
     from . import rich_utils
 
+    DEFAULT_MARKUP_MODE: MarkupMode = "rich"
+
 except ImportError:  # pragma: no cover
     rich = None  # type: ignore
-
-MarkupMode = Literal["markdown", "rich", None]
+    DEFAULT_MARKUP_MODE = None
 
 
 # Copy from click.parser._split_opt
@@ -167,6 +170,7 @@ def _main(
     complete_var: Optional[str] = None,
     standalone_mode: bool = True,
     windows_expand_args: bool = True,
+    rich_markup_mode: MarkupMode = DEFAULT_MARKUP_MODE,
     **extra: Any,
 ) -> Any:
     # Typer override, duplicated from click.main() to handle custom rich exceptions
@@ -201,14 +205,16 @@ def _main(
                 # even always obvious that `rv` indicates success/failure
                 # by its truthiness/falsiness
                 ctx.exit()
-        except (EOFError, KeyboardInterrupt) as e:
+        except EOFError as e:
             click.echo(file=sys.stderr)
             raise click.Abort() from e
+        except KeyboardInterrupt as e:
+            raise click.exceptions.Exit(130) from e
         except click.ClickException as e:
             if not standalone_mode:
                 raise
             # Typer override
-            if rich:
+            if rich and rich_markup_mode is not None:
                 rich_utils.rich_format_error(e)
             else:
                 e.show()
@@ -238,7 +244,7 @@ def _main(
         if not standalone_mode:
             raise
         # Typer override
-        if rich:
+        if rich and rich_markup_mode is not None:
             rich_utils.rich_abort_error()
         else:
             click.echo(_("Aborted!"), file=sys.stderr)
@@ -360,8 +366,13 @@ class TyperArgument(click.core.Argument):
         if self.required:
             extra.append(_("required"))
         if extra:
-            extra_str = ";".join(extra)
-            help = f"{help}  [{extra_str}]" if help else f"[{extra_str}]"
+            extra_str = "; ".join(extra)
+            extra_str = f"[{extra_str}]"
+            if rich is not None:
+                # This is needed for when we want to export to HTML
+                extra_str = rich.markup.escape(extra_str).strip()
+
+            help = f"{help}  {extra_str}" if help else f"{extra_str}"
         return name, help
 
     def make_metavar(self) -> str:
@@ -409,7 +420,6 @@ class TyperOption(click.core.Option):
         prompt_required: bool = True,
         hide_input: bool = False,
         is_flag: Optional[bool] = None,
-        flag_value: Optional[Any] = None,
         multiple: bool = False,
         count: bool = False,
         allow_from_autoenv: bool = True,
@@ -436,7 +446,6 @@ class TyperOption(click.core.Option):
             confirmation_prompt=confirmation_prompt,
             hide_input=hide_input,
             is_flag=is_flag,
-            flag_value=flag_value,
             multiple=multiple,
             count=count,
             allow_from_autoenv=allow_from_autoenv,
@@ -550,7 +559,12 @@ class TyperOption(click.core.Option):
 
         if extra:
             extra_str = "; ".join(extra)
-            help = f"{help}  [{extra_str}]" if help else f"[{extra_str}]"
+            extra_str = f"[{extra_str}]"
+            if rich is not None:
+                # This is needed for when we want to export to HTML
+                extra_str = rich.markup.escape(extra_str).strip()
+
+            help = f"{help}  {extra_str}" if help else f"{extra_str}"
 
         return ("; " if any_prefix_is_slash else " / ").join(rv), help
 
@@ -614,7 +628,7 @@ class TyperCommand(click.core.Command):
         hidden: bool = False,
         deprecated: bool = False,
         # Rich settings
-        rich_markup_mode: MarkupMode = None,
+        rich_markup_mode: MarkupMode = DEFAULT_MARKUP_MODE,
         rich_help_panel: Union[str, None] = None,
     ) -> None:
         super().__init__(
@@ -665,11 +679,12 @@ class TyperCommand(click.core.Command):
             complete_var=complete_var,
             standalone_mode=standalone_mode,
             windows_expand_args=windows_expand_args,
+            rich_markup_mode=self.rich_markup_mode,
             **extra,
         )
 
     def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
-        if not rich:
+        if not rich or self.rich_markup_mode is None:
             return super().format_help(ctx, formatter)
         return rich_utils.rich_format_help(
             obj=self,
@@ -687,7 +702,7 @@ class TyperGroup(click.core.Group):
             Union[Dict[str, click.Command], Sequence[click.Command]]
         ] = None,
         # Rich settings
-        rich_markup_mode: MarkupMode = None,
+        rich_markup_mode: MarkupMode = DEFAULT_MARKUP_MODE,
         rich_help_panel: Union[str, None] = None,
         **attrs: Any,
     ) -> None:
@@ -727,14 +742,21 @@ class TyperGroup(click.core.Group):
             complete_var=complete_var,
             standalone_mode=standalone_mode,
             windows_expand_args=windows_expand_args,
+            rich_markup_mode=self.rich_markup_mode,
             **extra,
         )
 
     def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
-        if not rich:
+        if not rich or self.rich_markup_mode is None:
             return super().format_help(ctx, formatter)
         return rich_utils.rich_format_help(
             obj=self,
             ctx=ctx,
             markup_mode=self.rich_markup_mode,
         )
+
+    def list_commands(self, ctx: click.Context) -> List[str]:
+        """Returns a list of subcommand names.
+        Note that in Click's Group class, these are sorted.
+        In Typer, we wish to maintain the original order of creation (cf Issue #933)"""
+        return [n for n, c in self.commands.items()]

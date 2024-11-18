@@ -68,9 +68,9 @@ STYLE_ERRORS_SUGGESTION = "dim"
 STYLE_ABORTED = "red"
 _TERMINAL_WIDTH = getenv("TERMINAL_WIDTH")
 MAX_WIDTH = int(_TERMINAL_WIDTH) if _TERMINAL_WIDTH else None
-COLOR_SYSTEM: Optional[
-    Literal["auto", "standard", "256", "truecolor", "windows"]
-] = "auto"  # Set to None to disable colors
+COLOR_SYSTEM: Optional[Literal["auto", "standard", "256", "truecolor", "windows"]] = (
+    "auto"  # Set to None to disable colors
+)
 _TYPER_FORCE_DISABLE_TERMINAL = getenv("_TYPER_FORCE_DISABLE_TERMINAL")
 FORCE_TERMINAL = (
     True
@@ -92,6 +92,7 @@ OPTIONS_PANEL_TITLE = _("Options")
 COMMANDS_PANEL_TITLE = _("Commands")
 ERRORS_PANEL_TITLE = _("Error")
 ABORTED_TEXT = _("Aborted.")
+RICH_HELP = _("Try [blue]'{command_path} {help_option}'[/] for help.")
 
 MARKUP_MODE_MARKDOWN = "markdown"
 MARKUP_MODE_RICH = "rich"
@@ -144,17 +145,14 @@ def _get_rich_console(stderr: bool = False) -> Console:
     )
 
 
-def _make_rich_rext(
+def _make_rich_text(
     *, text: str, style: str = "", markup_mode: MarkupMode
 ) -> Union[Markdown, Text]:
     """Take a string, remove indentations, and return styled text.
 
-    By default, return the text as a Rich Text with the request style.
-    If `rich_markdown_enable` is `True`, also parse the text for Rich markup strings.
-    If `rich_markup_enable` is `True`, parse as Markdown.
-
-    Only one of `rich_markdown_enable` or `rich_markup_enable` can be True.
-    If both are True, `rich_markdown_enable` takes precedence.
+    By default, the text is not parsed for any special formatting.
+    If `markup_mode` is `"rich"`, the text is parsed for Rich markup strings.
+    If `markup_mode` is `"markdown"`, parse as Markdown.
     """
     # Remove indentations from input text
     text = inspect.cleandoc(text)
@@ -194,7 +192,7 @@ def _get_help_text(
     # Remove single linebreaks
     if markup_mode != MARKUP_MODE_MARKDOWN and not first_line.startswith("\b"):
         first_line = first_line.replace("\n", " ")
-    yield _make_rich_rext(
+    yield _make_rich_text(
         text=first_line.strip(),
         style=STYLE_HELPTEXT_FIRST_LINE,
         markup_mode=markup_mode,
@@ -217,7 +215,7 @@ def _get_help_text(
             # Join with double linebreaks if markdown
             remaining_lines = "\n\n".join(remaining_paragraphs)
 
-        yield _make_rich_rext(
+        yield _make_rich_text(
             text=remaining_lines,
             style=STYLE_HELPTEXT,
             markup_mode=markup_mode,
@@ -272,7 +270,7 @@ def _get_parameter_help(
                 for x in paragraphs
             ]
         items.append(
-            _make_rich_rext(
+            _make_rich_text(
                 text="\n".join(paragraphs).strip(),
                 style=STYLE_OPTION_HELP,
                 markup_mode=markup_mode,
@@ -331,7 +329,7 @@ def _make_command_help(
         paragraphs[0] = paragraphs[0].replace("\n", " ")
     elif paragraphs[0].startswith("\b"):
         paragraphs[0] = paragraphs[0].replace("\b\n", "")
-    return _make_rich_rext(
+    return _make_rich_text(
         text=paragraphs[0].strip(),
         style=STYLE_OPTION_HELP,
         markup_mode=markup_mode,
@@ -674,7 +672,7 @@ def rich_format_help(
         # Remove single linebreaks, replace double with single
         lines = obj.epilog.split("\n\n")
         epilogue = "\n".join([x.replace("\n", " ").strip() for x in lines])
-        epilogue_text = _make_rich_rext(text=epilogue, markup_mode=markup_mode)
+        epilogue_text = _make_rich_text(text=epilogue, markup_mode=markup_mode)
         console.print(Padding(Align(epilogue_text, pad=False), 1))
 
 
@@ -691,7 +689,9 @@ def rich_format_error(self: click.ClickException) -> None:
 
     if ctx is not None and ctx.command.get_help_option(ctx) is not None:
         console.print(
-            f"Try [blue]'{ctx.command_path} {ctx.help_option_names[0]}'[/] for help.",
+            RICH_HELP.format(
+                command_path=ctx.command_path, help_option=ctx.help_option_names[0]
+            ),
             style=STYLE_ERRORS_SUGGESTION,
         )
 
@@ -715,3 +715,17 @@ def print_with_rich(text: str) -> None:
     """Print richly formatted message."""
     console = _get_rich_console()
     console.print(text)
+
+
+def rich_to_html(input_text: str) -> str:
+    """Print the HTML version of a rich-formatted input string.
+
+    This function does not provide a full HTML page, but can be used to insert
+    HTML-formatted text spans into a markdown file.
+    """
+    console = Console(record=True, highlight=False)
+
+    with console.capture():
+        console.print(input_text, overflow="ignore", crop=False)
+
+    return console.export_html(inline_styles=True, code_format="{code}").strip()

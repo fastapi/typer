@@ -86,6 +86,7 @@ class ZshComplete(click.shell_completion.ZshComplete):
                 .replace("'", "''")
                 .replace("$", "\\$")
                 .replace("`", "\\`")
+                .replace(":", r"\\:")
             )
 
         # TODO: Explore replicating the new behavior from Click, pay attention to
@@ -175,7 +176,7 @@ class PowerShellComplete(click.shell_completion.ShellComplete):
         completion_args = os.getenv("_TYPER_COMPLETE_ARGS", "")
         incomplete = os.getenv("_TYPER_COMPLETE_WORD_TO_COMPLETE", "")
         cwords = click.parser.split_arg_string(completion_args)
-        args = cwords[1:]
+        args = cwords[1:-1] if incomplete else cwords[1:]
         return args, incomplete
 
     def format_completion(self, item: click.shell_completion.CompletionItem) -> str:
