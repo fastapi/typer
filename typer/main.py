@@ -390,17 +390,17 @@ def get_command(typer_instance: Typer) -> click.Command:
 
 
 def get_group_name(typer_info: TyperInfo) -> Optional[str]:
-    if typer_info.callback:
-        # Priority 1: Callback passed in app.add_typer()
-        return get_command_name(typer_info.callback.__name__)
-    if typer_info.typer_instance:
-        registered_callback = typer_info.typer_instance.registered_callback
-        if registered_callback:
-            if registered_callback.callback:
-                # Priority 2: Callback passed in @subapp.callback()
-                return get_command_name(registered_callback.callback.__name__)
-        if typer_info.typer_instance.info.callback:
-            return get_command_name(typer_info.typer_instance.info.callback.__name__)
+    # if typer_info.callback:
+    #     # Priority 1: Callback passed in app.add_typer()
+    #     return get_command_name(typer_info.callback.__name__)
+    # if typer_info.typer_instance:
+    #     registered_callback = typer_info.typer_instance.registered_callback
+    #     if registered_callback:
+    #         if registered_callback.callback:
+    #             # Priority 2: Callback passed in @subapp.callback()
+    #             return get_command_name(registered_callback.callback.__name__)
+    #     if typer_info.typer_instance.info.callback:
+    #         return get_command_name(typer_info.typer_instance.info.callback.__name__)
     return None
 
 
