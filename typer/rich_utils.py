@@ -1,6 +1,7 @@
 # Extracted and modified from https://github.com/ewels/rich-click
 
 import inspect
+import io
 import sys
 from collections import defaultdict
 from gettext import gettext as _
@@ -717,9 +718,8 @@ def rich_to_html(input_text: str) -> str:
     This function does not provide a full HTML page, but can be used to insert
     HTML-formatted text spans into a markdown file.
     """
-    console = Console(record=True, highlight=False)
+    console = Console(record=True, highlight=False, file=io.StringIO())
 
-    with console.capture():
-        console.print(input_text, overflow="ignore", crop=False)
+    console.print(input_text, overflow="ignore", crop=False)
 
     return console.export_html(inline_styles=True, code_format="{code}").strip()
