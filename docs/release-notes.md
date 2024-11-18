@@ -13,6 +13,10 @@
 
 * 🐛 Fix printing HTML from Rich output. PR [#1055](https://github.com/fastapi/typer/pull/1055) by [@tiangolo](https://github.com/tiangolo).
 
+### Docs
+
+* 📝 Update markdown includes to use the new simpler format. PR [#1054](https://github.com/fastapi/typer/pull/1054) by [@tiangolo](https://github.com/tiangolo).
+
 ### Internal
 
 * ⬆ Bump ruff from 0.7.3 to 0.7.4. PR [#1051](https://github.com/fastapi/typer/pull/1051) by [@dependabot[bot]](https://github.com/apps/dependabot).
