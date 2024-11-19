@@ -389,21 +389,6 @@ def get_command(typer_instance: Typer) -> click.Command:
     )  # pragma: no cover
 
 
-def get_group_name(typer_info: TyperInfo) -> Optional[str]:
-    # if typer_info.callback:
-    #     # Priority 1: Callback passed in app.add_typer()
-    #     return get_command_name(typer_info.callback.__name__)
-    # if typer_info.typer_instance:
-    #     registered_callback = typer_info.typer_instance.registered_callback
-    #     if registered_callback:
-    #         if registered_callback.callback:
-    #             # Priority 2: Callback passed in @subapp.callback()
-    #             return get_command_name(registered_callback.callback.__name__)
-    #     if typer_info.typer_instance.info.callback:
-    #         return get_command_name(typer_info.typer_instance.info.callback.__name__)
-    return None
-
-
 def solve_typer_info_help(typer_info: TyperInfo) -> str:
     # Priority 1: Explicit value was set in app.add_typer()
     if not isinstance(typer_info.help, DefaultPlaceholder):
@@ -480,8 +465,6 @@ def solve_typer_info_defaults(typer_info: TyperInfo) -> TyperInfo:
             pass
         # Value not set, use the default
         values[name] = value.value
-    if values["name"] is None:
-        values["name"] = get_group_name(typer_info)
     values["help"] = solve_typer_info_help(typer_info)
     return TyperInfo(**values)
 
