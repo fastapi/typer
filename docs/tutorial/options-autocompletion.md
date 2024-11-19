@@ -16,27 +16,7 @@ To check it quickly without creating a new Python package, use the `typer` comma
 
 Then let's create small example program:
 
-//// tab | Python 3.7+
-
-```Python
-{!> ../docs_src/options_autocompletion/tutorial001_an.py!}
-```
-
-////
-
-//// tab | Python 3.7+ non-Annotated
-
-/// tip
-
-Prefer to use the `Annotated` version if possible.
-
-///
-
-```Python
-{!> ../docs_src/options_autocompletion/tutorial001.py!}
-```
-
-////
+{* docs_src/options_autocompletion/tutorial001_an.py *}
 
 And let's try it with the `typer` command to get completion:
 
@@ -70,27 +50,7 @@ Right now we get completion for the *CLI option* names, but not for the values.
 
 We can provide completion for the values creating an `autocompletion` function, similar to the `callback` functions from [CLI Option Callback and Context](./options/callback-and-context.md){.internal-link target=_blank}:
 
-//// tab | Python 3.7+
-
-```Python hl_lines="5-6  15"
-{!> ../docs_src/options_autocompletion/tutorial002_an.py!}
-```
-
-////
-
-//// tab | Python 3.7+ non-Annotated
-
-/// tip
-
-Prefer to use the `Annotated` version if possible.
-
-///
-
-```Python hl_lines="4-5  14"
-{!> ../docs_src/options_autocompletion/tutorial002.py!}
-```
-
-////
+{* docs_src/options_autocompletion/tutorial002_an.py hl[5:6,15] *}
 
 We return a `list` of strings from the `complete_name()` function.
 
@@ -119,27 +79,7 @@ Modify the `complete_name()` function to receive a parameter of type `str`, it w
 
 Then we can check and return only the values that start with the incomplete value from the command line:
 
-//// tab | Python 3.7+
-
-```Python hl_lines="7-12"
-{!> ../docs_src/options_autocompletion/tutorial003_an.py!}
-```
-
-////
-
-//// tab | Python 3.7+ non-Annotated
-
-/// tip
-
-Prefer to use the `Annotated` version if possible.
-
-///
-
-```Python hl_lines="6-11"
-{!> ../docs_src/options_autocompletion/tutorial003.py!}
-```
-
-////
+{* docs_src/options_autocompletion/tutorial003_an.py hl[7:12] *}
 
 Now let's try it:
 
@@ -178,27 +118,7 @@ In the `complete_name()` function, instead of providing one `str` per completion
 
 So, in the end, we return a `list` of `tuples` of `str`:
 
-//// tab | Python 3.7+
-
-```Python hl_lines="4-8  11-17"
-{!> ../docs_src/options_autocompletion/tutorial004_an.py!}
-```
-
-////
-
-//// tab | Python 3.7+ non-Annotated
-
-/// tip
-
-Prefer to use the `Annotated` version if possible.
-
-///
-
-```Python hl_lines="3-7  10-16"
-{!> ../docs_src/options_autocompletion/tutorial004.py!}
-```
-
-////
+{* docs_src/options_autocompletion/tutorial004_an.py hl[4:8,11:17] *}
 
 /// tip
 
@@ -239,27 +159,7 @@ Instead of creating and returning a list with values (`str` or `tuple`), we can 
 
 That way our function will be a <a href="https://docs.python.org/3.8/glossary.html#index-19" class="external-link" target="_blank">generator</a> that **Typer** (actually Click) can iterate:
 
-//// tab | Python 3.7+
-
-```Python hl_lines="11-14"
-{!> ../docs_src/options_autocompletion/tutorial005_an.py!}
-```
-
-////
-
-//// tab | Python 3.7+ non-Annotated
-
-/// tip
-
-Prefer to use the `Annotated` version if possible.
-
-///
-
-```Python hl_lines="10-13"
-{!> ../docs_src/options_autocompletion/tutorial005.py!}
-```
-
-////
+{* docs_src/options_autocompletion/tutorial005_an.py hl[11:14] *}
 
 That simplifies our code a bit and works the same.
 
@@ -295,27 +195,7 @@ So, for now, take this as a sneak peek 😉.
 
 For this we use a `List` of `str`:
 
-//// tab | Python 3.7+
-
-```Python hl_lines="9-14"
-{!> ../docs_src/options_autocompletion/tutorial006_an.py!}
-```
-
-////
-
-//// tab | Python 3.7+ non-Annotated
-
-/// tip
-
-Prefer to use the `Annotated` version if possible.
-
-///
-
-```Python hl_lines="8-11"
-{!> ../docs_src/options_autocompletion/tutorial006.py!}
-```
-
-////
+{* docs_src/options_autocompletion/tutorial006_an.py hl[9:14] *}
 
 And then we can use it like:
 
@@ -340,27 +220,7 @@ But you can access the context by declaring a function parameter of type `typer.
 
 And from that context you can get the current values for each parameter.
 
-//// tab | Python 3.7+
-
-```Python hl_lines="13-14  16"
-{!> ../docs_src/options_autocompletion/tutorial007_an.py!}
-```
-
-////
-
-//// tab | Python 3.7+ non-Annotated
-
-/// tip
-
-Prefer to use the `Annotated` version if possible.
-
-///
-
-```Python hl_lines="12-13  15"
-{!> ../docs_src/options_autocompletion/tutorial007.py!}
-```
-
-////
+{* docs_src/options_autocompletion/tutorial007_an.py hl[13:14,16] *}
 
 We are getting the `names` already provided with `--name` in the command line before this completion was triggered.
 
@@ -436,27 +296,7 @@ You can print to "standard error" with a **Rich** `Console(stderr=True)`.
 
 Using `stderr=True` tells **Rich** that the output should be shown in "standard error".
 
-//// tab | Python 3.7+
-
-```Python hl_lines="13  16-17"
-{!> ../docs_src/options_autocompletion/tutorial008_an.py!}
-```
-
-////
-
-//// tab | Python 3.7+ non-Annotated
-
-/// tip
-
-Prefer to use the `Annotated` version if possible.
-
-///
-
-```Python hl_lines="12  15-16"
-{!> ../docs_src/options_autocompletion/tutorial008.py!}
-```
-
-////
+{* docs_src/options_autocompletion/tutorial008_an.py hl[13,16:17] *}
 
 /// info
 
@@ -504,27 +344,7 @@ But it's probably useful only in very advanced use cases.
 
 Of course, you can declare everything if you need it, the context, the raw *CLI parameters*, and the incomplete `str`:
 
-//// tab | Python 3.7+
-
-```Python hl_lines="16"
-{!> ../docs_src/options_autocompletion/tutorial009_an.py!}
-```
-
-////
-
-//// tab | Python 3.7+ non-Annotated
-
-/// tip
-
-Prefer to use the `Annotated` version if possible.
-
-///
-
-```Python hl_lines="15"
-{!> ../docs_src/options_autocompletion/tutorial009.py!}
-```
-
-////
+{* docs_src/options_autocompletion/tutorial009_an.py hl[16] *}
 
 Check it:
 

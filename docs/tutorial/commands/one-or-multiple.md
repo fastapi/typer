@@ -2,9 +2,7 @@
 
 You might have noticed that if you create a single command, as in the first example:
 
-```Python hl_lines="3  6  12"
-{!../docs_src/commands/index/tutorial001.py!}
-```
+{* docs_src/commands/index/tutorial001.py hl[3,6,12] *}
 
 **Typer** is smart enough to create a CLI application with that single function as the main CLI application, not as a command/subcommand:
 
@@ -45,9 +43,7 @@ Notice that it doesn't show a command `main`, even though the function name is `
 
 But if you add multiple commands, **Typer** will create one *CLI command* for each one of them:
 
-```Python hl_lines="6  11"
-{!../docs_src/commands/index/tutorial002.py!}
-```
+{* docs_src/commands/index/tutorial002.py hl[6,11] *}
 
 Here we have 2 commands `create` and `delete`:
 
@@ -84,9 +80,7 @@ Deleting user: Hiro Hamada
 
 If you want to create a CLI app with one single command but you still want it to be a command/subcommand you can just add a callback:
 
-```Python hl_lines="11 12 13"
-{!../docs_src/commands/one_or_multiple/tutorial001.py!}
-```
+{* docs_src/commands/one_or_multiple/tutorial001.py hl[11,12,13] *}
 
 And now your CLI program will have a single command.
 
@@ -121,9 +115,7 @@ Creating user: Hiro Hamada
 
 Now that you are using a callback just to have a single command, you might as well use it to add documentation for your app:
 
-```Python hl_lines="11 12 13 14 15 16 17"
-{!../docs_src/commands/one_or_multiple/tutorial002.py!}
-```
+{* docs_src/commands/one_or_multiple/tutorial002.py hl[11,12,13,14,15,16,17] *}
 
 And now the docstring from the callback will be used as the help text:
 
