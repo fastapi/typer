@@ -10,7 +10,7 @@ app.add_typer(users.app, name="users")
 
 ## Add a help text
 
-We can also set the `help` while adding a Typer:
+We can also set the `help` text while adding a Typer:
 
 {* docs_src/subcommands/name_help/tutorial001.py hl[6] *}
 
@@ -60,9 +60,9 @@ But those are documented later in another section.
 
 ///
 
-## Inferring name and help from callback
+## Inferring help text from callback
 
-### Inferring a command's name and help
+### Inferring a command's help text
 
 When you create a command with `@app.command()`, by default, it generates the name from the function name.
 
@@ -81,13 +81,13 @@ def create(item: str):
 
 ...will create a command `create` with a help text of `Create an item`.
 
-### Inferring help from `@app.callback()`
+### Inferring the help text from `@app.callback()`
 
 The same way, if you define a callback in a `typer.Typer()`, the help text is extracted from the callback function's docstring.
 
 Here's an example:
 
-{* docs_src/subcommands/name_help/tutorial002.py hl[6,9,10,11,12,13] *}
+{* docs_src/subcommands/name_help/tutorial002.py hl[9,10,11,12,13] *}
 
 The help text for that command will be the callback function's docstring: `Manage users in the app.`.
 
@@ -126,6 +126,12 @@ Commands:
 ```
 
 </div>
+
+/// note
+
+In previous versions of Typer, in addition to the help text, the command name was also inferred from the callback function name, this is no longer the case.
+
+///
 
 ### Help from callback parameter in `typer.Typer()`
 
@@ -277,7 +283,7 @@ So, when inferring help text, the precedence order from lowest priority to highe
 
 That's for inferring the help text from functions.
 
-But if you set the name and help text explicitly, that has a higher priority than these.
+But if you set the help text explicitly, that has a higher priority than these.
 
 ## Set the name and help
 
@@ -345,7 +351,7 @@ Commands:
 
 </div>
 
-### Name and help in `@app.callback()`
+### Help text in `@app.callback()`
 
 Any parameter that you use when creating a `typer.Typer()` app can be overridden in the parameters of `@app.callback()`.
 
@@ -439,9 +445,9 @@ Commands:
 
 The precedence to generate a command's name and help, from lowest priority to highest, is:
 
-* Implicitly inferred from `sub_app = typer.Typer(callback=some_function)`
-* Implicitly inferred from the callback function under `@sub_app.callback()`
-* Implicitly inferred from `app.add_typer(sub_app, callback=some_function)`
+* Implicitly inferred from `sub_app = typer.Typer(callback=some_function)` (only the help text)
+* Implicitly inferred from the callback function under `@sub_app.callback()` (only the help text)
+* Implicitly inferred from `app.add_typer(sub_app, callback=some_function)` (only the help text)
 * Explicitly set on `sub_app = typer.Typer(name="some-name", help="Some help.")`
 * Explicitly set on `@sub_app.callback("some-name", help="Some help.")`
 * Explicitly set on `app.add_typer(sub_app, name="some-name", help="Some help.")`
