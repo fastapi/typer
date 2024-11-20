@@ -449,7 +449,6 @@ The precedence to generate a command's name and help, from lowest priority to hi
 * Implicitly inferred from the callback function under `@sub_app.callback()` (only the help text)
 * Implicitly inferred from `app.add_typer(sub_app, callback=some_function)` (only the help text)
 * Explicitly set on `sub_app = typer.Typer(name="some-name", help="Some help.")`
-* Explicitly set on `@sub_app.callback("some-name", help="Some help.")`
 * Explicitly set on `app.add_typer(sub_app, name="some-name", help="Some help.")`
 
 So, `app.add_typer(sub_app, name="some-name", help="Some help.")` always wins.

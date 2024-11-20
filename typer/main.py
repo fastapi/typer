@@ -184,7 +184,6 @@ class Typer:
 
     def callback(
         self,
-        name: Optional[str] = Default(None),
         *,
         cls: Optional[Type[TyperGroup]] = Default(None),
         invoke_without_command: bool = Default(False),
@@ -206,7 +205,6 @@ class Typer:
     ) -> Callable[[CommandFunctionType], CommandFunctionType]:
         def decorator(f: CommandFunctionType) -> CommandFunctionType:
             self.registered_callback = TyperInfo(
-                name=name,
                 cls=cls,
                 invoke_without_command=invoke_without_command,
                 no_args_is_help=no_args_is_help,

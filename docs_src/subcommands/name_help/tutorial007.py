@@ -21,8 +21,7 @@ def new_users():
 app.add_typer(users_app, callback=new_users)
 
 
-# TODO: do we want this to work?
-@users_app.callback("call-users", help="Help from callback for users.")
+@users_app.callback(help="Help from callback for users.")
 def users():
     """
     Manage users in the app.
