@@ -19,13 +19,13 @@ def test_help():
 
 
 def test_command_help():
-    result = runner.invoke(app, ["call-users", "--help"])
+    result = runner.invoke(app, ["users", "--help"])
     assert result.exit_code == 0
     assert "Help from callback for users." in result.output
 
 
 def test_command():
-    result = runner.invoke(app, ["call-users", "create", "Camila"])
+    result = runner.invoke(app, ["users", "create", "Camila"])
     assert result.exit_code == 0
     assert "Creating user: Camila" in result.output
 
