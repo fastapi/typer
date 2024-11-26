@@ -54,7 +54,7 @@ Hello Camila Gutiérrez
 // The above is equivalent to passing the --greeting CLI option with value `formal`
 $ python main.py Camila Gutiérrez --greeting formal
 
-Hi Camila !
+Hello Camila Gutiérrez
 
 // But you can select another value
 $ python main.py Camila Gutiérrez --greeting casual

@@ -8,7 +8,6 @@ import traceback
 from datetime import datetime
 from enum import Enum
 from functools import update_wrapper
-from gettext import gettext
 from pathlib import Path
 from traceback import FrameSummary, StackSummary
 from types import TracebackType
@@ -838,122 +837,67 @@ def lenient_issubclass(
     return isinstance(cls, type) and issubclass(cls, class_or_tuple)
 
 
-class ClickTypeUnion(click.ParamType):
-    def __init__(self, *types: click.ParamType) -> None:
-        self._types: tuple[click.ParamType, ...] = types
-        self.name: str = "|".join(t.name for t in types)
+class DefaultOption(click.ParamType):
+    def __init__(self, type_: click.ParamType, default: Any) -> None:
+        self._type: click.ParamType = type_
+        self._default: Any = default
+        self.name: str = f"BOOLEAN|{type_.name}"
 
     @override
     def __repr__(self) -> str:
-        return "|".join(repr(t) for t in self._types)
+        return f"DefaultOption({self._type})"
 
     @override
     def to_info_dict(self) -> Dict[str, Any]:
-        info_dict: Dict[str, Any] = {}
-        for t in self._types:
-            info_dict |= t.to_info_dict()
-
-        return info_dict
+        return self._type.to_info_dict()
 
     @override
     def get_metavar(self, param: click.Parameter) -> Optional[str]:
-        metavar_union: list[str] = []
-        for t in self._types:
-            metavar = t.get_metavar(param)
-            if metavar is not None:
-                metavar_union.append(metavar)
-
-        if not len(metavar_union):
-            return None
-
-        return "|".join(metavar_union)
+        return self._type.get_metavar(param)
 
     @override
     def get_missing_message(self, param: click.Parameter) -> Optional[str]:
-        message_union: list[str] = []
-        for t in self._types:
-            message = t.get_missing_message(param)
-            if message is not None:
-                message_union.append(message)
-
-        if not len(message_union):
-            return None
-
-        return "\n".join(message_union)
+        return self._type.get_missing_message(param)
 
     @override
     def convert(
         self, value: Any, param: Optional[click.Parameter], ctx: Optional[click.Context]
     ) -> Any:
-        fail_messages: list[str] = []
+        str_value = str(value).strip().lower()
 
-        for t in self._types:
-            try:
-                return t.convert(value, param, ctx)
+        if str_value in {"True", "true", "t", "yes", "y", "on"}:
+            return self._default
 
-            except click.BadParameter as e:
-                if not getattr(t, "union_ignore_fail_message", False):
-                    fail_messages.append(e.message)
-
-        self.fail(" and ".join(fail_messages), param, ctx)
-
-
-class BoolLiteral(click.types.BoolParamType):
-    union_ignore_fail_message: bool = True
-    name: str = "boolean literal"
-
-    @override
-    def convert(
-        self, value: Any, param: Optional[click.Parameter], ctx: Optional[click.Context]
-    ) -> Any:
-        value_ = str(value)
-        norm = value_.strip().lower()
-
-        # do not cast "1"
-        if norm in {"True", "true", "t", "yes", "y", "on"}:
-            return True
-
-        # do not cast "0"
-        if norm in {"False", "false", "f", "no", "n", "off"}:
+        if str_value in {"False", "false", "f", "no", "n", "off"}:
             return False
 
-        self.fail(
-            gettext("{value!r} is not a valid boolean literal.").format(value=value_),
-            param,
-            ctx,
-        )
-
-    @override
-    def __repr__(self) -> str:
-        return "BOOL(Literal)"
-
-
-class BoolInteger(click.ParamType):
-    union_ignore_fail_message: bool = True
-    name: str = "boolean integer"
-
-    @override
-    def convert(
-        self, value: Any, param: Optional[click.Parameter], ctx: Optional[click.Context]
-    ) -> Any:
-        value_ = str(value)
-        norm = value_.strip()
-
-        if norm == "1":
-            return True
-
-        if norm == "0":
+        if isinstance(value, DefaultFalse):
             return False
 
-        self.fail(
-            gettext("{value!r} is not a valid boolean integer.").format(value=value_),
-            param,
-            ctx,
-        )
+        try:
+            return self._type.convert(value, param, ctx)
 
-    @override
+        except click.BadParameter as e:
+            fail = e
+
+        if str_value == "1":
+            return self._default
+
+        if str_value == "0":
+            return False
+
+        raise fail
+
+
+class DefaultFalse:
+    def __init__(self, value: Any) -> None:
+        self._value = value
+
     def __repr__(self) -> str:
-        return "BOOL(int)"
+        return f"False ({repr(self._value)})"
+
+    def __str__(self) -> str:
+        return f"False ({str(self._value)})"
 
 
 def get_click_param(
@@ -1051,11 +995,9 @@ def get_click_param(
         elif secondary_type is bool:
             is_flag = False
             flag_value = default_value
-            default_value = False
             assert parameter_type is not None
-            parameter_type = ClickTypeUnion(
-                BoolLiteral(), parameter_type, BoolInteger()
-            )
+            parameter_type = DefaultOption(parameter_type, default=default_value)
+            default_value = DefaultFalse(default_value)
 
         default_option_name = get_command_name(param.name)
         if is_flag:
