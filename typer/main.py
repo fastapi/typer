@@ -619,30 +619,48 @@ def get_command_from_info(
     return command
 
 
-def determine_type_convertor(type_: Any) -> Optional[Callable[[Any], Any]]:
+def determine_type_convertor(
+    type_: Any, skip_bool: bool = False
+) -> Optional[Callable[[Any], Any]]:
     convertor: Optional[Callable[[Any], Any]] = None
     if lenient_issubclass(type_, Path):
-        convertor = param_path_convertor
+        convertor = generate_path_convertor(skip_bool)
     if lenient_issubclass(type_, Enum):
-        convertor = generate_enum_convertor(type_)
+        convertor = generate_enum_convertor(type_, skip_bool)
     return convertor
 
 
-def param_path_convertor(value: Optional[str] = None) -> Optional[Path]:
-    if value is not None:
+def generate_path_convertor(
+    skip_bool: bool = False,
+) -> Callable[[Any], Union[None, bool, Path]]:
+    def convertor(value: Optional[str] = None) -> Union[None, bool, Path]:
+        if value is None:
+            return None
+
+        if isinstance(value, bool) and skip_bool:
+            return value
+
         return Path(value)
-    return None
+
+    return convertor
 
 
-def generate_enum_convertor(enum: Type[Enum]) -> Callable[[Any], Any]:
+def generate_enum_convertor(
+    enum: Type[Enum], skip_bool: bool = False
+) -> Callable[[Any], Union[None, bool, Enum]]:
     val_map = {str(val.value): val for val in enum}
 
-    def convertor(value: Any) -> Any:
-        if value is not None:
-            val = str(value)
-            if val in val_map:
-                key = val_map[val]
-                return enum(key)
+    def convertor(value: Any) -> Union[None, bool, Enum]:
+        if value is None:
+            return None
+
+        if isinstance(value, bool) and skip_bool:
+            return value
+
+        val = str(value)
+        if val in val_map:
+            key = val_map[val]
+            return enum(key)
 
     return convertor
 
@@ -809,6 +827,57 @@ def lenient_issubclass(
     return isinstance(cls, type) and issubclass(cls, class_or_tuple)
 
 
+class ClickTypeUnion(click.ParamType):
+    def __init__(self, *types: click.ParamType) -> None:
+        self._types: tuple[click.ParamType, ...] = types
+        self.name: str = "|".join(t.name for t in types)
+
+    def to_info_dict(self) -> Dict[str, Any]:
+        info_dict: Dict[str, Any] = {}
+        for t in self._types:
+            info_dict |= t.to_info_dict()
+
+        return info_dict
+
+    def get_metavar(self, param: click.Parameter) -> Optional[str]:
+        metavar_union: list[str] = []
+        for t in self._types:
+            metavar = t.get_metavar(param)
+            if metavar is not None:
+                metavar_union.append(metavar)
+
+        if not len(metavar_union):
+            return None
+
+        return "|".join(metavar_union)
+
+    def get_missing_message(self, param: click.Parameter) -> Optional[str]:
+        message_union: list[str] = []
+        for t in self._types:
+            message = t.get_missing_message(param)
+            if message is not None:
+                message_union.append(message)
+
+        if not len(message_union):
+            return None
+
+        return "\n".join(message_union)
+
+    def convert(
+        self, value: Any, param: Optional[click.Parameter], ctx: Optional[click.Context]
+    ) -> Any:
+        fail_messages: list[str] = []
+
+        for t in self._types:
+            try:
+                return t.convert(value, param, ctx)
+
+            except click.BadParameter as e:
+                fail_messages.append(e.message)
+
+        self.fail(" or ".join(fail_messages), param, ctx)
+
+
 def get_click_param(
     param: ParamMeta,
 ) -> Tuple[Union[click.Argument, click.Option], Any]:
@@ -836,10 +905,12 @@ def get_click_param(
     else:
         annotation = str
     main_type = annotation
+    secondary_type: bool | None = None
     is_list = False
     is_tuple = False
     parameter_type: Any = None
     is_flag = None
+    flag_value: Any = None
     origin = get_origin(main_type)
 
     if origin is not None:
@@ -850,7 +921,17 @@ def get_click_param(
                 if type_ is NoneType:
                     continue
                 types.append(type_)
-            assert len(types) == 1, "Typer Currently doesn't support Union types"
+
+            if len(types) == 1:
+                main_type = types[0]
+
+            else:
+                types = sorted(types, key=lambda t: t is bool)
+                main_type, secondary_type, *union_types = types
+                assert (
+                    not len(union_types) and secondary_type is bool
+                ), "Typer Currently doesn't support Union types"
+
             main_type = types[0]
             origin = get_origin(main_type)
         # Handle Tuples and Lists
@@ -875,7 +956,7 @@ def get_click_param(
         parameter_type = get_click_type(
             annotation=main_type, parameter_info=parameter_info
         )
-    convertor = determine_type_convertor(main_type)
+    convertor = determine_type_convertor(main_type, skip_bool=secondary_type is bool)
     if is_list:
         convertor = generate_list_convertor(
             convertor=convertor, default_value=default_value
@@ -888,6 +969,14 @@ def get_click_param(
             # Click doesn't accept a flag of type bool, only None, and then it sets it
             # to bool internally
             parameter_type = None
+
+        elif secondary_type is bool:
+            is_flag = False
+            flag_value = default_value
+            default_value = False
+            assert parameter_type is not None
+            parameter_type = ClickTypeUnion(parameter_type, click.BOOL)
+
         default_option_name = get_command_name(param.name)
         if is_flag:
             default_option_declaration = (
@@ -910,6 +999,7 @@ def get_click_param(
                 prompt_required=parameter_info.prompt_required,
                 hide_input=parameter_info.hide_input,
                 is_flag=is_flag,
+                flag_value=flag_value,
                 multiple=is_list,
                 count=parameter_info.count,
                 allow_from_autoenv=parameter_info.allow_from_autoenv,

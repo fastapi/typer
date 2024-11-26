@@ -1,3 +1,5 @@
+from enum import StrEnum, auto
+
 import typer
 from typer.testing import CliRunner
 from typing_extensions import Annotated
@@ -76,3 +78,40 @@ def test_annotated_option_with_argname_doesnt_mutate_multiple_calls():
     result = runner.invoke(app, ["--force"])
     assert result.exit_code == 0, result.output
     assert "Forcing operation" in result.output
+
+
+def test_annotated_option_accepts_optional_value():
+    class OptEnum(StrEnum):
+        val1 = auto()
+        val2 = auto()
+
+    app = typer.Typer()
+
+    @app.command()
+    def cmd(opt: Annotated[bool | OptEnum, typer.Option()] = OptEnum.val1):
+        if opt is False:
+            print("False")
+        elif opt is True:
+            print("True")
+        else:
+            print(opt.value)
+
+    result = runner.invoke(app)
+    assert result.exit_code == 0, result.output
+    assert "False" in result.output
+
+    result = runner.invoke(app, ["--opt"])
+    assert result.exit_code == 0, result.output
+    assert "val1" in result.output
+
+    result = runner.invoke(app, ["--opt", "val1"])
+    assert result.exit_code == 0, result.output
+    assert "val1" in result.output
+
+    result = runner.invoke(app, ["--opt", "val2"])
+    assert result.exit_code == 0, result.output
+    assert "val2" in result.output
+
+    result = runner.invoke(app, ["--opt", "val3"])
+    assert result.exit_code != 0
+    assert "Invalid value for '--opt': 'val3' is not one of" in result.output
