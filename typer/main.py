@@ -8,14 +8,25 @@ import traceback
 from datetime import datetime
 from enum import Enum
 from functools import update_wrapper
+from gettext import gettext
 from pathlib import Path
 from traceback import FrameSummary, StackSummary
 from types import TracebackType
-from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, Union
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    List,
+    Optional,
+    Sequence,
+    Tuple,
+    Type,
+    Union,
+)
 from uuid import UUID
 
 import click
-from typing_extensions import get_args, get_origin
+from typing_extensions import get_args, get_origin, override
 
 from ._typing import is_union
 from .completion import get_completion_inspect_parameters
@@ -832,6 +843,11 @@ class ClickTypeUnion(click.ParamType):
         self._types: tuple[click.ParamType, ...] = types
         self.name: str = "|".join(t.name for t in types)
 
+    @override
+    def __repr__(self) -> str:
+        return "|".join(repr(t) for t in self._types)
+
+    @override
     def to_info_dict(self) -> Dict[str, Any]:
         info_dict: Dict[str, Any] = {}
         for t in self._types:
@@ -839,6 +855,7 @@ class ClickTypeUnion(click.ParamType):
 
         return info_dict
 
+    @override
     def get_metavar(self, param: click.Parameter) -> Optional[str]:
         metavar_union: list[str] = []
         for t in self._types:
@@ -851,6 +868,7 @@ class ClickTypeUnion(click.ParamType):
 
         return "|".join(metavar_union)
 
+    @override
     def get_missing_message(self, param: click.Parameter) -> Optional[str]:
         message_union: list[str] = []
         for t in self._types:
@@ -863,6 +881,7 @@ class ClickTypeUnion(click.ParamType):
 
         return "\n".join(message_union)
 
+    @override
     def convert(
         self, value: Any, param: Optional[click.Parameter], ctx: Optional[click.Context]
     ) -> Any:
@@ -873,9 +892,68 @@ class ClickTypeUnion(click.ParamType):
                 return t.convert(value, param, ctx)
 
             except click.BadParameter as e:
-                fail_messages.append(e.message)
+                if not getattr(t, "union_ignore_fail_message", False):
+                    fail_messages.append(e.message)
 
-        self.fail(" or ".join(fail_messages), param, ctx)
+        self.fail(" and ".join(fail_messages), param, ctx)
+
+
+class BoolLiteral(click.types.BoolParamType):
+    union_ignore_fail_message: bool = True
+    name: str = "boolean literal"
+
+    @override
+    def convert(
+        self, value: Any, param: Optional[click.Parameter], ctx: Optional[click.Context]
+    ) -> Any:
+        value_ = str(value)
+        norm = value_.strip().lower()
+
+        # do not cast "1"
+        if norm in {"True", "true", "t", "yes", "y", "on"}:
+            return True
+
+        # do not cast "0"
+        if norm in {"False", "false", "f", "no", "n", "off"}:
+            return False
+
+        self.fail(
+            gettext("{value!r} is not a valid boolean literal.").format(value=value_),
+            param,
+            ctx,
+        )
+
+    @override
+    def __repr__(self) -> str:
+        return "BOOL(Literal)"
+
+
+class BoolInteger(click.ParamType):
+    union_ignore_fail_message: bool = True
+    name: str = "boolean integer"
+
+    @override
+    def convert(
+        self, value: Any, param: Optional[click.Parameter], ctx: Optional[click.Context]
+    ) -> Any:
+        value_ = str(value)
+        norm = value_.strip()
+
+        if norm == "1":
+            return True
+
+        if norm == "0":
+            return False
+
+        self.fail(
+            gettext("{value!r} is not a valid boolean integer.").format(value=value_),
+            param,
+            ctx,
+        )
+
+    @override
+    def __repr__(self) -> str:
+        return "BOOL(int)"
 
 
 def get_click_param(
@@ -975,7 +1053,9 @@ def get_click_param(
             flag_value = default_value
             default_value = False
             assert parameter_type is not None
-            parameter_type = ClickTypeUnion(parameter_type, click.BOOL)
+            parameter_type = ClickTypeUnion(
+                BoolLiteral(), parameter_type, BoolInteger()
+            )
 
         default_option_name = get_command_name(param.name)
         if is_flag:
