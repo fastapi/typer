@@ -929,7 +929,7 @@ def get_click_param(
     else:
         annotation = str
     main_type = annotation
-    secondary_type: type[bool] | None = None
+    secondary_type: Union[Type[bool], None] = None
     is_list = False
     is_tuple = False
     parameter_type: Any = None

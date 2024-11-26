@@ -1,4 +1,5 @@
-from enum import StrEnum, auto
+from enum import Enum
+from typing import Union
 
 import typer
 from typer.testing import CliRunner
@@ -84,12 +85,12 @@ class TestAnnotatedOptionAcceptsOptionalValue:
     def test_enum(self):
         app = typer.Typer()
 
-        class OptEnum(StrEnum):
-            val1 = auto()
-            val2 = auto()
+        class OptEnum(str, Enum):
+            val1 = "val1"
+            val2 = "val2"
 
         @app.command()
-        def cmd(opt: Annotated[bool | OptEnum, typer.Option()] = OptEnum.val1):
+        def cmd(opt: Annotated[Union[bool, OptEnum], typer.Option()] = OptEnum.val1):
             if opt is False:
                 print("False")
             elif opt is True:
@@ -121,7 +122,7 @@ class TestAnnotatedOptionAcceptsOptionalValue:
         app = typer.Typer()
 
         @app.command()
-        def cmd(opt: Annotated[bool | int, typer.Option()] = 1):
+        def cmd(opt: Annotated[Union[bool, int], typer.Option()] = 1):
             print(opt)
 
         result = runner.invoke(app)
