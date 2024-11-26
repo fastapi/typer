@@ -660,11 +660,11 @@ def generate_enum_convertor(
 ) -> Callable[[Any], Union[None, bool, Enum]]:
     val_map = {str(val.value): val for val in enum}
 
-    def convertor(value: Any) -> Union[None, bool, Enum]:
-        if value is None:
-            return None
-
+    def convertor(value: Any) -> Union[bool, Enum]:
         if isinstance(value, bool) and skip_bool:
+            return value
+
+        if isinstance(value, enum):
             return value
 
         val = str(value)
@@ -672,7 +672,9 @@ def generate_enum_convertor(
             key = val_map[val]
             return enum(key)
 
-        return None
+        raise click.BadParameter(
+            f"Invalid value '{value}' for enum '{enum.__name__}'"
+        )  # pragma: no cover
 
     return convertor
 
@@ -846,22 +848,6 @@ class DefaultOption(click.ParamType):
         self.name: str = f"BOOLEAN|{type_.name}"
 
     @override
-    def __repr__(self) -> str:
-        return f"DefaultOption({self._type})"
-
-    @override
-    def to_info_dict(self) -> Dict[str, Any]:
-        return self._type.to_info_dict()
-
-    @override
-    def get_metavar(self, param: click.Parameter) -> Optional[str]:
-        return self._type.get_metavar(param)
-
-    @override
-    def get_missing_message(self, param: click.Parameter) -> Optional[str]:
-        return self._type.get_missing_message(param)
-
-    @override
     def convert(
         self, value: Any, param: Optional[click.Parameter], ctx: Optional[click.Context]
     ) -> Any:
@@ -894,9 +880,6 @@ class DefaultOption(click.ParamType):
 class DefaultFalse:
     def __init__(self, value: Any) -> None:
         self._value = value
-
-    def __repr__(self) -> str:
-        return f"False ({repr(self._value)})"
 
     def __str__(self) -> str:
         return f"False ({str(self._value)})"
