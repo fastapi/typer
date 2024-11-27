@@ -498,7 +498,7 @@ def get_group_from_info(
 
             warnings.warn(
                 "The 'callback' parameter is not supported by Typer when using `add_typer` without a name",
-                stacklevel=2,
+                stacklevel=5,
             )
     solved_info = solve_typer_info_defaults(group_info)
     (
