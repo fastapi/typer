@@ -129,7 +129,7 @@ Commands:
 
 /// note
 
-In previous versions of Typer, in addition to the help text, the command name was also inferred from the callback function name, this is no longer the case.
+Until Typer 0.14.0, in addition to the help text, the command name was also inferred from the callback function name, this is no longer the case.
 
 ///
 
