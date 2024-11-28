@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Breaking Changes
+
+* 🔥 Remove auto naming of groups added via `add_typer` based on the group's callback function name. PR [#1052](https://github.com/fastapi/typer/pull/1052) by [@patrick91](https://github.com/patrick91).
+
 ### Internal
 
 * ⬆ Bump pypa/gh-action-pypi-publish from 1.10.3 to 1.12.2. PR [#1043](https://github.com/fastapi/typer/pull/1043) by [@dependabot[bot]](https://github.com/apps/dependabot).
