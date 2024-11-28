@@ -48,7 +48,7 @@ Commands:
 
 </div>
 
-We can set the `name` and `help` in several places, each one taking precedence over the other, overriding the previous value.
+We can set the `help` in several places, each one taking precedence over the other, overriding the previous value.
 
 Let's see those locations.
 
@@ -129,7 +129,7 @@ Commands:
 
 /// note
 
-Until Typer 0.14.0, in addition to the help text, the command name was also inferred from the callback function name, this is no longer the case.
+Before Typer 0.14.0, in addition to the help text, the command name was also inferred from the callback function name, this is no longer the case.
 
 ///
 
@@ -291,7 +291,7 @@ Let's now see the places where you can set the command name and help text, from 
 
 /// tip
 
-Setting the name and help text explicitly always has a higher precedence than inferring from a callback function.
+Setting the help text explicitly always has a higher precedence than inferring from a callback function.
 
 ///
 
@@ -311,7 +311,7 @@ The rest of the callbacks and overrides are there only to show you that they don
 
 ///
 
-We set an explicit name `exp-users`, and an explicit help `Explicit help.`.
+We set an explicit help `Explicit help.`.
 
 So that will take precedence now.
 
@@ -353,13 +353,13 @@ Commands:
 
 ### Help text in `@app.callback()`
 
-Any parameter that you use when creating a `typer.Typer()` app can be overridden in the parameters of `@app.callback()`.
+Many parameters that you use when creating a `typer.Typer()` app can be overridden in the parameters of `@app.callback()`.
 
-Continuing with the previous example, we now override the values in `@user_app.callback()`:
+Continuing with the previous example, we now override the `help` in `@user_app.callback()`:
 
 {* docs_src/subcommands/name_help/tutorial007.py hl[24] *}
 
-And now the command name will be `call-users` and the help text will be `Help from callback for users.`.
+And now the help text will be `Help from callback for users.`.
 
 Check it:
 
@@ -369,7 +369,7 @@ Check it:
 // Check the help
 $ python main.py --help
 
-// The command name now is call-users and the help text is "Help from callback for users.".
+// The help text is now "Help from callback for users.".
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
 
 Options:
@@ -378,13 +378,13 @@ Options:
   --help                Show this message and exit.
 
 Commands:
-  call-users  Help from callback for users.
+  users  Help from callback for users.
 
-// Check the call-users command help
-$ python main.py call-users --help
+// Check the users command help
+$ python main.py users --help
 
 // Notice the main help text
-Usage: main.py call-users [OPTIONS] COMMAND [ARGS]...
+Usage: main.py users [OPTIONS] COMMAND [ARGS]...
 
   Help from callback for users.
 
@@ -443,12 +443,17 @@ Commands:
 
 ## Recap
 
-The precedence to generate a command's name and help, from lowest priority to highest, is:
+The precedence to generate a command's **help**, from lowest priority to highest, is:
 
-* Implicitly inferred from `sub_app = typer.Typer(callback=some_function)` (only the help text)
-* Implicitly inferred from the callback function under `@sub_app.callback()` (only the help text)
-* Implicitly inferred from `app.add_typer(sub_app, callback=some_function)` (only the help text)
-* Explicitly set on `sub_app = typer.Typer(name="some-name", help="Some help.")`
-* Explicitly set on `app.add_typer(sub_app, name="some-name", help="Some help.")`
+* Implicitly inferred from `sub_app = typer.Typer(callback=some_function)`
+* Implicitly inferred from the callback function under `@sub_app.callback()`
+* Implicitly inferred from `app.add_typer(sub_app, callback=some_function)`
+* Explicitly set on `sub_app = typer.Typer(help="Some help.")`
+* Explicitly set on `app.add_typer(sub_app, help="Some help.")`
+
+And the priority to set the command's **name**, from lowest priority to highest, is:
+
+* Explicitly set on `sub_app = typer.Typer(name="some-name")`
+* Explicitly set on `app.add_typer(sub_app, name="some-name")`
 
 So, `app.add_typer(sub_app, name="some-name", help="Some help.")` always wins.
