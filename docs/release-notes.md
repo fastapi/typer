@@ -6,6 +6,58 @@
 
 * 🔥 Remove auto naming of groups added via `add_typer` based on the group's callback function name. PR [#1052](https://github.com/fastapi/typer/pull/1052) by [@patrick91](https://github.com/patrick91).
 
+Before, it was supported to infer the name of a command group from the callback function name in the sub-app, so, in this code:
+
+```python
+import typer
+
+app = typer.Typer()
+users_app = typer.Typer()
+
+app.add_typer(users_app)
+
+
+@users_app.callback()
+def users():  # <-- This was the inferred command group name
+    """
+    Manage users in the app.
+    """
+
+
+@users_app.command()
+def create(name: str):
+    print(f"Creating user: {name}")
+```
+
+...the command group would be named `users`, based on the name of the function `def users()`.
+
+Now you need to set it explicitly:
+
+```python
+import typer
+
+app = typer.Typer()
+users_app = typer.Typer()
+
+app.add_typer(users_app, name="users")  # <-- Explicitly set the command group name
+
+
+@users_app.callback()
+def users():
+    """
+    Manage users in the app.
+    """
+
+
+@users_app.command()
+def create(name: str):
+    print(f"Creating user: {name}")
+```
+
+Updated docs [SubCommand Name and Help](https://typer.tiangolo.com/tutorial/subcommands/name-and-help/).
+
+**Note**: this change will enable important features in the next release. 🤩
+
 ### Internal
 
 * ⬆ Bump pypa/gh-action-pypi-publish from 1.10.3 to 1.12.2. PR [#1043](https://github.com/fastapi/typer/pull/1043) by [@dependabot[bot]](https://github.com/apps/dependabot).
