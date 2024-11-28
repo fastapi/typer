@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.14.0
+
 ### Breaking Changes
 
 * 🔥 Remove auto naming of groups added via `add_typer` based on the group's callback function name. PR [#1052](https://github.com/fastapi/typer/pull/1052) by [@patrick91](https://github.com/patrick91).
