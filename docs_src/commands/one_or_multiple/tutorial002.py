@@ -13,7 +13,7 @@ def callback():
     """
     Creates a single user Hiro Hamada.
 
-    In the next version it will create 5 users more.
+    In the next version it will create 5 more users.
     """
 
 
