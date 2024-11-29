@@ -458,7 +458,7 @@ In reality, the parameters that require an order can be made *optional* too. And
 
 ### In **Typer**
 
-To try and make it a bit easier, we'll normally use the words "parameter" or "argument" to refer to Python functions.
+To try and make it a bit easier, we'll normally use the words "parameter" or "argument" to refer to "Python functions parameters" or "Python functions arguments".
 
 We'll use ***CLI argument*** to refer to those *CLI parameters* that depend on the specific order. That are **required** by default.
 
