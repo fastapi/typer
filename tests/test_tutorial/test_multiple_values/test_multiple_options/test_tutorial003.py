@@ -24,13 +24,13 @@ def test_1_number():
 
 
 def test_2_number():
-    result = runner.invoke(app, ["--number", "2, 3, 4.5"], catch_exceptions=False)
+    result = runner.invoke(app, ["--number", "2,3,4.5"], catch_exceptions=False)
     assert result.exit_code == 0
     assert "The sum is 9.5" in result.output
 
 
 def test_3_number():
-    result = runner.invoke(app, ["--number", "2, 3, 4.5", "--number", "5"])
+    result = runner.invoke(app, ["--number", "2,3,4.5", "--number", "5"])
     assert result.exit_code == 0
     assert "The sum is 14.5" in result.output
 
