@@ -1,12 +1,18 @@
-# Typer Multi-File Applications
+# Multi-File Applications
 
 When your CLI application grows, you can split it into multiple files and modules. This pattern helps maintain clean and organized code structure.
 
-In this tutorial, you will learn how to create a multi-file Typer application.
+This tutorial will show you how to use `add_typer` to create sub commands and organize your commands in multiple files.
 
-## Basic Structure
+We will create a simple CLI with the following commands:
 
-Here is a basic structure for a multi-file Typer application:
+- `version`
+- `users add NAME`
+- `users delete NAME`
+
+## CLI structure
+
+Here is the structure we'll be working with:
 
 ```text
 mycli/
@@ -19,21 +25,25 @@ mycli/
 └── version.py
 ```
 
-This application will have the following commands:
+`mycli` will be our package, and it will contain the following modules:
 
-- `users add`
-- `users delete`
-- `version`
+- `main.py`: The main module that will import the `version` and `users` modules.
+- `version.py`: A module that will contain the `version` command.
+- `users/`: A package that will contain the `add` and `delete` commands.
 
 ## Implementation
 
+Let's start implementing our CLI! We'll create the `version` module, the `main` module, and the `users` package.
+
 ### Version Module (`version.py`)
 
-Let's start by creating a simple module that prints the version of the application.
+Let's start by creating the `version` module. This module will contain the `version` command.
 
-{* docs_src/splitting_apps/version.py hl[3,6,7,8] *}
+{* docs_src/splitting_apps/version.py *}
 
 In this file we are creating a new Typer app instance for the version command. This is not required in single-file applications, but in the case of multi-file applications it will allow us to include this command in the main application using `add_typer`.
+
+Let's see that next!
 
 ### Main Module (`main.py`)
 
@@ -49,12 +59,38 @@ Let's now create the `users` module with the `add` and `delete` commands.
 
 {* docs_src/splitting_apps/users/add.py *}
 
+Like the `version` module, we create a new Typer app instance for the `users/add` command. This allows us to include the `add` command in the users app.
+
 ### Users Delete Command (`users/delete.py`)
 
 {* docs_src/splitting_apps/users/delete.py *}
 
-### Users' app
+And once again, we create a new Typer app instance for the `users/delete` command. This allows us to include the `delete` command in the users app.
+
+### Users' app (`users/__init__.py`)
+
+Finally, we need to create an `__init__.py` file in the `users` directory to define the `users` app.
 
 {* docs_src/splitting_apps/users/__init__.py *}
 
-Similar to the `version` module, we create a new `Typer` app instance for the `users` module. This allows us to include the `add` and `delete` commands in the users app.
+Similarly to the `version` module, we create a new `Typer` app instance for the `users` module. This allows us to include the `add` and `delete` commands in the users app.
+
+## Running the Application
+
+Now we are ready to run the application!
+
+To run the application, execute the `main.py` file:
+
+<div class="termy">
+
+```console
+$ python main.py version
+
+My CLI Version 1.0
+
+$ python main.py users add Camila
+
+Adding user: Camila
+```
+
+</div>
