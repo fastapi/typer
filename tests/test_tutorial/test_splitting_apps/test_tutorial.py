@@ -1,7 +1,3 @@
-import os
-import subprocess
-import sys
-
 from typer.testing import CliRunner
 
 from docs_src.splitting_apps import main as mod
