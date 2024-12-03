@@ -57,7 +57,7 @@ We'll see how to implement the user module in the next section.
 
 {* docs_src/splitting_apps/main.py hl[8,9] *}
 
-In this module, we import the `version` and `users` modules and add them to the main app using `add_typer`. 
+In this module, we import the `version` and `users` modules and add them to the main app using `add_typer`.
 
 For the `users` module, we specify the name as `users` to group the commands under the `users` sub-command.
 
