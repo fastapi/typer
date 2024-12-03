@@ -1,6 +1,6 @@
 # Multi-File Applications
 
-When your CLI application grows, you can split it into multiple files and modules. This pattern helps maintain clean and organized code structure.
+When your CLI application grows, you can split it into multiple files and modules. This pattern helps maintain a clean and organized code structure.
 
 This tutorial will show you how to use `add_typer` to create sub commands and organize your commands in multiple files.
 
@@ -25,11 +25,11 @@ mycli/
 └── version.py
 ```
 
-`mycli` will be our package, and it will contain the following modules:
+`mycli` will be our <abbr title="a directory with an __init__.py file">package</abbr>, and it will contain the following modules:
 
-- `main.py`: The main module that will import the `version` and `users` modules.
-- `version.py`: A module that will contain the `version` command.
-- `users/`: A package that will contain the `add` and `delete` commands.
+- `main.py`: The main <abbr title="a Python file that can be imported">module</abbr> that will import the `version` and `users` modules.
+- `version.py`: A <abbr title="a Python file that can be imported">module</abbr> that will contain the `version` command.
+- `users/`: A <abbr title="another directory with an __init__.py file">package</abbr> (inside of our `mycli` package) that will contain the `add` and `delete` commands.
 
 ## Implementation
 
@@ -47,11 +47,31 @@ Let's see that next!
 
 ### Main Module (`main.py`)
 
-The main module will be the entry point of the application. It will import the version module and the users module. We'll see how to implement the user module in the next section.
+The main module will be the entry point of the application. It will import the version module and the users module.
+
+/// tip
+
+We'll see how to implement the user module in the next section.
+
+///
 
 {* docs_src/splitting_apps/main.py hl[8,9] *}
 
-In this module, we import the `version` and `users` modules and add them to the main app using `add_typer`. For the `users` module, we specify the name as `users` to group the commands under the `users` namespace.
+In this module, we import the `version` and `users` modules and add them to the main app using `add_typer`. 
+
+For the `users` module, we specify the name as `users` to group the commands under the `users` sub-command.
+
+Notice that we didn't add a name for the `version_app` Typer app. Because of this, Typer will add the commands (just one in this case) declared in the `version_app` directly at the top level. So, there will be a top-level `version` sub-command.
+
+But for `users`, we add a name `"users"`, this way those commands will be under the sub-command `users` instead of at the top level. So, there will be a `users add` and `users delete` sub-sub-commands. 😅
+
+/// tip
+
+If you want a command to group the included commands in a sub-app, add a name.
+
+If you want to include the commands from a sub-app directly at the top level, don't add a name, or set it to `None`. 🤓
+
+///
 
 Let's now create the `users` module with the `add` and `delete` commands.
 
@@ -79,18 +99,31 @@ Similarly to the `version` module, we create a new `Typer` app instance for the 
 
 Now we are ready to run the application!
 
-To run the application, execute the `main.py` file:
+To run the application, you can execute it as a Python module:
 
 <div class="termy">
 
 ```console
-$ python main.py version
+$ python -m mycli.main version
 
 My CLI Version 1.0
 
-$ python main.py users add Camila
+$ python -m mycli.main users add Camila
 
 Adding user: Camila
 ```
 
 </div>
+
+And if you built a package and installed your app, you can then use the `mycli` command:
+
+<div class="termy">
+
+```console
+$ mycli version
+
+My CLI Version 1.0
+
+$ mycli users add Camila
+
+Adding user: Camila

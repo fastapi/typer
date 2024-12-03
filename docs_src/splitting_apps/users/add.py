@@ -5,4 +5,4 @@ app = typer.Typer()
 
 @app.command()
 def add(name: str):
-    typer.echo(f"Adding user: {name}")
+    print(f"Adding user: {name}")
