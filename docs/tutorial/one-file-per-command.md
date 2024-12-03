@@ -1,6 +1,6 @@
 # One File Per Command
 
-When your CLI application grows, you can split it into multiple files and modules. This pattern helps maintain a clean and organized code structure.
+When your CLI application grows, you can split it into multiple files and modules. This pattern helps maintain a clean and organized code structure. ✨
 
 This tutorial will show you how to use `add_typer` to create sub commands and organize your commands in multiple files.
 
@@ -25,15 +25,17 @@ mycli/
 └── version.py
 ```
 
-`mycli` will be our <abbr title="a directory with an __init__.py file">package</abbr>, and it will contain the following modules:
+`mycli` will be our <abbr title="a directory with an __init__.py file, it can be imported">package</abbr>, and it will contain the following modules:
 
 - `main.py`: The main <abbr title="a Python file that can be imported">module</abbr> that will import the `version` and `users` modules.
 - `version.py`: A <abbr title="a Python file that can be imported">module</abbr> that will contain the `version` command.
-- `users/`: A <abbr title="another directory with an __init__.py file">package</abbr> (inside of our `mycli` package) that will contain the `add` and `delete` commands.
+- `users/`: A <abbr title="another directory with an __init__.py file, it can also be imported">package</abbr> (inside of our `mycli` package) that will contain the `add` and `delete` commands.
 
 ## Implementation
 
-Let's start implementing our CLI! We'll create the `version` module, the `main` module, and the `users` package.
+Let's start implementing our CLI! 🚀
+
+We'll create the `version` module, the `main` module, and the `users` package.
 
 ### Version Module (`version.py`)
 
@@ -41,7 +43,9 @@ Let's start by creating the `version` module. This module will contain the `vers
 
 {* docs_src/one_file_per_command/version.py *}
 
-In this file we are creating a new Typer app instance for the version command. This is not required in single-file applications, but in the case of multi-file applications it will allow us to include this command in the main application using `add_typer`.
+In this file we are creating a new Typer app instance for the `version` command.
+
+This is not required in single-file applications, but in the case of multi-file applications it will allow us to include this command in the main application using `app.add_typer()`.
 
 Let's see that next!
 
@@ -51,15 +55,15 @@ The main module will be the entry point of the application. It will import the v
 
 /// tip
 
-We'll see how to implement the user module in the next section.
+We'll see how to implement the users module in the next section.
 
 ///
 
 {* docs_src/one_file_per_command/main.py hl[8,9] *}
 
-In this module, we import the `version` and `users` modules and add them to the main app using `add_typer`.
+In this module, we import the `version` and `users` modules and add them to the main app using `app.add_typer()`.
 
-For the `users` module, we specify the name as `users` to group the commands under the `users` sub-command.
+For the `users` module, we specify the name as `"users"` to group the commands under the `users` sub-command.
 
 Notice that we didn't add a name for the `version_app` Typer app. Because of this, Typer will add the commands (just one in this case) declared in the `version_app` directly at the top level. So, there will be a top-level `version` sub-command.
 
@@ -97,7 +101,7 @@ Similarly to the `version` module, we create a new `Typer` app instance for the 
 
 ## Running the Application
 
-Now we are ready to run the application!
+Now we are ready to run the application! 😎
 
 To run the application, you can execute it as a Python module:
 
@@ -127,3 +131,14 @@ My CLI Version 1.0
 $ mycli users add Camila
 
 Adding user: Camila
+```
+
+</div>
+
+## Callbacks
+
+Have in mind that if you include a sub-app with `app.add_typer()` **without a name**, the commands will be added to the top level, so **only the top level callback** (if there's any) will be used, the one declared in the main app.
+
+If you **want to use a callback** for a sub-app, you need to include the sub-app **with a name**, which creates a sub-command grouping the commands in that sub-app. 🤓
+
+In the example above, if the `users` sub-app had a callback, it would be used. But if the `version` sub-app had a callback, it would not be used, because the `version` sub-app was included without a name.
