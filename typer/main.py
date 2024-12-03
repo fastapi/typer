@@ -151,7 +151,7 @@ class Typer:
         rich_markup_mode: MarkupMode = Default(DEFAULT_MARKUP_MODE),
         rich_help_panel: Union[str, None] = Default(None),
         pretty_exceptions_enable: bool = True,
-        pretty_exceptions_show_locals: bool = True,
+        pretty_exceptions_show_locals: bool = False,
         pretty_exceptions_short: bool = True,
     ):
         self._add_completion = add_completion
