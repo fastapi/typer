@@ -1,6 +1,6 @@
 from typer.testing import CliRunner
 
-from docs_src.splitting_apps import main as mod
+from docs_src.one_file_per_command import main as mod
 
 runner = CliRunner()
 

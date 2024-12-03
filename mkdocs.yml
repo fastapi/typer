@@ -134,7 +134,7 @@ nav:
       - tutorial/using-click.md
       - tutorial/package.md
       - tutorial/exceptions.md
-      - tutorial/splitting-apps.md
+      - tutorial/one-file-per-command.md
       - tutorial/typer-command.md
   - Resources:
     - resources/index.md
