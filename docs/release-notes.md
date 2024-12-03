@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.15.0
+
 ### Features
 
 * ✨ Add support for extending typer apps without passing a name, add commands to the top level. PR [#1037](https://github.com/fastapi/typer/pull/1037) by [@patrick91](https://github.com/patrick91).
