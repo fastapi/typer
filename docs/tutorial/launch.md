@@ -1,5 +1,7 @@
 # Launching Applications
 
+To the moon. 🚀
+
 You can launch applications from your CLI program with `typer.launch()`.
 
 It will launch the appropriate application depending on the URL or file type you pass it:

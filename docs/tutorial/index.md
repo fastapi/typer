@@ -2,6 +2,8 @@
 
 Learn how to use **Typer** in this step-by-step **Tutorial** - **User Guide**.
 
+Because you're super cool. 😎
+
 It covers everything you need to know from the **simplest scripts** to **complex CLI applications**.
 
 You could consider this a **book**, a **course**, the **official** and recommended way to learn **Typer**. 😎
