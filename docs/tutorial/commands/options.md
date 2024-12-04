@@ -35,7 +35,7 @@ Commands:
   create
   delete
   delete-all
-  info
+  init
 ```
 
 </div>
