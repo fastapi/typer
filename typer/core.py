@@ -269,6 +269,7 @@ class TyperArgument(click.core.Argument):
         is_eager: bool = False,
         envvar: Optional[Union[str, List[str]]] = None,
         # Note that shell_complete is not fully supported and will be removed in future versions
+        # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Optional[
             Callable[
                 [click.Context, click.Parameter, str],
@@ -409,6 +410,7 @@ class TyperOption(click.core.Option):
         is_eager: bool = False,
         envvar: Optional[Union[str, List[str]]] = None,
         # Note that shell_complete is not fully supported and will be removed in future versions
+        # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Optional[
             Callable[
                 [click.Context, click.Parameter, str],
