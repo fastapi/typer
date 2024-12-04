@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.15.1
+
 ### Features
 
 * 🗑️ Deprecate `shell_complete` and continue to use `autocompletion` for CLI parameters. PR [#974](https://github.com/fastapi/typer/pull/974) by [@svlandeg](https://github.com/svlandeg).
