@@ -2,8 +2,6 @@
 
 Are you liking **Typer**?
 
-You're super cool. 😎
-
 Would you like to help Typer, other users, and the author?
 
 Or would you like to get help with **Typer**?
