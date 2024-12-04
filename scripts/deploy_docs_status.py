@@ -5,6 +5,8 @@ from github import Github
 from pydantic import BaseModel, SecretStr
 from pydantic_settings import BaseSettings
 
+site_domain = "typer.tiangolo.com"
+
 
 class Settings(BaseSettings):
     github_repository: str
@@ -76,7 +78,7 @@ def main() -> None:
         else:
             use_path = path.replace(".md", "/")
         link = LinkData(
-            previous_link=f"https://fastapi.tiangolo.com/{use_path}",
+            previous_link=f"https://{site_domain}/{use_path}",
             preview_link=f"{deploy_url}/{use_path}",
         )
         links.append(link)
