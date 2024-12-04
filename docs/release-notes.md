@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Refactors
+
+* 🚚 Rename test to corner-cases to make it more explicit. PR [#1083](https://github.com/fastapi/typer/pull/1083) by [@tiangolo](https://github.com/tiangolo).
+
 ## 0.15.1
 
 ### Features
