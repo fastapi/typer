@@ -25,6 +25,7 @@ The end
 
 Top command
 
+
 **Usage**:
 
 ```console
@@ -57,6 +58,7 @@ $ multiapp sub [OPTIONS] COMMAND [ARGS]...
 
 Say Hello
 
+
 **Usage**:
 
 ```console
@@ -72,6 +74,7 @@ $ multiapp sub hello [OPTIONS]
 ### `multiapp sub hi`
 
 Say Hi
+
 
 **Usage**:
 
@@ -90,6 +93,7 @@ $ multiapp sub hi [OPTIONS] [USER]
 ### `multiapp sub bye`
 
 Say bye
+
 
 **Usage**:
 
