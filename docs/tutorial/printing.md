@@ -1,5 +1,7 @@
 # Printing and Colors
 
+A
+
 You can use the normal `print()` to show information on the screen:
 
 {* docs_src/first_steps/tutorial001.py hl[5] *}
