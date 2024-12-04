@@ -227,8 +227,6 @@ It could look like this:
 /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/custompython/bin
 ```
 
-This way, when you type `python` in the terminal, the system will find the Python program in `/opt/custompython/bin` (the last directory) and use that one.
-
 ////
 
 //// tab | Windows
@@ -241,11 +239,7 @@ If you say yes to update the `PATH` environment variable, then the installer wil
 C:\Program Files\Python312\Scripts;C:\Program Files\Python312;C:\Windows\System32;C:\opt\custompython\bin
 ```
 
-This way, when you type `python` in the terminal, the system will find the Python program in `C:\opt\custompython\bin` (the last directory) and use that one.
-
 ////
-
-This way, when you type `python` in the terminal, the system will find the Python program in `/opt/custompython/bin` (the last directory) and use that one.
 
 So, if you type:
 
@@ -259,7 +253,7 @@ $ python
 
 //// tab | Linux, macOS
 
-The system will **find** the `python` program in `/opt/custompython/bin` and run it.
+The system will **find** the `python` program in `/opt/custompython/bin` (the last directory) and run it.
 
 It would be roughly equivalent to typing:
 
@@ -275,7 +269,7 @@ $ /opt/custompython/bin/python
 
 //// tab | Windows
 
-The system will **find** the `python` program in `C:\opt\custompython\bin\python` and run it.
+The system will **find** the `python` program in `C:\opt\custompython\bin\python` (the last directory) and run it.
 
 It would be roughly equivalent to typing:
 
