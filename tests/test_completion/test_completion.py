@@ -5,7 +5,7 @@ from pathlib import Path
 
 from docs_src.commands.index import tutorial001 as mod
 
-from ..utils import needs_bash, needs_linux
+from ..utils import needs_bash, needs_linux, requires_completion_permission
 
 
 @needs_bash
@@ -26,6 +26,7 @@ def test_show_completion():
 
 @needs_bash
 @needs_linux
+@requires_completion_permission
 def test_install_completion():
     bash_completion_path: Path = Path.home() / ".bashrc"
     text = ""

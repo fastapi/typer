@@ -36,6 +36,7 @@ def Option(
     confirmation_prompt: bool = False,
     prompt_required: bool = True,
     hide_input: bool = False,
+    # TODO: remove is_flag and flag_value in a future release
     is_flag: Optional[bool] = None,
     flag_value: Optional[Any] = None,
     count: bool = False,
@@ -100,6 +101,7 @@ def Option(
     confirmation_prompt: bool = False,
     prompt_required: bool = True,
     hide_input: bool = False,
+    # TODO: remove is_flag and flag_value in a future release
     is_flag: Optional[bool] = None,
     flag_value: Optional[Any] = None,
     count: bool = False,
@@ -163,6 +165,7 @@ def Option(
     confirmation_prompt: bool = False,
     prompt_required: bool = True,
     hide_input: bool = False,
+    # TODO: remove is_flag and flag_value in a future release
     is_flag: Optional[bool] = None,
     flag_value: Optional[Any] = None,
     count: bool = False,
