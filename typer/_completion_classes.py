@@ -1,3 +1,4 @@
+import importlib.util
 import os
 import re
 import sys
@@ -19,6 +20,15 @@ try:
     import shellingham
 except ImportError:  # pragma: no cover
     shellingham = None
+
+
+def _sanitize_help_text(text: str) -> str:
+    """Sanitizes the help text by removing rich tags"""
+    if not importlib.util.find_spec("rich"):
+        return text
+    from . import rich_utils
+
+    return rich_utils.rich_render_text(text)
 
 
 class BashComplete(click.shell_completion.BashComplete):
@@ -93,7 +103,7 @@ class ZshComplete(click.shell_completion.ZshComplete):
         # the difference with and without escape
         # return f"{item.type}\n{item.value}\n{item.help if item.help else '_'}"
         if item.help:
-            return f'"{escape(item.value)}":"{escape(item.help)}"'
+            return f'"{escape(item.value)}":"{_sanitize_help_text(escape(item.help))}"'
         else:
             return f'"{escape(item.value)}"'
 
@@ -139,7 +149,7 @@ class FishComplete(click.shell_completion.FishComplete):
         # return f"{item.type},{item.value}
         if item.help:
             formatted_help = re.sub(r"\s", " ", item.help)
-            return f"{item.value}\t{formatted_help}"
+            return f"{item.value}\t{_sanitize_help_text(formatted_help)}"
         else:
             return f"{item.value}"
 
@@ -180,7 +190,7 @@ class PowerShellComplete(click.shell_completion.ShellComplete):
         return args, incomplete
 
     def format_completion(self, item: click.shell_completion.CompletionItem) -> str:
-        return f"{item.value}:::{item.help or ' '}"
+        return f"{item.value}:::{_sanitize_help_text(item.help) if item.help else ' '}"
 
 
 def completion_init() -> None:
