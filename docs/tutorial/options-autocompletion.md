@@ -270,27 +270,7 @@ You may want to reuse completer functions across CLI applications or within the 
 
 We can declare a parameter of type <a href="https://click.palletsprojects.com/en/stable/api/#click.Parameter" class="external-link" target="_blank">click.Parameter</a> along with the `click.Context` in our completer function to determine this. For example, lets revisit our above context example where we filter out duplicates but add a second greeter argument that reuses the same completer function:
 
-//// tab | Python 3.7+
-
-```Python hl_lines="15-16"
-{!> ../docs_src/options_autocompletion/tutorial010_an.py!}
-```
-
-////
-
-//// tab | Python 3.7+ non-Annotated
-
-/// tip
-
-Prefer to use the `Annotated` version if possible.
-
-///
-
-```Python hl_lines="14-15"
-{!> ../docs_src/options_autocompletion/tutorial010.py!}
-```
-
-////
+{* docs_src/options_autocompletion/tutorial010_an.py hl[15:16] *}
 
 /// tip
 
