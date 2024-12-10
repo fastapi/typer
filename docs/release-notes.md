@@ -8,6 +8,7 @@
 
 ### Internal
 
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1087](https://github.com/fastapi/typer/pull/1087) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * ⬆ Bump ruff from 0.8.1 to 0.8.2. PR [#1084](https://github.com/fastapi/typer/pull/1084) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump mkdocs-material from 9.5.47 to 9.5.48. PR [#1086](https://github.com/fastapi/typer/pull/1086) by [@dependabot[bot]](https://github.com/apps/dependabot).
 
