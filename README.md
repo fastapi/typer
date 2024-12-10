@@ -53,7 +53,7 @@ Create and activate a <a href="https://typer.tiangolo.com/virtual-environments/"
 ```console
 $ pip install typer
 ---> 100%
-Successfully installed typer rich shellingham
+Successfully installed typer rich shellingham pydantic
 ```
 
 </div>
@@ -355,6 +355,7 @@ For a more complete example including more features, see the <a href="https://ty
 By default it also comes with extra standard dependencies:
 
 * <a href="https://rich.readthedocs.io/en/stable/index.html" class="external-link" target="_blank"><code>rich</code></a>: to show nicely formatted errors automatically.
+* <a href="https://docs.pydantic.dev/latest/" class="external-link" target="_blank"><code>pydantic</code></a>: to support the usage of Pydantic types.
 * <a href="https://github.com/sarugaku/shellingham" class="external-link" target="_blank"><code>shellingham</code></a>: to automatically detect the current shell when installing completion.
     * With `shellingham` you can just use `--install-completion`.
     * Without `shellingham`, you have to pass the name of the shell to install completion for, e.g. `--install-completion bash`.
@@ -375,7 +376,7 @@ pip install typer
 pip install "typer-slim[standard]"
 ```
 
-The `standard` extra dependencies are `rich` and `shellingham`.
+The `standard` extra dependencies are `rich`, `shellingham` and `pydantic`.
 
 **Note**: The `typer` command is only included in the `typer` package.
 
