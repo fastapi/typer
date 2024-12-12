@@ -203,9 +203,6 @@ def get_docs_for_click(
     title: Optional[str] = None,
 ) -> str:
     docs = "#" * (1 + indent)
-    rich_markup_mode = None
-    if hasattr(ctx, "obj") and isinstance(ctx.obj, dict):
-        rich_markup_mode = ctx.obj.get("TYPER_RICH_MARKUP_MODE", None)
     command_name = name or obj.name
     if call_prefix:
         command_name = f"{call_prefix} {command_name}"
@@ -213,7 +210,7 @@ def get_docs_for_click(
         title = f"`{command_name}`" if command_name else "CLI"
     docs += f" {title}\n\n"
     if obj.help:
-        docs += f"{_parse_html(obj.help, rich_markup_mode)}\n\n"
+        docs += f"{_parse_html(ctx, obj.help)}\n\n"
     usage_pieces = obj.collect_usage_pieces(ctx)
     if usage_pieces:
         docs += "**Usage**:\n\n"
@@ -237,7 +234,7 @@ def get_docs_for_click(
         for arg_name, arg_help in args:
             docs += f"* `{arg_name}`"
             if arg_help:
-                docs += f": {_parse_html(arg_help, rich_markup_mode)}"
+                docs += f": {_parse_html(ctx, arg_help)}"
             docs += "\n"
         docs += "\n"
     if opts:
@@ -245,7 +242,7 @@ def get_docs_for_click(
         for opt_name, opt_help in opts:
             docs += f"* `{opt_name}`"
             if opt_help:
-                docs += f": {_parse_html(opt_help, rich_markup_mode)}"
+                docs += f": {_parse_html(ctx, opt_help)}"
             docs += "\n"
         docs += "\n"
     if obj.epilog:
@@ -261,7 +258,7 @@ def get_docs_for_click(
                 docs += f"* `{command_obj.name}`"
                 command_help = command_obj.get_short_help_str()
                 if command_help:
-                    docs += f": {_parse_html(command_help, rich_markup_mode)}"
+                    docs += f": {_parse_html(ctx, command_help)}"
                 docs += "\n"
             docs += "\n"
         for command in commands:
@@ -276,7 +273,10 @@ def get_docs_for_click(
     return docs
 
 
-def _parse_html(input_text: str, rich_markup_mode: Optional[str]) -> str:
+def _parse_html(ctx: click.Context, input_text: str) -> str:
+    rich_markup_mode = None
+    if hasattr(ctx, "obj") and isinstance(ctx.obj, dict):
+        rich_markup_mode = ctx.obj.get("TYPER_RICH_MARKUP_MODE", None)
     if has_rich and rich_markup_mode and rich_markup_mode == "rich":  # pragma: no cover
         return rich_utils.rich_to_html(input_text)
     return input_text
