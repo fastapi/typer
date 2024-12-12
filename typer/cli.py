@@ -10,6 +10,7 @@ import typer.core
 from click import Command, Group, Option
 
 from . import __version__
+from .models import DefaultPlaceholder
 
 try:
     import rich
@@ -305,7 +306,10 @@ def docs(
         if not hasattr(ctx, "obj") or ctx.obj is None:
             ctx.ensure_object(dict)
         if isinstance(ctx.obj, dict):
-            ctx.obj["TYPER_RICH_MARKUP_MODE"] = typer_obj.rich_markup_mode
+            if isinstance(typer_obj.rich_markup_mode, DefaultPlaceholder):
+                ctx.obj["TYPER_RICH_MARKUP_MODE"] = typer_obj.rich_markup_mode.value
+            else:
+                ctx.obj["TYPER_RICH_MARKUP_MODE"] = typer_obj.rich_markup_mode
     click_obj = typer.main.get_command(typer_obj)
     docs = get_docs_for_click(obj=click_obj, ctx=ctx, name=name, title=title)
     clean_docs = f"{docs.strip()}\n"

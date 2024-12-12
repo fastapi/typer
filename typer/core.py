@@ -26,6 +26,8 @@ import click.shell_completion
 import click.types
 import click.utils
 
+from .models import DefaultPlaceholder
+
 if sys.version_info >= (3, 8):
     from typing import Literal
 else:
@@ -700,7 +702,10 @@ class TyperCommand(click.core.Command):
             if not hasattr(ctx, "obj") or ctx.obj is None:
                 ctx.ensure_object(dict)
             if isinstance(ctx.obj, dict):
-                ctx.obj["TYPER_RICH_MARKUP_MODE"] = self.rich_markup_mode
+                if isinstance(self.rich_markup_mode, DefaultPlaceholder):
+                    ctx.obj["TYPER_RICH_MARKUP_MODE"] = self.rich_markup_mode.value
+                else:
+                    ctx.obj["TYPER_RICH_MARKUP_MODE"] = self.rich_markup_mode
             return super().format_help(ctx, formatter)
         return rich_utils.rich_format_help(
             obj=self,
