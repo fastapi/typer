@@ -189,3 +189,30 @@ def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
             name=param.name, default=default, annotation=annotation
         )
     return params
+
+
+class SeparatorForNonListTypeError(Exception):
+    argument_name: str
+    argument_type: Type[Any]
+
+    def __init__(self, argument_name: str, argument_type: Type[Any]):
+        self.argument_name = argument_name
+        self.argument_type = argument_type
+
+    def __str__(self) -> str:
+        return f"Multiple values are supported for List[T] types only. Annotate {self.argument_name!r} as List[{self.argument_type.__name__}] to support multiple values."
+
+
+class UnsupportedSeparatorError(Exception):
+    argument_name: str
+    separator: str
+
+    def __init__(self, argument_name: str, separator: str):
+        self.argument_name = argument_name
+        self.separator = separator
+
+    def __str__(self) -> str:
+        return (
+            f"Error in definition of Option {self.argument_name!r}. "
+            f'Only single-character non-whitespace separators are supported, but got "{self.separator}".'
+        )
