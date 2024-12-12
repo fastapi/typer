@@ -28,6 +28,30 @@ def test_doc():
     assert "**Arguments**" in result.stdout
 
 
+def test_doc_no_rich():
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "coverage",
+            "run",
+            "-m",
+            "typer",
+            "tests.assets.cli.multi_app_norich",
+            "utils",
+            "docs",
+            "--name",
+            "multiapp",
+        ],
+        capture_output=True,
+        encoding="utf-8",
+    )
+    docs_path: Path = Path(__file__).parent.parent / "assets/cli/multiapp-docs.md"
+    docs = docs_path.read_text()
+    assert docs in result.stdout
+    assert "**Arguments**" in result.stdout
+
+
 def test_doc_output(tmp_path: Path):
     out_file: Path = tmp_path / "out.md"
     result = subprocess.run(
