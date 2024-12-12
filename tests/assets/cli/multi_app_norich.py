@@ -10,7 +10,6 @@ def hello(name: str = "World", age: int = typer.Option(0, help="The age of the u
     """
     Say Hello
     """
-    typer.echo(f"Hello {name}")
 
 
 @sub_app.command()
@@ -25,7 +24,6 @@ def bye():
     """
     Say bye
     """
-    typer.echo("sub bye")
 
 
 app = typer.Typer(help="Demo App", epilog="The end", rich_markup_mode=None)
@@ -37,4 +35,3 @@ def top():
     """
     Top command
     """
-    typer.echo("top")
