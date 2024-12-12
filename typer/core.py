@@ -373,7 +373,7 @@ class TyperArgument(click.core.Argument):
             extra_str = f"[{extra_str}]"
             rich_markup_mode = None
             if hasattr(ctx, "obj") and isinstance(ctx.obj, dict):
-                rich_markup_mode = ctx.obj.get('TYPER_RICH_MARKUP_MODE', None)
+                rich_markup_mode = ctx.obj.get("TYPER_RICH_MARKUP_MODE", None)
             if rich is not None and rich_markup_mode == "rich":
                 # This is needed for when we want to export to HTML
                 extra_str = rich.markup.escape(extra_str).strip()
@@ -571,7 +571,7 @@ class TyperOption(click.core.Option):
 
             rich_markup_mode = None
             if hasattr(ctx, "obj") and isinstance(ctx.obj, dict):
-                rich_markup_mode = ctx.obj.get('TYPER_RICH_MARKUP_MODE', None)
+                rich_markup_mode = ctx.obj.get("TYPER_RICH_MARKUP_MODE", None)
             if rich is not None and rich_markup_mode == "rich":
                 # This is needed for when we want to export to HTML
                 extra_str = rich.markup.escape(extra_str).strip()
@@ -700,7 +700,7 @@ class TyperCommand(click.core.Command):
             if not hasattr(ctx, "obj") or ctx.obj is None:
                 ctx.ensure_object(dict)
             if isinstance(ctx.obj, dict):
-                ctx.obj['TYPER_RICH_MARKUP_MODE'] = self.rich_markup_mode
+                ctx.obj["TYPER_RICH_MARKUP_MODE"] = self.rich_markup_mode
             return super().format_help(ctx, formatter)
         return rich_utils.rich_format_help(
             obj=self,
