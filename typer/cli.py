@@ -276,7 +276,7 @@ def get_docs_for_click(
     return docs
 
 
-def _parse_html(input_text: str, rich_markup_mode: None | str) -> str:
+def _parse_html(input_text: str, rich_markup_mode: Optional[str]) -> str:
     if has_rich and rich_markup_mode and rich_markup_mode == "rich":  # pragma: no cover
         return rich_utils.rich_to_html(input_text)
     return input_text
