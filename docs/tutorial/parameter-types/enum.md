@@ -111,3 +111,51 @@ Buying groceries: Eggs, Bacon
 ```
 
 </div>
+
+
+### Literal choices
+
+With Python 3.8+, you can also use `typing.Literal` to represent a set of possible predefined choices, without having to use an `Enum`:
+
+=== "Python 3.7+"
+
+    ```Python hl_lines="6"
+    {!> ../docs_src/parameter_types/enum/tutorial004_an.py!}
+    ```
+
+=== "Python 3.7+ non-Annotated"
+
+    !!! tip
+        Prefer to use the `Annotated` version if possible.
+
+    ```Python hl_lines="5"
+    {!> ../docs_src/parameter_types/enum/tutorial004.py!}
+    ```
+
+<div class="termy">
+
+```console
+$ python main.py --help
+
+// Notice the predefined values [simple|conv|lstm]
+Usage: main.py [OPTIONS]
+
+Options:
+  --network [simple|conv|lstm]  [default: simple]
+  --help                        Show this message and exit.
+
+// Try it
+$ python main.py --network conv
+
+Training neural network of type: conv
+
+// Invalid value
+$ python main.py --network capsule
+
+Usage: main.py [OPTIONS]
+Try "main.py --help" for help.
+
+Error: Invalid value for '--network': 'capsule' is not one of 'simple', 'conv', 'lstm'.
+```
+
+</div>
