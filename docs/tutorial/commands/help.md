@@ -446,6 +446,20 @@ $ python main.py --help
 
 You can see the custom panel for the commands for "`Utils and Configs`".
 
+## Expand or Fit
+
+By default, the help panels all expand to match the width of your terminal window.
+
+For a CLI with few parameters, especially on wide terminal windows, you might prefer a more narrow layout.
+You can do this by initializing your Typer with `rich_expand=False`, like this:
+
+```python
+app = typer.Typer(rich_expand=False)
+```
+
+Your help panels will all fit to their contents, which also means they will probably have different widths.
+It's a different look, and sometimes you might prefer it as an option.
+
 ## Epilog
 
 If you need, you can also add an epilog section to the help of your commands:
