@@ -89,6 +89,7 @@ nav:
           - tutorial/options/index.md
           - tutorial/options/help.md
           - tutorial/options/required.md
+          - tutorial/options/optional_value.md
           - tutorial/options/prompt.md
           - tutorial/options/password.md
           - tutorial/options/name.md

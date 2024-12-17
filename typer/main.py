@@ -11,11 +11,21 @@ from functools import update_wrapper
 from pathlib import Path
 from traceback import FrameSummary, StackSummary
 from types import TracebackType
-from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, Union
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    List,
+    Optional,
+    Sequence,
+    Tuple,
+    Type,
+    Union,
+)
 from uuid import UUID
 
 import click
-from typing_extensions import get_args, get_origin
+from typing_extensions import get_args, get_origin, override
 
 from ._typing import is_union
 from .completion import get_completion_inspect_parameters
@@ -610,30 +620,52 @@ def get_command_from_info(
     return command
 
 
-def determine_type_convertor(type_: Any) -> Optional[Callable[[Any], Any]]:
+def determine_type_convertor(
+    type_: Any, skip_bool: bool = False
+) -> Optional[Callable[[Any], Any]]:
     convertor: Optional[Callable[[Any], Any]] = None
     if lenient_issubclass(type_, Path):
-        convertor = param_path_convertor
+        convertor = generate_path_convertor(skip_bool)
     if lenient_issubclass(type_, Enum):
-        convertor = generate_enum_convertor(type_)
+        convertor = generate_enum_convertor(type_, skip_bool)
     return convertor
 
 
-def param_path_convertor(value: Optional[str] = None) -> Optional[Path]:
-    if value is not None:
+def generate_path_convertor(
+    skip_bool: bool = False,
+) -> Callable[[Any], Union[None, bool, Path]]:
+    def convertor(value: Optional[str] = None) -> Union[None, bool, Path]:
+        if value is None:
+            return None
+
+        if isinstance(value, bool) and skip_bool:
+            return value
+
         return Path(value)
-    return None
+
+    return convertor
 
 
-def generate_enum_convertor(enum: Type[Enum]) -> Callable[[Any], Any]:
+def generate_enum_convertor(
+    enum: Type[Enum], skip_bool: bool = False
+) -> Callable[[Any], Union[None, bool, Enum]]:
     val_map = {str(val.value): val for val in enum}
 
-    def convertor(value: Any) -> Any:
-        if value is not None:
-            val = str(value)
-            if val in val_map:
-                key = val_map[val]
-                return enum(key)
+    def convertor(value: Any) -> Union[bool, Enum]:
+        if isinstance(value, bool) and skip_bool:
+            return value
+
+        if isinstance(value, enum):
+            return value
+
+        val = str(value)
+        if val in val_map:
+            key = val_map[val]
+            return enum(key)
+
+        raise click.BadParameter(
+            f"Invalid value '{value}' for enum '{enum.__name__}'"
+        )  # pragma: no cover
 
     return convertor
 
@@ -800,6 +832,50 @@ def lenient_issubclass(
     return isinstance(cls, type) and issubclass(cls, class_or_tuple)
 
 
+class DefaultOption(click.ParamType):
+    def __init__(self, type_: click.ParamType, default: Any) -> None:
+        self._type: click.ParamType = type_
+        self._default: Any = default
+        self.name: str = f"BOOLEAN|{type_.name}"
+
+    @override
+    def convert(
+        self, value: Any, param: Optional[click.Parameter], ctx: Optional[click.Context]
+    ) -> Any:
+        str_value = str(value).strip().lower()
+
+        if str_value in {"True", "true", "t", "yes", "y", "on"}:
+            return self._default
+
+        if str_value in {"False", "false", "f", "no", "n", "off"}:
+            return False
+
+        if isinstance(value, DefaultFalse):
+            return False
+
+        try:
+            return self._type.convert(value, param, ctx)
+
+        except click.BadParameter as e:
+            fail = e
+
+        if str_value == "1":
+            return self._default
+
+        if str_value == "0":
+            return False
+
+        raise fail
+
+
+class DefaultFalse:
+    def __init__(self, value: Any) -> None:
+        self._value = value
+
+    def __str__(self) -> str:
+        return f"False ({str(self._value)})"
+
+
 def get_click_param(
     param: ParamMeta,
 ) -> Tuple[Union[click.Argument, click.Option], Any]:
@@ -827,10 +903,12 @@ def get_click_param(
     else:
         annotation = str
     main_type = annotation
+    secondary_type: Union[Type[bool], None] = None
     is_list = False
     is_tuple = False
     parameter_type: Any = None
     is_flag = None
+    flag_value: Any = None
     origin = get_origin(main_type)
 
     if origin is not None:
@@ -841,7 +919,17 @@ def get_click_param(
                 if type_ is NoneType:
                     continue
                 types.append(type_)
-            assert len(types) == 1, "Typer Currently doesn't support Union types"
+
+            if len(types) == 1:
+                main_type = types[0]
+
+            else:
+                types = sorted(types, key=lambda t: t is bool)
+                main_type, secondary_type, *union_types = types
+                assert (
+                    not len(union_types) and secondary_type is bool
+                ), "Typer Currently doesn't support Union types"
+
             main_type = types[0]
             origin = get_origin(main_type)
         # Handle Tuples and Lists
@@ -866,7 +954,7 @@ def get_click_param(
         parameter_type = get_click_type(
             annotation=main_type, parameter_info=parameter_info
         )
-    convertor = determine_type_convertor(main_type)
+    convertor = determine_type_convertor(main_type, skip_bool=secondary_type is bool)
     if is_list:
         convertor = generate_list_convertor(
             convertor=convertor, default_value=default_value
@@ -879,6 +967,14 @@ def get_click_param(
             # Click doesn't accept a flag of type bool, only None, and then it sets it
             # to bool internally
             parameter_type = None
+
+        elif secondary_type is bool:
+            is_flag = False
+            flag_value = default_value
+            assert parameter_type is not None
+            parameter_type = DefaultOption(parameter_type, default=default_value)
+            default_value = DefaultFalse(default_value)
+
         default_option_name = get_command_name(param.name)
         if is_flag:
             default_option_declaration = (
@@ -901,6 +997,7 @@ def get_click_param(
                 prompt_required=parameter_info.prompt_required,
                 hide_input=parameter_info.hide_input,
                 is_flag=is_flag,
+                flag_value=flag_value,
                 multiple=is_list,
                 count=parameter_info.count,
                 allow_from_autoenv=parameter_info.allow_from_autoenv,
