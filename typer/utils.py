@@ -3,7 +3,7 @@ import sys
 from copy import copy
 from typing import Any, Callable, Dict, List, Tuple, Type, cast
 
-from typing_extensions import Annotated, get_args, get_origin, get_type_hints
+from typing_extensions import Annotated, get_args, get_origin, get_type_hints, Doc
 
 from .models import ArgumentInfo, OptionInfo, ParameterInfo, ParamMeta
 
@@ -63,6 +63,19 @@ class MixedAnnotatedAndDefaultStyleError(Exception):
         return msg
 
 
+class MultipleDocAnnotationsError(Exception):
+    argument_name: str
+
+    def __init__(self, argument_name: str):
+        self.argument_name = argument_name
+
+    def __str__(self) -> str:
+        return (
+            "Cannot specify multiple `Annotated` Doc arguments"
+            f" for {self.argument_name!r}"
+        )
+
+
 class MultipleTyperAnnotationsError(Exception):
     argument_name: str
 
@@ -92,17 +105,27 @@ class DefaultFactoryAndDefaultValueError(Exception):
         )
 
 
-def _split_annotation_from_typer_annotations(
+def _split_annotation_from_doc_and_typer_annotations(
     base_annotation: Type[Any],
 ) -> Tuple[Type[Any], List[ParameterInfo]]:
     if get_origin(base_annotation) is not Annotated:
         return base_annotation, []
-    base_annotation, *maybe_typer_annotations = get_args(base_annotation)
-    return base_annotation, [
+    base_annotation, *other_annotations = get_args(base_annotation)
+    typer_annotations = [
         annotation
-        for annotation in maybe_typer_annotations
+        for annotation in other_annotations
         if isinstance(annotation, ParameterInfo)
     ]
+    doc_annotations = [
+        annotation
+        for annotation in other_annotations
+        if isinstance(annotation, Doc)
+    ]
+    return (
+        base_annotation,
+        doc_annotations,
+        typer_annotations,
+    )
 
 
 def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
@@ -114,16 +137,21 @@ def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
     type_hints = get_type_hints(func)
     params = {}
     for param in signature.parameters.values():
-        annotation, typer_annotations = _split_annotation_from_typer_annotations(
+        annotation, doc_annotations, typer_annotations = _split_annotation_from_doc_and_typer_annotations(
             param.annotation,
         )
         if len(typer_annotations) > 1:
             raise MultipleTyperAnnotationsError(param.name)
+        if len(doc_annotations) > 1:
+            raise MultipleDocAnnotationsError(param.name)
+        doc_help = doc_annotations[0].documentation if doc_annotations else None
 
         default = param.default
         if typer_annotations:
             # It's something like `my_param: Annotated[str, Argument()]`
             [parameter_info] = typer_annotations
+            if not getattr(parameter_info, "help", None):
+                parameter_info.help = doc_help
 
             # Forbid `my_param: Annotated[str, Argument()] = Argument("...")`
             if isinstance(param.default, ParameterInfo):
