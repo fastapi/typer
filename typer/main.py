@@ -493,13 +493,16 @@ def get_group_from_info(
         )
         if sub_group.name:
             commands[sub_group.name] = sub_group
-        elif sub_group.callback:
-            import warnings
+        else:
+            if sub_group.callback:
+                import warnings
 
-            warnings.warn(
-                "The 'callback' parameter is not supported by Typer when using `add_typer` without a name",
-                stacklevel=5,
-            )
+                warnings.warn(
+                    "The 'callback' parameter is not supported by Typer when using `add_typer` without a name",
+                    stacklevel=5,
+                )
+            for sub_command_name, sub_command in sub_group.commands.items():
+                commands[sub_command_name] = sub_command
     solved_info = solve_typer_info_defaults(group_info)
     (
         params,

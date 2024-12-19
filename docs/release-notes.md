@@ -2,8 +2,50 @@
 
 ## Latest Changes
 
+### Refactors
+
+* 🚚 Rename test to corner-cases to make it more explicit. PR [#1083](https://github.com/fastapi/typer/pull/1083) by [@tiangolo](https://github.com/tiangolo).
+
 ### Internal
 
+* ⬆ Bump ruff from 0.8.2 to 0.8.3. PR [#1090](https://github.com/fastapi/typer/pull/1090) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1093](https://github.com/fastapi/typer/pull/1093) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump mkdocs-material from 9.5.48 to 9.5.49. PR [#1092](https://github.com/fastapi/typer/pull/1092) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pypa/gh-action-pypi-publish from 1.12.2 to 1.12.3. PR [#1088](https://github.com/fastapi/typer/pull/1088) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1087](https://github.com/fastapi/typer/pull/1087) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump ruff from 0.8.1 to 0.8.2. PR [#1084](https://github.com/fastapi/typer/pull/1084) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mkdocs-material from 9.5.47 to 9.5.48. PR [#1086](https://github.com/fastapi/typer/pull/1086) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
+## 0.15.1
+
+### Features
+
+* 🗑️ Deprecate `shell_complete` and continue to use `autocompletion` for CLI parameters. PR [#974](https://github.com/fastapi/typer/pull/974) by [@svlandeg](https://github.com/svlandeg).
+
+### Docs
+
+* ✏️ Fix a few typos in the source and documentation. PR [#1028](https://github.com/fastapi/typer/pull/1028) by [@kkirsche](https://github.com/kkirsche).
+* 📝 Fix minor inconsistencies and typos in tutorial. PR [#1067](https://github.com/fastapi/typer/pull/1067) by [@tvoirand](https://github.com/tvoirand).
+* ✏️ Fix a few small typos in the documentation. PR [#1077](https://github.com/fastapi/typer/pull/1077) by [@svlandeg](https://github.com/svlandeg).
+
+### Internal
+
+* 🔧 Update build-docs filter patterns. PR [#1080](https://github.com/fastapi/typer/pull/1080) by [@tiangolo](https://github.com/tiangolo).
+* 🔨 Update deploy docs preview script. PR [#1079](https://github.com/fastapi/typer/pull/1079) by [@tiangolo](https://github.com/tiangolo).
+* 🔧 Update members. PR [#1078](https://github.com/fastapi/typer/pull/1078) by [@tiangolo](https://github.com/tiangolo).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1071](https://github.com/fastapi/typer/pull/1071) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Update httpx requirement from <0.28.0,>=0.27.0 to >=0.27.0,<0.29.0. PR [#1065](https://github.com/fastapi/typer/pull/1065) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
+## 0.15.0
+
+### Features
+
+* ✨ Add support for extending typer apps without passing a name, add commands to the top level. PR [#1037](https://github.com/fastapi/typer/pull/1037) by [@patrick91](https://github.com/patrick91).
+    * New docs: [One File Per Command](https://typer.tiangolo.com/tutorial/one-file-per-command/).
+
+### Internal
+
+* ⬆ Bump mkdocs-material from 9.5.46 to 9.5.47. PR [#1070](https://github.com/fastapi/typer/pull/1070) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ruff from 0.8.0 to 0.8.1. PR [#1066](https://github.com/fastapi/typer/pull/1066) by [@dependabot[bot]](https://github.com/apps/dependabot).
 
 ## 0.14.0
