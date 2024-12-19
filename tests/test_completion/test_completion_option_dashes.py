@@ -27,9 +27,9 @@ def test_completion_dashes_bash_all():
             "COMP_CWORD": "2",
         },
     )
-    assert "alpine-latest-333" in result.stdout
+    assert "alpine-latest-666" in result.stdout
     assert "alpine-hello-666" in result.stdout
-    assert "something-else-999" in result.stdout
+    assert "something-else-666" in result.stdout
 
 
 def test_completion_dashes_bash_partial():
@@ -44,9 +44,9 @@ def test_completion_dashes_bash_partial():
             "COMP_CWORD": "2",
         },
     )
-    assert "alpine-latest-333" in result.stdout
+    assert "alpine-latest-666" in result.stdout
     assert "alpine-hello-666" in result.stdout
-    assert "something-else-999" not in result.stdout
+    assert "something-else-666" not in result.stdout
 
 
 def test_completion_dashes_bash_single():
@@ -61,9 +61,9 @@ def test_completion_dashes_bash_single():
             "COMP_CWORD": "2",
         },
     )
-    assert "alpine-latest-333" in result.stdout
+    assert "alpine-latest-666" in result.stdout
     assert "alpine-hello-666" not in result.stdout
-    assert "something-else-999" not in result.stdout
+    assert "something-else-666" not in result.stdout
 
 
 def test_completion_dashes_zsh_all():
@@ -77,9 +77,9 @@ def test_completion_dashes_zsh_all():
             "_TYPER_COMPLETE_ARGS": "dashes_example.py --name ",
         },
     )
-    assert "alpine-latest-333" in result.stdout
+    assert "alpine-latest-666" in result.stdout
     assert "alpine-hello-666" in result.stdout
-    assert "something-else-999" in result.stdout
+    assert "something-else-666" in result.stdout
 
 
 def test_completion_dashes_zsh_partial():
@@ -93,9 +93,9 @@ def test_completion_dashes_zsh_partial():
             "_TYPER_COMPLETE_ARGS": "dashes_example.py --name alpine",
         },
     )
-    assert "alpine-latest-333" in result.stdout
+    assert "alpine-latest-666" in result.stdout
     assert "alpine-hello-666" in result.stdout
-    assert "something-else-999" not in result.stdout
+    assert "something-else-666" not in result.stdout
 
 
 def test_completion_dashes_zsh_single():
@@ -109,9 +109,9 @@ def test_completion_dashes_zsh_single():
             "_TYPER_COMPLETE_ARGS": "dashes_example.py --name alpine-latest",
         },
     )
-    assert "alpine-latest-333" in result.stdout
+    assert "alpine-latest-666" in result.stdout
     assert "alpine-hello-666" not in result.stdout
-    assert "something-else-999" not in result.stdout
+    assert "something-else-666" not in result.stdout
 
 
 def test_completion_dashes_powershell_all():
@@ -126,9 +126,9 @@ def test_completion_dashes_powershell_all():
             "_TYPER_COMPLETE_WORD_TO_COMPLETE": "",
         },
     )
-    assert "alpine-latest-333" in result.stdout
+    assert "alpine-latest-666" in result.stdout
     assert "alpine-hello-666" in result.stdout
-    assert "something-else-999" in result.stdout
+    assert "something-else-666" in result.stdout
 
 
 def test_completion_dashes_powershell_partial():
@@ -143,9 +143,9 @@ def test_completion_dashes_powershell_partial():
             "_TYPER_COMPLETE_WORD_TO_COMPLETE": "alpine",
         },
     )
-    assert "alpine-latest-333" in result.stdout
+    assert "alpine-latest-666" in result.stdout
     assert "alpine-hello-666" in result.stdout
-    assert "something-else-999" not in result.stdout
+    assert "something-else-666" not in result.stdout
 
 
 def test_completion_dashes_powershell_single():
@@ -160,9 +160,9 @@ def test_completion_dashes_powershell_single():
             "_TYPER_COMPLETE_WORD_TO_COMPLETE": "alpine-latest",
         },
     )
-    assert "alpine-latest-333" in result.stdout
+    assert "alpine-latest-666" in result.stdout
     assert "alpine-hello-666" not in result.stdout
-    assert "something-else-999" not in result.stdout
+    assert "something-else-666" not in result.stdout
 
 
 def test_completion_dashes_pwsh_all():
@@ -177,9 +177,9 @@ def test_completion_dashes_pwsh_all():
         },
     )
 
-    assert "alpine-latest-333" in result.stdout
+    assert "alpine-latest-666" in result.stdout
     assert "alpine-hello-666" in result.stdout
-    assert "something-else-999" in result.stdout
+    assert "something-else-666" in result.stdout
 
 
 def test_completion_dashes_pwsh_partial():
@@ -194,9 +194,9 @@ def test_completion_dashes_pwsh_partial():
             "_TYPER_COMPLETE_WORD_TO_COMPLETE": "alpine",
         },
     )
-    assert "alpine-latest-333" in result.stdout
+    assert "alpine-latest-666" in result.stdout
     assert "alpine-hello-666" in result.stdout
-    assert "something-else-999" not in result.stdout
+    assert "something-else-666" not in result.stdout
 
 
 def test_completion_dashes_pwsh_single():
@@ -211,9 +211,9 @@ def test_completion_dashes_pwsh_single():
             "_TYPER_COMPLETE_WORD_TO_COMPLETE": "alpine-latest",
         },
     )
-    assert "alpine-latest-333" in result.stdout
+    assert "alpine-latest-666" in result.stdout
     assert "alpine-hello-666" not in result.stdout
-    assert "something-else-999" not in result.stdout
+    assert "something-else-666" not in result.stdout
 
 
 # TODO: tests for complete_fish

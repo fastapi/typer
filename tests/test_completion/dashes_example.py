@@ -1,9 +1,9 @@
 import typer
 
 image_desc = [
-    ("alpine-latest-333", "latest alpine image"),
+    ("alpine-latest-666", "latest alpine image"),
     ("alpine-hello-666", "fake image: for testing"),
-    ("something-else-999", "yet another image"),
+    ("something-else-666", "yet another image"),
 ]
 
 
