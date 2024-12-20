@@ -4,11 +4,13 @@ import inspect
 import io
 import sys
 from collections import defaultdict
+from enum import Enum
 from gettext import gettext as _
 from os import getenv
 from typing import Any, DefaultDict, Dict, Iterable, List, Optional, Union
 
 import click
+import yaml
 from rich import box
 from rich.align import Align
 from rich.columns import Columns
@@ -21,6 +23,8 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 from rich.theme import Theme
+
+from .rich_table import rich_table_factory
 
 if sys.version_info >= (3, 8):
     from typing import Literal
@@ -729,3 +733,30 @@ def rich_to_html(input_text: str) -> str:
     console.print(input_text, overflow="ignore", crop=False)
 
     return console.export_html(inline_styles=True, code_format="{code}").strip()
+
+
+class OutputFormat(str, Enum):
+    TEXT = "text"
+    JSON = "json"
+    YAML = "yaml"
+
+
+def print_rich_object(
+    obj: Any, out_fmt: OutputFormat = OutputFormat.TEXT, indent: int = 2
+) -> None:
+    """Print rich version of the provided object in the specified format."""
+    console = _get_rich_console()
+    if out_fmt == OutputFormat.JSON:
+        console.print_json(data=obj, indent=indent)
+        return
+
+    if out_fmt == OutputFormat.YAML:
+        console.print(yaml.dump(obj, indent=indent))
+        return
+
+    if not obj:
+        console.print("Nothing found")
+        return
+
+    table = rich_table_factory(obj)
+    console.print(table)
