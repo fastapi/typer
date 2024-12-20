@@ -741,11 +741,13 @@ class OutputFormat(str, Enum):
     YAML = "yaml"
 
 
-def print_rich_object(
-    obj: Any, out_fmt: OutputFormat = OutputFormat.TEXT, indent: int = 2
+def print_rich_object_for_console(
+    console: Console,
+    obj: Any,
+    out_fmt: OutputFormat = OutputFormat.TEXT,
+    indent: int = 2,
 ) -> None:
-    """Print rich version of the provided object in the specified format."""
-    console = _get_rich_console()
+    """Print rich version of the provided object in the specified format using provided `Console`."""
     if out_fmt == OutputFormat.JSON:
         console.print_json(data=obj, indent=indent)
         return
@@ -760,3 +762,11 @@ def print_rich_object(
 
     table = rich_table_factory(obj)
     console.print(table)
+
+
+def print_rich_object(
+    obj: Any, out_fmt: OutputFormat = OutputFormat.TEXT, indent: int = 2
+) -> None:
+    """Print rich version of the provided object in the specified format."""
+    console = _get_rich_console()
+    print_rich_object_for_console(console, obj, out_fmt=out_fmt, indent=indent)
