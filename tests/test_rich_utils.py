@@ -86,7 +86,7 @@ EXPECTED_TEXT = """\
 ├──────┼────────────────┤
 │ bar  │  1  inverse    │
 └──────┴────────────────┘
-Found 3 items            
+Found 3 items
 """  # noqa: W291
 
 
