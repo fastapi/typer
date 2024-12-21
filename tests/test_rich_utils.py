@@ -71,8 +71,8 @@ DATA = [
 ]
 
 
-EXPECTED_JSON = json.dumps(DATA, indent=2) + "\n"
-EXPECTED_YAML = yaml.dump(DATA) + "\n"
+EXPECTED_JSON = json.dumps(DATA, indent=2)
+EXPECTED_YAML = yaml.dump(DATA)
 EXPECTED_TEXT = """\
 ┏━━━━━━┳━━━━━━━━━━━━━━━━┓
 ┃ Name ┃ Properties     ┃
@@ -86,8 +86,7 @@ EXPECTED_TEXT = """\
 ├──────┼────────────────┤
 │ bar  │  1  inverse    │
 └──────┴────────────────┘
-Found 3 items
-"""
+Found 3 items"""
 
 
 @pytest.mark.parametrize(
@@ -127,6 +126,4 @@ def test_rich_object_none(output_format, expected):
 
     result = runner.invoke(app, [output_format])
     assert result.exit_code == 0
-    output = [x.strip() for x in result.stdout.split()]
-    lines = [x.strip() for x in expected.split()]
-    assert output == lines
+    assert result.stdout.startswith(expected)
