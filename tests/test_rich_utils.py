@@ -106,7 +106,7 @@ def test_rich_object_data(output_format, expected):
 
     result = runner.invoke(app, [output_format])
     assert result.exit_code == 0
-    assert result.stdout.startswith(expected)
+    assert result.stdout.replace("\r", "").startswith(expected)
 
 
 @pytest.mark.parametrize(
@@ -126,4 +126,4 @@ def test_rich_object_none(output_format, expected):
 
     result = runner.invoke(app, [output_format])
     assert result.exit_code == 0
-    assert result.stdout.startswith(expected)
+    assert result.stdout.replace("\r", "").startswith(expected)
