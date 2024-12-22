@@ -43,7 +43,7 @@ class RichTable(Table):
         self,
         *args: Any,
         outer: bool = True,
-        row_props: dict[str, Any] = DEFAULT_ROW_PROPS,
+        row_props: Dict[str, Any] = DEFAULT_ROW_PROPS,
         **kwargs: Any,
     ):
         super().__init__(
