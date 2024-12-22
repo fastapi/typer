@@ -1,5 +1,5 @@
 from gettext import gettext
-from typing import Any, Optional
+from typing import Any, Dict, List, Optional
 
 from rich.box import HEAVY_HEAD
 from rich.table import Table
@@ -73,7 +73,7 @@ def _truncate(s: str, max_length: int) -> str:
     return s[: max_length - 3] + ELLIPSIS
 
 
-def _get_name_key(item: dict[Any, Any]) -> Optional[str]:
+def _get_name_key(item: Dict[Any, Any]) -> Optional[str]:
     """Attempts to find an identifying value."""
     for k in KEY_FIELDS:
         key = str(k)
@@ -88,7 +88,7 @@ def _is_url(s: str) -> bool:
     return any(s.startswith(p) for p in URL_PREFIXES)
 
 
-def _create_list_table(items: list[dict[Any, Any]], outer: bool) -> RichTable:
+def _create_list_table(items: List[Dict[Any, Any]], outer: bool) -> RichTable:
     """Creates a table from a list of dictionary items.
 
     If an identifying "name key" is found (in the first entry), the table will have 2 columns: name, Properties
@@ -118,7 +118,7 @@ def _create_list_table(items: list[dict[Any, Any]], outer: bool) -> RichTable:
     return table
 
 
-def _create_object_table(obj: dict[Any, Any], outer: bool) -> RichTable:
+def _create_object_table(obj: Dict[Any, Any], outer: bool) -> RichTable:
     """Creates a table of a dictionary object.
 
     NOTE: nesting is done in the right column as needed.
