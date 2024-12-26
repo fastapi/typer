@@ -47,27 +47,7 @@ content = b"la cig\xc3\xbce\xc3\xb1a trae al ni\xc3\xb1o"
 
 You will get all the correct editor support, attributes, methods, etc for the file-like object:`
 
-//// tab | Python 3.7+
-
-```Python hl_lines="5"
-{!> ../docs_src/parameter_types/file/tutorial001_an.py!}
-```
-
-////
-
-//// tab | Python 3.7+ non-Annotated
-
-/// tip
-
-Prefer to use the `Annotated` version if possible.
-
-///
-
-```Python hl_lines="4"
-{!> ../docs_src/parameter_types/file/tutorial001.py!}
-```
-
-////
+{* docs_src/parameter_types/file/tutorial001_an.py hl[5] *}
 
 Check it:
 
@@ -94,27 +74,7 @@ Config line: some more settings
 
 For writing text, you can use `typer.FileTextWrite`:
 
-//// tab | Python 3.7+
-
-```Python hl_lines="5-6"
-{!> ../docs_src/parameter_types/file/tutorial002_an.py!}
-```
-
-////
-
-//// tab | Python 3.7+ non-Annotated
-
-/// tip
-
-Prefer to use the `Annotated` version if possible.
-
-///
-
-```Python hl_lines="4-5"
-{!> ../docs_src/parameter_types/file/tutorial002.py!}
-```
-
-////
+{* docs_src/parameter_types/file/tutorial002_an.py hl[5:6] *}
 
 This would be for writing human text, like:
 
@@ -158,27 +118,7 @@ You will receive `bytes` from it.
 
 It's useful for reading binary files like images:
 
-//// tab | Python 3.7+
-
-```Python hl_lines="5"
-{!> ../docs_src/parameter_types/file/tutorial003_an.py!}
-```
-
-////
-
-//// tab | Python 3.7+ non-Annotated
-
-/// tip
-
-Prefer to use the `Annotated` version if possible.
-
-///
-
-```Python hl_lines="4"
-{!> ../docs_src/parameter_types/file/tutorial003.py!}
-```
-
-////
+{* docs_src/parameter_types/file/tutorial003_an.py hl[5] *}
 
 Check it:
 
@@ -207,27 +147,7 @@ Have in mind that you have to pass `bytes` to its `.write()` method, not `str`.
 
 If you have a `str`, you have to encode it first to get `bytes`.
 
-//// tab | Python 3.7+
-
-```Python hl_lines="5"
-{!> ../docs_src/parameter_types/file/tutorial004_an.py!}
-```
-
-////
-
-//// tab | Python 3.7+ non-Annotated
-
-/// tip
-
-Prefer to use the `Annotated` version if possible.
-
-///
-
-```Python hl_lines="4"
-{!> ../docs_src/parameter_types/file/tutorial004.py!}
-```
-
-////
+{* docs_src/parameter_types/file/tutorial004_an.py hl[5] *}
 
 <div class="termy">
 
@@ -277,27 +197,7 @@ You can override the `mode` from the defaults above.
 
 For example, you could use `mode="a"` to write "appending" to the same file:
 
-//// tab | Python 3.7+
-
-```Python hl_lines="5"
-{!> ../docs_src/parameter_types/file/tutorial005_an.py!}
-```
-
-////
-
-//// tab | Python 3.7+ non-Annotated
-
-/// tip
-
-Prefer to use the `Annotated` version if possible.
-
-///
-
-```Python hl_lines="4"
-{!> ../docs_src/parameter_types/file/tutorial005.py!}
-```
-
-////
+{* docs_src/parameter_types/file/tutorial005_an.py hl[5] *}
 
 /// tip
 
