@@ -129,7 +129,7 @@ Usage: main.py [OPTIONS] COMMAND [ARGS]...
 
   Creates a single user Hiro Hamada.
 
-  In the next version it will create 5 users more.
+  In the next version it will create 5 more users.
 
 Options:
   --install-completion  Install completion for the current shell.
