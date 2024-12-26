@@ -46,9 +46,21 @@ def test_rich_markup_mode_rich():
 @pytest.mark.parametrize(
     "mode,lines",
     [
-        pytest.param("markdown", ["First line", "", "Line 1", "", "Line 2", "", "Line 3", ""], marks=pytest.mark.xfail),
-        pytest.param("rich", ["First line", "", "Line 1", "", "Line 2", "", "Line 3", ""], marks=pytest.mark.xfail),
-        pytest.param("none", ["First line", "", "Line 1", "", "Line 2", "", "Line 3", ""], marks=pytest.mark.xfail),
+        pytest.param(
+            "markdown",
+            ["First line", "", "Line 1", "", "Line 2", "", "Line 3", ""],
+            marks=pytest.mark.xfail,
+        ),
+        pytest.param(
+            "rich",
+            ["First line", "", "Line 1", "", "Line 2", "", "Line 3", ""],
+            marks=pytest.mark.xfail,
+        ),
+        pytest.param(
+            "none",
+            ["First line", "", "Line 1", "", "Line 2", "", "Line 3", ""],
+            marks=pytest.mark.xfail,
+        ),
     ],
 )
 def test_markup_mode_newline_pr815(mode: str, lines: List[str]):
