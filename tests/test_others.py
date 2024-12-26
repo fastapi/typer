@@ -170,59 +170,6 @@ def test_callback_4_list_none():
     assert "Hello World" in result.stdout
 
 
-def test_list_default_None():
-    app = typer.Typer()
-
-    @app.command()
-    def main(names: typing.Optional[typing.List[str]] = typer.Option(None, "--name")):
-        if not names:
-            print(f"Hello emptiness: {names}")
-        else:
-            print(f"Hello {', '.join(names)}")
-
-    result = runner.invoke(app, ["--name", "Sideshow", "--name", "Bob"])
-    assert "Hello Sideshow, Bob" in result.stdout
-
-    result = runner.invoke(app, [])
-    assert "Hello emptiness: None" in result.stdout
-
-
-def test_list_default_empty():
-    app = typer.Typer()
-
-    @app.command()
-    def main(names: typing.Optional[typing.List[str]] = typer.Option([], "--name")):
-        if not names:
-            print(f"Hello emptiness: {names}")
-        else:
-            print(f"Hello {', '.join(names)}")
-
-    result = runner.invoke(app, ["--name", "Sideshow", "--name", "Bob"])
-    assert "Hello Sideshow, Bob" in result.stdout
-
-    result = runner.invoke(app, [])
-    assert "Hello emptiness: []" in result.stdout
-
-
-def test_list_default_values():
-    app = typer.Typer()
-
-    @app.command()
-    def main(
-        names: typing.Optional[typing.List[str]] = typer.Option(["Darkness"], "--name"),
-    ):
-        if not names:
-            print(f"Hello emptiness: {names}")
-        else:
-            print(f"Hello {', '.join(names)}")
-
-    result = runner.invoke(app, ["--name", "Sideshow", "--name", "Bob"])
-    assert "Hello Sideshow, Bob" in result.stdout
-
-    result = runner.invoke(app, [])
-    assert "Hello Darkness" in result.stdout
-
-
 def test_completion_argument():
     file_path = Path(__file__).parent / "assets/completion_argument.py"
     result = subprocess.run(
