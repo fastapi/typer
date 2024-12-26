@@ -209,9 +209,15 @@ def test_markup_mode_bullets_single_newline(mode: str, lines: List[str]):
     "mode,lines",
     [
         ("markdown", ["First line", "", "• 1", "• 2", "• 3", ""]),
-        pytest.param("rich", ["First line", "", "- 1", "", "- 2", "", "- 3", ""], marks=pytest.mark.xfail),
         pytest.param(
-            "none", ["First line", "", "- 1", "", "- 2", "", "- 3", ""], marks=pytest.mark.xfail
+            "rich",
+            ["First line", "", "- 1", "", "- 2", "", "- 3", ""],
+            marks=pytest.mark.xfail,
+        ),
+        pytest.param(
+            "none",
+            ["First line", "", "- 1", "", "- 2", "", "- 3", ""],
+            marks=pytest.mark.xfail,
         ),
     ],
 )
@@ -248,8 +254,16 @@ def test_markup_mode_bullets_double_newline(mode: str, lines: List[str]):
     "mode,lines",
     [
         ("markdown", ["First line", "", "• 1 - 2   - a   - b - 3", ""]),
-        pytest.param("rich", ["First line", "", "- 1 - 2  - a  - b - 3", ""], marks=pytest.mark.xfail),
-        pytest.param("none", ["First line", "", "- 1 - 2  - a  - b - 3", ""], marks=pytest.mark.xfail),
+        pytest.param(
+            "rich",
+            ["First line", "", "- 1 - 2  - a  - b - 3", ""],
+            marks=pytest.mark.xfail,
+        ),
+        pytest.param(
+            "none",
+            ["First line", "", "- 1 - 2  - a  - b - 3", ""],
+            marks=pytest.mark.xfail,
+        ),
     ],
 )
 def test_markup_mode_nested_bullets_single_newline(mode: str, lines: List[str]):
@@ -285,8 +299,16 @@ def test_markup_mode_nested_bullets_single_newline(mode: str, lines: List[str]):
     "mode,lines",
     [
         ("markdown", ["First line", "", "• 1", "• 2", "• a", "• b", "• 3", ""]),
-        pytest.param("rich", ["First line", "", "- 1", "", "- 2", "", "- a", "", "- b", "", "- 3", ""], marks=pytest.mark.xfail),
-        pytest.param("none", ["First line", "", "- 1", "", "- 2", "", "- a", "", "- b", "", "- 3", ""], marks=pytest.mark.xfail),
+        pytest.param(
+            "rich",
+            ["First line", "", "- 1", "", "- 2", "", "- a", "", "- b", "", "- 3", ""],
+            marks=pytest.mark.xfail,
+        ),
+        pytest.param(
+            "none",
+            ["First line", "", "- 1", "", "- 2", "", "- a", "", "- b", "", "- 3", ""],
+            marks=pytest.mark.xfail,
+        ),
     ],
 )
 def test_markup_mode_nested_bullets_double_newline(mode: str, lines: List[str]):
