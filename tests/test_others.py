@@ -153,7 +153,11 @@ def test_callback_4_list_none():
         return [value.upper() for value in values]
 
     @app.command()
-    def main(names: typing.Optional[typing.List[str]] = typer.Option(None, "--name", callback=names_callback)):
+    def main(
+        names: typing.Optional[typing.List[str]] = typer.Option(
+            None, "--name", callback=names_callback
+        ),
+    ):
         if names is None:
             print("Hello World")
         else:
