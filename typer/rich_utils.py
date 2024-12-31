@@ -488,7 +488,7 @@ def _print_commands_panel(
     # Define formatting in first column, as commands don't match highlighter
     # regex
     commands_table.add_column(
-        style="bold cyan",
+        style=STYLE_OPTION,
         no_wrap=True,
         width=cmd_len,
     )
