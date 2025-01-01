@@ -24,7 +24,7 @@ from rich.table import Table
 from rich.text import Text
 from rich.theme import Theme
 
-from .rich_table import rich_table_factory
+from .rich_table import TableConfig, rich_table_factory
 
 if sys.version_info >= (3, 8):
     from typing import Literal
@@ -746,6 +746,7 @@ def print_rich_object_for_console(
     obj: Any,
     out_fmt: OutputFormat = OutputFormat.TEXT,
     indent: int = 2,
+    config: TableConfig = TableConfig(),
 ) -> None:
     """Print rich version of the provided object in the specified format using provided `Console`."""
     if out_fmt == OutputFormat.JSON:
@@ -760,13 +761,18 @@ def print_rich_object_for_console(
         console.print("Nothing found")
         return
 
-    table = rich_table_factory(obj)
+    table = rich_table_factory(obj, config)
     console.print(table)
 
 
 def print_rich_object(
-    obj: Any, out_fmt: OutputFormat = OutputFormat.TEXT, indent: int = 2
+    obj: Any,
+    out_fmt: OutputFormat = OutputFormat.TEXT,
+    indent: int = 2,
+    config: TableConfig = TableConfig(),
 ) -> None:
     """Print rich version of the provided object in the specified format."""
     console = _get_rich_console()
-    print_rich_object_for_console(console, obj, out_fmt=out_fmt, indent=indent)
+    print_rich_object_for_console(
+        console, obj, out_fmt=out_fmt, indent=indent, config=config
+    )

@@ -4,7 +4,7 @@ import pytest
 import typer
 import typer.completion
 import yaml
-from typer.rich_utils import OutputFormat, print_rich_object
+from typer.rich_utils import OutputFormat, TableConfig, print_rich_object
 from typer.testing import CliRunner
 
 runner = CliRunner()
@@ -88,6 +88,21 @@ EXPECTED_TEXT = """\
 └──────┴────────────────┘
 Found 3 items"""
 
+CONFIGED_TEXT = """\
+┏━━━━━━┳━━━━━━━━━━━━━━━━┓
+┃ Name ┃          Inner ┃
+┡━━━━━━╇━━━━━━━━━━━━━━━━┩
+│  sna │   prop1     1  │
+│      │  prop B  None  │
+│      │    blah   zay  │
+├──────┼────────────────┤
+│  foo │   prop2     2  │
+│      │  prop B  True  │
+├──────┼────────────────┤
+│  bar │  1  inverse    │
+└──────┴────────────────┘
+This shows 3 items"""
+
 
 def non_ascii_dots(s: str) -> str:
     """
@@ -139,3 +154,21 @@ def test_rich_object_none(output_format, expected):
     assert result.exit_code == 0
     output = non_ascii_dots(result.stdout)
     assert output.startswith(non_ascii_dots(expected))
+
+
+def test_rich_object_config():
+    app = typer.Typer()
+
+    @app.command()
+    def print_rich_data():
+        config = TableConfig(
+            row_properties={"justify": "right", "no_wrap": True, "overflow": "ignore"},
+            properties_label="Inner",
+            items_caption="This shows {} items",
+        )
+        print_rich_object(DATA, config=config)
+
+    result = runner.invoke(app, [])
+    assert result.exit_code == 0
+    output = non_ascii_dots(result.stdout)
+    assert output.startswith(non_ascii_dots(CONFIGED_TEXT))
