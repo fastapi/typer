@@ -34,6 +34,43 @@ URL_MAX_LEN = 100
 #       `Any` readability.
 
 
+class TableConfig:
+    """This data class provides a means for customizing the table outputs.
+
+    The defaults provide a standard look and feel, but can be overridden to all customization.
+    """
+
+    def __init__(
+        self,
+        items_label: str = ITEMS,
+        property_label: str = PROPERTY,
+        properties_label: str = PROPERTIES,
+        value_label: str = VALUE,
+        values_label: str = VALUES,
+        unknown_label: str = UNKNOWN,
+        items_caption: str = FOUND_ITEMS,
+        url_prefixes: List[str] = URL_PREFIXES,
+        url_max_len: int = URL_MAX_LEN,
+        key_fields: List[str] = KEY_FIELDS,
+        key_max_len: int = KEY_MAX_LEN,
+        value_max_len: int = VALUE_MAX_LEN,
+        row_properties: Dict[str, Any] = DEFAULT_ROW_PROPS,
+    ):
+        self.items_label = items_label
+        self.property_label = property_label
+        self.properties_label = properties_label
+        self.value_label = value_label
+        self.values_label = values_label
+        self.unknown_label = unknown_label
+        self.items_caption = items_caption
+        self.url_prefixes = url_prefixes
+        self.url_max_len = url_max_len
+        self.key_fields = key_fields
+        self.key_max_len = key_max_len
+        self.value_max_len = value_max_len
+        self.row_properties = row_properties
+
+
 class RichTable(Table):
     """
     This is wrapper around the rich.Table to provide some methods for adding complex items.
@@ -73,9 +110,9 @@ def _truncate(s: str, max_length: int) -> str:
     return s[: max_length - 3] + ELLIPSIS
 
 
-def _get_name_key(item: Dict[Any, Any]) -> Optional[str]:
+def _get_name_key(item: Dict[Any, Any], key_fields: List[str]) -> Optional[str]:
     """Attempts to find an identifying value."""
-    for k in KEY_FIELDS:
+    for k in key_fields:
         key = str(k)
         if key in item:
             return key
@@ -83,12 +120,14 @@ def _get_name_key(item: Dict[Any, Any]) -> Optional[str]:
     return None
 
 
-def _is_url(s: str) -> bool:
+def _is_url(s: str, url_prefixes: List[str]) -> bool:
     """Rudimentary check for somethingt starting with URL prefix"""
-    return any(s.startswith(p) for p in URL_PREFIXES)
+    return any(s.startswith(p) for p in url_prefixes)
 
 
-def _create_list_table(items: List[Dict[Any, Any]], outer: bool) -> RichTable:
+def _create_list_table(
+    items: List[Dict[Any, Any]], outer: bool, config: TableConfig
+) -> RichTable:
     """Creates a table from a list of dictionary items.
 
     If an identifying "name key" is found (in the first entry), the table will have 2 columns: name, Properties
@@ -96,42 +135,59 @@ def _create_list_table(items: List[Dict[Any, Any]], outer: bool) -> RichTable:
 
     NOTE: nesting is done as needed
     """
-    caption = FOUND_ITEMS.format(len(items)) if outer else None
-    name_key = _get_name_key(items[0])
+    caption = config.items_caption.format(len(items)) if outer else None
+    name_key = _get_name_key(items[0], config.key_fields)
     if not name_key:
         # without identifiers just create table with one "Values" column
-        table = RichTable(VALUES, outer=outer, show_lines=True, caption=caption)
+        table = RichTable(
+            config.values_label,
+            outer=outer,
+            show_lines=True,
+            caption=caption,
+            row_props=config.row_properties,
+        )
         for item in items:
-            table.add_row(_table_cell_value(item))
+            table.add_row(_table_cell_value(item, config))
         return table
 
     # create a table with identifier in left column, and rest of data in right column
     name_label = name_key[0].upper() + name_key[1:]
-    fields = [name_label, PROPERTIES]
-    table = RichTable(*fields, outer=outer, show_lines=True, caption=caption)
+    fields = [name_label, config.properties_label]
+    table = RichTable(
+        *fields,
+        outer=outer,
+        show_lines=True,
+        caption=caption,
+        row_props=config.row_properties,
+    )
     for item in items:
         # id may be an int, so convert to string before truncating
-        name = str(item.pop(name_key, UNKNOWN))
-        body = _table_cell_value(item)
-        table.add_row(_truncate(name, KEY_MAX_LEN), body)
+        name = str(item.pop(name_key, config.unknown_label))
+        body = _table_cell_value(item, config)
+        table.add_row(_truncate(name, config.key_max_len), body)
 
     return table
 
 
-def _create_object_table(obj: Dict[Any, Any], outer: bool) -> RichTable:
+def _create_object_table(
+    obj: Dict[Any, Any], outer: bool, config: TableConfig
+) -> RichTable:
     """Creates a table of a dictionary object.
 
     NOTE: nesting is done in the right column as needed.
     """
-    table = RichTable(*OBJECT_HEADERS, outer=outer, show_lines=False)
+    headers = [config.property_label, config.value_label]
+    table = RichTable(
+        *headers, outer=outer, show_lines=False, row_props=config.row_properties
+    )
     for k, v in obj.items():
         name = str(k)
-        table.add_row(_truncate(name, KEY_MAX_LEN), _table_cell_value(v))
+        table.add_row(_truncate(name, config.key_max_len), _table_cell_value(v, config))
 
     return table
 
 
-def _table_cell_value(obj: Any) -> Any:
+def _table_cell_value(obj: Any, config: TableConfig) -> Any:
     """Creates the "inner" value for a table cell.
 
     Depending on the input value type, the cell may look different. If a dict, or list[dict],
@@ -139,28 +195,32 @@ def _table_cell_value(obj: Any) -> Any:
     """
     value: Any = None
     if isinstance(obj, dict):
-        value = _create_object_table(obj, outer=False)
+        value = _create_object_table(obj, outer=False, config=config)
     elif isinstance(obj, list) and obj:
         if isinstance(obj[0], dict):
-            value = _create_list_table(obj, outer=False)
+            value = _create_list_table(obj, outer=False, config=config)
         else:
             values = [str(x) for x in obj]
             s = str(", ".join(values))
-            value = _truncate(s, VALUE_MAX_LEN)
+            value = _truncate(s, config.value_max_len)
     else:
         s = str(obj)
-        max_len = URL_MAX_LEN if _is_url(s) else VALUE_MAX_LEN
+        max_len = (
+            config.url_max_len
+            if _is_url(s, config.url_prefixes)
+            else config.value_max_len
+        )
         value = _truncate(s, max_len)
 
     return value
 
 
-def rich_table_factory(obj: Any) -> RichTable:
+def rich_table_factory(obj: Any, config: TableConfig = TableConfig()) -> RichTable:
     """Create a RichTable (alias for rich.table.Table) from the object."""
     if isinstance(obj, dict):
-        return _create_object_table(obj, outer=True)
+        return _create_object_table(obj, outer=True, config=config)
 
     if isinstance(obj, list) and obj and isinstance(obj[0], dict):
-        return _create_list_table(obj, outer=True)
+        return _create_list_table(obj, outer=True, config=config)
 
     raise ValueError(f"Unable to create table for type {type(obj).__name__}")
