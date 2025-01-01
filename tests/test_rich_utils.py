@@ -170,5 +170,6 @@ def test_rich_object_config():
 
     result = runner.invoke(app, [])
     assert result.exit_code == 0
-    output = non_ascii_dots(result.stdout)
-    assert output.startswith(non_ascii_dots(CONFIGED_TEXT))
+    output = non_ascii_dots(result.stdout).rstrip("\r\n").strip()
+    expected = non_ascii_dots(CONFIGED_TEXT).rstrip("\r\n").strip()
+    assert output == expected
