@@ -86,6 +86,7 @@ class ZshComplete(click.shell_completion.ZshComplete):
                 .replace("'", "''")
                 .replace("$", "\\$")
                 .replace("`", "\\`")
+                .replace(":", r"\\:")
             )
 
         # TODO: Explore replicating the new behavior from Click, pay attention to

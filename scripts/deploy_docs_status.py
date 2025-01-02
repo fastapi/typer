@@ -2,8 +2,10 @@ import logging
 import re
 
 from github import Github
-from pydantic import SecretStr
+from pydantic import BaseModel, SecretStr
 from pydantic_settings import BaseSettings
+
+site_domain = "typer.tiangolo.com"
 
 
 class Settings(BaseSettings):
@@ -15,7 +17,12 @@ class Settings(BaseSettings):
     is_done: bool = False
 
 
-def main():
+class LinkData(BaseModel):
+    previous_link: str
+    preview_link: str
+
+
+def main() -> None:
     logging.basicConfig(level=logging.INFO)
     settings = Settings()
 
@@ -60,24 +67,31 @@ def main():
     docs_files = [f for f in files if f.filename.startswith("docs/")]
 
     deploy_url = settings.deploy_url.rstrip("/")
-    links: list[str] = []
+    links: list[LinkData] = []
     for f in docs_files:
         match = re.match(r"docs/(.*)", f.filename)
-        assert match
+        if not match:
+            continue
         path = match.group(1)
         if path.endswith("index.md"):
-            path = path.replace("index.md", "")
+            use_path = path.replace("index.md", "")
         else:
-            path = path.replace(".md", "/")
-        link = f"{deploy_url}/{path}"
+            use_path = path.replace(".md", "/")
+        link = LinkData(
+            previous_link=f"https://{site_domain}/{use_path}",
+            preview_link=f"{deploy_url}/{use_path}",
+        )
         links.append(link)
-    links.sort()
+        links.sort(key=lambda x: x.preview_link)
 
     message = f"📝 Docs preview for commit {settings.commit_sha} at: {deploy_url}"
 
     if links:
         message += "\n\n### Modified Pages\n\n"
-        message += "\n".join([f"* {link}" for link in links])
+        for link in links:
+            message += f"* {link.preview_link}"
+            message += f" - ([before]({link.previous_link}))"
+            message += "\n"
 
     print(message)
     use_pr.as_issue().create_comment(message)
