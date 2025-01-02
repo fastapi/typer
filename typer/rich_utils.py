@@ -712,12 +712,6 @@ def rich_abort_error() -> None:
     console.print(ABORTED_TEXT, style=STYLE_ABORTED)
 
 
-def print_with_rich(text: str) -> None:
-    """Print richly formatted message."""
-    console = _get_rich_console()
-    console.print(text)
-
-
 def rich_to_html(input_text: str) -> str:
     """Print the HTML version of a rich-formatted input string.
 
@@ -729,3 +723,9 @@ def rich_to_html(input_text: str) -> str:
     console.print(input_text, overflow="ignore", crop=False)
 
     return console.export_html(inline_styles=True, code_format="{code}").strip()
+
+
+def rich_render_text(text: str) -> str:
+    """Remove rich tags and render a pure text representation"""
+    console = _get_rich_console()
+    return "".join(segment.text for segment in console.render(text)).rstrip("\n")
