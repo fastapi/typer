@@ -81,7 +81,7 @@ jobs:
       - name: Build Docs
         run: python ./scripts/docs.py build
       - name: Generate llms.txt, md files.
-        uses: demodrive-ai/llms-txt-action@7a16ba5e614d6f05e8d5b778feaafacef0b56555
+        uses: demodrive-ai/llms-txt-action@8c352054bffa7689cd507dc2a577121ac23cb0dd
       - uses: actions/upload-artifact@v4
         with:
           name: docs-site
