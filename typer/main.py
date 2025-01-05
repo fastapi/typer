@@ -12,6 +12,7 @@ from pathlib import Path
 from traceback import FrameSummary, StackSummary
 from types import TracebackType
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, Union
+from typing_extensions import Doc
 from uuid import UUID
 
 import click
@@ -46,7 +47,7 @@ from .models import (
     Required,
     TyperInfo,
 )
-from .utils import get_params_from_function
+from .utils import get_params_from_function, MultipleDocAnnotationsError
 
 try:
     import rich
@@ -821,6 +822,18 @@ def get_click_param(
     else:
         default_value = param.default
         parameter_info = OptionInfo()
+    if param.other_annotations:
+        doc_annotations = [
+            annotation
+            for annotation in param.other_annotations
+            if isinstance(annotation, Doc)
+        ]
+        if len(doc_annotations) == 1:
+            doc_help = doc_annotations[0].documentation if doc_annotations else None
+            if not getattr(parameter_info, "help", None):
+                parameter_info.help = doc_help
+        if len(doc_annotations) > 1:
+            raise MultipleDocAnnotationsError(param.name)
     annotation: Any
     if param.annotation is not param.empty:
         annotation = param.annotation

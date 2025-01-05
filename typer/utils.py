@@ -116,15 +116,15 @@ def _split_annotation_from_doc_and_typer_annotations(
         for annotation in other_annotations
         if isinstance(annotation, ParameterInfo)
     ]
-    doc_annotations = [
+    other_annotations = [
         annotation
         for annotation in other_annotations
-        if isinstance(annotation, Doc)
+        if not isinstance(annotation, ParameterInfo)
     ]
     return (
         base_annotation,
-        doc_annotations,
         typer_annotations,
+        other_annotations,
     )
 
 
@@ -137,21 +137,15 @@ def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
     type_hints = get_type_hints(func)
     params = {}
     for param in signature.parameters.values():
-        annotation, doc_annotations, typer_annotations = _split_annotation_from_doc_and_typer_annotations(
+        annotation, typer_annotations, other_annotations = _split_annotation_from_doc_and_typer_annotations(
             param.annotation,
         )
         if len(typer_annotations) > 1:
             raise MultipleTyperAnnotationsError(param.name)
-        if len(doc_annotations) > 1:
-            raise MultipleDocAnnotationsError(param.name)
-        doc_help = doc_annotations[0].documentation if doc_annotations else None
-
         default = param.default
         if typer_annotations:
             # It's something like `my_param: Annotated[str, Argument()]`
             [parameter_info] = typer_annotations
-            if not getattr(parameter_info, "help", None):
-                parameter_info.help = doc_help
 
             # Forbid `my_param: Annotated[str, Argument()] = Argument("...")`
             if isinstance(param.default, ParameterInfo):
@@ -160,8 +154,6 @@ def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
                     annotated_param_type=type(parameter_info),
                     default_param_type=type(param.default),
                 )
-
-            parameter_info = copy(parameter_info)
 
             # When used as a default, `Option` takes a default value and option names
             # as positional arguments:
@@ -214,6 +206,9 @@ def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
             default = parameter_info
 
         params[param.name] = ParamMeta(
-            name=param.name, default=default, annotation=annotation
+            name=param.name,
+            default=default,
+            annotation=annotation,
+            other_annotations=other_annotations,
         )
     return params
