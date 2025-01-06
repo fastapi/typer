@@ -174,7 +174,6 @@ def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
                 parameter_info.default = ...
 
             # Forbid `my_param: Annotated[str, Argument('some-default')]`
-            import pdb; pdb.set_trace()
             if parameter_info.default is not ...:
                 raise AnnotatedParamWithDefaultValueError(
                     param_type=type(parameter_info),
