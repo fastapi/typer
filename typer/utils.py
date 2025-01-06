@@ -3,7 +3,7 @@ import sys
 from copy import copy
 from typing import Any, Callable, Dict, List, Tuple, Type, cast
 
-from typing_extensions import Annotated, get_args, get_origin, get_type_hints, Doc
+from typing_extensions import Annotated, get_args, get_origin, get_type_hints
 
 from .models import ArgumentInfo, OptionInfo, ParameterInfo, ParamMeta
 
@@ -137,8 +137,10 @@ def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
     type_hints = get_type_hints(func)
     params = {}
     for param in signature.parameters.values():
-        annotation, typer_annotations, other_annotations = _split_annotation_from_typer_annotations(
-            param.annotation,
+        annotation, typer_annotations, other_annotations = (
+            _split_annotation_from_typer_annotations(
+                param.annotation,
+            )
         )
         if len(typer_annotations) > 1:
             raise MultipleTyperAnnotationsError(param.name)

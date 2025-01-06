@@ -1,12 +1,11 @@
 from typing import Annotated
-from typing_extensions import Doc
-import pytest
 
+import pytest
 import typer
 import typer.completion
+from typer import Argument, Option
 from typer.testing import CliRunner
-from typer import Option, Argument
-
+from typing_extensions import Doc
 
 
 @pytest.fixture
@@ -17,16 +16,8 @@ def runner():
 @pytest.mark.parametrize(
     "doc,parameter,expected",
     [
-        (
-            Doc("doc only help"),
-            None,
-            "doc only help"
-        ),
-        (
-            None,
-            Argument(help="argument only help"),
-            "argument only help"
-        ),
+        (Doc("doc only help"), None, "doc only help"),
+        (None, Argument(help="argument only help"), "argument only help"),
         (
             Doc("doc help should appear"),
             Argument(),
@@ -37,11 +28,7 @@ def runner():
             Argument(help="argument help has priority"),
             "argument help has priority",
         ),
-        (
-            None,
-            Option(help="option only help"),
-            "option only help"
-        ),
+        (None, Option(help="option only help"), "option only help"),
         (
             Doc("this help should not appear"),
             Option(help="option help has priority"),

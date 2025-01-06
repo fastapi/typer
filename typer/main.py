@@ -12,11 +12,10 @@ from pathlib import Path
 from traceback import FrameSummary, StackSummary
 from types import TracebackType
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, Union
-from typing_extensions import Doc
 from uuid import UUID
 
 import click
-from typing_extensions import get_args, get_origin
+from typing_extensions import Doc, get_args, get_origin
 
 from ._typing import is_union
 from .completion import get_completion_inspect_parameters
@@ -47,7 +46,7 @@ from .models import (
     Required,
     TyperInfo,
 )
-from .utils import get_params_from_function, MultipleDocAnnotationsError
+from .utils import MultipleDocAnnotationsError, get_params_from_function
 
 try:
     import rich
