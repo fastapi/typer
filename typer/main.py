@@ -827,12 +827,12 @@ def get_click_param(
             for annotation in param.other_annotations
             if isinstance(annotation, Doc)
         ]
+        if len(doc_annotations) > 1:
+            raise MultipleDocAnnotationsError(param.name)
         if len(doc_annotations) == 1:
             doc_help = doc_annotations[0].documentation if doc_annotations else None
             if not getattr(parameter_info, "help", None):
                 parameter_info.help = doc_help
-        if len(doc_annotations) > 1:
-            raise MultipleDocAnnotationsError(param.name)
     annotation: Any
     if param.annotation is not param.empty:
         annotation = param.annotation

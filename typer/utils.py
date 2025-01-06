@@ -144,6 +144,7 @@ def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
         )
         if len(typer_annotations) > 1:
             raise MultipleTyperAnnotationsError(param.name)
+
         default = param.default
         if typer_annotations:
             # It's something like `my_param: Annotated[str, Argument()]`
@@ -156,6 +157,8 @@ def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
                     annotated_param_type=type(parameter_info),
                     default_param_type=type(param.default),
                 )
+
+            parameter_info = copy(parameter_info)
 
             # When used as a default, `Option` takes a default value and option names
             # as positional arguments:

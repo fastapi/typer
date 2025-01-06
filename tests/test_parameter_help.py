@@ -8,11 +8,6 @@ from typer.testing import CliRunner
 from typing_extensions import Doc
 
 
-@pytest.fixture
-def runner():
-    return CliRunner()
-
-
 @pytest.mark.parametrize(
     "doc,parameter,expected",
     [
@@ -41,12 +36,13 @@ def runner():
         ),
     ],
 )
-def test_doc_help(runner, doc, parameter, expected):
+def test_doc_help(doc, parameter, expected):
     app = typer.Typer()
 
     @app.command()
     def main(arg: Annotated[str, doc, parameter]):
         print(f"Hello {arg}")
 
+    runner = CliRunner()
     result = runner.invoke(app, ["--help"])
     assert expected in result.stdout
