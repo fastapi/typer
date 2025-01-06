@@ -15,7 +15,7 @@ from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, U
 from uuid import UUID
 
 import click
-from typing_extensions import Doc, get_args, get_origin
+from typing_extensions import Doc, get_args, get_origin  # type: ignore
 
 from ._typing import is_union
 from .completion import get_completion_inspect_parameters
