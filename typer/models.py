@@ -514,7 +514,7 @@ class ParamMeta:
         name: str,
         default: Any = inspect.Parameter.empty,
         annotation: Any = inspect.Parameter.empty,
-        other_annotations: List[Any] = None,
+        other_annotations: Optional[List[Any]] = None,
     ) -> None:
         self.name = name
         self.default = default

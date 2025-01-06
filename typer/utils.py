@@ -107,7 +107,7 @@ class DefaultFactoryAndDefaultValueError(Exception):
 
 def _split_annotation_from_typer_annotations(
     base_annotation: Type[Any],
-) -> Tuple[Type[Any], List[ParameterInfo]]:
+) -> Tuple[Type[Any], List[ParameterInfo], List[Any]]:
     if get_origin(base_annotation) is not Annotated:
         return base_annotation, [], []
     base_annotation, *other_annotations = get_args(base_annotation)

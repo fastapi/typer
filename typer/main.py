@@ -800,12 +800,29 @@ def lenient_issubclass(
     return isinstance(cls, type) and issubclass(cls, class_or_tuple)
 
 
+def _set_doc_help(param: ParamMeta, parameter_info: ParameterInfo) -> None:
+    if not param.other_annotations:
+        return
+    doc_annotations = [
+        annotation
+        for annotation in param.other_annotations
+        if isinstance(annotation, Doc)
+    ]
+    if len(doc_annotations) > 1:
+        raise MultipleDocAnnotationsError(param.name)
+    if len(doc_annotations) == 1:
+        doc_help = doc_annotations[0].documentation if doc_annotations else None
+        if not getattr(parameter_info, "help", None):
+            parameter_info.help = doc_help
+
+
 def get_click_param(
     param: ParamMeta,
 ) -> Tuple[Union[click.Argument, click.Option], Any]:
     # First, find out what will be:
     # * ParamInfo (ArgumentInfo or OptionInfo)
     # * default_value
+    # * help message
     # * required
     default_value = None
     required = False
@@ -821,18 +838,7 @@ def get_click_param(
     else:
         default_value = param.default
         parameter_info = OptionInfo()
-    if param.other_annotations:
-        doc_annotations = [
-            annotation
-            for annotation in param.other_annotations
-            if isinstance(annotation, Doc)
-        ]
-        if len(doc_annotations) > 1:
-            raise MultipleDocAnnotationsError(param.name)
-        if len(doc_annotations) == 1:
-            doc_help = doc_annotations[0].documentation if doc_annotations else None
-            if not getattr(parameter_info, "help", None):
-                parameter_info.help = doc_help
+    _set_doc_help(param, parameter_info)
     annotation: Any
     if param.annotation is not param.empty:
         annotation = param.annotation
