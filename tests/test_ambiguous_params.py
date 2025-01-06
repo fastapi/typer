@@ -8,7 +8,7 @@ from typer.utils import (
     MultipleTyperAnnotationsError,
     _split_annotation_from_typer_annotations,
 )
-from typing_extensions import Annotated
+from typing_extensions import Annotated, Doc
 
 runner = CliRunner()
 
@@ -17,10 +17,19 @@ def test_split_annotations_from_typer_annotations_simple():
     # Simple sanity check that this utility works. If this isn't working on a given
     # python version, then no other tests for Annotated will work.
     given = Annotated[str, typer.Argument()]
-    base, typer_annotations = _split_annotation_from_typer_annotations(given)
+    base, typer_annotations, other_annotations = _split_annotation_from_typer_annotations(given)
     assert base is str
     # No equality check on the param types. Checking the length is sufficient.
     assert len(typer_annotations) == 1
+    assert len(other_annotations) == 0
+
+def test_split_other_annotations_from_typer_annotations():
+    given = Annotated[str, typer.Argument(), Doc("doc help")]
+    base, typer_annotations, other_annotations = _split_annotation_from_typer_annotations(given)
+    assert base is str
+    assert len(typer_annotations) == 1
+    assert len(other_annotations) == 1
+    assert isinstance(other_annotations[0], Doc)
 
 
 def test_forbid_default_value_in_annotated_argument():

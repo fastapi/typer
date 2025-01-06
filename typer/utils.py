@@ -105,11 +105,11 @@ class DefaultFactoryAndDefaultValueError(Exception):
         )
 
 
-def _split_annotation_from_doc_and_typer_annotations(
+def _split_annotation_from_typer_annotations(
     base_annotation: Type[Any],
 ) -> Tuple[Type[Any], List[ParameterInfo]]:
     if get_origin(base_annotation) is not Annotated:
-        return base_annotation, []
+        return base_annotation, [], []
     base_annotation, *other_annotations = get_args(base_annotation)
     typer_annotations = [
         annotation
@@ -137,7 +137,7 @@ def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
     type_hints = get_type_hints(func)
     params = {}
     for param in signature.parameters.values():
-        annotation, typer_annotations, other_annotations = _split_annotation_from_doc_and_typer_annotations(
+        annotation, typer_annotations, other_annotations = _split_annotation_from_typer_annotations(
             param.annotation,
         )
         if len(typer_annotations) > 1:
@@ -174,6 +174,7 @@ def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
                 parameter_info.default = ...
 
             # Forbid `my_param: Annotated[str, Argument('some-default')]`
+            import pdb; pdb.set_trace()
             if parameter_info.default is not ...:
                 raise AnnotatedParamWithDefaultValueError(
                     param_type=type(parameter_info),
