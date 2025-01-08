@@ -8,6 +8,8 @@
 
 ### Internal
 
+* ⬆ Bump ruff from 0.8.4 to 0.8.6. PR [#1107](https://github.com/fastapi/typer/pull/1107) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1109](https://github.com/fastapi/typer/pull/1109) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * ⬆ Bump pillow from 11.0.0 to 11.1.0. PR [#1104](https://github.com/fastapi/typer/pull/1104) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1102](https://github.com/fastapi/typer/pull/1102) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * ⬆ Bump ruff from 0.8.3 to 0.8.4. PR [#1097](https://github.com/fastapi/typer/pull/1097) by [@dependabot[bot]](https://github.com/apps/dependabot).
