@@ -1,6 +1,7 @@
 # Extracted and modified from https://github.com/ewels/rich-click
 
 import inspect
+import io
 import sys
 from collections import defaultdict
 from gettext import gettext as _
@@ -92,6 +93,7 @@ OPTIONS_PANEL_TITLE = _("Options")
 COMMANDS_PANEL_TITLE = _("Commands")
 ERRORS_PANEL_TITLE = _("Error")
 ABORTED_TEXT = _("Aborted.")
+RICH_HELP = _("Try [blue]'{command_path} {help_option}'[/] for help.")
 
 MARKUP_MODE_MARKDOWN = "markdown"
 MARKUP_MODE_RICH = "rich"
@@ -149,12 +151,9 @@ def _make_rich_text(
 ) -> Union[Markdown, Text]:
     """Take a string, remove indentations, and return styled text.
 
-    By default, return the text as a Rich Text with the request style.
-    If `rich_markdown_enable` is `True`, also parse the text for Rich markup strings.
-    If `rich_markup_enable` is `True`, parse as Markdown.
-
-    Only one of `rich_markdown_enable` or `rich_markup_enable` can be True.
-    If both are True, `rich_markdown_enable` takes precedence.
+    By default, the text is not parsed for any special formatting.
+    If `markup_mode` is `"rich"`, the text is parsed for Rich markup strings.
+    If `markup_mode` is `"markdown"`, parse as Markdown.
     """
     # Remove indentations from input text
     text = inspect.cleandoc(text)
@@ -691,7 +690,9 @@ def rich_format_error(self: click.ClickException) -> None:
 
     if ctx is not None and ctx.command.get_help_option(ctx) is not None:
         console.print(
-            f"Try [blue]'{ctx.command_path} {ctx.help_option_names[0]}'[/] for help.",
+            RICH_HELP.format(
+                command_path=ctx.command_path, help_option=ctx.help_option_names[0]
+            ),
             style=STYLE_ERRORS_SUGGESTION,
         )
 
@@ -709,3 +710,22 @@ def rich_abort_error() -> None:
     """Print richly formatted abort error."""
     console = _get_rich_console(stderr=True)
     console.print(ABORTED_TEXT, style=STYLE_ABORTED)
+
+
+def print_with_rich(text: str) -> None:
+    """Print richly formatted message."""
+    console = _get_rich_console()
+    console.print(text)
+
+
+def rich_to_html(input_text: str) -> str:
+    """Print the HTML version of a rich-formatted input string.
+
+    This function does not provide a full HTML page, but can be used to insert
+    HTML-formatted text spans into a markdown file.
+    """
+    console = Console(record=True, highlight=False, file=io.StringIO())
+
+    console.print(input_text, overflow="ignore", crop=False)
+
+    return console.export_html(inline_styles=True, code_format="{code}").strip()

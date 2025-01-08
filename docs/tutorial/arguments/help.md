@@ -4,9 +4,7 @@ In the *First Steps* section you saw how to add help for a CLI app/command by ad
 
 Here's how that last example looked like:
 
-```Python
-{!../docs_src/first_steps/tutorial006.py!}
-```
+{* docs_src/first_steps/tutorial006.py *}
 
 Now that you also know how to use `typer.Argument()`, let's use it to add documentation specific for a *CLI argument*.
 
@@ -14,27 +12,7 @@ Now that you also know how to use `typer.Argument()`, let's use it to add docume
 
 You can use the `help` parameter to add a help text for a *CLI argument*:
 
-//// tab | Python 3.7+
-
-```Python hl_lines="5"
-{!> ../docs_src/arguments/help/tutorial001_an.py!}
-```
-
-////
-
-//// tab | Python 3.7+ non-Annotated
-
-/// tip
-
-Prefer to use the `Annotated` version if possible.
-
-///
-
-```Python hl_lines="4"
-{!> ../docs_src/arguments/help/tutorial001.py!}
-```
-
-////
+{* docs_src/arguments/help/tutorial001_an.py hl[5] *}
 
 And it will be used in the automatic `--help` option:
 
@@ -59,27 +37,7 @@ Options:
 
 And of course, you can also combine that `help` with the <abbr title="a multi-line string as the first expression inside a function (not assigned to any variable) used for documentation">docstring</abbr>:
 
-//// tab | Python 3.7+
-
-```Python hl_lines="5-8"
-{!> ../docs_src/arguments/help/tutorial002_an.py!}
-```
-
-////
-
-//// tab | Python 3.7+ non-Annotated
-
-/// tip
-
-Prefer to use the `Annotated` version if possible.
-
-///
-
-```Python hl_lines="4-7"
-{!> ../docs_src/arguments/help/tutorial002.py!}
-```
-
-////
+{* docs_src/arguments/help/tutorial002_an.py hl[5:8] *}
 
 And the `--help` option will combine all the information:
 
@@ -106,27 +64,7 @@ Options:
 
 If you have a *CLI argument* with a default value, like `"World"`:
 
-//// tab | Python 3.7+
-
-```Python hl_lines="5"
-{!> ../docs_src/arguments/help/tutorial003_an.py!}
-```
-
-////
-
-//// tab | Python 3.7+ non-Annotated
-
-/// tip
-
-Prefer to use the `Annotated` version if possible.
-
-///
-
-```Python hl_lines="4"
-{!> ../docs_src/arguments/help/tutorial003.py!}
-```
-
-////
+{* docs_src/arguments/help/tutorial003_an.py hl[5] *}
 
 It will show that default value in the help text:
 
@@ -151,27 +89,7 @@ Options:
 
 But you can disable that if you want to, with `show_default=False`:
 
-//// tab | Python 3.7+
-
-```Python hl_lines="7"
-{!> ../docs_src/arguments/help/tutorial004_an.py!}
-```
-
-////
-
-//// tab | Python 3.7+ non-Annotated
-
-/// tip
-
-Prefer to use the `Annotated` version if possible.
-
-///
-
-```Python hl_lines="4"
-{!> ../docs_src/arguments/help/tutorial004.py!}
-```
-
-////
+{* docs_src/arguments/help/tutorial004_an.py hl[7] *}
 
 And then it won't show the default value:
 
@@ -206,27 +124,7 @@ In **Typer** these default values are shown by default. 👀
 
 You can use the same `show_default` to pass a custom string (instead of a `bool`) to customize the default value to be shown in the help text:
 
-//// tab | Python 3.7+
-
-```Python hl_lines="9"
-{!> ../docs_src/arguments/help/tutorial005_an.py!}
-```
-
-////
-
-//// tab | Python 3.7+ non-Annotated
-
-/// tip
-
-Prefer to use the `Annotated` version if possible.
-
-///
-
-```Python hl_lines="6"
-{!> ../docs_src/arguments/help/tutorial005.py!}
-```
-
-////
+{* docs_src/arguments/help/tutorial005_an.py hl[9] *}
 
 And it will be used in the help text:
 
@@ -271,27 +169,7 @@ But you can customize it with the `metavar` parameter for `typer.Argument()`.
 
 For example, let's say you don't want to have the default of `NAME`, you want to have `username`, in lowercase, and you really want ✨ emojis ✨ everywhere:
 
-//// tab | Python 3.7+
-
-```Python hl_lines="5"
-{!> ../docs_src/arguments/help/tutorial006_an.py!}
-```
-
-////
-
-//// tab | Python 3.7+ non-Annotated
-
-/// tip
-
-Prefer to use the `Annotated` version if possible.
-
-///
-
-```Python hl_lines="4"
-{!> ../docs_src/arguments/help/tutorial006.py!}
-```
-
-////
+{* docs_src/arguments/help/tutorial006_an.py hl[5] *}
 
 Now the generated help text will have `✨username✨` instead of `NAME`:
 
@@ -317,27 +195,7 @@ You might want to show the help information for *CLI arguments* in different pan
 
 If you have installed Rich as described in the docs for [Printing and Colors](../printing.md){.internal-link target=_blank}, you can set the `rich_help_panel` parameter to the name of the panel where you want this *CLI argument* to be shown:
 
-//// tab | Python 3.7+
-
-```Python hl_lines="8  12"
-{!> ../docs_src/arguments/help/tutorial007_an.py!}
-```
-
-////
-
-//// tab | Python 3.7+ non-Annotated
-
-/// tip
-
-Prefer to use the `Annotated` version if possible.
-
-///
-
-```Python hl_lines="7  10"
-{!> ../docs_src/arguments/help/tutorial007.py!}
-```
-
-////
+{* docs_src/arguments/help/tutorial007_an.py hl[8,12] *}
 
 Then, if you check the `--help` option, you will see a default panel named "`Arguments`" for the *CLI arguments* that don't have a custom `rich_help_panel`.
 
@@ -380,27 +238,7 @@ If you want, you can make a *CLI argument* **not** show up in the `Arguments` se
 
 You will probably not want to do this normally, but it's possible:
 
-//// tab | Python 3.7+
-
-```Python hl_lines="5"
-{!> ../docs_src/arguments/help/tutorial008_an.py!}
-```
-
-////
-
-//// tab | Python 3.7+ non-Annotated
-
-/// tip
-
-Prefer to use the `Annotated` version if possible.
-
-///
-
-```Python hl_lines="4"
-{!> ../docs_src/arguments/help/tutorial008.py!}
-```
-
-////
+{* docs_src/arguments/help/tutorial008_an.py hl[5] *}
 
 Check it:
 

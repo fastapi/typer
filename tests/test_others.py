@@ -15,6 +15,8 @@ from typer.main import solve_typer_info_defaults, solve_typer_info_help
 from typer.models import ParameterInfo, TyperInfo
 from typer.testing import CliRunner
 
+from .utils import requires_completion_permission
+
 runner = CliRunner()
 
 
@@ -74,6 +76,7 @@ def test_valid_parser_permutations():
     ParameterInfo(click_type=CustomClickParser())
 
 
+@requires_completion_permission
 def test_install_invalid_shell():
     app = typer.Typer()
 

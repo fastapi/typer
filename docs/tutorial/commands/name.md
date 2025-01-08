@@ -17,9 +17,7 @@ And what if you wanted the command to still be named `create`?
 
 For this, you can set the name of the command in the first parameter for the `@app.command()` decorator:
 
-```Python hl_lines="6  11"
-{!../docs_src/commands/name/tutorial001.py!}
-```
+{* docs_src/commands/name/tutorial001.py hl[6,11] *}
 
 Now, even though the functions are named `cli_create_user()` and `cli_delete_user()`, the commands will still be named `create` and `delete`:
 
