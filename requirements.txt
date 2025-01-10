@@ -3,4 +3,4 @@
 -r requirements-tests.txt
 -r requirements-docs.txt
 
-pre-commit >=2.17.0,<4.0.0
+pre-commit >=2.17.0,<5.0.0
