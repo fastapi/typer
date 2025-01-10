@@ -2,7 +2,7 @@
 
 You can declare a *CLI parameter* to be a standard Python `dict`:
 
-{* docs_src/parameter_types/json/tutorial001.py hl[5] *}
+{* docs_src/parameter_types/dict/tutorial001.py hl[5] *}
 
 Check it:
 
@@ -10,10 +10,10 @@ Check it:
 
 ```console
 // Run your program
-$ python main.py --user-info '{"name": "Camila", "age": 15, "height_meters": 1.7, "female": true}'
+$ python main.py --user-info '{"name": "Camila", "age": 15, "height": 1.7, "female": true}'
 
 Name: Camila
-User attributes: ['age', 'female', 'height_meters', 'name']
+User attributes: ['age', 'female', 'height', 'name']
 
 ```
 

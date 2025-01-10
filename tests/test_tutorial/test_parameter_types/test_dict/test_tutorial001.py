@@ -5,7 +5,7 @@ import sys
 import typer
 from typer.testing import CliRunner
 
-from docs_src.parameter_types.json import tutorial001 as mod
+from docs_src.parameter_types.dict import tutorial001 as mod
 
 runner = CliRunner()
 
@@ -21,7 +21,7 @@ def test_help():
 
 
 def test_params():
-    data = {"name": "Camila", "age": 15, "height_meters": 1.7, "female": True}
+    data = {"name": "Camila", "age": 15, "height": 1.7, "female": True}
     result = runner.invoke(
         app,
         [
@@ -30,11 +30,8 @@ def test_params():
         ],
     )
     assert result.exit_code == 0
-    assert "Name: Camila" in result.output.strip()
-    assert (
-        f"User attributes: {['age', 'female', 'height_meters', 'name']}"
-        in result.output.strip()
-    )
+    assert "Name: Camila" in result.output
+    assert "User attributes: ['age', 'female', 'height', 'name']" in result.output
 
 
 def test_invalid():
