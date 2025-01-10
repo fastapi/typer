@@ -30,8 +30,11 @@ def test_params():
         ],
     )
     assert result.exit_code == 0
-    assert f"Name: Camila" in result.output.strip()
-    assert f"User attributes: {['age', 'female', 'height_meters', 'name']}" in result.output.strip()
+    assert "Name: Camila" in result.output.strip()
+    assert (
+        f"User attributes: {['age', 'female', 'height_meters', 'name']}"
+        in result.output.strip()
+    )
 
 
 def test_invalid():
