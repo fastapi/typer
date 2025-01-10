@@ -2,7 +2,6 @@
 
 import inspect
 import io
-import sys
 from collections import defaultdict
 from gettext import gettext as _
 from os import getenv
