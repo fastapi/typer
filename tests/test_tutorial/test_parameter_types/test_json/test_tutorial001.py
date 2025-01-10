@@ -30,7 +30,8 @@ def test_params():
         ],
     )
     assert result.exit_code == 0
-    assert result.output.strip() == (f"User Info: {json.dumps(data)}")
+    assert f"Name: Camila" in result.output.strip()
+    assert f"User attributes: {['age', 'female', 'height_meters', 'name']}" in result.output.strip()
 
 
 def test_invalid():

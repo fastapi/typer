@@ -1,26 +1,8 @@
-# JSON
+# Dict
 
-To use JSON inputs use `dict` as Argument type
+You can declare a *CLI parameter* to be a standard Python `dict`:
 
-it will do something like
-
-```python
-import json
-
-data = json.loads(user_input)
-```
-
-## Usage
-
-You will get all the correct editor support, attributes, methods, etc for the dict object:
-
-//// tab | Python 3.7+
-
-```Python hl_lines="5"
-{!> ../docs_src/parameter_types/json/tutorial001.py!}
-```
-
-////
+{* docs_src/parameter_types/json/tutorial001.py hl[5] *}
 
 Check it:
 
@@ -30,8 +12,17 @@ Check it:
 // Run your program
 $ python main.py --user-info '{"name": "Camila", "age": 15, "height_meters": 1.7, "female": true}'
 
-User Info: {"name": "Camila", "age": 15, "height_meters": 1.7, "female": true}
+Name: Camila
+User attributes: ['age', 'female', 'height_meters', 'name']
 
 ```
 
 </div>
+
+This can be particularly useful when you want to include JSON input:
+
+```python
+import json
+
+data = json.loads(user_input)
+```
