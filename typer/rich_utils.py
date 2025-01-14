@@ -287,7 +287,9 @@ def _get_parameter_help(
     if isinstance(param, (TyperOption, TyperArgument)):
         default_value = param._extract_default_help_str(ctx=ctx)
         show_default_is_str = isinstance(param.show_default, str)
-        if show_default_is_str or (default_value is not None and (param.show_default or ctx.show_default)):
+        if show_default_is_str or (
+            default_value is not None and (param.show_default or ctx.show_default)
+        ):
             default_str = param._get_default_string(
                 ctx=ctx,
                 show_default_is_str=show_default_is_str,
