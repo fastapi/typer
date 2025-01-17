@@ -22,7 +22,7 @@ jobs:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
         python-version: [ "3.12" ]
         include:
-          - os: ubuntu-latest
+          - os: ubuntu-22.04
             python-version: "3.7"
           - os: macos-latest
             python-version: "3.8"
@@ -45,7 +45,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Setup uv
-        uses: astral-sh/setup-uv@v4
+        uses: astral-sh/setup-uv@v5
         with:
           version: "0.4.15"
           enable-cache: true
@@ -83,7 +83,7 @@ jobs:
         with:
           python-version: '3.8'
       - name: Setup uv
-        uses: astral-sh/setup-uv@v4
+        uses: astral-sh/setup-uv@v5
         with:
           version: "0.4.15"
           enable-cache: true
