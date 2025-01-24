@@ -1059,7 +1059,8 @@ def get_param_completion(
         if ctx_name:
             use_params[ctx_name] = ctx
         if args_name:
-            use_params[args_name] = args
+            obj = ctx.obj or {}
+            use_params[args_name] = obj.get("args", []) if isinstance(obj, dict) else []
         if incomplete_name:
             use_params[incomplete_name] = incomplete
         return callback(**use_params)
