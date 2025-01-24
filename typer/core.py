@@ -84,7 +84,7 @@ def _typer_param_setup_autocompletion_compat(
 
             out = []
 
-            for c in autocompletion(ctx, param, incomplete):
+            for c in autocompletion(ctx, [], param, incomplete):
                 if isinstance(c, tuple):
                     use_completion = CompletionItem(c[0], help=c[1])
                 elif isinstance(c, CompletionItem):

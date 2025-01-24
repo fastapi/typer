@@ -1062,14 +1062,16 @@ def get_param_completion(
         )
 
     def wrapper(
-        ctx: click.Context, param: click.core.Parameter, incomplete: Optional[str]
+        ctx: click.Context,
+        args: List[str],
+        param: click.core.Parameter,
+        incomplete: Optional[str],
     ) -> Any:
         use_params: Dict[str, Any] = {}
         if ctx_name:
             use_params[ctx_name] = ctx
         if args_name:
-            obj = ctx.obj or {}
-            use_params[args_name] = obj.get("args", []) if isinstance(obj, dict) else []
+            use_params[args_name] = args
         if param_name:
             use_params[param_name] = param
         if incomplete_name:

@@ -372,7 +372,7 @@ But it's probably useful only in very advanced use cases.
 
 ## Getting the Context and the raw *CLI parameters*
 
-Of course, you can declare everything if you need it, the context, the raw *CLI parameters*, and the incomplete `str`:
+Of course, you can declare everything if you need it, the context, the raw *CLI parameters*, the Parameter and the incomplete `str`:
 
 {* docs_src/options_autocompletion/tutorial009_an.py hl[16] *}
 

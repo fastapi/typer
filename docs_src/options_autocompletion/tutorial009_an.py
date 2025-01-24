@@ -14,7 +14,10 @@ valid_completion_items = [
 err_console = Console(stderr=True)
 
 
-def complete_name(ctx: typer.Context, param: Parameter, incomplete: str):
+def complete_name(
+    ctx: typer.Context, args: List[str], param: Parameter, incomplete: str
+):
+    err_console.print(f"{args}")
     names = ctx.params.get(param.name) or []
     for name, help_text in valid_completion_items:
         if name.startswith(incomplete) and name not in names:
