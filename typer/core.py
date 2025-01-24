@@ -60,7 +60,7 @@ def _typer_param_setup_autocompletion_compat(
     *,
     autocompletion: Optional[
         Callable[
-            [click.Context, click.core.Parameter, str],
+            [click.Context, List[str], click.core.Parameter, str],
             List[Union[Tuple[str, str], str, "click.shell_completion.CompletionItem"]],
         ]
     ] = None,
