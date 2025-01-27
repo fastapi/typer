@@ -8,6 +8,7 @@
 
 ### Internal
 
+* ⬆ Bump ruff from 0.8.6 to 0.9.1. PR [#1118](https://github.com/fastapi/typer/pull/1118) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pypa/gh-action-pypi-publish from 1.12.3 to 1.12.4. PR [#1132](https://github.com/fastapi/typer/pull/1132) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump mkdocs-material from 9.5.49 to 9.5.50. PR [#1129](https://github.com/fastapi/typer/pull/1129) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * 💚 Fix test matrix for Python 3.7. PR [#1116](https://github.com/fastapi/typer/pull/1116) by [@svlandeg](https://github.com/svlandeg).
