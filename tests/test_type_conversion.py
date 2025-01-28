@@ -1,11 +1,12 @@
 from enum import Enum
 from pathlib import Path
-from typing import Any, List, Optional, Tuple
+from typing import Any, List, Optional, Tuple, Union
 
 import click
 import pytest
 import typer
 from typer.testing import CliRunner
+from typing_extensions import Annotated
 
 from .utils import needs_py310
 
@@ -169,3 +170,101 @@ def test_custom_click_type():
 
     result = runner.invoke(app, ["0x56"])
     assert result.exit_code == 0
+
+
+class TestOptionAcceptsOptionalValue:
+    def test_enum(self):
+        app = typer.Typer()
+
+        class OptEnum(str, Enum):
+            val1 = "val1"
+            val2 = "val2"
+
+        @app.command()
+        def cmd(opt: Annotated[Union[bool, OptEnum], typer.Option()] = OptEnum.val1):
+            if opt is False:
+                print("False")
+
+            else:
+                print(opt.value)
+
+        result = runner.invoke(app)
+        assert result.exit_code == 0, result.output
+        assert "False" in result.output
+
+        result = runner.invoke(app, ["--opt"])
+        assert result.exit_code == 0, result.output
+        assert "val1" in result.output
+
+        result = runner.invoke(app, ["--opt", "val1"])
+        assert result.exit_code == 0, result.output
+        assert "val1" in result.output
+
+        result = runner.invoke(app, ["--opt", "val2"])
+        assert result.exit_code == 0, result.output
+        assert "val2" in result.output
+
+        result = runner.invoke(app, ["--opt", "val3"])
+        assert result.exit_code != 0
+        assert "Invalid value for '--opt': 'val3' is not one of" in result.output
+
+        result = runner.invoke(app, ["--opt", "0"])
+        assert result.exit_code == 0, result.output
+        assert "False" in result.output
+
+        result = runner.invoke(app, ["--opt", "1"])
+        assert result.exit_code == 0, result.output
+        assert "val1" in result.output
+
+    def test_int(self):
+        app = typer.Typer()
+
+        @app.command()
+        def cmd(opt: Annotated[Union[bool, int], typer.Option()] = 1):
+            print(opt)
+
+        result = runner.invoke(app)
+        assert result.exit_code == 0, result.output
+        assert "False" in result.output
+
+        result = runner.invoke(app, ["--opt"])
+        assert result.exit_code == 0, result.output
+        assert "1" in result.output
+
+        result = runner.invoke(app, ["--opt", "2"])
+        assert result.exit_code == 0, result.output
+        assert "2" in result.output
+
+        result = runner.invoke(app, ["--opt", "test"])
+        assert result.exit_code != 0
+        assert (
+            "Invalid value for '--opt': 'test' is not a valid integer" in result.output
+        )
+
+        result = runner.invoke(app, ["--opt", "true"])
+        assert result.exit_code == 0, result.output
+        assert "1" in result.output
+
+        result = runner.invoke(app, ["--opt", "off"])
+        assert result.exit_code == 0, result.output
+        assert "False" in result.output
+
+    def test_path(self):
+        app = typer.Typer()
+
+        @app.command()
+        def cmd(opt: Annotated[Union[bool, Path], typer.Option()] = Path(".")):
+            if isinstance(opt, Path):
+                print((opt / "file.py").as_posix())
+
+        result = runner.invoke(app, ["--opt"])
+        assert result.exit_code == 0, result.output
+        assert "file.py" in result.output
+
+        result = runner.invoke(app, ["--opt", "/test/path/file.py"])
+        assert result.exit_code == 0, result.output
+        assert "/test/path/file.py" in result.output
+
+        result = runner.invoke(app, ["--opt", "False"])
+        assert result.exit_code == 0, result.output
+        assert "file.py" not in result.output
