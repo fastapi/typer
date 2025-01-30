@@ -165,7 +165,7 @@ That simplifies our code a bit and works the same.
 
 /// tip
 
-If all the `yield` part seems complex for you, don't worry, you can just use the version with the `list` above.
+If the `yield` part seems complex for you, don't worry, you can just use the version with the `list` above.
 
 In the end, that's just to save us a couple of lines of code.
 
