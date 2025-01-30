@@ -10,7 +10,7 @@ But you can also provide auto completion for the **values** of *CLI options* and
 
 Before checking how to provide custom completions, let's check again how it works.
 
-After installing completion for your own Python package (or using the `typer` command), when you use your CLI program and start adding a *CLI option* with `--` an then hit <kbd>TAB</kbd>, your shell will show you the available *CLI options* (the same for *CLI arguments*, etc).
+After installing completion for your own Python package (or using the `typer` command), when you use your CLI program and start adding a *CLI option* with `--` and then hit <kbd>TAB</kbd>, your shell will show you the available *CLI options* (the same for *CLI arguments*, etc).
 
 To check it quickly without creating a new Python package, use the `typer` command.
 
