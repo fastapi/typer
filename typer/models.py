@@ -531,3 +531,14 @@ class DeveloperExceptionConfig:
         self.pretty_exceptions_enable = pretty_exceptions_enable
         self.pretty_exceptions_show_locals = pretty_exceptions_show_locals
         self.pretty_exceptions_short = pretty_exceptions_short
+
+
+class TyperPath(click.Path):
+    # Overwrite Click's behaviour to be compatible with Typer's autocompletion system
+    def shell_complete(
+        self, ctx: Context, param: click.Parameter, incomplete: str
+    ) -> list[click.shell_completion.CompletionItem]:
+        """Return an empty list so that the autocompletion functionality
+        will work properly from the commandline.
+        """
+        return []
