@@ -1,23 +1,12 @@
+# Multiple CLI Options
+
 You can declare a *CLI option* that can be used multiple times, and then get all the values.
 
 For example, let's say you want to accept several users in a single execution.
 
 For this, use the standard Python `typing.List` to declare it as a `list` of `str`:
 
-=== "Python 3.6+"
-
-    ```Python hl_lines="1  7"
-    {!> ../docs_src/multiple_values/multiple_options/tutorial001_an.py!}
-    ```
-
-=== "Python 3.6+ non-Annotated"
-
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
-
-    ```Python hl_lines="1  6"
-    {!> ../docs_src/multiple_values/multiple_options/tutorial001.py!}
-    ```
+{* docs_src/multiple_values/multiple_options/tutorial001_an.py hl[1,7] *}
 
 You will receive the values as you declared them, as a `list` of `str`.
 
@@ -26,9 +15,10 @@ Check it:
 <div class="termy">
 
 ```console
+// The default value is 'None'
 $ python main.py
 
-No provided users
+No provided users (raw input = None)
 Aborted!
 
 // Now pass a user
@@ -50,20 +40,7 @@ Processing user: Morty
 
 The same way, you can use other types and they will be converted by **Typer** to their declared type:
 
-=== "Python 3.6+"
-
-    ```Python hl_lines="7"
-    {!> ../docs_src/multiple_values/multiple_options/tutorial002_an.py!}
-    ```
-
-=== "Python 3.6+ non-Annotated"
-
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
-
-    ```Python hl_lines="6"
-    {!> ../docs_src/multiple_values/multiple_options/tutorial002.py!}
-    ```
+{* docs_src/multiple_values/multiple_options/tutorial002_an.py hl[7] *}
 
 Check it:
 

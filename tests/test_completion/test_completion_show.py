@@ -1,37 +1,42 @@
 import os
 import subprocess
 import sys
+from unittest import mock
+
+import shellingham
+import typer
+from typer.testing import CliRunner
 
 import pytest
 
 from docs_src.asynchronous import tutorial001 as async_mod
 from docs_src.commands.index import tutorial001 as sync_mod
 
+runner = CliRunner()
 mod_params = ("mod", (sync_mod, async_mod))
+
 
 
 @pytest.mark.parametrize(*mod_params)
 def test_completion_show_no_shell(mod):
+    app = typer.Typer()
+    app.command()(mod.main)
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--show-completion"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
         env={
             **os.environ,
-            "_TYPER_COMPLETE_TESTING": "True",
             "_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION": "True",
         },
     )
-    # TODO: when deprecating Click 7, remove second option
-    assert (
-        "Option '--show-completion' requires an argument" in result.stderr
-        or "--show-completion option requires an argument" in result.stderr
-    )
+    assert "Option '--show-completion' requires an argument" in result.stderr
 
 
 @pytest.mark.parametrize(*mod_params)
 def test_completion_show_bash(mod):
+    app = typer.Typer()
+    app.command()(mod.main)
     result = subprocess.run(
         [
             sys.executable,
@@ -42,12 +47,10 @@ def test_completion_show_bash(mod):
             "--show-completion",
             "bash",
         ],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
         env={
             **os.environ,
-            "_TYPER_COMPLETE_TESTING": "True",
             "_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION": "True",
         },
     )
@@ -59,6 +62,8 @@ def test_completion_show_bash(mod):
 
 @pytest.mark.parametrize(*mod_params)
 def test_completion_source_zsh(mod):
+    app = typer.Typer()
+    app.command()(mod.main)
     result = subprocess.run(
         [
             sys.executable,
@@ -69,12 +74,10 @@ def test_completion_source_zsh(mod):
             "--show-completion",
             "zsh",
         ],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
         env={
             **os.environ,
-            "_TYPER_COMPLETE_TESTING": "True",
             "_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION": "True",
         },
     )
@@ -83,6 +86,8 @@ def test_completion_source_zsh(mod):
 
 @pytest.mark.parametrize(*mod_params)
 def test_completion_source_fish(mod):
+    app = typer.Typer()
+    app.command()(mod.main)
     result = subprocess.run(
         [
             sys.executable,
@@ -93,12 +98,10 @@ def test_completion_source_fish(mod):
             "--show-completion",
             "fish",
         ],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
         env={
             **os.environ,
-            "_TYPER_COMPLETE_TESTING": "True",
             "_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION": "True",
         },
     )
@@ -107,6 +110,8 @@ def test_completion_source_fish(mod):
 
 @pytest.mark.parametrize(*mod_params)
 def test_completion_source_powershell(mod):
+    app = typer.Typer()
+    app.command()(mod.main)
     result = subprocess.run(
         [
             sys.executable,
@@ -117,12 +122,10 @@ def test_completion_source_powershell(mod):
             "--show-completion",
             "powershell",
         ],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
         env={
             **os.environ,
-            "_TYPER_COMPLETE_TESTING": "True",
             "_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION": "True",
         },
     )
@@ -134,6 +137,8 @@ def test_completion_source_powershell(mod):
 
 @pytest.mark.parametrize(*mod_params)
 def test_completion_source_pwsh(mod):
+    app = typer.Typer()
+    app.command()(mod.main)
     result = subprocess.run(
         [
             sys.executable,
@@ -144,12 +149,10 @@ def test_completion_source_pwsh(mod):
             "--show-completion",
             "pwsh",
         ],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
         env={
             **os.environ,
-            "_TYPER_COMPLETE_TESTING": "True",
             "_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION": "True",
         },
     )
@@ -157,3 +160,14 @@ def test_completion_source_pwsh(mod):
         "Register-ArgumentCompleter -Native -CommandName tutorial001.py -ScriptBlock $scriptblock"
         in result.stdout
     )
+
+
+@pytest.mark.parametrize(*mod_params)
+def test_completion_show_invalid_shell(mod):
+    app = typer.Typer()
+    app.command()(mod.main)
+    with mock.patch.object(
+        shellingham, "detect_shell", return_value=("xshell", "/usr/bin/xshell")
+    ):
+        result = runner.invoke(app, ["--show-completion"])
+    assert "Shell xshell not supported" in result.stdout

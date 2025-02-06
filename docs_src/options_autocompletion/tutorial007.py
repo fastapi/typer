@@ -23,7 +23,7 @@ app = typer.Typer()
 def main(
     name: List[str] = typer.Option(
         ["World"], help="The name to say hi to.", autocompletion=complete_name
-    )
+    ),
 ):
     for n in name:
         print(f"Hello {n}")

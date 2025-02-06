@@ -15,13 +15,9 @@ from typing import (
 )
 
 import click
-
-from ._compat_utils import _get_click_major
+import click.shell_completion
 
 if TYPE_CHECKING:  # pragma: no cover
-    if _get_click_major() > 7:
-        import click.shell_completion
-
     from .core import TyperCommand, TyperGroup
     from .main import Typer
 
@@ -193,6 +189,8 @@ class ParameterInfo:
         expose_value: bool = True,
         is_eager: bool = False,
         envvar: Optional[Union[str, List[str]]] = None,
+        # Note that shell_complete is not fully supported and will be removed in future versions
+        # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Optional[
             Callable[
                 [click.Context, click.Parameter, str],
@@ -301,6 +299,8 @@ class OptionInfo(ParameterInfo):
         expose_value: bool = True,
         is_eager: bool = False,
         envvar: Optional[Union[str, List[str]]] = None,
+        # Note that shell_complete is not fully supported and will be removed in future versions
+        # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Optional[
             Callable[
                 [click.Context, click.Parameter, str],
@@ -313,11 +313,12 @@ class OptionInfo(ParameterInfo):
         parser: Optional[Callable[[str], Any]] = None,
         click_type: Optional[click.ParamType] = None,
         # Option
-        show_default: bool = True,
+        show_default: Union[bool, str] = True,
         prompt: Union[bool, str] = False,
         confirmation_prompt: bool = False,
         prompt_required: bool = True,
         hide_input: bool = False,
+        # TODO: remove is_flag and flag_value in a future release
         is_flag: Optional[bool] = None,
         flag_value: Optional[Any] = None,
         count: bool = False,
@@ -398,12 +399,19 @@ class OptionInfo(ParameterInfo):
             # Rich settings
             rich_help_panel=rich_help_panel,
         )
+        if is_flag is not None or flag_value is not None:
+            import warnings
+
+            warnings.warn(
+                "The 'is_flag' and 'flag_value' parameters are not supported by Typer "
+                "and will be removed entirely in a future release.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
         self.prompt = prompt
         self.confirmation_prompt = confirmation_prompt
         self.prompt_required = prompt_required
         self.hide_input = hide_input
-        self.is_flag = is_flag
-        self.flag_value = flag_value
         self.count = count
         self.allow_from_autoenv = allow_from_autoenv
 
@@ -420,6 +428,8 @@ class ArgumentInfo(ParameterInfo):
         expose_value: bool = True,
         is_eager: bool = False,
         envvar: Optional[Union[str, List[str]]] = None,
+        # Note that shell_complete is not fully supported and will be removed in future versions
+        # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Optional[
             Callable[
                 [click.Context, click.Parameter, str],

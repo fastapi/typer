@@ -1,3 +1,5 @@
+# Nested SubCommands
+
 We'll now see how these same ideas can be extended for deeply nested commands.
 
 Let's imagine that the same *CLI program* from the previous examples now needs to handle `lands`.
@@ -10,9 +12,7 @@ And each of those could have their own commands, like `create` and `delete`.
 
 Let's start with a file `reigns.py`:
 
-```Python
-{!../docs_src/subcommands/tutorial003/reigns.py!}
-```
+{* docs_src/subcommands/tutorial003/reigns.py *}
 
 This is already a simple *CLI program* to manage reigns:
 
@@ -49,9 +49,7 @@ Destroying reign: Mordor
 
 And now the equivalent for managing towns in `towns.py`:
 
-```Python
-{!../docs_src/subcommands/tutorial003/towns.py!}
-```
+{* docs_src/subcommands/tutorial003/towns.py *}
 
 With it, you can manage towns:
 
@@ -88,9 +86,7 @@ Burning town: Vizima
 
 Now let's put the `reigns` and `towns` together in the same *CLI program* in `lands.py`:
 
-```Python
-{!../docs_src/subcommands/tutorial003/lands.py!}
-```
+{* docs_src/subcommands/tutorial003/lands.py *}
 
 And now we have a single *CLI program* with a command (or command group) `reigns` that has its own commands. And another command `towns` with its own subcommands.
 
@@ -191,9 +187,7 @@ This already is a quite deeply nested "tree" of commands/command groups.
 
 But to achieve that, we just have to add the `lands` **Typer** app to the same `main.py` file we already had:
 
-```Python hl_lines="4  10"
-{!../docs_src/subcommands/tutorial003/main.py!}
-```
+{* docs_src/subcommands/tutorial003/main.py hl[4,10] *}
 
 And now we have everything in a single *CLI program*:
 
@@ -244,44 +238,35 @@ Here are all the files if you want to review/copy them:
 
 `reigns.py`:
 
-```Python
-{!../docs_src/subcommands/tutorial003/reigns.py!}
-```
+{* docs_src/subcommands/tutorial003/reigns.py *}
 
 `towns.py`:
 
-```Python
-{!../docs_src/subcommands/tutorial003/towns.py!}
-```
+{* docs_src/subcommands/tutorial003/towns.py *}
 
 `lands.py`:
 
-```Python
-{!../docs_src/subcommands/tutorial003/lands.py!}
-```
+{* docs_src/subcommands/tutorial003/lands.py *}
 
 `users.py`:
 
-```Python
-{!../docs_src/subcommands/tutorial003/users.py!}
-```
+{* docs_src/subcommands/tutorial003/users.py *}
 
 `items.py`:
 
-```Python
-{!../docs_src/subcommands/tutorial003/items.py!}
-```
+{* docs_src/subcommands/tutorial003/items.py *}
 
 `main.py`:
 
-```Python
-{!../docs_src/subcommands/tutorial003/main.py!}
-```
+{* docs_src/subcommands/tutorial003/main.py *}
 
-!!! tip
-    All these files have an `if __name__ == "__main__"` block just to demonstrate how each of them can also be an independent *CLI app*.
+/// tip
 
-    But for your final application, only `main.py` would need it.
+All these files have an `if __name__ == "__main__"` block just to demonstrate how each of them can also be an independent *CLI app*.
+
+But for your final application, only `main.py` would need it.
+
+///
 
 ## Recap
 
@@ -289,7 +274,10 @@ That's it, you can just add **Typer** applications one inside another as much as
 
 You can probably achieve a simpler *CLI program* design that's easier to use than the example here. But if your requirements are complex, **Typer** helps you build your *CLI app* easily.
 
-!!! tip
-    Auto completion helps a lot, specially with complex programs.
+/// tip
 
-    Check the docs about adding auto completion to your *CLI apps*.
+Auto completion helps a lot, specially with complex programs.
+
+Check the docs about adding auto completion to your *CLI apps*.
+
+///
