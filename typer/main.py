@@ -184,7 +184,6 @@ class Typer:
 
     def callback(
         self,
-        name: Optional[str] = Default(None),
         *,
         cls: Optional[Type[TyperGroup]] = Default(None),
         invoke_without_command: bool = Default(False),
@@ -206,7 +205,6 @@ class Typer:
     ) -> Callable[[CommandFunctionType], CommandFunctionType]:
         def decorator(f: CommandFunctionType) -> CommandFunctionType:
             self.registered_callback = TyperInfo(
-                name=name,
                 cls=cls,
                 invoke_without_command=invoke_without_command,
                 no_args_is_help=no_args_is_help,
@@ -389,21 +387,6 @@ def get_command(typer_instance: Typer) -> click.Command:
     )  # pragma: no cover
 
 
-def get_group_name(typer_info: TyperInfo) -> Optional[str]:
-    if typer_info.callback:
-        # Priority 1: Callback passed in app.add_typer()
-        return get_command_name(typer_info.callback.__name__)
-    if typer_info.typer_instance:
-        registered_callback = typer_info.typer_instance.registered_callback
-        if registered_callback:
-            if registered_callback.callback:
-                # Priority 2: Callback passed in @subapp.callback()
-                return get_command_name(registered_callback.callback.__name__)
-        if typer_info.typer_instance.info.callback:
-            return get_command_name(typer_info.typer_instance.info.callback.__name__)
-    return None
-
-
 def solve_typer_info_help(typer_info: TyperInfo) -> str:
     # Priority 1: Explicit value was set in app.add_typer()
     if not isinstance(typer_info.help, DefaultPlaceholder):
@@ -480,8 +463,6 @@ def solve_typer_info_defaults(typer_info: TyperInfo) -> TyperInfo:
             pass
         # Value not set, use the default
         values[name] = value.value
-    if values["name"] is None:
-        values["name"] = get_group_name(typer_info)
     values["help"] = solve_typer_info_help(typer_info)
     return TyperInfo(**values)
 
@@ -492,9 +473,9 @@ def get_group_from_info(
     pretty_exceptions_short: bool,
     rich_markup_mode: MarkupMode,
 ) -> TyperGroup:
-    assert (
-        group_info.typer_instance
-    ), "A Typer instance is needed to generate a Click Group"
+    assert group_info.typer_instance, (
+        "A Typer instance is needed to generate a Click Group"
+    )
     commands: Dict[str, click.Command] = {}
     for command_info in group_info.typer_instance.registered_commands:
         command = get_command_from_info(
@@ -512,6 +493,16 @@ def get_group_from_info(
         )
         if sub_group.name:
             commands[sub_group.name] = sub_group
+        else:
+            if sub_group.callback:
+                import warnings
+
+                warnings.warn(
+                    "The 'callback' parameter is not supported by Typer when using `add_typer` without a name",
+                    stacklevel=5,
+                )
+            for sub_command_name, sub_command in sub_group.commands.items():
+                commands[sub_command_name] = sub_command
     solved_info = solve_typer_info_defaults(group_info)
     (
         params,
@@ -856,16 +847,16 @@ def get_click_param(
         # Handle Tuples and Lists
         if lenient_issubclass(origin, List):
             main_type = get_args(main_type)[0]
-            assert not get_origin(
-                main_type
-            ), "List types with complex sub-types are not currently supported"
+            assert not get_origin(main_type), (
+                "List types with complex sub-types are not currently supported"
+            )
             is_list = True
         elif lenient_issubclass(origin, Tuple):  # type: ignore
             types = []
             for type_ in get_args(main_type):
-                assert not get_origin(
-                    type_
-                ), "Tuple types with complex sub-types are not currently supported"
+                assert not get_origin(type_), (
+                    "Tuple types with complex sub-types are not currently supported"
+                )
                 types.append(
                     get_click_type(annotation=type_, parameter_info=parameter_info)
                 )

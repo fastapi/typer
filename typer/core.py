@@ -62,16 +62,17 @@ def _typer_param_setup_autocompletion_compat(
         Callable[[click.Context, List[str], str], List[Union[Tuple[str, str], str]]]
     ] = None,
 ) -> None:
-    if autocompletion is not None and self._custom_shell_complete is None:
+    if self._custom_shell_complete is not None:
         import warnings
 
         warnings.warn(
-            "'autocompletion' is renamed to 'shell_complete'. The old name is"
-            " deprecated and will be removed in Click 8.1. See the docs about"
-            " 'Parameter' for information about new behavior.",
+            "In Typer, only the parameter 'autocompletion' is supported. "
+            "The support for 'shell_complete' is deprecated and will be removed in upcoming versions. ",
             DeprecationWarning,
             stacklevel=2,
         )
+
+    if autocompletion is not None:
 
         def compat_autocompletion(
             ctx: click.Context, param: click.core.Parameter, incomplete: str
@@ -267,6 +268,8 @@ class TyperArgument(click.core.Argument):
         expose_value: bool = True,
         is_eager: bool = False,
         envvar: Optional[Union[str, List[str]]] = None,
+        # Note that shell_complete is not fully supported and will be removed in future versions
+        # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Optional[
             Callable[
                 [click.Context, click.Parameter, str],
@@ -366,8 +369,13 @@ class TyperArgument(click.core.Argument):
         if self.required:
             extra.append(_("required"))
         if extra:
-            extra_str = ";".join(extra)
-            help = f"{help}  [{extra_str}]" if help else f"[{extra_str}]"
+            extra_str = "; ".join(extra)
+            extra_str = f"[{extra_str}]"
+            if rich is not None:
+                # This is needed for when we want to export to HTML
+                extra_str = rich.markup.escape(extra_str).strip()
+
+            help = f"{help}  {extra_str}" if help else f"{extra_str}"
         return name, help
 
     def make_metavar(self) -> str:
@@ -401,6 +409,8 @@ class TyperOption(click.core.Option):
         expose_value: bool = True,
         is_eager: bool = False,
         envvar: Optional[Union[str, List[str]]] = None,
+        # Note that shell_complete is not fully supported and will be removed in future versions
+        # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Optional[
             Callable[
                 [click.Context, click.Parameter, str],
@@ -554,7 +564,12 @@ class TyperOption(click.core.Option):
 
         if extra:
             extra_str = "; ".join(extra)
-            help = f"{help}  [{extra_str}]" if help else f"[{extra_str}]"
+            extra_str = f"[{extra_str}]"
+            if rich is not None:
+                # This is needed for when we want to export to HTML
+                extra_str = rich.markup.escape(extra_str).strip()
+
+            help = f"{help}  {extra_str}" if help else f"{extra_str}"
 
         return ("; " if any_prefix_is_slash else " / ").join(rv), help
 

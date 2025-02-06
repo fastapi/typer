@@ -6,9 +6,7 @@ When adding a Typer app inside of another, the sub-Typer can also have its own c
 
 It can handle any *CLI parameters* that go before its own commands and execute any extra code:
 
-```Python hl_lines="9 10 11"
-{!../docs_src/subcommands/callback_override/tutorial001.py!}
-```
+{* docs_src/subcommands/callback_override/tutorial001.py hl[9,10,11] *}
 
 In this case it doesn't define any *CLI parameters*, it just writes a message.
 
@@ -30,9 +28,7 @@ Creating user: Camila
 
 It's also possible to add a callback when creating the `typer.Typer()` app that will be added to another Typer app:
 
-```Python hl_lines="6 7  10"
-{!../docs_src/subcommands/callback_override/tutorial002.py!}
-```
+{* docs_src/subcommands/callback_override/tutorial002.py hl[6,7,10] *}
 
 This achieves exactly the same as above, it's just another place to add the callback.
 
@@ -55,9 +51,7 @@ If a callback was added when creating the `typer.Typer()` app, it's possible to 
 
 This is the same information you saw on the section about [Commands - Typer Callback](../commands/callback.md){.internal-link target=_blank}, and it applies the same for sub-Typer apps:
 
-```Python hl_lines="6 7  10  14 15 16"
-{!../docs_src/subcommands/callback_override/tutorial003.py!}
-```
+{* docs_src/subcommands/callback_override/tutorial003.py hl[6,7,10,14,15,16] *}
 
 Here we had defined a callback when creating the `typer.Typer()` sub-app, but then we override it with a new callback with the function `user_callback()`.
 
@@ -83,9 +77,7 @@ Lastly, you can override the callback defined anywhere else when adding a sub-Ty
 
 This has the highest priority:
 
-```Python hl_lines="13 14  17"
-{!../docs_src/subcommands/callback_override/tutorial004.py!}
-```
+{* docs_src/subcommands/callback_override/tutorial004.py hl[13,14,17] *}
 
 Notice that the precedence goes to `app.add_typer()` and is not affected by the order of execution. There's another callback defined below, but the one from `app.add_typer()` wins.
 
