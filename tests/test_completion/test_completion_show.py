@@ -3,18 +3,16 @@ import subprocess
 import sys
 from unittest import mock
 
+import pytest
 import shellingham
 import typer
 from typer.testing import CliRunner
-
-import pytest
 
 from docs_src.asynchronous import tutorial001 as async_mod
 from docs_src.commands.index import tutorial001 as sync_mod
 
 runner = CliRunner()
 mod_params = ("mod", (sync_mod, async_mod))
-
 
 
 @pytest.mark.parametrize(*mod_params)

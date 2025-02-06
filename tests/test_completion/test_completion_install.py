@@ -6,7 +6,6 @@ from unittest import mock
 
 import pytest
 import shellingham
-import typer
 from typer.testing import CliRunner
 
 from docs_src.asynchronous import tutorial001 as async_mod
