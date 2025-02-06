@@ -71,7 +71,7 @@ Because the asynchronous functions are wrapped in a synchronous context before b
 
 ## Customizing async engine
 
-Customizing the used async engine is as simple a providing an additional parameter to the Typer instance or the decorators.
+Customizing the used async engine is as simple as providing an additional parameter to the Typer instance or the decorators.
 
 The `async_runner` provided to the decorator always overwrites the typer instances `async_runner`.
 
