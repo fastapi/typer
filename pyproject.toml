@@ -34,7 +34,7 @@ requires = [
     "typing-extensions >= 3.7.4.3",
 ]
 description-file = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.6"
 
 [tool.flit.metadata.urls]
 Documentation = "https://typer.tiangolo.com/"
