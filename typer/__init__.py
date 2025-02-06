@@ -5,8 +5,14 @@ __version__ = "0.15.1"
 from shutil import get_terminal_size as get_terminal_size
 
 from click.exceptions import Abort as Abort
+from click.exceptions import BadArgumentUsage as BadArgumentUsage
+from click.exceptions import BadOptionUsage as BadOptionUsage
 from click.exceptions import BadParameter as BadParameter
-from click.exceptions import Exit as Exit
+from click.exceptions import ClickException as ClickException
+from click.exceptions import FileError as FileError
+from click.exceptions import MissingParameter as MissingParameter
+from click.exceptions import NoSuchOption as NoSuchOption
+from click.exceptions import UsageError as UsageError
 from click.termui import clear as clear
 from click.termui import confirm as confirm
 from click.termui import echo_via_pager as echo_via_pager
