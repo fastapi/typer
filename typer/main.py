@@ -69,10 +69,10 @@ def run_as_sync(coroutine: Coroutine[Any, Any, Any]) -> Any:
     alternative async engines are not mixed and only installed on demand.
     """
 
-    if importlib.util.find_spec("anyio"):  # type: ignore
-        import anyio
+    if importlib.util.find_spec("anyio"):
+        import anyio # type: ignore
 
-        backend = "trio" if importlib.util.find_spec("trio") else "asyncio"  # type: ignore
+        backend = "trio" if importlib.util.find_spec("trio") else "asyncio"
 
         return anyio.run(lambda: coroutine, backend=backend)
     else:
@@ -219,7 +219,7 @@ class Typer:
 
     def to_sync(
         self, f: CommandFunctionType, async_runner: Optional[AsyncRunner]
-    ) -> SyncCommandFunctionType:
+    ) -> SyncCommandFunctionType:  # type: ignore
         if inspect.iscoroutinefunction(f):
             run_sync: AsyncRunner = async_runner or self.async_runner
 
