@@ -1124,7 +1124,7 @@ def get_param_completion(
 
 
 def run(
-    function: Union[Callable[..., Any], Callable[..., Coroutine[Any, Any, Any]]]
+    function: Union[Callable[..., Any], Callable[..., Coroutine[Any, Any, Any]]],
 ) -> None:
     app = Typer(add_completion=False)
     app.command()(function)

@@ -35,7 +35,7 @@ async def delete_all(
         False,
         prompt="Are you sure you want to delete ALL users?",
         help="Force deletion without confirmation.",
-    )
+    ),
 ):
     """
     Delete ALL users in the database.
