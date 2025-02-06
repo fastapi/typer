@@ -79,7 +79,7 @@ Then we check that the text printed to "standard output" contains the text that 
 
 /// tip
 
-**Checking for output sent to standard error?** Make sure your `CliRunner` instance is created with the `mix_stderr=False` argument. You need this to be able to access `result.stderr` in tests.
+You could also check output sent to "standard error" (`stderr`) instead of "standard output" (`stdout`). To do so, make sure your `CliRunner` instance is created with the `mix_stderr=False` argument. You need this setting to be able to access `result.stderr` in tests.
 
 ///
 
