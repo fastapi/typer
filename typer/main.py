@@ -70,15 +70,15 @@ def run_as_sync(coroutine: Coroutine[Any, Any, Any]) -> Any:
     """
 
     if importlib.util.find_spec("anyio"):
-        import anyio # type: ignore
+        import anyio  # type: ignore
 
         backend = "trio" if importlib.util.find_spec("trio") else "asyncio"
 
-        return anyio.run(lambda: coroutine, backend=backend)
+        return anyio.run(lambda: coroutine, backend=backend)  # type: ignore
     else:
         import asyncio
 
-        return asyncio.run(coroutine)
+        return asyncio.run(coroutine)  # type: ignore
 
 
 try:
