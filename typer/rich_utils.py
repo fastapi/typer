@@ -9,6 +9,7 @@ from os import getenv
 from typing import Any, DefaultDict, Dict, Iterable, List, Optional, Union
 
 import click
+from click import Parameter
 from rich import box
 from rich.align import Align
 from rich.columns import Columns
@@ -366,7 +367,13 @@ def _print_options_panel(
 
         # Column for a metavar, if we have one
         metavar = Text(style=STYLE_METAVAR, overflow="fold")
-        metavar_str = param.make_metavar()
+
+        # Starting with Click 8.2 we need to pass the context.
+        # We need to check on Clicks function, as our override uses varargs
+        if inspect.signature(Parameter.make_metavar).parameters.get("ctx"):
+            metavar_str = param.make_metavar(ctx)
+        else:
+            metavar_str = param.make_metavar()
 
         # Do it ourselves if this is a positional argument
         if (
