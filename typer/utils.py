@@ -63,6 +63,19 @@ class MixedAnnotatedAndDefaultStyleError(Exception):
         return msg
 
 
+class MultipleDocAnnotationsError(Exception):
+    argument_name: str
+
+    def __init__(self, argument_name: str):
+        self.argument_name = argument_name
+
+    def __str__(self) -> str:
+        return (
+            "Cannot specify multiple `Annotated` Doc arguments"
+            f" for {self.argument_name!r}"
+        )
+
+
 class MultipleTyperAnnotationsError(Exception):
     argument_name: str
 
@@ -94,15 +107,25 @@ class DefaultFactoryAndDefaultValueError(Exception):
 
 def _split_annotation_from_typer_annotations(
     base_annotation: Type[Any],
-) -> Tuple[Type[Any], List[ParameterInfo]]:
+) -> Tuple[Type[Any], List[ParameterInfo], List[Any]]:
     if get_origin(base_annotation) is not Annotated:
-        return base_annotation, []
-    base_annotation, *maybe_typer_annotations = get_args(base_annotation)
-    return base_annotation, [
+        return base_annotation, [], []
+    base_annotation, *other_annotations = get_args(base_annotation)
+    typer_annotations = [
         annotation
-        for annotation in maybe_typer_annotations
+        for annotation in other_annotations
         if isinstance(annotation, ParameterInfo)
     ]
+    other_annotations = [
+        annotation
+        for annotation in other_annotations
+        if not isinstance(annotation, ParameterInfo)
+    ]
+    return (
+        base_annotation,
+        typer_annotations,
+        other_annotations,
+    )
 
 
 def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
@@ -114,8 +137,10 @@ def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
     type_hints = get_type_hints(func)
     params = {}
     for param in signature.parameters.values():
-        annotation, typer_annotations = _split_annotation_from_typer_annotations(
-            param.annotation,
+        annotation, typer_annotations, other_annotations = (
+            _split_annotation_from_typer_annotations(
+                param.annotation,
+            )
         )
         if len(typer_annotations) > 1:
             raise MultipleTyperAnnotationsError(param.name)
@@ -186,6 +211,9 @@ def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
             default = parameter_info
 
         params[param.name] = ParamMeta(
-            name=param.name, default=default, annotation=annotation
+            name=param.name,
+            default=default,
+            annotation=annotation,
+            other_annotations=other_annotations,
         )
     return params
