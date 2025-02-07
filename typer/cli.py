@@ -10,6 +10,7 @@ import typer.core
 from click import Command, Group, Option
 
 from . import __version__
+from .models import DefaultPlaceholder
 
 try:
     import rich
@@ -209,7 +210,7 @@ def get_docs_for_click(
         title = f"`{command_name}`" if command_name else "CLI"
     docs += f" {title}\n\n"
     if obj.help:
-        docs += f"{_parse_html(obj.help)}\n\n"
+        docs += f"{_parse_html(ctx, obj.help)}\n\n"
     usage_pieces = obj.collect_usage_pieces(ctx)
     if usage_pieces:
         docs += "**Usage**:\n\n"
@@ -233,7 +234,7 @@ def get_docs_for_click(
         for arg_name, arg_help in args:
             docs += f"* `{arg_name}`"
             if arg_help:
-                docs += f": {_parse_html(arg_help)}"
+                docs += f": {_parse_html(ctx, arg_help)}"
             docs += "\n"
         docs += "\n"
     if opts:
@@ -241,7 +242,7 @@ def get_docs_for_click(
         for opt_name, opt_help in opts:
             docs += f"* `{opt_name}`"
             if opt_help:
-                docs += f": {_parse_html(opt_help)}"
+                docs += f": {_parse_html(ctx, opt_help)}"
             docs += "\n"
         docs += "\n"
     if obj.epilog:
@@ -257,7 +258,7 @@ def get_docs_for_click(
                 docs += f"* `{command_obj.name}`"
                 command_help = command_obj.get_short_help_str()
                 if command_help:
-                    docs += f": {_parse_html(command_help)}"
+                    docs += f": {_parse_html(ctx, command_help)}"
                 docs += "\n"
             docs += "\n"
         for command in commands:
@@ -272,10 +273,13 @@ def get_docs_for_click(
     return docs
 
 
-def _parse_html(input_text: str) -> str:
-    if not has_rich:  # pragma: no cover
-        return input_text
-    return rich_utils.rich_to_html(input_text)
+def _parse_html(ctx: click.Context, input_text: str) -> str:
+    rich_markup_mode = None
+    if hasattr(ctx, "obj") and isinstance(ctx.obj, dict):
+        rich_markup_mode = ctx.obj.get("TYPER_RICH_MARKUP_MODE", None)
+    if has_rich and rich_markup_mode and rich_markup_mode == "rich":  # pragma: no cover
+        return rich_utils.rich_to_html(input_text)
+    return input_text
 
 
 @utils_app.command()
@@ -301,6 +305,14 @@ def docs(
     if not typer_obj:
         typer.echo("No Typer app found", err=True)
         raise typer.Abort()
+    if hasattr(typer_obj, "rich_markup_mode"):
+        if not hasattr(ctx, "obj") or ctx.obj is None:
+            ctx.ensure_object(dict)
+        if isinstance(ctx.obj, dict):
+            if isinstance(typer_obj.rich_markup_mode, DefaultPlaceholder):
+                ctx.obj["TYPER_RICH_MARKUP_MODE"] = typer_obj.rich_markup_mode.value
+            else:
+                ctx.obj["TYPER_RICH_MARKUP_MODE"] = typer_obj.rich_markup_mode
     click_obj = typer.main.get_command(typer_obj)
     docs = get_docs_for_click(obj=click_obj, ctx=ctx, name=name, title=title)
     clean_docs = f"{docs.strip()}\n"
