@@ -50,17 +50,14 @@ def test_union_type_optional():
     assert result.exit_code == 0
     assert "User: Camila" in result.output
 
+
 @pytest.mark.parametrize(
     ("value", "expected"),
-    [
-        ("0", "ROOTED!"),
-        ("12", "ID: 12"),
-        ("name", "USER: name")
-    ],
+    [("0", "ROOTED!"), ("12", "ID: 12"), ("name", "USER: name")],
 )
 def test_union(value, expected):
     app = typer.Typer()
-    
+
     @app.command()
     def opt(id_or_name: Union[int, str]):
         if isinstance(id_or_name, int):
@@ -70,11 +67,11 @@ def test_union(value, expected):
                 print(f"ID: {id_or_name}")
         else:
             print(f"USER: {id_or_name}")
-    
+
     result = runner.invoke(app, [value])
     assert result.exit_code == 0
-    assert expected  in result.output
-        
+    assert expected in result.output
+
 
 def test_optional_tuple():
     app = typer.Typer()
