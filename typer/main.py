@@ -1516,16 +1516,19 @@ def get_callback(
     update_wrapper(wrapper, callback)
     return wrapper
 
+
 class UnionParamType(click.ParamType):
     @property
-    def name(self) -> str: # type: ignore
-        return ' | '.join(_type.name for _type in self._types)
+    def name(self) -> str:  # type: ignore
+        return " | ".join(_type.name for _type in self._types)
 
     def __init__(self, types: List[click.ParamType]):
         super().__init__()
         self._types = types
 
-    def convert(self, value: Any, param: Optional[click.Parameter], ctx: Optional[click.Context]) -> Any:
+    def convert(
+        self, value: Any, param: Optional[click.Parameter], ctx: Optional[click.Context]
+    ) -> Any:
         # *types, last = self._types
         error_messages = []
         for _type in self._types:
@@ -1535,7 +1538,7 @@ class UnionParamType(click.ParamType):
                 print(type(e))
                 error_messages.append(str(e))
         # return last.convert(value, param, ctx)
-        raise self.fail('\n' + '\nbut also\n'.join(error_messages), param, ctx)
+        raise self.fail("\n" + "\nbut also\n".join(error_messages), param, ctx)
 
 
 def get_click_type(
@@ -1694,7 +1697,7 @@ def get_click_param(
                     continue
                 types.append(type_)
             if len(types) == 1:
-                main_type, = types
+                (main_type,) = types
                 origin = get_origin(main_type)
             else:
                 for type_ in get_args(main_type):
