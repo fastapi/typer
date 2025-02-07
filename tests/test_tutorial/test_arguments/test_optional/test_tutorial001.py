@@ -31,7 +31,7 @@ def test_call_no_arg_no_rich():
     typer.core.rich = None
     result = runner.invoke(app)
     assert result.exit_code != 0
-    assert "Error: Missing argument 'NAME'" in result.stdout
+    assert "Error: Missing argument 'NAME'" in result.output
     typer.core.rich = rich
 
 
