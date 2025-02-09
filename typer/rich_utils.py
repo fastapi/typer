@@ -63,6 +63,7 @@ STYLE_COMMANDS_TABLE_PADDING = (0, 1)
 STYLE_COMMANDS_TABLE_BOX = ""
 STYLE_COMMANDS_TABLE_ROW_STYLES = None
 STYLE_COMMANDS_TABLE_BORDER_STYLE = None
+STYLE_COMMANDS_TABLE_FIRST_COLUMN = "bold cyan"
 STYLE_ERRORS_PANEL_BORDER = "red"
 ALIGN_ERRORS_PANEL: Literal["left", "center", "right"] = "left"
 STYLE_ERRORS_SUGGESTION = "dim"
@@ -488,7 +489,7 @@ def _print_commands_panel(
     # Define formatting in first column, as commands don't match highlighter
     # regex
     commands_table.add_column(
-        style="bold cyan",
+        style=STYLE_COMMANDS_TABLE_FIRST_COLUMN,
         no_wrap=True,
         width=cmd_len,
     )
