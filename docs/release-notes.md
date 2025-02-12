@@ -8,6 +8,19 @@
 
 ### Internal
 
+* ⬆ Bump ruff from 0.9.4 to 0.9.5. PR [#1146](https://github.com/fastapi/typer/pull/1146) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1142](https://github.com/fastapi/typer/pull/1142) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump ruff from 0.9.3 to 0.9.4. PR [#1139](https://github.com/fastapi/typer/pull/1139) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1135](https://github.com/fastapi/typer/pull/1135) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump ruff from 0.9.1 to 0.9.3. PR [#1136](https://github.com/fastapi/typer/pull/1136) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1130](https://github.com/fastapi/typer/pull/1130) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump ruff from 0.8.6 to 0.9.1. PR [#1118](https://github.com/fastapi/typer/pull/1118) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pypa/gh-action-pypi-publish from 1.12.3 to 1.12.4. PR [#1132](https://github.com/fastapi/typer/pull/1132) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mkdocs-material from 9.5.49 to 9.5.50. PR [#1129](https://github.com/fastapi/typer/pull/1129) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 💚 Fix test matrix for Python 3.7. PR [#1116](https://github.com/fastapi/typer/pull/1116) by [@svlandeg](https://github.com/svlandeg).
+* ⬆ Bump ruff from 0.8.4 to 0.8.6. PR [#1107](https://github.com/fastapi/typer/pull/1107) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1109](https://github.com/fastapi/typer/pull/1109) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump pillow from 11.0.0 to 11.1.0. PR [#1104](https://github.com/fastapi/typer/pull/1104) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1102](https://github.com/fastapi/typer/pull/1102) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * ⬆ Bump ruff from 0.8.3 to 0.8.4. PR [#1097](https://github.com/fastapi/typer/pull/1097) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump astral-sh/setup-uv from 4 to 5. PR [#1098](https://github.com/fastapi/typer/pull/1098) by [@dependabot[bot]](https://github.com/apps/dependabot).
