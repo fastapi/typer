@@ -43,7 +43,7 @@ There's something to be aware of with callbacks and completion that requires som
 
 But first let's just use completion in your shell (Bash, Zsh, Fish, or PowerShell).
 
-After installing completion (for your own Python package), when you use your CLI program and start adding a *CLI option* with `--` an then hit <kbd>TAB</kbd>, your shell will show you the available *CLI options* (the same for *CLI arguments*, etc).
+After installing completion (for your own Python package), when you use your CLI program and start adding a *CLI option* with `--` and then hit <kbd>TAB</kbd>, your shell will show you the available *CLI options* (the same for *CLI arguments*, etc).
 
 To check it quickly with the previous script use the `typer` command:
 
