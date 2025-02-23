@@ -32,6 +32,15 @@ INNER_LIST = {
     "Prop III": None,
 }
 
+SIMPLE_LIST = [
+    "str value",
+    "3",
+    4,
+    False,
+    None,
+    "foo",
+]
+
 
 def test_rich_table_defaults_outer():
     columns = ["col 1", "Column B", "III"]
@@ -76,8 +85,13 @@ def test_rich_table_defaults_inner():
 
 
 def test_create_table_not_obj():
+    class TestData:
+        def __init__(self, value: int):
+            self.value = value
+
     with pytest.raises(ValueError) as excinfo:
-        rich_table_factory([1, 2, 3])
+        data = [TestData(1), TestData(2), TestData(3)]
+        rich_table_factory(data)
 
     assert excinfo.match("Unable to create table for type list")
 
@@ -333,3 +347,26 @@ def test_create_table_config_inner_list():
     assert inner.row_count == 4
     names = inner.columns[0]._cells
     assert names == ["True", "None", "1.2345", "blah"]
+
+
+def test_create_table_simple_list():
+    data = deepcopy(SIMPLE_LIST)
+    config = TableConfig(
+        items_caption="Got {} simple things",
+        items_label="Simple stuff",
+    )
+    uut = rich_table_factory(data, config)
+    assert uut.row_count == 6
+    assert len(uut.columns) == 1
+
+    col0 = uut.columns[0]
+    assert col0.header == "Simple stuff"
+    assert uut.caption == "Got 6 simple things"
+
+    # check the values
+    assert col0._cells[0] == "str value"
+    assert col0._cells[1] == "3"
+    assert col0._cells[2] == "4"
+    assert col0._cells[3] == "False"
+    assert col0._cells[4] == "None"
+    assert col0._cells[5] == "foo"

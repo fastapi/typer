@@ -223,4 +223,24 @@ def rich_table_factory(obj: Any, config: TableConfig = TableConfig()) -> RichTab
     if isinstance(obj, list) and obj and isinstance(obj[0], dict):
         return _create_list_table(obj, outer=True, config=config)
 
+    # this is a list of "simple" properties
+    if (
+        isinstance(obj, list)
+        and obj
+        and all(
+            item is None or isinstance(item, (str, float, bool, int)) for item in obj
+        )
+    ):
+        caption = config.items_caption.format(len(obj))
+        table = RichTable(
+            config.items_label,
+            outer=True,
+            show_lines=True,
+            caption=caption,
+            row_props=config.row_properties,
+        )
+        for item in obj:
+            table.add_row(_table_cell_value(item, config))
+        return table
+
     raise ValueError(f"Unable to create table for type {type(obj).__name__}")
