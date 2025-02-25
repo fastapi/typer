@@ -10,9 +10,9 @@ runner = CliRunner()
 
 def test_cli():
     result = runner.invoke(mod.cli, [])
-    assert "Usage" in result.stdout
-    assert "dropdb" in result.stdout
-    assert "sub" in result.stdout
+    assert "Usage" in result.output
+    assert "dropdb" in result.output
+    assert "sub" in result.output
 
 
 def test_typer():
