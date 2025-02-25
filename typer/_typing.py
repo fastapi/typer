@@ -1,6 +1,6 @@
 # Copied from pydantic 1.9.2 (the latest version to support python 3.6.)
 # https://github.com/pydantic/pydantic/blob/v1.9.2/pydantic/typing.py
-# Reduced drastically to only include Typer-specific 3.7+ functionality
+# Reduced drastically to only include Typer-specific 3.8+ functionality
 # mypy: ignore-errors
 
 import sys
@@ -43,17 +43,7 @@ NoneType = None.__class__
 NONE_TYPES: Tuple[Any, Any, Any] = (None, NoneType, Literal[None])
 
 
-if sys.version_info < (3, 8):
-    # Even though this implementation is slower, we need it for python 3.7:
-    # In python 3.7 "Literal" is not a builtin type and uses a different
-    # mechanism.
-    # for this reason `Literal[None] is Literal[None]` evaluates to `False`,
-    # breaking the faster implementation used for the other python versions.
-
-    def is_none_type(type_: Any) -> bool:
-        return type_ in NONE_TYPES
-
-elif sys.version_info[:2] == (3, 8):
+if sys.version_info[:2] == (3, 8):
     # We can use the fast implementation for 3.8 but there is a very weird bug
     # where it can fail for `Literal[None]`.
     # We just need to redefine a useless `Literal[None]` inside the function body to fix this
