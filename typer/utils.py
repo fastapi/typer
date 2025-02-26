@@ -3,8 +3,7 @@ import sys
 from copy import copy
 from typing import Any, Callable, Dict, List, Tuple, Type, cast
 
-from typing_extensions import Annotated, get_args, get_origin, get_type_hints
-
+from ._typing import Annotated, get_args, get_origin, get_type_hints
 from .models import ArgumentInfo, OptionInfo, ParameterInfo, ParamMeta
 
 

@@ -22,7 +22,7 @@ from rich.table import Table
 from rich.text import Text
 from rich.theme import Theme
 
-if sys.version_info >= (3, 8):
+if sys.version_info >= (3, 9):
     from typing import Literal
 else:
     from typing_extensions import Literal
