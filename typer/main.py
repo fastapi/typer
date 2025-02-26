@@ -45,6 +45,7 @@ from .models import (
     ParamMeta,
     Required,
     TyperInfo,
+    TyperPath,
 )
 from .utils import get_params_from_function
 
@@ -744,7 +745,7 @@ def get_click_type(
         or parameter_info.path_type
         or parameter_info.resolve_path
     ):
-        return click.Path(
+        return TyperPath(
             exists=parameter_info.exists,
             file_okay=parameter_info.file_okay,
             dir_okay=parameter_info.dir_okay,
