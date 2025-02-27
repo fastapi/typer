@@ -146,4 +146,4 @@ def test_completion_show_invalid_shell():
         shellingham, "detect_shell", return_value=("xshell", "/usr/bin/xshell")
     ):
         result = runner.invoke(app, ["--show-completion"])
-    assert "Shell xshell not supported" in result.stdout
+    assert "Shell xshell not supported" in result.output

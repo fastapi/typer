@@ -329,7 +329,12 @@ class TyperArgument(click.core.Argument):
         # to support Arguments
         if self.hidden:
             return None
-        name = self.make_metavar()
+        # Starting with Click 8.2 we need to pass the context.
+        # We need to check on Clicks function, as our override uses varargs
+        if inspect.signature(click.Parameter.make_metavar).parameters.get("ctx"):
+            name = self.make_metavar(ctx)
+        else:
+            name = self.make_metavar()
         help = self.help or ""
         extra = []
         if self.show_envvar:
@@ -375,7 +380,7 @@ class TyperArgument(click.core.Argument):
             help = f"{help}  {extra_str}" if help else f"{extra_str}"
         return name, help
 
-    def make_metavar(self) -> str:
+    def make_metavar(self, *args) -> str:
         # Modified version of click.core.Argument.make_metavar()
         # to include Argument name
         if self.metavar is not None:
@@ -383,7 +388,7 @@ class TyperArgument(click.core.Argument):
         var = (self.name or "").upper()
         if not self.required:
             var = f"[{var}]"
-        type_var = self.type.get_metavar(self)
+        type_var = self.type.get_metavar(self, *args)
         if type_var:
             var += f":{type_var}"
         if self.nargs != 1:
@@ -498,7 +503,12 @@ class TyperOption(click.core.Option):
                 any_prefix_is_slash = True
 
             if not self.is_flag and not self.count:
-                rv += f" {self.make_metavar()}"
+                if inspect.signature(click.Parameter.make_metavar).parameters.get(
+                    "ctx"
+                ):
+                    rv += f" {self.make_metavar(ctx)}"
+                else:
+                    rv += f" {self.make_metavar()}"
 
             return rv
 
