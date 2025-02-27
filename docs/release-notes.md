@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.15.2
+
 ### Features
 
 * ✨ Allow custom styles for commands in help output. PR [#1103](https://github.com/fastapi/typer/pull/1103) by [@TheTechromancer](https://github.com/TheTechromancer).
