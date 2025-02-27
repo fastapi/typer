@@ -4,6 +4,7 @@
 
 ### Features
 
+* ✨ Allow custom styles for commands in help output. PR [#1103](https://github.com/fastapi/typer/pull/1103) by [@TheTechromancer](https://github.com/TheTechromancer).
 * ✨ Avoid the unnecessary import of `typing_extensions` in newer Python versions. PR [#1048](https://github.com/fastapi/typer/pull/1048) by [@horta](https://github.com/horta).
 
 ### Fixes
