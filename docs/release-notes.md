@@ -21,6 +21,7 @@
 
 ### Internal
 
+* 🔧 Add support for Python 3.13, tests in CI and add PyPI trove classifier. PR [#1091](https://github.com/fastapi/typer/pull/1091) by [@edgarrmondragon](https://github.com/edgarrmondragon).
 * ⬆ Bump ruff from 0.9.6 to 0.9.7. PR [#1161](https://github.com/fastapi/typer/pull/1161) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1162](https://github.com/fastapi/typer/pull/1162) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * ⬆ Bump ruff from 0.9.5 to 0.9.6. PR [#1153](https://github.com/fastapi/typer/pull/1153) by [@dependabot[bot]](https://github.com/apps/dependabot).
