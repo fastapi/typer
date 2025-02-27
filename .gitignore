@@ -12,6 +12,3 @@ htmlcov
 coverage.xml
 .coverage*
 .cache
-
-# for Mac users who browse to HTML coverage results
-.DS_Store
