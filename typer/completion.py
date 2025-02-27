@@ -15,12 +15,6 @@ try:
 except ImportError:  # pragma: no cover
     shellingham = None
 
-try:
-    import rich
-
-except ImportError:  # pragma: no cover
-    rich = None  # type: ignore
-
 
 _click_patched = False
 
@@ -147,13 +141,7 @@ def shell_complete(
 
     # Typer override to print the completion help msg with Rich
     if instruction == "complete":
-        if not rich:  # pragma: no cover
-            click.echo(comp.complete())
-        else:
-            from . import rich_utils
-
-            rich_utils.print_with_rich(comp.complete())
-
+        click.echo(comp.complete())
         return 0
     # Typer override end
 
