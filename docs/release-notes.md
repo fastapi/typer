@@ -6,6 +6,10 @@
 
 * ✨ Avoid the unnecessary import of `typing_extensions` in newer Python versions. PR [#1048](https://github.com/fastapi/typer/pull/1048) by [@horta](https://github.com/horta).
 
+### Fixes
+
+* 🐛 Fix shell completions for the fish shell. PR [#1069](https://github.com/fastapi/typer/pull/1069) by [@goraje](https://github.com/goraje).
+
 ### Refactors
 
 * 🚚 Rename test to corner-cases to make it more explicit. PR [#1083](https://github.com/fastapi/typer/pull/1083) by [@tiangolo](https://github.com/tiangolo).
