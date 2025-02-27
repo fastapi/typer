@@ -15,9 +15,8 @@ from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, U
 from uuid import UUID
 
 import click
-from typing_extensions import get_args, get_origin
 
-from ._typing import is_union
+from ._typing import get_args, get_origin, is_union
 from .completion import get_completion_inspect_parameters
 from .core import (
     DEFAULT_MARKUP_MODE,
