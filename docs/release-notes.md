@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Internal
+
+* ✏️ Fix typo in test name. PR [#1165](https://github.com/fastapi/typer/pull/1165) by [@svlandeg](https://github.com/svlandeg).
+
 ## 0.15.2
 
 ### Features
