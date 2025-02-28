@@ -15,9 +15,8 @@ from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, U
 from uuid import UUID
 
 import click
-from typing_extensions import get_args, get_origin
 
-from ._typing import is_union
+from ._typing import get_args, get_origin, is_union
 from .command_tree import get_command_tree_param_meta
 from .completion import get_completion_inspect_parameters
 from .core import (
@@ -484,9 +483,9 @@ def get_group_from_info(
     rich_markup_mode: MarkupMode,
     command_tree: bool,
 ) -> TyperGroup:
-    assert (
-        group_info.typer_instance
-    ), "A Typer instance is needed to generate a Click Group"
+    assert group_info.typer_instance, (
+        "A Typer instance is needed to generate a Click Group"
+    )
     commands: Dict[str, click.Command] = {}
     for command_info in group_info.typer_instance.registered_commands:
         command = get_command_from_info(
@@ -861,16 +860,16 @@ def get_click_param(
         # Handle Tuples and Lists
         if lenient_issubclass(origin, List):
             main_type = get_args(main_type)[0]
-            assert not get_origin(
-                main_type
-            ), "List types with complex sub-types are not currently supported"
+            assert not get_origin(main_type), (
+                "List types with complex sub-types are not currently supported"
+            )
             is_list = True
         elif lenient_issubclass(origin, Tuple):  # type: ignore
             types = []
             for type_ in get_args(main_type):
-                assert not get_origin(
-                    type_
-                ), "Tuple types with complex sub-types are not currently supported"
+                assert not get_origin(type_), (
+                    "Tuple types with complex sub-types are not currently supported"
+                )
                 types.append(
                     get_click_type(annotation=type_, parameter_info=parameter_info)
                 )
