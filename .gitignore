@@ -12,3 +12,6 @@ htmlcov
 coverage.xml
 .coverage*
 .cache
+
+# ignore for folks browsing directories on a Mac
+.DS_Store
