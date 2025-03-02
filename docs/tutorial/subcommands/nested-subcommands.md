@@ -12,9 +12,7 @@ And each of those could have their own commands, like `create` and `delete`.
 
 Let's start with a file `reigns.py`:
 
-```Python
-{!../docs_src/subcommands/tutorial003/reigns.py!}
-```
+{* docs_src/subcommands/tutorial003/reigns.py *}
 
 This is already a simple *CLI program* to manage reigns:
 
@@ -51,9 +49,7 @@ Destroying reign: Mordor
 
 And now the equivalent for managing towns in `towns.py`:
 
-```Python
-{!../docs_src/subcommands/tutorial003/towns.py!}
-```
+{* docs_src/subcommands/tutorial003/towns.py *}
 
 With it, you can manage towns:
 
@@ -90,9 +86,7 @@ Burning town: Vizima
 
 Now let's put the `reigns` and `towns` together in the same *CLI program* in `lands.py`:
 
-```Python
-{!../docs_src/subcommands/tutorial003/lands.py!}
-```
+{* docs_src/subcommands/tutorial003/lands.py *}
 
 And now we have a single *CLI program* with a command (or command group) `reigns` that has its own commands. And another command `towns` with its own subcommands.
 
@@ -193,9 +187,7 @@ This already is a quite deeply nested "tree" of commands/command groups.
 
 But to achieve that, we just have to add the `lands` **Typer** app to the same `main.py` file we already had:
 
-```Python hl_lines="4  10"
-{!../docs_src/subcommands/tutorial003/main.py!}
-```
+{* docs_src/subcommands/tutorial003/main.py hl[4,10] *}
 
 And now we have everything in a single *CLI program*:
 
@@ -246,39 +238,27 @@ Here are all the files if you want to review/copy them:
 
 `reigns.py`:
 
-```Python
-{!../docs_src/subcommands/tutorial003/reigns.py!}
-```
+{* docs_src/subcommands/tutorial003/reigns.py *}
 
 `towns.py`:
 
-```Python
-{!../docs_src/subcommands/tutorial003/towns.py!}
-```
+{* docs_src/subcommands/tutorial003/towns.py *}
 
 `lands.py`:
 
-```Python
-{!../docs_src/subcommands/tutorial003/lands.py!}
-```
+{* docs_src/subcommands/tutorial003/lands.py *}
 
 `users.py`:
 
-```Python
-{!../docs_src/subcommands/tutorial003/users.py!}
-```
+{* docs_src/subcommands/tutorial003/users.py *}
 
 `items.py`:
 
-```Python
-{!../docs_src/subcommands/tutorial003/items.py!}
-```
+{* docs_src/subcommands/tutorial003/items.py *}
 
 `main.py`:
 
-```Python
-{!../docs_src/subcommands/tutorial003/main.py!}
-```
+{* docs_src/subcommands/tutorial003/main.py *}
 
 /// tip
 

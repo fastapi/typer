@@ -14,9 +14,7 @@ For example, let's say that you want to execute some logic in a `Typer` callback
 
 You can get the name of the subcommand from the context:
 
-```Python hl_lines="17  21"
-{!../docs_src/commands/context/tutorial001.py!}
-```
+{* docs_src/commands/context/tutorial001.py hl[17,21] *}
 
 Check it:
 
@@ -46,9 +44,7 @@ And if no command is provided, the help message is shown.
 
 But we could make it run even without a subcommand with `invoke_without_command=True`:
 
-```Python hl_lines="16"
-{!../docs_src/commands/context/tutorial002.py!}
-```
+{* docs_src/commands/context/tutorial002.py hl[16] *}
 
 Check it:
 
@@ -78,9 +74,7 @@ For that, we can get the `typer.Context` and check if there's an invoked command
 
 If it's `None`, it means that we are not calling a subcommand but the main program (the callback) directly:
 
-```Python hl_lines="17  21"
-{!../docs_src/commands/context/tutorial003.py!}
-```
+{* docs_src/commands/context/tutorial003.py hl[17,21] *}
 
 Check it:
 
@@ -111,9 +105,7 @@ For example, you could keep additional *CLI parameters* not declared in your CLI
 
 Then you can access those extra raw *CLI parameters* as a `list` of `str` in `ctx.args`:
 
-```Python hl_lines="7  9 10"
-{!../docs_src/commands/context/tutorial004.py!}
-```
+{* docs_src/commands/context/tutorial004.py hl[7,9,10] *}
 
 <div class="termy">
 

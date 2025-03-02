@@ -2,9 +2,7 @@
 
 You can get the application directory where you can, for example, save configuration files with `typer.get_app_dir()`:
 
-```Python hl_lines="9"
-{!../docs_src/app_dir/tutorial001.py!}
-```
+{* docs_src/app_dir/tutorial001.py hl[9] *}
 
 It will give you a directory for storing configurations appropriate for your CLI program for the current user in each operating system.
 

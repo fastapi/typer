@@ -1,5 +1,8 @@
 import inspect
 import os
+import platform
+import shutil
+import subprocess
 import sys
 import traceback
 from datetime import datetime
@@ -12,9 +15,9 @@ from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, U
 from uuid import UUID
 
 import click
-from typing_extensions import get_args, get_origin
 
 from ._typing import is_literal_type, is_union, literal_values
+from ._typing import get_args, get_origin, is_union
 from .completion import get_completion_inspect_parameters
 from .core import (
     DEFAULT_MARKUP_MODE,
@@ -181,7 +184,6 @@ class Typer:
 
     def callback(
         self,
-        name: Optional[str] = Default(None),
         *,
         cls: Optional[Type[TyperGroup]] = Default(None),
         invoke_without_command: bool = Default(False),
@@ -203,7 +205,6 @@ class Typer:
     ) -> Callable[[CommandFunctionType], CommandFunctionType]:
         def decorator(f: CommandFunctionType) -> CommandFunctionType:
             self.registered_callback = TyperInfo(
-                name=name,
                 cls=cls,
                 invoke_without_command=invoke_without_command,
                 no_args_is_help=no_args_is_help,
@@ -386,21 +387,6 @@ def get_command(typer_instance: Typer) -> click.Command:
     )  # pragma: no cover
 
 
-def get_group_name(typer_info: TyperInfo) -> Optional[str]:
-    if typer_info.callback:
-        # Priority 1: Callback passed in app.add_typer()
-        return get_command_name(typer_info.callback.__name__)
-    if typer_info.typer_instance:
-        registered_callback = typer_info.typer_instance.registered_callback
-        if registered_callback:
-            if registered_callback.callback:
-                # Priority 2: Callback passed in @subapp.callback()
-                return get_command_name(registered_callback.callback.__name__)
-        if typer_info.typer_instance.info.callback:
-            return get_command_name(typer_info.typer_instance.info.callback.__name__)
-    return None
-
-
 def solve_typer_info_help(typer_info: TyperInfo) -> str:
     # Priority 1: Explicit value was set in app.add_typer()
     if not isinstance(typer_info.help, DefaultPlaceholder):
@@ -477,8 +463,6 @@ def solve_typer_info_defaults(typer_info: TyperInfo) -> TyperInfo:
             pass
         # Value not set, use the default
         values[name] = value.value
-    if values["name"] is None:
-        values["name"] = get_group_name(typer_info)
     values["help"] = solve_typer_info_help(typer_info)
     return TyperInfo(**values)
 
@@ -489,9 +473,9 @@ def get_group_from_info(
     pretty_exceptions_short: bool,
     rich_markup_mode: MarkupMode,
 ) -> TyperGroup:
-    assert (
-        group_info.typer_instance
-    ), "A Typer instance is needed to generate a Click Group"
+    assert group_info.typer_instance, (
+        "A Typer instance is needed to generate a Click Group"
+    )
     commands: Dict[str, click.Command] = {}
     for command_info in group_info.typer_instance.registered_commands:
         command = get_command_from_info(
@@ -509,6 +493,16 @@ def get_group_from_info(
         )
         if sub_group.name:
             commands[sub_group.name] = sub_group
+        else:
+            if sub_group.callback:
+                import warnings
+
+                warnings.warn(
+                    "The 'callback' parameter is not supported by Typer when using `add_typer` without a name",
+                    stacklevel=5,
+                )
+            for sub_command_name, sub_command in sub_group.commands.items():
+                commands[sub_command_name] = sub_command
     solved_info = solve_typer_info_defaults(group_info)
     (
         params,
@@ -826,14 +820,14 @@ def get_click_param(
             required = True
         else:
             default_value = parameter_info.default
-    elif param.default == Required or param.default == param.empty:
+    elif param.default == Required or param.default is param.empty:
         required = True
         parameter_info = ArgumentInfo()
     else:
         default_value = param.default
         parameter_info = OptionInfo()
     annotation: Any
-    if not param.annotation == param.empty:
+    if param.annotation is not param.empty:
         annotation = param.annotation
     else:
         annotation = str
@@ -858,16 +852,16 @@ def get_click_param(
         # Handle Tuples and Lists
         if lenient_issubclass(origin, List):
             main_type = get_args(main_type)[0]
-            assert not get_origin(
-                main_type
-            ), "List types with complex sub-types are not currently supported"
+            assert not get_origin(main_type), (
+                "List types with complex sub-types are not currently supported"
+            )
             is_list = True
         elif lenient_issubclass(origin, Tuple):  # type: ignore
             types = []
             for type_ in get_args(main_type):
-                assert not get_origin(
-                    type_
-                ), "Tuple types with complex sub-types are not currently supported"
+                assert not get_origin(type_), (
+                    "Tuple types with complex sub-types are not currently supported"
+                )
                 types.append(
                     get_click_type(annotation=type_, parameter_info=parameter_info)
                 )
@@ -885,7 +879,7 @@ def get_click_param(
     if is_tuple:
         convertor = generate_tuple_convertor(get_args(main_type))
     if isinstance(parameter_info, OptionInfo):
-        if main_type is bool and parameter_info.is_flag is not False:
+        if main_type is bool:
             is_flag = True
             # Click doesn't accept a flag of type bool, only None, and then it sets it
             # to bool internally
@@ -912,7 +906,6 @@ def get_click_param(
                 prompt_required=parameter_info.prompt_required,
                 hide_input=parameter_info.hide_input,
                 is_flag=is_flag,
-                flag_value=parameter_info.flag_value,
                 multiple=is_list,
                 count=parameter_info.count,
                 allow_from_autoenv=parameter_info.allow_from_autoenv,
@@ -1084,3 +1077,68 @@ def run(function: Callable[..., Any]) -> None:
     app = Typer(add_completion=False)
     app.command()(function)
     app()
+
+
+def _is_macos() -> bool:
+    return platform.system() == "Darwin"
+
+
+def _is_linux_or_bsd() -> bool:
+    if platform.system() == "Linux":
+        return True
+
+    return "BSD" in platform.system()
+
+
+def launch(url: str, wait: bool = False, locate: bool = False) -> int:
+    """This function launches the given URL (or filename) in the default
+    viewer application for this file type.  If this is an executable, it
+    might launch the executable in a new session.  The return value is
+    the exit code of the launched application.  Usually, ``0`` indicates
+    success.
+
+    This function handles url in different operating systems separately:
+    - On macOS (Darwin), it uses the 'open' command.
+    - On Linux and BSD, it uses 'xdg-open' if available.
+    - On Windows (and other OSes), it uses the standard webbrowser module.
+
+    The function avoids, when possible, using the webbrowser module on Linux and macOS
+    to prevent spammy terminal messages from some browsers (e.g., Chrome).
+
+    Examples::
+
+        typer.launch("https://typer.tiangolo.com/")
+        typer.launch("/my/downloaded/file", locate=True)
+
+    :param url: URL or filename of the thing to launch.
+    :param wait: Wait for the program to exit before returning. This
+        only works if the launched program blocks. In particular,
+        ``xdg-open`` on Linux does not block.
+    :param locate: if this is set to `True` then instead of launching the
+                   application associated with the URL it will attempt to
+                   launch a file manager with the file located.  This
+                   might have weird effects if the URL does not point to
+                   the filesystem.
+    """
+
+    if url.startswith("http://") or url.startswith("https://"):
+        if _is_macos():
+            return subprocess.Popen(
+                ["open", url], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT
+            ).wait()
+
+        has_xdg_open = _is_linux_or_bsd() and shutil.which("xdg-open") is not None
+
+        if has_xdg_open:
+            return subprocess.Popen(
+                ["xdg-open", url], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT
+            ).wait()
+
+        import webbrowser
+
+        webbrowser.open(url)
+
+        return 0
+
+    else:
+        return click.launch(url)
