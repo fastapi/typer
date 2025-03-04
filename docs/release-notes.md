@@ -4,6 +4,7 @@
 
 ### Internal
 
+* ⬆ Bump ruff from 0.9.7 to 0.9.9. PR [#1166](https://github.com/fastapi/typer/pull/1166) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ✏️ Fix typo in test name. PR [#1165](https://github.com/fastapi/typer/pull/1165) by [@svlandeg](https://github.com/svlandeg).
 
 ## 0.15.2
