@@ -57,8 +57,7 @@ def test_rich_markup_mode_rich():
             marks=pytest.mark.xfail,
         ),
         pytest.param(
-            None,
-            ["First line", "", "Line 1", "", "Line 2", "", "Line 3", ""]
+            None, ["First line", "", "Line 1", "", "Line 2", "", "Line 3", ""]
         ),
     ],
 )
@@ -172,9 +171,7 @@ def test_markup_mode_newline_issue447(mode: str, lines: List[str]):
         pytest.param(
             "rich", ["First line", "", "- 1 - 2 - 3", ""], marks=pytest.mark.xfail
         ),
-        pytest.param(
-            None, ["First line", "", "- 1 - 2 - 3", ""]
-        ),
+        pytest.param(None, ["First line", "", "- 1 - 2 - 3", ""]),
     ],
 )
 def test_markup_mode_bullets_single_newline(mode: str, lines: List[str]):
@@ -215,10 +212,7 @@ def test_markup_mode_bullets_single_newline(mode: str, lines: List[str]):
             ["First line", "", "- 1", "", "- 2", "", "- 3", ""],
             marks=pytest.mark.xfail,
         ),
-        pytest.param(
-            None,
-            ["First line", "", "- 1", "", "- 2", "", "- 3", ""]
-        ),
+        pytest.param(None, ["First line", "", "- 1", "", "- 2", "", "- 3", ""]),
     ],
 )
 def test_markup_mode_bullets_double_newline(mode: str, lines: List[str]):
