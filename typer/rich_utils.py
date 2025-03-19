@@ -22,7 +22,7 @@ from rich.table import Table
 from rich.text import Text
 from rich.theme import Theme
 
-if sys.version_info >= (3, 8):
+if sys.version_info >= (3, 9):
     from typing import Literal
 else:
     from typing_extensions import Literal
@@ -63,6 +63,7 @@ STYLE_COMMANDS_TABLE_PADDING = (0, 1)
 STYLE_COMMANDS_TABLE_BOX = ""
 STYLE_COMMANDS_TABLE_ROW_STYLES = None
 STYLE_COMMANDS_TABLE_BORDER_STYLE = None
+STYLE_COMMANDS_TABLE_FIRST_COLUMN = "bold cyan"
 STYLE_ERRORS_PANEL_BORDER = "red"
 ALIGN_ERRORS_PANEL: Literal["left", "center", "right"] = "left"
 STYLE_ERRORS_SUGGESTION = "dim"
@@ -488,7 +489,7 @@ def _print_commands_panel(
     # Define formatting in first column, as commands don't match highlighter
     # regex
     commands_table.add_column(
-        style="bold cyan",
+        style=STYLE_COMMANDS_TABLE_FIRST_COLUMN,
         no_wrap=True,
         width=cmd_len,
     )
@@ -712,12 +713,6 @@ def rich_abort_error() -> None:
     console.print(ABORTED_TEXT, style=STYLE_ABORTED)
 
 
-def print_with_rich(text: str) -> None:
-    """Print richly formatted message."""
-    console = _get_rich_console()
-    console.print(text)
-
-
 def rich_to_html(input_text: str) -> str:
     """Print the HTML version of a rich-formatted input string.
 
@@ -729,3 +724,9 @@ def rich_to_html(input_text: str) -> str:
     console.print(input_text, overflow="ignore", crop=False)
 
     return console.export_html(inline_styles=True, code_format="{code}").strip()
+
+
+def rich_render_text(text: str) -> str:
+    """Remove rich tags and render a pure text representation"""
+    console = _get_rich_console()
+    return "".join(segment.text for segment in console.render(text)).rstrip("\n")
