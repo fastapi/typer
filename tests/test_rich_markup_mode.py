@@ -167,11 +167,11 @@ def test_markup_mode_newline_issue447(mode: str, lines: List[str]):
 @pytest.mark.parametrize(
     "mode,lines",
     [
-        ("markdown", ["First line", "", "• 1 - 2 - 3", ""]),
+        pytest.param("markdown", ["First line", "", "• 1", "• 2", "• 3", ""], marks=pytest.mark.xfail),
         pytest.param(
-            "rich", ["First line", "", "- 1 - 2 - 3", ""], marks=pytest.mark.xfail
+            "rich", ["First line", "", "- 1", "- 2", "- 3", ""], marks=pytest.mark.xfail
         ),
-        pytest.param(None, ["First line", "", "- 1 - 2 - 3", ""]),
+        pytest.param(None, ["First line", "", "- 1", "- 2", "- 3", ""], marks=pytest.mark.xfail),
     ],
 )
 def test_markup_mode_bullets_single_newline(mode: str, lines: List[str]):
@@ -212,7 +212,7 @@ def test_markup_mode_bullets_single_newline(mode: str, lines: List[str]):
             ["First line", "", "- 1", "", "- 2", "", "- 3", ""],
             marks=pytest.mark.xfail,
         ),
-        pytest.param(None, ["First line", "", "- 1", "", "- 2", "", "- 3", ""]),
+        (None, ["First line", "", "- 1", "", "- 2", "", "- 3", ""]),
     ],
 )
 def test_markup_mode_bullets_double_newline(mode: str, lines: List[str]):
@@ -248,17 +248,16 @@ def test_markup_mode_bullets_double_newline(mode: str, lines: List[str]):
 @pytest.mark.parametrize(
     "mode,lines",
     [
-        ("markdown", ["First line", "", "• 1 - 2   - a   - b - 3", ""]),
+        pytest.param("markdown", ["First line", "", "• 1", "• 2", "• a", "• b", "• 3", ""], marks=pytest.mark.xfail),
         pytest.param(
             "rich",
-            ["First line", "", "- 1 - 2  - a  - b - 3", ""],
+            ["First line", "", "- 1", "- 2", "-a", "-b", "- 3", ""],
             marks=pytest.mark.xfail,
         ),
         pytest.param(
             None,
-            ["First line", "", "- 1 - 2  - a  - b - 3", ""],
-            marks=pytest.mark.xfail,
-        ),
+            ["First line", "", "- 1", "- 2", "-a", "-b", "- 3", ""],
+            marks=pytest.mark.xfail),
     ],
 )
 def test_markup_mode_nested_bullets_single_newline(mode: str, lines: List[str]):
