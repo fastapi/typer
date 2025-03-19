@@ -57,9 +57,8 @@ def test_rich_markup_mode_rich():
             marks=pytest.mark.xfail,
         ),
         pytest.param(
-            "none",
-            ["First line", "", "Line 1", "", "Line 2", "", "Line 3", ""],
-            marks=pytest.mark.xfail,
+            None,
+            ["First line", "", "Line 1", "", "Line 2", "", "Line 3", ""]
         ),
     ],
 )
@@ -85,7 +84,8 @@ def test_markup_mode_newline_pr815(mode: str, lines: List[str]):
 
     result = runner.invoke(app, ["--help"])
     result_lines = [line.strip() for line in result.stdout.split("\n")]
-    assert any(c in result.stdout for c in rounded)
+    if mode:
+        assert any(c in result.stdout for c in rounded)
     help_start = result_lines.index("First line")
     arg_start = [i for i, row in enumerate(result_lines) if "Arguments" in row][0]
     assert help_start != -1
@@ -120,7 +120,7 @@ def test_markup_mode_newline_pr815(mode: str, lines: List[str]):
             marks=pytest.mark.xfail,
         ),
         pytest.param(
-            "none",
+            None,
             [
                 "This header is just pretty long really",
                 "",
@@ -129,7 +129,6 @@ def test_markup_mode_newline_pr815(mode: str, lines: List[str]):
                 "And a short line 2",
                 "",
             ],
-            marks=pytest.mark.xfail,
         ),
     ],
 )
@@ -158,7 +157,8 @@ def test_markup_mode_newline_issue447(mode: str, lines: List[str]):
 
     result = runner.invoke(app, ["--help"])
     result_lines = [line.strip() for line in result.stdout.split("\n")]
-    assert any(c in result.stdout for c in rounded)
+    if mode:
+        assert any(c in result.stdout for c in rounded)
     help_start = [i for i, row in enumerate(result_lines) if "This header" in row][0]
     arg_start = [i for i, row in enumerate(result_lines) if "Arguments" in row][0]
     assert help_start != -1
@@ -173,7 +173,7 @@ def test_markup_mode_newline_issue447(mode: str, lines: List[str]):
             "rich", ["First line", "", "- 1 - 2 - 3", ""], marks=pytest.mark.xfail
         ),
         pytest.param(
-            "none", ["First line", "", "- 1 - 2 - 3", ""], marks=pytest.mark.xfail
+            None, ["First line", "", "- 1 - 2 - 3", ""]
         ),
     ],
 )
@@ -198,7 +198,8 @@ def test_markup_mode_bullets_single_newline(mode: str, lines: List[str]):
 
     result = runner.invoke(app, ["--help"])
     result_lines = [line.strip() for line in result.stdout.split("\n")]
-    assert any(c in result.stdout for c in rounded)
+    if mode:
+        assert any(c in result.stdout for c in rounded)
     help_start = result_lines.index("First line")
     arg_start = [i for i, row in enumerate(result_lines) if "Arguments" in row][0]
     assert help_start != -1
@@ -215,9 +216,8 @@ def test_markup_mode_bullets_single_newline(mode: str, lines: List[str]):
             marks=pytest.mark.xfail,
         ),
         pytest.param(
-            "none",
-            ["First line", "", "- 1", "", "- 2", "", "- 3", ""],
-            marks=pytest.mark.xfail,
+            None,
+            ["First line", "", "- 1", "", "- 2", "", "- 3", ""]
         ),
     ],
 )
@@ -243,7 +243,8 @@ def test_markup_mode_bullets_double_newline(mode: str, lines: List[str]):
 
     result = runner.invoke(app, ["--help"])
     result_lines = [line.strip() for line in result.stdout.split("\n")]
-    assert any(c in result.stdout for c in rounded)
+    if mode:
+        assert any(c in result.stdout for c in rounded)
     help_start = result_lines.index("First line")
     arg_start = [i for i, row in enumerate(result_lines) if "Arguments" in row][0]
     assert help_start != -1
@@ -260,7 +261,7 @@ def test_markup_mode_bullets_double_newline(mode: str, lines: List[str]):
             marks=pytest.mark.xfail,
         ),
         pytest.param(
-            "none",
+            None,
             ["First line", "", "- 1 - 2  - a  - b - 3", ""],
             marks=pytest.mark.xfail,
         ),
@@ -288,7 +289,8 @@ def test_markup_mode_nested_bullets_single_newline(mode: str, lines: List[str]):
 
     result = runner.invoke(app, ["--help"])
     result_lines = [line.strip() for line in result.stdout.split("\n")]
-    assert any(c in result.stdout for c in rounded)
+    if mode:
+        assert any(c in result.stdout for c in rounded)
     help_start = result_lines.index("First line")
     arg_start = [i for i, row in enumerate(result_lines) if "Arguments" in row][0]
     assert help_start != -1
@@ -305,9 +307,8 @@ def test_markup_mode_nested_bullets_single_newline(mode: str, lines: List[str]):
             marks=pytest.mark.xfail,
         ),
         pytest.param(
-            "none",
+            None,
             ["First line", "", "- 1", "", "- 2", "", "- a", "", "- b", "", "- 3", ""],
-            marks=pytest.mark.xfail,
         ),
     ],
 )
@@ -337,7 +338,8 @@ def test_markup_mode_nested_bullets_double_newline(mode: str, lines: List[str]):
 
     result = runner.invoke(app, ["--help"])
     result_lines = [line.strip() for line in result.stdout.split("\n")]
-    assert any(c in result.stdout for c in rounded)
+    if mode:
+        assert any(c in result.stdout for c in rounded)
     help_start = result_lines.index("First line")
     arg_start = [i for i, row in enumerate(result_lines) if "Arguments" in row][0]
     assert help_start != -1
