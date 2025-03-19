@@ -190,7 +190,8 @@ def _get_help_text(
     help_text = help_text.partition("\f")[0]
 
     # Get the first paragraph
-    first_line = help_text.split("\n\n")[0]
+    first_line, *remaining_paragraphs = help_text.split("\n\n")
+
     # Remove single linebreaks
     if markup_mode != MARKUP_MODE_MARKDOWN and not first_line.startswith("\b"):
         first_line = first_line.replace("\n", " ")
@@ -201,9 +202,10 @@ def _get_help_text(
     )
 
     # Get remaining lines, remove single line breaks and format as dim
-    remaining_paragraphs = help_text.split("\n\n")[1:]
     if remaining_paragraphs:
-        if markup_mode != MARKUP_MODE_RICH:
+        if markup_mode != MARKUP_MODE_MARKDOWN:
+            yield Text("")
+        if markup_mode not in (MARKUP_MODE_RICH, MARKUP_MODE_MARKDOWN):
             # Remove single linebreaks
             remaining_paragraphs = [
                 x.replace("\n", " ").strip()
@@ -214,7 +216,7 @@ def _get_help_text(
             # Join back together
             remaining_lines = "\n".join(remaining_paragraphs)
         else:
-            # Join with double linebreaks if markdown
+            # Join with double linebreaks if markdown or Rich markup
             remaining_lines = "\n\n".join(remaining_paragraphs)
 
         yield _make_rich_text(
