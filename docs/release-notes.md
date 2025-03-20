@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Fixes
+
+* 🐛 Fix newline after header in help text, and add more tests for the behaviour of `rich_markup_mode` . PR [#964](https://github.com/fastapi/typer/pull/964) by [@svlandeg](https://github.com/svlandeg).
+
 ### Internal
 
 * ⬆ Bump ruff from 0.9.10 to 0.11.0. PR [#1180](https://github.com/fastapi/typer/pull/1180) by [@dependabot[bot]](https://github.com/apps/dependabot).
