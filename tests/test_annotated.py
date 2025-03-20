@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import typer
 from typer.testing import CliRunner
 from typing_extensions import Annotated
@@ -76,3 +78,19 @@ def test_annotated_option_with_argname_doesnt_mutate_multiple_calls():
     result = runner.invoke(app, ["--force"])
     assert result.exit_code == 0, result.output
     assert "Forcing operation" in result.output
+
+
+def test_annotated_custom_path():
+    app = typer.Typer()
+
+    class CustomPath(Path):
+        pass
+
+    @app.command()
+    def custom_parser(
+        pth: Annotated[CustomPath, typer.Argument(parser=CustomPath)],
+    ):
+        assert isinstance(pth, CustomPath)
+
+    result = runner.invoke(app, "/some/quirky/path/implementation")
+    assert result.exit_code == 0
