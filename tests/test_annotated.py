@@ -1,8 +1,9 @@
 import sys
+from pathlib import Path
+
 import typer
 from typer.testing import CliRunner
 from typing_extensions import Annotated
-from pathlib import Path
 
 from .utils import needs_py310
 
