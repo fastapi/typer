@@ -1,8 +1,8 @@
-from pathlib import Path
-
+import sys
 import typer
 from typer.testing import CliRunner
 from typing_extensions import Annotated
+from pathlib import Path
 
 from .utils import needs_py310
 
@@ -84,7 +84,10 @@ def test_annotated_custom_path():
     app = typer.Typer()
 
     class CustomPath(Path):
-        pass
+        # Subclassing Path was not fully supported before 3.12
+        # https://docs.python.org/3.12/whatsnew/3.12.html
+        if sys.version_info < (3, 12):
+            _flavour = type(Path())._flavour
 
     @app.command()
     def custom_parser(
