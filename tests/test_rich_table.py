@@ -41,6 +41,18 @@ SIMPLE_LIST = [
     "foo",
 ]
 
+UNSAFE_DICT = {
+    "[bold]rick[/]": "key has markup",
+    "value-markup": "This [red]body[/] has markup",
+    "simple-list": ["[red]abc[/]", "[yellow]def[/]"],
+    "complex-list": [
+        {
+            "[green]name": "foo",
+            "body": "[//]contains escape",
+        },
+    ],
+}
+
 
 def test_rich_table_defaults_outer():
     columns = ["col 1", "Column B", "III"]
@@ -370,3 +382,47 @@ def test_create_table_simple_list():
     assert col0._cells[3] == "False"
     assert col0._cells[4] == "None"
     assert col0._cells[5] == "foo"
+
+
+def test_unsafe_table():
+    data = deepcopy(UNSAFE_DICT)
+    config = TableConfig(
+        key_fields=["[green]name"]
+    )
+    uut = rich_table_factory(data, config)
+    assert uut.row_count == 4
+    assert len(uut.columns) == 2
+
+    col0 = uut.columns[0]
+    col1 = uut.columns[1]
+
+    # check headers
+    assert col0.header == "Property"
+    assert col1.header == "Value"
+
+    # check the values
+    assert col0._cells[0] == "\\[bold]rick\\[/]"
+    assert col1._cells[0] == "key has markup"
+
+    assert col0._cells[1] == "value-markup"
+    assert col1._cells[1] == "This \\[red]body\\[/] has markup"
+
+    assert col0._cells[2] == "simple-list"
+    assert col1._cells[2] == "\\[red]abc\\[/], \\[yellow]def\\[/]"
+
+    assert col0._cells[3] == "complex-list"
+    inner = col1._cells[3]
+    assert inner.row_count == 1
+    assert len(inner.columns) == 2
+    ic0 = inner.columns[0]
+    ic1 = inner.columns[1]
+
+    assert ic0._cells[0] == "foo"
+    deeper = ic1._cells[0]
+    assert deeper.row_count == 1
+    assert len(deeper.columns) == 2
+
+    dc0 = deeper.columns[0]
+    dc1 = deeper.columns[1]
+    assert dc0._cells[0] == "body"
+    assert dc1._cells[0] == "\\[//]contains escape"

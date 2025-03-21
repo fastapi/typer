@@ -2,6 +2,7 @@ from gettext import gettext
 from typing import Any, Dict, List, Optional
 
 from rich.box import HEAVY_HEAD
+from rich.markup import escape
 from rich.table import Table
 
 DEFAULT_ROW_PROPS = {
@@ -125,6 +126,11 @@ def _is_url(s: str, url_prefixes: List[str]) -> bool:
     return any(s.startswith(p) for p in url_prefixes)
 
 
+def _safe(v: Any) -> str:
+    """Converts 'v' to a string that is properly escaped."""
+    return escape(str(v))
+
+
 def _create_list_table(
     items: List[Dict[Any, Any]], outer: bool, config: TableConfig
 ) -> RichTable:
@@ -162,7 +168,7 @@ def _create_list_table(
     )
     for item in items:
         # id may be an int, so convert to string before truncating
-        name = str(item.pop(name_key, config.unknown_label))
+        name = _safe(item.pop(name_key, config.unknown_label))
         body = _table_cell_value(item, config)
         table.add_row(_truncate(name, config.key_max_len), body)
 
@@ -181,7 +187,7 @@ def _create_object_table(
         *headers, outer=outer, show_lines=False, row_props=config.row_properties
     )
     for k, v in obj.items():
-        name = str(k)
+        name = _safe(k)
         table.add_row(_truncate(name, config.key_max_len), _table_cell_value(v, config))
 
     return table
@@ -201,10 +207,10 @@ def _table_cell_value(obj: Any, config: TableConfig) -> Any:
             value = _create_list_table(obj, outer=False, config=config)
         else:
             values = [str(x) for x in obj]
-            s = str(", ".join(values))
+            s = _safe(", ".join(values))
             value = _truncate(s, config.value_max_len)
     else:
-        s = str(obj)
+        s = _safe(obj)
         max_len = (
             config.url_max_len
             if _is_url(s, config.url_prefixes)
