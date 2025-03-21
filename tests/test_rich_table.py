@@ -386,9 +386,7 @@ def test_create_table_simple_list():
 
 def test_unsafe_table():
     data = deepcopy(UNSAFE_DICT)
-    config = TableConfig(
-        key_fields=["[green]name"]
-    )
+    config = TableConfig(key_fields=["[green]name"])
     uut = rich_table_factory(data, config)
     assert uut.row_count == 4
     assert len(uut.columns) == 2
