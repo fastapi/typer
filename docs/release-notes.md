@@ -4,6 +4,7 @@
 
 ### Fixes
 
+* 🐛 Ensure that autocompletion works for `Path` arguments/options. PR [#1138](https://github.com/fastapi/typer/pull/1138) by [@svlandeg](https://github.com/svlandeg).
 * 🐛 Fix newline after header in help text, and add more tests for the behaviour of `rich_markup_mode` . PR [#964](https://github.com/fastapi/typer/pull/964) by [@svlandeg](https://github.com/svlandeg).
 
 ### Internal
