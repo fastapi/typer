@@ -200,6 +200,9 @@ def _get_help_text(
         markup_mode=markup_mode,
     )
 
+    # Add a newline inbetween the header and the remaining paragraphs
+    yield Text("")
+
     # Get remaining lines, remove single line breaks and format as dim
     remaining_paragraphs = help_text.split("\n\n")[1:]
     if remaining_paragraphs:
