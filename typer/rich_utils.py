@@ -372,10 +372,9 @@ def _print_options_panel(
         # Column for a metavar, if we have one
         metavar = Text(style=STYLE_METAVAR, overflow="fold")
 
-        # Starting with Click 8.2 we need to pass the context.
-        # We need to check on Clicks function, as our override uses varargs
+        # Starting with Click 8.2 we need to pass the context
         if inspect.signature(Parameter.make_metavar).parameters.get("ctx"):
-            metavar_str = param.make_metavar(ctx)
+            metavar_str = param.make_metavar(ctx)  # type: ignore
         else:
             metavar_str = param.make_metavar()
 
