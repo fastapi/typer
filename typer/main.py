@@ -15,9 +15,8 @@ from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, U
 from uuid import UUID
 
 import click
-from typing_extensions import get_args, get_origin
 
-from ._typing import is_union
+from ._typing import get_args, get_origin, is_union
 from .completion import get_completion_inspect_parameters
 from .core import (
     DEFAULT_MARKUP_MODE,
@@ -45,6 +44,7 @@ from .models import (
     ParamMeta,
     Required,
     TyperInfo,
+    TyperPath,
 )
 from .utils import get_params_from_function
 
@@ -744,7 +744,7 @@ def get_click_type(
         or parameter_info.path_type
         or parameter_info.resolve_path
     ):
-        return click.Path(
+        return TyperPath(
             exists=parameter_info.exists,
             file_okay=parameter_info.file_okay,
             dir_okay=parameter_info.dir_okay,
