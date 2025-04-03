@@ -708,7 +708,9 @@ class BytesParamType(click.ParamType):
         if isinstance(value, bytes):
             return value
         try:
-            return value.encode()
+            if isinstance(value, str):
+                return value.encode()
+            return str(value).encode()
         except (UnicodeDecodeError, AttributeError):
             self.fail(
                 f"{value!r} is not a valid string that can be encoded to bytes",
