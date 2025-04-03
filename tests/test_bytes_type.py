@@ -67,8 +67,8 @@ def test_bytes_non_string_input():
 
 def test_bytes_conversion_error():
     """Test error handling when bytes conversion fails."""
-    from typer.main import BytesParamType
     import click
+    from typer.main import BytesParamType
 
     bytes_type = BytesParamType()
 
@@ -76,7 +76,7 @@ def test_bytes_conversion_error():
     class MockObj:
         def __str__(self):
             # This will trigger the UnicodeDecodeError in the except block
-            raise UnicodeDecodeError('utf-8', b'\x80abc', 0, 1, 'invalid start byte')
+            raise UnicodeDecodeError("utf-8", b"\x80abc", 0, 1, "invalid start byte")
 
     # Create a mock context for testing
     ctx = click.Context(click.Command("test"))
