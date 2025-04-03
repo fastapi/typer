@@ -1,6 +1,7 @@
-import typer
 import base64
 import binascii
+
+import typer
 from typer.testing import CliRunner
 
 runner = CliRunner()
@@ -30,7 +31,7 @@ def test_base64_encode_decode():
     # Test decoding
     result = runner.invoke(app, ["decode", "SGVsbG8sIHdvcmxkIQ=="])
     assert result.exit_code == 0
-    assert result.stdout.strip() == repr(b'Hello, world!')
+    assert result.stdout.strip() == repr(b"Hello, world!")
 
 
 def test_hex_encode_decode():
@@ -57,7 +58,7 @@ def test_hex_encode_decode():
     # Test from_hex
     result = runner.invoke(app, ["from-hex", "414243313233"])
     assert result.exit_code == 0
-    assert result.stdout.strip() == repr(b'ABC123')
+    assert result.stdout.strip() == repr(b"ABC123")
 
 
 def test_complex_bytes_operations():

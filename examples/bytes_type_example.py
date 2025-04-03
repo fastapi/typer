@@ -1,5 +1,6 @@
-import typer
 import base64
+
+import typer
 
 app = typer.Typer()
 

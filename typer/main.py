@@ -710,7 +710,11 @@ class BytesParamType(click.ParamType):
         try:
             return value.encode()
         except (UnicodeDecodeError, AttributeError):
-            self.fail(f"{value!r} is not a valid string that can be encoded to bytes", param, ctx)
+            self.fail(
+                f"{value!r} is not a valid string that can be encoded to bytes",
+                param,
+                ctx,
+            )
 
 
 BYTES = BytesParamType()
