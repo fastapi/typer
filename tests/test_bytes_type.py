@@ -84,7 +84,9 @@ def test_bytes_conversion_error():
     # This should raise a click.BadParameter exception
     try:
         bytes_type.convert(MockObj(), None, ctx)
-        raise AssertionError("Should have raised an exception")
+        raise AssertionError(
+            "Should have raised click.BadParameter"
+        )  # pragma: no cover
     except click.BadParameter:
         pass  # Test passes if we get here
 
