@@ -701,6 +701,21 @@ def get_callback(
     return wrapper
 
 
+class BytesParamType(click.ParamType):
+    name = "bytes"
+
+    def convert(self, value, param, ctx):
+        if isinstance(value, bytes):
+            return value
+        try:
+            return value.encode()
+        except (UnicodeDecodeError, AttributeError):
+            self.fail(f"{value!r} is not a valid string that can be encoded to bytes", param, ctx)
+
+
+BYTES = BytesParamType()
+
+
 def get_click_type(
     *, annotation: Any, parameter_info: ParameterInfo
 ) -> click.ParamType:
@@ -712,6 +727,8 @@ def get_click_type(
 
     elif annotation is str:
         return click.STRING
+    elif annotation is bytes:
+        return BYTES
     elif annotation is int:
         if parameter_info.min is not None or parameter_info.max is not None:
             min_ = None
