@@ -84,9 +84,9 @@ def test_bytes_conversion_error():
     # This should raise a click.BadParameter exception
     try:
         bytes_type.convert(MockObj(), None, ctx)
-        assert False, "Should have raised an exception"
+        raise AssertionError("Should have raised an exception")
     except click.BadParameter:
-        assert True
+        pass  # Test passes if we get here
 
 
 if __name__ == "__main__":
