@@ -24,7 +24,7 @@ def base64_decode(encoded: str):
         typer.echo(f"As string: {decoded.decode(errors='replace')}")
     except Exception as e:
         typer.echo(f"Error decoding base64: {e}", err=True)
-        raise typer.Exit(code=1)
+        raise typer.Exit(code=1) from e
 
 
 @app.command()
@@ -45,7 +45,7 @@ def hex_decode(hex_str: str):
         typer.echo(f"As string: {data.decode(errors='replace')}")
     except Exception as e:
         typer.echo(f"Error decoding hex: {e}", err=True)
-        raise typer.Exit(code=1)
+        raise typer.Exit(code=1) from e
 
 
 @app.command()
@@ -66,13 +66,13 @@ def convert(
             raw_bytes = base64.b64decode(data)
         except Exception as e:
             typer.echo(f"Error decoding base64: {e}", err=True)
-            raise typer.Exit(code=1)
+            raise typer.Exit(code=1) from e
     elif from_format == "hex":
         try:
             raw_bytes = binascii.unhexlify(data)
         except Exception as e:
             typer.echo(f"Error decoding hex: {e}", err=True)
-            raise typer.Exit(code=1)
+            raise typer.Exit(code=1) from e
     elif from_format != "raw":
         typer.echo(f"Unknown source format: {from_format}", err=True)
         raise typer.Exit(code=1)

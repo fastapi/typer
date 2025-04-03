@@ -704,7 +704,7 @@ def get_callback(
 class BytesParamType(click.ParamType):
     name = "bytes"
 
-    def convert(self, value, param, ctx):
+    def convert(self, value: Any, param: Optional[click.Parameter], ctx: Optional[click.Context]) -> bytes:
         if isinstance(value, bytes):
             return value
         try:
