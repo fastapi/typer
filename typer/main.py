@@ -901,8 +901,9 @@ def get_click_param(
         # Handle Tuples and Lists
         if lenient_issubclass(origin, List):
             main_type = get_args(main_type)[0]
-            assert not is_complex_subtype(main_type), \
+            assert not is_complex_subtype(main_type), (
                 "List types with complex sub-types are not currently supported"
+            )
             is_list = True
         elif lenient_issubclass(origin, Tuple):  # type: ignore
             types = []
