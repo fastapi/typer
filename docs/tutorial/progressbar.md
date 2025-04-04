@@ -6,9 +6,7 @@ If you are executing an operation that can take some time, you can inform it to 
 
 You can use <a href="https://rich.readthedocs.io/en/stable/progress.html" class="external-link" target="_blank">Rich's Progress Display</a> to show a progress bar, for example:
 
-```Python hl_lines="4  9"
-{!../docs_src/progressbar/tutorial001.py!}
-```
+{* docs_src/progressbar/tutorial001.py hl[4,9] *}
 
 You put the thing that you want to iterate over inside of Rich's `track()`, and then iterate over that.
 
@@ -48,9 +46,7 @@ Rich allows you to display many things in complex and advanced ways.
 
 For example, this will show two spinners:
 
-```Python hl_lines="4  8-15"
-{!../docs_src/progressbar/tutorial002.py!}
-```
+{* docs_src/progressbar/tutorial002.py hl[4,8:15] *}
 
 I can't show you the beautiful animation here in the docs. 😅
 
@@ -104,9 +100,7 @@ with typer.progressbar(something) as progress:
 
 And you pass as function argument to `typer.progressbar()` the thing that you would normally iterate over.
 
-```Python hl_lines="8"
-{!../docs_src/progressbar/tutorial003.py!}
-```
+{* docs_src/progressbar/tutorial003.py hl[8] *}
 
 So, if you have a list of users, this could be:
 
@@ -169,9 +163,7 @@ The progress bar is generated from the length of the iterable (e.g. the list of 
 
 But if the length is not available (for example, with something that fetches a new user from a web API each time) you can pass an explicit `length` to `typer.progressbar()`.
 
-```Python hl_lines="14"
-{!../docs_src/progressbar/tutorial004.py!}
-```
+{* docs_src/progressbar/tutorial004.py hl[14] *}
 
 Check it:
 
@@ -219,9 +211,7 @@ Remember, you are much better off using <a href="https://rich.readthedocs.io/" c
 
 You can also set a `label`:
 
-```Python hl_lines="8"
-{!../docs_src/progressbar/tutorial005.py!}
-```
+{* docs_src/progressbar/tutorial005.py hl[8] *}
 
 Check it:
 
@@ -237,9 +227,7 @@ If you need to manually iterate over something and update the progress bar irreg
 
 And then calling the `.update()` method in the object from the `with` statement:
 
-```Python hl_lines="8  12"
-{!../docs_src/progressbar/tutorial006.py!}
-```
+{* docs_src/progressbar/tutorial006.py hl[8,12] *}
 
 Check it:
 

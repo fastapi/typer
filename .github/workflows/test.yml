@@ -20,9 +20,9 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
-        python-version: [ "3.12" ]
+        python-version: [ "3.13" ]
         include:
-          - os: ubuntu-latest
+          - os: ubuntu-22.04
             python-version: "3.7"
           - os: macos-latest
             python-version: "3.8"
@@ -32,6 +32,8 @@ jobs:
             python-version: "3.10"
           - os: macos-latest
             python-version: "3.11"
+          - os: windows-latest
+            python-version: "3.12"
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
@@ -45,7 +47,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Setup uv
-        uses: astral-sh/setup-uv@v3
+        uses: astral-sh/setup-uv@v5
         with:
           version: "0.4.15"
           enable-cache: true
@@ -83,7 +85,7 @@ jobs:
         with:
           python-version: '3.8'
       - name: Setup uv
-        uses: astral-sh/setup-uv@v3
+        uses: astral-sh/setup-uv@v5
         with:
           version: "0.4.15"
           enable-cache: true
