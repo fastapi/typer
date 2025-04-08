@@ -4,10 +4,13 @@
 
 ### Fixes
 
+* 🐛 Ensure that autocompletion works for `Path` arguments/options. PR [#1138](https://github.com/fastapi/typer/pull/1138) by [@svlandeg](https://github.com/svlandeg).
 * 🐛 Fix newline after header in help text, and add more tests for the behaviour of `rich_markup_mode` . PR [#964](https://github.com/fastapi/typer/pull/964) by [@svlandeg](https://github.com/svlandeg).
 
 ### Internal
 
+* ⬆ Bump ruff from 0.11.1 to 0.11.2. PR [#1186](https://github.com/fastapi/typer/pull/1186) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1187](https://github.com/fastapi/typer/pull/1187) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * ⬆ Bump ruff from 0.11.0 to 0.11.1. PR [#1185](https://github.com/fastapi/typer/pull/1185) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ruff from 0.9.10 to 0.11.0. PR [#1180](https://github.com/fastapi/typer/pull/1180) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1181](https://github.com/fastapi/typer/pull/1181) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
