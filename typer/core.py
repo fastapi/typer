@@ -9,7 +9,6 @@ from typing import (
     Callable,
     Dict,
     List,
-    Literal,
     MutableMapping,
     Optional,
     Sequence,
@@ -26,6 +25,8 @@ import click.parser
 import click.shell_completion
 import click.types
 import click.utils
+
+from ._typing import Literal
 
 MarkupMode = Literal["markdown", "rich", None]
 
