@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.15.3
+
 ### Fixes
 
 * 🐛 Ensure that autocompletion works for `Path` arguments/options. PR [#1138](https://github.com/fastapi/typer/pull/1138) by [@svlandeg](https://github.com/svlandeg).
