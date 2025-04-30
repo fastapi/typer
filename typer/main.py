@@ -1136,4 +1136,4 @@ def launch(url: str, wait: bool = False, locate: bool = False) -> int:
         return 0
 
     else:
-        return click.launch(url)
+        return click.launch(url, wait=wait, locate=locate)
