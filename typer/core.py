@@ -27,6 +27,7 @@ import click.types
 import click.utils
 
 from ._typing import Literal
+from .utils import CLICK_8_2_0_OR_LATER
 
 MarkupMode = Literal["markdown", "rich", None]
 
@@ -329,7 +330,7 @@ class TyperArgument(click.core.Argument):
         # to support Arguments
         if self.hidden:
             return None
-        name = self.make_metavar()
+        name = self.make_metavar(ctx) if CLICK_8_2_0_OR_LATER else self.make_metavar()
         help = self.help or ""
         extra = []
         if self.show_envvar:
@@ -375,7 +376,7 @@ class TyperArgument(click.core.Argument):
             help = f"{help}  {extra_str}" if help else f"{extra_str}"
         return name, help
 
-    def make_metavar(self) -> str:
+    def make_metavar(self, ctx: Optional[click.Context] = None) -> str:
         # Modified version of click.core.Argument.make_metavar()
         # to include Argument name
         if self.metavar is not None:
@@ -383,7 +384,11 @@ class TyperArgument(click.core.Argument):
         var = (self.name or "").upper()
         if not self.required:
             var = f"[{var}]"
-        type_var = self.type.get_metavar(self)
+        type_var = (
+            self.type.get_metavar(self, ctx)
+            if CLICK_8_2_0_OR_LATER
+            else self.type.get_metavar(self)
+        )
         if type_var:
             var += f":{type_var}"
         if self.nargs != 1:
@@ -498,7 +503,7 @@ class TyperOption(click.core.Option):
                 any_prefix_is_slash = True
 
             if not self.is_flag and not self.count:
-                rv += f" {self.make_metavar()}"
+                rv += f" {self.make_metavar(ctx) if CLICK_8_2_0_OR_LATER else self.make_metavar()}"
 
             return rv
 

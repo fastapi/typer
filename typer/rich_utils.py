@@ -27,6 +27,8 @@ if sys.version_info >= (3, 9):
 else:
     from typing_extensions import Literal
 
+from .utils import CLICK_8_2_0_OR_LATER
+
 # Default styles
 STYLE_OPTION = "bold cyan"
 STYLE_SWITCH = "bold green"
@@ -370,7 +372,9 @@ def _print_options_panel(
 
         # Column for a metavar, if we have one
         metavar = Text(style=STYLE_METAVAR, overflow="fold")
-        metavar_str = param.make_metavar()
+        metavar_str = (
+            param.make_metavar(ctx) if CLICK_8_2_0_OR_LATER else param.make_metavar()
+        )
 
         # Do it ourselves if this is a positional argument
         if (

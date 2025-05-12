@@ -3,8 +3,17 @@ import sys
 from copy import copy
 from typing import Any, Callable, Dict, List, Tuple, Type, cast
 
+try:
+    from importlib.metadata import version
+except ModuleNotFoundError:
+    from importlib_metadata import version
+
+from packaging.version import Version
+
 from ._typing import Annotated, get_args, get_origin, get_type_hints
 from .models import ArgumentInfo, OptionInfo, ParameterInfo, ParamMeta
+
+CLICK_8_2_0_OR_LATER = Version(version("click")) >= Version("8.2.0")
 
 
 def _param_type_to_user_string(param_type: Type[ParameterInfo]) -> str:

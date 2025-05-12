@@ -35,6 +35,8 @@ classifiers = [
 ]
 dependencies = [
     "click >= 8.0.0",
+    "importlib-metadata; python_version < \"3.8\"",
+    "packaging",
     "typing-extensions >= 3.7.4.3",
 ]
 readme = "README.md"
