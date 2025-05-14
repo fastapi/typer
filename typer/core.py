@@ -388,7 +388,7 @@ class TyperArgument(click.core.Argument):
         signature = inspect.signature(self.type.get_metavar)
         if "ctx" in signature.parameters:
             # Click >= 8.2
-            type_var = self.type.get_metavar(self, ctx=ctx)  # type: ignore[call-arg]
+            type_var = self.type.get_metavar(self, ctx=ctx)  # type: ignore[arg-type]
         else:
             # Click < 8.2
             type_var = self.type.get_metavar(self)  # type: ignore[call-arg]
@@ -496,7 +496,7 @@ class TyperOption(click.core.Option):
         signature = inspect.signature(super_make_metavar)
         if "ctx" in signature.parameters:
             # Click >= 8.2
-            return super_make_metavar(ctx=ctx)  # type: ignore[call-arg]
+            return super_make_metavar(ctx=ctx)  # type: ignore[arg-type]
         # Click < 8.2
         return super().make_metavar()  # type: ignore[call-arg]
 
