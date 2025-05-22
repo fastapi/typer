@@ -25,6 +25,7 @@ import click.parser
 import click.shell_completion
 import click.types
 import click.utils
+from typer._compat import add_ctx_arg
 
 from ._typing import Literal
 
@@ -376,7 +377,8 @@ class TyperArgument(click.core.Argument):
         return name, help
 
     # TODO: When deprecating Click < 8.2, make context required
-    def make_metavar(self, ctx: Union[click.Context, None] = None) -> str:
+    @add_ctx_arg
+    def make_metavar(self, ctx: Union[click.Context, None]) -> str:
         # Modified version of click.core.Argument.make_metavar()
         # to include Argument name
         if self.metavar is not None:
@@ -490,13 +492,12 @@ class TyperOption(click.core.Option):
     ) -> Optional[Union[Any, Callable[[], Any]]]:
         return _extract_default_help_str(self, ctx=ctx)
 
-    # TODO: Remove when deprecating Click < 8.2
-    def make_metavar(self, ctx: Union[click.Context, None] = None) -> str:
-        super_make_metavar = super().make_metavar
-        signature = inspect.signature(super_make_metavar)
+    @add_ctx_arg
+    def make_metavar(self, ctx: Union[click.Context, None]) -> str:
+        signature = inspect.signature(super().make_metavar)
         if "ctx" in signature.parameters:
             # Click >= 8.2
-            return super_make_metavar(ctx=ctx)  # type: ignore[arg-type]
+            return super().make_metavar(ctx=ctx)  # type: ignore[arg-type]
         # Click < 8.2
         return super().make_metavar()  # type: ignore[call-arg]
 
