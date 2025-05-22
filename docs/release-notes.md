@@ -2,6 +2,16 @@
 
 ## Latest Changes
 
+### Internal
+
+* 🔧 Remove Google Analytics. PR [#1229](https://github.com/fastapi/typer/pull/1229) by [@tiangolo](https://github.com/tiangolo).
+
+## 0.15.4
+
+### Upgrades
+
+* 📌 Pin Click to < 8.2, compatibility for Click >= 8.2 will be added in a future version. PR [#1225](https://github.com/fastapi/typer/pull/1225) by [@tiangolo](https://github.com/tiangolo).
+
 ## 0.15.3
 
 ### Fixes
