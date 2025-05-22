@@ -329,7 +329,7 @@ class TyperArgument(click.core.Argument):
         # to support Arguments
         if self.hidden:
             return None
-        name = self.make_metavar()
+        name = self.make_metavar(ctx=ctx)
         help = self.help or ""
         extra = []
         if self.show_envvar:
@@ -375,7 +375,7 @@ class TyperArgument(click.core.Argument):
             help = f"{help}  {extra_str}" if help else f"{extra_str}"
         return name, help
 
-    def make_metavar(self) -> str:
+    def make_metavar(self, ctx: Union[click.Context, None] = None) -> str:
         # Modified version of click.core.Argument.make_metavar()
         # to include Argument name
         if self.metavar is not None:
@@ -383,7 +383,16 @@ class TyperArgument(click.core.Argument):
         var = (self.name or "").upper()
         if not self.required:
             var = f"[{var}]"
-        type_var = self.type.get_metavar(self)
+        # TODO: When deprecating Click < 8.2, remove this
+        signature = inspect.signature(self.type.get_metavar)
+        if "ctx" in signature.parameters:
+            # Click >= 8.2
+            type_var = self.type.get_metavar(self, ctx=ctx)  # type: ignore[arg-type]
+        else:
+            # Click < 8.2
+            type_var = self.type.get_metavar(self)  # type: ignore[call-arg]
+        # TODO: /When deprecating Click < 8.2, remove this, uncomment the line below
+        # type_var = self.type.get_metavar(self, ctx=ctx)
         if type_var:
             var += f":{type_var}"
         if self.nargs != 1:
@@ -480,6 +489,14 @@ class TyperOption(click.core.Option):
     ) -> Optional[Union[Any, Callable[[], Any]]]:
         return _extract_default_help_str(self, ctx=ctx)
 
+    def make_metavar(self, ctx: Union[click.Context, None] = None) -> str:
+        signature = inspect.signature(super().make_metavar)
+        if "ctx" in signature.parameters:
+            # Click >= 8.2
+            return super().make_metavar(ctx=ctx)  # type: ignore[arg-type]
+        # Click < 8.2
+        return super().make_metavar()  # type: ignore[call-arg]
+
     def get_help_record(self, ctx: click.Context) -> Optional[Tuple[str, str]]:
         # Duplicate all of Click's logic only to modify a single line, to allow boolean
         # flags with only names for False values as it's currently supported by Typer
@@ -498,7 +515,7 @@ class TyperOption(click.core.Option):
                 any_prefix_is_slash = True
 
             if not self.is_flag and not self.count:
-                rv += f" {self.make_metavar()}"
+                rv += f" {self.make_metavar(ctx=ctx)}"
 
             return rv
 
