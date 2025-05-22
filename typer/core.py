@@ -384,7 +384,7 @@ class TyperArgument(click.core.Argument):
         var = (self.name or "").upper()
         if not self.required:
             var = f"[{var}]"
-        # TODO: When Click < 8.2, remove this
+        # TODO: When deprecating Click < 8.2, remove this
         signature = inspect.signature(self.type.get_metavar)
         if "ctx" in signature.parameters:
             # Click >= 8.2
@@ -392,8 +392,8 @@ class TyperArgument(click.core.Argument):
         else:
             # Click < 8.2
             type_var = self.type.get_metavar(self)  # type: ignore[call-arg]
-        # TODO: /When Click < 8.2, remove this, uncomment the line below
-        # type_var = self.type.get_metavar(self, ctx=use_ctx)
+        # TODO: /When deprecating Click < 8.2, remove this, uncomment the line below
+        # type_var = self.type.get_metavar(self, ctx=ctx)
         if type_var:
             var += f":{type_var}"
         if self.nargs != 1:
