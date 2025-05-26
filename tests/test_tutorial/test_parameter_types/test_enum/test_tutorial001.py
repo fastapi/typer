@@ -26,6 +26,12 @@ def test_main():
     assert "Training neural network of type: conv" in result.output
 
 
+def test_main_default():
+    result = runner.invoke(app)
+    assert result.exit_code == 0
+    assert "Training neural network of type: simple" in result.output
+
+
 def test_invalid_case():
     result = runner.invoke(app, ["--network", "CONV"])
     assert result.exit_code != 0
