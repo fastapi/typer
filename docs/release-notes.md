@@ -2,6 +2,7 @@
 
 ## Latest Changes
 
+## 0.16.0
 
 ### Upgrades
 
