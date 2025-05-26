@@ -16,7 +16,7 @@ class TyperChoice(click.Choice, Generic[ParamTypeValue]):  # type: ignore[type-a
         # This class overrides that method to maintain the previous behavior.
         # In Click:
         # normed_value = choice.name if isinstance(choice, Enum) else str(choice)
-        normed_value = choice.value if isinstance(choice, Enum) else str(choice)
+        normed_value = str(choice.value) if isinstance(choice, Enum) else str(choice)
 
         if ctx is not None and ctx.token_normalize_func is not None:
             normed_value = ctx.token_normalize_func(normed_value)
