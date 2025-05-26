@@ -22,7 +22,7 @@ runner = CliRunner()
 def test_enum_choice() -> None:
     # This test is only for coverage of the new custom TyperChoice class
     result = runner.invoke(app, ["--name", "morty"], catch_exceptions=False)
-    # assert result.exit_code == 0
+    assert result.exit_code == 0
     assert "Hello Morty!" in result.output
 
     result = runner.invoke(app, ["--name", "Rick"])
