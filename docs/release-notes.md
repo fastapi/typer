@@ -2,13 +2,16 @@
 
 ## Latest Changes
 
-### Refactors
-
-* ✅ Refactor tests for compatibility with Click 8.2. PR [#1230](https://github.com/fastapi/typer/pull/1230) by [@tiangolo](https://github.com/tiangolo).
 
 ### Upgrades
 
 * ⬆️ Add compatibility with Click 8.2. PR [#1222](https://github.com/fastapi/typer/pull/1222) by [@tiangolo](https://github.com/tiangolo).
+
+When using the `CliRunner` with Click < 8.2, to be able to access the `stderr` output, you needed to set the `mix_stderr` parameter to `True`. Since Click 8.2 (and Typer 0.160 this release supporting it) this is no longer necessary, so this parameter has been removed.
+
+### Refactors
+
+* ✅ Refactor tests for compatibility with Click 8.2. PR [#1230](https://github.com/fastapi/typer/pull/1230) by [@tiangolo](https://github.com/tiangolo).
 
 ### Internal
 
