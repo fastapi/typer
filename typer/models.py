@@ -1,5 +1,6 @@
 import inspect
 import io
+import json
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -19,7 +20,6 @@ import click.shell_completion
 if TYPE_CHECKING:  # pragma: no cover
     from .core import TyperCommand, TyperGroup
     from .main import Typer
-
 
 NoneType = type(None)
 
@@ -50,6 +50,23 @@ class FileBinaryWrite(io.BufferedWriter):
 
 class CallbackParam(click.Parameter):
     pass
+
+
+class DictParamType(click.ParamType):
+    name = "dict"
+
+    def convert(
+        self,
+        value: Any,
+        param: Optional["click.Parameter"],
+        ctx: Optional["click.Context"],
+    ) -> Any:
+        if isinstance(value, dict):
+            return value
+        return json.loads(value)
+
+    def __repr__(self) -> str:
+        return "DICT"
 
 
 class DefaultPlaceholder:
