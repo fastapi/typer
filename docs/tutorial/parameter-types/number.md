@@ -100,7 +100,7 @@ ID is 5
 
 ## Counter *CLI options*
 
-You can make a *CLI option* work as a counter with the `counter` parameter:
+You can make a *CLI option* work as a counter with the `count` parameter:
 
 {* docs_src/parameter_types/number/tutorial003_an.py hl[5] *}
 
