@@ -209,6 +209,9 @@ def _main(
         except KeyboardInterrupt as e:
             raise click.exceptions.Exit(130) from e
         except click.ClickException as e:
+            _no_args_is_help_error = getattr(click.exceptions, 'NoArgsIsHelpError', None)
+            if _no_args_is_help_error is not None and isinstance(e, _no_args_is_help_error):
+                raise click.exceptions.Exit(0) from e
             if not standalone_mode:
                 raise
             # Typer override
