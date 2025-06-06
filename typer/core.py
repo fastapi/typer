@@ -208,7 +208,11 @@ def _main(
             raise click.Abort() from e
         except KeyboardInterrupt as e:
             raise click.exceptions.Exit(130) from e
+        # TODO: When deprecating Click < 8.2 uncomment the next two lines
+        # except click.exceptions.NoArgsIsHelpError as e:
+            # raise click.exceptions.Exit(0) from e
         except click.ClickException as e:
+            # TODO: When deprecating Click < 8.2 remove this section [start]
             _no_args_is_help_error = getattr(
                 click.exceptions, "NoArgsIsHelpError", None
             )
@@ -216,6 +220,7 @@ def _main(
                 e, _no_args_is_help_error
             ):
                 raise click.exceptions.Exit(0) from e
+            # TODO: When deprecating Click < 8.2 remove this section [end]
             if not standalone_mode:
                 raise
             # Typer override
