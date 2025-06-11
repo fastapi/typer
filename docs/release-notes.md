@@ -4,6 +4,7 @@
 
 ### Internal
 
+* ⬆ Bump cairosvg from 2.7.1 to 2.8.2. PR [#1226](https://github.com/fastapi/typer/pull/1226) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ruff from 0.11.6 to 0.11.13. PR [#1241](https://github.com/fastapi/typer/pull/1241) by [@dependabot[bot]](https://github.com/apps/dependabot).
 
 ## 0.16.0
