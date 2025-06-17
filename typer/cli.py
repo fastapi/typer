@@ -15,7 +15,6 @@ try:
     import rich
 
     has_rich = True
-    from . import rich_utils
 
 except ImportError:  # pragma: no cover
     has_rich = False
@@ -275,6 +274,8 @@ def get_docs_for_click(
 def _parse_html(input_text: str) -> str:
     if not has_rich:  # pragma: no cover
         return input_text
+    from . import rich_utils
+
     return rich_utils.rich_to_html(input_text)
 
 
