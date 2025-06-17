@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Docs
+
+* 📝 Fix reference to `count` parameter in the documentation. PR [#1201](https://github.com/fastapi/typer/pull/1201) by [@PokkaKiyo](https://github.com/PokkaKiyo).
+
 ### Internal
 
 * ⬆ Bump pillow from 11.1.0 to 11.2.1. PR [#1198](https://github.com/fastapi/typer/pull/1198) by [@dependabot[bot]](https://github.com/apps/dependabot).
