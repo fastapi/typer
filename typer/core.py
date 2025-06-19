@@ -25,6 +25,7 @@ import click.parser
 import click.shell_completion
 import click.types
 import click.utils
+from click.exceptions import NoArgsIsHelpError
 
 from ._typing import Literal
 
@@ -208,6 +209,8 @@ def _main(
             raise click.Abort() from e
         except KeyboardInterrupt as e:
             raise click.exceptions.Exit(130) from e
+        except NoArgsIsHelpError as e:
+            raise click.exceptions.Exit(0) from e
         except click.ClickException as e:
             if not standalone_mode:
                 raise
