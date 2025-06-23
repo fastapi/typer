@@ -109,23 +109,17 @@ name: str
 
 Now, finally what we came for, an optional *CLI argument*.
 
-To make a *CLI argument* optional, use `typer.Argument()` and pass a different "default" as the first parameter to `typer.Argument()`, for example `None`:
+To make a *CLI argument* optional, use `typer.Argument()` and make sure to provide a "default" value, for example `"World"`:
 
-{* docs_src/arguments/optional/tutorial002_an.py hl[7] *}
+{* docs_src/arguments/optional/tutorial002_an.py hl[5] *}
 
 Now we have:
 
 ```Python
-name: Annotated[Optional[str], typer.Argument()] = None
+name: Annotated[str, typer.Argument()] = "World"
 ```
 
 Because we are using `typer.Argument()` **Typer** will know that this is a *CLI argument* (no matter if *required* or *optional*).
-
-/// tip
-
-By using `Optional` your editor will be able to know that the value *could* be `None`, and will be able to warn you if you do something assuming it is a `str` that would break if it was `None`.
-
-///
 
 Check the help:
 
