@@ -57,6 +57,7 @@ jobs:
       - name: Install Dependencies
         run: uv pip install -r requirements-tests.txt
       - name: Lint
+        if: matrix.python-version != '3.7' && matrix.python-version != '3.8' && matrix.python-version != '3.9'
         run: bash scripts/lint.sh
       - run: mkdir coverage
       - run: bash ./scripts/test-files.sh
