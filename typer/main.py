@@ -18,6 +18,7 @@ import click
 from typer._types import TyperChoice
 
 from ._typing import get_args, get_origin, is_union
+from .command_tree import get_command_tree_param_meta
 from .completion import get_completion_inspect_parameters
 from .core import (
     DEFAULT_MARKUP_MODE,
@@ -126,6 +127,12 @@ def get_install_completion_arguments() -> Tuple[click.Parameter, click.Parameter
     return click_install_param, click_show_param
 
 
+def get_command_tree_parameter() -> click.Parameter:
+    meta = get_command_tree_param_meta()
+    param, _ = get_click_param(meta)
+    return param
+
+
 class Typer:
     def __init__(
         self,
@@ -148,6 +155,7 @@ class Typer:
         hidden: bool = Default(False),
         deprecated: bool = Default(False),
         add_completion: bool = True,
+        command_tree: bool = Default(False),
         # Rich settings
         rich_markup_mode: MarkupMode = Default(DEFAULT_MARKUP_MODE),
         rich_help_panel: Union[str, None] = Default(None),
@@ -156,6 +164,7 @@ class Typer:
         pretty_exceptions_short: bool = True,
     ):
         self._add_completion = add_completion
+        self._command_tree = command_tree
         self.rich_markup_mode: MarkupMode = rich_markup_mode
         self.rich_help_panel = rich_help_panel
         self.pretty_exceptions_enable = pretty_exceptions_enable
@@ -346,6 +355,7 @@ def get_group(typer_instance: Typer) -> TyperGroup:
         TyperInfo(typer_instance),
         pretty_exceptions_short=typer_instance.pretty_exceptions_short,
         rich_markup_mode=typer_instance.rich_markup_mode,
+        command_tree=typer_instance._command_tree,
     )
     return group
 
@@ -473,6 +483,7 @@ def get_group_from_info(
     *,
     pretty_exceptions_short: bool,
     rich_markup_mode: MarkupMode,
+    command_tree: bool,
 ) -> TyperGroup:
     assert group_info.typer_instance, (
         "A Typer instance is needed to generate a Click Group"
@@ -491,6 +502,7 @@ def get_group_from_info(
             sub_group_info,
             pretty_exceptions_short=pretty_exceptions_short,
             rich_markup_mode=rich_markup_mode,
+            command_tree=command_tree,
         )
         if sub_group.name:
             commands[sub_group.name] = sub_group
@@ -510,6 +522,8 @@ def get_group_from_info(
         convertors,
         context_param_name,
     ) = get_params_convertors_ctx_param_name_from_function(solved_info.callback)
+    if command_tree:
+        params.append(get_command_tree_parameter())  # type: ignore[arg-type]
     cls = solved_info.cls or TyperGroup
     assert issubclass(cls, TyperGroup), f"{cls} should be a subclass of {TyperGroup}"
     group = cls(
