@@ -221,8 +221,9 @@ def _table_cell_value(obj: Any, config: TableConfig) -> Any:
     return value
 
 
-def rich_table_factory(obj: Any, config: TableConfig = TableConfig()) -> RichTable:
+def rich_table_factory(obj: Any, config: Optional[TableConfig] = None) -> RichTable:
     """Create a RichTable (alias for rich.table.Table) from the object."""
+    config = config or TableConfig()
     if isinstance(obj, dict):
         return _create_object_table(obj, outer=True, config=config)
 
