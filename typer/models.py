@@ -28,8 +28,23 @@ AnyType = Type[Any]
 Required = ...
 
 
+class TypedCommand(click.Command):
+    """A properly typed version of click.Command for better IDE support."""
+    params: List[click.Parameter]
+
+
 class Context(click.Context):
-    pass
+    """
+    Typer Context with improved type hints.
+    
+    This extends click.Context but provides better type hints, particularly
+    for the command.params attribute which is properly typed as List[click.Parameter].
+    """
+    command: TypedCommand
+    
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
+        # The command attribute is inherited from click.Context but we type it better
 
 
 class FileText(io.TextIOWrapper):
