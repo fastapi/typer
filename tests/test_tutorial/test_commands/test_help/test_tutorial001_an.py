@@ -69,44 +69,28 @@ def test_create():
 def test_delete():
     result = runner.invoke(app, ["delete", "Camila"], input="y\n")
     assert result.exit_code == 0
-    # TODO: when deprecating Click 7, remove second option
-    assert (
-        "Are you sure you want to delete the user? [y/n]:" in result.output
-        or "Are you sure you want to delete the user? [y/N]:" in result.output
-    )
+    assert "Are you sure you want to delete the user? [y/n]:" in result.output
     assert "Deleting user: Camila" in result.output
 
 
 def test_no_delete():
     result = runner.invoke(app, ["delete", "Camila"], input="n\n")
     assert result.exit_code == 0
-    # TODO: when deprecating Click 7, remove second option
-    assert (
-        "Are you sure you want to delete the user? [y/n]:" in result.output
-        or "Are you sure you want to delete the user? [y/N]:" in result.output
-    )
+    assert "Are you sure you want to delete the user? [y/n]:" in result.output
     assert "Operation cancelled" in result.output
 
 
 def test_delete_all():
     result = runner.invoke(app, ["delete-all"], input="y\n")
     assert result.exit_code == 0
-    # TODO: when deprecating Click 7, remove second option
-    assert (
-        "Are you sure you want to delete ALL users? [y/n]:" in result.output
-        or "Are you sure you want to delete ALL users? [y/N]:" in result.output
-    )
+    assert "Are you sure you want to delete ALL users? [y/n]:" in result.output
     assert "Deleting all users" in result.output
 
 
 def test_no_delete_all():
     result = runner.invoke(app, ["delete-all"], input="n\n")
     assert result.exit_code == 0
-    # TODO: when deprecating Click 7, remove second option
-    assert (
-        "Are you sure you want to delete ALL users? [y/n]:" in result.output
-        or "Are you sure you want to delete ALL users? [y/N]:" in result.output
-    )
+    assert "Are you sure you want to delete ALL users? [y/n]:" in result.output
     assert "Operation cancelled" in result.output
 
 
@@ -119,8 +103,7 @@ def test_init():
 def test_script():
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
     )
     assert "Usage" in result.stdout

@@ -16,7 +16,7 @@ app.command()(mod.main)
 def test_1():
     result = runner.invoke(app, ["Camila"])
     assert result.exit_code != 0
-    assert "Missing option '--lastname'." in result.output
+    assert "Missing option '--lastname'" in result.output
 
 
 def test_option_lastname():
@@ -47,8 +47,7 @@ def test_help_no_rich():
 def test_script():
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
     )
     assert "Usage" in result.stdout

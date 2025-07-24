@@ -14,8 +14,7 @@ def test_traceback_rich():
     file_path = Path(mod.__file__)
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", str(file_path)],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
         env={**os.environ, "_TYPER_STANDARD_TRACEBACK": ""},
     )
@@ -31,8 +30,7 @@ def test_standard_traceback_env_var():
     file_path = Path(mod.__file__)
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", str(file_path)],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
         env={**os.environ, "_TYPER_STANDARD_TRACEBACK": "1"},
     )
@@ -47,8 +45,7 @@ def test_standard_traceback_env_var():
 def test_script():
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
     )
     assert "Usage" in result.stdout

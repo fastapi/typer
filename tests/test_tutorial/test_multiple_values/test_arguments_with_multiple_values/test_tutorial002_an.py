@@ -32,12 +32,7 @@ def test_defaults():
 def test_invalid_args():
     result = runner.invoke(app, ["Draco", "Hagrid"])
     assert result.exit_code != 0
-    # TODO: when deprecating Click 7, remove second option
-
-    assert (
-        "Argument 'names' takes 3 values" in result.stdout
-        or "argument names takes 3 values" in result.stdout
-    )
+    assert "Argument 'names' takes 3 values" in result.output
 
 
 def test_valid_args():
@@ -51,8 +46,7 @@ def test_valid_args():
 def test_script():
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
     )
     assert "Usage" in result.stdout

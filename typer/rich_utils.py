@@ -1,6 +1,7 @@
 # Extracted and modified from https://github.com/ewels/rich-click
 
 import inspect
+import io
 import sys
 from collections import defaultdict
 from gettext import gettext as _
@@ -21,7 +22,7 @@ from rich.table import Table
 from rich.text import Text
 from rich.theme import Theme
 
-if sys.version_info >= (3, 8):
+if sys.version_info >= (3, 9):
     from typing import Literal
 else:
     from typing_extensions import Literal
@@ -62,15 +63,16 @@ STYLE_COMMANDS_TABLE_PADDING = (0, 1)
 STYLE_COMMANDS_TABLE_BOX = ""
 STYLE_COMMANDS_TABLE_ROW_STYLES = None
 STYLE_COMMANDS_TABLE_BORDER_STYLE = None
+STYLE_COMMANDS_TABLE_FIRST_COLUMN = "bold cyan"
 STYLE_ERRORS_PANEL_BORDER = "red"
 ALIGN_ERRORS_PANEL: Literal["left", "center", "right"] = "left"
 STYLE_ERRORS_SUGGESTION = "dim"
 STYLE_ABORTED = "red"
 _TERMINAL_WIDTH = getenv("TERMINAL_WIDTH")
 MAX_WIDTH = int(_TERMINAL_WIDTH) if _TERMINAL_WIDTH else None
-COLOR_SYSTEM: Optional[
-    Literal["auto", "standard", "256", "truecolor", "windows"]
-] = "auto"  # Set to None to disable colors
+COLOR_SYSTEM: Optional[Literal["auto", "standard", "256", "truecolor", "windows"]] = (
+    "auto"  # Set to None to disable colors
+)
 _TYPER_FORCE_DISABLE_TERMINAL = getenv("_TYPER_FORCE_DISABLE_TERMINAL")
 FORCE_TERMINAL = (
     True
@@ -92,6 +94,7 @@ OPTIONS_PANEL_TITLE = _("Options")
 COMMANDS_PANEL_TITLE = _("Commands")
 ERRORS_PANEL_TITLE = _("Error")
 ABORTED_TEXT = _("Aborted.")
+RICH_HELP = _("Try [blue]'{command_path} {help_option}'[/] for help.")
 
 MARKUP_MODE_MARKDOWN = "markdown"
 MARKUP_MODE_RICH = "rich"
@@ -144,17 +147,14 @@ def _get_rich_console(stderr: bool = False) -> Console:
     )
 
 
-def _make_rich_rext(
+def _make_rich_text(
     *, text: str, style: str = "", markup_mode: MarkupMode
 ) -> Union[Markdown, Text]:
     """Take a string, remove indentations, and return styled text.
 
-    By default, return the text as a Rich Text with the request style.
-    If `rich_markdown_enable` is `True`, also parse the text for Rich markup strings.
-    If `rich_markup_enable` is `True`, parse as Markdown.
-
-    Only one of `rich_markdown_enable` or `rich_markup_enable` can be True.
-    If both are True, `rich_markdown_enable` takes precedence.
+    By default, the text is not parsed for any special formatting.
+    If `markup_mode` is `"rich"`, the text is parsed for Rich markup strings.
+    If `markup_mode` is `"markdown"`, parse as Markdown.
     """
     # Remove indentations from input text
     text = inspect.cleandoc(text)
@@ -194,11 +194,14 @@ def _get_help_text(
     # Remove single linebreaks
     if markup_mode != MARKUP_MODE_MARKDOWN and not first_line.startswith("\b"):
         first_line = first_line.replace("\n", " ")
-    yield _make_rich_rext(
+    yield _make_rich_text(
         text=first_line.strip(),
         style=STYLE_HELPTEXT_FIRST_LINE,
         markup_mode=markup_mode,
     )
+
+    # Add a newline inbetween the header and the remaining paragraphs
+    yield Text("")
 
     # Get remaining lines, remove single line breaks and format as dim
     remaining_paragraphs = help_text.split("\n\n")[1:]
@@ -217,7 +220,7 @@ def _get_help_text(
             # Join with double linebreaks if markdown
             remaining_lines = "\n\n".join(remaining_paragraphs)
 
-        yield _make_rich_rext(
+        yield _make_rich_text(
             text=remaining_lines,
             style=STYLE_HELPTEXT,
             markup_mode=markup_mode,
@@ -272,7 +275,7 @@ def _get_parameter_help(
                 for x in paragraphs
             ]
         items.append(
-            _make_rich_rext(
+            _make_rich_text(
                 text="\n".join(paragraphs).strip(),
                 style=STYLE_OPTION_HELP,
                 markup_mode=markup_mode,
@@ -331,7 +334,7 @@ def _make_command_help(
         paragraphs[0] = paragraphs[0].replace("\n", " ")
     elif paragraphs[0].startswith("\b"):
         paragraphs[0] = paragraphs[0].replace("\b\n", "")
-    return _make_rich_rext(
+    return _make_rich_text(
         text=paragraphs[0].strip(),
         style=STYLE_OPTION_HELP,
         markup_mode=markup_mode,
@@ -367,7 +370,13 @@ def _print_options_panel(
 
         # Column for a metavar, if we have one
         metavar = Text(style=STYLE_METAVAR, overflow="fold")
-        metavar_str = param.make_metavar()
+        # TODO: when deprecating Click < 8.2, make ctx required
+        signature = inspect.signature(param.make_metavar)
+        if "ctx" in signature.parameters:
+            metavar_str = param.make_metavar(ctx=ctx)
+        else:
+            # Click < 8.2
+            metavar_str = param.make_metavar()  # type: ignore[call-arg]
 
         # Do it ourselves if this is a positional argument
         if (
@@ -383,19 +392,15 @@ def _print_options_panel(
 
         # Range - from
         # https://github.com/pallets/click/blob/c63c70dabd3f86ca68678b4f00951f78f52d0270/src/click/core.py#L2698-L2706  # noqa: E501
-        try:
-            # skip count with default range type
-            if (
-                isinstance(param.type, click.types._NumberRangeBase)
-                and isinstance(param, click.Option)
-                and not (param.count and param.type.min == 0 and param.type.max is None)
-            ):
-                range_str = param.type._describe_range()
-                if range_str:
-                    metavar.append(RANGE_STRING.format(range_str))
-        except AttributeError:  # pragma: no cover
-            # click.types._NumberRangeBase is only in Click 8x onwards
-            pass
+        # skip count with default range type
+        if (
+            isinstance(param.type, click.types._NumberRangeBase)
+            and isinstance(param, click.Option)
+            and not (param.count and param.type.min == 0 and param.type.max is None)
+        ):
+            range_str = param.type._describe_range()
+            if range_str:
+                metavar.append(RANGE_STRING.format(range_str))
 
         # Required asterisk
         required: Union[str, Text] = ""
@@ -470,6 +475,7 @@ def _print_commands_panel(
     commands: List[click.Command],
     markup_mode: MarkupMode,
     console: Console,
+    cmd_len: int,
 ) -> None:
     t_styles: Dict[str, Any] = {
         "show_lines": STYLE_COMMANDS_TABLE_SHOW_LINES,
@@ -491,7 +497,16 @@ def _print_commands_panel(
     )
     # Define formatting in first column, as commands don't match highlighter
     # regex
-    commands_table.add_column(style="bold cyan", no_wrap=True)
+    commands_table.add_column(
+        style=STYLE_COMMANDS_TABLE_FIRST_COLUMN,
+        no_wrap=True,
+        width=cmd_len,
+    )
+
+    # A big ratio makes the description column be greedy and take all the space
+    # available instead of allowing the command column to grow and misalign with
+    # other panels.
+    commands_table.add_column("Description", justify="left", no_wrap=False, ratio=10)
     rows: List[List[Union[RenderableType, None]]] = []
     deprecated_rows: List[Union[RenderableType, None]] = []
     for command in commands:
@@ -621,7 +636,7 @@ def rich_format_help(
             console=console,
         )
 
-    if isinstance(obj, click.MultiCommand):
+    if isinstance(obj, click.Group):
         panel_to_commands: DefaultDict[str, List[click.Command]] = defaultdict(list)
         for command_name in obj.list_commands(ctx):
             command = obj.get_command(ctx, command_name)
@@ -632,6 +647,16 @@ def rich_format_help(
                 )
                 panel_to_commands[panel_name].append(command)
 
+        # Identify the longest command name in all panels
+        max_cmd_len = max(
+            [
+                len(command.name or "")
+                for commands in panel_to_commands.values()
+                for command in commands
+            ],
+            default=0,
+        )
+
         # Print each command group panel
         default_commands = panel_to_commands.get(COMMANDS_PANEL_TITLE, [])
         _print_commands_panel(
@@ -639,6 +664,7 @@ def rich_format_help(
             commands=default_commands,
             markup_mode=markup_mode,
             console=console,
+            cmd_len=max_cmd_len,
         )
         for panel_name, commands in panel_to_commands.items():
             if panel_name == COMMANDS_PANEL_TITLE:
@@ -649,6 +675,7 @@ def rich_format_help(
                 commands=commands,
                 markup_mode=markup_mode,
                 console=console,
+                cmd_len=max_cmd_len,
             )
 
     # Epilogue if we have it
@@ -656,7 +683,7 @@ def rich_format_help(
         # Remove single linebreaks, replace double with single
         lines = obj.epilog.split("\n\n")
         epilogue = "\n".join([x.replace("\n", " ").strip() for x in lines])
-        epilogue_text = _make_rich_rext(text=epilogue, markup_mode=markup_mode)
+        epilogue_text = _make_rich_text(text=epilogue, markup_mode=markup_mode)
         console.print(Padding(Align(epilogue_text, pad=False), 1))
 
 
@@ -673,7 +700,9 @@ def rich_format_error(self: click.ClickException) -> None:
 
     if ctx is not None and ctx.command.get_help_option(ctx) is not None:
         console.print(
-            f"Try [blue]'{ctx.command_path} {ctx.help_option_names[0]}'[/] for help.",
+            RICH_HELP.format(
+                command_path=ctx.command_path, help_option=ctx.help_option_names[0]
+            ),
             style=STYLE_ERRORS_SUGGESTION,
         )
 
@@ -691,3 +720,22 @@ def rich_abort_error() -> None:
     """Print richly formatted abort error."""
     console = _get_rich_console(stderr=True)
     console.print(ABORTED_TEXT, style=STYLE_ABORTED)
+
+
+def rich_to_html(input_text: str) -> str:
+    """Print the HTML version of a rich-formatted input string.
+
+    This function does not provide a full HTML page, but can be used to insert
+    HTML-formatted text spans into a markdown file.
+    """
+    console = Console(record=True, highlight=False, file=io.StringIO())
+
+    console.print(input_text, overflow="ignore", crop=False)
+
+    return console.export_html(inline_styles=True, code_format="{code}").strip()
+
+
+def rich_render_text(text: str) -> str:
+    """Remove rich tags and render a pure text representation"""
+    console = _get_rich_console()
+    return "".join(segment.text for segment in console.render(text)).rstrip("\n")

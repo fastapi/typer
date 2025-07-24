@@ -10,9 +10,9 @@ runner = CliRunner()
 
 def test_cli():
     result = runner.invoke(mod.cli, [])
-    assert "Usage" in result.stdout
-    assert "dropdb" in result.stdout
-    assert "sub" in result.stdout
+    assert "Usage" in result.output
+    assert "dropdb" in result.output
+    assert "sub" in result.output
 
 
 def test_typer():
@@ -33,8 +33,7 @@ def test_click_dropdb():
 def test_script():
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
     )
     assert "Usage" in result.stdout

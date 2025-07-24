@@ -4,7 +4,7 @@ from typing import Any, MutableMapping, Tuple
 
 import click
 
-from ._compat_utils import _get_click_major
+from ._completion_classes import completion_init
 from ._completion_shared import Shells, get_completion_script, install
 from .models import ParamMeta
 from .params import Option
@@ -12,7 +12,7 @@ from .utils import get_params_from_function
 
 try:
     import shellingham
-except ImportError:  # pragma: nocover
+except ImportError:  # pragma: no cover
     shellingham = None
 
 
@@ -34,7 +34,7 @@ def get_completion_inspect_parameters() -> Tuple[ParamMeta, ParamMeta]:
 
 def install_callback(ctx: click.Context, param: click.Parameter, value: Any) -> Any:
     if not value or ctx.resilient_parsing:
-        return value  # pragma no cover
+        return value  # pragma: no cover
     if isinstance(value, str):
         shell, path = install(shell=value)
     else:
@@ -46,7 +46,7 @@ def install_callback(ctx: click.Context, param: click.Parameter, value: Any) -> 
 
 def show_callback(ctx: click.Context, param: click.Parameter, value: Any) -> Any:
     if not value or ctx.resilient_parsing:
-        return value  # pragma no cover
+        return value  # pragma: no cover
     prog_name = ctx.find_root().info_name
     assert prog_name
     complete_var = "_{}_COMPLETE".format(prog_name.replace("-", "_").upper())
@@ -68,7 +68,6 @@ def _install_completion_placeholder_function(
     install_completion: bool = Option(
         None,
         "--install-completion",
-        is_flag=True,
         callback=install_callback,
         expose_value=False,
         help="Install completion for the current shell.",
@@ -76,13 +75,12 @@ def _install_completion_placeholder_function(
     show_completion: bool = Option(
         None,
         "--show-completion",
-        is_flag=True,
         callback=show_callback,
         expose_value=False,
         help="Show completion for the current shell, to copy it or customize the installation.",
     ),
 ) -> Any:
-    pass  # pragma no cover
+    pass  # pragma: no cover
 
 
 def _install_completion_no_auto_placeholder_function(
@@ -99,18 +97,7 @@ def _install_completion_no_auto_placeholder_function(
         help="Show completion for the specified shell, to copy it or customize the installation.",
     ),
 ) -> Any:
-    pass  # pragma no cover
-
-
-def completion_init() -> None:
-    if _get_click_major() < 8:
-        from ._completion_click7 import completion_init
-
-        completion_init()
-    else:
-        from ._completion_click8 import completion_init
-
-        completion_init()
+    pass  # pragma: no cover
 
 
 # Re-implement Click's shell_complete to add error message with:
@@ -119,7 +106,7 @@ def completion_init() -> None:
 # And to add extra error messages, for compatibility with Typer in previous versions
 # This is only called in new Command method, only used by Click 8.x+
 def shell_complete(
-    cli: click.BaseCommand,
+    cli: click.Command,
     ctx_args: MutableMapping[str, Any],
     prog_name: str,
     complete_var: str,
@@ -152,9 +139,11 @@ def shell_complete(
         click.echo(comp.source())
         return 0
 
+    # Typer override to print the completion help msg with Rich
     if instruction == "complete":
         click.echo(comp.complete())
         return 0
+    # Typer override end
 
     click.echo(f'Completion instruction "{instruction}" not supported.', err=True)
     return 1

@@ -34,7 +34,7 @@ body:
           required: true
         - label: I already searched in Google "How to X in Typer" and didn't find any information.
           required: true
-        - label: I already read and followed all the tutorial in the docs and didn't find an answer.
+        - label: I already read and followed all the tutorials in the docs and didn't find an answer.
           required: true
         - label: I already checked if it is not related to Typer but to [Click](https://github.com/pallets/click).
           required: true
@@ -47,7 +47,7 @@ body:
 
           * Read open issues with questions until I find 2 issues where I can help someone and add a comment to help there.
           * I already hit the "watch" button in this repository to receive notifications and I commit to help at least 2 people that ask questions in the future.
-          * Review one Pull Request by downloading the code and following all the review process](https://typer.tiangolo.com/help-typer/#review-pull-requests).
+          * Review one Pull Request by downloading the code and following all the [review process](https://typer.tiangolo.com/help-typer/#review-pull-requests).
 
       options:
         - label: I commit to help with one of those options 👆

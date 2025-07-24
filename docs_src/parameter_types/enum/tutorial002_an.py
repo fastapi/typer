@@ -13,7 +13,7 @@ class NeuralNetwork(str, Enum):
 def main(
     network: Annotated[
         NeuralNetwork, typer.Option(case_sensitive=False)
-    ] = NeuralNetwork.simple
+    ] = NeuralNetwork.simple,
 ):
     print(f"Training neural network of type: {network.value}")
 
