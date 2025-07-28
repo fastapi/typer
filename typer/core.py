@@ -20,12 +20,12 @@ from typing import (
 
 import click
 import click.core
-from click.exceptions import NoArgsIsHelpError
 import click.formatting
 import click.parser
 import click.shell_completion
 import click.types
 import click.utils
+from click.exceptions import NoArgsIsHelpError
 
 from ._typing import Literal
 
