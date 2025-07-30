@@ -35,7 +35,8 @@ classifiers = [
 ]
 dependencies = [
     "click >= 8.0.0",
-    "typing-extensions >= 3.7.4.3",
+    "typing-extensions >= 3.7.4.3; python_version < '3.8'",
+    "typing-extensions >= 4.13.0; python_version >= '3.8'",
 ]
 readme = "README.md"
 [project.urls]

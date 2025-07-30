@@ -5,7 +5,7 @@ from typing import Annotated
 import typer
 from typer.testing import CliRunner
 
-from .utils import needs_py310
+from .utils import needs_py38
 
 runner = CliRunner()
 
@@ -26,7 +26,7 @@ def test_annotated_argument_with_default():
     assert "hello 42" in result.output
 
 
-@needs_py310
+@needs_py38
 def test_annotated_argument_in_string_type_with_default():
     app = typer.Typer()
 
