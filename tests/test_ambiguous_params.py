@@ -229,3 +229,21 @@ def test_forbid_default_and_default_factory_with_default_param(param, param_info
 )
 def test_error_rendering(error, message):
     assert str(error) == message
+
+
+def test_keyword_only_without_default_becomes_option():
+    app = typer.Typer()
+
+    @app.command()
+    def cmd(*, my_param):
+        print(my_param)
+
+    # Check that it works with the keyword
+    result = runner.invoke(app, ["--my-param", "hello"])
+    assert result.exit_code == 0, result.output
+    assert "hello" in result.output
+
+    # Check that it fails without the keyword
+    result = runner.invoke(app, ["hello"])
+    assert result.exit_code != 0, result.output
+    assert "Missing option" in result.output, result.output
