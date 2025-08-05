@@ -221,6 +221,12 @@ And that will:
 * Add two subcommands with `@app.command()`.
 * Execute the `app()` itself, as if it was a function (instead of `typer.run`).
 
+
+>**Note on Single vs Multi-command mode**:  
+> If your app only has one command, Typer will automatically enter "single-command mode", meaning the command name is **omitted** in usage (`python main.py Camila`).  
+> However, once you define multiple commands, you must **explicitly include the command name** (`python main.py hello Camila`).  
+> This behavior can be surprising — see [One or Multiple Commands](https://typer.tiangolo.com/tutorial/commands/one-or-multiple/) for more details.
+
 ### Run the upgraded example
 
 Check the new help:
