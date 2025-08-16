@@ -2,12 +2,99 @@
 
 ## Latest Changes
 
+### Docs
+
+* 📝 Fix reference to `count` parameter in the documentation. PR [#1201](https://github.com/fastapi/typer/pull/1201) by [@PokkaKiyo](https://github.com/PokkaKiyo).
+
+### Internal
+
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1206](https://github.com/fastapi/typer/pull/1206) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump pillow from 11.1.0 to 11.2.1. PR [#1198](https://github.com/fastapi/typer/pull/1198) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump cairosvg from 2.7.1 to 2.8.2. PR [#1226](https://github.com/fastapi/typer/pull/1226) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.11.6 to 0.11.13. PR [#1241](https://github.com/fastapi/typer/pull/1241) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
+## 0.16.0
+
+### Upgrades
+
+* ⬆️ Add compatibility with Click 8.2. PR [#1222](https://github.com/fastapi/typer/pull/1222) by [@tiangolo](https://github.com/tiangolo).
+
+When using the `CliRunner` with Click < 8.2, to be able to access the `stderr` output, you needed to set the `mix_stderr` parameter to `True`. Since Click 8.2 (and Typer 0.160 this release supporting it) this is no longer necessary, so this parameter has been removed.
+
+### Refactors
+
+* ✅ Refactor tests for compatibility with Click 8.2. PR [#1230](https://github.com/fastapi/typer/pull/1230) by [@tiangolo](https://github.com/tiangolo).
+
+### Internal
+
+* 🔧 Remove Google Analytics. PR [#1229](https://github.com/fastapi/typer/pull/1229) by [@tiangolo](https://github.com/tiangolo).
+
+## 0.15.4
+
+### Upgrades
+
+* 📌 Pin Click to < 8.2, compatibility for Click >= 8.2 will be added in a future version. PR [#1225](https://github.com/fastapi/typer/pull/1225) by [@tiangolo](https://github.com/tiangolo).
+
+## 0.15.3
+
+### Fixes
+
+* 🐛 Ensure that autocompletion works for `Path` arguments/options. PR [#1138](https://github.com/fastapi/typer/pull/1138) by [@svlandeg](https://github.com/svlandeg).
+* 🐛 Fix newline after header in help text, and add more tests for the behaviour of `rich_markup_mode` . PR [#964](https://github.com/fastapi/typer/pull/964) by [@svlandeg](https://github.com/svlandeg).
+
+### Internal
+
+* ⬆ Bump astral-sh/setup-uv from 5 to 6. PR [#1203](https://github.com/fastapi/typer/pull/1203) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.11.2 to 0.11.6. PR [#1200](https://github.com/fastapi/typer/pull/1200) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1196](https://github.com/fastapi/typer/pull/1196) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump ruff from 0.11.1 to 0.11.2. PR [#1186](https://github.com/fastapi/typer/pull/1186) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1187](https://github.com/fastapi/typer/pull/1187) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump ruff from 0.11.0 to 0.11.1. PR [#1185](https://github.com/fastapi/typer/pull/1185) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.9.10 to 0.11.0. PR [#1180](https://github.com/fastapi/typer/pull/1180) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1181](https://github.com/fastapi/typer/pull/1181) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1176](https://github.com/fastapi/typer/pull/1176) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump ruff from 0.9.9 to 0.9.10. PR [#1175](https://github.com/fastapi/typer/pull/1175) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1171](https://github.com/fastapi/typer/pull/1171) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump ruff from 0.9.7 to 0.9.9. PR [#1166](https://github.com/fastapi/typer/pull/1166) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ✏️ Fix typo in test name. PR [#1165](https://github.com/fastapi/typer/pull/1165) by [@svlandeg](https://github.com/svlandeg).
+
+## 0.15.2
+
+### Features
+
+* ✨ Allow custom styles for commands in help output. PR [#1103](https://github.com/fastapi/typer/pull/1103) by [@TheTechromancer](https://github.com/TheTechromancer).
+* ✨ Avoid the unnecessary import of `typing_extensions` in newer Python versions. PR [#1048](https://github.com/fastapi/typer/pull/1048) by [@horta](https://github.com/horta).
+
+### Fixes
+
+* 🐛 Fix shell completions for the fish shell. PR [#1069](https://github.com/fastapi/typer/pull/1069) by [@goraje](https://github.com/goraje).
+
 ### Refactors
 
 * 🚚 Rename test to corner-cases to make it more explicit. PR [#1083](https://github.com/fastapi/typer/pull/1083) by [@tiangolo](https://github.com/tiangolo).
 
+### Docs
+
+* ✏️ Fix small typos in the tutorial documentation. PR [#1137](https://github.com/fastapi/typer/pull/1137) by [@svlandeg](https://github.com/svlandeg).
+* 📝 Update optional CLI argument section in tutorial with `Annotated`. PR [#983](https://github.com/fastapi/typer/pull/983) by [@gkeuccsr](https://github.com/gkeuccsr).
+* 📝 Clarify the need for `mix_stderr` when accessing the output of `stderr` in tests. PR [#1045](https://github.com/fastapi/typer/pull/1045) by [@mrchrisadams](https://github.com/mrchrisadams).
+
 ### Internal
 
+* 🔧 Add support for Python 3.13, tests in CI and add PyPI trove classifier. PR [#1091](https://github.com/fastapi/typer/pull/1091) by [@edgarrmondragon](https://github.com/edgarrmondragon).
+* ⬆ Bump ruff from 0.9.6 to 0.9.7. PR [#1161](https://github.com/fastapi/typer/pull/1161) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1162](https://github.com/fastapi/typer/pull/1162) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump ruff from 0.9.5 to 0.9.6. PR [#1153](https://github.com/fastapi/typer/pull/1153) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1151](https://github.com/fastapi/typer/pull/1151) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump ruff from 0.9.4 to 0.9.5. PR [#1146](https://github.com/fastapi/typer/pull/1146) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1142](https://github.com/fastapi/typer/pull/1142) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump ruff from 0.9.3 to 0.9.4. PR [#1139](https://github.com/fastapi/typer/pull/1139) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1135](https://github.com/fastapi/typer/pull/1135) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump ruff from 0.9.1 to 0.9.3. PR [#1136](https://github.com/fastapi/typer/pull/1136) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1130](https://github.com/fastapi/typer/pull/1130) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump ruff from 0.8.6 to 0.9.1. PR [#1118](https://github.com/fastapi/typer/pull/1118) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pypa/gh-action-pypi-publish from 1.12.3 to 1.12.4. PR [#1132](https://github.com/fastapi/typer/pull/1132) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mkdocs-material from 9.5.49 to 9.5.50. PR [#1129](https://github.com/fastapi/typer/pull/1129) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * 💚 Fix test matrix for Python 3.7. PR [#1116](https://github.com/fastapi/typer/pull/1116) by [@svlandeg](https://github.com/svlandeg).
 * ⬆ Bump ruff from 0.8.4 to 0.8.6. PR [#1107](https://github.com/fastapi/typer/pull/1107) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1109](https://github.com/fastapi/typer/pull/1109) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).

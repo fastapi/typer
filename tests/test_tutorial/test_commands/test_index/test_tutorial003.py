@@ -12,7 +12,6 @@ runner = CliRunner()
 
 def test_no_arg():
     result = runner.invoke(app)
-    assert result.exit_code == 0
     assert "[OPTIONS] COMMAND [ARGS]..." in result.output
     assert "Commands" in result.output
     assert "create" in result.output
