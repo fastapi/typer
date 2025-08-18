@@ -9,6 +9,7 @@
 
 ### Internal
 
+* ⬆ Bump ruff from 0.11.13 to 0.12.9. PR [#1276](https://github.com/fastapi/typer/pull/1276) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1247](https://github.com/fastapi/typer/pull/1247) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * ⬆ Bump actions/checkout from 4 to 5. PR [#1271](https://github.com/fastapi/typer/pull/1271) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump mkdocs-macros-plugin from 1.3.7 to 1.3.9. PR [#1272](https://github.com/fastapi/typer/pull/1272) by [@dependabot[bot]](https://github.com/apps/dependabot).
