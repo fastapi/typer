@@ -16,6 +16,7 @@ def test_no_arg():
     assert "Commands" in result.output
     assert "create" in result.output
     assert "delete" in result.output
+    assert result.exit_code == 0
 
 
 def test_no_additional_output():
