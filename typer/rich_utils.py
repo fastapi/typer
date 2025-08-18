@@ -693,6 +693,10 @@ def rich_format_error(self: click.ClickException) -> None:
     Called by custom exception handler to print richly formatted click errors.
     Mimics original click.ClickException.echo() function but with rich formatting.
     """
+    # Don't do anything when it's a NoArgsIsHelpError (without importing it, cf. #1278)
+    if self.__class__.__name__ == "NoArgsIsHelpError":
+        return
+
     console = _get_rich_console(stderr=True)
     ctx: Union[click.Context, None] = getattr(self, "ctx", None)
     if ctx is not None:
