@@ -4,6 +4,7 @@
 
 ### Docs
 
+* 📝 Remove duplicated line in `environment-variables.md`. PR [#1277](https://github.com/fastapi/typer/pull/1277) by [@neirzhei](https://github.com/neirzhei).
 * 📝 Fix reference to `count` parameter in the documentation. PR [#1201](https://github.com/fastapi/typer/pull/1201) by [@PokkaKiyo](https://github.com/PokkaKiyo).
 
 ### Internal
