@@ -9,6 +9,7 @@
 
 ### Internal
 
+* ⬆ Bump tiangolo/latest-changes from 0.3.2 to 0.4.0. PR [#1265](https://github.com/fastapi/typer/pull/1265) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pillow from 11.2.1 to 11.3.0. PR [#1249](https://github.com/fastapi/typer/pull/1249) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1206](https://github.com/fastapi/typer/pull/1206) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * ⬆ Bump pillow from 11.1.0 to 11.2.1. PR [#1198](https://github.com/fastapi/typer/pull/1198) by [@dependabot[bot]](https://github.com/apps/dependabot).
