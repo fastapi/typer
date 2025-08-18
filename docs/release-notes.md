@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.16.1
+
 ### Fixes
 
 * 🐛 Avoid printing additional output with `no_args_is_help=True` and Click 8.2. PR [#1278](https://github.com/fastapi/typer/pull/1278) by [@svlandeg](https://github.com/svlandeg).
