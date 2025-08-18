@@ -19,7 +19,7 @@ def test_no_arg():
 
 
 def test_no_additional_output():
-    """With Click 8.2, additional output was generated (cf. PR #1262)"""
+    """Ensure that no additional output was generated (cf. PR #1262)"""
     result = runner.invoke(app)
     assert result.output.count("Usage") == 1
     assert "Error" not in result.output
