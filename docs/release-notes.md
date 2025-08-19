@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Internal
+
+* ⬆ Update pytest-sugar requirement from <1.1.0,>=0.9.4 to >=0.9.4,<1.2.0. PR [#1279](https://github.com/fastapi/typer/pull/1279) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
 ## 0.16.1
 
 ### Fixes
