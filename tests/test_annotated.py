@@ -92,9 +92,9 @@ def test_annotated_custom_path():
 
     @app.command()
     def custom_parser(
-        pth: Annotated[CustomPath, typer.Argument(parser=CustomPath)],
+        my_path: Annotated[CustomPath, typer.Argument(parser=CustomPath)],
     ):
-        assert isinstance(pth, CustomPath)
+        assert isinstance(my_path, CustomPath)
 
     result = runner.invoke(app, "/some/quirky/path/implementation")
     assert result.exit_code == 0
