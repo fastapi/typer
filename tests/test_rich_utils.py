@@ -66,8 +66,8 @@ def test_rich_doesnt_print_None_default():
         ),
     ):
         print(f"Hello {name}")
-        print(option_1)
-        print(option_2)
+        print(f"First: {option_1}")
+        print(f"Second: {option_2}")
 
     result = runner.invoke(app, ["--help"])
     assert "Usage" in result.stdout
@@ -75,3 +75,7 @@ def test_rich_doesnt_print_None_default():
     assert "option-1" in result.stdout
     assert "option-2" in result.stdout
     assert result.stdout.count("[default: None]") == 0
+    result = runner.invoke(app, ["Rick", "--option-2=Morty"])
+    assert "Hello Rick" in result.stdout
+    assert "First: option_1_default" in result.stdout
+    assert "Second: Morty" in result.stdout
