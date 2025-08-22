@@ -57,13 +57,13 @@ def test_rich_doesnt_print_None_default():
 
     @app.command()
     def main(
-            name: str,
-            option_1: str = typer.Option(
-                "option_1_default",
-            ),
-            option_2: str = typer.Option(
-                ...,
-            ),
+        name: str,
+        option_1: str = typer.Option(
+            "option_1_default",
+        ),
+        option_2: str = typer.Option(
+            ...,
+        ),
     ):
         print(f"Hello {name}")
         print(option_1)
