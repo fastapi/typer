@@ -15,6 +15,7 @@ from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, U
 from uuid import UUID
 
 import click
+from typer._types import TyperChoice
 
 from ._typing import get_args, get_origin, is_union
 from .completion import get_completion_inspect_parameters
@@ -787,7 +788,12 @@ def get_click_type(
             atomic=parameter_info.atomic,
         )
     elif lenient_issubclass(annotation, Enum):
-        return click.Choice(
+        # The custom TyperChoice is only needed for Click < 8.2.0, to parse the
+        # command line values matching them to the enum values. Click 8.2.0 added
+        # support for enum values but reading enum names.
+        # Passing here the list of enum values (instead of just the enum) accounts for
+        # Click < 8.2.0.
+        return TyperChoice(
             [item.value for item in annotation],
             case_sensitive=parameter_info.case_sensitive,
         )

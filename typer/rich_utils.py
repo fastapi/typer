@@ -372,7 +372,13 @@ def _print_options_panel(
 
         # Column for a metavar, if we have one
         metavar = Text(style=STYLE_METAVAR, overflow="fold")
-        metavar_str = param.make_metavar()
+        # TODO: when deprecating Click < 8.2, make ctx required
+        signature = inspect.signature(param.make_metavar)
+        if "ctx" in signature.parameters:
+            metavar_str = param.make_metavar(ctx=ctx)
+        else:
+            # Click < 8.2
+            metavar_str = param.make_metavar()  # type: ignore[call-arg]
 
         # Do it ourselves if this is a positional argument
         if (
@@ -689,6 +695,10 @@ def rich_format_error(self: click.ClickException) -> None:
     Called by custom exception handler to print richly formatted click errors.
     Mimics original click.ClickException.echo() function but with rich formatting.
     """
+    # Don't do anything when it's a NoArgsIsHelpError (without importing it, cf. #1278)
+    if self.__class__.__name__ == "NoArgsIsHelpError":
+        return
+
     console = _get_rich_console(stderr=True)
     ctx: Union[click.Context, None] = getattr(self, "ctx", None)
     if ctx is not None:
