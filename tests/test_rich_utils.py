@@ -50,3 +50,28 @@ def test_rich_help_no_commands():
 
     assert result.exit_code == 0
     assert "Show this message" in result.stdout
+
+
+def test_rich_doesnt_print_None_default():
+    app = typer.Typer(rich_markup_mode="rich")
+
+    @app.command()
+    def main(
+            name: str,
+            option_1: str = typer.Option(
+                "option_1_default",
+            ),
+            option_2: str = typer.Option(
+                ...,
+            ),
+    ):
+        print(f"Hello {name}")
+        print(option_1)
+        print(option_2)
+
+    result = runner.invoke(app, ["--help"])
+    assert "Usage" in result.stdout
+    assert "name" in result.stdout
+    assert "option-1" in result.stdout
+    assert "option-2" in result.stdout
+    assert result.stdout.count("[default: None]") == 0
