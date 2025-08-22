@@ -9,7 +9,6 @@ description = "Typer, build great CLIs. Easy to code. Based on Python type hints
 authors = [
     {name = "Sebastián Ramírez", email = "tiangolo@gmail.com"},
 ]
-readme = "README.md"
 requires-python = ">=3.7"
 classifiers = [
     "Intended Audience :: Information Technology",
@@ -30,36 +29,83 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "License :: OSI Approved :: MIT License",
 ]
 dependencies = [
     "click >= 8.0.0",
     "typing-extensions >= 3.7.4.3",
 ]
-
+readme = "README.md"
 [project.urls]
-Documentation = "https://typer.tiangolo.com/"
-homepage = "https://github.com/tiangolo/typer"
+Homepage = "https://github.com/fastapi/typer"
+Documentation = "https://typer.tiangolo.com"
+Repository = "https://github.com/fastapi/typer"
+Issues = "https://github.com/fastapi/typer/issues"
+Changelog = "https://typer.tiangolo.com/release-notes/"
 
 [project.optional-dependencies]
-all = [
-    "colorama >=0.4.3,<0.5.0",
-    "shellingham >=1.3.0,<2.0.0",
-    "rich >=10.11.0,<14.0.0",
+standard = [
+    "shellingham >=1.3.0",
+    "rich >=10.11.0",
 ]
 
 [tool.pdm]
 version = { source = "file", path = "typer/__init__.py" }
 distribution = true
 
-[tool.isort]
-profile = "black"
-known_third_party = ["typer", "click"]
-skip_glob = [
-    "docs_src/subcommands/tutorial001/main.py",
-    "docs_src/subcommands/tutorial003/lands.py",
-    "docs_src/subcommands/tutorial003/main.py",
+[tool.pdm.build]
+source-includes = [
+    "tests/",
+    "docs_src/",
+    "requirements*.txt",
+    "scripts/",
     ]
+
+[tool.tiangolo._internal-slim-build]
+sync-dependencies = [
+    "typer-slim[standard]",
+    "typer-cli",
+    "typer"
+]
+
+[tool.tiangolo._internal-slim-build.packages.typer-slim.project]
+name = "typer-slim"
+
+[tool.tiangolo._internal-slim-build.packages.typer]
+include-optional-dependencies = ["standard"]
+
+[tool.tiangolo._internal-slim-build.packages.typer.project]
+optional-dependencies = {}
+
+[tool.tiangolo._internal-slim-build.packages.typer.project.scripts]
+typer = "typer.cli:main"
+
+[tool.tiangolo._internal-slim-build.packages.typer-cli.project]
+name = "typer-cli"
+readme = "typer-cli/README.md"
+dependencies = [
+    "typer",
+]
+optional-dependencies = {}
+
+[tool.tiangolo._internal-slim-build.packages.typer-cli.tool.pdm.build]
+# excludes needs to explicitly exclude the top level python packages,
+# otherwise PDM includes them by default
+# A "*" glob pattern can't be used here because in PDM internals, the patterns are put
+# in a set (unordered, order varies) and each excluded file is assigned one of the
+# glob patterns that matches, as the set is unordered, the matched pattern could be "*"
+# independent of the order here. And then the internal code would give it a lower score
+# than the one for a default included file.
+# By not using "*" and explicitly excluding the top level packages, they get a higher
+# score than the default inclusion
+excludes = ["typer", "tests", "pdm_build.py"]
+# source-includes needs to explicitly define some value because PDM will check the
+# truthy value of the list, and if empty, will include some defaults, including "tests",
+# an empty string doesn't match anything, but makes the list truthy, so that PDM
+# doesn't override it during the build.
+source-includes = [""]
 
 [tool.pytest.ini_options]
 addopts = [
@@ -70,8 +116,6 @@ xfail_strict = true
 junit_family = "xunit2"
 filterwarnings = [
     "error",
-    # TODO: until I refactor completion to use the new shell_complete
-    "ignore:'autocompletion' is renamed to 'shell_complete'. The old name is deprecated and will be removed in Click 8.1. See the docs about 'Parameter' for information about new behavior.:DeprecationWarning:typer",
     # For pytest-xdist
     'ignore::DeprecationWarning:xdist',
 ]
@@ -88,6 +132,7 @@ omit = [
     "typer/_typing.py"
 ]
 context = '${CONTEXT}'
+relative_files = true
 
 [tool.coverage.report]
 exclude_lines = [
@@ -147,9 +192,6 @@ ignore = [
 "docs_src/prompt/tutorial003.py" = ["F841"]
 # Loop control variable `x` not used within loop body
 "docs_src/using_click/tutorial001.py" = ["B007"]
-
-# TODO: refactor _typing.py, remove unnecessary code
-"typer/_typing.py" = ["UP036", "F822"]
 
 [tool.ruff.lint.isort]
 known-third-party = ["typer", "click"]

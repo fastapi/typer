@@ -10,11 +10,14 @@ from typer.testing import CliRunner
 
 from docs_src.commands.index import tutorial001 as mod
 
+from ..utils import requires_completion_permission
+
 runner = CliRunner()
 app = typer.Typer()
 app.command()(mod.main)
 
 
+@requires_completion_permission
 def test_completion_install_no_shell():
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--install-completion"],
@@ -22,13 +25,13 @@ def test_completion_install_no_shell():
         encoding="utf-8",
         env={
             **os.environ,
-            "_TYPER_COMPLETE_TESTING": "True",
             "_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION": "True",
         },
     )
     assert "Option '--install-completion' requires an argument" in result.stderr
 
 
+@requires_completion_permission
 def test_completion_install_bash():
     bash_completion_path: Path = Path.home() / ".bashrc"
     text = ""
@@ -48,15 +51,14 @@ def test_completion_install_bash():
         encoding="utf-8",
         env={
             **os.environ,
-            "_TYPER_COMPLETE_TESTING": "True",
             "_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION": "True",
         },
     )
     new_text = bash_completion_path.read_text()
     bash_completion_path.write_text(text)
-    install_source = ".bash_completions/tutorial001.py.sh"
-    assert install_source not in text
-    assert install_source in new_text
+    install_source = Path(".bash_completions/tutorial001.py.sh")
+    assert str(install_source) not in text
+    assert str(install_source) in new_text
     assert "completion installed in" in result.stdout
     assert "Completion will take effect once you restart the terminal" in result.stdout
     install_source_path = Path.home() / install_source
@@ -69,6 +71,7 @@ def test_completion_install_bash():
     )
 
 
+@requires_completion_permission
 def test_completion_install_zsh():
     completion_path: Path = Path.home() / ".zshrc"
     text = ""
@@ -90,7 +93,6 @@ def test_completion_install_zsh():
         encoding="utf-8",
         env={
             **os.environ,
-            "_TYPER_COMPLETE_TESTING": "True",
             "_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION": "True",
         },
     )
@@ -107,6 +109,7 @@ def test_completion_install_zsh():
     assert "compdef _tutorial001py_completion tutorial001.py" in install_content
 
 
+@requires_completion_permission
 def test_completion_install_fish():
     script_path = Path(mod.__file__)
     completion_path: Path = (
@@ -126,7 +129,6 @@ def test_completion_install_fish():
         encoding="utf-8",
         env={
             **os.environ,
-            "_TYPER_COMPLETE_TESTING": "True",
             "_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION": "True",
         },
     )
@@ -137,11 +139,7 @@ def test_completion_install_fish():
     assert "Completion will take effect once you restart the terminal" in result.stdout
 
 
-runner = CliRunner()
-app = typer.Typer()
-app.command()(mod.main)
-
-
+@requires_completion_permission
 def test_completion_install_powershell():
     completion_path: Path = (
         Path.home() / ".config/powershell/Microsoft.PowerShell_profile.ps1"

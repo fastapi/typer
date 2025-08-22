@@ -7,6 +7,10 @@ on:
     types:
       - opened
       - synchronize
+
+env:
+  UV_SYSTEM_PYTHON: 1
+
 jobs:
   changes:
     runs-on: ubuntu-latest
@@ -17,8 +21,8 @@ jobs:
     outputs:
       docs: ${{ steps.filter.outputs.docs }}
     steps:
-    - uses: actions/checkout@v4
-    # For pull requests it's not necessary to checkout the code but for master it is
+    - uses: actions/checkout@v5
+    # For pull requests it's not necessary to checkout the code but for the main branch it is
     - uses: dorny/paths-filter@v3
       id: filter
       with:
@@ -28,11 +32,15 @@ jobs:
             - docs/**
             - docs_src/**
             - requirements-docs.txt
+            - requirements-docs-insiders.txt
             - pyproject.toml
             - mkdocs.yml
             - mkdocs.insiders.yml
+            - mkdocs.maybe-insiders.yml
+            - mkdocs.no-insiders.yml
             - .github/workflows/build-docs.yml
             - .github/workflows/deploy-docs.yml
+            - data/**
 
   build-docs:
     needs:
@@ -44,40 +52,39 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - uses: actions/cache@v3
-        id: cache
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
         with:
-          path: ${{ env.pythonLocation }}
-          key: ${{ runner.os }}-python-docs-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml', 'requirements-docs.txt') }}-v01
+          version: "0.4.15"
+          enable-cache: true
+          cache-dependency-glob: |
+            requirements**.txt
+            pyproject.toml
       - name: Install docs extras
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: pip install -r requirements-docs.txt
+        run: uv pip install -r requirements-docs.txt
       - name: Install Material for MkDocs Insiders
-        if: ( github.event_name != 'pull_request' || github.secret_source != 'Actions' ) && steps.cache.outputs.cache-hit != 'true'
-        run: |
-          pip install git+https://${{ secrets.TYPER_MKDOCS_MATERIAL_INSIDERS }}@github.com/squidfunk/mkdocs-material-insiders.git
-          pip install git+https://${{ secrets.TYPER_MKDOCS_MATERIAL_INSIDERS }}@github.com/pawamoy-insiders/griffe-typing-deprecated.git
-          pip install git+https://${{ secrets.TYPER_MKDOCS_MATERIAL_INSIDERS }}@github.com/pawamoy-insiders/mkdocstrings-python.git
-      - uses: actions/cache@v3
+        if: ( github.event_name != 'pull_request' || github.secret_source == 'Actions' )
+        run: uv pip install -r requirements-docs-insiders.txt
+        env:
+          TOKEN: ${{ secrets.TYPER_MKDOCS_MATERIAL_INSIDERS }}
+      - uses: actions/cache@v4
         with:
           key: mkdocs-cards-${{ github.ref }}-v1
           path: .cache
+      - name: Verify README
+        run: python ./scripts/docs.py verify-readme
       - name: Build Docs
-        if: github.event_name == 'pull_request' && github.secret_source != 'Actions'
-        run: python -m mkdocs build
-      - name: Build Docs with Insiders
-        if: ( github.event_name != 'pull_request' || github.secret_source != 'Actions' )
-        run: python -m mkdocs build --config-file mkdocs.insiders.yml
-
-      - uses: actions/upload-artifact@v3
+        run: python ./scripts/docs.py build
+      - uses: actions/upload-artifact@v4
         with:
           name: docs-site
           path: ./site/**
+          include-hidden-files: true
 
   # https://github.com/marketplace/actions/alls-green#why
   docs-all-green:  # This job does nothing and is only used for the branch protection

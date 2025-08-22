@@ -9,7 +9,7 @@ def old_callback():
     """
 
 
-users_app = typer.Typer(callback=old_callback)
+users_app = typer.Typer(callback=old_callback, name="users")
 
 
 def new_users():
@@ -18,7 +18,7 @@ def new_users():
     """
 
 
-app.add_typer(users_app, callback=new_users)
+app.add_typer(users_app, callback=new_users, name="new-users")
 
 
 @users_app.callback()

@@ -22,7 +22,8 @@ def test_1():
 def test_2():
     result = runner.invoke(app, ["--name", "rick"])
     assert result.exit_code != 0
-    assert "Invalid value for '--name': Only Camila is allowed" in result.output
+    assert "Invalid value for '--name'" in result.output
+    assert "Only Camila is allowed" in result.output
 
 
 def test_3():
@@ -50,7 +51,6 @@ def test_completion():
             "_TUTORIAL003_AN.PY_COMPLETE": "complete_bash",
             "COMP_WORDS": "tutorial003_an.py --name Rick --v",
             "COMP_CWORD": "3",
-            "_TYPER_COMPLETE_TESTING": "True",
         },
     )
     assert "--version" in result.stdout
