@@ -10,8 +10,19 @@ from enum import Enum
 from functools import update_wrapper
 from pathlib import Path
 from traceback import FrameSummary, StackSummary
-from types import TracebackType
-from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, Union
+from types import ModuleType, TracebackType
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Iterable,
+    List,
+    Optional,
+    Sequence,
+    Tuple,
+    Type,
+    Union,
+)
 from uuid import UUID
 
 import click
@@ -81,6 +92,9 @@ def except_hook(
     typer_path = os.path.dirname(__file__)
     click_path = os.path.dirname(click.__file__)
     supress_internal_dir_names = [typer_path, click_path]
+    suppress = supress_internal_dir_names + list(
+        exception_config.pretty_exceptions_suppress
+    )
     exc = exc_value
     if rich:
         from .rich_utils import MAX_WIDTH
@@ -90,7 +104,7 @@ def except_hook(
             exc,
             exc.__traceback__,
             show_locals=exception_config.pretty_exceptions_show_locals,
-            suppress=supress_internal_dir_names,
+            suppress=suppress,
             width=MAX_WIDTH,
         )
         console_stderr.print(rich_tb)
@@ -154,6 +168,7 @@ class Typer:
         pretty_exceptions_enable: bool = True,
         pretty_exceptions_show_locals: bool = True,
         pretty_exceptions_short: bool = True,
+        pretty_exceptions_suppress: Iterable[Union[str, ModuleType]] = (),
     ):
         self._add_completion = add_completion
         self.rich_markup_mode: MarkupMode = rich_markup_mode
@@ -161,6 +176,7 @@ class Typer:
         self.pretty_exceptions_enable = pretty_exceptions_enable
         self.pretty_exceptions_show_locals = pretty_exceptions_show_locals
         self.pretty_exceptions_short = pretty_exceptions_short
+        self.pretty_exceptions_suppress = pretty_exceptions_suppress
         self.info = TyperInfo(
             name=name,
             cls=cls,
@@ -336,6 +352,7 @@ class Typer:
                     pretty_exceptions_enable=self.pretty_exceptions_enable,
                     pretty_exceptions_show_locals=self.pretty_exceptions_show_locals,
                     pretty_exceptions_short=self.pretty_exceptions_short,
+                    pretty_exceptions_suppress=self.pretty_exceptions_suppress,
                 ),
             )
             raise e
