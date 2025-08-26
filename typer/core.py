@@ -26,9 +26,8 @@ import click.shell_completion
 import click.types
 import click.utils
 
-from .models import DefaultPlaceholder
-
 from ._typing import Literal
+from .models import DefaultPlaceholder
 
 MarkupMode = Literal["markdown", "rich", None]
 
