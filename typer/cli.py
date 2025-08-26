@@ -212,7 +212,7 @@ def get_docs_for_click(
     rich_markup_mode = None
     if hasattr(ctx, "obj") and isinstance(ctx.obj, dict):
         rich_markup_mode = ctx.obj.get("TYPER_RICH_MARKUP_MODE", None)
-    to_parse = has_rich and rich_markup_mode and rich_markup_mode == "rich"
+    to_parse: bool = bool(has_rich and (rich_markup_mode == "rich"))
     if obj.help:
         docs += f"{_parse_html(to_parse, obj.help)}\n\n"
     usage_pieces = obj.collect_usage_pieces(ctx)
