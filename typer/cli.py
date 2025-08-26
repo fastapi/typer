@@ -8,9 +8,9 @@ import click
 import typer
 import typer.core
 from click import Command, Group, Option
-from .core import MARKUP_MODE_KEY
 
 from . import __version__
+from .core import MARKUP_MODE_KEY
 from .models import DefaultPlaceholder
 
 try:
