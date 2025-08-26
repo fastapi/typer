@@ -8,6 +8,7 @@ import click
 import typer
 import typer.core
 from click import Command, Group, Option
+from core import MARKUP_MODE_KEY
 
 from . import __version__
 from .models import DefaultPlaceholder
@@ -211,7 +212,7 @@ def get_docs_for_click(
     docs += f" {title}\n\n"
     rich_markup_mode = None
     if hasattr(ctx, "obj") and isinstance(ctx.obj, dict):
-        rich_markup_mode = ctx.obj.get("TYPER_RICH_MARKUP_MODE", None)
+        rich_markup_mode = ctx.obj.get(MARKUP_MODE_KEY, None)
     to_parse: bool = bool(has_rich and (rich_markup_mode == "rich"))
     if obj.help:
         docs += f"{_parse_html(to_parse, obj.help)}\n\n"
@@ -311,9 +312,9 @@ def docs(
             ctx.ensure_object(dict)
         if isinstance(ctx.obj, dict):
             if isinstance(typer_obj.rich_markup_mode, DefaultPlaceholder):
-                ctx.obj["TYPER_RICH_MARKUP_MODE"] = typer_obj.rich_markup_mode.value
+                ctx.obj[MARKUP_MODE_KEY] = typer_obj.rich_markup_mode.value
             else:
-                ctx.obj["TYPER_RICH_MARKUP_MODE"] = typer_obj.rich_markup_mode
+                ctx.obj[MARKUP_MODE_KEY] = typer_obj.rich_markup_mode
     click_obj = typer.main.get_command(typer_obj)
     docs = get_docs_for_click(obj=click_obj, ctx=ctx, name=name, title=title)
     clean_docs = f"{docs.strip()}\n"
