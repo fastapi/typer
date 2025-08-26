@@ -27,8 +27,10 @@ import click.types
 import click.utils
 
 from ._typing import Literal
+from .models import DefaultPlaceholder
 
 MarkupMode = Literal["markdown", "rich", None]
+MARKUP_MODE_KEY = "TYPER_RICH_MARKUP_MODE"
 
 try:
     import rich
@@ -368,7 +370,10 @@ class TyperArgument(click.core.Argument):
         if extra:
             extra_str = "; ".join(extra)
             extra_str = f"[{extra_str}]"
-            if rich is not None:
+            rich_markup_mode = None
+            if hasattr(ctx, "obj") and isinstance(ctx.obj, dict):
+                rich_markup_mode = ctx.obj.get(MARKUP_MODE_KEY, None)
+            if rich is not None and rich_markup_mode == "rich":
                 # This is needed for when we want to export to HTML
                 extra_str = rich.markup.escape(extra_str).strip()
 
@@ -579,7 +584,11 @@ class TyperOption(click.core.Option):
         if extra:
             extra_str = "; ".join(extra)
             extra_str = f"[{extra_str}]"
-            if rich is not None:
+
+            rich_markup_mode = None
+            if hasattr(ctx, "obj") and isinstance(ctx.obj, dict):
+                rich_markup_mode = ctx.obj.get(MARKUP_MODE_KEY, None)
+            if rich is not None and rich_markup_mode == "rich":
                 # This is needed for when we want to export to HTML
                 extra_str = rich.markup.escape(extra_str).strip()
 
@@ -704,6 +713,13 @@ class TyperCommand(click.core.Command):
 
     def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
         if not rich or self.rich_markup_mode is None:
+            if not hasattr(ctx, "obj") or ctx.obj is None:
+                ctx.ensure_object(dict)
+            if isinstance(ctx.obj, dict):
+                if isinstance(self.rich_markup_mode, DefaultPlaceholder):
+                    ctx.obj[MARKUP_MODE_KEY] = self.rich_markup_mode.value
+                else:
+                    ctx.obj[MARKUP_MODE_KEY] = self.rich_markup_mode
             return super().format_help(ctx, formatter)
         return rich_utils.rich_format_help(
             obj=self,
