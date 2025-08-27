@@ -20,7 +20,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
-        python-version: [ "3.12" ]
+        python-version: [ "3.13" ]
         include:
           - os: ubuntu-22.04
             python-version: "3.7"
@@ -32,6 +32,8 @@ jobs:
             python-version: "3.10"
           - os: macos-latest
             python-version: "3.11"
+          - os: windows-latest
+            python-version: "3.12"
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
@@ -39,13 +41,13 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
       - name: Setup uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v6
         with:
           version: "0.4.15"
           enable-cache: true
@@ -55,6 +57,7 @@ jobs:
       - name: Install Dependencies
         run: uv pip install -r requirements-tests.txt
       - name: Lint
+        if: matrix.python-version != '3.7' && matrix.python-version != '3.8' && matrix.python-version != '3.9'
         run: bash scripts/lint.sh
       - run: mkdir coverage
       - run: bash ./scripts/test-files.sh
@@ -78,12 +81,12 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-python@v5
         with:
           python-version: '3.8'
       - name: Setup uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v6
         with:
           version: "0.4.15"
           enable-cache: true

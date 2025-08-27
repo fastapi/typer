@@ -95,7 +95,7 @@ def test_completion_complete_subcommand_fish(mod):
         },
     )
     assert (
-        "delete  Delete a user with USERNAME.\ndelete-all      Delete ALL users in the database."
+        "delete\tDelete a user with USERNAME.\ndelete-all\tDelete ALL users in the database."
         in result.stdout
     )
 

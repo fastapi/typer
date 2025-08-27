@@ -1,7 +1,7 @@
 import typer.core
 from typer.testing import CliRunner
 
-from tests.assets import conrner_cases as mod
+from tests.assets import corner_cases as mod
 
 runner = CliRunner()
 

@@ -27,9 +27,9 @@ from typing import (
 from uuid import UUID
 
 import click
-from typing_extensions import get_args, get_origin
+from typer._types import TyperChoice
 
-from ._typing import is_union
+from ._typing import get_args, get_origin, is_union
 from .completion import get_completion_inspect_parameters
 from .core import (
     DEFAULT_MARKUP_MODE,
@@ -59,6 +59,7 @@ from .models import (
     Required,
     SyncCommandFunctionType,
     TyperInfo,
+    TyperPath,
 )
 from .utils import get_params_from_function
 
@@ -799,7 +800,7 @@ def get_click_type(
         or parameter_info.path_type
         or parameter_info.resolve_path
     ):
-        return click.Path(
+        return TyperPath(
             exists=parameter_info.exists,
             file_okay=parameter_info.file_okay,
             dir_okay=parameter_info.dir_okay,
@@ -842,7 +843,12 @@ def get_click_type(
             atomic=parameter_info.atomic,
         )
     elif lenient_issubclass(annotation, Enum):
-        return click.Choice(
+        # The custom TyperChoice is only needed for Click < 8.2.0, to parse the
+        # command line values matching them to the enum values. Click 8.2.0 added
+        # support for enum values but reading enum names.
+        # Passing here the list of enum values (instead of just the enum) accounts for
+        # Click < 8.2.0.
+        return TyperChoice(
             [item.value for item in annotation],
             case_sensitive=parameter_info.case_sensitive,
         )
