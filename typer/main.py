@@ -1,3 +1,4 @@
+import importlib
 import inspect
 import os
 import platform
@@ -7,11 +8,22 @@ import sys
 import traceback
 from datetime import datetime
 from enum import Enum
-from functools import update_wrapper
+from functools import update_wrapper, wraps
 from pathlib import Path
 from traceback import FrameSummary, StackSummary
 from types import TracebackType
-from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, Union
+from typing import (
+    Any,
+    Callable,
+    Coroutine,
+    Dict,
+    List,
+    Optional,
+    Sequence,
+    Tuple,
+    Type,
+    Union,
+)
 from uuid import UUID
 
 import click
@@ -30,6 +42,7 @@ from .core import (
 from .models import (
     AnyType,
     ArgumentInfo,
+    AsyncRunner,
     CommandFunctionType,
     CommandInfo,
     Default,
@@ -44,10 +57,30 @@ from .models import (
     ParameterInfo,
     ParamMeta,
     Required,
+    SyncCommandFunctionType,
     TyperInfo,
     TyperPath,
 )
 from .utils import get_params_from_function
+
+
+def run_as_sync(coroutine: Coroutine[Any, Any, Any]) -> Any:
+    """
+    When using anyio we try to predict the appropriate backend assuming that
+    alternative async engines are not mixed and only installed on demand.
+    """
+
+    if importlib.util.find_spec("anyio"):
+        import anyio
+
+        backend = "trio" if importlib.util.find_spec("trio") else "asyncio"
+
+        return anyio.run(lambda: coroutine, backend=backend)  # type: ignore
+    else:
+        import asyncio
+
+        return asyncio.run(coroutine)
+
 
 try:
     import rich
@@ -148,6 +181,7 @@ class Typer:
         hidden: bool = Default(False),
         deprecated: bool = Default(False),
         add_completion: bool = True,
+        async_runner: AsyncRunner = run_as_sync,
         # Rich settings
         rich_markup_mode: MarkupMode = Default(DEFAULT_MARKUP_MODE),
         rich_help_panel: Union[str, None] = Default(None),
@@ -182,6 +216,22 @@ class Typer:
         self.registered_groups: List[TyperInfo] = []
         self.registered_commands: List[CommandInfo] = []
         self.registered_callback: Optional[TyperInfo] = None
+        self.async_runner = async_runner
+
+    def to_sync(
+        self, f: CommandFunctionType, async_runner: Optional[AsyncRunner]
+    ) -> SyncCommandFunctionType:  # type: ignore
+        if inspect.iscoroutinefunction(f):
+            run_sync: AsyncRunner = async_runner or self.async_runner
+
+            @wraps(f)
+            def execute(*args: Any, **kwargs: Any) -> Any:
+                return run_sync(f(*args, **kwargs))
+
+        else:
+            execute = f
+
+        return execute  # type: ignore
 
     def callback(
         self,
@@ -192,6 +242,7 @@ class Typer:
         subcommand_metavar: Optional[str] = Default(None),
         chain: bool = Default(False),
         result_callback: Optional[Callable[..., Any]] = Default(None),
+        async_runner: Optional[AsyncRunner] = None,
         # Command
         context_settings: Optional[Dict[Any, Any]] = Default(None),
         help: Optional[str] = Default(None),
@@ -213,7 +264,7 @@ class Typer:
                 chain=chain,
                 result_callback=result_callback,
                 context_settings=context_settings,
-                callback=f,
+                callback=self.to_sync(f, async_runner),
                 help=help,
                 epilog=epilog,
                 short_help=short_help,
@@ -223,7 +274,7 @@ class Typer:
                 deprecated=deprecated,
                 rich_help_panel=rich_help_panel,
             )
-            return f
+            return f  # self.to_sync(f, async_runner) # TESTING
 
         return decorator
 
@@ -241,6 +292,7 @@ class Typer:
         no_args_is_help: bool = False,
         hidden: bool = False,
         deprecated: bool = False,
+        async_runner: Optional[AsyncRunner] = None,
         # Rich settings
         rich_help_panel: Union[str, None] = Default(None),
     ) -> Callable[[CommandFunctionType], CommandFunctionType]:
@@ -253,7 +305,7 @@ class Typer:
                     name=name,
                     cls=cls,
                     context_settings=context_settings,
-                    callback=f,
+                    callback=self.to_sync(f, async_runner),
                     help=help,
                     epilog=epilog,
                     short_help=short_help,
@@ -266,7 +318,10 @@ class Typer:
                     rich_help_panel=rich_help_panel,
                 )
             )
-            return f
+            # test = f()
+            # test2 = self.to_sync(f, async_runner)
+            # test3 = test2()
+            return f  # self.to_sync(f, async_runner) # TESTING
 
         return decorator
 
@@ -1074,7 +1129,9 @@ def get_param_completion(
     return wrapper
 
 
-def run(function: Callable[..., Any]) -> None:
+def run(
+    function: Union[Callable[..., Any], Callable[..., Coroutine[Any, Any, Any]]],
+) -> None:
     app = Typer(add_completion=False)
     app.command()(function)
     app()
