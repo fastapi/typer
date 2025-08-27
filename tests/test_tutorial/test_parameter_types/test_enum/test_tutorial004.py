@@ -37,7 +37,6 @@ def test_invalid():
     assert "lstm" in result.output
 
 
-@needs_py38
 def test_script():
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
