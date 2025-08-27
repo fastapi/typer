@@ -6,16 +6,19 @@ from unittest import mock
 
 import pytest
 import shellingham
+import typer
 from typer.testing import CliRunner
 
 from docs_src.asynchronous import tutorial001 as async_mod
 from docs_src.commands.index import tutorial001 as sync_mod
 
-mod_params = ("mod", (sync_mod, async_mod))
-
 from ..utils import requires_completion_permission
 
+mod_params = ("mod", (sync_mod, async_mod))
+
 runner = CliRunner()
+app = typer.Typer()
+app.command()(sync_mod.main)
 
 
 @requires_completion_permission
