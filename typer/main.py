@@ -622,7 +622,7 @@ def determine_type_convertor(type_: Any) -> Optional[Callable[[Any], Any]]:
 
 def param_path_convertor(value: Optional[str] = None) -> Optional[Path]:
     if value is not None:
-        return Path(value)
+        return Path(value).expanduser()
     return None
 
 
