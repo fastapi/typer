@@ -27,16 +27,17 @@ def test_main():
 def test_invalid():
     result = runner.invoke(app, ["--network", "capsule"])
     assert result.exit_code != 0
+    assert "Invalid value for '--network'" in result.output
     assert (
-        "Invalid value for '--network': invalid choice: capsule. (choose from"
-        in result.output
-        or "Invalid value for '--network': 'capsule' is not one of" in result.output
+        "invalid choice: capsule. (choose from" in result.output
+        or "'capsule' is not one of" in result.output
     )
     assert "simple" in result.output
     assert "conv" in result.output
     assert "lstm" in result.output
 
 
+@needs_py38
 def test_script():
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
