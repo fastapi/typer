@@ -106,13 +106,3 @@ $ multiapp sub bye [OPTIONS]
 **Options**:
 
 * `--help`: Show this message and exit.
-
-**Usage**:
-
-```console
-$ multiapp sub bye [OPTIONS]
-```
-
-**Options**:
-
-* `--help`: Show this message and exit.
