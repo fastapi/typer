@@ -49,41 +49,34 @@ cd ./rick-portal-gun
 
 ## Dependencies and environment
 
-Add `typer[all]` to your dependencies:
+Add `typer` to your dependencies:
 
 <div class="termy">
 
 ```console
-$ poetry add "typer[all]"
+$ poetry add typer
 
 // It creates a virtual environment for your project
 Creating virtualenv rick-portal-gun-w31dJa0b-py3.10 in /home/rick/.cache/pypoetry/virtualenvs
-Using version ^0.1.0 for typer
+Using version ^0.12.0 for typer
 
 Updating dependencies
 Resolving dependencies... (1.2s)
 
-Writing lock file
-
 ---> 100%
 
-Package operations: 15 installs, 0 updates, 0 removals
+Package operations: 8 installs, 0 updates, 0 removals
 
-  - Installing zipp (3.1.0)
-  - Installing importlib-metadata (1.5.0)
-  - Installing pyparsing (2.4.6)
-  - Installing six (1.14.0)
-  - Installing attrs (19.3.0)
-  - Installing click (7.1.1)
-  - Installing colorama (0.4.3)
-  - Installing more-itertools (8.2.0)
-  - Installing packaging (20.3)
-  - Installing pluggy (0.13.1)
-  - Installing py (1.8.1)
-  - Installing shellingham (1.3.2)
-  - Installing wcwidth (0.1.8)
-  - Installing pytest (5.4.1)
-  - Installing typer (0.0.11)
+  - Installing mdurl (0.1.2)
+  - Installing markdown-it-py (3.0.0)
+  - Installing pygments (2.17.2)
+  - Installing click (8.1.7)
+  - Installing rich (13.7.1)
+  - Installing shellingham (1.5.4)
+  - Installing typing-extensions (4.11.0)
+  - Installing typer (0.12.3)
+
+Writing lock file
 
 // Activate that new virtual environment
 $ poetry shell
@@ -106,8 +99,7 @@ You can see that you have a generated project structure that looks like:
 ├── rick_portal_gun
 │   └── __init__.py
 └── tests
-    ├── __init__.py
-    └── test_rick_portal_gun.py
+    └── __init__.py
 ```
 
 ## Create your app
@@ -183,14 +175,11 @@ rick-portal-gun = "rick_portal_gun.main:app"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-typer = {extras = ["all"], version = "^0.1.0"}
-
-[tool.poetry.dev-dependencies]
-pytest = "^5.2"
+typer = "^0.12.0"
 
 [build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
 ```
 
 Here's what that line means:
@@ -239,7 +228,7 @@ Installing dependencies from lock file
 
 No dependencies to install or update
 
-  - Installing rick-portal-gun (0.1.0)
+  - Installing the current project: rick-portal-gun (0.1.0)
 ```
 
 </div>
@@ -258,7 +247,7 @@ $ which rick-portal-gun
 /home/rick/.cache/pypoetry/virtualenvs/rick-portal-gun-w31dJa0b-py3.10/bin/rick-portal-gun
 
 // Try it
-$ rick-portal-gun
+$ rick-portal-gun --help
 
 // You get all the standard help
 Usage: rick-portal-gun [OPTIONS] COMMAND [ARGS]...
@@ -292,7 +281,6 @@ $ poetry build
 Building rick-portal-gun (0.1.0)
  - Building sdist
  - Built rick-portal-gun-0.1.0.tar.gz
-
  - Building wheel
  - Built rick_portal_gun-0.1.0-py3-none-any.whl
 ```
@@ -320,7 +308,7 @@ Now you can open another terminal and install that package from the file for you
 <div class="termy">
 
 ```console
-$ pip install --user /home/rock/code/rick-portal-gun/dist/rick_portal_gun-0.1.0-py3-none-any.whl
+$ pip install --user /home/rick/rick-portal-gun/dist/rick_portal_gun-0.1.0-py3-none-any.whl
 
 ---> 100%
 ```
@@ -361,7 +349,7 @@ Having it installed globally (and not in a single environment), you can now inst
 ```console
 $ rick-portal-gun --install-completion
 
-zsh completion installed in /home/user/.zshrc.
+zsh completion installed in /home/rick/.zshrc.
 Completion will take effect once you restart the terminal.
 ```
 
@@ -439,8 +427,7 @@ The file would live right beside `__init__.py`:
 │   ├── __main__.py
 │   └── main.py
 └── tests
-    ├── __init__.py
-    └── test_rick_portal_gun.py
+    └── __init__.py
 ```
 
 No other file has to import it, you don't have to reference it in your `pyproject.toml` or anything else, it just works by default, as it is standard Python behavior.
@@ -457,7 +444,7 @@ Now, after installing your package, if you call it with `python -m` it will work
 <div class="termy">
 
 ```console
-$ python -m rick_portal_gun
+$ python -m rick_portal_gun --help
 
 Usage: __main__.py [OPTIONS] COMMAND [ARGS]...
 
@@ -513,7 +500,7 @@ You can pass all the arguments and keyword arguments you could pass to a Click a
 <div class="termy">
 
 ```console
-$ python -m rick_portal_gun
+$ python -m rick_portal_gun --help
 
 Usage: rick-portal-gun [OPTIONS] COMMAND [ARGS]...
 
@@ -603,7 +590,6 @@ $ poetry publish --build
 Building rick-portal-gun (0.1.0)
  - Building sdist
  - Built rick-portal-gun-0.1.0.tar.gz
-
  - Building wheel
  - Built rick_portal_gun-0.1.0-py3-none-any.whl
 
@@ -630,10 +616,10 @@ $ pip uninstall rick-portal-gun
 Found existing installation: rick-portal-gun 0.1.0
 Uninstalling rick-portal-gun-0.1.0:
   Would remove:
-    /home/user/.local/bin/rick-portal-gun
-    /home/user/.local/lib/python3.10/site-packages/rick_portal_gun-0.1.0.dist-info/*
-    /home/user/.local/lib/python3.10/site-packages/rick_portal_gun/*
-# Proceed (y/n)? $ y
+    /home/rick/.local/bin/rick-portal-gun
+    /home/rick/.local/lib/python3.10/site-packages/rick_portal_gun-0.1.0.dist-info/*
+    /home/rick/.local/lib/python3.10/site-packages/rick_portal_gun/*
+# Proceed (Y/n)? $ Y
     Successfully uninstalled rick-portal-gun-0.1.0
 ```
 
@@ -648,11 +634,16 @@ $ pip install --user rick-portal-gun
 
 // Notice that it says "Downloading" 🚀
 Collecting rick-portal-gun
-  Downloading rick_portal_gun-0.1.0-py3-none-any.whl (1.8 kB)
-Requirement already satisfied: typer[all]<0.0.12,>=0.0.11 in ./.local/lib/python3.10/site-packages (from rick-portal-gun) (0.0.11)
-Requirement already satisfied: click<7.2.0,>=7.1.1 in ./anaconda3/lib/python3.10/site-packages (from typer[all]<0.0.12,>=0.0.11->rick-portal-gun) (7.1.1)
-Requirement already satisfied: colorama; extra == "all" in ./anaconda3/lib/python3.10/site-packages (from typer[all]<0.0.12,>=0.0.11->rick-portal-gun) (0.4.3)
-Requirement already satisfied: shellingham; extra == "all" in ./anaconda3/lib/python3.10/site-packages (from typer[all]<0.0.12,>=0.0.11->rick-portal-gun) (1.3.1)
+  Downloading rick_portal_gun-0.1.0-py3-none-any.whl.metadata (435 bytes)
+Requirement already satisfied: typer<0.13.0,>=0.12.3 in ./.local/lib/python3.10/site-packages (from rick-portal-gun==0.1.0) (0.12.3)
+Requirement already satisfied: typing-extensions>=3.7.4.3 in ./.local/lib/python3.10/site-packages (from typer<0.13.0,>=0.12.3->rick-portal-gun==0.1.0) (4.11.0)
+Requirement already satisfied: click>=8.0.0 in ./.local/lib/python3.10/site-packages (from typer<0.13.0,>=0.12.3->rick-portal-gun==0.1.0) (8.1.7)
+Requirement already satisfied: shellingham>=1.3.0 in ./.local/lib/python3.10/site-packages (from typer<0.13.0,>=0.12.3->rick-portal-gun==0.1.0) (1.5.4)
+Requirement already satisfied: rich>=10.11.0 in ./.local/lib/python3.10/site-packages (from typer<0.13.0,>=0.12.3->rick-portal-gun==0.1.0) (13.7.1)
+Requirement already satisfied: pygments<3.0.0,>=2.13.0 in ./.local/lib/python3.10/site-packages (from rich>=10.11.0->typer<0.13.0,>=0.12.3->rick-portal-gun==0.1.0) (2.17.2)
+Requirement already satisfied: markdown-it-py>=2.2.0 in ./.local/lib/python3.10/site-packages (from rich>=10.11.0->typer<0.13.0,>=0.12.3->rick-portal-gun==0.1.0) (3.0.0)
+Requirement already satisfied: mdurl~=0.1 in ./.local/lib/python3.10/site-packages (from markdown-it-py>=2.2.0->rich>=10.11.0->typer<0.13.0,>=0.12.3->rick-portal-gun==0.1.0) (0.1.2)
+Downloading rick_portal_gun-0.1.0-py3-none-any.whl (1.8 kB)
 Installing collected packages: rick-portal-gun
 Successfully installed rick-portal-gun-0.1.0
 ```
@@ -715,14 +706,11 @@ rick-portal-gun = "rick_portal_gun.main:app"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-typer = {extras = ["all"], version = "^0.1.0"}
-
-[tool.poetry.dev-dependencies]
-pytest = "^5.2"
+typer = "^0.12.0"
 
 [build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
 ```
 
 And in the file `rick_portal_gun/__init__.py`:
@@ -743,7 +731,6 @@ $ poetry publish --build
 Building rick-portal-gun (0.2.0)
  - Building sdist
  - Built rick-portal-gun-0.2.0.tar.gz
-
  - Building wheel
  - Built rick_portal_gun-0.2.0-py3-none-any.whl
 
