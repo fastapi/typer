@@ -71,20 +71,7 @@ This feature makes it easy to parse multiple values from a single command-line a
 
 To use this feature, define a command-line option that accepts multiple values separated by a specific character (such as a comma). Here's an example of how to implement this:
 
-=== "Python 3.7+"
-
-    ```Python hl_lines="7"
-    {!> ../docs_src/multiple_values/multiple_options/tutorial003_an.py!}
-    ```
-
-=== "Python 3.7+ non-Annotated"
-
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
-
-    ```Python hl_lines="6"
-    {!> ../docs_src/multiple_values/multiple_options/tutorial003.py!}
-    ```
+{* docs_src/multiple_values/multiple_options/tutorial003_an.py hl[7] *}
 
 Check it:
 
@@ -119,5 +106,5 @@ The sum is 14.5
 
 </div>
 
-!!! warning
+/// warning
     Only single-character non-whitespace separators are supported.
