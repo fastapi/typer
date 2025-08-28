@@ -25,8 +25,8 @@ from typing import (
 from uuid import UUID
 
 import click
-from typing_extensions import Annotated, TypeAlias
 from typer._types import TyperChoice
+from typing_extensions import Annotated, TypeAlias
 
 from ._typing import get_args, get_origin, is_union
 from .completion import get_completion_inspect_parameters
