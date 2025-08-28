@@ -115,22 +115,9 @@ Buying groceries: Eggs, Bacon
 
 ### Literal choices
 
-With Python 3.8+, you can also use `typing.Literal` to represent a set of possible predefined choices, without having to use an `Enum`:
+You can also use `typing.Literal` to represent a set of possible predefined choices, without having to use an `Enum`:
 
-=== "Python 3.7+"
-
-    ```Python hl_lines="6"
-    {!> ../docs_src/parameter_types/enum/tutorial004_an.py!}
-    ```
-
-=== "Python 3.7+ non-Annotated"
-
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
-
-    ```Python hl_lines="5"
-    {!> ../docs_src/parameter_types/enum/tutorial004.py!}
-    ```
+{* docs_src/parameter_types/enum/tutorial004_an.py hl[6] *}
 
 <div class="termy">
 
