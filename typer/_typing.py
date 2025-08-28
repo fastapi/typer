@@ -13,16 +13,12 @@ from typing import (
     Union,
 )
 
-if sys.version_info < (3, 8):
-    from typing_extensions import Literal
-else:
-    from typing import Literal
-
 if sys.version_info >= (3, 9):
-    from typing import Annotated, get_args, get_origin, get_type_hints
+    from typing import Annotated, Literal, get_args, get_origin, get_type_hints
 else:
     from typing_extensions import (
         Annotated,
+        Literal,
         get_args,
         get_origin,
         get_type_hints,
