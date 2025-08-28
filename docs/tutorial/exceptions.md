@@ -202,9 +202,7 @@ $ python main.py
 If you want to control the width of the yellow and red Rich exception borders, you can set the parameter `pretty_exceptions_width` to a specific integer
 (by default it's the maximum console width if it can be determined, or otherwise 100):
 
-```Python hl_lines="3"
-{!../docs_src/exceptions/tutorial005.py!}
-```
+{* docs_src/exceptions/tutorial005.py hl[3] *}
 
 This prevents artificial line breaks in cases where there is sufficient horizontal space on the console.
 
