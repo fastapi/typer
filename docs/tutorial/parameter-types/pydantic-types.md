@@ -26,64 +26,12 @@ Successfully installed pydantic, email-validator
 
 You can then use them as parameter types.
 
-=== "Python 3.7+ Argument"
+{* docs_src/parameter_types/pydantic_types/tutorial001_an.py hl[5] *}
 
-    ```Python hl_lines="5"
-    {!> ../docs_src/parameter_types/pydantic_types/tutorial001_an.py!}
-    ```
+{* docs_src/parameter_types/pydantic_types/tutorial002_an.py hl[5] *}
 
-=== "Python 3.7+ Argument non-Annotated"
+These types are also supported in lists or tuples:
 
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
+{* docs_src/parameter_types/pydantic_types/tutorial003_an.py hl[6] *}
 
-    ```Python hl_lines="4"
-    {!> ../docs_src/parameter_types/pydantic_types/tutorial001.py!}
-    ```
-
-=== "Python 3.7+ Option"
-
-    ```Python hl_lines="5"
-    {!> ../docs_src/parameter_types/pydantic_types/tutorial002_an.py!}
-    ```
-
-=== "Python 3.7+ Option non-Annotated"
-
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
-
-    ```Python hl_lines="4"
-    {!> ../docs_src/parameter_types/pydantic_types/tutorial002.py!}
-    ```
-
-These types are also supported in lists or tuples
-
-=== "Python 3.7+ list"
-
-    ```Python hl_lines="6"
-    {!> ../docs_src/parameter_types/pydantic_types/tutorial003_an.py!}
-    ```
-
-=== "Python 3.7+ list non-Annotated"
-
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
-
-    ```Python hl_lines="5"
-    {!> ../docs_src/parameter_types/pydantic_types/tutorial003.py!}
-    ```
-
-=== "Python 3.7+ tuple"
-
-    ```Python hl_lines="6"
-    {!> ../docs_src/parameter_types/pydantic_types/tutorial004_an.py!}
-    ```
-
-=== "Python 3.7+ tuple non-Annotated"
-
-    !!! tip
-        Prefer to use the `Annotated` version if possible.
-
-    ```Python hl_lines="5"
-    {!> ../docs_src/parameter_types/pydantic_types/tutorial004.py!}
-    ```
+{* docs_src/parameter_types/pydantic_types/tutorial004_an.py hl[6] *}
