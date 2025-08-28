@@ -145,8 +145,6 @@ Buying groceries: Eggs, Bacon
 
 You can also combine `enum_by_name=True` with a list of enums:
 
-//// tab | Python 3.7+
-
 {* docs_src/parameter_types/enum/tutorial006_an.py hl[15] *}
 
 This works exactly the same, but you're using the enum names instead of values:
