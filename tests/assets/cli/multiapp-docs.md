@@ -51,13 +51,13 @@ $ multiapp sub [OPTIONS] COMMAND [ARGS]...
 
 * `hello`: Say Hello
 
-**Farewell**:
-
-* `bye`: Say bye
-
 **Greet**:
 
 * `hi`: Say Hi
+
+**Farewell**:
+
+* `bye`: Say bye
 
 ### `multiapp sub hello`
 
@@ -73,20 +73,6 @@ $ multiapp sub hello [OPTIONS]
 
 * `--name TEXT`: [default: World]
 * `--age INTEGER`: The age of the user  [default: 0]
-* `--help`: Show this message and exit.
-
-### `multiapp sub bye`
-
-Say bye
-
-**Usage**:
-
-```console
-$ multiapp sub bye [OPTIONS]
-```
-
-**Options**:
-
 * `--help`: Show this message and exit.
 
 ### `multiapp sub hi`
@@ -110,6 +96,16 @@ $ multiapp sub hi [OPTIONS] [USER]
 ### `multiapp sub bye`
 
 Say bye
+
+**Usage**:
+
+```console
+$ multiapp sub bye [OPTIONS]
+```
+
+**Options**:
+
+* `--help`: Show this message and exit.
 
 **Usage**:
 
