@@ -15,6 +15,8 @@ from typer.main import solve_typer_info_defaults, solve_typer_info_help
 from typer.models import ParameterInfo, TyperInfo
 from typer.testing import CliRunner
 
+from .utils import requires_completion_permission
+
 runner = CliRunner()
 
 
@@ -74,6 +76,7 @@ def test_valid_parser_permutations():
     ParameterInfo(click_type=CustomClickParser())
 
 
+@requires_completion_permission
 def test_install_invalid_shell():
     app = typer.Typer()
 
@@ -139,6 +142,25 @@ def test_callback_3_untyped_parameters():
     assert "info name is: main" in result.stdout
     assert "param name is: name" in result.stdout
     assert "value is: Camila" in result.stdout
+
+
+def test_completion_argument():
+    file_path = Path(__file__).parent / "assets/completion_argument.py"
+    result = subprocess.run(
+        [sys.executable, "-m", "coverage", "run", str(file_path), "E"],
+        capture_output=True,
+        encoding="utf-8",
+        env={
+            **os.environ,
+            "_COMPLETION_ARGUMENT.PY_COMPLETE": "complete_zsh",
+            "_TYPER_COMPLETE_ARGS": "completion_argument.py E",
+            "_TYPER_COMPLETE_TESTING": "True",
+        },
+    )
+    assert "Emma" in result.stdout or "_files" in result.stdout
+    assert "ctx: completion_argument" in result.stderr
+    assert "arg is: name" in result.stderr
+    assert "incomplete is: E" in result.stderr
 
 
 def test_completion_untyped_parameters():
@@ -221,7 +243,7 @@ def test_forward_references():
 
     result = runner.invoke(app, ["Hello", "2", "invalid"])
 
-    assert "Invalid value for 'ARG3': 'invalid' is not a valid integer" in result.stdout
+    assert "Invalid value for 'ARG3': 'invalid' is not a valid integer" in result.output
     result = runner.invoke(app, ["Hello", "2", "3", "--arg4", "--arg5"])
     assert (
         "arg1: <class 'str'> Hello\narg2: <class 'int'> 2\narg3: <class 'int'> 3\narg4: <class 'bool'> True\narg5: <class 'bool'> True\n"
