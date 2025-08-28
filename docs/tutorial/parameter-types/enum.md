@@ -80,27 +80,7 @@ Sometimes you want to accept `Enum` names from the command line and convert
 that into `Enum` values in the command handler. You can enable this by setting
 `enum_by_name=True`:
 
-//// tab | Python 3.7+
-
-```Python hl_lines="14"
-{!> ../docs_src/parameter_types/enum/tutorial004_an.py!}
-```
-
-////
-
-//// tab | Python 3.7+ non-Annotated
-
-/// tip
-
-Prefer to use the `Annotated` version if possible.
-
-///
-
-```Python hl_lines="13"
-{!> ../docs_src/parameter_types/enum/tutorial004.py!}
-```
-
-////
+{* docs_src/parameter_types/enum/tutorial004_an.py hl[14] *}
 
 And then the names of the `Enum` will be used instead of values:
 
@@ -116,27 +96,7 @@ Log level set to DEBUG
 
 This can be particularly useful if the enum values are not strings:
 
-//// tab | Python 3.7+
-
-```Python hl_lines="8-11 14"
-{!> ../docs_src/parameter_types/enum/tutorial005_an.py!}
-```
-
-////
-
-//// tab | Python 3.7+ non-Annotated
-
-/// tip
-
-Prefer to use the `Annotated` version if possible.
-
-///
-
-```Python hl_lines="7-10 13"
-{!../docs_src/parameter_types/enum/tutorial005.py!}
-```
-
-////
+{* docs_src/parameter_types/enum/tutorial005_an.py hl[8:11,14] *}
 
 ```console
 $ python main.py --access protected
@@ -187,25 +147,7 @@ You can also combine `enum_by_name=True` with a list of enums:
 
 //// tab | Python 3.7+
 
-```Python hl_lines="15"
-{!> ../docs_src/parameter_types/enum/tutorial006_an.py!}
-```
-
-////
-
-//// tab | Python 3.7+ non-Annotated
-
-/// tip
-
-Prefer to use the `Annotated` version if possible.
-
-///
-
-```Python hl_lines="13"
-{!> ../docs_src/parameter_types/enum/tutorial006.py!}
-```
-
-////
+{* docs_src/parameter_types/enum/tutorial006_an.py hl[15] *}
 
 This works exactly the same, but you're using the enum names instead of values:
 
