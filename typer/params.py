@@ -19,6 +19,8 @@ def Option(
     expose_value: bool = True,
     is_eager: bool = False,
     envvar: Optional[Union[str, List[str]]] = None,
+    # Note that shell_complete is not fully supported and will be removed in future versions
+    # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Optional[
         Callable[
             [click.Context, click.Parameter, str],
@@ -35,6 +37,7 @@ def Option(
     confirmation_prompt: bool = False,
     prompt_required: bool = True,
     hide_input: bool = False,
+    # TODO: remove is_flag and flag_value in a future release
     is_flag: Optional[bool] = None,
     flag_value: Optional[Any] = None,
     count: bool = False,
@@ -83,6 +86,8 @@ def Option(
     expose_value: bool = True,
     is_eager: bool = False,
     envvar: Optional[Union[str, List[str]]] = None,
+    # Note that shell_complete is not fully supported and will be removed in future versions
+    # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Optional[
         Callable[
             [click.Context, click.Parameter, str],
@@ -99,6 +104,7 @@ def Option(
     confirmation_prompt: bool = False,
     prompt_required: bool = True,
     hide_input: bool = False,
+    # TODO: remove is_flag and flag_value in a future release
     is_flag: Optional[bool] = None,
     flag_value: Optional[Any] = None,
     count: bool = False,
@@ -145,6 +151,8 @@ def Option(
     expose_value: bool = True,
     is_eager: bool = False,
     envvar: Optional[Union[str, List[str]]] = None,
+    # Note that shell_complete is not fully supported and will be removed in future versions
+    # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Optional[
         Callable[
             [click.Context, click.Parameter, str],
@@ -162,6 +170,7 @@ def Option(
     confirmation_prompt: bool = False,
     prompt_required: bool = True,
     hide_input: bool = False,
+    # TODO: remove is_flag and flag_value in a future release
     is_flag: Optional[bool] = None,
     flag_value: Optional[Any] = None,
     count: bool = False,
@@ -266,6 +275,8 @@ def Argument(
     expose_value: bool = True,
     is_eager: bool = False,
     envvar: Optional[Union[str, List[str]]] = None,
+    # Note that shell_complete is not fully supported and will be removed in future versions
+    # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Optional[
         Callable[
             [click.Context, click.Parameter, str],
@@ -322,6 +333,8 @@ def Argument(
     expose_value: bool = True,
     is_eager: bool = False,
     envvar: Optional[Union[str, List[str]]] = None,
+    # Note that shell_complete is not fully supported and will be removed in future versions
+    # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Optional[
         Callable[
             [click.Context, click.Parameter, str],
@@ -376,6 +389,8 @@ def Argument(
     expose_value: bool = True,
     is_eager: bool = False,
     envvar: Optional[Union[str, List[str]]] = None,
+    # Note that shell_complete is not fully supported and will be removed in future versions
+    # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Optional[
         Callable[
             [click.Context, click.Parameter, str],

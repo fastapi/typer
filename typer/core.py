@@ -26,10 +26,7 @@ import click.shell_completion
 import click.types
 import click.utils
 
-if sys.version_info >= (3, 8):
-    from typing import Literal
-else:
-    from typing_extensions import Literal
+from ._typing import Literal
 
 MarkupMode = Literal["markdown", "rich", None]
 
@@ -62,16 +59,17 @@ def _typer_param_setup_autocompletion_compat(
         Callable[[click.Context, List[str], str], List[Union[Tuple[str, str], str]]]
     ] = None,
 ) -> None:
-    if autocompletion is not None and self._custom_shell_complete is None:
+    if self._custom_shell_complete is not None:
         import warnings
 
         warnings.warn(
-            "'autocompletion' is renamed to 'shell_complete'. The old name is"
-            " deprecated and will be removed in Click 8.1. See the docs about"
-            " 'Parameter' for information about new behavior.",
+            "In Typer, only the parameter 'autocompletion' is supported. "
+            "The support for 'shell_complete' is deprecated and will be removed in upcoming versions. ",
             DeprecationWarning,
             stacklevel=2,
         )
+
+    if autocompletion is not None:
 
         def compat_autocompletion(
             ctx: click.Context, param: click.core.Parameter, incomplete: str
@@ -205,9 +203,11 @@ def _main(
                 # even always obvious that `rv` indicates success/failure
                 # by its truthiness/falsiness
                 ctx.exit()
-        except (EOFError, KeyboardInterrupt) as e:
+        except EOFError as e:
             click.echo(file=sys.stderr)
             raise click.Abort() from e
+        except KeyboardInterrupt as e:
+            raise click.exceptions.Exit(130) from e
         except click.ClickException as e:
             if not standalone_mode:
                 raise
@@ -265,6 +265,8 @@ class TyperArgument(click.core.Argument):
         expose_value: bool = True,
         is_eager: bool = False,
         envvar: Optional[Union[str, List[str]]] = None,
+        # Note that shell_complete is not fully supported and will be removed in future versions
+        # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Optional[
             Callable[
                 [click.Context, click.Parameter, str],
@@ -327,7 +329,7 @@ class TyperArgument(click.core.Argument):
         # to support Arguments
         if self.hidden:
             return None
-        name = self.make_metavar()
+        name = self.make_metavar(ctx=ctx)
         help = self.help or ""
         extra = []
         if self.show_envvar:
@@ -364,11 +366,16 @@ class TyperArgument(click.core.Argument):
         if self.required:
             extra.append(_("required"))
         if extra:
-            extra_str = ";".join(extra)
-            help = f"{help}  [{extra_str}]" if help else f"[{extra_str}]"
+            extra_str = "; ".join(extra)
+            extra_str = f"[{extra_str}]"
+            if rich is not None:
+                # This is needed for when we want to export to HTML
+                extra_str = rich.markup.escape(extra_str).strip()
+
+            help = f"{help}  {extra_str}" if help else f"{extra_str}"
         return name, help
 
-    def make_metavar(self) -> str:
+    def make_metavar(self, ctx: Union[click.Context, None] = None) -> str:
         # Modified version of click.core.Argument.make_metavar()
         # to include Argument name
         if self.metavar is not None:
@@ -376,7 +383,16 @@ class TyperArgument(click.core.Argument):
         var = (self.name or "").upper()
         if not self.required:
             var = f"[{var}]"
-        type_var = self.type.get_metavar(self)
+        # TODO: When deprecating Click < 8.2, remove this
+        signature = inspect.signature(self.type.get_metavar)
+        if "ctx" in signature.parameters:
+            # Click >= 8.2
+            type_var = self.type.get_metavar(self, ctx=ctx)  # type: ignore[arg-type]
+        else:
+            # Click < 8.2
+            type_var = self.type.get_metavar(self)  # type: ignore[call-arg]
+        # TODO: /When deprecating Click < 8.2, remove this, uncomment the line below
+        # type_var = self.type.get_metavar(self, ctx=ctx)
         if type_var:
             var += f":{type_var}"
         if self.nargs != 1:
@@ -399,6 +415,8 @@ class TyperOption(click.core.Option):
         expose_value: bool = True,
         is_eager: bool = False,
         envvar: Optional[Union[str, List[str]]] = None,
+        # Note that shell_complete is not fully supported and will be removed in future versions
+        # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Optional[
             Callable[
                 [click.Context, click.Parameter, str],
@@ -413,7 +431,6 @@ class TyperOption(click.core.Option):
         prompt_required: bool = True,
         hide_input: bool = False,
         is_flag: Optional[bool] = None,
-        flag_value: Optional[Any] = None,
         multiple: bool = False,
         count: bool = False,
         allow_from_autoenv: bool = True,
@@ -440,7 +457,6 @@ class TyperOption(click.core.Option):
             confirmation_prompt=confirmation_prompt,
             hide_input=hide_input,
             is_flag=is_flag,
-            flag_value=flag_value,
             multiple=multiple,
             count=count,
             allow_from_autoenv=allow_from_autoenv,
@@ -473,6 +489,14 @@ class TyperOption(click.core.Option):
     ) -> Optional[Union[Any, Callable[[], Any]]]:
         return _extract_default_help_str(self, ctx=ctx)
 
+    def make_metavar(self, ctx: Union[click.Context, None] = None) -> str:
+        signature = inspect.signature(super().make_metavar)
+        if "ctx" in signature.parameters:
+            # Click >= 8.2
+            return super().make_metavar(ctx=ctx)  # type: ignore[arg-type]
+        # Click < 8.2
+        return super().make_metavar()  # type: ignore[call-arg]
+
     def get_help_record(self, ctx: click.Context) -> Optional[Tuple[str, str]]:
         # Duplicate all of Click's logic only to modify a single line, to allow boolean
         # flags with only names for False values as it's currently supported by Typer
@@ -491,7 +515,7 @@ class TyperOption(click.core.Option):
                 any_prefix_is_slash = True
 
             if not self.is_flag and not self.count:
-                rv += f" {self.make_metavar()}"
+                rv += f" {self.make_metavar(ctx=ctx)}"
 
             return rv
 
@@ -554,7 +578,12 @@ class TyperOption(click.core.Option):
 
         if extra:
             extra_str = "; ".join(extra)
-            help = f"{help}  [{extra_str}]" if help else f"[{extra_str}]"
+            extra_str = f"[{extra_str}]"
+            if rich is not None:
+                # This is needed for when we want to export to HTML
+                extra_str = rich.markup.escape(extra_str).strip()
+
+            help = f"{help}  {extra_str}" if help else f"{extra_str}"
 
         return ("; " if any_prefix_is_slash else " / ").join(rv), help
 
