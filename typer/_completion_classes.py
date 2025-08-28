@@ -1,3 +1,4 @@
+import importlib.util
 import os
 import re
 import sys
@@ -16,9 +17,26 @@ from ._completion_shared import (
 )
 
 try:
+    from click.shell_completion import split_arg_string as click_split_arg_string
+except ImportError:  # pragma: no cover
+    # TODO: when removing support for Click < 8.2, remove this import
+    from click.parser import (  # type: ignore[no-redef]
+        split_arg_string as click_split_arg_string,
+    )
+
+try:
     import shellingham
 except ImportError:  # pragma: no cover
     shellingham = None
+
+
+def _sanitize_help_text(text: str) -> str:
+    """Sanitizes the help text by removing rich tags"""
+    if not importlib.util.find_spec("rich"):
+        return text
+    from . import rich_utils
+
+    return rich_utils.rich_render_text(text)
 
 
 class BashComplete(click.shell_completion.BashComplete):
@@ -33,7 +51,7 @@ class BashComplete(click.shell_completion.BashComplete):
         }
 
     def get_completion_args(self) -> Tuple[List[str], str]:
-        cwords = click.parser.split_arg_string(os.environ["COMP_WORDS"])
+        cwords = click_split_arg_string(os.environ["COMP_WORDS"])
         cword = int(os.environ["COMP_CWORD"])
         args = cwords[1:cword]
 
@@ -70,7 +88,7 @@ class ZshComplete(click.shell_completion.ZshComplete):
 
     def get_completion_args(self) -> Tuple[List[str], str]:
         completion_args = os.getenv("_TYPER_COMPLETE_ARGS", "")
-        cwords = click.parser.split_arg_string(completion_args)
+        cwords = click_split_arg_string(completion_args)
         args = cwords[1:]
         if args and not completion_args.endswith(" "):
             incomplete = args[-1]
@@ -86,13 +104,14 @@ class ZshComplete(click.shell_completion.ZshComplete):
                 .replace("'", "''")
                 .replace("$", "\\$")
                 .replace("`", "\\`")
+                .replace(":", r"\\:")
             )
 
         # TODO: Explore replicating the new behavior from Click, pay attention to
         # the difference with and without escape
         # return f"{item.type}\n{item.value}\n{item.help if item.help else '_'}"
         if item.help:
-            return f'"{escape(item.value)}":"{escape(item.help)}"'
+            return f'"{escape(item.value)}":"{_sanitize_help_text(escape(item.help))}"'
         else:
             return f'"{escape(item.value)}"'
 
@@ -120,7 +139,7 @@ class FishComplete(click.shell_completion.FishComplete):
 
     def get_completion_args(self) -> Tuple[List[str], str]:
         completion_args = os.getenv("_TYPER_COMPLETE_ARGS", "")
-        cwords = click.parser.split_arg_string(completion_args)
+        cwords = click_split_arg_string(completion_args)
         args = cwords[1:]
         if args and not completion_args.endswith(" "):
             incomplete = args[-1]
@@ -138,7 +157,7 @@ class FishComplete(click.shell_completion.FishComplete):
         # return f"{item.type},{item.value}
         if item.help:
             formatted_help = re.sub(r"\s", " ", item.help)
-            return f"{item.value}\t{formatted_help}"
+            return f"{item.value}\t{_sanitize_help_text(formatted_help)}"
         else:
             return f"{item.value}"
 
@@ -174,12 +193,12 @@ class PowerShellComplete(click.shell_completion.ShellComplete):
     def get_completion_args(self) -> Tuple[List[str], str]:
         completion_args = os.getenv("_TYPER_COMPLETE_ARGS", "")
         incomplete = os.getenv("_TYPER_COMPLETE_WORD_TO_COMPLETE", "")
-        cwords = click.parser.split_arg_string(completion_args)
-        args = cwords[1:]
+        cwords = click_split_arg_string(completion_args)
+        args = cwords[1:-1] if incomplete else cwords[1:]
         return args, incomplete
 
     def format_completion(self, item: click.shell_completion.CompletionItem) -> str:
-        return f"{item.value}:::{item.help or ' '}"
+        return f"{item.value}:::{_sanitize_help_text(item.help) if item.help else ' '}"
 
 
 def completion_init() -> None:

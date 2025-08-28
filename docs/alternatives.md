@@ -22,7 +22,7 @@ Provide a better development experience than just reading *CLI Parameters* by ha
 
 ///
 
-### <a href="https://www.hug.rest/" class="external-link" target="_blank">Hug</a>
+### <a href="https://hugapi.github.io/hug/" class="external-link" target="_blank">Hug</a>
 
 Hug is a library to create APIs and CLIs, it uses parameters in functions to declare the required data.
 
