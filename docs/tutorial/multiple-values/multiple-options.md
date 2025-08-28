@@ -107,4 +107,5 @@ The sum is 14.5
 </div>
 
 /// warning
-    Only single-character non-whitespace separators are supported.
+
+Only single-character non-whitespace separators are supported.
