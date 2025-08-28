@@ -9,7 +9,7 @@ def users():
     """
 
 
-users_app = typer.Typer(callback=users)
+users_app = typer.Typer(callback=users, name="users")
 app.add_typer(users_app)
 
 
