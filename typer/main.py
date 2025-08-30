@@ -620,7 +620,9 @@ def determine_type_convertor(type_: Any) -> Optional[Callable[[Any], Any]]:
 
 def param_path_convertor(value: Optional[str] = None) -> Optional[Path]:
     if value is not None:
-        return Path(value)
+        # allow returning any subclass of Path created by an annotated parser without converting
+        # it back to a Path
+        return value if isinstance(value, Path) else Path(value)
     return None
 
 
