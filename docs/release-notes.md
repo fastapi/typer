@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.17.0
+
 ### Features
 
 * ⚡️ Lazy-load `rich_utils` to reduce startup time. PR [#1128](https://github.com/fastapi/typer/pull/1128) by [@oefe](https://github.com/oefe).
