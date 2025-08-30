@@ -1,13 +1,16 @@
 import importlib.util
 import re
 import sys
+from collections import defaultdict
+from itertools import chain
 from pathlib import Path
-from typing import Any, List, Optional
+from typing import Any, Dict, List, Optional
 
 import click
 import typer
 import typer.core
 from click import Command, Group, Option
+from typer.rich_utils import _RICH_HELP_PANEL_NAME, COMMANDS_PANEL_TITLE
 
 from . import __version__
 
@@ -249,19 +252,33 @@ def get_docs_for_click(
         group = obj
         commands = group.list_commands(ctx)
         if commands:
-            docs += "**Commands**:\n\n"
+            panel_to_commands: Dict[str, List[click.Command]] = defaultdict(list)
             for command in commands:
                 command_obj = group.get_command(ctx, command)
                 assert command_obj
-                docs += f"* `{command_obj.name}`"
-                command_help = command_obj.get_short_help_str()
-                if command_help:
-                    docs += f": {_parse_html(command_help)}"
+                panel_name = (
+                    getattr(command_obj, _RICH_HELP_PANEL_NAME, None)
+                    or COMMANDS_PANEL_TITLE
+                )
+                panel_to_commands[panel_name].append(command_obj)
+            default_command_objs = panel_to_commands.pop(COMMANDS_PANEL_TITLE, [])
+            if default_command_objs:
+                panel_to_commands = {
+                    COMMANDS_PANEL_TITLE: default_command_objs,
+                    **panel_to_commands,
+                }
+            for panel_name, command_objs in panel_to_commands.items():
+                docs += f"**{panel_name}**:\n\n"
+                for command_obj in command_objs:
+                    docs += f"* `{command_obj.name}`"
+                    command_help = command_obj.get_short_help_str()
+                    if command_help:
+                        docs += f": {_parse_html(command_help)}"
+                    docs += "\n"
                 docs += "\n"
-            docs += "\n"
-        for command in commands:
-            command_obj = group.get_command(ctx, command)
-            assert command_obj
+        for command_obj in chain.from_iterable(
+            command_objs for command_objs in panel_to_commands.values()
+        ):
             use_prefix = ""
             if command_name:
                 use_prefix += f"{command_name}"
