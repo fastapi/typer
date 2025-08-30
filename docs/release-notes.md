@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Fixes
+
+* 🐛 Fix markdown formatting in `--help` output. PR [#815](https://github.com/fastapi/typer/pull/815) by [@gar1t](https://github.com/gar1t).
+
 ## 0.17.0
 
 ### Features
