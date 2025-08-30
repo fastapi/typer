@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Features
+
+* ⚡️ Lazy-load `rich_utils` to reduce startup time. PR [#1128](https://github.com/fastapi/typer/pull/1128) by [@oefe](https://github.com/oefe).
+
 ### Internal
 
 * ⬆ Bump ruff from 0.12.9 to 0.12.10. PR [#1280](https://github.com/fastapi/typer/pull/1280) by [@dependabot[bot]](https://github.com/apps/dependabot).
