@@ -8,7 +8,7 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
-      - name: check if prs have merge conflict
+      - name: Check if PRs have merge conflicts
         uses: eps1lon/actions-label-merge-conflict@v3
         with:
           dirtyLabel: "conflicts"
