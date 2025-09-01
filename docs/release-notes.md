@@ -2,6 +2,30 @@
 
 ## Latest Changes
 
+## 0.17.3
+
+### Features
+
+* ✨ Allow annotated parsing with a subclass of `Path`. PR [#1183](https://github.com/fastapi/typer/pull/1183) by [@emfdavid](https://github.com/emfdavid).
+
+## 0.17.2
+
+### Fixes
+
+* 🐛 Avoid printing `default: None` in the help section when using Rich. PR [#1120](https://github.com/fastapi/typer/pull/1120) by [@mattmess1221](https://github.com/mattmess1221).
+
+## 0.17.1
+
+### Fixes
+
+* 🐛 Fix markdown formatting in `--help` output. PR [#815](https://github.com/fastapi/typer/pull/815) by [@gar1t](https://github.com/gar1t).
+
+## 0.17.0
+
+### Features
+
+* ⚡️ Lazy-load `rich_utils` to reduce startup time. PR [#1128](https://github.com/fastapi/typer/pull/1128) by [@oefe](https://github.com/oefe).
+
 ### Internal
 
 * ⬆ Bump ruff from 0.12.9 to 0.12.10. PR [#1280](https://github.com/fastapi/typer/pull/1280) by [@dependabot[bot]](https://github.com/apps/dependabot).
