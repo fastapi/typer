@@ -6,6 +6,9 @@ on:
 
 jobs:
   main:
+    permissions:
+      contents: read
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
       - name: Check if PRs have merge conflicts
