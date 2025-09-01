@@ -15,6 +15,7 @@ from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, U
 from uuid import UUID
 
 import click
+from typer._types import TyperChoice
 
 from ._typing import get_args, get_origin, is_union
 from .completion import get_completion_inspect_parameters
@@ -44,16 +45,12 @@ from .models import (
     ParamMeta,
     Required,
     TyperInfo,
+    TyperPath,
 )
 from .utils import get_params_from_function
 
 try:
     import rich
-    from rich.traceback import Traceback
-
-    from . import rich_utils
-
-    console_stderr = rich_utils._get_rich_console(stderr=True)
 
 except ImportError:  # pragma: no cover
     rich = None  # type: ignore
@@ -81,7 +78,9 @@ def except_hook(
     supress_internal_dir_names = [typer_path, click_path]
     exc = exc_value
     if rich:
-        from .rich_utils import MAX_WIDTH
+        from rich.traceback import Traceback
+
+        from . import rich_utils
 
         rich_tb = Traceback.from_exception(
             type(exc),
@@ -89,8 +88,9 @@ def except_hook(
             exc.__traceback__,
             show_locals=exception_config.pretty_exceptions_show_locals,
             suppress=supress_internal_dir_names,
-            width=MAX_WIDTH,
+            width=rich_utils.MAX_WIDTH,
         )
+        console_stderr = rich_utils._get_rich_console(stderr=True)
         console_stderr.print(rich_tb)
         return
     tb_exc = traceback.TracebackException.from_exception(exc)
@@ -620,7 +620,9 @@ def determine_type_convertor(type_: Any) -> Optional[Callable[[Any], Any]]:
 
 def param_path_convertor(value: Optional[str] = None) -> Optional[Path]:
     if value is not None:
-        return Path(value)
+        # allow returning any subclass of Path created by an annotated parser without converting
+        # it back to a Path
+        return value if isinstance(value, Path) else Path(value)
     return None
 
 
@@ -743,7 +745,7 @@ def get_click_type(
         or parameter_info.path_type
         or parameter_info.resolve_path
     ):
-        return click.Path(
+        return TyperPath(
             exists=parameter_info.exists,
             file_okay=parameter_info.file_okay,
             dir_okay=parameter_info.dir_okay,
@@ -786,7 +788,12 @@ def get_click_type(
             atomic=parameter_info.atomic,
         )
     elif lenient_issubclass(annotation, Enum):
-        return click.Choice(
+        # The custom TyperChoice is only needed for Click < 8.2.0, to parse the
+        # command line values matching them to the enum values. Click 8.2.0 added
+        # support for enum values but reading enum names.
+        # Passing here the list of enum values (instead of just the enum) accounts for
+        # Click < 8.2.0.
+        return TyperChoice(
             [item.value for item in annotation],
             case_sensitive=parameter_info.case_sensitive,
         )

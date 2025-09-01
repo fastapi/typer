@@ -190,7 +190,8 @@ def _get_help_text(
     help_text = help_text.partition("\f")[0]
 
     # Get the first paragraph
-    first_line = help_text.split("\n\n")[0]
+    first_line, *remaining_paragraphs = help_text.split("\n\n")
+
     # Remove single linebreaks
     if markup_mode != MARKUP_MODE_MARKDOWN and not first_line.startswith("\b"):
         first_line = first_line.replace("\n", " ")
@@ -201,9 +202,10 @@ def _get_help_text(
     )
 
     # Get remaining lines, remove single line breaks and format as dim
-    remaining_paragraphs = help_text.split("\n\n")[1:]
     if remaining_paragraphs:
-        if markup_mode != MARKUP_MODE_RICH:
+        # Add a newline inbetween the header and the remaining paragraphs
+        yield Text("")
+        if markup_mode not in (MARKUP_MODE_RICH, MARKUP_MODE_MARKDOWN):
             # Remove single linebreaks
             remaining_paragraphs = [
                 x.replace("\n", " ").strip()
@@ -214,7 +216,7 @@ def _get_help_text(
             # Join back together
             remaining_lines = "\n".join(remaining_paragraphs)
         else:
-            # Join with double linebreaks if markdown
+            # Join with double linebreaks if markdown or Rich markup
             remaining_lines = "\n\n".join(remaining_paragraphs)
 
         yield _make_rich_text(
@@ -286,9 +288,11 @@ def _get_parameter_help(
     # Default value
     # This uses Typer's specific param._get_default_string
     if isinstance(param, (TyperOption, TyperArgument)):
-        if param.show_default:
-            show_default_is_str = isinstance(param.show_default, str)
-            default_value = param._extract_default_help_str(ctx=ctx)
+        default_value = param._extract_default_help_str(ctx=ctx)
+        show_default_is_str = isinstance(param.show_default, str)
+        if show_default_is_str or (
+            default_value is not None and (param.show_default or ctx.show_default)
+        ):
             default_str = param._get_default_string(
                 ctx=ctx,
                 show_default_is_str=show_default_is_str,
@@ -367,7 +371,13 @@ def _print_options_panel(
 
         # Column for a metavar, if we have one
         metavar = Text(style=STYLE_METAVAR, overflow="fold")
-        metavar_str = param.make_metavar()
+        # TODO: when deprecating Click < 8.2, make ctx required
+        signature = inspect.signature(param.make_metavar)
+        if "ctx" in signature.parameters:
+            metavar_str = param.make_metavar(ctx=ctx)
+        else:
+            # Click < 8.2
+            metavar_str = param.make_metavar()  # type: ignore[call-arg]
 
         # Do it ourselves if this is a positional argument
         if (
@@ -684,6 +694,10 @@ def rich_format_error(self: click.ClickException) -> None:
     Called by custom exception handler to print richly formatted click errors.
     Mimics original click.ClickException.echo() function but with rich formatting.
     """
+    # Don't do anything when it's a NoArgsIsHelpError (without importing it, cf. #1278)
+    if self.__class__.__name__ == "NoArgsIsHelpError":
+        return
+
     console = _get_rich_console(stderr=True)
     ctx: Union[click.Context, None] = getattr(self, "ctx", None)
     if ctx is not None:
