@@ -283,6 +283,8 @@ def _parse_html(to_parse: bool, input_text: str) -> str:
 
         return rich_utils.rich_to_html(input_text)
     return input_text
+
+
 def _parse_html(input_text: str) -> str:
     if not has_rich:  # pragma: no cover
         return input_text
