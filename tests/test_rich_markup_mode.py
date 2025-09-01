@@ -49,7 +49,6 @@ def test_rich_markup_mode_rich():
         pytest.param(
             "markdown",
             ["First line", "", "Line 1", "", "Line 2", "", "Line 3", ""],
-            marks=pytest.mark.xfail,
         ),
         pytest.param(
             "rich", ["First line", "", "Line 1", "", "Line 2", "", "Line 3", ""]
@@ -140,7 +139,6 @@ def test_markup_mode_newline_issue447(mode: str, lines: List[str]):
                 "Line 3",
                 "",
             ],
-            marks=pytest.mark.xfail,
         ),
         pytest.param(
             "rich",
