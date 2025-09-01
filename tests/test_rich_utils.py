@@ -86,7 +86,7 @@ def test_rich_doesnt_print_None_default():
     assert "First: option_1_default" in result.stdout
     assert "Second: Morty" in result.stdout
 
-    
+
 DATA = [
     {"name": "sna", "prop1": 1, "prop B": None, "blah": "zay"},
     {
