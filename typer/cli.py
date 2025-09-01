@@ -285,14 +285,6 @@ def _parse_html(to_parse: bool, input_text: str) -> str:
     return input_text
 
 
-def _parse_html(input_text: str) -> str:
-    if not has_rich:  # pragma: no cover
-        return input_text
-    from . import rich_utils
-
-    return rich_utils.rich_to_html(input_text)
-
-
 @utils_app.command()
 def docs(
     ctx: typer.Context,
