@@ -35,8 +35,6 @@ MARKUP_MODE_KEY = "TYPER_RICH_MARKUP_MODE"
 try:
     import rich
 
-    from . import rich_utils
-
     DEFAULT_MARKUP_MODE: MarkupMode = "rich"
 
 except ImportError:  # pragma: no cover
@@ -215,6 +213,8 @@ def _main(
                 raise
             # Typer override
             if rich and rich_markup_mode is not None:
+                from . import rich_utils
+
                 rich_utils.rich_format_error(e)
             else:
                 e.show()
@@ -245,6 +245,8 @@ def _main(
             raise
         # Typer override
         if rich and rich_markup_mode is not None:
+            from . import rich_utils
+
             rich_utils.rich_abort_error()
         else:
             click.echo(_("Aborted!"), file=sys.stderr)
@@ -721,6 +723,8 @@ class TyperCommand(click.core.Command):
                 else:
                     ctx.obj[MARKUP_MODE_KEY] = self.rich_markup_mode
             return super().format_help(ctx, formatter)
+        from . import rich_utils
+
         return rich_utils.rich_format_help(
             obj=self,
             ctx=ctx,
@@ -784,6 +788,8 @@ class TyperGroup(click.core.Group):
     def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
         if not rich or self.rich_markup_mode is None:
             return super().format_help(ctx, formatter)
+        from . import rich_utils
+
         return rich_utils.rich_format_help(
             obj=self,
             ctx=ctx,
