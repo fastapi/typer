@@ -55,13 +55,10 @@ try:
 
     from . import rich_utils
 
-    DEFAULT_WIDTH = rich_utils.MAX_WIDTH
-
     console_stderr = rich_utils._get_rich_console(stderr=True)
 
 except ImportError:  # pragma: no cover
     rich = None  # type: ignore
-    DEFAULT_WIDTH = 100
 
 _original_except_hook = sys.excepthook
 _typer_developer_exception_attr_name = "__typer_developer_exception__"
@@ -86,13 +83,15 @@ def except_hook(
     supress_internal_dir_names = [typer_path, click_path]
     exc = exc_value
     if rich:
+        from .rich_utils import MAX_WIDTH
+
         rich_tb = Traceback.from_exception(
             type(exc),
             exc,
             exc.__traceback__,
             show_locals=exception_config.pretty_exceptions_show_locals,
             suppress=supress_internal_dir_names,
-            width=exception_config.pretty_exceptions_width,
+            width=exception_config.pretty_exceptions_width or MAX_WIDTH,
         )
         console_stderr.print(rich_tb)
         return
@@ -155,7 +154,7 @@ class Typer:
         pretty_exceptions_enable: bool = True,
         pretty_exceptions_show_locals: bool = True,
         pretty_exceptions_short: bool = True,
-        pretty_exceptions_width: Union[int, None] = DEFAULT_WIDTH,
+        pretty_exceptions_width: Union[int, None] = Default(None),
     ):
         self._add_completion = add_completion
         self.rich_markup_mode: MarkupMode = rich_markup_mode
