@@ -278,11 +278,11 @@ def get_docs_for_click(
 
 
 def _parse_html(to_parse: bool, input_text: str) -> str:
-    if to_parse:
-        from . import rich_utils
+    if not to_parse:
+        return input_text
+    from . import rich_utils
 
-        return rich_utils.rich_to_html(input_text)
-    return input_text
+    return rich_utils.rich_to_html(input_text)
 
 
 @utils_app.command()
