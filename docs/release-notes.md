@@ -4,6 +4,7 @@
 
 ### Internal
 
+* 👷 Set permissions for conflict detector workflow. PR [#1287](https://github.com/fastapi/typer/pull/1287) by [@svlandeg](https://github.com/svlandeg).
 * 👷 Detect and label merge conflicts on PRs automatically. PR [#1286](https://github.com/fastapi/typer/pull/1286) by [@svlandeg](https://github.com/svlandeg).
 
 ## 0.17.3
