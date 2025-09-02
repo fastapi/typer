@@ -27,46 +27,44 @@ asyncio | asyncio via anyio | asyncio* | trio via anyio
 
 Async functions can be run just like normal functions:
 
-{* docs_src/asynchronous/tutorial001.py *}
+{* docs_src/asynchronous/tutorial001.py hl[1,7:8,13] *}
 
 Or using `anyio`:
 
-{* docs_src/asynchronous/tutorial002.py *}
-
-<small>Important to note, `typer.run()` doesn't provide means to customize the async run behavior.</small>
+{* docs_src/asynchronous/tutorial002.py hl[1,8] *}
 
 ## Using with commands
 
-Async functions can be registered as commands just like synchronous functions:
+Async functions can be registered as commands explicitely just like synchronous functions:
 
-{* docs_src/asynchronous/tutorial003.py *}
+{* docs_src/asynchronous/tutorial003.py hl[1,7:8,14] *}
 
 Or using `anyio`:
 
-{* docs_src/asynchronous/tutorial004.py *}
+{* docs_src/asynchronous/tutorial004.py hl[1,9] *}
 
 Or using `trio` via `anyio`:
 
-{* docs_src/asynchronous/tutorial005.py *}
-
-## Using with callback
-
-The callback function supports asynchronous functions just like commands including the `async_runner` parameter:
-
-{* docs_src/asynchronous/tutorial006.py *}
-
-Because the asynchronous functions are wrapped in a synchronous context before being executed, it is possible to mix async engines between the callback and commands.
+{* docs_src/asynchronous/tutorial005.py hl[1,9] *}
 
 ## Customizing async engine
 
-Customizing the used async engine is as simple as providing an additional parameter to the Typer instance or the decorators.
+You can customize the async engine by providing an additional parameter `async_runner` to the Typer instance or to the command decorator.
 
-The `async_runner` provided to the decorator always overwrites the typer instances `async_runner`.
+When both are provided, the one from the decorator will take precedence over the one from the Typer instance.
 
 Customize a single command:
 
-{* docs_src/asynchronous/tutorial007.py *}
+{* docs_src/asynchronous/tutorial007.py hl[14] *}
 
 Customize the default engine for the Typer instance:
 
-{* docs_src/asynchronous/tutorial008.py *}
+{* docs_src/asynchronous/tutorial008.py hl[5] *}
+
+## Using with callback
+
+The callback function supports asynchronous functions with the `async_runner` parameter as well:
+
+{* docs_src/asynchronous/tutorial006.py hl[14] *}
+
+Because the asynchronous functions are wrapped in a synchronous context before being executed, it is possible to mix async engines between the callback and commands.
