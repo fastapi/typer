@@ -27,7 +27,7 @@ asyncio | asyncio via anyio | asyncio* | trio via anyio
 
 Async functions can be run just like normal functions:
 
-{* docs_src/asynchronous/tutorial001.py hl[1,7:8,13] *}
+{* docs_src/asynchronous/tutorial001.py hl[1,8:9,14] *}
 
 Or using `anyio`:
 
@@ -37,7 +37,7 @@ Or using `anyio`:
 
 Async functions can be registered as commands explicitely just like synchronous functions:
 
-{* docs_src/asynchronous/tutorial003.py hl[1,7:8,14] *}
+{* docs_src/asynchronous/tutorial003.py hl[1,8:9,15] *}
 
 Or using `anyio`:
 
@@ -55,16 +55,16 @@ When both are provided, the one from the decorator will take precedence over the
 
 Customize a single command:
 
-{* docs_src/asynchronous/tutorial007.py hl[14] *}
+{* docs_src/asynchronous/tutorial007.py hl[15] *}
 
 Customize the default engine for the Typer instance:
 
-{* docs_src/asynchronous/tutorial008.py hl[5] *}
+{* docs_src/asynchronous/tutorial008.py hl[6] *}
 
 ## Using with callback
 
 The callback function supports asynchronous functions with the `async_runner` parameter as well:
 
-{* docs_src/asynchronous/tutorial006.py hl[14] *}
+{* docs_src/asynchronous/tutorial006.py hl[15] *}
 
 Because the asynchronous functions are wrapped in a synchronous context before being executed, it is possible to mix async engines between the callback and commands.
