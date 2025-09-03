@@ -19,7 +19,7 @@ The same way as with `typer.Argument()`, the old style of using the function par
 
 {* docs_src/options/required/tutorial001.py hl[4] *}
 
-Or you can explictily pass `...` to `typer.Option(default=...)`:
+Or you can explicitly pass `...` to `typer.Option(default=...)`:
 
 {* docs_src/options/required/tutorial002.py hl[4] *}
 

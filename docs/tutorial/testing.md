@@ -71,7 +71,7 @@ Then we check that the text printed to "standard output" contains the text that 
 
 /// tip
 
-You could also check `result.stderr` for "standard error" independently from "standard output" if your `CliRunner` instance is created with the `mix_stderr=False` argument.
+You could also check the output sent to "standard error" (`stderr`) or "standard output" (`stdout`) independently by accessing `result.stdout` and `result.stderr` in your tests.
 
 ///
 

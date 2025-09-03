@@ -10,11 +10,11 @@ But you can also provide auto completion for the **values** of *CLI options* and
 
 Before checking how to provide custom completions, let's check again how it works.
 
-After installing completion for your own Python package (or using the `typer` command), when you use your CLI program and start adding a *CLI option* with `--` an then hit <kbd>TAB</kbd>, your shell will show you the available *CLI options* (the same for *CLI arguments*, etc).
+After installing completion for your own Python package (or using the `typer` command), when you use your CLI program and start adding a *CLI option* with `--` and then hit <kbd>TAB</kbd>, your shell will show you the available *CLI options* (the same for *CLI arguments*, etc).
 
 To check it quickly without creating a new Python package, use the `typer` command.
 
-Then let's create small example program:
+Then let's create a small example program:
 
 {* docs_src/options_autocompletion/tutorial001_an.py *}
 
@@ -165,7 +165,7 @@ That simplifies our code a bit and works the same.
 
 /// tip
 
-If all the `yield` part seems complex for you, don't worry, you can just use the version with the `list` above.
+If the `yield` part seems complex for you, don't worry, you can just use the version with the `list` above.
 
 In the end, that's just to save us a couple of lines of code.
 
@@ -384,3 +384,13 @@ You can declare function parameters of these types:
 * `List[str]`: for the raw *CLI parameters*.
 
 It doesn't matter how you name them, in which order, or which ones of the 3 options you declare. It will all "**just work**" ✨
+
+## Comparison to Click functionality
+
+Note that Click 7 had a similar [`autocompletion` function](https://click.palletsprojects.com/en/7.x/bashcomplete/), but it worked slightly differently.
+
+It required the callback function to take exactly the 3 arguments `ctx`, `args` and `incomplete` in that exact order, instead of matching them dynamically based on types, as Typer does.
+
+Since Click 8, this functionality has been replaced by [`shell_complete`](https://click.palletsprojects.com/en/8.1.x/api/#click.ParamType.shell_complete), which still depends on the exact order of arguments for the callback function.
+
+However, Typer continues to use the `autocompletion` functionality as described on this page.
