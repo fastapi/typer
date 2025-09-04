@@ -18,6 +18,13 @@ def test_no_arg():
     assert "delete" in result.output
 
 
+def test_no_additional_output():
+    """Ensure that no additional output was generated (cf. PR #1262)"""
+    result = runner.invoke(app)
+    assert result.output.count("Usage") == 1
+    assert "Error" not in result.output
+
+
 def test_create():
     result = runner.invoke(app, ["create"])
     assert result.exit_code == 0
