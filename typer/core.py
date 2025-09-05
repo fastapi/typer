@@ -372,7 +372,9 @@ class TyperArgument(click.core.Argument):
             extra_str = f"[{extra_str}]"
             if rich is not None:
                 # This is needed for when we want to export to HTML
-                extra_str = rich.markup.escape(extra_str).strip()
+                from . import rich_utils
+
+                extra_str = rich_utils.escape_before_html_export(extra_str)
 
             help = f"{help}  {extra_str}" if help else f"{extra_str}"
         return name, help
@@ -583,7 +585,9 @@ class TyperOption(click.core.Option):
             extra_str = f"[{extra_str}]"
             if rich is not None:
                 # This is needed for when we want to export to HTML
-                extra_str = rich.markup.escape(extra_str).strip()
+                from . import rich_utils
+
+                extra_str = rich_utils.escape_before_html_export(extra_str)
 
             help = f"{help}  {extra_str}" if help else f"{extra_str}"
 
