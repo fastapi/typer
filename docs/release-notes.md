@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Fixes
+
+* 🐛 Make sure `rich.markup` is imported when rendering help text. PR [#1290](https://github.com/fastapi/typer/pull/1290) by [@g-arjones](https://github.com/g-arjones).
+
 ### Internal
 
 * ⬆ Bump pypa/gh-action-pypi-publish from 1.12.4 to 1.13.0. PR [#1292](https://github.com/fastapi/typer/pull/1292) by [@dependabot[bot]](https://github.com/apps/dependabot).
