@@ -83,7 +83,7 @@ def test_rich_doesnt_print_None_default():
     assert "Second: Morty" in result.stdout
 
 
-def test_rich_ness():
+def test_rich_markup_import_regression():
     # Remove rich.markup if it was imported by other tests
     if "rich" in sys.modules:
         rich_module = sys.modules["rich"]
@@ -94,7 +94,7 @@ def test_rich_ness():
 
     @app.command()
     def main(bar: str):
-        pass
+        pass  # pragma: no cover
 
     result = runner.invoke(app, ["--help"])
     assert "Usage" in result.stdout
