@@ -22,6 +22,8 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 from rich.theme import Theme
+from rich.traceback import Traceback
+from typer.models import DeveloperExceptionConfig
 
 if sys.version_info >= (3, 9):
     from typing import Literal
@@ -750,3 +752,19 @@ def rich_render_text(text: str) -> str:
     """Remove rich tags and render a pure text representation"""
     console = _get_rich_console()
     return "".join(segment.text for segment in console.render(text)).rstrip("\n")
+
+
+def get_traceback(
+    exc: BaseException,
+    exception_config: DeveloperExceptionConfig,
+    internal_dir_names: List[str],
+):
+    rich_tb = Traceback.from_exception(
+        type(exc),
+        exc,
+        exc.__traceback__,
+        show_locals=exception_config.pretty_exceptions_show_locals,
+        suppress=internal_dir_names,
+        width=MAX_WIDTH,
+    )
+    return rich_tb
