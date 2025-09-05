@@ -81,6 +81,7 @@ def except_hook(
         from rich.traceback import Traceback
 
         from . import rich_utils
+        from .rich_utils import MAX_WIDTH
 
         rich_tb = Traceback.from_exception(
             type(exc),
@@ -88,7 +89,7 @@ def except_hook(
             exc.__traceback__,
             show_locals=exception_config.pretty_exceptions_show_locals,
             suppress=supress_internal_dir_names,
-            width=rich_utils.MAX_WIDTH,
+            width=exception_config.pretty_exceptions_width or MAX_WIDTH,
         )
         console_stderr = rich_utils._get_rich_console(stderr=True)
         console_stderr.print(rich_tb)
@@ -152,6 +153,7 @@ class Typer:
         pretty_exceptions_enable: bool = True,
         pretty_exceptions_show_locals: bool = True,
         pretty_exceptions_short: bool = True,
+        pretty_exceptions_width: Union[int, None] = Default(None),
     ):
         self._add_completion = add_completion
         self.rich_markup_mode: MarkupMode = rich_markup_mode
@@ -159,6 +161,7 @@ class Typer:
         self.pretty_exceptions_enable = pretty_exceptions_enable
         self.pretty_exceptions_show_locals = pretty_exceptions_show_locals
         self.pretty_exceptions_short = pretty_exceptions_short
+        self.pretty_exceptions_width = pretty_exceptions_width
         self.info = TyperInfo(
             name=name,
             cls=cls,
@@ -334,6 +337,7 @@ class Typer:
                     pretty_exceptions_enable=self.pretty_exceptions_enable,
                     pretty_exceptions_show_locals=self.pretty_exceptions_show_locals,
                     pretty_exceptions_short=self.pretty_exceptions_short,
+                    pretty_exceptions_width=self.pretty_exceptions_width,
                 ),
             )
             raise e
