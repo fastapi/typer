@@ -4,6 +4,7 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
+    Coroutine,
     Dict,
     List,
     Optional,
@@ -69,7 +70,22 @@ class DefaultPlaceholder:
 
 DefaultType = TypeVar("DefaultType")
 
-CommandFunctionType = TypeVar("CommandFunctionType", bound=Callable[..., Any])
+
+AsyncCommandFunctionType = TypeVar(
+    "AsyncCommandFunctionType", bound=Callable[..., Coroutine[Any, Any, Any]]
+)
+
+SyncCommandFunctionType = TypeVar("SyncCommandFunctionType", bound=Callable[..., Any])
+
+
+CommandFunctionType = TypeVar(
+    "CommandFunctionType",
+    Callable[..., Any],
+    Callable[..., Coroutine[Any, Any, Any]],
+)
+
+
+AsyncRunner = Callable[[Coroutine[Any, Any, Any]], Any]
 
 
 def Default(value: DefaultType) -> DefaultType:
