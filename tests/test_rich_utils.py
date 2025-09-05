@@ -1,5 +1,4 @@
 import sys
-from typing import Annotated
 
 import typer
 import typer.completion
@@ -94,9 +93,9 @@ def test_rich_ness():
     app = typer.Typer(rich_markup_mode=None)
 
     @app.command()
-    def main(bar: Annotated[str, typer.Argument(help="foobar")]):
+    def main(bar: str):
         pass
 
     result = runner.invoke(app, ["--help"])
     assert "Usage" in result.stdout
-    assert "bar" in result.stdout
+    assert "BAR" in result.stdout
