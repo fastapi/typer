@@ -16,6 +16,7 @@ from rich.console import Console, RenderableType, group
 from rich.emoji import Emoji
 from rich.highlighter import RegexHighlighter
 from rich.markdown import Markdown
+from rich.markup import escape
 from rich.padding import Padding
 from rich.panel import Panel
 from rich.table import Table
@@ -725,6 +726,11 @@ def rich_abort_error() -> None:
     """Print richly formatted abort error."""
     console = _get_rich_console(stderr=True)
     console.print(ABORTED_TEXT, style=STYLE_ABORTED)
+
+
+def escape_before_html_export(input_text: str) -> str:
+    """Ensure that the input string can be used for HTML export."""
+    return escape(input_text).strip()
 
 
 def rich_to_html(input_text: str) -> str:
