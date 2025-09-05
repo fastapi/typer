@@ -62,3 +62,34 @@ Using it in your editor is what really shows you the benefits of **Typer**, seei
 And running the examples is what will really help you **understand** what is going on.
 
 You can learn a lot more by **running some examples** and **playing around** with them than by reading all the docs here.
+
+---
+
+## Install **Typer**
+
+The first step is to install **Typer**:
+
+<div class="termy">
+
+```console
+$ pip install typer
+---> 100%
+Successfully installed typer click shellingham rich pydantic
+```
+
+</div>
+
+By default, `typer` comes with `rich`, `shellingham` and `pydantic`.
+
+!!! note
+    If you are an advanced user and want to opt out of these default extra dependencies, you can instead install `typer-slim`.
+
+    ```bash
+    pip install typer
+    ```
+
+...includes the same optional dependencies as:
+
+    ```bash
+    pip install "typer-slim[standard]"
+    ```
