@@ -75,28 +75,19 @@ def except_hook(
         return
     typer_path = os.path.dirname(__file__)
     click_path = os.path.dirname(click.__file__)
-    supress_internal_dir_names = [typer_path, click_path]
+    internal_dir_names = [typer_path, click_path]
     exc = exc_value
     if rich:
-        from rich.traceback import Traceback
-
         from . import rich_utils
 
-        rich_tb = Traceback.from_exception(
-            type(exc),
-            exc,
-            exc.__traceback__,
-            show_locals=exception_config.pretty_exceptions_show_locals,
-            suppress=supress_internal_dir_names,
-            width=rich_utils.MAX_WIDTH,
-        )
+        rich_tb = rich_utils.get_traceback(exc, exception_config, internal_dir_names)
         console_stderr = rich_utils._get_rich_console(stderr=True)
         console_stderr.print(rich_tb)
         return
     tb_exc = traceback.TracebackException.from_exception(exc)
     stack: List[FrameSummary] = []
     for frame in tb_exc.stack:
-        if any(frame.filename.startswith(path) for path in supress_internal_dir_names):
+        if any(frame.filename.startswith(path) for path in internal_dir_names):
             if not exception_config.pretty_exceptions_short:
                 # Hide the line for internal libraries, Typer and Click
                 stack.append(
