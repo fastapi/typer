@@ -600,12 +600,17 @@ def get_command_from_info(
     return command
 
 
-def determine_type_convertor(type_: Any) -> Optional[Callable[[Any], Any]]:
+def determine_type_convertor(
+    type_: Any, enum_by_name: bool
+) -> Optional[Callable[[Any], Any]]:
     convertor: Optional[Callable[[Any], Any]] = None
     if lenient_issubclass(type_, Path):
         convertor = param_path_convertor
     if lenient_issubclass(type_, Enum):
-        convertor = generate_enum_convertor(type_)
+        if enum_by_name:
+            convertor = generate_enum_name_convertor(type_)
+        else:
+            convertor = generate_enum_convertor(type_)
     return convertor
 
 
@@ -630,6 +635,18 @@ def generate_enum_convertor(enum: Type[Enum]) -> Callable[[Any], Any]:
     return convertor
 
 
+def generate_enum_name_convertor(enum: Type[Enum]) -> Callable[..., Any]:
+    val_map = {str(item.name): item for item in enum}
+
+    def convertor(value: Any) -> Any:
+        if value is not None:
+            val = str(value)
+            if val in val_map:
+                return val_map[val]
+
+    return convertor
+
+
 def generate_list_convertor(
     convertor: Optional[Callable[[Any], Any]], default_value: Optional[Any]
 ) -> Callable[[Sequence[Any]], Optional[List[Any]]]:
@@ -643,8 +660,9 @@ def generate_list_convertor(
 
 def generate_tuple_convertor(
     types: Sequence[Any],
+    enum_by_name: bool,
 ) -> Callable[[Optional[Tuple[Any, ...]]], Optional[Tuple[Any, ...]]]:
-    convertors = [determine_type_convertor(type_) for type_ in types]
+    convertors = [determine_type_convertor(type_, enum_by_name) for type_ in types]
 
     def internal_convertor(
         param_args: Optional[Tuple[Any, ...]],
@@ -779,15 +797,16 @@ def get_click_type(
             atomic=parameter_info.atomic,
         )
     elif lenient_issubclass(annotation, Enum):
+        if parameter_info.enum_by_name:
+            choices = [item.name for item in annotation]
+        else:
+            choices = [item.value for item in annotation]
         # The custom TyperChoice is only needed for Click < 8.2.0, to parse the
         # command line values matching them to the enum values. Click 8.2.0 added
         # support for enum values but reading enum names.
         # Passing here the list of enum values (instead of just the enum) accounts for
         # Click < 8.2.0.
-        return TyperChoice(
-            [item.value for item in annotation],
-            case_sensitive=parameter_info.case_sensitive,
-        )
+        return TyperChoice(choices, case_sensitive=parameter_info.case_sensitive)
     raise RuntimeError(f"Type not yet supported: {annotation}")  # pragma: no cover
 
 
@@ -863,13 +882,14 @@ def get_click_param(
         parameter_type = get_click_type(
             annotation=main_type, parameter_info=parameter_info
         )
-    convertor = determine_type_convertor(main_type)
+    enum_by_name = parameter_info.enum_by_name
+    convertor = determine_type_convertor(main_type, enum_by_name)
     if is_list:
         convertor = generate_list_convertor(
             convertor=convertor, default_value=default_value
         )
     if is_tuple:
-        convertor = generate_tuple_convertor(get_args(main_type))
+        convertor = generate_tuple_convertor(get_args(main_type), enum_by_name)
     if isinstance(parameter_info, OptionInfo):
         if main_type is bool:
             is_flag = True
