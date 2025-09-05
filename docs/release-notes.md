@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.17.4
+
 ### Fixes
 
 * 🐛 Make sure `rich.markup` is imported when rendering help text. PR [#1290](https://github.com/fastapi/typer/pull/1290) by [@g-arjones](https://github.com/g-arjones).
