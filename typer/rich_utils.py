@@ -758,7 +758,7 @@ def get_traceback(
     exc: BaseException,
     exception_config: DeveloperExceptionConfig,
     internal_dir_names: List[str],
-):
+) -> Traceback:
     rich_tb = Traceback.from_exception(
         type(exc),
         exc,
