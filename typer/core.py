@@ -33,8 +33,6 @@ MarkupMode = Literal["markdown", "rich", None]
 try:
     import rich
 
-    from . import rich_utils
-
     DEFAULT_MARKUP_MODE: MarkupMode = "rich"
 
 except ImportError:  # pragma: no cover
@@ -213,6 +211,8 @@ def _main(
                 raise
             # Typer override
             if rich and rich_markup_mode is not None:
+                from . import rich_utils
+
                 rich_utils.rich_format_error(e)
             else:
                 e.show()
@@ -243,6 +243,8 @@ def _main(
             raise
         # Typer override
         if rich and rich_markup_mode is not None:
+            from . import rich_utils
+
             rich_utils.rich_abort_error()
         else:
             click.echo(_("Aborted!"), file=sys.stderr)
@@ -329,7 +331,7 @@ class TyperArgument(click.core.Argument):
         # to support Arguments
         if self.hidden:
             return None
-        name = self.make_metavar()
+        name = self.make_metavar(ctx=ctx)
         help = self.help or ""
         extra = []
         if self.show_envvar:
@@ -370,12 +372,14 @@ class TyperArgument(click.core.Argument):
             extra_str = f"[{extra_str}]"
             if rich is not None:
                 # This is needed for when we want to export to HTML
-                extra_str = rich.markup.escape(extra_str).strip()
+                from . import rich_utils
+
+                extra_str = rich_utils.escape_before_html_export(extra_str)
 
             help = f"{help}  {extra_str}" if help else f"{extra_str}"
         return name, help
 
-    def make_metavar(self) -> str:
+    def make_metavar(self, ctx: Union[click.Context, None] = None) -> str:
         # Modified version of click.core.Argument.make_metavar()
         # to include Argument name
         if self.metavar is not None:
@@ -383,7 +387,16 @@ class TyperArgument(click.core.Argument):
         var = (self.name or "").upper()
         if not self.required:
             var = f"[{var}]"
-        type_var = self.type.get_metavar(self)
+        # TODO: When deprecating Click < 8.2, remove this
+        signature = inspect.signature(self.type.get_metavar)
+        if "ctx" in signature.parameters:
+            # Click >= 8.2
+            type_var = self.type.get_metavar(self, ctx=ctx)  # type: ignore[arg-type]
+        else:
+            # Click < 8.2
+            type_var = self.type.get_metavar(self)  # type: ignore[call-arg]
+        # TODO: /When deprecating Click < 8.2, remove this, uncomment the line below
+        # type_var = self.type.get_metavar(self, ctx=ctx)
         if type_var:
             var += f":{type_var}"
         if self.nargs != 1:
@@ -480,6 +493,14 @@ class TyperOption(click.core.Option):
     ) -> Optional[Union[Any, Callable[[], Any]]]:
         return _extract_default_help_str(self, ctx=ctx)
 
+    def make_metavar(self, ctx: Union[click.Context, None] = None) -> str:
+        signature = inspect.signature(super().make_metavar)
+        if "ctx" in signature.parameters:
+            # Click >= 8.2
+            return super().make_metavar(ctx=ctx)  # type: ignore[arg-type]
+        # Click < 8.2
+        return super().make_metavar()  # type: ignore[call-arg]
+
     def get_help_record(self, ctx: click.Context) -> Optional[Tuple[str, str]]:
         # Duplicate all of Click's logic only to modify a single line, to allow boolean
         # flags with only names for False values as it's currently supported by Typer
@@ -498,7 +519,7 @@ class TyperOption(click.core.Option):
                 any_prefix_is_slash = True
 
             if not self.is_flag and not self.count:
-                rv += f" {self.make_metavar()}"
+                rv += f" {self.make_metavar(ctx=ctx)}"
 
             return rv
 
@@ -564,7 +585,9 @@ class TyperOption(click.core.Option):
             extra_str = f"[{extra_str}]"
             if rich is not None:
                 # This is needed for when we want to export to HTML
-                extra_str = rich.markup.escape(extra_str).strip()
+                from . import rich_utils
+
+                extra_str = rich_utils.escape_before_html_export(extra_str)
 
             help = f"{help}  {extra_str}" if help else f"{extra_str}"
 
@@ -688,6 +711,8 @@ class TyperCommand(click.core.Command):
     def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
         if not rich or self.rich_markup_mode is None:
             return super().format_help(ctx, formatter)
+        from . import rich_utils
+
         return rich_utils.rich_format_help(
             obj=self,
             ctx=ctx,
@@ -751,6 +776,8 @@ class TyperGroup(click.core.Group):
     def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
         if not rich or self.rich_markup_mode is None:
             return super().format_help(ctx, formatter)
+        from . import rich_utils
+
         return rich_utils.rich_format_help(
             obj=self,
             ctx=ctx,
