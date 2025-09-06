@@ -18,11 +18,14 @@ from rich.console import Console, RenderableType, group
 from rich.emoji import Emoji
 from rich.highlighter import RegexHighlighter
 from rich.markdown import Markdown
+from rich.markup import escape
 from rich.padding import Padding
 from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 from rich.theme import Theme
+from rich.traceback import Traceback
+from typer.models import DeveloperExceptionConfig
 
 from .rich_table import TableConfig, rich_table_factory
 
@@ -731,6 +734,11 @@ def rich_abort_error() -> None:
     console.print(ABORTED_TEXT, style=STYLE_ABORTED)
 
 
+def escape_before_html_export(input_text: str) -> str:
+    """Ensure that the input string can be used for HTML export."""
+    return escape(input_text).strip()
+
+
 def rich_to_html(input_text: str) -> str:
     """Print the HTML version of a rich-formatted input string.
 
@@ -791,3 +799,19 @@ def print_rich_object(
     print_rich_object_for_console(
         console, obj, out_fmt=out_fmt, indent=indent, config=config
     )
+
+
+def get_traceback(
+    exc: BaseException,
+    exception_config: DeveloperExceptionConfig,
+    internal_dir_names: List[str],
+) -> Traceback:
+    rich_tb = Traceback.from_exception(
+        type(exc),
+        exc,
+        exc.__traceback__,
+        show_locals=exception_config.pretty_exceptions_show_locals,
+        suppress=internal_dir_names,
+        width=MAX_WIDTH,
+    )
+    return rich_tb

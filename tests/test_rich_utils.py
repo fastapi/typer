@@ -1,4 +1,5 @@
 import json
+import sys
 from copy import deepcopy
 
 import pytest
@@ -207,3 +208,21 @@ def test_rich_object_config():
     output = prepare(result.stdout)
     prepared = prepare(deepcopy(CONFIGED_TEXT))
     assert output == prepared
+
+
+def test_rich_markup_import_regression():
+    # Remove rich.markup if it was imported by other tests
+    if "rich" in sys.modules:
+        rich_module = sys.modules["rich"]
+        if hasattr(rich_module, "markup"):
+            delattr(rich_module, "markup")
+
+    app = typer.Typer(rich_markup_mode=None)
+
+    @app.command()
+    def main(bar: str):
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["--help"])
+    assert "Usage" in result.stdout
+    assert "BAR" in result.stdout
