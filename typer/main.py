@@ -1,3 +1,4 @@
+import importlib.util
 import inspect
 import os
 import platform
@@ -49,11 +50,8 @@ from .models import (
 )
 from .utils import get_params_from_function
 
-try:
-    import rich
+HAS_RICH = importlib.util.find_spec("rich") is not None
 
-except ImportError:  # pragma: no cover
-    rich = None  # type: ignore
 
 _original_except_hook = sys.excepthook
 _typer_developer_exception_attr_name = "__typer_developer_exception__"
@@ -77,7 +75,7 @@ def except_hook(
     click_path = os.path.dirname(click.__file__)
     internal_dir_names = [typer_path, click_path]
     exc = exc_value
-    if rich:
+    if HAS_RICH:
         from . import rich_utils
 
         rich_tb = rich_utils.get_traceback(exc, exception_config, internal_dir_names)

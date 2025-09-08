@@ -164,12 +164,14 @@ select = [
     "B",  # flake8-bugbear
     "C4",  # flake8-comprehensions
     "UP", # pyupgrade
+    "TID", # flake8-tidy-imports
 ]
 ignore = [
     "E501",  # line too long, handled by black
     "B008",  # do not perform function calls in argument defaults
     "C901",  # too complex
     "W191", # indentation contains tabs
+    "TID252", # Relative imports OK
 ]
 
 [tool.ruff.lint.per-file-ignores]
@@ -192,6 +194,8 @@ ignore = [
 "docs_src/prompt/tutorial003.py" = ["F841"]
 # Loop control variable `x` not used within loop body
 "docs_src/using_click/tutorial001.py" = ["B007"]
+# No need to avoid rich imports in docs
+"docs_src/*" = ["TID"]
 
 [tool.ruff.lint.isort]
 known-third-party = ["typer", "click"]
@@ -201,3 +205,9 @@ known-first-party = ["reigns", "towns", "lands", "items", "users"]
 [tool.ruff.lint.pyupgrade]
 # Preserve types, even if a file imports `from __future__ import annotations`.
 keep-runtime-typing = true
+
+[tool.ruff.lint.flake8-tidy-imports]
+banned-module-level-imports = ["typer.rich_utils"]
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"rich".msg = "Use 'typer.rich_utils' instead of importing from 'rich' directly."

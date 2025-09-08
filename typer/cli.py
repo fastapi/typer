@@ -11,14 +11,7 @@ from click import Command, Group, Option
 
 from . import __version__
 
-try:
-    import rich
-
-    has_rich = True
-
-except ImportError:  # pragma: no cover
-    has_rich = False
-    rich = None  # type: ignore
+HAS_RICH = importlib.util.find_spec("rich") is not None
 
 default_app_names = ("app", "cli", "main")
 default_func_names = ("main", "cli", "app")
@@ -272,7 +265,7 @@ def get_docs_for_click(
 
 
 def _parse_html(input_text: str) -> str:
-    if not has_rich:  # pragma: no cover
+    if not HAS_RICH:  # pragma: no cover
         return input_text
     from . import rich_utils
 
