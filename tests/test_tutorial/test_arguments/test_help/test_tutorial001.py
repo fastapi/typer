@@ -35,7 +35,6 @@ def test_help_no_rich(monkeypatch: pytest.MonkeyPatch):
     assert "[required]" in result.output
 
 
-
 def test_call_arg():
     result = runner.invoke(app, ["Camila"])
     assert result.exit_code == 0

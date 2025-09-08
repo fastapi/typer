@@ -43,6 +43,7 @@ def test_help_no_rich(monkeypatch: pytest.MonkeyPatch):
     assert "TEXT" in result.output
     assert "[required]" in result.output
 
+
 def test_script():
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],

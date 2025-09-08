@@ -32,6 +32,7 @@ def test_help_no_rich(monkeypatch: pytest.MonkeyPatch):
     assert "--score" in result.output
     assert "FLOAT RANGE" in result.output
 
+
 def test_params():
     result = runner.invoke(app, ["5", "--age", "20", "--score", "90"])
     assert result.exit_code == 0

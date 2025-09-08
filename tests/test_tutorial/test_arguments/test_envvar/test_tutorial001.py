@@ -33,7 +33,6 @@ def test_help_no_rich(monkeypatch: pytest.MonkeyPatch):
     assert "default: World" in result.output
 
 
-
 def test_call_arg():
     result = runner.invoke(app, ["Wednesday"])
     assert result.exit_code == 0
