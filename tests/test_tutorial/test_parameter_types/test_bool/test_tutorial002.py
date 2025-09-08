@@ -23,7 +23,6 @@ def test_help():
 
 
 def test_help_no_rich(monkeypatch: pytest.MonkeyPatch):
-    # Mainly for coverage
     monkeypatch.setattr(typer.core, "HAS_RICH", False)
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
