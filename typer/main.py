@@ -88,7 +88,7 @@ def except_hook(
         if any(frame.filename.startswith(path) for path in internal_dir_names):
             if not exception_config.pretty_exceptions_short:
                 # Hide the line for internal libraries, Typer and Click
-                stack.append(
+                stack.append( # pragma: no cover
                     traceback.FrameSummary(
                         filename=frame.filename,
                         lineno=frame.lineno,
