@@ -3,6 +3,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
 from typer.testing import CliRunner
 
 from docs_src.exceptions import tutorial002 as mod
@@ -30,13 +31,16 @@ def test_traceback_rich():
     assert "name = 'morty'" not in result.stderr
 
 
-def test_standard_traceback_env_var():
+@pytest.mark.parametrize(
+    "env_var", ["TYPER_STANDARD_TRACEBACK", "_TYPER_STANDARD_TRACEBACK"]
+)
+def test_standard_traceback_env_var(env_var: str):
     file_path = Path(mod.__file__)
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", str(file_path), "secret"],
         capture_output=True,
         encoding="utf-8",
-        env={**os.environ, "TYPER_STANDARD_TRACEBACK": "1"},
+        env={**os.environ, env_var: "1"},
     )
     assert "return get_command(self)(*args, **kwargs)" in result.stderr
 
