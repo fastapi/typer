@@ -177,7 +177,7 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 # "__init__.py" = ["F401"]
 # rich_utils is allowed to use rich imports
-"typer\rich_utils.py" = ["TID251"]
+"typer/rich_utils.py" = ["TID251"]
 # This file is more readable without yield from
 "docs_src/progressbar/tutorial004.py" = ["UP028", "B007"]
 # Default mutable data structure
