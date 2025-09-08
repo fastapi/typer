@@ -16,7 +16,11 @@ def test_traceback_rich():
         [sys.executable, "-m", "coverage", "run", str(file_path), "secret"],
         capture_output=True,
         encoding="utf-8",
-        env={**os.environ, "_TYPER_STANDARD_TRACEBACK": ""},
+        env={
+            **os.environ,
+            "TYPER_STANDARD_TRACEBACK": "",
+            "_TYPER_STANDARD_TRACEBACK": "",
+        },
     )
     assert "return get_command(self)(*args, **kwargs)" not in result.stderr
 
@@ -32,7 +36,7 @@ def test_standard_traceback_env_var():
         [sys.executable, "-m", "coverage", "run", str(file_path), "secret"],
         capture_output=True,
         encoding="utf-8",
-        env={**os.environ, "_TYPER_STANDARD_TRACEBACK": "1"},
+        env={**os.environ, "TYPER_STANDARD_TRACEBACK": "1"},
     )
     assert "return get_command(self)(*args, **kwargs)" in result.stderr
 
