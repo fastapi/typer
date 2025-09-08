@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Internal
+
+* ⬆ Bump actions/labeler from 5 to 6. PR [#1296](https://github.com/fastapi/typer/pull/1296) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
 ## 0.17.4
 
 ### Fixes
