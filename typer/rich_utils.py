@@ -1,7 +1,5 @@
 # Extracted and modified from https://github.com/ewels/rich-click
 
-# ruff: noqa: TID251 we are allowed to use rich in this module and assume it is available
-
 import inspect
 import io
 import sys
