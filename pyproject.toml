@@ -171,7 +171,7 @@ ignore = [
     "B008",  # do not perform function calls in argument defaults
     "C901",  # too complex
     "W191", # indentation contains tabs
-    "TID252", # Relative imports OK
+    "TID252", # relative imports okay
 ]
 
 [tool.ruff.lint.per-file-ignores]
@@ -196,7 +196,7 @@ ignore = [
 "docs_src/prompt/tutorial003.py" = ["F841"]
 # Loop control variable `x` not used within loop body
 "docs_src/using_click/tutorial001.py" = ["B007"]
-# No need to avoid rich imports in docs
+# No need to worry about rich imports in docs
 "docs_src/*" = ["TID"]
 
 [tool.ruff.lint.isort]
@@ -209,6 +209,7 @@ known-first-party = ["reigns", "towns", "lands", "items", "users"]
 keep-runtime-typing = true
 
 [tool.ruff.lint.flake8-tidy-imports]
+# Import rich_utils from within functions (lazy), not at the module level (TID253)
 banned-module-level-imports = ["typer.rich_utils"]
 
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
