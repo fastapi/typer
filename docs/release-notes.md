@@ -4,6 +4,51 @@
 
 ### Internal
 
+* ⬆ Bump actions/setup-python from 5 to 6. PR [#1291](https://github.com/fastapi/typer/pull/1291) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.12.11 to 0.12.12. PR [#1295](https://github.com/fastapi/typer/pull/1295) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1300](https://github.com/fastapi/typer/pull/1300) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump actions/labeler from 5 to 6. PR [#1296](https://github.com/fastapi/typer/pull/1296) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
+## 0.17.4
+
+### Fixes
+
+* 🐛 Make sure `rich.markup` is imported when rendering help text. PR [#1290](https://github.com/fastapi/typer/pull/1290) by [@g-arjones](https://github.com/g-arjones).
+
+### Internal
+
+* ⬆ Bump pypa/gh-action-pypi-publish from 1.12.4 to 1.13.0. PR [#1292](https://github.com/fastapi/typer/pull/1292) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.12.10 to 0.12.11. PR [#1283](https://github.com/fastapi/typer/pull/1283) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1288](https://github.com/fastapi/typer/pull/1288) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* 👷 Set permissions for conflict detector workflow. PR [#1287](https://github.com/fastapi/typer/pull/1287) by [@svlandeg](https://github.com/svlandeg).
+* 👷 Detect and label merge conflicts on PRs automatically. PR [#1286](https://github.com/fastapi/typer/pull/1286) by [@svlandeg](https://github.com/svlandeg).
+
+## 0.17.3
+
+### Features
+
+* ✨ Allow annotated parsing with a subclass of `Path`. PR [#1183](https://github.com/fastapi/typer/pull/1183) by [@emfdavid](https://github.com/emfdavid).
+
+## 0.17.2
+
+### Fixes
+
+* 🐛 Avoid printing `default: None` in the help section when using Rich. PR [#1120](https://github.com/fastapi/typer/pull/1120) by [@mattmess1221](https://github.com/mattmess1221).
+
+## 0.17.1
+
+### Fixes
+
+* 🐛 Fix markdown formatting in `--help` output. PR [#815](https://github.com/fastapi/typer/pull/815) by [@gar1t](https://github.com/gar1t).
+
+## 0.17.0
+
+### Features
+
+* ⚡️ Lazy-load `rich_utils` to reduce startup time. PR [#1128](https://github.com/fastapi/typer/pull/1128) by [@oefe](https://github.com/oefe).
+
+### Internal
+
 * ⬆ Bump ruff from 0.12.9 to 0.12.10. PR [#1280](https://github.com/fastapi/typer/pull/1280) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1281](https://github.com/fastapi/typer/pull/1281) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * ⬆ Update pytest-sugar requirement from <1.1.0,>=0.9.4 to >=0.9.4,<1.2.0. PR [#1279](https://github.com/fastapi/typer/pull/1279) by [@dependabot[bot]](https://github.com/apps/dependabot).
