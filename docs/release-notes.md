@@ -4,6 +4,7 @@
 
 ### Internal
 
+* ⬆ Bump actions/setup-python from 5 to 6. PR [#1291](https://github.com/fastapi/typer/pull/1291) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ruff from 0.12.11 to 0.12.12. PR [#1295](https://github.com/fastapi/typer/pull/1295) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1300](https://github.com/fastapi/typer/pull/1300) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * ⬆ Bump actions/labeler from 5 to 6. PR [#1296](https://github.com/fastapi/typer/pull/1296) by [@dependabot[bot]](https://github.com/apps/dependabot).
