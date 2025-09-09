@@ -2,62 +2,76 @@ import os
 import subprocess
 import sys
 
-from docs_src.commands.index import tutorial002 as mod
+import pytest
+
+from docs_src.commands.index import tutorial002 as sync_mod
+
+from .for_testing import commands_index_tutorial002_async as async_mod
+
+mod_params = ("mod", (sync_mod, async_mod))
 
 
-def test_completion_complete_subcommand_zsh():
+@pytest.mark.parametrize(*mod_params)
+def test_completion_complete_subcommand_zsh(mod):
+    filename = os.path.basename(mod.__file__)
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
         capture_output=True,
         encoding="utf-8",
         env={
             **os.environ,
-            "_TUTORIAL002.PY_COMPLETE": "complete_zsh",
-            "_TYPER_COMPLETE_ARGS": "tutorial002.py ",
+            f"_{filename.upper()}_COMPLETE": "complete_zsh",
+            "_TYPER_COMPLETE_ARGS": f"{filename} ",
         },
     )
     assert "create" in result.stdout
     assert "delete" in result.stdout
 
 
-def test_completion_complete_subcommand_fish():
+@pytest.mark.parametrize(*mod_params)
+def test_completion_complete_subcommand_fish(mod):
+    filename = os.path.basename(mod.__file__)
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
         capture_output=True,
         encoding="utf-8",
         env={
             **os.environ,
-            "_TUTORIAL002.PY_COMPLETE": "complete_fish",
-            "_TYPER_COMPLETE_ARGS": "tutorial002.py ",
+            f"_{filename.upper()}_COMPLETE": "complete_fish",
+            "_TYPER_COMPLETE_ARGS": f"{filename} ",
             "_TYPER_COMPLETE_FISH_ACTION": "get-args",
         },
     )
     assert "create\ndelete" in result.stdout
 
 
-def test_completion_complete_subcommand_powershell():
+@pytest.mark.parametrize(*mod_params)
+def test_completion_complete_subcommand_powershell(mod):
+    filename = os.path.basename(mod.__file__)
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
         capture_output=True,
         encoding="utf-8",
         env={
             **os.environ,
-            "_TUTORIAL002.PY_COMPLETE": "complete_powershell",
-            "_TYPER_COMPLETE_ARGS": "tutorial002.py ",
+            f"_{filename.upper()}_COMPLETE": "complete_powershell",
+            "_TYPER_COMPLETE_ARGS": f"{filename} ",
         },
     )
-    assert ("create::: \ndelete::: ") in result.stdout
+    assert "create::: \ndelete::: " in result.stdout
 
 
-def test_completion_complete_subcommand_pwsh():
+@pytest.mark.parametrize(*mod_params)
+def test_completion_complete_subcommand_pwsh(mod):
+    filename = os.path.basename(mod.__file__)
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
         capture_output=True,
         encoding="utf-8",
         env={
             **os.environ,
-            "_TUTORIAL002.PY_COMPLETE": "complete_pwsh",
-            "_TYPER_COMPLETE_ARGS": "tutorial002.py ",
+            f"_{filename.upper()}_COMPLETE": "complete_pwsh",
+            "_TYPER_COMPLETE_ARGS": f"{filename} ",
         },
     )
-    assert ("create::: \ndelete::: ") in result.stdout
+    assert "create::: \ndelete::: " in result.stdout
