@@ -10,7 +10,6 @@ import click
 import typer
 import typer.core
 from click import Command, Group, Option
-from typer.rich_utils import _RICH_HELP_PANEL_NAME, COMMANDS_PANEL_TITLE
 
 from . import __version__
 
@@ -251,22 +250,33 @@ def get_docs_for_click(
     if isinstance(obj, Group):
         group = obj
         commands = group.list_commands(ctx)
+        default_panel_name = "Commands"
+        if has_rich:
+            from . import rich_utils
+
+            default_panel_name = rich_utils.COMMANDS_PANEL_TITLE
         if commands:
             panel_to_commands: Dict[str, List[click.Command]] = defaultdict(list)
             for command in commands:
                 command_obj = group.get_command(ctx, command)
                 assert command_obj
-                panel_name = (
-                    getattr(command_obj, _RICH_HELP_PANEL_NAME, None)
-                    or COMMANDS_PANEL_TITLE
-                )
+                if has_rich:
+                    from . import rich_utils
+
+                    panel_name = rich_utils.get_panel_name(
+                        command_obj, default_panel_name
+                    )
+                else:
+                    panel_name = default_panel_name
                 panel_to_commands[panel_name].append(command_obj)
-            default_command_objs = panel_to_commands.pop(COMMANDS_PANEL_TITLE, [])
-            if default_command_objs:
-                panel_to_commands = {
-                    COMMANDS_PANEL_TITLE: default_command_objs,
-                    **panel_to_commands,
-                }
+            if has_rich:
+                # Ensure that the ungrouped commands show up first
+                default_command_objs = panel_to_commands.pop(default_panel_name, [])
+                if len(default_command_objs) > 0:
+                    panel_to_commands = {
+                        default_panel_name: default_command_objs,
+                        **panel_to_commands,
+                    }
             for panel_name, command_objs in panel_to_commands.items():
                 docs += f"**{panel_name}**:\n\n"
                 for command_obj in command_objs:
@@ -276,15 +286,15 @@ def get_docs_for_click(
                         docs += f": {_parse_html(command_help)}"
                     docs += "\n"
                 docs += "\n"
-        for command_obj in chain.from_iterable(
-            command_objs for command_objs in panel_to_commands.values()
-        ):
-            use_prefix = ""
-            if command_name:
-                use_prefix += f"{command_name}"
-            docs += get_docs_for_click(
-                obj=command_obj, ctx=ctx, indent=indent + 1, call_prefix=use_prefix
-            )
+            for command_obj in chain.from_iterable(
+                command_objs for command_objs in panel_to_commands.values()
+            ):
+                use_prefix = ""
+                if command_name:
+                    use_prefix += f"{command_name}"
+                docs += get_docs_for_click(
+                    obj=command_obj, ctx=ctx, indent=indent + 1, call_prefix=use_prefix
+                )
     return docs
 
 
