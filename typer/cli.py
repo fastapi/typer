@@ -10,8 +10,7 @@ import typer.core
 from click import Command, Group, Option
 
 from . import __version__
-
-HAS_RICH = importlib.util.find_spec("rich") is not None
+from .core import HAS_RICH
 
 default_app_names = ("app", "cli", "main")
 default_func_names = ("main", "cli", "app")

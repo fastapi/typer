@@ -22,6 +22,7 @@ from ._typing import get_args, get_origin, is_union
 from .completion import get_completion_inspect_parameters
 from .core import (
     DEFAULT_MARKUP_MODE,
+    HAS_RICH,
     MarkupMode,
     TyperArgument,
     TyperCommand,
@@ -49,9 +50,6 @@ from .models import (
     TyperPath,
 )
 from .utils import get_params_from_function
-
-HAS_RICH = importlib.util.find_spec("rich") is not None
-
 
 _original_except_hook = sys.excepthook
 _typer_developer_exception_attr_name = "__typer_developer_exception__"
