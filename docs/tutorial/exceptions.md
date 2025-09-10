@@ -235,14 +235,14 @@ TypeError: can only concatenate str (not "int") to str
 
 </div>
 
-You could also achieve the same with the environment variable `_TYPER_STANDARD_TRACEBACK=1`.
+You could also achieve the same with the environment variable `TYPER_STANDARD_TRACEBACK=1` (or by setting the deprecated variable `_TYPER_STANDARD_TRACEBACK=1`).
 
 This will work for any other Typer program too, in case you need to debug a problem in a Typer program made by someone else:
 
 <div class="termy">
 
 ```console
-export _TYPER_STANDARD_TRACEBACK=1
+export TYPER_STANDARD_TRACEBACK=1
 $ python main.py
 
 
