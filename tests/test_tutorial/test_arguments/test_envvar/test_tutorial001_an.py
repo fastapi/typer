@@ -1,6 +1,7 @@
 import subprocess
 import sys
 
+import pytest
 import typer
 import typer.core
 from typer.testing import CliRunner
@@ -22,16 +23,15 @@ def test_help():
     assert "default: World" in result.output
 
 
-def test_help_no_rich():
-    rich = typer.core.rich
-    typer.core.rich = None
+def test_help_no_rich(monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setattr(typer.core, "HAS_RICH", False)
+
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     assert "[OPTIONS] [NAME]" in result.output
     assert "Arguments" in result.output
     assert "env var: AWESOME_NAME" in result.output
     assert "default: World" in result.output
-    typer.core.rich = rich
 
 
 def test_call_arg():

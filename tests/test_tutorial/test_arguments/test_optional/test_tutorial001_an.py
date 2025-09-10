@@ -1,6 +1,7 @@
 import subprocess
 import sys
 
+import pytest
 import typer
 import typer.core
 from typer.testing import CliRunner
@@ -25,14 +26,12 @@ def test_call_no_arg_standalone():
     assert result.exit_code != 0
 
 
-def test_call_no_arg_no_rich():
+def test_call_no_arg_no_rich(monkeypatch: pytest.MonkeyPatch):
     # Mainly for coverage
-    rich = typer.core.rich
-    typer.core.rich = None
+    monkeypatch.setattr(typer.core, "HAS_RICH", False)
     result = runner.invoke(app)
     assert result.exit_code != 0
     assert "Error: Missing argument 'NAME'" in result.output
-    typer.core.rich = rich
 
 
 def test_call_arg():

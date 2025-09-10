@@ -1,7 +1,7 @@
 import typer
 import typer.main
 
-typer.main.rich = None
+typer.main.HAS_RICH = False
 
 
 def main(name: str = "morty"):
