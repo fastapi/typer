@@ -54,7 +54,7 @@ Error: Invalid value for '--network': 'CONV' is not one of 'simple', 'conv', 'ls
 
 You can make an `Enum` (choice) *CLI parameter* be case-insensitive with the `case_sensitive` parameter:
 
-{* docs_src/parameter_types/enum/tutorial002_an.py hl[15] *}
+{* docs_src/parameter_types/enum/tutorial002_py311.py hl[15] *}
 
 And then the values of the `Enum` will be checked no matter if lower case, upper case, or a mix:
 
