@@ -14,8 +14,6 @@ jobs:
           - typer-slim
           - typer
           - typer-cli
-    env:
-      dir: ${{ matrix.package == 'typer-slim' && './' || matrix.package == 'typer' && 'typer_package' || matrix.package == 'typer-cli' && 'typer_cli_package' }}
     permissions:
       id-token: write
     steps:
@@ -23,9 +21,9 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.10"
           # Issue ref: https://github.com/actions/setup-python/issues/436
@@ -34,9 +32,8 @@ jobs:
       - name: Install build dependencies
         run: pip install build
       - name: Build distribution
-        working-directory: ${{ env.dir }}
+        env:
+          TIANGOLO_BUILD_PACKAGE: ${{ matrix.package }}
         run: python -m build
       - name: Publish
-        uses: pypa/gh-action-pypi-publish@v1.8.11
-        with:
-          packages-dir: ${{ env.dir }}/dist/
+        uses: pypa/gh-action-pypi-publish@v1.13.0

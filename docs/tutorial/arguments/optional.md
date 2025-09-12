@@ -1,3 +1,5 @@
+# Optional CLI Arguments
+
 We said before that *by default*:
 
 * *CLI options* are **optional**
@@ -33,23 +35,22 @@ __init__.py  test_tutorial
 
 In the [First Steps](../first-steps.md#add-a-cli-argument){.internal-link target=_blank} you saw how to add a *CLI argument*:
 
-```Python hl_lines="4"
-{!../docs_src/first_steps/tutorial002.py!}
-```
+{* docs_src/first_steps/tutorial002.py hl[4] *}
 
 Now let's see an alternative way to create the same *CLI argument*:
 
 
-```Python hl_lines="5"
-{!> ../docs_src/arguments/optional/tutorial001_an.py!}
-```
+{* docs_src/arguments/optional/tutorial001_an.py hl[5] *}
 
-!!! info
-    Typer added support for `Annotated` (and started recommending it) in version 0.9.0.
+/// info
 
-    If you have an older version, you would get errors when trying to use `Annotated`.
+Typer added support for `Annotated` (and started recommending it) in version 0.9.0.
 
-    Make sure you Upgrade the Typer version to at least 0.9.0 before using `Annotated`.
+If you have an older version, you would get errors when trying to use `Annotated`.
+
+Make sure you upgrade the Typer version to at least 0.9.0 before using `Annotated`.
+
+///
 
 Before, you had this function parameter:
 
@@ -108,22 +109,17 @@ name: str
 
 Now, finally what we came for, an optional *CLI argument*.
 
-To make a *CLI argument* optional, use `typer.Argument()` and pass a different "default" as the first parameter to `typer.Argument()`, for example `None`:
+To make a *CLI argument* optional, use `typer.Argument()` and make sure to provide a "default" value, for example `"World"`:
 
-```Python hl_lines="7"
-{!../docs_src/arguments/optional/tutorial002_an.py!}
-```
+{* docs_src/arguments/optional/tutorial002_an.py hl[5] *}
 
 Now we have:
 
 ```Python
-name: Annotated[Optional[str], typer.Argument()] = None
+name: Annotated[str, typer.Argument()] = "World"
 ```
 
 Because we are using `typer.Argument()` **Typer** will know that this is a *CLI argument* (no matter if *required* or *optional*).
-
-!!! tip
-    By using `Optional` your editor will be able to know that the value *could* be `None`, and will be able to warn you if you do something assuming it is a `str` that would break if it was `None`.
 
 Check the help:
 
@@ -144,10 +140,13 @@ Options:
 
 </div>
 
-!!! tip
-    Notice that `NAME` is still a *CLI argument*, it's shown up there in the "`Usage: main.py` ...".
+/// tip
 
-    Also notice that now `[NAME]` has brackets ("`[`" and "`]`") around (before it was just `NAME`) to denote that it's **optional**, not **required**.
+Notice that `NAME` is still a *CLI argument*, it's shown up there in the "`Usage: main.py` ...".
+
+Also notice that now `[NAME]` has brackets ("`[`" and "`]`") around (before it was just `NAME`) to denote that it's **optional**, not **required**.
+
+///
 
 Now run it and test it:
 
@@ -167,8 +166,11 @@ Hello Camila
 
 </div>
 
-!!! tip
-    Notice that "`Camila`" here is an optional *CLI argument*, not a *CLI option*, because we didn't use something like "`--name Camila`", we just passed "`Camila`" directly to the program.
+/// tip
+
+Notice that "`Camila`" here is an optional *CLI argument*, not a *CLI option*, because we didn't use something like "`--name Camila`", we just passed "`Camila`" directly to the program.
+
+///
 
 ## Alternative (old) `typer.Argument()` as the default value
 
@@ -176,12 +178,13 @@ Hello Camila
 
 Instead of using `Annotated`, you can use `typer.Argument()` as the default value:
 
-```Python hl_lines="4"
-{!> ../docs_src/arguments/optional/tutorial001.py!}
-```
+{* docs_src/arguments/optional/tutorial001.py hl[4] *}
 
-!!! tip
-    Prefer to use the `Annotated` version if possible.
+/// tip
+
+Prefer to use the `Annotated` version if possible.
+
+///
 
 Before, because `name` didn't have any default value it would be a **required parameter** for the Python function, in Python terms.
 
@@ -203,18 +206,17 @@ Not passing any value to the `default` argument is the same as marking it as req
 name: str = typer.Argument(default=...)
 ```
 
-!!! info
-    If you hadn't seen that `...` before: it is a special single value, it is <a href="https://docs.python.org/3/library/constants.html#Ellipsis" class="external-link" target="_blank">part of Python and is called "Ellipsis"</a>.
+/// info
 
-```Python hl_lines="4"
-{!> ../docs_src/arguments/optional/tutorial003.py!}
-```
+If you hadn't seen that `...` before: it is a special single value, it is <a href="https://docs.python.org/3/library/constants.html#Ellipsis" class="external-link" target="_blank">part of Python and is called "Ellipsis"</a>.
+
+///
+
+{* docs_src/arguments/optional/tutorial003.py hl[4] *}
 
 And the same way, you can make it optional by passing a different `default` value, for example `None`:
 
-```Python hl_lines="6"
-{!> ../docs_src/arguments/optional/tutorial002.py!}
-```
+{* docs_src/arguments/optional/tutorial002.py hl[6] *}
 
 Because the first parameter passed to `typer.Argument(default=None)` (the new "default" value) is `None`, **Typer** knows that this is an **optional** *CLI argument*, if no value is provided when calling it in the command line, it will have that default value of `None`.
 

@@ -1,18 +1,25 @@
+<style>
+.md-content .md-typeset h1 { display: none; }
+</style>
+
 <p align="center">
-  <a href="https://typer.tiangolo.com"><img src="https://typer.tiangolo.com/img/logo-margin/logo-margin-vector.svg" alt="Typer"></a>
+  <a href="https://typer.tiangolo.com"><img src="https://typer.tiangolo.com/img/logo-margin/logo-margin-vector.svg#only-light" alt="Typer"></a>
+<!-- only-mkdocs -->
+  <a href="https://typer.tiangolo.com"><img src="img/logo-margin/logo-margin-white-vector.svg#only-dark" alt="Typer"></a>
+<!-- /only-mkdocs -->
 </p>
 <p align="center">
     <em>Typer, build great CLIs. Easy to code. Based on Python type hints.</em>
 </p>
 <p align="center">
-<a href="https://github.com/tiangolo/typer/actions?query=workflow%3ATest" target="_blank">
-    <img src="https://github.com/tiangolo/typer/workflows/Test/badge.svg" alt="Test">
+<a href="https://github.com/fastapi/typer/actions?query=workflow%3ATest" target="_blank">
+    <img src="https://github.com/fastapi/typer/workflows/Test/badge.svg" alt="Test">
 </a>
-<a href="https://github.com/tiangolo/typer/actions?query=workflow%3APublish" target="_blank">
-    <img src="https://github.com/tiangolo/typer/workflows/Publish/badge.svg" alt="Publish">
+<a href="https://github.com/fastapi/typer/actions?query=workflow%3APublish" target="_blank">
+    <img src="https://github.com/fastapi/typer/workflows/Publish/badge.svg" alt="Publish">
 </a>
-<a href="https://coverage-badge.samuelcolvin.workers.dev/redirect/tiangolo/typer" target="_blank">
-    <img src="https://coverage-badge.samuelcolvin.workers.dev/tiangolo/typer.svg" alt="Coverage">
+<a href="https://coverage-badge.samuelcolvin.workers.dev/redirect/fastapi/typer" target="_blank">
+    <img src="https://coverage-badge.samuelcolvin.workers.dev/fastapi/typer.svg" alt="Coverage">
 <a href="https://pypi.org/project/typer" target="_blank">
     <img src="https://img.shields.io/pypi/v/typer?color=%2334D058&label=pypi%20package" alt="Package version">
 </a>
@@ -22,7 +29,7 @@
 
 **Documentation**: <a href="https://typer.tiangolo.com" target="_blank">https://typer.tiangolo.com</a>
 
-**Source Code**: <a href="https://github.com/tiangolo/typer" target="_blank">https://github.com/tiangolo/typer</a>
+**Source Code**: <a href="https://github.com/fastapi/typer" target="_blank">https://github.com/fastapi/typer</a>
 
 ---
 
@@ -37,13 +44,15 @@ The key features are:
 * **Short**: Minimize code duplication. Multiple features from each parameter declaration. Fewer bugs.
 * **Start simple**: The simplest example adds only 2 lines of code to your app: **1 import, 1 function call**.
 * **Grow large**: Grow in complexity as much as you want, create arbitrarily complex trees of commands and groups of subcommands, with options and arguments.
-* **Run scripts**: Typer includes a `typer` command that you can use to run scripts, automatically converting them to CLIs, even if they don't use Typer internally.
+* **Run scripts**: Typer includes a `typer` command/program that you can use to run scripts, automatically converting them to CLIs, even if they don't use Typer internally.
 
 ## FastAPI of CLIs
 
 **Typer** is <a href="https://fastapi.tiangolo.com" class="external-link" target="_blank">FastAPI</a>'s little sibling, it's the FastAPI of CLIs.
 
 ## Installation
+
+Create and activate a <a href="https://typer.tiangolo.com/virtual-environments/" class="external-link" target="_blank">virtual environment</a> and then install **Typer**:
 
 <div class="termy">
 
@@ -355,13 +364,10 @@ By default it also comes with extra standard dependencies:
 * <a href="https://github.com/sarugaku/shellingham" class="external-link" target="_blank"><code>shellingham</code></a>: to automatically detect the current shell when installing completion.
     * With `shellingham` you can just use `--install-completion`.
     * Without `shellingham`, you have to pass the name of the shell to install completion for, e.g. `--install-completion bash`.
-* `typer-cli`: adds the `typer` command to your shell:
-    * Quickly run scripts (that don't have to use Typer) with shell completion.
-    * Generate docs for your Typer applications.
 
 ### `typer-slim`
 
-If you don't want the extra dependencies, install `typer-slim` instead.
+If you don't want the extra standard optional dependencies, install `typer-slim` instead.
 
 When you install with:
 
@@ -369,15 +375,15 @@ When you install with:
 pip install typer
 ```
 
-...it's the equivalent of:
+...it includes the same code and dependencies as:
 
 ```bash
 pip install "typer-slim[standard]"
 ```
 
-The `standard` extra dependencies are `rich`, `shellingham`, `typer-cli`.
+The `standard` extra dependencies are `rich` and `shellingham`.
 
-**Note**: even if you don't install `typer-cli` you can still use it's functionality by calling `typer` as a module, e.g. `python -m typer`.
+**Note**: The `typer` command is only included in the `typer` package.
 
 ## License
 

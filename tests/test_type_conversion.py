@@ -7,6 +7,8 @@ import pytest
 import typer
 from typer.testing import CliRunner
 
+from .utils import needs_py310
+
 runner = CliRunner()
 
 
@@ -27,6 +29,45 @@ def test_optional():
     result = runner.invoke(app, ["--user", "Camila"])
     assert result.exit_code == 0
     assert "User: Camila" in result.output
+
+
+@needs_py310
+def test_union_type_optional():
+    app = typer.Typer()
+
+    @app.command()
+    def opt(user: str | None = None):
+        if user:
+            print(f"User: {user}")
+        else:
+            print("No user")
+
+    result = runner.invoke(app)
+    assert result.exit_code == 0
+    assert "No user" in result.output
+
+    result = runner.invoke(app, ["--user", "Camila"])
+    assert result.exit_code == 0
+    assert "User: Camila" in result.output
+
+
+def test_optional_tuple():
+    app = typer.Typer()
+
+    @app.command()
+    def opt(number: Optional[Tuple[int, int]] = None):
+        if number:
+            print(f"Number: {number}")
+        else:
+            print("No number")
+
+    result = runner.invoke(app)
+    assert result.exit_code == 0
+    assert "No number" in result.output
+
+    result = runner.invoke(app, ["--number", "4", "2"])
+    assert result.exit_code == 0
+    assert "Number: (4, 2)" in result.output
 
 
 def test_no_type():
