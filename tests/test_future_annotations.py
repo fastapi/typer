@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import typer
+from typer._typing import Annotated
 from typer.testing import CliRunner
-from typing_extensions import Annotated
 
 runner = CliRunner()
 
