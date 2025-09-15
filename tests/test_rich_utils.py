@@ -1,3 +1,5 @@
+import sys
+
 import typer
 import typer.completion
 from typer.testing import CliRunner
@@ -79,3 +81,21 @@ def test_rich_doesnt_print_None_default():
     assert "Hello Rick" in result.stdout
     assert "First: option_1_default" in result.stdout
     assert "Second: Morty" in result.stdout
+
+
+def test_rich_markup_import_regression():
+    # Remove rich.markup if it was imported by other tests
+    if "rich" in sys.modules:
+        rich_module = sys.modules["rich"]
+        if hasattr(rich_module, "markup"):
+            delattr(rich_module, "markup")
+
+    app = typer.Typer(rich_markup_mode=None)
+
+    @app.command()
+    def main(bar: str):
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["--help"])
+    assert "Usage" in result.stdout
+    assert "BAR" in result.stdout
