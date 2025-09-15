@@ -291,4 +291,3 @@ def test_markup_mode_default():
     app = typer.Typer()
 
     assert app.rich_markup_mode == MARKUP_MODE_RICH
-
