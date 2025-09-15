@@ -3,6 +3,7 @@ from typing import List
 import pytest
 import typer
 import typer.completion
+from typer.rich_utils import MARKUP_MODE_RICH
 from typer.testing import CliRunner
 
 runner = CliRunner()
@@ -284,3 +285,10 @@ def test_markup_mode_bullets_double_newline(mode: str, lines: List[str]):
     arg_start = [i for i, row in enumerate(result_lines) if "Arguments" in row][0]
     assert help_start != -1
     assert result_lines[help_start:arg_start] == lines
+
+
+def test_markup_mode_default():
+    app = typer.Typer()
+
+    assert app.rich_markup_mode == MARKUP_MODE_RICH
+
