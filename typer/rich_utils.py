@@ -207,7 +207,7 @@ def _get_help_text(
     if remaining_paragraphs:
         # Add a newline inbetween the header and the remaining paragraphs
         yield Text("")
-        # Join with double linebreaks if markdown or Rich markup
+        # Join with double linebreaks for markdown and Rich markup
         remaining_lines = "\n\n".join(remaining_paragraphs)
 
         yield _make_rich_text(
