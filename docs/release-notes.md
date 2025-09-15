@@ -4,6 +4,7 @@
 
 ### Internal
 
+* ⬆ Update pytest-cov requirement from <7.0.0,>=2.10.0 to >=2.10.0,<8.0.0. PR [#1301](https://github.com/fastapi/typer/pull/1301) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump actions/setup-python from 5 to 6. PR [#1291](https://github.com/fastapi/typer/pull/1291) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ruff from 0.12.11 to 0.12.12. PR [#1295](https://github.com/fastapi/typer/pull/1295) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1300](https://github.com/fastapi/typer/pull/1300) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
