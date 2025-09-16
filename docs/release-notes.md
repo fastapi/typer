@@ -4,6 +4,7 @@
 
 ### Internal
 
+* ⬆ Bump mkdocs-material from 9.6.14 to 9.6.20. PR [#1308](https://github.com/fastapi/typer/pull/1308) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump mkdocs-material from 9.5.50 to 9.6.14. PR [#1223](https://github.com/fastapi/typer/pull/1223) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump actions/download-artifact from 4 to 5. PR [#1269](https://github.com/fastapi/typer/pull/1269) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ruff from 0.12.12 to 0.13.0. PR [#1302](https://github.com/fastapi/typer/pull/1302) by [@dependabot[bot]](https://github.com/apps/dependabot).
