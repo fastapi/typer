@@ -4,6 +4,7 @@
 
 ### Internal
 
+* ⬆ Bump actions/download-artifact from 4 to 5. PR [#1269](https://github.com/fastapi/typer/pull/1269) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ruff from 0.12.12 to 0.13.0. PR [#1302](https://github.com/fastapi/typer/pull/1302) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1307](https://github.com/fastapi/typer/pull/1307) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * ⬆ Update pytest-cov requirement from <7.0.0,>=2.10.0 to >=2.10.0,<8.0.0. PR [#1301](https://github.com/fastapi/typer/pull/1301) by [@dependabot[bot]](https://github.com/apps/dependabot).
