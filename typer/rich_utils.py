@@ -23,12 +23,8 @@ from rich.table import Table
 from rich.text import Text
 from rich.theme import Theme
 from rich.traceback import Traceback
+from typer._typing import Literal
 from typer.models import DeveloperExceptionConfig
-
-if sys.version_info >= (3, 9):
-    from typing import Literal
-else:
-    from typing_extensions import Literal
 
 # Default styles
 STYLE_OPTION = "bold cyan"
