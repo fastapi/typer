@@ -96,7 +96,7 @@ ARGUMENTS_PANEL_TITLE = _("Arguments")
 OPTIONS_PANEL_TITLE = _("Options")
 COMMANDS_PANEL_TITLE = _("Commands")
 ERRORS_PANEL_TITLE = _("Error")
-ABORTED_TEXT = _("Aborted.")
+ABORTED_TEXT = _("Aborted...")
 RICH_HELP = _("Try [blue]'{command_path} {help_option}'[/] for help.")
 
 MARKUP_MODE_MARKDOWN = "markdown"
