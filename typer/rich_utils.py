@@ -103,7 +103,6 @@ MARKUP_MODE_MARKDOWN = "markdown"
 MARKUP_MODE_RICH = "rich"
 _RICH_HELP_PANEL_NAME = "rich_help_panel"
 
-MarkupMode = Literal["markdown", "rich", None]
 MarkupModeStrict = Literal["markdown", "rich"]
 
 
