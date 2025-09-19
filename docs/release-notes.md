@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Fixes
+
+* 👽️ Ensure compatibility with Click 8.3.0 by restoring the original `value_is_missing` function. PR [#1333](https://github.com/fastapi/typer/pull/1333) by [@svlandeg](https://github.com/svlandeg).
+
 ## 0.17.5
 
 ### Fixes
