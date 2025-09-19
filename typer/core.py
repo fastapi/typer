@@ -609,7 +609,7 @@ def _value_is_missing(param: click.Parameter, value: Any) -> bool:
     #     return True
 
     if (param.nargs != 1 or param.multiple) and value == ():
-        return True
+        return True    # pragma: no cover
 
     return False
 
