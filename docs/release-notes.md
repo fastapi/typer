@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.17.5
+
 ### Fixes
 
 * ⬇️ Restrict Click to below 8.3.0 to handle changes in the new version. PR [#1336](https://github.com/fastapi/typer/pull/1336) by [@svlandeg](https://github.com/svlandeg).
