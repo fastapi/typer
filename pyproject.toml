@@ -30,6 +30,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "License :: OSI Approved :: MIT License",
 ]
 dependencies = [
@@ -115,8 +116,6 @@ xfail_strict = true
 junit_family = "xunit2"
 filterwarnings = [
     "error",
-    # TODO: until I refactor completion to use the new shell_complete
-    "ignore:'autocompletion' is renamed to 'shell_complete'. The old name is deprecated and will be removed in Click 8.1. See the docs about 'Parameter' for information about new behavior.:DeprecationWarning:typer",
     # For pytest-xdist
     'ignore::DeprecationWarning:xdist',
 ]
@@ -194,9 +193,6 @@ ignore = [
 "docs_src/prompt/tutorial003.py" = ["F841"]
 # Loop control variable `x` not used within loop body
 "docs_src/using_click/tutorial001.py" = ["B007"]
-
-# TODO: refactor _typing.py, remove unnecessary code
-"typer/_typing.py" = ["UP036", "F822"]
 
 [tool.ruff.lint.isort]
 known-third-party = ["typer", "click"]

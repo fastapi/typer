@@ -11,6 +11,15 @@ from click import Command, Group, Option
 
 from . import __version__
 
+try:
+    import rich
+
+    has_rich = True
+
+except ImportError:  # pragma: no cover
+    has_rich = False
+    rich = None  # type: ignore
+
 default_app_names = ("app", "cli", "main")
 default_func_names = ("main", "cli", "app")
 
@@ -199,7 +208,7 @@ def get_docs_for_click(
         title = f"`{command_name}`" if command_name else "CLI"
     docs += f" {title}\n\n"
     if obj.help:
-        docs += f"{obj.help}\n\n"
+        docs += f"{_parse_html(obj.help)}\n\n"
     usage_pieces = obj.collect_usage_pieces(ctx)
     if usage_pieces:
         docs += "**Usage**:\n\n"
@@ -223,7 +232,7 @@ def get_docs_for_click(
         for arg_name, arg_help in args:
             docs += f"* `{arg_name}`"
             if arg_help:
-                docs += f": {arg_help}"
+                docs += f": {_parse_html(arg_help)}"
             docs += "\n"
         docs += "\n"
     if opts:
@@ -231,7 +240,7 @@ def get_docs_for_click(
         for opt_name, opt_help in opts:
             docs += f"* `{opt_name}`"
             if opt_help:
-                docs += f": {opt_help}"
+                docs += f": {_parse_html(opt_help)}"
             docs += "\n"
         docs += "\n"
     if obj.epilog:
@@ -247,7 +256,7 @@ def get_docs_for_click(
                 docs += f"* `{command_obj.name}`"
                 command_help = command_obj.get_short_help_str()
                 if command_help:
-                    docs += f": {command_help}"
+                    docs += f": {_parse_html(command_help)}"
                 docs += "\n"
             docs += "\n"
         for command in commands:
@@ -260,6 +269,14 @@ def get_docs_for_click(
                 obj=command_obj, ctx=ctx, indent=indent + 1, call_prefix=use_prefix
             )
     return docs
+
+
+def _parse_html(input_text: str) -> str:
+    if not has_rich:  # pragma: no cover
+        return input_text
+    from . import rich_utils
+
+    return rich_utils.rich_to_html(input_text)
 
 
 @utils_app.command()
