@@ -876,12 +876,12 @@ def get_click_param(
             annotation=main_type, parameter_info=parameter_info
         )
     convertor = determine_type_convertor(main_type)
+    if is_tuple:
+        convertor = generate_tuple_convertor(get_args(main_type))
     if is_list:
         convertor = generate_list_convertor(
             convertor=convertor, default_value=default_value
         )
-    if is_tuple:
-        convertor = generate_tuple_convertor(get_args(main_type))
     if isinstance(parameter_info, OptionInfo):
         if main_type is bool:
             is_flag = True
