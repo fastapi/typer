@@ -25,6 +25,7 @@ import click.parser
 import click.shell_completion
 import click.types
 import click.utils
+from click._utils import UNSET
 
 from ._typing import Literal
 
@@ -403,6 +404,18 @@ class TyperArgument(click.core.Argument):
             var += "..."
         return var
 
+    def value_is_missing(self, value: Any) -> bool:
+        if value is None:
+            return True
+
+        if value is UNSET:
+            return True
+
+        if (self.nargs != 1 or self.multiple) and value == ():
+            return True
+
+        return False
+
 
 class TyperOption(click.core.Option):
     def __init__(
@@ -592,6 +605,18 @@ class TyperOption(click.core.Option):
             help = f"{help}  {extra_str}" if help else f"{extra_str}"
 
         return ("; " if any_prefix_is_slash else " / ").join(rv), help
+
+    def value_is_missing(self, value: Any) -> bool:
+        if value is None:
+            return True
+
+        if value is UNSET:
+            return True
+
+        if (self.nargs != 1 or self.multiple) and value == ():
+            return True
+
+        return False
 
 
 def _typer_format_options(
