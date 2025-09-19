@@ -1,3 +1,5 @@
+# CLI Parameter Types
+
 You can use several data types for the *CLI options* and *CLI arguments*, and you can add data validation requirements too.
 
 ## Data conversion
@@ -6,9 +8,7 @@ When you declare a *CLI parameter* with some type **Typer** will convert the dat
 
 For example:
 
-```Python hl_lines="4"
-{!../docs_src/parameter_types/index/tutorial001.py!}
-```
+{* docs_src/parameter_types/index/tutorial001.py hl[4] *}
 
 In this example, the value received for the *CLI argument* `NAME` will be treated as `str`.
 
@@ -33,8 +33,6 @@ Options:
   --age INTEGER           [default: 20]
   --height-meters FLOAT   [default: 1.89]
   --female / --no-female  [default: True]
-  --install-completion    Install completion for the current shell.
-  --show-completion       Show completion for the current shell, to copy it or customize the installation.
   --help                  Show this message and exit.
 
 // Call it with CLI parameters
@@ -52,7 +50,7 @@ $ python main.py Camila --age 15.3
 Usage: main.py [OPTIONS] NAME
 Try "main.py --help" for help.
 
-Error: Invalid value for '--age': 15.3 is not a valid integer
+Error: Invalid value for '--age': '15.3' is not a valid integer
 
 // Because 15.3 is not an INTEGER (it's a float)
 ```
@@ -64,5 +62,8 @@ Error: Invalid value for '--age': 15.3 is not a valid integer
 See more about specific types and validations in the next sections...
 
 
-!!! info "Technical Details"
-    All the types you will see in the next sections are handled underneath by <a href="https://click.palletsprojects.com/en/7.x/parameters/#parameter-types" class="external-link" target="_blank">Click's Parameter Types</a>.
+/// info | Technical Details
+
+All the types you will see in the next sections are handled underneath by <a href="https://click.palletsprojects.com/en/7.x/parameters/#parameter-types" class="external-link" target="_blank">Click's Parameter Types</a>.
+
+///

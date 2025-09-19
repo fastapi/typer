@@ -1,3 +1,5 @@
+# CLI Option Callback and Context
+
 In some occasions you might want to have some custom logic for a specific *CLI parameter* (for a *CLI option*  or *CLI argument*) that is executed with the value received from the terminal.
 
 In those cases you can use a *CLI parameter* callback function.
@@ -6,9 +8,7 @@ In those cases you can use a *CLI parameter* callback function.
 
 For example, you could do some validation before the rest of the code is executed.
 
-```Python hl_lines="4 5 6 7  10"
-{!../docs_src/options/callback/tutorial001.py!}
-```
+{* docs_src/options/callback/tutorial001_an.py hl[7:10,13] *}
 
 Here you pass a function to `typer.Option()` or `typer.Argument()` with the keyword argument `callback`.
 
@@ -43,9 +43,9 @@ There's something to be aware of with callbacks and completion that requires som
 
 But first let's just use completion in your shell (Bash, Zsh, Fish, or PowerShell).
 
-After installing completion (for your own Python package or for **Typer CLI**), when you use your CLI program and start adding a *CLI option* with `--` an then hit <kbd>TAB</kbd>, your shell will show you the available *CLI options* (the same for *CLI arguments*, etc).
+After installing completion (for your own Python package), when you use your CLI program and start adding a *CLI option* with `--` and then hit <kbd>TAB</kbd>, your shell will show you the available *CLI options* (the same for *CLI arguments*, etc).
 
-To check it quickly without creating a new Python package, install [Typer CLI](../../typer-cli.md){.internal-link target=_blank} and use it with the previous script:
+To check it quickly with the previous script use the `typer` command:
 
 <div class="termy">
 
@@ -94,9 +94,7 @@ But the main **important point** is that it is all based on values printed by yo
 
 Let's say that when the callback is running, we want to show a message saying that it's validating the name:
 
-```Python hl_lines="5"
-{!../docs_src/options/callback/tutorial002.py!}
-```
+{* docs_src/options/callback/tutorial002_an.py hl[8] *}
 
 And because the callback will be called when the shell calls your program asking for completion, that message `"Validating name"` will be printed and it will break completion.
 
@@ -131,15 +129,13 @@ But you can access the context by declaring a function parameter of type `typer.
 
 The "context" has some additional data about the current execution of your program:
 
-```Python hl_lines="4 5 6"
-{!../docs_src/options/callback/tutorial003.py!}
-```
+{* docs_src/options/callback/tutorial003_an.py hl[7:9] *}
 
 The `ctx.resilient_parsing` will be `True` when handling completion, so you can just return without printing anything else.
 
 But it will be `False` when calling the program normally. So you can continue the execution of your previous code.
 
-That's all is needed to fix completion 🚀
+That's all is needed to fix completion. 🚀
 
 Check it:
 
@@ -165,9 +161,7 @@ Hello Camila
 
 The same way you can access the `typer.Context` by declaring a function parameter with its value, you can declare another function parameter with type `typer.CallbackParam` to get the specific Click `Parameter` object.
 
-```Python hl_lines="4  7"
-{!../docs_src/options/callback/tutorial004.py!}
-```
+{* docs_src/options/callback/tutorial004_an.py hl[7,10] *}
 
 It's probably not very common, but you could do it if you need it.
 

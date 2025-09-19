@@ -1,7 +1,12 @@
-!!! warning
-    This is a more advanced topic, if you are starting with **Typer**, feel free to skip it.
+# Using Click
 
-    It will be mostly useful for people that already work with Click and have questions around it.
+/// warning
+
+This is a more advanced topic, if you are starting with **Typer**, feel free to skip it.
+
+It will be mostly useful for people that already work with Click and have questions around it.
+
+///
 
 **Typer** is powered by <a href="https://click.palletsprojects.com" class="external-link" target="_blank">Click</a>. It does all the work underneath.
 
@@ -23,9 +28,7 @@ A `Command` can have its own *CLI arguments* and *CLI options*, and it has a fun
 
 For example, in this Click app:
 
-```Python hl_lines="7  14"
-{!../docs_src/using_click/tutorial001.py!}
-```
+{* docs_src/using_click/tutorial001.py hl[7,14] *}
 
 The original `hello` variable is converted by Click from a function to a `Command` object. And the original `hello` function is used by that `Command` internally, but it is no longer named `hello` (as `hello` is now a Click `Command`).
 
@@ -41,14 +44,15 @@ And a `Group` can also have a function that it calls, right before calling the f
 
 For example:
 
-```Python hl_lines="5  19 20"
-{!../docs_src/using_click/tutorial002.py!}
-```
+{* docs_src/using_click/tutorial002.py hl[5,19,20] *}
 
 The `cli` variable is converted by Click from a function to a `Group` object. And the original `cli` function is used by that `Group` internally.
 
-!!! tip
-    The original `cli` function would be the equivalent of a [Typer Callback](./commands/callback.md){.internal-link target=_blank}.
+/// tip
+
+The original `cli` function would be the equivalent of a [Typer Callback](./commands/callback.md){.internal-link target=_blank}.
+
+///
 
 Then the `cli` variable, that now is a `Group` object, is used to add sub-commands.
 
@@ -66,8 +70,11 @@ But **Typer** creates a Click `Group` object if your app has any of:
 * A callback.
 * Sub-Typer apps (sub commands).
 
-!!! tip
-    If you want to learn more about this check the section [One or Multiple Commands](./commands/one-or-multiple.md){.internal-link target=_blank}.
+/// tip
+
+If you want to learn more about this check the section [One or Multiple Commands](./commands/one-or-multiple.md){.internal-link target=_blank}.
+
+///
 
 ### Combine Click and **Typer**
 
@@ -79,9 +86,7 @@ You can use it directly, and use the Click object with other Click applications.
 
 For example, you could have a **Typer** app, generate a Click `Group` from it, and then include other Click apps in it:
 
-```Python hl_lines="15 16  29  31  34"
-{!../docs_src/using_click/tutorial003.py!}
-```
+{* docs_src/using_click/tutorial003.py hl[15,16,29,31,34] *}
 
 Notice that we add a callback that does nothing (only document the CLI program), to make sure **Typer** creates a Click `Group`. That way we can add sub-commands to that Click `Group`.
 
@@ -94,12 +99,19 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py
+$ python main.py --help
 
 // Notice we have both subcommands, top and hello
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
 
-Error: Missing command.
+Options:
+  --install-completion  Install completion for the current shell.
+  --show-completion     Show completion for the current shell, to copy it or customize the installation.
+  --help                Show this message and exit.
+
+Commands:
+  hello
+  top
 
 // Call the Typer part
 $ python main.py top
@@ -118,9 +130,7 @@ Hello Camila!
 
 The same way, you can do the contrary and include a **Typer** sub app in a bigger Click app:
 
-```Python hl_lines="31  33  36"
-{!../docs_src/using_click/tutorial004.py!}
-```
+{* docs_src/using_click/tutorial004.py hl[31,33,36] *}
 
 Notice that we don't have to add a callback or more commands, we can just create a **Typer** app that generates a single Click `Command`, as we don't need to include anything under the Typer app.
 
@@ -174,7 +184,10 @@ Most of the functionality provided by decorators in Click has an alternative way
 
 For example, to access the context, you can just declare a function parameter of type `typer.Context`.
 
-!!! tip
-    You can read more about using the context in the docs: [Commands: Using the Context](commands/context.md){.internal-link target=_blank}
+/// tip
+
+You can read more about using the context in the docs: [Commands: Using the Context](commands/context.md){.internal-link target=_blank}
+
+///
 
 But if you need to use something based on Click decorators, you can always generate a Click object using the methods described above, and use it as you would normally use Click.
