@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Fixes
+
+* ⬇️ Restrict Click to below 8.3.0 to handle changes in the new version. PR [#1336](https://github.com/fastapi/typer/pull/1336) by [@svlandeg](https://github.com/svlandeg).
+
 ### Internal
 
 * ⬆ Bump mkdocs-material from 9.6.14 to 9.6.20. PR [#1308](https://github.com/fastapi/typer/pull/1308) by [@dependabot[bot]](https://github.com/apps/dependabot).
