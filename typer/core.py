@@ -25,7 +25,6 @@ import click.parser
 import click.shell_completion
 import click.types
 import click.utils
-from click._utils import UNSET
 
 from ._typing import Literal
 
@@ -613,6 +612,7 @@ def _value_is_missing(param: click.Parameter, value: Any):
         return True
 
     return False
+
 
 def _typer_format_options(
     self: click.core.Command, *, ctx: click.Context, formatter: click.HelpFormatter
