@@ -600,7 +600,7 @@ class TyperOption(click.core.Option):
         return _value_is_missing(self, value)
 
 
-def _value_is_missing(param: click.Parameter, value: Any):
+def _value_is_missing(param: click.Parameter, value: Any) -> bool:
     if value is None:
         return True
 
