@@ -613,6 +613,7 @@ def _value_is_missing(param: click.Parameter, value: Any):
 
     return False
 
+
 def _typer_format_options(
     self: click.core.Command, *, ctx: click.Context, formatter: click.HelpFormatter
 ) -> None:
