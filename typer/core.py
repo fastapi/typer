@@ -25,7 +25,6 @@ import click.parser
 import click.shell_completion
 import click.types
 import click.utils
-from click._utils import UNSET
 
 from ._typing import Literal
 
