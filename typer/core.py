@@ -405,16 +405,7 @@ class TyperArgument(click.core.Argument):
         return var
 
     def value_is_missing(self, value: Any) -> bool:
-        if value is None:
-            return True
-
-        if value is UNSET:
-            return True
-
-        if (self.nargs != 1 or self.multiple) and value == ():
-            return True
-
-        return False
+        return _value_is_missing(self, value)
 
 
 class TyperOption(click.core.Option):
@@ -607,17 +598,21 @@ class TyperOption(click.core.Option):
         return ("; " if any_prefix_is_slash else " / ").join(rv), help
 
     def value_is_missing(self, value: Any) -> bool:
-        if value is None:
-            return True
+        return _value_is_missing(self, value)
 
-        if value is UNSET:
-            return True
 
-        if (self.nargs != 1 or self.multiple) and value == ():
-            return True
+def _value_is_missing(param: click.Parameter, value: Any):
+    if value is None:
+        return True
 
-        return False
+    # Click 8.3 and beyond
+    # if value is UNSET:
+    #     return True
 
+    if (param.nargs != 1 or param.multiple) and value == ():
+        return True
+
+    return False
 
 def _typer_format_options(
     self: click.core.Command, *, ctx: click.Context, formatter: click.HelpFormatter
