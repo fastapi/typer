@@ -152,7 +152,7 @@ def _get_shell_name() -> str | None:
     The name will always be lowercase. If the shell cannot be detected, None is
     returned.
     """
-    name: str | None # N.B. shellingham is untyped
+    name: str | None  # N.B. shellingham is untyped
     if HAS_SHELLINGHAM:
         import shellingham
 
