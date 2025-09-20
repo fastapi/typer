@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.19.0
+
 ### Features
 
 * ✨ Support `typing.Literal` to define a set of predefined choices. PR [#429](https://github.com/fastapi/typer/pull/429) by [@blackary](https://github.com/blackary).
