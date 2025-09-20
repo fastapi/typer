@@ -10,7 +10,7 @@ from docs_src.parameter_types.number import tutorial001 as mod
 
 runner = CliRunner()
 
-app = typer.Typer()
+app = typer.Typer(rich_markup_mode=None)
 app.command()(mod.main)
 
 
