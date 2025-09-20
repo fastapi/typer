@@ -144,5 +144,3 @@ def shell_complete(
 
     click.echo(f'Completion instruction "{instruction}" not supported.', err=True)
     return 1
-
-
