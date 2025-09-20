@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+## 0.19.1
+
+**Note**: this is the last version to support Python 3.7, going forward Typer will require Python 3.8+. And soon Python 3.8 will also be dropped as [Python 3.8 reached it's end of life](https://devguide.python.org/versions/) almost a year ago.
+
 ### Fixes
 
 * 🐛 Ensure that `Optional[list]` values work correctly with callbacks. PR [#1018](https://github.com/fastapi/typer/pull/1018) by [@solesensei](https://github.com/solesensei).
