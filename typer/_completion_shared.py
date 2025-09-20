@@ -3,7 +3,7 @@ import re
 import subprocess
 from enum import Enum
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Union
 
 import click
 from typer.core import HAS_SHELLINGHAM
@@ -235,13 +235,13 @@ def install(
         click.echo(f"Shell {shell} is not supported.")
         raise click.exceptions.Exit(1)
 
-def _get_shell_name() -> str | None:
+def _get_shell_name() -> Union[str, None]:
     """Get the current shell name, if available.
 
     The name will always be lowercase. If the shell cannot be detected, None is
     returned.
     """
-    name: str | None  # N.B. shellingham is untyped
+    name: Union[str, None]  # N.B. shellingham is untyped
     if HAS_SHELLINGHAM:
         import shellingham
 
