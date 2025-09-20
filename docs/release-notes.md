@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Features
+
+* ✅ Use Ruff rules to ensure safe lazy-loading of `rich`. PR [#1297](https://github.com/fastapi/typer/pull/1297) by [@nathanjmcdougall](https://github.com/nathanjmcdougall).
+
 ## 0.18.0
 
 ### Fixes
