@@ -1,7 +1,8 @@
+import pytest
 import typer.core
 from typer.testing import CliRunner
 
-from tests.assets import conrner_cases as mod
+from tests.assets import corner_cases as mod
 
 runner = CliRunner()
 
@@ -16,9 +17,9 @@ def test_hidden_option():
     assert "(dynamic)" in result.output
 
 
-def test_hidden_option_no_rich():
-    rich = typer.core.rich
-    typer.core.rich = None
+def test_hidden_option_no_rich(monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setattr(typer.core, "HAS_RICH", False)
+
     result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
     assert "Say hello" in result.output
@@ -26,7 +27,6 @@ def test_hidden_option_no_rich():
     assert "/lastname" in result.output
     assert "TEST_LASTNAME" in result.output
     assert "(dynamic)" in result.output
-    typer.core.rich = rich
 
 
 def test_coverage_call():
