@@ -16,11 +16,14 @@ from rich.console import Console, RenderableType, group
 from rich.emoji import Emoji
 from rich.highlighter import RegexHighlighter
 from rich.markdown import Markdown
+from rich.markup import escape
 from rich.padding import Padding
 from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 from rich.theme import Theme
+from rich.traceback import Traceback
+from typer.models import DeveloperExceptionConfig
 
 if sys.version_info >= (3, 9):
     from typing import Literal
@@ -190,7 +193,8 @@ def _get_help_text(
     help_text = help_text.partition("\f")[0]
 
     # Get the first paragraph
-    first_line = help_text.split("\n\n")[0]
+    first_line, *remaining_paragraphs = help_text.split("\n\n")
+
     # Remove single linebreaks
     if markup_mode != MARKUP_MODE_MARKDOWN and not first_line.startswith("\b"):
         first_line = first_line.replace("\n", " ")
@@ -200,13 +204,11 @@ def _get_help_text(
         markup_mode=markup_mode,
     )
 
-    # Add a newline inbetween the header and the remaining paragraphs
-    yield Text("")
-
     # Get remaining lines, remove single line breaks and format as dim
-    remaining_paragraphs = help_text.split("\n\n")[1:]
     if remaining_paragraphs:
-        if markup_mode != MARKUP_MODE_RICH:
+        # Add a newline inbetween the header and the remaining paragraphs
+        yield Text("")
+        if markup_mode not in (MARKUP_MODE_RICH, MARKUP_MODE_MARKDOWN):
             # Remove single linebreaks
             remaining_paragraphs = [
                 x.replace("\n", " ").strip()
@@ -217,7 +219,7 @@ def _get_help_text(
             # Join back together
             remaining_lines = "\n".join(remaining_paragraphs)
         else:
-            # Join with double linebreaks if markdown
+            # Join with double linebreaks if markdown or Rich markup
             remaining_lines = "\n\n".join(remaining_paragraphs)
 
         yield _make_rich_text(
@@ -289,9 +291,11 @@ def _get_parameter_help(
     # Default value
     # This uses Typer's specific param._get_default_string
     if isinstance(param, (TyperOption, TyperArgument)):
-        if param.show_default:
-            show_default_is_str = isinstance(param.show_default, str)
-            default_value = param._extract_default_help_str(ctx=ctx)
+        default_value = param._extract_default_help_str(ctx=ctx)
+        show_default_is_str = isinstance(param.show_default, str)
+        if show_default_is_str or (
+            default_value is not None and (param.show_default or ctx.show_default)
+        ):
             default_str = param._get_default_string(
                 ctx=ctx,
                 show_default_is_str=show_default_is_str,
@@ -693,6 +697,10 @@ def rich_format_error(self: click.ClickException) -> None:
     Called by custom exception handler to print richly formatted click errors.
     Mimics original click.ClickException.echo() function but with rich formatting.
     """
+    # Don't do anything when it's a NoArgsIsHelpError (without importing it, cf. #1278)
+    if self.__class__.__name__ == "NoArgsIsHelpError":
+        return
+
     console = _get_rich_console(stderr=True)
     ctx: Union[click.Context, None] = getattr(self, "ctx", None)
     if ctx is not None:
@@ -722,6 +730,11 @@ def rich_abort_error() -> None:
     console.print(ABORTED_TEXT, style=STYLE_ABORTED)
 
 
+def escape_before_html_export(input_text: str) -> str:
+    """Ensure that the input string can be used for HTML export."""
+    return escape(input_text).strip()
+
+
 def rich_to_html(input_text: str) -> str:
     """Print the HTML version of a rich-formatted input string.
 
@@ -739,3 +752,19 @@ def rich_render_text(text: str) -> str:
     """Remove rich tags and render a pure text representation"""
     console = _get_rich_console()
     return "".join(segment.text for segment in console.render(text)).rstrip("\n")
+
+
+def get_traceback(
+    exc: BaseException,
+    exception_config: DeveloperExceptionConfig,
+    internal_dir_names: List[str],
+) -> Traceback:
+    rich_tb = Traceback.from_exception(
+        type(exc),
+        exc,
+        exc.__traceback__,
+        show_locals=exception_config.pretty_exceptions_show_locals,
+        suppress=internal_dir_names,
+        width=MAX_WIDTH,
+    )
+    return rich_tb
