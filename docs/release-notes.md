@@ -2,6 +2,62 @@
 
 ## Latest Changes
 
+### Features
+
+* ✨ Allow setting an environment variable to `None` in `CliRunner.invoke`. PR [#1303](https://github.com/fastapi/typer/pull/1303) by [@arjenzorgdoc](https://github.com/arjenzorgdoc).
+* ✅ Use Ruff rules to ensure safe lazy-loading of `rich`. PR [#1297](https://github.com/fastapi/typer/pull/1297) by [@nathanjmcdougall](https://github.com/nathanjmcdougall).
+
+### Refactors
+
+* ✅ Avoid rich formatting in number test. PR [#1305](https://github.com/fastapi/typer/pull/1305) by [@svlandeg](https://github.com/svlandeg).
+
+### Docs
+
+* 📝 Clarify single-command vs multi-command behaviour in README. PR [#1268](https://github.com/fastapi/typer/pull/1268) by [@MorgenPronk](https://github.com/MorgenPronk).
+
+## 0.18.0
+
+### Fixes
+
+* 👽️ Ensure compatibility with Click 8.3.0 by restoring the original `value_is_missing` function. PR [#1333](https://github.com/fastapi/typer/pull/1333) by [@svlandeg](https://github.com/svlandeg).
+
+### Upgrades
+
+* 📌 Remove pin for Click < 8.3.0 now that there's a fix for the changes. PR [#1346](https://github.com/fastapi/typer/pull/1346) by [@tiangolo](https://github.com/tiangolo).
+
+## 0.17.5
+
+### Fixes
+
+* ⬇️ Restrict Click to below 8.3.0 to handle changes in the new version. PR [#1336](https://github.com/fastapi/typer/pull/1336) by [@svlandeg](https://github.com/svlandeg).
+
+### Internal
+
+* ⬆ Bump mkdocs-material from 9.6.14 to 9.6.20. PR [#1308](https://github.com/fastapi/typer/pull/1308) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mkdocs-material from 9.5.50 to 9.6.14. PR [#1223](https://github.com/fastapi/typer/pull/1223) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump actions/download-artifact from 4 to 5. PR [#1269](https://github.com/fastapi/typer/pull/1269) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.12.12 to 0.13.0. PR [#1302](https://github.com/fastapi/typer/pull/1302) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1307](https://github.com/fastapi/typer/pull/1307) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Update pytest-cov requirement from <7.0.0,>=2.10.0 to >=2.10.0,<8.0.0. PR [#1301](https://github.com/fastapi/typer/pull/1301) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump actions/setup-python from 5 to 6. PR [#1291](https://github.com/fastapi/typer/pull/1291) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.12.11 to 0.12.12. PR [#1295](https://github.com/fastapi/typer/pull/1295) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1300](https://github.com/fastapi/typer/pull/1300) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump actions/labeler from 5 to 6. PR [#1296](https://github.com/fastapi/typer/pull/1296) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
+## 0.17.4
+
+### Fixes
+
+* 🐛 Make sure `rich.markup` is imported when rendering help text. PR [#1290](https://github.com/fastapi/typer/pull/1290) by [@g-arjones](https://github.com/g-arjones).
+
+### Internal
+
+* ⬆ Bump pypa/gh-action-pypi-publish from 1.12.4 to 1.13.0. PR [#1292](https://github.com/fastapi/typer/pull/1292) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.12.10 to 0.12.11. PR [#1283](https://github.com/fastapi/typer/pull/1283) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1288](https://github.com/fastapi/typer/pull/1288) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* 👷 Set permissions for conflict detector workflow. PR [#1287](https://github.com/fastapi/typer/pull/1287) by [@svlandeg](https://github.com/svlandeg).
+* 👷 Detect and label merge conflicts on PRs automatically. PR [#1286](https://github.com/fastapi/typer/pull/1286) by [@svlandeg](https://github.com/svlandeg).
+
 ## 0.17.3
 
 ### Features
