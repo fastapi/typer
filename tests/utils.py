@@ -2,7 +2,7 @@ import sys
 from os import getenv
 
 import pytest
-from typer.completion import _get_shell_name
+from typer._completion_shared import _get_shell_name
 
 needs_py310 = pytest.mark.skipif(
     sys.version_info < (3, 10), reason="requires python3.10+"

@@ -5,7 +5,7 @@ from typing import Any, MutableMapping, Tuple
 import click
 
 from ._completion_classes import completion_init
-from ._completion_shared import Shells, get_completion_script, install
+from ._completion_shared import Shells, _get_shell_name, get_completion_script, install
 from .core import HAS_SHELLINGHAM
 from .models import ParamMeta
 from .params import Option
@@ -146,23 +146,3 @@ def shell_complete(
     return 1
 
 
-def _get_shell_name() -> str | None:
-    """Get the current shell name, if available.
-
-    The name will always be lowercase. If the shell cannot be detected, None is
-    returned.
-    """
-    name: str | None  # N.B. shellingham is untyped
-    if HAS_SHELLINGHAM:
-        import shellingham
-
-        try:
-            # N.B. detect_shell returns a tuple of (shell name, shell command).
-            # We only need the name.
-            name, _cmd = shellingham.detect_shell()  # noqa: TID251
-        except shellingham.ShellDetectionFailure:  # pragma: no cover
-            name = None
-    else:
-        name = None  # pragma: no cover
-
-    return name
