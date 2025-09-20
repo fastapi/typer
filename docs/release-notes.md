@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Refactors
+
+* 🔥 Drop support for Python 3.7. PR [#830](https://github.com/fastapi/typer/pull/830) by [@kinuax](https://github.com/kinuax).
+
 ## 0.19.1
 
 **Note**: this is the last version to support Python 3.7, going forward Typer will require Python 3.8+. And soon Python 3.8 will also be dropped as [Python 3.8 reached it's end of life](https://devguide.python.org/versions/) almost a year ago.
