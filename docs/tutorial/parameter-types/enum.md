@@ -112,7 +112,6 @@ Buying groceries: Eggs, Bacon
 
 </div>
 
-
 ### Literal choices
 
 You can also use `Literal` to represent a set of possible predefined choices, without having to use an `Enum`:
