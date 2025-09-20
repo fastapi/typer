@@ -159,7 +159,7 @@ def _get_shell_name() -> str | None:
         try:
             # N.B. detect_shell returns a tuple of (shell name, shell command).
             # We only need the name.
-            name, _cmd = shellingham.detect_shell()
+            name, _cmd = shellingham.detect_shell()  # noqa: TID251
         except shellingham.ShellDetectionFailure:  # pragma: no cover
             name = None
     else:
