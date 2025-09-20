@@ -7,10 +7,7 @@ from typing import Optional, Tuple
 
 import click
 
-try:
-    import shellingham
-except ImportError:  # pragma: no cover
-    shellingham = None
+from .completion import _get_shell_name
 
 
 class Shells(str, Enum):
@@ -213,8 +210,8 @@ def install(
     if complete_var is None:
         complete_var = "_{}_COMPLETE".format(prog_name.replace("-", "_").upper())
     test_disable_detection = os.getenv("_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION")
-    if shell is None and shellingham is not None and not test_disable_detection:
-        shell, _ = shellingham.detect_shell()
+    if shell is None and not test_disable_detection:
+        shell = _get_shell_name()
     if shell == "bash":
         installed_path = install_bash(
             prog_name=prog_name, complete_var=complete_var, shell=shell

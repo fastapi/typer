@@ -6,15 +6,10 @@ import click
 
 from ._completion_classes import completion_init
 from ._completion_shared import Shells, get_completion_script, install
+from .core import HAS_SHELLINGHAM
 from .models import ParamMeta
 from .params import Option
 from .utils import get_params_from_function
-
-try:
-    import shellingham
-except ImportError:  # pragma: no cover
-    shellingham = None
-
 
 _click_patched = False
 
@@ -22,7 +17,7 @@ _click_patched = False
 def get_completion_inspect_parameters() -> Tuple[ParamMeta, ParamMeta]:
     completion_init()
     test_disable_detection = os.getenv("_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION")
-    if shellingham and not test_disable_detection:
+    if HAS_SHELLINGHAM and not test_disable_detection:
         parameters = get_params_from_function(_install_completion_placeholder_function)
     else:
         parameters = get_params_from_function(
@@ -50,12 +45,15 @@ def show_callback(ctx: click.Context, param: click.Parameter, value: Any) -> Any
     prog_name = ctx.find_root().info_name
     assert prog_name
     complete_var = "_{}_COMPLETE".format(prog_name.replace("-", "_").upper())
-    shell = ""
     test_disable_detection = os.getenv("_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION")
     if isinstance(value, str):
         shell = value
-    elif shellingham and not test_disable_detection:
-        shell, _ = shellingham.detect_shell()
+    elif not test_disable_detection:
+        shell = _get_shell_name()
+        if shell is None:
+            shell = ""
+    else:
+        shell = ""
     script_content = get_completion_script(
         prog_name=prog_name, complete_var=complete_var, shell=shell
     )
@@ -147,3 +145,23 @@ def shell_complete(
 
     click.echo(f'Completion instruction "{instruction}" not supported.', err=True)
     return 1
+
+def _get_shell_name() -> str | None:
+    """Get the current shell name, if available.
+
+    The name will always be lowercase. If the shell cannot be detected, None is
+    returned.
+    """
+    if HAS_SHELLINGHAM:
+        import shellingham
+
+        try:
+            # N.B. detect_shell returns a tuple of (shell name, shell command).
+            # We only need the name.
+            name, _cmd = shellingham.detect_shell()
+        except shellingham.ShellDetectionFailure:  # pragma: no cover
+            name = None
+    else:
+        name = None  # pragma: no cover
+
+    return name

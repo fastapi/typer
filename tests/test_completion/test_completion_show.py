@@ -3,7 +3,6 @@ import subprocess
 import sys
 from unittest import mock
 
-import shellingham
 import typer
 from typer.testing import CliRunner
 
@@ -142,6 +141,8 @@ def test_completion_source_pwsh():
 
 
 def test_completion_show_invalid_shell():
+    import shellingham
+
     with mock.patch.object(
         shellingham, "detect_shell", return_value=("xshell", "/usr/bin/xshell")
     ):
