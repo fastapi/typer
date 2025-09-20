@@ -12,9 +12,9 @@ needs_linux = pytest.mark.skipif(
     not sys.platform.startswith("linux"), reason="Test requires Linux"
 )
 
-shell_name = _get_shell_name()
+shell = _get_shell_name()
 needs_bash = pytest.mark.skipif(
-    shell_name is None or "bash" not in shell_name, reason="Test requires Bash"
+    shell is None or "bash" not in shell, reason="Test requires Bash"
 )
 
 requires_completion_permission = pytest.mark.skipif(
