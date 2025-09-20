@@ -13,7 +13,7 @@ runner = CliRunner()
 def test_traceback_rich():
     file_path = Path(mod.__file__)
     result = subprocess.run(
-        [sys.executable, "-m", "coverage", "run", str(file_path), "secret"],
+        [sys.executable, "-m", "coverage", "run", str(file_path)],
         capture_output=True,
         encoding="utf-8",
         env={**os.environ, "_TYPER_STANDARD_TRACEBACK": ""},
@@ -21,15 +21,15 @@ def test_traceback_rich():
     assert "return get_command(self)(*args, **kwargs)" not in result.stderr
 
     assert "app()" not in result.stderr
-    assert "print(password + 3)" in result.stderr
+    assert "print(name + 3)" in result.stderr
     assert 'TypeError: can only concatenate str (not "int") to str' in result.stderr
-    assert "name = 'morty'" not in result.stderr
+    assert "name = 'morty'" in result.stderr
 
 
 def test_standard_traceback_env_var():
     file_path = Path(mod.__file__)
     result = subprocess.run(
-        [sys.executable, "-m", "coverage", "run", str(file_path), "secret"],
+        [sys.executable, "-m", "coverage", "run", str(file_path)],
         capture_output=True,
         encoding="utf-8",
         env={**os.environ, "_TYPER_STANDARD_TRACEBACK": "1"},
@@ -37,7 +37,7 @@ def test_standard_traceback_env_var():
     assert "return get_command(self)(*args, **kwargs)" in result.stderr
 
     assert "app()" in result.stderr
-    assert "print(password + 3)" in result.stderr
+    assert "print(name + 3)" in result.stderr
     assert 'TypeError: can only concatenate str (not "int") to str' in result.stderr
     assert "name = 'morty'" not in result.stderr
 
