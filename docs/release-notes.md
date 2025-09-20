@@ -6,6 +6,10 @@
 
 * ✅ Use Ruff rules to ensure safe lazy-loading of `rich`. PR [#1297](https://github.com/fastapi/typer/pull/1297) by [@nathanjmcdougall](https://github.com/nathanjmcdougall).
 
+### Docs
+
+* 📝 Clarify single-command vs multi-command behaviour in README. PR [#1268](https://github.com/fastapi/typer/pull/1268) by [@MorgenPronk](https://github.com/MorgenPronk).
+
 ## 0.18.0
 
 ### Fixes
