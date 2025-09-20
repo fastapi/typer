@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Fixes
+
+* 🐛 Ensure that `Optional[list]` values work correctly with callbacks. PR [#1018](https://github.com/fastapi/typer/pull/1018) by [@solesensei](https://github.com/solesensei).
+
 ## 0.19.0
 
 ### Features
