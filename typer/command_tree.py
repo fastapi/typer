@@ -4,21 +4,10 @@ from typing import Any, Dict, List, Tuple
 
 import click
 
-from ._typing import Literal
+from .core import DEFAULT_MARKUP_MODE, HAS_RICH
 from .models import ParamMeta
 from .params import Option
 from .utils import get_params_from_function
-
-MarkupMode = Literal["markdown", "rich", None]
-
-try:
-    from . import rich_utils
-
-    DEFAULT_MARKUP_MODE: MarkupMode = "rich"
-
-except ImportError:  # pragma: no cover
-    DEFAULT_MARKUP_MODE = None
-
 
 SUBCMD_INDENT = "  "
 SUBCOMMAND_TITLE = _("Sub-Commands")
@@ -65,13 +54,15 @@ def show_command_tree(
 
     if items:
         markup_mode = DEFAULT_MARKUP_MODE
-        if markup_mode is None:  # pragma: no cover
+        if not HAS_RICH or markup_mode is None:  # pragma: no cover
             formatter = ctx.make_formatter()
             formatter.section(SUBCOMMAND_TITLE)
             formatter.write_dl(items)
             content = formatter.getvalue().rstrip("\n")
             click.echo(content)
         else:
+            from . import rich_utils
+
             rich_utils.rich_format_subcommands(ctx, items)
 
     sys.exit(0)
