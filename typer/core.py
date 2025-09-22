@@ -1,4 +1,5 @@
 import errno
+import importlib.util
 import inspect
 import os
 import sys
@@ -30,15 +31,11 @@ from ._typing import Literal
 
 MarkupMode = Literal["markdown", "rich", None]
 
-try:
-    import rich
+HAS_RICH = importlib.util.find_spec("rich") is not None
 
-    from . import rich_utils
-
+if HAS_RICH:
     DEFAULT_MARKUP_MODE: MarkupMode = "rich"
-
-except ImportError:  # pragma: no cover
-    rich = None  # type: ignore
+else:  # pragma: no cover
     DEFAULT_MARKUP_MODE = None
 
 
@@ -212,7 +209,9 @@ def _main(
             if not standalone_mode:
                 raise
             # Typer override
-            if rich and rich_markup_mode is not None:
+            if HAS_RICH and rich_markup_mode is not None:
+                from . import rich_utils
+
                 rich_utils.rich_format_error(e)
             else:
                 e.show()
@@ -242,7 +241,9 @@ def _main(
         if not standalone_mode:
             raise
         # Typer override
-        if rich and rich_markup_mode is not None:
+        if HAS_RICH and rich_markup_mode is not None:
+            from . import rich_utils
+
             rich_utils.rich_abort_error()
         else:
             click.echo(_("Aborted!"), file=sys.stderr)
@@ -368,9 +369,11 @@ class TyperArgument(click.core.Argument):
         if extra:
             extra_str = "; ".join(extra)
             extra_str = f"[{extra_str}]"
-            if rich is not None:
+            if HAS_RICH:
                 # This is needed for when we want to export to HTML
-                extra_str = rich.markup.escape(extra_str).strip()
+                from . import rich_utils
+
+                extra_str = rich_utils.escape_before_html_export(extra_str)
 
             help = f"{help}  {extra_str}" if help else f"{extra_str}"
         return name, help
@@ -398,6 +401,9 @@ class TyperArgument(click.core.Argument):
         if self.nargs != 1:
             var += "..."
         return var
+
+    def value_is_missing(self, value: Any) -> bool:
+        return _value_is_missing(self, value)
 
 
 class TyperOption(click.core.Option):
@@ -579,13 +585,32 @@ class TyperOption(click.core.Option):
         if extra:
             extra_str = "; ".join(extra)
             extra_str = f"[{extra_str}]"
-            if rich is not None:
+            if HAS_RICH:
                 # This is needed for when we want to export to HTML
-                extra_str = rich.markup.escape(extra_str).strip()
+                from . import rich_utils
+
+                extra_str = rich_utils.escape_before_html_export(extra_str)
 
             help = f"{help}  {extra_str}" if help else f"{extra_str}"
 
         return ("; " if any_prefix_is_slash else " / ").join(rv), help
+
+    def value_is_missing(self, value: Any) -> bool:
+        return _value_is_missing(self, value)
+
+
+def _value_is_missing(param: click.Parameter, value: Any) -> bool:
+    if value is None:
+        return True
+
+    # Click 8.3 and beyond
+    # if value is UNSET:
+    #     return True
+
+    if (param.nargs != 1 or param.multiple) and value == ():
+        return True  # pragma: no cover
+
+    return False
 
 
 def _typer_format_options(
@@ -703,8 +728,10 @@ class TyperCommand(click.core.Command):
         )
 
     def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
-        if not rich or self.rich_markup_mode is None:
+        if not HAS_RICH or self.rich_markup_mode is None:
             return super().format_help(ctx, formatter)
+        from . import rich_utils
+
         return rich_utils.rich_format_help(
             obj=self,
             ctx=ctx,
@@ -766,8 +793,10 @@ class TyperGroup(click.core.Group):
         )
 
     def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
-        if not rich or self.rich_markup_mode is None:
+        if not HAS_RICH or self.rich_markup_mode is None:
             return super().format_help(ctx, formatter)
+        from . import rich_utils
+
         return rich_utils.rich_format_help(
             obj=self,
             ctx=ctx,

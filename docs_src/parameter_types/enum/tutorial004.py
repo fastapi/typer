@@ -1,12 +1,9 @@
-from enum import Enum
-
 import typer
+from typing_extensions import Literal
 
-NeuralNetwork = Enum("NeuralNetwork", {k: k for k in ["simple", "conv", "lstm"]})
 
-
-def main(network: NeuralNetwork = typer.Option("simple", case_sensitive=False)):
-    print(f"Training neural network of type: {network.value}")
+def main(network: Literal["simple", "conv", "lstm"] = typer.Option("simple")):
+    print(f"Training neural network of type: {network}")
 
 
 if __name__ == "__main__":

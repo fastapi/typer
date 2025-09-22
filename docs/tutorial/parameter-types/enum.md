@@ -112,6 +112,40 @@ Buying groceries: Eggs, Bacon
 
 </div>
 
+### Literal choices
+
+You can also use `Literal` to represent a set of possible predefined choices, without having to use an `Enum`:
+
+{* docs_src/parameter_types/enum/tutorial004_an.py hl[6] *}
+
+<div class="termy">
+
+```console
+$ python main.py --help
+
+// Notice the predefined values [simple|conv|lstm]
+Usage: main.py [OPTIONS]
+
+Options:
+  --network [simple|conv|lstm]  [default: simple]
+  --help                        Show this message and exit.
+
+// Try it
+$ python main.py --network conv
+
+Training neural network of type: conv
+
+// Invalid value
+$ python main.py --network capsule
+
+Usage: main.py [OPTIONS]
+Try "main.py --help" for help.
+
+Error: Invalid value for '--network': 'capsule' is not one of 'simple', 'conv', 'lstm'.
+```
+
+</div>
+
 
 ### Functional API
 
@@ -119,6 +153,6 @@ In order to use an `Enum` created using the <a href="https://docs.python.org/3/l
 
 You also need to supply the default value as a string (not the enum):
 
-{* docs_src/parameter_types/enum/tutorial004_an.py hl[6,10] *}
+{* docs_src/parameter_types/enum/tutorial005_an.py hl[6,10] *}
 
 Alternatively, you can create an `Enum` that extends both `str` and `Enum`. In Python 3.11+, there is <a href="https://docs.python.org/3.11/library/enum.html#enum.StrEnum" class="external-link" target="_blank">`enum.StrEnum`</a>. For Python 3.10 or earlier, there is the <a href="https://github.com/irgeek/StrEnum" class="external-link" target="_blank">StrEnum package</a>.
