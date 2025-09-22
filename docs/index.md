@@ -324,6 +324,8 @@ Goodbye Ms. Camila. Have a good day.
 
 </div>
 
+**Note**: If your app only has one command, by default the command name is **omitted** in usage: `python main.py Camila`. However, when there are multiple commands, you must **explicitly include the command name**: `python main.py hello Camila`. See [One or Multiple Commands](https://typer.tiangolo.com/tutorial/commands/one-or-multiple/) for more details.
+
 ### Recap
 
 In summary, you declare **once** the types of parameters (*CLI arguments* and *CLI options*) as function parameters.

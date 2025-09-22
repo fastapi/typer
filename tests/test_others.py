@@ -144,6 +144,32 @@ def test_callback_3_untyped_parameters():
     assert "value is: Camila" in result.stdout
 
 
+def test_callback_4_list_none():
+    app = typer.Typer()
+
+    def names_callback(ctx, param, values: typing.Optional[typing.List[str]]):
+        if values is None:
+            return values
+        return [value.upper() for value in values]
+
+    @app.command()
+    def main(
+        names: typing.Optional[typing.List[str]] = typer.Option(
+            None, "--name", callback=names_callback
+        ),
+    ):
+        if names is None:
+            print("Hello World")
+        else:
+            print(f"Hello {', '.join(names)}")
+
+    result = runner.invoke(app, ["--name", "Sideshow", "--name", "Bob"])
+    assert "Hello SIDESHOW, BOB" in result.stdout
+
+    result = runner.invoke(app, [])
+    assert "Hello World" in result.stdout
+
+
 def test_completion_argument():
     file_path = Path(__file__).parent / "assets/completion_argument.py"
     result = subprocess.run(

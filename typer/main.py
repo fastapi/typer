@@ -28,10 +28,11 @@ import click
 from typer._types import TyperChoice
 from typing_extensions import Annotated, TypeAlias
 
-from ._typing import get_args, get_origin, is_union
+from ._typing import get_args, get_origin, is_literal_type, is_union, literal_values
 from .completion import get_completion_inspect_parameters
 from .core import (
     DEFAULT_MARKUP_MODE,
+    HAS_RICH,
     MarkupMode,
     TyperArgument,
     TyperCommand,
@@ -59,17 +60,6 @@ from .models import (
     TyperPath,
 )
 from .utils import get_params_from_function
-
-try:
-    import rich
-    from rich.traceback import Traceback
-
-    from . import rich_utils
-
-    console_stderr = rich_utils._get_rich_console(stderr=True)
-
-except ImportError:  # pragma: no cover
-    rich = None  # type: ignore
 
 try:
     import pydantic
@@ -124,25 +114,19 @@ def except_hook(
         return
     typer_path = os.path.dirname(__file__)
     click_path = os.path.dirname(click.__file__)
-    supress_internal_dir_names = [typer_path, click_path]
+    internal_dir_names = [typer_path, click_path]
     exc = exc_value
-    if rich:
-        from .rich_utils import MAX_WIDTH
+    if HAS_RICH:
+        from . import rich_utils
 
-        rich_tb = Traceback.from_exception(
-            type(exc),
-            exc,
-            exc.__traceback__,
-            show_locals=exception_config.pretty_exceptions_show_locals,
-            suppress=supress_internal_dir_names,
-            width=MAX_WIDTH,
-        )
+        rich_tb = rich_utils.get_traceback(exc, exception_config, internal_dir_names)
+        console_stderr = rich_utils._get_rich_console(stderr=True)
         console_stderr.print(rich_tb)
         return
     tb_exc = traceback.TracebackException.from_exception(exc)
     stack: List[FrameSummary] = []
     for frame in tb_exc.stack:
-        if any(frame.filename.startswith(path) for path in supress_internal_dir_names):
+        if any(frame.filename.startswith(path) for path in internal_dir_names):
             if not exception_config.pretty_exceptions_short:
                 # Hide the line for internal libraries, Typer and Click
                 stack.append(
@@ -668,7 +652,9 @@ def determine_type_convertor(type_: Any) -> Optional[Callable[[Any], Any]]:
 
 def param_path_convertor(value: Optional[str] = None) -> Optional[Path]:
     if value is not None:
-        return Path(value)
+        # allow returning any subclass of Path created by an annotated parser without converting
+        # it back to a Path
+        return value if isinstance(value, Path) else Path(value)
     return None
 
 
@@ -687,10 +673,10 @@ def generate_enum_convertor(enum: Type[Enum]) -> Callable[[Any], Any]:
 
 def generate_list_convertor(
     convertor: Optional[Callable[[Any], Any]], default_value: Optional[Any]
-) -> Callable[[Sequence[Any]], Optional[List[Any]]]:
-    def internal_convertor(value: Sequence[Any]) -> Optional[List[Any]]:
-        if default_value is None and len(value) == 0:
-            return None
+) -> Callable[[Optional[Sequence[Any]]], Optional[List[Any]]]:
+    def internal_convertor(value: Optional[Sequence[Any]]) -> Optional[List[Any]]:
+        if value is None or len(value) == 0:
+            return default_value
         return [convertor(v) if convertor else v for v in value]
 
     return internal_convertor
@@ -841,6 +827,11 @@ def get_click_type(
         # Click < 8.2.0.
         return TyperChoice(
             [item.value for item in annotation],
+            case_sensitive=parameter_info.case_sensitive,
+        )
+    elif is_literal_type(annotation):
+        return click.Choice(
+            literal_values(annotation),
             case_sensitive=parameter_info.case_sensitive,
         )
     elif is_pydantic_type(annotation):
