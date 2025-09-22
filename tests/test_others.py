@@ -171,14 +171,14 @@ def test_callback_4_list_none():
 
 
 def test_empty_list_default_generator():
-    def empty_list() -> list[str]:
+    def empty_list() -> typing.List[str]:
         return []
 
     app = typer.Typer()
 
     @app.command()
     def main(
-        names: typing.Annotated[list[str], typer.Option(default_factory=empty_list)],
+        names: typing.Annotated[typing.List[str], typer.Option(default_factory=empty_list)],
     ):
         print(names)
 
