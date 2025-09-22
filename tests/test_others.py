@@ -178,7 +178,9 @@ def test_empty_list_default_generator():
 
     @app.command()
     def main(
-        names: typing.Annotated[typing.List[str], typer.Option(default_factory=empty_list)],
+        names: typing.Annotated[
+            typing.List[str], typer.Option(default_factory=empty_list)
+        ],
     ):
         print(names)
 
