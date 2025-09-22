@@ -1,4 +1,5 @@
 import errno
+import importlib.util
 import inspect
 import os
 import sys
@@ -32,13 +33,11 @@ from .models import DefaultPlaceholder
 MarkupMode = Literal["markdown", "rich", None]
 MARKUP_MODE_KEY = "TYPER_RICH_MARKUP_MODE"
 
-try:
-    import rich
+HAS_RICH = importlib.util.find_spec("rich") is not None
 
+if HAS_RICH:
     DEFAULT_MARKUP_MODE: MarkupMode = "rich"
-
-except ImportError:  # pragma: no cover
-    rich = None  # type: ignore
+else:  # pragma: no cover
     DEFAULT_MARKUP_MODE = None
 
 
@@ -212,7 +211,7 @@ def _main(
             if not standalone_mode:
                 raise
             # Typer override
-            if rich and rich_markup_mode is not None:
+            if HAS_RICH and rich_markup_mode is not None:
                 from . import rich_utils
 
                 rich_utils.rich_format_error(e)
@@ -244,7 +243,7 @@ def _main(
         if not standalone_mode:
             raise
         # Typer override
-        if rich and rich_markup_mode is not None:
+        if HAS_RICH and rich_markup_mode is not None:
             from . import rich_utils
 
             rich_utils.rich_abort_error()
@@ -375,9 +374,11 @@ class TyperArgument(click.core.Argument):
             rich_markup_mode = None
             if hasattr(ctx, "obj") and isinstance(ctx.obj, dict):
                 rich_markup_mode = ctx.obj.get(MARKUP_MODE_KEY, None)
-            if rich is not None and rich_markup_mode == "rich":
+            if HAS_RICH and rich_markup_mode == "rich":
                 # This is needed for when we want to export to HTML
-                extra_str = rich.markup.escape(extra_str).strip()
+                from . import rich_utils
+
+                extra_str = rich_utils.escape_before_html_export(extra_str)
 
             help = f"{help}  {extra_str}" if help else f"{extra_str}"
         return name, help
@@ -405,6 +406,9 @@ class TyperArgument(click.core.Argument):
         if self.nargs != 1:
             var += "..."
         return var
+
+    def value_is_missing(self, value: Any) -> bool:
+        return _value_is_missing(self, value)
 
 
 class TyperOption(click.core.Option):
@@ -586,17 +590,35 @@ class TyperOption(click.core.Option):
         if extra:
             extra_str = "; ".join(extra)
             extra_str = f"[{extra_str}]"
-
             rich_markup_mode = None
             if hasattr(ctx, "obj") and isinstance(ctx.obj, dict):
                 rich_markup_mode = ctx.obj.get(MARKUP_MODE_KEY, None)
-            if rich is not None and rich_markup_mode == "rich":
+            if HAS_RICH and rich_markup_mode == "rich":
                 # This is needed for when we want to export to HTML
-                extra_str = rich.markup.escape(extra_str).strip()
+                from . import rich_utils
+
+                extra_str = rich_utils.escape_before_html_export(extra_str)
 
             help = f"{help}  {extra_str}" if help else f"{extra_str}"
 
         return ("; " if any_prefix_is_slash else " / ").join(rv), help
+
+    def value_is_missing(self, value: Any) -> bool:
+        return _value_is_missing(self, value)
+
+
+def _value_is_missing(param: click.Parameter, value: Any) -> bool:
+    if value is None:
+        return True
+
+    # Click 8.3 and beyond
+    # if value is UNSET:
+    #     return True
+
+    if (param.nargs != 1 or param.multiple) and value == ():
+        return True  # pragma: no cover
+
+    return False
 
 
 def _typer_format_options(
@@ -714,7 +736,7 @@ class TyperCommand(click.core.Command):
         )
 
     def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
-        if not rich or self.rich_markup_mode is None:
+        if not HAS_RICH or self.rich_markup_mode is None:
             if not hasattr(ctx, "obj") or ctx.obj is None:
                 ctx.ensure_object(dict)
             if isinstance(ctx.obj, dict):
@@ -786,7 +808,7 @@ class TyperGroup(click.core.Group):
         )
 
     def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
-        if not rich or self.rich_markup_mode is None:
+        if not HAS_RICH or self.rich_markup_mode is None:
             return super().format_help(ctx, formatter)
         from . import rich_utils
 

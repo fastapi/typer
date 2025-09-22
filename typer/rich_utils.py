@@ -16,11 +16,14 @@ from rich.console import Console, RenderableType, group
 from rich.emoji import Emoji
 from rich.highlighter import RegexHighlighter
 from rich.markdown import Markdown
+from rich.markup import escape
 from rich.padding import Padding
 from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 from rich.theme import Theme
+from rich.traceback import Traceback
+from typer.models import DeveloperExceptionConfig
 
 if sys.version_info >= (3, 9):
     from typing import Literal
@@ -727,6 +730,11 @@ def rich_abort_error() -> None:
     console.print(ABORTED_TEXT, style=STYLE_ABORTED)
 
 
+def escape_before_html_export(input_text: str) -> str:
+    """Ensure that the input string can be used for HTML export."""
+    return escape(input_text).strip()
+
+
 def rich_to_html(input_text: str) -> str:
     """Print the HTML version of a rich-formatted input string.
 
@@ -744,3 +752,19 @@ def rich_render_text(text: str) -> str:
     """Remove rich tags and render a pure text representation"""
     console = _get_rich_console()
     return "".join(segment.text for segment in console.render(text)).rstrip("\n")
+
+
+def get_traceback(
+    exc: BaseException,
+    exception_config: DeveloperExceptionConfig,
+    internal_dir_names: List[str],
+) -> Traceback:
+    rich_tb = Traceback.from_exception(
+        type(exc),
+        exc,
+        exc.__traceback__,
+        show_locals=exception_config.pretty_exceptions_show_locals,
+        suppress=internal_dir_names,
+        width=MAX_WIDTH,
+    )
+    return rich_tb
