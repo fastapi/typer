@@ -4,26 +4,19 @@ from typing import Any, Dict, List, Tuple
 
 import click
 
+from ._typing import Literal
 from .models import ParamMeta
 from .params import Option
 from .utils import get_params_from_function
 
-if sys.version_info >= (3, 8):
-    from typing import Literal
-else:
-    from typing_extensions import Literal
-
 MarkupMode = Literal["markdown", "rich", None]
 
 try:
-    import rich
-
     from . import rich_utils
 
     DEFAULT_MARKUP_MODE: MarkupMode = "rich"
 
 except ImportError:  # pragma: no cover
-    rich = None  # type: ignore
     DEFAULT_MARKUP_MODE = None
 
 
@@ -72,7 +65,7 @@ def show_command_tree(
 
     if items:
         markup_mode = DEFAULT_MARKUP_MODE
-        if not rich or markup_mode is None:  # pragma: no cover
+        if markup_mode is None:  # pragma: no cover
             formatter = ctx.make_formatter()
             formatter.section(SUBCOMMAND_TITLE)
             formatter.write_dl(items)
