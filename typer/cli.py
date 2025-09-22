@@ -243,7 +243,7 @@ def get_docs_for_click(
         group = obj
         commands = group.list_commands(ctx)
         default_panel_name = "Commands"
-        if has_rich:
+        if HAS_RICH:
             from . import rich_utils
 
             default_panel_name = rich_utils.COMMANDS_PANEL_TITLE
@@ -253,14 +253,14 @@ def get_docs_for_click(
                 command_obj = group.get_command(ctx, command)
                 assert command_obj
                 panel_name = default_panel_name
-                if has_rich:
+                if HAS_RICH:
                     from . import rich_utils
 
                     panel_name = rich_utils.get_panel_name(
                         command_obj, default_panel_name
                     )
                 panel_to_commands[panel_name].append(command_obj)
-            if has_rich:
+            if HAS_RICH:
                 # Ensure that the ungrouped commands show up first
                 default_command_objs = panel_to_commands.pop(default_panel_name, [])
                 if len(default_command_objs) > 0:
