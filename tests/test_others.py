@@ -170,6 +170,27 @@ def test_callback_4_list_none():
     assert "Hello World" in result.stdout
 
 
+def test_empty_list_default_generator():
+    def empty_list() -> list[str]:
+        return []
+
+    app = typer.Typer()
+
+    @app.command()
+    def main(
+        names: typing.Annotated[
+            list[str],
+            typer.Option(
+                default_factory=empty_list,
+            ),
+        ],
+    ):
+        print(names)
+
+    result = runner.invoke(app)
+    assert "[]" in result.output
+
+
 def test_completion_argument():
     file_path = Path(__file__).parent / "assets/completion_argument.py"
     result = subprocess.run(
