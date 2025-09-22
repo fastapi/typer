@@ -2,8 +2,58 @@
 
 ## Latest Changes
 
+### Refactors
+
+* 🔥 Drop support for Python 3.7. PR [#830](https://github.com/fastapi/typer/pull/830) by [@kinuax](https://github.com/kinuax).
+
+## 0.19.1
+
+**Note**: this is the last version to support Python 3.7, going forward Typer will require Python 3.8+. And soon Python 3.8 will also be dropped as [Python 3.8 reached it's end of life](https://devguide.python.org/versions/) almost a year ago.
+
+### Fixes
+
+* 🐛 Ensure that `Optional[list]` values work correctly with callbacks. PR [#1018](https://github.com/fastapi/typer/pull/1018) by [@solesensei](https://github.com/solesensei).
+
+## 0.19.0
+
+### Features
+
+* ✨ Support `typing.Literal` to define a set of predefined choices. PR [#429](https://github.com/fastapi/typer/pull/429) by [@blackary](https://github.com/blackary).
+* ✨ Allow setting an environment variable to `None` in `CliRunner.invoke`. PR [#1303](https://github.com/fastapi/typer/pull/1303) by [@arjenzorgdoc](https://github.com/arjenzorgdoc).
+
+### Refactors
+
+* ✅ Use Ruff rules to ensure safe lazy-loading of `rich`. PR [#1297](https://github.com/fastapi/typer/pull/1297) by [@nathanjmcdougall](https://github.com/nathanjmcdougall).
+* ✅ Avoid rich formatting in number test. PR [#1305](https://github.com/fastapi/typer/pull/1305) by [@svlandeg](https://github.com/svlandeg).
+
+### Docs
+
+* 📝 Clarify single-command vs multi-command behaviour in README. PR [#1268](https://github.com/fastapi/typer/pull/1268) by [@MorgenPronk](https://github.com/MorgenPronk).
+
+## 0.18.0
+
+### Fixes
+
+* 👽️ Ensure compatibility with Click 8.3.0 by restoring the original `value_is_missing` function. PR [#1333](https://github.com/fastapi/typer/pull/1333) by [@svlandeg](https://github.com/svlandeg).
+
+### Upgrades
+
+* 📌 Remove pin for Click < 8.3.0 now that there's a fix for the changes. PR [#1346](https://github.com/fastapi/typer/pull/1346) by [@tiangolo](https://github.com/tiangolo).
+
+## 0.17.5
+
+### Fixes
+
+* ⬇️ Restrict Click to below 8.3.0 to handle changes in the new version. PR [#1336](https://github.com/fastapi/typer/pull/1336) by [@svlandeg](https://github.com/svlandeg).
+
 ### Internal
 
+* ⬆ Bump mkdocs-material from 9.6.14 to 9.6.20. PR [#1308](https://github.com/fastapi/typer/pull/1308) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mkdocs-material from 9.5.50 to 9.6.14. PR [#1223](https://github.com/fastapi/typer/pull/1223) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump actions/download-artifact from 4 to 5. PR [#1269](https://github.com/fastapi/typer/pull/1269) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.12.12 to 0.13.0. PR [#1302](https://github.com/fastapi/typer/pull/1302) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1307](https://github.com/fastapi/typer/pull/1307) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Update pytest-cov requirement from <7.0.0,>=2.10.0 to >=2.10.0,<8.0.0. PR [#1301](https://github.com/fastapi/typer/pull/1301) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump actions/setup-python from 5 to 6. PR [#1291](https://github.com/fastapi/typer/pull/1291) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ruff from 0.12.11 to 0.12.12. PR [#1295](https://github.com/fastapi/typer/pull/1295) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1300](https://github.com/fastapi/typer/pull/1300) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
