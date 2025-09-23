@@ -10,11 +10,14 @@ from typer.testing import CliRunner
 
 from docs_src.commands.index import tutorial001 as mod
 
+from ..utils import requires_completion_permission
+
 runner = CliRunner()
 app = typer.Typer()
 app.command()(mod.main)
 
 
+@requires_completion_permission
 def test_completion_install_no_shell():
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--install-completion"],
@@ -28,6 +31,7 @@ def test_completion_install_no_shell():
     assert "Option '--install-completion' requires an argument" in result.stderr
 
 
+@requires_completion_permission
 def test_completion_install_bash():
     bash_completion_path: Path = Path.home() / ".bashrc"
     text = ""
@@ -67,6 +71,7 @@ def test_completion_install_bash():
     )
 
 
+@requires_completion_permission
 def test_completion_install_zsh():
     completion_path: Path = Path.home() / ".zshrc"
     text = ""
@@ -104,6 +109,7 @@ def test_completion_install_zsh():
     assert "compdef _tutorial001py_completion tutorial001.py" in install_content
 
 
+@requires_completion_permission
 def test_completion_install_fish():
     script_path = Path(mod.__file__)
     completion_path: Path = (
@@ -133,6 +139,7 @@ def test_completion_install_fish():
     assert "Completion will take effect once you restart the terminal" in result.stdout
 
 
+@requires_completion_permission
 def test_completion_install_powershell():
     completion_path: Path = (
         Path.home() / ".config/powershell/Microsoft.PowerShell_profile.ps1"
