@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.19.2
+
 ### Fixes
 
 * 🐛  Fix list convertor with an empty list default factory . PR [#1350](https://github.com/fastapi/typer/pull/1350) by [@svlandeg](https://github.com/svlandeg).
