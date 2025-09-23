@@ -118,6 +118,7 @@ nav:
           - tutorial/subcommands/index.md
           - tutorial/subcommands/add-typer.md
           - tutorial/subcommands/single-file.md
+          - Adding SubCommands to a Command: tutorial/subcommands/commands-with-subcommands.md
           - tutorial/subcommands/nested-subcommands.md
           - tutorial/subcommands/callback-override.md
           - tutorial/subcommands/name-and-help.md
