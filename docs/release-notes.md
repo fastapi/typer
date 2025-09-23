@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Fixes
+
+* 🐛  Fix list convertor with an empty list default factory . PR [#1350](https://github.com/fastapi/typer/pull/1350) by [@svlandeg](https://github.com/svlandeg).
+
 ### Refactors
 
 * 🔥 Drop support for Python 3.7. PR [#830](https://github.com/fastapi/typer/pull/830) by [@kinuax](https://github.com/kinuax).
