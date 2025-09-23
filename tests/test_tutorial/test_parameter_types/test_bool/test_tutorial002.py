@@ -1,6 +1,7 @@
 import subprocess
 import sys
 
+import pytest
 import typer
 import typer.core
 from typer.testing import CliRunner
@@ -21,15 +22,13 @@ def test_help():
     assert "--no-accept" not in result.output
 
 
-def test_help_no_rich():
-    rich = typer.core.rich
-    typer.core.rich = None
+def test_help_no_rich(monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setattr(typer.core, "HAS_RICH", False)
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     assert "--accept" in result.output
     assert "--reject" in result.output
     assert "--no-accept" not in result.output
-    typer.core.rich = rich
 
 
 def test_main():
@@ -53,19 +52,13 @@ def test_reject():
 def test_invalid_no_accept():
     result = runner.invoke(app, ["--no-accept"])
     assert result.exit_code != 0
-    # TODO: when deprecating Click 7, remove second option
-
-    assert (
-        "No such option: --no-accept" in result.output
-        or "no such option: --no-accept" in result.output
-    )
+    assert "No such option: --no-accept" in result.output
 
 
 def test_script():
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
     )
     assert "Usage" in result.stdout

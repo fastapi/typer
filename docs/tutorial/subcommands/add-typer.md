@@ -1,3 +1,5 @@
+# Add Typer
+
 We'll start with the core idea.
 
 To add a `typer.Typer()` app inside of another.
@@ -8,9 +10,7 @@ Let's imagine that you are creating a *CLI program* to manage items in some dist
 
 It could be in an `items.py` file with this:
 
-```Python
-{!../docs_src/subcommands/tutorial001/items.py!}
-```
+{* docs_src/subcommands/tutorial001/items.py *}
 
 And you would use it like:
 
@@ -30,9 +30,7 @@ But then you realize that you also have to manage users from your *CLI app*.
 
 It could be a file `users.py` with something like:
 
-```Python
-{!../docs_src/subcommands/tutorial001/users.py!}
-```
+{* docs_src/subcommands/tutorial001/users.py *}
 
 And you would use it like:
 
@@ -56,9 +54,7 @@ In this case, as with `git remote`, we can put them together as subcommands in a
 
 Now create a `main.py` with:
 
-```Python hl_lines="3 4  7 8"
-{!../docs_src/subcommands/tutorial001/main.py!}
-```
+{* docs_src/subcommands/tutorial001/main.py hl[3,4,7,8] *}
 
 Here's what we do in `main.py`:
 
@@ -127,8 +123,11 @@ Selling item: Vase
 
 </div>
 
-!!! tip
-    Notice that we are still calling `$ python main.py` but now we are using the command `items`.
+/// tip
+
+Notice that we are still calling `$ python main.py` but now we are using the command `items`.
+
+///
 
 And now check the command `users`, with all its subcommands:
 

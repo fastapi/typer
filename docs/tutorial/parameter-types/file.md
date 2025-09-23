@@ -1,9 +1,14 @@
+# File
+
 Apart from `Path` *CLI parameters* you can also declare some types of "files".
 
-!!! tip
-    In most of the cases you are probably fine just using `Path`.
+/// tip
 
-    You can read and write data with `Path` the same way.
+In most of the cases you are probably fine just using `Path`.
+
+You can read and write data with `Path` the same way.
+
+///
 
 The difference is that these types will give you a Python <a href="https://docs.python.org/3/glossary.html#term-file-object" class="external-link" target="_blank">file-like object</a> instead of a Python <a href="https://docs.python.org/3/library/pathlib.html#basic-use" class="external-link" target="_blank">Path</a>.
 
@@ -40,11 +45,9 @@ instead of having `bytes`, e.g.:
 content = b"la cig\xc3\xbce\xc3\xb1a trae al ni\xc3\xb1o"
 ```
 
-You will get all the correct editor support, attributes, methods, etc for the file-like object:
+You will get all the correct editor support, attributes, methods, etc for the file-like object:`
 
-```Python hl_lines="4"
-{!../docs_src/parameter_types/file/tutorial001.py!}
-```
+{* docs_src/parameter_types/file/tutorial001_an.py hl[5] *}
 
 Check it:
 
@@ -71,9 +74,7 @@ Config line: some more settings
 
 For writing text, you can use `typer.FileTextWrite`:
 
-```Python hl_lines="4 5"
-{!../docs_src/parameter_types/file/tutorial002.py!}
-```
+{* docs_src/parameter_types/file/tutorial002_an.py hl[5:6] *}
 
 This would be for writing human text, like:
 
@@ -101,10 +102,13 @@ Some config written by the app
 
 </div>
 
-!!! info "Technical Details"
-    `typer.FileTextWrite` is a just a convenience class.
+/// info | Technical Details
 
-    It's the same as using `typer.FileText` and setting `mode="w"`. You will learn about `mode` later below.
+`typer.FileTextWrite` is a just a convenience class.
+
+It's the same as using `typer.FileText` and setting `mode="w"`. You will learn about `mode` later below.
+
+///
 
 ## `FileBinaryRead`
 
@@ -114,9 +118,7 @@ You will receive `bytes` from it.
 
 It's useful for reading binary files like images:
 
-```Python hl_lines="4"
-{!../docs_src/parameter_types/file/tutorial003.py!}
-```
+{* docs_src/parameter_types/file/tutorial003_an.py hl[5] *}
 
 Check it:
 
@@ -145,9 +147,7 @@ Have in mind that you have to pass `bytes` to its `.write()` method, not `str`.
 
 If you have a `str`, you have to encode it first to get `bytes`.
 
-```Python hl_lines="4"
-{!../docs_src/parameter_types/file/tutorial004.py!}
-```
+{* docs_src/parameter_types/file/tutorial004_an.py hl[5] *}
 
 <div class="termy">
 
@@ -197,12 +197,13 @@ You can override the `mode` from the defaults above.
 
 For example, you could use `mode="a"` to write "appending" to the same file:
 
-```Python hl_lines="4"
-{!../docs_src/parameter_types/file/tutorial005.py!}
-```
+{* docs_src/parameter_types/file/tutorial005_an.py hl[5] *}
 
-!!! tip
-    As you are manually setting `mode="a"`, you can use `typer.FileText` or `typer.FileTextWrite`, both will work.
+/// tip
+
+As you are manually setting `mode="a"`, you can use `typer.FileText` or `typer.FileTextWrite`, both will work.
+
+///
 
 Check it:
 
@@ -234,10 +235,13 @@ This is a single line
 
 ## About the different types
 
-!!! info
-    These are technical details about why the different types/classes provided by **Typer**.
+/// info
 
-    But you don't need this information to be able to use them. You can skip it.
+These are technical details about why the different types/classes provided by **Typer**.
+
+But you don't need this information to be able to use them. You can skip it.
+
+///
 
 **Typer** provides you these different types (classes) because they inherit directly from the actual Python implementation that will be provided underneath for each case.
 

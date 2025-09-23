@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Callable, List, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, Callable, List, Optional, Type, Union, overload
 
 import click
 
@@ -8,15 +8,19 @@ if TYPE_CHECKING:  # pragma: no cover
     import click.shell_completion
 
 
+# Overload for Option created with custom type 'parser'
+@overload
 def Option(
     # Parameter
-    default: Optional[Any],
+    default: Optional[Any] = ...,
     *param_decls: str,
     callback: Optional[Callable[..., Any]] = None,
     metavar: Optional[str] = None,
     expose_value: bool = True,
     is_eager: bool = False,
     envvar: Optional[Union[str, List[str]]] = None,
+    # Note that shell_complete is not fully supported and will be removed in future versions
+    # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Optional[
         Callable[
             [click.Context, click.Parameter, str],
@@ -24,12 +28,147 @@ def Option(
         ]
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
+    default_factory: Optional[Callable[[], Any]] = None,
+    # Custom type
+    parser: Optional[Callable[[str], Any]] = None,
     # Option
-    show_default: bool = True,
+    show_default: Union[bool, str] = True,
     prompt: Union[bool, str] = False,
     confirmation_prompt: bool = False,
     prompt_required: bool = True,
     hide_input: bool = False,
+    # TODO: remove is_flag and flag_value in a future release
+    is_flag: Optional[bool] = None,
+    flag_value: Optional[Any] = None,
+    count: bool = False,
+    allow_from_autoenv: bool = True,
+    help: Optional[str] = None,
+    hidden: bool = False,
+    show_choices: bool = True,
+    show_envvar: bool = True,
+    # Choice
+    case_sensitive: bool = True,
+    # Numbers
+    min: Optional[Union[int, float]] = None,
+    max: Optional[Union[int, float]] = None,
+    clamp: bool = False,
+    # DateTime
+    formats: Optional[List[str]] = None,
+    # File
+    mode: Optional[str] = None,
+    encoding: Optional[str] = None,
+    errors: Optional[str] = "strict",
+    lazy: Optional[bool] = None,
+    atomic: bool = False,
+    # Path
+    exists: bool = False,
+    file_okay: bool = True,
+    dir_okay: bool = True,
+    writable: bool = False,
+    readable: bool = True,
+    resolve_path: bool = False,
+    allow_dash: bool = False,
+    path_type: Union[None, Type[str], Type[bytes]] = None,
+    # Rich settings
+    rich_help_panel: Union[str, None] = None,
+) -> Any: ...
+
+
+# Overload for Option created with custom type 'click_type'
+@overload
+def Option(
+    # Parameter
+    default: Optional[Any] = ...,
+    *param_decls: str,
+    callback: Optional[Callable[..., Any]] = None,
+    metavar: Optional[str] = None,
+    expose_value: bool = True,
+    is_eager: bool = False,
+    envvar: Optional[Union[str, List[str]]] = None,
+    # Note that shell_complete is not fully supported and will be removed in future versions
+    # TODO: Remove shell_complete in a future version (after 0.16.0)
+    shell_complete: Optional[
+        Callable[
+            [click.Context, click.Parameter, str],
+            Union[List["click.shell_completion.CompletionItem"], List[str]],
+        ]
+    ] = None,
+    autocompletion: Optional[Callable[..., Any]] = None,
+    default_factory: Optional[Callable[[], Any]] = None,
+    # Custom type
+    click_type: Optional[click.ParamType] = None,
+    # Option
+    show_default: Union[bool, str] = True,
+    prompt: Union[bool, str] = False,
+    confirmation_prompt: bool = False,
+    prompt_required: bool = True,
+    hide_input: bool = False,
+    # TODO: remove is_flag and flag_value in a future release
+    is_flag: Optional[bool] = None,
+    flag_value: Optional[Any] = None,
+    count: bool = False,
+    allow_from_autoenv: bool = True,
+    help: Optional[str] = None,
+    hidden: bool = False,
+    show_choices: bool = True,
+    show_envvar: bool = True,
+    # Choice
+    case_sensitive: bool = True,
+    # Numbers
+    min: Optional[Union[int, float]] = None,
+    max: Optional[Union[int, float]] = None,
+    clamp: bool = False,
+    # DateTime
+    formats: Optional[List[str]] = None,
+    # File
+    mode: Optional[str] = None,
+    encoding: Optional[str] = None,
+    errors: Optional[str] = "strict",
+    lazy: Optional[bool] = None,
+    atomic: bool = False,
+    # Path
+    exists: bool = False,
+    file_okay: bool = True,
+    dir_okay: bool = True,
+    writable: bool = False,
+    readable: bool = True,
+    resolve_path: bool = False,
+    allow_dash: bool = False,
+    path_type: Union[None, Type[str], Type[bytes]] = None,
+    # Rich settings
+    rich_help_panel: Union[str, None] = None,
+) -> Any: ...
+
+
+def Option(
+    # Parameter
+    default: Optional[Any] = ...,
+    *param_decls: str,
+    callback: Optional[Callable[..., Any]] = None,
+    metavar: Optional[str] = None,
+    expose_value: bool = True,
+    is_eager: bool = False,
+    envvar: Optional[Union[str, List[str]]] = None,
+    # Note that shell_complete is not fully supported and will be removed in future versions
+    # TODO: Remove shell_complete in a future version (after 0.16.0)
+    shell_complete: Optional[
+        Callable[
+            [click.Context, click.Parameter, str],
+            Union[List["click.shell_completion.CompletionItem"], List[str]],
+        ]
+    ] = None,
+    autocompletion: Optional[Callable[..., Any]] = None,
+    default_factory: Optional[Callable[[], Any]] = None,
+    # Custom type
+    parser: Optional[Callable[[str], Any]] = None,
+    click_type: Optional[click.ParamType] = None,
+    # Option
+    show_default: Union[bool, str] = True,
+    prompt: Union[bool, str] = False,
+    confirmation_prompt: bool = False,
+    prompt_required: bool = True,
+    hide_input: bool = False,
+    # TODO: remove is_flag and flag_value in a future release
     is_flag: Optional[bool] = None,
     flag_value: Optional[Any] = None,
     count: bool = False,
@@ -75,6 +214,10 @@ def Option(
         envvar=envvar,
         shell_complete=shell_complete,
         autocompletion=autocompletion,
+        default_factory=default_factory,
+        # Custom type
+        parser=parser,
+        click_type=click_type,
         # Option
         show_default=show_default,
         prompt=prompt,
@@ -117,15 +260,19 @@ def Option(
     )
 
 
+# Overload for Argument created with custom type 'parser'
+@overload
 def Argument(
     # Parameter
-    default: Optional[Any],
+    default: Optional[Any] = ...,
     *,
     callback: Optional[Callable[..., Any]] = None,
     metavar: Optional[str] = None,
     expose_value: bool = True,
     is_eager: bool = False,
     envvar: Optional[Union[str, List[str]]] = None,
+    # Note that shell_complete is not fully supported and will be removed in future versions
+    # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Optional[
         Callable[
             [click.Context, click.Parameter, str],
@@ -133,6 +280,122 @@ def Argument(
         ]
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
+    default_factory: Optional[Callable[[], Any]] = None,
+    # Custom type
+    parser: Optional[Callable[[str], Any]] = None,
+    # TyperArgument
+    show_default: Union[bool, str] = True,
+    show_choices: bool = True,
+    show_envvar: bool = True,
+    help: Optional[str] = None,
+    hidden: bool = False,
+    # Choice
+    case_sensitive: bool = True,
+    # Numbers
+    min: Optional[Union[int, float]] = None,
+    max: Optional[Union[int, float]] = None,
+    clamp: bool = False,
+    # DateTime
+    formats: Optional[List[str]] = None,
+    # File
+    mode: Optional[str] = None,
+    encoding: Optional[str] = None,
+    errors: Optional[str] = "strict",
+    lazy: Optional[bool] = None,
+    atomic: bool = False,
+    # Path
+    exists: bool = False,
+    file_okay: bool = True,
+    dir_okay: bool = True,
+    writable: bool = False,
+    readable: bool = True,
+    resolve_path: bool = False,
+    allow_dash: bool = False,
+    path_type: Union[None, Type[str], Type[bytes]] = None,
+    # Rich settings
+    rich_help_panel: Union[str, None] = None,
+) -> Any: ...
+
+
+# Overload for Argument created with custom type 'click_type'
+@overload
+def Argument(
+    # Parameter
+    default: Optional[Any] = ...,
+    *,
+    callback: Optional[Callable[..., Any]] = None,
+    metavar: Optional[str] = None,
+    expose_value: bool = True,
+    is_eager: bool = False,
+    envvar: Optional[Union[str, List[str]]] = None,
+    # Note that shell_complete is not fully supported and will be removed in future versions
+    # TODO: Remove shell_complete in a future version (after 0.16.0)
+    shell_complete: Optional[
+        Callable[
+            [click.Context, click.Parameter, str],
+            Union[List["click.shell_completion.CompletionItem"], List[str]],
+        ]
+    ] = None,
+    autocompletion: Optional[Callable[..., Any]] = None,
+    default_factory: Optional[Callable[[], Any]] = None,
+    # Custom type
+    click_type: Optional[click.ParamType] = None,
+    # TyperArgument
+    show_default: Union[bool, str] = True,
+    show_choices: bool = True,
+    show_envvar: bool = True,
+    help: Optional[str] = None,
+    hidden: bool = False,
+    # Choice
+    case_sensitive: bool = True,
+    # Numbers
+    min: Optional[Union[int, float]] = None,
+    max: Optional[Union[int, float]] = None,
+    clamp: bool = False,
+    # DateTime
+    formats: Optional[List[str]] = None,
+    # File
+    mode: Optional[str] = None,
+    encoding: Optional[str] = None,
+    errors: Optional[str] = "strict",
+    lazy: Optional[bool] = None,
+    atomic: bool = False,
+    # Path
+    exists: bool = False,
+    file_okay: bool = True,
+    dir_okay: bool = True,
+    writable: bool = False,
+    readable: bool = True,
+    resolve_path: bool = False,
+    allow_dash: bool = False,
+    path_type: Union[None, Type[str], Type[bytes]] = None,
+    # Rich settings
+    rich_help_panel: Union[str, None] = None,
+) -> Any: ...
+
+
+def Argument(
+    # Parameter
+    default: Optional[Any] = ...,
+    *,
+    callback: Optional[Callable[..., Any]] = None,
+    metavar: Optional[str] = None,
+    expose_value: bool = True,
+    is_eager: bool = False,
+    envvar: Optional[Union[str, List[str]]] = None,
+    # Note that shell_complete is not fully supported and will be removed in future versions
+    # TODO: Remove shell_complete in a future version (after 0.16.0)
+    shell_complete: Optional[
+        Callable[
+            [click.Context, click.Parameter, str],
+            Union[List["click.shell_completion.CompletionItem"], List[str]],
+        ]
+    ] = None,
+    autocompletion: Optional[Callable[..., Any]] = None,
+    default_factory: Optional[Callable[[], Any]] = None,
+    # Custom type
+    parser: Optional[Callable[[str], Any]] = None,
+    click_type: Optional[click.ParamType] = None,
     # TyperArgument
     show_default: Union[bool, str] = True,
     show_choices: bool = True,
@@ -178,6 +441,10 @@ def Argument(
         envvar=envvar,
         shell_complete=shell_complete,
         autocompletion=autocompletion,
+        default_factory=default_factory,
+        # Custom type
+        parser=parser,
+        click_type=click_type,
         # TyperArgument
         show_default=show_default,
         show_choices=show_choices,

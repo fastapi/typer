@@ -1,5 +1,8 @@
 import inspect
 import os
+import platform
+import shutil
+import subprocess
 import sys
 import traceback
 from datetime import datetime
@@ -12,9 +15,19 @@ from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, U
 from uuid import UUID
 
 import click
+from typer._types import TyperChoice
 
+from ._typing import get_args, get_origin, is_literal_type, is_union, literal_values
 from .completion import get_completion_inspect_parameters
-from .core import MarkupMode, TyperArgument, TyperCommand, TyperGroup, TyperOption
+from .core import (
+    DEFAULT_MARKUP_MODE,
+    HAS_RICH,
+    MarkupMode,
+    TyperArgument,
+    TyperCommand,
+    TyperGroup,
+    TyperOption,
+)
 from .models import (
     AnyType,
     ArgumentInfo,
@@ -33,25 +46,16 @@ from .models import (
     ParamMeta,
     Required,
     TyperInfo,
+    TyperPath,
 )
 from .utils import get_params_from_function
-
-try:
-    import rich
-    from rich.console import Console
-    from rich.traceback import Traceback
-
-    console_stderr = Console(stderr=True)
-
-except ImportError:  # pragma: nocover
-    rich = None  # type: ignore
 
 _original_except_hook = sys.excepthook
 _typer_developer_exception_attr_name = "__typer_developer_exception__"
 
 
 def except_hook(
-    exc_type: Type[BaseException], exc_value: BaseException, tb: TracebackType
+    exc_type: Type[BaseException], exc_value: BaseException, tb: Optional[TracebackType]
 ) -> None:
     exception_config: Union[DeveloperExceptionConfig, None] = getattr(
         exc_value, _typer_developer_exception_attr_name, None
@@ -66,24 +70,19 @@ def except_hook(
         return
     typer_path = os.path.dirname(__file__)
     click_path = os.path.dirname(click.__file__)
-    supress_internal_dir_names = [typer_path, click_path]
+    internal_dir_names = [typer_path, click_path]
     exc = exc_value
-    if rich:
-        rich_tb = Traceback.from_exception(
-            type(exc),
-            exc,
-            exc.__traceback__,
-            show_locals=exception_config.pretty_exceptions_show_locals,
-            suppress=supress_internal_dir_names,
-        )
+    if HAS_RICH:
+        from . import rich_utils
+
+        rich_tb = rich_utils.get_traceback(exc, exception_config, internal_dir_names)
+        console_stderr = rich_utils._get_rich_console(stderr=True)
         console_stderr.print(rich_tb)
         return
     tb_exc = traceback.TracebackException.from_exception(exc)
     stack: List[FrameSummary] = []
     for frame in tb_exc.stack:
-        if any(
-            [frame.filename.startswith(path) for path in supress_internal_dir_names]
-        ):
+        if any(frame.filename.startswith(path) for path in internal_dir_names):
             if not exception_config.pretty_exceptions_short:
                 # Hide the line for internal libraries, Typer and Click
                 stack.append(
@@ -97,7 +96,7 @@ def except_hook(
         else:
             stack.append(frame)
     # Type ignore ref: https://github.com/python/typeshed/pull/8244
-    final_stack_summary = StackSummary.from_list(stack)  # type: ignore
+    final_stack_summary = StackSummary.from_list(stack)
     tb_exc.stack = final_stack_summary
     for line in tb_exc.format():
         print(line, file=sys.stderr)
@@ -134,7 +133,7 @@ class Typer:
         deprecated: bool = Default(False),
         add_completion: bool = True,
         # Rich settings
-        rich_markup_mode: MarkupMode = None,
+        rich_markup_mode: MarkupMode = Default(DEFAULT_MARKUP_MODE),
         rich_help_panel: Union[str, None] = Default(None),
         pretty_exceptions_enable: bool = True,
         pretty_exceptions_show_locals: bool = True,
@@ -170,7 +169,6 @@ class Typer:
 
     def callback(
         self,
-        name: Optional[str] = Default(None),
         *,
         cls: Optional[Type[TyperGroup]] = Default(None),
         invoke_without_command: bool = Default(False),
@@ -192,7 +190,6 @@ class Typer:
     ) -> Callable[[CommandFunctionType], CommandFunctionType]:
         def decorator(f: CommandFunctionType) -> CommandFunctionType:
             self.registered_callback = TyperInfo(
-                name=name,
                 cls=cls,
                 invoke_without_command=invoke_without_command,
                 no_args_is_help=no_args_is_help,
@@ -370,22 +367,9 @@ def get_command(typer_instance: Typer) -> click.Command:
             click_command.params.append(click_install_param)
             click_command.params.append(click_show_param)
         return click_command
-    assert False, "Could not get a command for this Typer instance"  # pragma no cover
-
-
-def get_group_name(typer_info: TyperInfo) -> Optional[str]:
-    if typer_info.callback:
-        # Priority 1: Callback passed in app.add_typer()
-        return get_command_name(typer_info.callback.__name__)
-    if typer_info.typer_instance:
-        registered_callback = typer_info.typer_instance.registered_callback
-        if registered_callback:
-            if registered_callback.callback:
-                # Priority 2: Callback passed in @subapp.callback()
-                return get_command_name(registered_callback.callback.__name__)
-        if typer_info.typer_instance.info.callback:
-            return get_command_name(typer_info.typer_instance.info.callback.__name__)
-    return None
+    raise RuntimeError(
+        "Could not get a command for this Typer instance"
+    )  # pragma: no cover
 
 
 def solve_typer_info_help(typer_info: TyperInfo) -> str:
@@ -435,7 +419,6 @@ def solve_typer_info_help(typer_info: TyperInfo) -> str:
 
 def solve_typer_info_defaults(typer_info: TyperInfo) -> TyperInfo:
     values: Dict[str, Any] = {}
-    name = None
     for name, value in typer_info.__dict__.items():
         # Priority 1: Value was set in app.add_typer()
         if not isinstance(value, DefaultPlaceholder):
@@ -444,7 +427,8 @@ def solve_typer_info_defaults(typer_info: TyperInfo) -> TyperInfo:
         # Priority 2: Value was set in @subapp.callback()
         try:
             callback_value = getattr(
-                typer_info.typer_instance.registered_callback, name  # type: ignore
+                typer_info.typer_instance.registered_callback,  # type: ignore
+                name,
             )
             if not isinstance(callback_value, DefaultPlaceholder):
                 values[name] = callback_value
@@ -454,7 +438,8 @@ def solve_typer_info_defaults(typer_info: TyperInfo) -> TyperInfo:
         # Priority 3: Value set in subapp = typer.Typer()
         try:
             instance_value = getattr(
-                typer_info.typer_instance.info, name  # type: ignore
+                typer_info.typer_instance.info,  # type: ignore
+                name,
             )
             if not isinstance(instance_value, DefaultPlaceholder):
                 values[name] = instance_value
@@ -463,8 +448,6 @@ def solve_typer_info_defaults(typer_info: TyperInfo) -> TyperInfo:
             pass
         # Value not set, use the default
         values[name] = value.value
-    if values["name"] is None:
-        values["name"] = get_group_name(typer_info)
     values["help"] = solve_typer_info_help(typer_info)
     return TyperInfo(**values)
 
@@ -475,9 +458,9 @@ def get_group_from_info(
     pretty_exceptions_short: bool,
     rich_markup_mode: MarkupMode,
 ) -> TyperGroup:
-    assert (
-        group_info.typer_instance
-    ), "A Typer instance is needed to generate a Click Group"
+    assert group_info.typer_instance, (
+        "A Typer instance is needed to generate a Click Group"
+    )
     commands: Dict[str, click.Command] = {}
     for command_info in group_info.typer_instance.registered_commands:
         command = get_command_from_info(
@@ -495,6 +478,16 @@ def get_group_from_info(
         )
         if sub_group.name:
             commands[sub_group.name] = sub_group
+        else:
+            if sub_group.callback:
+                import warnings
+
+                warnings.warn(
+                    "The 'callback' parameter is not supported by Typer when using `add_typer` without a name",
+                    stacklevel=5,
+                )
+            for sub_command_name, sub_command in sub_group.commands.items():
+                commands[sub_command_name] = sub_command
     solved_info = solve_typer_info_defaults(group_info)
     (
         params,
@@ -502,7 +495,7 @@ def get_group_from_info(
         context_param_name,
     ) = get_params_convertors_ctx_param_name_from_function(solved_info.callback)
     cls = solved_info.cls or TyperGroup
-    assert issubclass(cls, TyperGroup)
+    assert issubclass(cls, TyperGroup), f"{cls} should be a subclass of {TyperGroup}"
     group = cls(
         name=solved_info.name or "",
         commands=commands,
@@ -539,7 +532,7 @@ def get_command_name(name: str) -> str:
 
 
 def get_params_convertors_ctx_param_name_from_function(
-    callback: Optional[Callable[..., Any]]
+    callback: Optional[Callable[..., Any]],
 ) -> Tuple[List[Union[click.Argument, click.Option]], Dict[str, Any], Optional[str]]:
     params = []
     convertors = {}
@@ -613,27 +606,31 @@ def determine_type_convertor(type_: Any) -> Optional[Callable[[Any], Any]]:
 
 def param_path_convertor(value: Optional[str] = None) -> Optional[Path]:
     if value is not None:
-        return Path(value)
+        # allow returning any subclass of Path created by an annotated parser without converting
+        # it back to a Path
+        return value if isinstance(value, Path) else Path(value)
     return None
 
 
 def generate_enum_convertor(enum: Type[Enum]) -> Callable[[Any], Any]:
-    lower_val_map = {str(val.value).lower(): val for val in enum}
+    val_map = {str(val.value): val for val in enum}
 
     def convertor(value: Any) -> Any:
         if value is not None:
-            low = str(value).lower()
-            if low in lower_val_map:
-                key = lower_val_map[low]
+            val = str(value)
+            if val in val_map:
+                key = val_map[val]
                 return enum(key)
 
     return convertor
 
 
 def generate_list_convertor(
-    convertor: Optional[Callable[[Any], Any]]
-) -> Callable[[Sequence[Any]], List[Any]]:
-    def internal_convertor(value: Sequence[Any]) -> List[Any]:
+    convertor: Optional[Callable[[Any], Any]], default_value: Optional[Any]
+) -> Callable[[Optional[Sequence[Any]]], Optional[List[Any]]]:
+    def internal_convertor(value: Optional[Sequence[Any]]) -> Optional[List[Any]]:
+        if value is None or len(value) == 0:
+            return default_value
         return [convertor(v) if convertor else v for v in value]
 
     return internal_convertor
@@ -641,10 +638,14 @@ def generate_list_convertor(
 
 def generate_tuple_convertor(
     types: Sequence[Any],
-) -> Callable[[Tuple[Any, ...]], Tuple[Any, ...]]:
+) -> Callable[[Optional[Tuple[Any, ...]]], Optional[Tuple[Any, ...]]]:
     convertors = [determine_type_convertor(type_) for type_ in types]
 
-    def internal_convertor(param_args: Tuple[Any, ...]) -> Tuple[Any, ...]:
+    def internal_convertor(
+        param_args: Optional[Tuple[Any, ...]],
+    ) -> Optional[Tuple[Any, ...]]:
+        if param_args is None:
+            return None
         return tuple(
             convertor(arg) if convertor else arg
             for (convertor, arg) in zip(convertors, param_args)
@@ -657,10 +658,11 @@ def get_callback(
     *,
     callback: Optional[Callable[..., Any]] = None,
     params: Sequence[click.Parameter] = [],
-    convertors: Dict[str, Callable[[str], Any]] = {},
+    convertors: Optional[Dict[str, Callable[[str], Any]]] = None,
     context_param_name: Optional[str] = None,
     pretty_exceptions_short: bool,
 ) -> Optional[Callable[..., Any]]:
+    use_convertors = convertors or {}
     if not callback:
         return None
     parameters = get_params_from_function(callback)
@@ -674,13 +676,13 @@ def get_callback(
     def wrapper(**kwargs: Any) -> Any:
         _rich_traceback_guard = pretty_exceptions_short  # noqa: F841
         for k, v in kwargs.items():
-            if k in convertors:
-                use_params[k] = convertors[k](v)
+            if k in use_convertors:
+                use_params[k] = use_convertors[k](v)
             else:
                 use_params[k] = v
         if context_param_name:
             use_params[context_param_name] = click.get_current_context()
-        return callback(**use_params)  # type: ignore
+        return callback(**use_params)
 
     update_wrapper(wrapper, callback)
     return wrapper
@@ -689,9 +691,15 @@ def get_callback(
 def get_click_type(
     *, annotation: Any, parameter_info: ParameterInfo
 ) -> click.ParamType:
-    if annotation == str:
+    if parameter_info.click_type is not None:
+        return parameter_info.click_type
+
+    elif parameter_info.parser is not None:
+        return click.types.FuncParamType(parameter_info.parser)
+
+    elif annotation is str:
         return click.STRING
-    elif annotation == int:
+    elif annotation is int:
         if parameter_info.min is not None or parameter_info.max is not None:
             min_ = None
             max_ = None
@@ -702,7 +710,7 @@ def get_click_type(
             return click.IntRange(min=min_, max=max_, clamp=parameter_info.clamp)
         else:
             return click.INT
-    elif annotation == float:
+    elif annotation is float:
         if parameter_info.min is not None or parameter_info.max is not None:
             return click.FloatRange(
                 min=parameter_info.min,
@@ -711,7 +719,7 @@ def get_click_type(
             )
         else:
             return click.FLOAT
-    elif annotation == bool:
+    elif annotation is bool:
         return click.BOOL
     elif annotation == UUID:
         return click.UUID
@@ -723,7 +731,7 @@ def get_click_type(
         or parameter_info.path_type
         or parameter_info.resolve_path
     ):
-        return click.Path(
+        return TyperPath(
             exists=parameter_info.exists,
             file_okay=parameter_info.file_okay,
             dir_okay=parameter_info.dir_okay,
@@ -766,11 +774,21 @@ def get_click_type(
             atomic=parameter_info.atomic,
         )
     elif lenient_issubclass(annotation, Enum):
-        return click.Choice(
+        # The custom TyperChoice is only needed for Click < 8.2.0, to parse the
+        # command line values matching them to the enum values. Click 8.2.0 added
+        # support for enum values but reading enum names.
+        # Passing here the list of enum values (instead of just the enum) accounts for
+        # Click < 8.2.0.
+        return TyperChoice(
             [item.value for item in annotation],
             case_sensitive=parameter_info.case_sensitive,
         )
-    raise RuntimeError(f"Type not yet supported: {annotation}")  # pragma no cover
+    elif is_literal_type(annotation):
+        return click.Choice(
+            literal_values(annotation),
+            case_sensitive=parameter_info.case_sensitive,
+        )
+    raise RuntimeError(f"Type not yet supported: {annotation}")  # pragma: no cover
 
 
 def lenient_issubclass(
@@ -794,14 +812,14 @@ def get_click_param(
             required = True
         else:
             default_value = parameter_info.default
-    elif param.default == Required or param.default == param.empty:
+    elif param.default == Required or param.default is param.empty:
         required = True
         parameter_info = ArgumentInfo()
     else:
         default_value = param.default
         parameter_info = OptionInfo()
-    annotation: Any = Any
-    if not param.annotation == param.empty:
+    annotation: Any
+    if param.annotation is not param.empty:
         annotation = param.annotation
     else:
         annotation = str
@@ -810,31 +828,32 @@ def get_click_param(
     is_tuple = False
     parameter_type: Any = None
     is_flag = None
-    origin = getattr(main_type, "__origin__", None)
+    origin = get_origin(main_type)
+
     if origin is not None:
-        # Handle Optional[SomeType]
-        if origin is Union:
+        # Handle SomeType | None and Optional[SomeType]
+        if is_union(origin):
             types = []
-            for type_ in main_type.__args__:
+            for type_ in get_args(main_type):
                 if type_ is NoneType:
                     continue
                 types.append(type_)
             assert len(types) == 1, "Typer Currently doesn't support Union types"
             main_type = types[0]
-            origin = getattr(main_type, "__origin__", None)
+            origin = get_origin(main_type)
         # Handle Tuples and Lists
         if lenient_issubclass(origin, List):
-            main_type = main_type.__args__[0]
-            assert not getattr(
-                main_type, "__origin__", None
-            ), "List types with complex sub-types are not currently supported"
+            main_type = get_args(main_type)[0]
+            assert not get_origin(main_type), (
+                "List types with complex sub-types are not currently supported"
+            )
             is_list = True
         elif lenient_issubclass(origin, Tuple):  # type: ignore
             types = []
-            for type_ in main_type.__args__:
-                assert not getattr(
-                    type_, "__origin__", None
-                ), "Tuple types with complex sub-types are not currently supported"
+            for type_ in get_args(main_type):
+                assert not get_origin(type_), (
+                    "Tuple types with complex sub-types are not currently supported"
+                )
                 types.append(
                     get_click_type(annotation=type_, parameter_info=parameter_info)
                 )
@@ -846,11 +865,13 @@ def get_click_param(
         )
     convertor = determine_type_convertor(main_type)
     if is_list:
-        convertor = generate_list_convertor(convertor)
+        convertor = generate_list_convertor(
+            convertor=convertor, default_value=default_value
+        )
     if is_tuple:
-        convertor = generate_tuple_convertor(main_type.__args__)
+        convertor = generate_tuple_convertor(get_args(main_type))
     if isinstance(parameter_info, OptionInfo):
-        if main_type is bool and not (parameter_info.is_flag is False):
+        if main_type is bool:
             is_flag = True
             # Click doesn't accept a flag of type bool, only None, and then it sets it
             # to bool internally
@@ -877,7 +898,6 @@ def get_click_param(
                 prompt_required=parameter_info.prompt_required,
                 hide_input=parameter_info.hide_input,
                 is_flag=is_flag,
-                flag_value=parameter_info.flag_value,
                 multiple=is_list,
                 count=parameter_info.count,
                 allow_from_autoenv=parameter_info.allow_from_autoenv,
@@ -930,13 +950,14 @@ def get_click_param(
                 expose_value=parameter_info.expose_value,
                 is_eager=parameter_info.is_eager,
                 envvar=parameter_info.envvar,
+                shell_complete=parameter_info.shell_complete,
                 autocompletion=get_param_completion(parameter_info.autocompletion),
                 # Rich settings
                 rich_help_panel=parameter_info.rich_help_panel,
             ),
             convertor,
         )
-    assert False, "A click.Parameter should be returned"  # pragma no cover
+    raise AssertionError("A click.Parameter should be returned")  # pragma: no cover
 
 
 def get_param_callback(
@@ -985,14 +1006,14 @@ def get_param_callback(
             else:
                 use_value = value
             use_params[value_name] = use_value
-        return callback(**use_params)  # type: ignore
+        return callback(**use_params)
 
     update_wrapper(wrapper, callback)
     return wrapper
 
 
 def get_param_completion(
-    callback: Optional[Callable[..., Any]] = None
+    callback: Optional[Callable[..., Any]] = None,
 ) -> Optional[Callable[..., Any]]:
     if not callback:
         return None
@@ -1000,9 +1021,9 @@ def get_param_completion(
     ctx_name = None
     args_name = None
     incomplete_name = None
-    unassigned_params = [param for param in parameters.values()]
+    unassigned_params = list(parameters.values())
     for param_sig in unassigned_params[:]:
-        origin = getattr(param_sig.annotation, "__origin__", None)
+        origin = get_origin(param_sig.annotation)
         if lenient_issubclass(param_sig.annotation, click.Context):
             ctx_name = param_sig.name
             unassigned_params.remove(param_sig)
@@ -1038,7 +1059,7 @@ def get_param_completion(
             use_params[args_name] = args
         if incomplete_name:
             use_params[incomplete_name] = incomplete
-        return callback(**use_params)  # type: ignore
+        return callback(**use_params)
 
     update_wrapper(wrapper, callback)
     return wrapper
@@ -1048,3 +1069,68 @@ def run(function: Callable[..., Any]) -> None:
     app = Typer(add_completion=False)
     app.command()(function)
     app()
+
+
+def _is_macos() -> bool:
+    return platform.system() == "Darwin"
+
+
+def _is_linux_or_bsd() -> bool:
+    if platform.system() == "Linux":
+        return True
+
+    return "BSD" in platform.system()
+
+
+def launch(url: str, wait: bool = False, locate: bool = False) -> int:
+    """This function launches the given URL (or filename) in the default
+    viewer application for this file type.  If this is an executable, it
+    might launch the executable in a new session.  The return value is
+    the exit code of the launched application.  Usually, ``0`` indicates
+    success.
+
+    This function handles url in different operating systems separately:
+    - On macOS (Darwin), it uses the 'open' command.
+    - On Linux and BSD, it uses 'xdg-open' if available.
+    - On Windows (and other OSes), it uses the standard webbrowser module.
+
+    The function avoids, when possible, using the webbrowser module on Linux and macOS
+    to prevent spammy terminal messages from some browsers (e.g., Chrome).
+
+    Examples::
+
+        typer.launch("https://typer.tiangolo.com/")
+        typer.launch("/my/downloaded/file", locate=True)
+
+    :param url: URL or filename of the thing to launch.
+    :param wait: Wait for the program to exit before returning. This
+        only works if the launched program blocks. In particular,
+        ``xdg-open`` on Linux does not block.
+    :param locate: if this is set to `True` then instead of launching the
+                   application associated with the URL it will attempt to
+                   launch a file manager with the file located.  This
+                   might have weird effects if the URL does not point to
+                   the filesystem.
+    """
+
+    if url.startswith("http://") or url.startswith("https://"):
+        if _is_macos():
+            return subprocess.Popen(
+                ["open", url], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT
+            ).wait()
+
+        has_xdg_open = _is_linux_or_bsd() and shutil.which("xdg-open") is not None
+
+        if has_xdg_open:
+            return subprocess.Popen(
+                ["xdg-open", url], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT
+            ).wait()
+
+        import webbrowser
+
+        webbrowser.open(url)
+
+        return 0
+
+    else:
+        return click.launch(url)

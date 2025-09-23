@@ -1,8 +1,8 @@
+# CLI Option Prompt
+
 It's also possible to, instead of just showing an error, ask for the missing value with `prompt=True`:
 
-```Python hl_lines="4"
-{!../docs_src/options/prompt/tutorial001.py!}
-```
+{* docs_src/options/prompt/tutorial001_an.py hl[5] *}
 
 And then your program will ask the user for it in the terminal:
 
@@ -24,9 +24,7 @@ Hello Camila Gutiérrez
 
 You can also set a custom prompt, passing the string that you want to use instead of just `True`:
 
-```Python hl_lines="5"
-{!../docs_src/options/prompt/tutorial002.py!}
-```
+{* docs_src/options/prompt/tutorial002_an.py hl[7] *}
 
 And then your program will ask for it using with your custom prompt:
 
@@ -52,9 +50,7 @@ You can do it passing the parameter `confirmation_prompt=True`.
 
 Let's say it's a CLI app to delete a project:
 
-```Python hl_lines="4"
-{!../docs_src/options/prompt/tutorial003.py!}
-```
+{* docs_src/options/prompt/tutorial003_an.py hl[6] *}
 
 And it will prompt the user for a value and then for the confirmation:
 
@@ -75,7 +71,7 @@ $ python main.py
 # Project name: $ Old Project
 # Repeat for confirmation: $ New Spice
 
-Error: the two entered values do not match
+Error: The two entered values do not match
 
 # Project name: $ Old Project
 # Repeat for confirmation: $ Old Project

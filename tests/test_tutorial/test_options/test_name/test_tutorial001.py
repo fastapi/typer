@@ -26,11 +26,16 @@ def test_call():
     assert "Hello Camila" in result.output
 
 
+def test_call_no_args():
+    result = runner.invoke(app, ["--name"])
+    assert result.exit_code != 0
+    assert "Option '--name' requires an argument" in result.output
+
+
 def test_script():
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
     )
     assert "Usage" in result.stdout

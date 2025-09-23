@@ -1,10 +1,10 @@
+# Path
+
 You can declare a *CLI parameter* to be a standard Python <a href="https://docs.python.org/3/library/pathlib.html#basic-use" class="external-link" target="_blank">`pathlib.Path`</a>.
 
 This is what you would do for directory paths, file paths, etc:
 
-```Python hl_lines="1  7"
-{!../docs_src/parameter_types/path/tutorial001.py!}
-```
+{* docs_src/parameter_types/path/tutorial001_an.py hl[1,8] *}
 
 And again, as you receive a standard Python `Path` object the same as the type annotation, your editor will give you autocompletion for all its attributes and methods.
 
@@ -51,17 +51,21 @@ You can perform several validations for `Path` *CLI parameters*:
 * `readable`: if true, a readable check is performed.
 * `resolve_path`: if this is true, then the path is fully resolved before the value is passed onwards. This means that it’s absolute and <abbr title="symbolic links, also known as shortcuts. Links in a file system that point to other location. For example, some applications when installed create symlinks in the desktop to launch them.">symlinks</abbr> are resolved.
 
-!!! note "Technical Details"
-    It will not expand a tilde-prefix (something with `~`, like `~/Documents/`), as this is supposed to be done by the shell only.
+/// note | Technical Details
 
-!!! tip
-    All these parameters come directly from <a href="https://click.palletsprojects.com/en/7.x/parameters/#parameter-types" class="external-link" target="_blank">Click</a>.
+It will not expand a tilde-prefix (something with `~`, like `~/Documents/`), as this is supposed to be done by the shell only.
+
+///
+
+/// tip
+
+All these parameters come directly from <a href="https://click.palletsprojects.com/en/7.x/parameters/#parameter-types" class="external-link" target="_blank">Click</a>.
+
+///
 
 For example:
 
-```Python hl_lines="9 10 11 12 13 14"
-{!../docs_src/parameter_types/path/tutorial002.py!}
-```
+{* docs_src/parameter_types/path/tutorial002_an.py hl[11:16] *}
 
 Check it:
 
@@ -96,10 +100,13 @@ Error: Invalid value for '--config': File './' is a directory.
 
 ### Advanced `Path` configurations
 
-!!! warning "Advanced Details"
-    You probably won't need these configurations at first, you may want to skip it.
+/// warning | Advanced Details
 
-    They are used for more advanced use cases.
+You probably won't need these configurations at first, you may want to skip it.
+
+They are used for more advanced use cases.
+
+///
 
 * `allow_dash`: If this is set to True, a single dash to indicate standard streams is permitted.
 * `path_type`: optionally a string type that should be used to represent the path. The default is None which means the return value will be either bytes or unicode depending on what makes most sense given the input data Click deals with.
