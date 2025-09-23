@@ -28,8 +28,10 @@ import click.types
 import click.utils
 
 from ._typing import Literal
+from .models import DefaultPlaceholder
 
 MarkupMode = Literal["markdown", "rich", None]
+MARKUP_MODE_KEY = "TYPER_RICH_MARKUP_MODE"
 
 HAS_RICH = importlib.util.find_spec("rich") is not None
 
@@ -369,7 +371,10 @@ class TyperArgument(click.core.Argument):
         if extra:
             extra_str = "; ".join(extra)
             extra_str = f"[{extra_str}]"
-            if HAS_RICH:
+            rich_markup_mode = None
+            if hasattr(ctx, "obj") and isinstance(ctx.obj, dict):
+                rich_markup_mode = ctx.obj.get(MARKUP_MODE_KEY, None)
+            if HAS_RICH and rich_markup_mode == "rich":
                 # This is needed for when we want to export to HTML
                 from . import rich_utils
 
@@ -585,7 +590,10 @@ class TyperOption(click.core.Option):
         if extra:
             extra_str = "; ".join(extra)
             extra_str = f"[{extra_str}]"
-            if HAS_RICH:
+            rich_markup_mode = None
+            if hasattr(ctx, "obj") and isinstance(ctx.obj, dict):
+                rich_markup_mode = ctx.obj.get(MARKUP_MODE_KEY, None)
+            if HAS_RICH and rich_markup_mode == "rich":
                 # This is needed for when we want to export to HTML
                 from . import rich_utils
 
@@ -729,6 +737,13 @@ class TyperCommand(click.core.Command):
 
     def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
         if not HAS_RICH or self.rich_markup_mode is None:
+            if not hasattr(ctx, "obj") or ctx.obj is None:
+                ctx.ensure_object(dict)
+            if isinstance(ctx.obj, dict):
+                if isinstance(self.rich_markup_mode, DefaultPlaceholder):
+                    ctx.obj[MARKUP_MODE_KEY] = self.rich_markup_mode.value
+                else:
+                    ctx.obj[MARKUP_MODE_KEY] = self.rich_markup_mode
             return super().format_help(ctx, formatter)
         from . import rich_utils
 
