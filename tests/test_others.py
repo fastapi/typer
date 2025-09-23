@@ -7,7 +7,6 @@ from unittest import mock
 
 import click
 import pytest
-import shellingham
 import typer
 import typer.completion
 from typer.core import _split_opt
@@ -79,6 +78,8 @@ def test_valid_parser_permutations():
 
 @requires_completion_permission
 def test_install_invalid_shell():
+    import shellingham
+
     app = typer.Typer()
 
     @app.command()
