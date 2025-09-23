@@ -14,8 +14,7 @@ def remote(ctx: typer.Context):
     """Adding a remote"""
     if ctx.invoked_subcommand is None:
         print(
-            "\nThis is the remote main command. "
-            "You can also use the 'add' sub-command."
+            "\nThis is the remote main command. You can also use the 'add' sub-command."
         )
 
 
