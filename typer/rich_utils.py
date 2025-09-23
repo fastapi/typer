@@ -4,11 +4,13 @@ import inspect
 import io
 import sys
 from collections import defaultdict
+from enum import Enum
 from gettext import gettext as _
 from os import getenv
 from typing import Any, DefaultDict, Dict, Iterable, List, Optional, Union
 
 import click
+import yaml
 from rich import box
 from rich.align import Align
 from rich.columns import Columns
@@ -24,6 +26,8 @@ from rich.text import Text
 from rich.theme import Theme
 from rich.traceback import Traceback
 from typer.models import DeveloperExceptionConfig
+
+from .rich_table import TableConfig, rich_table_factory
 
 if sys.version_info >= (3, 9):
     from typing import Literal
@@ -752,6 +756,49 @@ def rich_render_text(text: str) -> str:
     """Remove rich tags and render a pure text representation"""
     console = _get_rich_console()
     return "".join(segment.text for segment in console.render(text)).rstrip("\n")
+
+
+class OutputFormat(str, Enum):
+    TEXT = "text"
+    JSON = "json"
+    YAML = "yaml"
+
+
+def print_rich_object_for_console(
+    console: Console,
+    obj: Any,
+    out_fmt: OutputFormat = OutputFormat.TEXT,
+    indent: int = 2,
+    config: TableConfig = TableConfig(),
+) -> None:
+    """Print rich version of the provided object in the specified format using provided `Console`."""
+    if out_fmt == OutputFormat.JSON:
+        console.print_json(data=obj, indent=indent)
+        return
+
+    if out_fmt == OutputFormat.YAML:
+        console.print(yaml.dump(obj, indent=indent))
+        return
+
+    if not obj:
+        console.print("Nothing found")
+        return
+
+    table = rich_table_factory(obj, config)
+    console.print(table)
+
+
+def print_rich_object(
+    obj: Any,
+    out_fmt: OutputFormat = OutputFormat.TEXT,
+    indent: int = 2,
+    config: TableConfig = TableConfig(),
+) -> None:
+    """Print rich version of the provided object in the specified format."""
+    console = _get_rich_console()
+    print_rich_object_for_console(
+        console, obj, out_fmt=out_fmt, indent=indent, config=config
+    )
 
 
 def get_traceback(
