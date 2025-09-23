@@ -6,6 +6,10 @@
 
 * 🔥 Drop support for Python 3.7. PR [#830](https://github.com/fastapi/typer/pull/830) by [@kinuax](https://github.com/kinuax).
 
+### Internal
+
+* ⬆ Bump markdown-include-variants from 0.0.4 to 0.0.5. PR [#1348](https://github.com/fastapi/typer/pull/1348) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
 ## 0.19.1
 
 **Note**: this is the last version to support Python 3.7, going forward Typer will require Python 3.8+. And soon Python 3.8 will also be dropped as [Python 3.8 reached it's end of life](https://devguide.python.org/versions/) almost a year ago.
