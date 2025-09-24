@@ -2,12 +2,20 @@
 
 ## Latest Changes
 
+## 0.19.2
+
+### Fixes
+
+* 🐛  Fix list convertor with an empty list default factory . PR [#1350](https://github.com/fastapi/typer/pull/1350) by [@svlandeg](https://github.com/svlandeg).
+
 ### Refactors
 
 * 🔥 Drop support for Python 3.7. PR [#830](https://github.com/fastapi/typer/pull/830) by [@kinuax](https://github.com/kinuax).
 
 ### Internal
 
+* ⬆ Bump ruff from 0.13.0 to 0.13.1. PR [#1339](https://github.com/fastapi/typer/pull/1339) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1351](https://github.com/fastapi/typer/pull/1351) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * ⬆ Bump markdown-include-variants from 0.0.4 to 0.0.5. PR [#1348](https://github.com/fastapi/typer/pull/1348) by [@dependabot[bot]](https://github.com/apps/dependabot).
 
 ## 0.19.1
