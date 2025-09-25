@@ -99,3 +99,46 @@ def test_rich_markup_import_regression():
     result = runner.invoke(app, ["--help"])
     assert "Usage" in result.stdout
     assert "BAR" in result.stdout
+
+
+def test_make_rich_text_with_ansi_escape_sequences():
+    from typer.rich_utils import Text, _make_rich_text
+
+    ansi_text = "This is \x1b[4munderlined\x1b[0m text"
+    result = _make_rich_text(text=ansi_text, markup_mode=None)
+
+    assert isinstance(result, Text)
+    assert "\x1b[" not in result.plain
+    assert "underlined" in result.plain
+
+    mixed_text = "Start \x1b[31mred\x1b[0m middle \x1b[32mgreen\x1b[0m end"
+    result = _make_rich_text(text=mixed_text, markup_mode=None)
+    assert isinstance(result, Text)
+    assert "\x1b[" not in result.plain
+    assert "red" in result.plain
+    assert "green" in result.plain
+
+    fake_ansi = "This contains \x1b[ but not a complete sequence"
+    result = _make_rich_text(text=fake_ansi, markup_mode=None)
+    assert isinstance(result, Text)
+    assert "\x1b[" not in result.plain
+    assert "This contains " in result.plain
+
+
+def test_make_rich_text_with_typer_style_in_help():
+    app = typer.Typer()
+
+    @app.command()
+    def example(
+        a: str = typer.Option(help="This is A"),
+        b: str = typer.Option(help=f"This is {typer.style('B', underline=True)}"),
+    ):
+        """Example command with styled help text."""
+        pass
+
+    result = runner.invoke(app, ["--help"])
+
+    assert result.exit_code == 0
+    assert "This is A" in result.stdout
+    assert "This is B" in result.stdout
+    assert "\x1b[" not in result.stdout
