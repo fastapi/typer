@@ -167,7 +167,11 @@ def _make_rich_text(
     if markup_mode == MARKUP_MODE_RICH:
         return highlighter(Text.from_markup(text, style=style))
     else:
-        return highlighter(Text(text, style=style))
+        ANSI_ESCAPE_SEQUENCE = "\x1b["
+        if ANSI_ESCAPE_SEQUENCE in text:
+            return highlighter(Text.from_ansi(text, style=style))
+        else:
+            return highlighter(Text(text, style=style))
 
 
 @group()
