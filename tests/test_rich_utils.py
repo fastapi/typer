@@ -134,7 +134,7 @@ def test_make_rich_text_with_typer_style_in_help():
         b: str = typer.Option(help=f"This is {typer.style('B', underline=True)}"),
     ):
         """Example command with styled help text."""
-        pass
+        pass  # pragma: no cover
 
     result = runner.invoke(app, ["--help"])
 
