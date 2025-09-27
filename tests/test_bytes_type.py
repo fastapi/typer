@@ -89,10 +89,3 @@ def test_bytes_conversion_error():
         )  # pragma: no cover
     except click.BadParameter:
         pass  # Test passes if we get here
-
-
-if __name__ == "__main__":
-    test_bytes_type()
-    test_bytes_option()
-    test_bytes_argument()
-    print("All tests passed!")

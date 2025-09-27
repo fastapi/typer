@@ -144,7 +144,7 @@ def test_bytes_invalid_encoding_name():
 
     @app.command()
     def main(name: bytes = typer.Option(..., encoding="no-such-enc")):
-        typer.echo(repr(name))
+        print(name)
 
     result = runner.invoke(app, ["--name", "x"])
     assert result.exit_code != 0
@@ -158,10 +158,3 @@ def test_bytes_invalid_encoding_name():
     except (ValueError, AttributeError):
         # Fallback to checking combined output for older versions
         assert error_message in (result.output or "")
-
-
-if __name__ == "__main__":
-    test_base64_encode_decode()
-    test_hex_encode_decode()
-    test_complex_bytes_operations()
-    print("All tests passed!")
