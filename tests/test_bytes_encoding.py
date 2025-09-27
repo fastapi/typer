@@ -91,6 +91,66 @@ def test_complex_bytes_operations():
     assert result.stdout.strip() == "CUSTOM:Hello"
 
 
+def test_bytes_default_utf8():
+    app = typer.Typer()
+
+    @app.command()
+    def main(name: bytes):
+        typer.echo(repr(name))
+
+    result = runner.invoke(app, ["héllö"])
+    assert result.exit_code == 0
+    assert result.stdout.strip() == repr("héllö".encode())
+
+
+def test_bytes_custom_encoding_option():
+    app = typer.Typer()
+
+    @app.command()
+    def main(name: bytes = typer.Option(..., encoding="latin-1")):
+        typer.echo(repr(name))
+
+    result = runner.invoke(app, ["--name", "ñ"])
+    assert result.exit_code == 0
+    assert result.stdout.strip() == repr("ñ".encode("latin-1"))
+
+
+def test_bytes_custom_encoding_argument():
+    app = typer.Typer()
+
+    @app.command()
+    def main(name: bytes = typer.Argument(..., encoding="latin-1")):
+        typer.echo(repr(name))
+
+    result = runner.invoke(app, ["ñ"])
+    assert result.exit_code == 0
+    assert result.stdout.strip() == repr("ñ".encode("latin-1"))
+
+
+def test_bytes_errors_replace_ascii():
+    app = typer.Typer()
+
+    @app.command()
+    def main(name: bytes = typer.Option(..., encoding="ascii", errors="replace")):
+        typer.echo(repr(name))
+
+    result = runner.invoke(app, ["--name", "é"])
+    assert result.exit_code == 0
+    assert result.stdout.strip() == repr("é".encode("ascii", "replace"))
+
+
+def test_bytes_invalid_encoding_name():
+    app = typer.Typer()
+
+    @app.command()
+    def main(name: bytes = typer.Option(..., encoding="no-such-enc")):
+        typer.echo(repr(name))
+
+    result = runner.invoke(app, ["--name", "x"])
+    assert result.exit_code != 0
+    assert "Could not encode" in result.stdout
+
+
 if __name__ == "__main__":
     test_base64_encode_decode()
     test_hex_encode_decode()

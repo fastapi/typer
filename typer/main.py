@@ -691,18 +691,36 @@ def get_callback(
 class BytesParamType(click.ParamType):
     name = "bytes"
 
+    def __init__(
+        self, encoding: Optional[str] = None, errors: Optional[str] = None
+    ) -> None:
+        super().__init__()
+        self.encoding = encoding
+        self.errors = errors
+
+    def _to_str(self, value: Any) -> str:
+        if isinstance(value, str):
+            return value
+        return str(value)
+
+    def _encode(self, s: str) -> bytes:
+        enc = self.encoding or "utf-8"
+        errs = self.errors or "strict"
+        return s.encode(enc, errs)
+
     def convert(
         self, value: Any, param: Optional[click.Parameter], ctx: Optional[click.Context]
     ) -> bytes:
         if isinstance(value, bytes):
             return value
         try:
-            if isinstance(value, str):
-                return value.encode()
-            return str(value).encode()
-        except (UnicodeDecodeError, AttributeError):
+            s = self._to_str(value)
+            return self._encode(s)
+        except Exception as e:
             self.fail(
-                f"{value!r} is not a valid string that can be encoded to bytes",
+                f"Could not encode {value!r} to bytes"
+                + (f" with encoding={self.encoding!r}" if self.encoding else "")
+                + f": {e}",
                 param,
                 ctx,
             )
@@ -723,7 +741,9 @@ def get_click_type(
     elif annotation is str:
         return click.STRING
     elif annotation is bytes:
-        return BYTES
+        return BytesParamType(
+            encoding=parameter_info.encoding, errors=parameter_info.errors
+        )
     elif annotation is int:
         if parameter_info.min is not None or parameter_info.max is not None:
             min_ = None

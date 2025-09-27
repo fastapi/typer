@@ -92,5 +92,64 @@ def convert(
         raise typer.Exit(code=1)
 
 
+@app.command()
+def convert_latin1(
+    data: bytes = typer.Argument(
+        ..., help="Data to convert (latin-1)", encoding="latin-1"
+    ),
+    from_format: str = typer.Option(
+        "raw", "--from", "-f", help="Source format: raw, base64, or hex"
+    ),
+    to_format: str = typer.Option(
+        "base64", "--to", "-t", help="Target format: raw, base64, or hex"
+    ),
+):
+    """Convert using latin-1 input decoding for the bytes argument."""
+    # Reuse the same logic as convert()
+    raw_bytes = data
+    if from_format == "base64":
+        try:
+            raw_bytes = base64.b64decode(data)
+        except Exception as e:
+            typer.echo(f"Error decoding base64: {e}", err=True)
+            raise typer.Exit(code=1) from e
+    elif from_format == "hex":
+        try:
+            raw_bytes = binascii.unhexlify(data)
+        except Exception as e:
+            typer.echo(f"Error decoding hex: {e}", err=True)
+            raise typer.Exit(code=1) from e
+    elif from_format != "raw":
+        typer.echo(f"Unknown source format: {from_format}", err=True)
+        raise typer.Exit(code=1)
+
+    if to_format == "raw":
+        typer.echo(f"Raw bytes: {raw_bytes!r}")
+        typer.echo(f"As string: {raw_bytes.decode(errors='replace')}")
+    elif to_format == "base64":
+        encoded = base64.b64encode(raw_bytes).decode()
+        typer.echo(f"Base64 encoded: {encoded}")
+    elif to_format == "hex":
+        encoded = binascii.hexlify(raw_bytes).decode()
+        typer.echo(f"Hex encoded: {encoded}")
+    else:
+        typer.echo(f"Unknown target format: {to_format}", err=True)
+        raise typer.Exit(code=1)
+
+
+@app.command()
+def option_ascii_replace(
+    payload: bytes = typer.Option(
+        ...,
+        "--payload",
+        help="Bytes option encoded with ascii and errors=replace",
+        encoding="ascii",
+        errors="replace",
+    ),
+):
+    """Demonstrate bytes option with ascii encoding and errors=replace."""
+    typer.echo(f"Option bytes: {payload!r}")
+
+
 if __name__ == "__main__":
     app()
