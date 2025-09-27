@@ -148,9 +148,16 @@ def test_bytes_invalid_encoding_name():
 
     result = runner.invoke(app, ["--name", "x"])
     assert result.exit_code != 0
-    # Check both stderr and stdout for the error message
-    error_text = (result.stderr or "") + (result.stdout or "")
-    assert "Could not encode" in error_text
+
+    # Check for the error message in either stderr or combined output
+    # to handle different Click testing behavior across Python versions
+    error_message = "Could not encode"
+    try:
+        # Try stderr first (works in newer versions)
+        assert error_message in result.stderr
+    except (ValueError, AttributeError):
+        # Fallback to checking combined output for older versions
+        assert error_message in (result.output or "")
 
 
 if __name__ == "__main__":
