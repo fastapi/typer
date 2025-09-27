@@ -144,7 +144,7 @@ def test_bytes_invalid_encoding_name():
 
     @app.command()
     def main(name: bytes = typer.Option(..., encoding="no-such-enc")):
-        print(name)
+        print(name)  # pragma: no cover
 
     result = runner.invoke(app, ["--name", "x"])
     assert result.exit_code != 0
