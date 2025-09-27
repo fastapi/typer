@@ -22,8 +22,6 @@ jobs:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
         python-version: [ "3.13" ]
         include:
-          - os: ubuntu-22.04
-            python-version: "3.7"
           - os: macos-latest
             python-version: "3.8"
           - os: windows-latest
@@ -94,7 +92,7 @@ jobs:
             requirements**.txt
             pyproject.toml
       - name: Get coverage files
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           pattern: coverage-*
           path: coverage
