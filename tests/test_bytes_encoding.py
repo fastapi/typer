@@ -148,7 +148,7 @@ def test_bytes_invalid_encoding_name():
 
     result = runner.invoke(app, ["--name", "x"])
     assert result.exit_code != 0
-    assert "Could not encode" in result.stdout
+    assert "Could not encode" in result.stderr
 
 
 if __name__ == "__main__":
