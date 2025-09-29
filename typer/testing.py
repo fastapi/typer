@@ -12,7 +12,7 @@ class CliRunner(ClickCliRunner):
         app: Typer,
         args: Optional[Union[str, Sequence[str]]] = None,
         input: Optional[Union[bytes, str, IO[Any]]] = None,
-        env: Optional[Mapping[str, str]] = None,
+        env: Optional[Mapping[str, Optional[str]]] = None,
         catch_exceptions: bool = True,
         color: bool = False,
         **extra: Any,
