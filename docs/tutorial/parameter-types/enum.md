@@ -111,3 +111,37 @@ Buying groceries: Eggs, Bacon
 ```
 
 </div>
+
+### Literal choices
+
+You can also use `Literal` to represent a set of possible predefined choices, without having to use an `Enum`:
+
+{* docs_src/parameter_types/enum/tutorial004_an.py hl[6] *}
+
+<div class="termy">
+
+```console
+$ python main.py --help
+
+// Notice the predefined values [simple|conv|lstm]
+Usage: main.py [OPTIONS]
+
+Options:
+  --network [simple|conv|lstm]  [default: simple]
+  --help                        Show this message and exit.
+
+// Try it
+$ python main.py --network conv
+
+Training neural network of type: conv
+
+// Invalid value
+$ python main.py --network capsule
+
+Usage: main.py [OPTIONS]
+Try "main.py --help" for help.
+
+Error: Invalid value for '--network': 'capsule' is not one of 'simple', 'conv', 'lstm'.
+```
+
+</div>

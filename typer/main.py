@@ -17,10 +17,11 @@ from uuid import UUID
 import click
 from typer._types import TyperChoice
 
-from ._typing import get_args, get_origin, is_union
+from ._typing import get_args, get_origin, is_literal_type, is_union, literal_values
 from .completion import get_completion_inspect_parameters
 from .core import (
     DEFAULT_MARKUP_MODE,
+    HAS_RICH,
     MarkupMode,
     TyperArgument,
     TyperCommand,
@@ -49,12 +50,6 @@ from .models import (
 )
 from .utils import get_params_from_function
 
-try:
-    import rich
-
-except ImportError:  # pragma: no cover
-    rich = None  # type: ignore
-
 _original_except_hook = sys.excepthook
 _typer_developer_exception_attr_name = "__typer_developer_exception__"
 
@@ -77,7 +72,7 @@ def except_hook(
     click_path = os.path.dirname(click.__file__)
     internal_dir_names = [typer_path, click_path]
     exc = exc_value
-    if rich:
+    if HAS_RICH:
         from . import rich_utils
 
         rich_tb = rich_utils.get_traceback(exc, exception_config, internal_dir_names)
@@ -632,9 +627,9 @@ def generate_enum_convertor(enum: Type[Enum]) -> Callable[[Any], Any]:
 
 def generate_list_convertor(
     convertor: Optional[Callable[[Any], Any]], default_value: Optional[Any]
-) -> Callable[[Sequence[Any]], Optional[List[Any]]]:
-    def internal_convertor(value: Sequence[Any]) -> Optional[List[Any]]:
-        if default_value is None and len(value) == 0:
+) -> Callable[[Optional[Sequence[Any]]], Optional[List[Any]]]:
+    def internal_convertor(value: Optional[Sequence[Any]]) -> Optional[List[Any]]:
+        if (value is None) or (default_value is None and len(value) == 0):
             return None
         return [convertor(v) if convertor else v for v in value]
 
@@ -786,6 +781,11 @@ def get_click_type(
         # Click < 8.2.0.
         return TyperChoice(
             [item.value for item in annotation],
+            case_sensitive=parameter_info.case_sensitive,
+        )
+    elif is_literal_type(annotation):
+        return click.Choice(
+            literal_values(annotation),
             case_sensitive=parameter_info.case_sensitive,
         )
     raise RuntimeError(f"Type not yet supported: {annotation}")  # pragma: no cover
