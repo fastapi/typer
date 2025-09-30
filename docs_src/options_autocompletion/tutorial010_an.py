@@ -1,8 +1,8 @@
 from typing import List
 
+import click
 import typer
-from click.core import Parameter
-from rich.console import Console
+from click.shell_completion import CompletionItem
 from typing_extensions import Annotated
 
 valid_completion_items = [
@@ -11,17 +11,12 @@ valid_completion_items = [
     ("Sebastian", "The type hints guy."),
 ]
 
-err_console = Console(stderr=True)
 
-
-def complete_name(
-    ctx: typer.Context, args: List[str], param: Parameter, incomplete: str
-):
-    err_console.print(f"{args}")
-    names = ctx.params.get(param.name) or []
+def complete_name(ctx: typer.Context, param: click.Parameter, incomplete: str):
+    names = (ctx.params.get(param.name) if param.name else []) or []
     for name, help_text in valid_completion_items:
         if name.startswith(incomplete) and name not in names:
-            yield (name, help_text)
+            yield CompletionItem(name, help=help_text)
 
 
 app = typer.Typer()
@@ -33,9 +28,13 @@ def main(
         List[str],
         typer.Option(help="The name to say hi to.", autocompletion=complete_name),
     ] = ["World"],
+    greeter: Annotated[
+        List[str],
+        typer.Option(help="Who are the greeters?.", autocompletion=complete_name),
+    ] = [],
 ):
     for n in name:
-        print(f"Hello {n}")
+        print(f"Hello {n}, from {' and '.join(greeter)}")
 
 
 if __name__ == "__main__":
