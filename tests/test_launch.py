@@ -8,17 +8,19 @@ url = "http://example.com"
 
 
 @pytest.mark.parametrize(
-    "system, command",
+    "system, sys_platform, command",
     [
-        ("Darwin", "open"),
-        ("Linux", "xdg-open"),
-        ("FreeBSD", "xdg-open"),
+        ("Darwin", "darwin", "open"),
+        ("Linux", "linux", "xdg-open"),
+        ("FreeBSD", "freebsd8", "xdg-open"),
     ],
 )
-def test_launch_url_unix(system: str, command: str):
+def test_launch_url_unix(system: str, sys_platform: str, command: str):
     with patch("platform.system", return_value=system), patch(
-        "shutil.which", return_value=True
-    ), patch("subprocess.Popen") as mock_popen:
+        "sys.platform", sys_platform
+    ), patch("shutil.which", return_value=True), patch(
+        "subprocess.Popen"
+    ) as mock_popen:
         typer.launch(url)
 
     mock_popen.assert_called_once_with(
@@ -27,7 +29,7 @@ def test_launch_url_unix(system: str, command: str):
 
 
 def test_launch_url_windows():
-    with patch("platform.system", return_value="Windows"), patch(
+    with patch("sys.platform", "windows"), patch(
         "webbrowser.open"
     ) as mock_webbrowser_open:
         typer.launch(url)
@@ -36,7 +38,7 @@ def test_launch_url_windows():
 
 
 def test_launch_url_no_xdg_open():
-    with patch("platform.system", return_value="Linux"), patch(
+    with patch("sys.platform", "linux"), patch(
         "shutil.which", return_value=None
     ), patch("webbrowser.open") as mock_webbrowser_open:
         typer.launch(url)
