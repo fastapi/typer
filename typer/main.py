@@ -66,7 +66,8 @@ try:
 
     def is_pydantic_type(type_: Any) -> bool:
         if get_origin(type_) is Annotated:
-            return is_pydantic_type(get_args(type_)[0])
+            # While this is excluded from coverage, we need this check for older versions of Pydantic 2, cf PR 723
+            return is_pydantic_type(get_args(type_)[0])  # pragma: no cover
         return type_.__module__.startswith("pydantic") and not lenient_issubclass(
             type_, pydantic.BaseModel
         )
