@@ -232,7 +232,7 @@ You can create colored strings to output to the terminal with `typer.style()`, t
 
 /// tip
 
-The parameters `fg` and `bg` receive strings with the color names for the "**f**ore**g**round" and "**b**ack**g**round" colors. You could simply pass `fg="green"` and `bg="red"`.
+The parameters `fg` and `bg` receive strings with the color names for the **f**ore**g**round and **b**ack**g**round colors. You could simply pass `fg="green"` and `bg="red"`.
 
 But **Typer** provides them all as variables like `typer.colors.GREEN` just so you can use autocompletion while selecting them.
 
