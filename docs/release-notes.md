@@ -2,6 +2,12 @@
 
 ## Latest Changes
 
+### Internal
+
+* ⬆ Bump ruff from 0.13.1 to 0.13.2. PR [#1357](https://github.com/fastapi/typer/pull/1357) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1358](https://github.com/fastapi/typer/pull/1358) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* 👷 Update docs previews comment, single comment, add failure status. PR [#1359](https://github.com/fastapi/typer/pull/1359) by [@tiangolo](https://github.com/tiangolo).
+
 ## 0.19.2
 
 ### Fixes
