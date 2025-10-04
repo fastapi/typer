@@ -102,6 +102,7 @@ RICH_HELP = _("Try [blue]'{command_path} {help_option}'[/] for help.")
 MARKUP_MODE_MARKDOWN = "markdown"
 MARKUP_MODE_RICH = "rich"
 _RICH_HELP_PANEL_NAME = "rich_help_panel"
+ANSI_PREFIX = "\033["
 
 MarkupMode = Literal["markdown", "rich", None]
 
@@ -127,6 +128,10 @@ class NegativeOptionHighlighter(RegexHighlighter):
 
 highlighter = OptionHighlighter()
 negative_highlighter = NegativeOptionHighlighter()
+
+
+def _has_ansi_character(text: str) -> bool:
+    return ANSI_PREFIX in text
 
 
 def _get_rich_console(stderr: bool = False) -> Console:
@@ -167,8 +172,8 @@ def _make_rich_text(
     if markup_mode == MARKUP_MODE_RICH:
         return highlighter(Text.from_markup(text, style=style))
     else:
-        ANSI_ESCAPE_SEQUENCE = "\x1b["
-        if ANSI_ESCAPE_SEQUENCE in text:
+        # if _ANSI_ESCAPE_SEQUENCE in text:
+        if _has_ansi_character(text):
             return highlighter(Text.from_ansi(text, style=style))
         else:
             return highlighter(Text(text, style=style))
