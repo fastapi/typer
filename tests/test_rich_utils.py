@@ -142,3 +142,49 @@ def test_make_rich_text_with_typer_style_in_help():
     assert "This is A" in result.stdout
     assert "This is B" in result.stdout
     assert "\x1b[" not in result.stdout
+
+
+def test_help_table_alignment_with_styled_text():
+    app = typer.Typer()
+
+    @app.command()
+    def example(
+        a: str = typer.Option(help="This is A"),
+        b: str = typer.Option(help=f"This is {typer.style('B', underline=True)}"),
+        c: str = typer.Option(help="This is C"),
+    ):
+        """Example command with styled help text."""
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["--help"])
+
+    assert result.exit_code == 0
+
+    lines = result.stdout.split("\n")
+
+    option_a_line = None
+    option_b_line = None
+    option_c_line = None
+
+    for line in lines:
+        if "--a" in line and "This is A" in line:
+            option_a_line = line
+        elif "--b" in line and "This is B" in line:
+            option_b_line = line
+        elif "--c" in line and "This is C" in line:
+            option_c_line = line
+
+    assert option_a_line is not None, "Option A line not found"
+    assert option_b_line is not None, "Option B line not found"
+    assert option_c_line is not None, "Option C line not found"
+
+    def find_right_boundary_pos(line):
+        return line.rfind("|")
+
+    pos_a = find_right_boundary_pos(option_a_line)
+    pos_b = find_right_boundary_pos(option_b_line)
+    pos_c = find_right_boundary_pos(option_c_line)
+
+    assert pos_a == pos_b == pos_c, (
+        f"Right boundaries not aligned: A={pos_a}, B={pos_b}, C={pos_c}"
+    )
