@@ -4,7 +4,6 @@ import sys
 from unittest import mock
 
 import typer
-import typer._completion_shared
 import typer.completion
 from typer.testing import CliRunner
 
