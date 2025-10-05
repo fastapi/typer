@@ -5,6 +5,7 @@ from unittest import mock
 
 import typer
 import typer._completion_shared
+import typer.completion
 from typer.testing import CliRunner
 
 from docs_src.commands.index import tutorial001 as mod
@@ -143,7 +144,7 @@ def test_completion_source_pwsh():
 
 def test_completion_show_invalid_shell():
     with mock.patch.object(
-        typer._completion_shared, "_get_shell_name", return_value="xshell"
+        typer.completion, "_get_shell_name", return_value="xshell"
     ):
         result = runner.invoke(app, ["--show-completion"])
     assert "Shell xshell not supported" in result.output
