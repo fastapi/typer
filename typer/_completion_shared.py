@@ -11,6 +11,7 @@ from typer.core import HAS_SHELLINGHAM
 if HAS_SHELLINGHAM:
     import shellingham
 
+
 class Shells(str, Enum):
     bash = "bash"
     zsh = "zsh"
