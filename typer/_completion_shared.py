@@ -8,6 +8,8 @@ from typing import Optional, Tuple, Union
 import click
 from typer.core import HAS_SHELLINGHAM
 
+if HAS_SHELLINGHAM:
+    import shellingham
 
 class Shells(str, Enum):
     bash = "bash"
@@ -244,8 +246,6 @@ def _get_shell_name() -> Union[str, None]:
     """
     name: Union[str, None]  # N.B. shellingham is untyped
     if HAS_SHELLINGHAM:
-        import shellingham
-
         try:
             # N.B. detect_shell returns a tuple of (shell name, shell command).
             # We only need the name.

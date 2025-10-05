@@ -8,6 +8,7 @@ from unittest import mock
 import click
 import pytest
 import typer
+import typer._completion_shared
 import typer.completion
 from typer.core import _split_opt
 from typer.main import solve_typer_info_defaults, solve_typer_info_help
@@ -77,8 +78,6 @@ def test_valid_parser_permutations():
 
 @requires_completion_permission
 def test_install_invalid_shell():
-    import shellingham
-
     app = typer.Typer()
 
     @app.command()
@@ -86,7 +85,7 @@ def test_install_invalid_shell():
         print("Hello World")
 
     with mock.patch.object(
-        shellingham, "detect_shell", return_value=("xshell", "/usr/bin/xshell")
+        typer._completion_shared, "_get_shell_name", return_value="xshell"
     ):
         result = runner.invoke(app, ["--install-completion"])
         assert "Shell xshell is not supported." in result.stdout

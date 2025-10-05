@@ -209,10 +209,12 @@ known-first-party = ["reigns", "towns", "lands", "items", "users"]
 keep-runtime-typing = true
 
 [tool.ruff.lint.flake8-tidy-imports]
-# Import rich_utils and shellingham from within functions (lazy),
-# not at the module level (TID253)
-banned-module-level-imports = ["typer.rich_utils", "shellingham"]
+# Import rich_utils from within functions (lazy), not at the module level (TID253)
+banned-module-level-imports = ["typer.rich_utils"]
 
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
 "rich".msg = "Use 'typer.rich_utils' instead of importing from 'rich' directly."
-"shellingham.detect_shell".msg = "Use 'typer._completion_shared._get_shell_name' instead of using 'shellingham.detect_shell' directly."
+"shellingham.detect_shell".msg = """\
+Use 'typer._completion_shared._get_shell_name' instead of using \
+'shellingham.detect_shell' directly.
+"""

@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 from unittest import mock
 
+import shellingham
 import typer
 from typer.testing import CliRunner
 
@@ -140,8 +141,6 @@ def test_completion_install_fish():
 
 @requires_completion_permission
 def test_completion_install_powershell():
-    import shellingham
-
     completion_path: Path = (
         Path.home() / ".config/powershell/Microsoft.PowerShell_profile.ps1"
     )
