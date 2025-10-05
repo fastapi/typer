@@ -142,8 +142,6 @@ def test_completion_source_pwsh():
 
 
 def test_completion_show_invalid_shell():
-    with mock.patch.object(
-        typer.completion, "_get_shell_name", return_value="xshell"
-    ):
+    with mock.patch.object(typer.completion, "_get_shell_name", return_value="xshell"):
         result = runner.invoke(app, ["--show-completion"])
     assert "Shell xshell not supported" in result.output
