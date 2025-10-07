@@ -17,10 +17,11 @@ from uuid import UUID
 import click
 from typer._types import TyperChoice
 
-from ._typing import get_args, get_origin, is_union
+from ._typing import get_args, get_origin, is_literal_type, is_union, literal_values
 from .completion import get_completion_inspect_parameters
 from .core import (
     DEFAULT_MARKUP_MODE,
+    HAS_RICH,
     MarkupMode,
     TyperArgument,
     TyperCommand,
@@ -49,12 +50,6 @@ from .models import (
 )
 from .utils import get_params_from_function
 
-try:
-    import rich
-
-except ImportError:  # pragma: no cover
-    rich = None  # type: ignore
-
 _original_except_hook = sys.excepthook
 _typer_developer_exception_attr_name = "__typer_developer_exception__"
 
@@ -75,28 +70,19 @@ def except_hook(
         return
     typer_path = os.path.dirname(__file__)
     click_path = os.path.dirname(click.__file__)
-    supress_internal_dir_names = [typer_path, click_path]
+    internal_dir_names = [typer_path, click_path]
     exc = exc_value
-    if rich:
-        from rich.traceback import Traceback
-
+    if HAS_RICH:
         from . import rich_utils
 
-        rich_tb = Traceback.from_exception(
-            type(exc),
-            exc,
-            exc.__traceback__,
-            show_locals=exception_config.pretty_exceptions_show_locals,
-            suppress=supress_internal_dir_names,
-            width=rich_utils.MAX_WIDTH,
-        )
+        rich_tb = rich_utils.get_traceback(exc, exception_config, internal_dir_names)
         console_stderr = rich_utils._get_rich_console(stderr=True)
         console_stderr.print(rich_tb)
         return
     tb_exc = traceback.TracebackException.from_exception(exc)
     stack: List[FrameSummary] = []
     for frame in tb_exc.stack:
-        if any(frame.filename.startswith(path) for path in supress_internal_dir_names):
+        if any(frame.filename.startswith(path) for path in internal_dir_names):
             if not exception_config.pretty_exceptions_short:
                 # Hide the line for internal libraries, Typer and Click
                 stack.append(
@@ -658,9 +644,9 @@ def generate_enum_name_convertor(enum: Type[Enum]) -> Callable[..., Any]:
 
 def generate_list_convertor(
     convertor: Optional[Callable[[Any], Any]], default_value: Optional[Any]
-) -> Callable[[Sequence[Any]], Optional[List[Any]]]:
-    def internal_convertor(value: Sequence[Any]) -> Optional[List[Any]]:
-        if default_value is None and len(value) == 0:
+) -> Callable[[Optional[Sequence[Any]]], Optional[List[Any]]]:
+    def internal_convertor(value: Optional[Sequence[Any]]) -> Optional[List[Any]]:
+        if (value is None) or (default_value is None and len(value) == 0):
             return None
         return [convertor(v) if convertor else v for v in value]
 
@@ -816,6 +802,11 @@ def get_click_type(
         # Passing here the list of enum values (instead of just the enum) accounts for
         # Click < 8.2.0.
         return TyperChoice(choices, case_sensitive=parameter_info.case_sensitive)
+    elif is_literal_type(annotation):
+        return click.Choice(
+            literal_values(annotation),
+            case_sensitive=parameter_info.case_sensitive,
+        )
     raise RuntimeError(f"Type not yet supported: {annotation}")  # pragma: no cover
 
 

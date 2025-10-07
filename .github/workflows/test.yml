@@ -22,8 +22,6 @@ jobs:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
         python-version: [ "3.13" ]
         include:
-          - os: ubuntu-22.04
-            python-version: "3.7"
           - os: macos-latest
             python-version: "3.8"
           - os: windows-latest
@@ -43,7 +41,7 @@ jobs:
         run: echo "$GITHUB_CONTEXT"
       - uses: actions/checkout@v5
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
       - name: Setup uv
@@ -82,7 +80,7 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
       - uses: actions/checkout@v5
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.8'
       - name: Setup uv
@@ -94,7 +92,7 @@ jobs:
             requirements**.txt
             pyproject.toml
       - name: Get coverage files
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           pattern: coverage-*
           path: coverage

@@ -1,18 +1,11 @@
-import enum
-import logging
-
 import typer
-from typing_extensions import Annotated
+from typing_extensions import Annotated, Literal
 
 
-class LogLevel(enum.Enum):
-    debug = logging.DEBUG
-    info = logging.INFO
-    warning = logging.WARNING
-
-
-def main(log_level: Annotated[LogLevel, typer.Option(enum_by_name=True)] = "warning"):
-    typer.echo(f"Log level set to: {logging.getLevelName(log_level.value)}")
+def main(
+    network: Annotated[Literal["simple", "conv", "lstm"], typer.Option()] = "simple",
+):
+    print(f"Training neural network of type: {network}")
 
 
 if __name__ == "__main__":
