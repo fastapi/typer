@@ -80,7 +80,7 @@ Sometimes you want to accept `Enum` names from the command line and convert
 that into `Enum` values in the command handler. You can enable this by setting
 `enum_by_name=True`:
 
-{* docs_src/parameter_types/enum/tutorial004_an.py hl[14] *}
+{* docs_src/parameter_types/enum/tutorial007_an.py hl[14] *}
 
 And then the names of the `Enum` will be used instead of values:
 
