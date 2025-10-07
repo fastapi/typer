@@ -172,7 +172,6 @@ def _make_rich_text(
     if markup_mode == MARKUP_MODE_RICH:
         return highlighter(Text.from_markup(text, style=style))
     else:
-        # if _ANSI_ESCAPE_SEQUENCE in text:
         if _has_ansi_character(text):
             return highlighter(Text.from_ansi(text, style=style))
         else:
