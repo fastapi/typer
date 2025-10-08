@@ -748,8 +748,8 @@ class TyperGroup(click.core.Group):
             Union[Dict[str, click.Command], Sequence[click.Command]]
         ] = None,
         # Rich settings
-        rich_help_panel: Union[str, None] = None,
         rich_markup_mode: MarkupMode = DEFAULT_MARKUP_MODE,
+        rich_help_panel: Union[str, None] = None,
         suggest_commands: bool = False,
         **attrs: Any,
     ) -> None:

@@ -132,10 +132,10 @@ class Typer:
         hidden: bool = Default(False),
         deprecated: bool = Default(False),
         add_completion: bool = True,
-        suggest_commands: bool = False,
         # Rich settings
         rich_markup_mode: MarkupMode = Default(DEFAULT_MARKUP_MODE),
         rich_help_panel: Union[str, None] = Default(None),
+        suggest_commands: bool = False,
         pretty_exceptions_enable: bool = True,
         pretty_exceptions_show_locals: bool = True,
         pretty_exceptions_short: bool = True,
@@ -143,10 +143,10 @@ class Typer:
         self._add_completion = add_completion
         self.rich_markup_mode: MarkupMode = rich_markup_mode
         self.rich_help_panel = rich_help_panel
+        self.suggest_commands = suggest_commands
         self.pretty_exceptions_enable = pretty_exceptions_enable
         self.pretty_exceptions_show_locals = pretty_exceptions_show_locals
         self.pretty_exceptions_short = pretty_exceptions_short
-        self.suggest_commands = suggest_commands
         self.info = TyperInfo(
             name=name,
             cls=cls,
@@ -331,8 +331,8 @@ def get_group(typer_instance: Typer) -> TyperGroup:
     group = get_group_from_info(
         TyperInfo(typer_instance),
         pretty_exceptions_short=typer_instance.pretty_exceptions_short,
-        suggest_commands=typer_instance.suggest_commands,
         rich_markup_mode=typer_instance.rich_markup_mode,
+        suggest_commands=typer_instance.suggest_commands,
     )
     return group
 
@@ -478,8 +478,8 @@ def get_group_from_info(
         sub_group = get_group_from_info(
             sub_group_info,
             pretty_exceptions_short=pretty_exceptions_short,
-            suggest_commands=suggest_commands,
             rich_markup_mode=rich_markup_mode,
+            suggest_commands=suggest_commands,
         )
         if sub_group.name:
             commands[sub_group.name] = sub_group

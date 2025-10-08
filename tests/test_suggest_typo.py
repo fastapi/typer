@@ -60,8 +60,7 @@ def test_typo_suggestion_multiple_matches():
     assert result.exit_code != 0
     assert "No such command" in result.output
     assert "Did you mean" in result.output
-    # Should suggest both create and createnew
-    assert "create" in result.output
+    assert "create" in result.output and "createnew" in result.output
 
 
 def test_typo_suggestion_no_matches():
@@ -79,7 +78,6 @@ def test_typo_suggestion_no_matches():
     result = runner.invoke(app, ["xyz"])
     assert result.exit_code != 0
     assert "No such command" in result.output
-    # No close matches, so no suggestions
     assert "Did you mean" not in result.output
 
 
@@ -137,13 +135,4 @@ def test_typo_suggestion_multiple_similar_commands():
     result = runner.invoke(app, ["sta"])
     assert result.exit_code != 0
     assert "No such command 'sta'" in result.output
-    assert "Did you mean" in result.output
-    # Should suggest multiple matches with quotes around each command
-    # get_close_matches returns up to 3 by default, sorted by similarity
-    assert "'start'" in result.output
-    assert "'status'" in result.output
-    # Check the full format with quotes around each suggestion
-    assert (
-        "Did you mean 'start', 'status'?" in result.output
-        or "Did you mean 'status', 'start'?" in result.output
-    )
+    assert "Did you mean 'start', 'status'?" in result.output
