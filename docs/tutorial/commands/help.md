@@ -470,9 +470,6 @@ $ python main.py --help
 
 You can see the custom panel for the commands for "`Utils and Configs`".
 
-
-
-
 ## Epilog
 
 If you need, you can also add an epilog section to the help of your commands:
