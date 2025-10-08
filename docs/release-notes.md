@@ -4,6 +4,7 @@
 
 ### Internal
 
+* ⬆ Bump astral-sh/setup-uv from 6 to 7. PR [#1369](https://github.com/fastapi/typer/pull/1369) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ruff from 0.13.2 to 0.13.3. PR [#1366](https://github.com/fastapi/typer/pull/1366) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1367](https://github.com/fastapi/typer/pull/1367) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * ⬆ Bump tiangolo/issue-manager from 0.5.1 to 0.6.0. PR [#1361](https://github.com/fastapi/typer/pull/1361) by [@dependabot[bot]](https://github.com/apps/dependabot).
