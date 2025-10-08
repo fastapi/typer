@@ -138,6 +138,7 @@ class Typer:
         pretty_exceptions_enable: bool = True,
         pretty_exceptions_show_locals: bool = True,
         pretty_exceptions_short: bool = True,
+        pretty_exceptions_suggest_on_error: bool = False,
     ):
         self._add_completion = add_completion
         self.rich_markup_mode: MarkupMode = rich_markup_mode
@@ -145,6 +146,7 @@ class Typer:
         self.pretty_exceptions_enable = pretty_exceptions_enable
         self.pretty_exceptions_show_locals = pretty_exceptions_show_locals
         self.pretty_exceptions_short = pretty_exceptions_short
+        self.pretty_exceptions_suggest_on_error = pretty_exceptions_suggest_on_error
         self.info = TyperInfo(
             name=name,
             cls=cls,
@@ -329,6 +331,7 @@ def get_group(typer_instance: Typer) -> TyperGroup:
     group = get_group_from_info(
         TyperInfo(typer_instance),
         pretty_exceptions_short=typer_instance.pretty_exceptions_short,
+        pretty_exceptions_suggest_on_error=typer_instance.pretty_exceptions_suggest_on_error,
         rich_markup_mode=typer_instance.rich_markup_mode,
     )
     return group
@@ -456,6 +459,7 @@ def get_group_from_info(
     group_info: TyperInfo,
     *,
     pretty_exceptions_short: bool,
+    pretty_exceptions_suggest_on_error: bool,
     rich_markup_mode: MarkupMode,
 ) -> TyperGroup:
     assert group_info.typer_instance, (
@@ -474,6 +478,7 @@ def get_group_from_info(
         sub_group = get_group_from_info(
             sub_group_info,
             pretty_exceptions_short=pretty_exceptions_short,
+            pretty_exceptions_suggest_on_error=pretty_exceptions_suggest_on_error,
             rich_markup_mode=rich_markup_mode,
         )
         if sub_group.name:
@@ -523,6 +528,7 @@ def get_group_from_info(
         rich_markup_mode=rich_markup_mode,
         # Rich settings
         rich_help_panel=solved_info.rich_help_panel,
+        pretty_exceptions_suggest_on_error=pretty_exceptions_suggest_on_error,
     )
     return group
 

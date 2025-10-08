@@ -196,6 +196,30 @@ $ python main.py
 
 </div>
 
+## Enable Command Typo Suggestions
+
+When users mistype a command name, Typer can suggest the correct command. This feature is **disabled by default**, but you can enable it with the parameter `pretty_exceptions_suggest_on_error=True`:
+
+{* docs_src/exceptions/tutorial005.py hl[3] *}
+
+Now if a user mistypes a command, they'll see a helpful suggestion:
+
+<div class="termy">
+
+```console
+$ python main.py crate
+
+Usage: main.py [OPTIONS] COMMAND [ARGS]...
+Try 'main.py --help' for help.
+╭─ Error ──────────────────────────────────────────────────────────────────────╮
+│ No such command 'crate'. Did you mean 'create'?                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+```
+
+</div>
+
+If there are multiple close matches, Typer will suggest them. This feature uses Python's built-in `difflib.get_close_matches()` to find similar command names, making your CLI more user-friendly by helping users recover from typos.
+
 ## Disable Pretty Exceptions
 
 You can also entirely disable pretty exceptions with the parameter `pretty_exceptions_enable=False`:
