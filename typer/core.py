@@ -748,15 +748,15 @@ class TyperGroup(click.core.Group):
             Union[Dict[str, click.Command], Sequence[click.Command]]
         ] = None,
         # Rich settings
-        rich_markup_mode: MarkupMode = DEFAULT_MARKUP_MODE,
         rich_help_panel: Union[str, None] = None,
-        pretty_exceptions_suggest_on_error: bool = False,
+        rich_markup_mode: MarkupMode = DEFAULT_MARKUP_MODE,
+        suggest_commands: bool = False,
         **attrs: Any,
     ) -> None:
         super().__init__(name=name, commands=commands, **attrs)
-        self.rich_markup_mode: MarkupMode = rich_markup_mode
         self.rich_help_panel = rich_help_panel
-        self.pretty_exceptions_suggest_on_error = pretty_exceptions_suggest_on_error
+        self.rich_markup_mode: MarkupMode = rich_markup_mode
+        self.suggest_commands = suggest_commands
 
     def format_options(
         self, ctx: click.Context, formatter: click.HelpFormatter
@@ -780,7 +780,7 @@ class TyperGroup(click.core.Group):
         try:
             return super().resolve_command(ctx, args)
         except click.UsageError as e:
-            if self.pretty_exceptions_suggest_on_error:
+            if self.suggest_commands:
                 available_commands = list(self.commands.keys())
                 if available_commands and args:
                     typo = args[0]

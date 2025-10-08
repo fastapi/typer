@@ -1,6 +1,6 @@
 import typer
 
-app = typer.Typer(pretty_exceptions_suggest_on_error=True)
+app = typer.Typer(suggest_commands=True)
 
 
 @app.command()

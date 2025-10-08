@@ -198,7 +198,7 @@ $ python main.py
 
 ## Enable Command Typo Suggestions
 
-When users mistype a command name, Typer can suggest the correct command. This feature is **disabled by default**, but you can enable it with the parameter `pretty_exceptions_suggest_on_error=True`:
+When users mistype a command name, Typer can suggest the correct command. This feature is **disabled by default**, but you can enable it with the parameter `suggest_commands=True`:
 
 {* docs_src/exceptions/tutorial005.py hl[3] *}
 

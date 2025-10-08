@@ -24,7 +24,7 @@ def test_typo_suggestion_disabled_by_default():
 
 def test_typo_suggestion_enabled():
     """Test that typo suggestions work when enabled"""
-    app = typer.Typer(pretty_exceptions_suggest_on_error=True)
+    app = typer.Typer(suggest_commands=True)
 
     @app.command()
     def create():
@@ -42,7 +42,7 @@ def test_typo_suggestion_enabled():
 
 def test_typo_suggestion_multiple_matches():
     """Test that multiple suggestions are shown when there are multiple close matches"""
-    app = typer.Typer(pretty_exceptions_suggest_on_error=True)
+    app = typer.Typer(suggest_commands=True)
 
     @app.command()
     def create():
@@ -66,7 +66,7 @@ def test_typo_suggestion_multiple_matches():
 
 def test_typo_suggestion_no_matches():
     """Test that no suggestions are shown when there are no close matches"""
-    app = typer.Typer(pretty_exceptions_suggest_on_error=True)
+    app = typer.Typer(suggest_commands=True)
 
     @app.command()
     def create():
@@ -85,7 +85,7 @@ def test_typo_suggestion_no_matches():
 
 def test_typo_suggestion_exact_match_works():
     """Test that exact matches still work normally"""
-    app = typer.Typer(pretty_exceptions_suggest_on_error=True)
+    app = typer.Typer(suggest_commands=True)
 
     @app.command()
     def create():
@@ -102,7 +102,7 @@ def test_typo_suggestion_exact_match_works():
 
 def test_typo_suggestion_disabled_explicitly():
     """Test that typo suggestions can be explicitly disabled"""
-    app = typer.Typer(pretty_exceptions_suggest_on_error=False)
+    app = typer.Typer(suggest_commands=False)
 
     @app.command()
     def create():
@@ -120,7 +120,7 @@ def test_typo_suggestion_disabled_explicitly():
 
 def test_typo_suggestion_multiple_similar_commands():
     """Test that multiple similar commands are suggested with quotes around each"""
-    app = typer.Typer(pretty_exceptions_suggest_on_error=True)
+    app = typer.Typer(suggest_commands=True)
 
     @app.command()
     def start():
