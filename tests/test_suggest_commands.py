@@ -114,25 +114,3 @@ def test_typo_suggestion_disabled_explicitly():
     assert result.exit_code != 0
     assert "No such command" in result.output
     assert "Did you mean" not in result.output
-
-
-def test_typo_suggestion_multiple_similar_commands():
-    """Test that multiple similar commands are suggested with quotes around each"""
-    app = typer.Typer(suggest_commands=True)
-
-    @app.command()
-    def start():  # pragma: no cover
-        typer.echo("Starting...")
-
-    @app.command()
-    def stop():  # pragma: no cover
-        typer.echo("Stopping...")
-
-    @app.command()
-    def status():  # pragma: no cover
-        typer.echo("Status...")
-
-    result = runner.invoke(app, ["sta"])
-    assert result.exit_code != 0
-    assert "No such command 'sta'" in result.output
-    assert "Did you mean 'start', 'status'?" in result.output

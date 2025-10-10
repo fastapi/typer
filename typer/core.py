@@ -754,8 +754,8 @@ class TyperGroup(click.core.Group):
         **attrs: Any,
     ) -> None:
         super().__init__(name=name, commands=commands, **attrs)
-        self.rich_help_panel = rich_help_panel
         self.rich_markup_mode: MarkupMode = rich_markup_mode
+        self.rich_help_panel = rich_help_panel
         self.suggest_commands = suggest_commands
 
     def format_options(
