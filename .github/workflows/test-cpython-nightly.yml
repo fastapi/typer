@@ -1,9 +1,6 @@
-name: Test CPython Main
+name: Test CPython Nightly
 
 on:
-  push:
-    branches:
-      - master
   schedule:
     - cron: "0 0 * * *"
   workflow_dispatch:
@@ -27,14 +24,14 @@ jobs:
           cd cpython
           ./configure --with-pydebug
           make -j4
-      # - name: Setup uv
-      #   uses: astral-sh/setup-uv@v7
-      #   with:
-      #     version: "0.4.15"
-      #     enable-cache: true
-      #     cache-dependency-glob: |
-      #       requirements**.txt
-      #       pyproject.toml
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.4.15"
+          enable-cache: true
+          cache-dependency-glob: |
+            requirements**.txt
+            pyproject.toml
       - name: Install Dependencies
         run: ./cpython/python -m uv pip install --system -r requirements-tests.txt
       - name: Lint
