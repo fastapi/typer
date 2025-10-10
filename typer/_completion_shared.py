@@ -123,12 +123,22 @@ def install_bash(*, prog_name: str, complete_var: str, shell: str) -> Path:
 
 def install_zsh(*, prog_name: str, complete_var: str, shell: str) -> Path:
     # Setup Zsh and load ~/.zfunc
-    zshrc_path = Path.home() / ".zshrc"
-    zshrc_path.parent.mkdir(parents=True, exist_ok=True)
+    zdotdir = os.getenv("ZDOTDIR")
+    zdotdir_path = Path(zdotdir).expanduser() if zdotdir else Path.home()
+    zshrc_path = zdotdir_path / ".zshrc"
+    zfunc_path = zdotdir_path / ".zfunc"
+    zfunc_path.mkdir(parents=True, exist_ok=True)
+
+    # If zfunc_path is in home, replace it with ~ for the fpath line
+    if zfunc_path.is_relative_to(Path.home()):
+        fpath = zfunc_path.as_posix().replace(Path.home().as_posix(), "~")
+    else:
+        fpath = zfunc_path.as_posix()
+
     zshrc_content = ""
     if zshrc_path.is_file():
         zshrc_content = zshrc_path.read_text()
-    completion_line = "fpath+=~/.zfunc; autoload -Uz compinit; compinit"
+    completion_line = f"fpath+={fpath}; autoload -Uz compinit; compinit"
     if completion_line not in zshrc_content:
         zshrc_content += f"\n{completion_line}\n"
     style_line = "zstyle ':completion:*' menu select"
@@ -140,8 +150,7 @@ def install_zsh(*, prog_name: str, complete_var: str, shell: str) -> Path:
     zshrc_content = f"{zshrc_content.strip()}\n"
     zshrc_path.write_text(zshrc_content)
     # Install completion under ~/.zfunc/
-    path_obj = Path.home() / f".zfunc/_{prog_name}"
-    path_obj.parent.mkdir(parents=True, exist_ok=True)
+    path_obj = zfunc_path / f"_{prog_name}"
     script_content = get_completion_script(
         prog_name=prog_name, complete_var=complete_var, shell=shell
     )
