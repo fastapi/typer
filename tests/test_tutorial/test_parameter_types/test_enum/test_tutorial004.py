@@ -4,7 +4,7 @@ import sys
 import typer
 from typer.testing import CliRunner
 
-from docs_src.parameter_types.enum import tutorial001 as mod
+from docs_src.parameter_types.enum import tutorial004 as mod
 
 runner = CliRunner()
 
@@ -15,9 +15,7 @@ app.command()(mod.main)
 def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "--network" in result.output
-    assert "[simple|conv|lstm]" in result.output
-    assert "default: simple" in result.output
+    assert "--network [simple|conv|lstm]" in result.output.replace("  ", "")
 
 
 def test_main():
@@ -26,27 +24,14 @@ def test_main():
     assert "Training neural network of type: conv" in result.output
 
 
-def test_main_default():
-    result = runner.invoke(app)
-    assert result.exit_code == 0
-    assert "Training neural network of type: simple" in result.output
-
-
-def test_invalid_case():
-    result = runner.invoke(app, ["--network", "CONV"])
-    assert result.exit_code != 0
-    assert "Invalid value for '--network'" in result.output
-    assert "'CONV' is not one of" in result.output
-    assert "simple" in result.output
-    assert "conv" in result.output
-    assert "lstm" in result.output
-
-
-def test_invalid_other():
+def test_invalid():
     result = runner.invoke(app, ["--network", "capsule"])
     assert result.exit_code != 0
     assert "Invalid value for '--network'" in result.output
-    assert "'capsule' is not one of" in result.output
+    assert (
+        "invalid choice: capsule. (choose from" in result.output
+        or "'capsule' is not one of" in result.output
+    )
     assert "simple" in result.output
     assert "conv" in result.output
     assert "lstm" in result.output

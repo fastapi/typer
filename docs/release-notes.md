@@ -4,6 +4,197 @@
 
 ### Internal
 
+* ⬆ Bump mkdocs-macros-plugin from 1.3.9 to 1.4.0. PR [#1354](https://github.com/fastapi/typer/pull/1354) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mkdocs-material from 9.6.20 to 9.6.21. PR [#1360](https://github.com/fastapi/typer/pull/1360) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mypy from 1.4.1 to 1.11.2. PR [#957](https://github.com/fastapi/typer/pull/957) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump astral-sh/setup-uv from 6 to 7. PR [#1369](https://github.com/fastapi/typer/pull/1369) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.13.2 to 0.13.3. PR [#1366](https://github.com/fastapi/typer/pull/1366) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1367](https://github.com/fastapi/typer/pull/1367) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump tiangolo/issue-manager from 0.5.1 to 0.6.0. PR [#1361](https://github.com/fastapi/typer/pull/1361) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.13.1 to 0.13.2. PR [#1357](https://github.com/fastapi/typer/pull/1357) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1358](https://github.com/fastapi/typer/pull/1358) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* 👷 Update docs previews comment, single comment, add failure status. PR [#1359](https://github.com/fastapi/typer/pull/1359) by [@tiangolo](https://github.com/tiangolo).
+
+## 0.19.2
+
+### Fixes
+
+* 🐛  Fix list convertor with an empty list default factory . PR [#1350](https://github.com/fastapi/typer/pull/1350) by [@svlandeg](https://github.com/svlandeg).
+
+### Refactors
+
+* 🔥 Drop support for Python 3.7. PR [#830](https://github.com/fastapi/typer/pull/830) by [@kinuax](https://github.com/kinuax).
+
+### Internal
+
+* ⬆ Bump ruff from 0.13.0 to 0.13.1. PR [#1339](https://github.com/fastapi/typer/pull/1339) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1351](https://github.com/fastapi/typer/pull/1351) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump markdown-include-variants from 0.0.4 to 0.0.5. PR [#1348](https://github.com/fastapi/typer/pull/1348) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
+## 0.19.1
+
+**Note**: this is the last version to support Python 3.7, going forward Typer will require Python 3.8+. And soon Python 3.8 will also be dropped as [Python 3.8 reached it's end of life](https://devguide.python.org/versions/) almost a year ago.
+
+### Fixes
+
+* 🐛 Ensure that `Optional[list]` values work correctly with callbacks. PR [#1018](https://github.com/fastapi/typer/pull/1018) by [@solesensei](https://github.com/solesensei).
+
+## 0.19.0
+
+### Features
+
+* ✨ Support `typing.Literal` to define a set of predefined choices. PR [#429](https://github.com/fastapi/typer/pull/429) by [@blackary](https://github.com/blackary).
+* ✨ Allow setting an environment variable to `None` in `CliRunner.invoke`. PR [#1303](https://github.com/fastapi/typer/pull/1303) by [@arjenzorgdoc](https://github.com/arjenzorgdoc).
+
+### Refactors
+
+* ✅ Use Ruff rules to ensure safe lazy-loading of `rich`. PR [#1297](https://github.com/fastapi/typer/pull/1297) by [@nathanjmcdougall](https://github.com/nathanjmcdougall).
+* ✅ Avoid rich formatting in number test. PR [#1305](https://github.com/fastapi/typer/pull/1305) by [@svlandeg](https://github.com/svlandeg).
+
+### Docs
+
+* 📝 Clarify single-command vs multi-command behaviour in README. PR [#1268](https://github.com/fastapi/typer/pull/1268) by [@MorgenPronk](https://github.com/MorgenPronk).
+
+## 0.18.0
+
+### Fixes
+
+* 👽️ Ensure compatibility with Click 8.3.0 by restoring the original `value_is_missing` function. PR [#1333](https://github.com/fastapi/typer/pull/1333) by [@svlandeg](https://github.com/svlandeg).
+
+### Upgrades
+
+* 📌 Remove pin for Click < 8.3.0 now that there's a fix for the changes. PR [#1346](https://github.com/fastapi/typer/pull/1346) by [@tiangolo](https://github.com/tiangolo).
+
+## 0.17.5
+
+### Fixes
+
+* ⬇️ Restrict Click to below 8.3.0 to handle changes in the new version. PR [#1336](https://github.com/fastapi/typer/pull/1336) by [@svlandeg](https://github.com/svlandeg).
+
+### Internal
+
+* ⬆ Bump mkdocs-material from 9.6.14 to 9.6.20. PR [#1308](https://github.com/fastapi/typer/pull/1308) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mkdocs-material from 9.5.50 to 9.6.14. PR [#1223](https://github.com/fastapi/typer/pull/1223) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump actions/download-artifact from 4 to 5. PR [#1269](https://github.com/fastapi/typer/pull/1269) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.12.12 to 0.13.0. PR [#1302](https://github.com/fastapi/typer/pull/1302) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1307](https://github.com/fastapi/typer/pull/1307) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Update pytest-cov requirement from <7.0.0,>=2.10.0 to >=2.10.0,<8.0.0. PR [#1301](https://github.com/fastapi/typer/pull/1301) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump actions/setup-python from 5 to 6. PR [#1291](https://github.com/fastapi/typer/pull/1291) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.12.11 to 0.12.12. PR [#1295](https://github.com/fastapi/typer/pull/1295) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1300](https://github.com/fastapi/typer/pull/1300) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump actions/labeler from 5 to 6. PR [#1296](https://github.com/fastapi/typer/pull/1296) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
+## 0.17.4
+
+### Fixes
+
+* 🐛 Make sure `rich.markup` is imported when rendering help text. PR [#1290](https://github.com/fastapi/typer/pull/1290) by [@g-arjones](https://github.com/g-arjones).
+
+### Internal
+
+* ⬆ Bump pypa/gh-action-pypi-publish from 1.12.4 to 1.13.0. PR [#1292](https://github.com/fastapi/typer/pull/1292) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.12.10 to 0.12.11. PR [#1283](https://github.com/fastapi/typer/pull/1283) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1288](https://github.com/fastapi/typer/pull/1288) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* 👷 Set permissions for conflict detector workflow. PR [#1287](https://github.com/fastapi/typer/pull/1287) by [@svlandeg](https://github.com/svlandeg).
+* 👷 Detect and label merge conflicts on PRs automatically. PR [#1286](https://github.com/fastapi/typer/pull/1286) by [@svlandeg](https://github.com/svlandeg).
+
+## 0.17.3
+
+### Features
+
+* ✨ Allow annotated parsing with a subclass of `Path`. PR [#1183](https://github.com/fastapi/typer/pull/1183) by [@emfdavid](https://github.com/emfdavid).
+
+## 0.17.2
+
+### Fixes
+
+* 🐛 Avoid printing `default: None` in the help section when using Rich. PR [#1120](https://github.com/fastapi/typer/pull/1120) by [@mattmess1221](https://github.com/mattmess1221).
+
+## 0.17.1
+
+### Fixes
+
+* 🐛 Fix markdown formatting in `--help` output. PR [#815](https://github.com/fastapi/typer/pull/815) by [@gar1t](https://github.com/gar1t).
+
+## 0.17.0
+
+### Features
+
+* ⚡️ Lazy-load `rich_utils` to reduce startup time. PR [#1128](https://github.com/fastapi/typer/pull/1128) by [@oefe](https://github.com/oefe).
+
+### Internal
+
+* ⬆ Bump ruff from 0.12.9 to 0.12.10. PR [#1280](https://github.com/fastapi/typer/pull/1280) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1281](https://github.com/fastapi/typer/pull/1281) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Update pytest-sugar requirement from <1.1.0,>=0.9.4 to >=0.9.4,<1.2.0. PR [#1279](https://github.com/fastapi/typer/pull/1279) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
+## 0.16.1
+
+### Fixes
+
+* 🐛 Avoid printing additional output with `no_args_is_help=True` and Click 8.2. PR [#1278](https://github.com/fastapi/typer/pull/1278) by [@svlandeg](https://github.com/svlandeg).
+
+### Docs
+
+* 📝 Remove duplicated line in `environment-variables.md`. PR [#1277](https://github.com/fastapi/typer/pull/1277) by [@neirzhei](https://github.com/neirzhei).
+* 📝 Fix reference to `count` parameter in the documentation. PR [#1201](https://github.com/fastapi/typer/pull/1201) by [@PokkaKiyo](https://github.com/PokkaKiyo).
+
+### Internal
+
+* ⬆ Bump ruff from 0.11.13 to 0.12.9. PR [#1276](https://github.com/fastapi/typer/pull/1276) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1247](https://github.com/fastapi/typer/pull/1247) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump actions/checkout from 4 to 5. PR [#1271](https://github.com/fastapi/typer/pull/1271) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mkdocs-macros-plugin from 1.3.7 to 1.3.9. PR [#1272](https://github.com/fastapi/typer/pull/1272) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump tiangolo/latest-changes from 0.3.2 to 0.4.0. PR [#1265](https://github.com/fastapi/typer/pull/1265) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pillow from 11.2.1 to 11.3.0. PR [#1249](https://github.com/fastapi/typer/pull/1249) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1206](https://github.com/fastapi/typer/pull/1206) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump pillow from 11.1.0 to 11.2.1. PR [#1198](https://github.com/fastapi/typer/pull/1198) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump cairosvg from 2.7.1 to 2.8.2. PR [#1226](https://github.com/fastapi/typer/pull/1226) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.11.6 to 0.11.13. PR [#1241](https://github.com/fastapi/typer/pull/1241) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
+## 0.16.0
+
+### Upgrades
+
+* ⬆️ Add compatibility with Click 8.2. PR [#1222](https://github.com/fastapi/typer/pull/1222) by [@tiangolo](https://github.com/tiangolo).
+
+When using the `CliRunner` with Click < 8.2, to be able to access the `stderr` output, you needed to set the `mix_stderr` parameter to `True`. Since Click 8.2 (and Typer 0.160 this release supporting it) this is no longer necessary, so this parameter has been removed.
+
+### Refactors
+
+* ✅ Refactor tests for compatibility with Click 8.2. PR [#1230](https://github.com/fastapi/typer/pull/1230) by [@tiangolo](https://github.com/tiangolo).
+
+### Internal
+
+* 🔧 Remove Google Analytics. PR [#1229](https://github.com/fastapi/typer/pull/1229) by [@tiangolo](https://github.com/tiangolo).
+
+## 0.15.4
+
+### Upgrades
+
+* 📌 Pin Click to < 8.2, compatibility for Click >= 8.2 will be added in a future version. PR [#1225](https://github.com/fastapi/typer/pull/1225) by [@tiangolo](https://github.com/tiangolo).
+
+## 0.15.3
+
+### Fixes
+
+* 🐛 Ensure that autocompletion works for `Path` arguments/options. PR [#1138](https://github.com/fastapi/typer/pull/1138) by [@svlandeg](https://github.com/svlandeg).
+* 🐛 Fix newline after header in help text, and add more tests for the behaviour of `rich_markup_mode` . PR [#964](https://github.com/fastapi/typer/pull/964) by [@svlandeg](https://github.com/svlandeg).
+
+### Internal
+
+* ⬆ Bump astral-sh/setup-uv from 5 to 6. PR [#1203](https://github.com/fastapi/typer/pull/1203) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.11.2 to 0.11.6. PR [#1200](https://github.com/fastapi/typer/pull/1200) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1196](https://github.com/fastapi/typer/pull/1196) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump ruff from 0.11.1 to 0.11.2. PR [#1186](https://github.com/fastapi/typer/pull/1186) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1187](https://github.com/fastapi/typer/pull/1187) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump ruff from 0.11.0 to 0.11.1. PR [#1185](https://github.com/fastapi/typer/pull/1185) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.9.10 to 0.11.0. PR [#1180](https://github.com/fastapi/typer/pull/1180) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1181](https://github.com/fastapi/typer/pull/1181) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1176](https://github.com/fastapi/typer/pull/1176) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump ruff from 0.9.9 to 0.9.10. PR [#1175](https://github.com/fastapi/typer/pull/1175) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1171](https://github.com/fastapi/typer/pull/1171) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump ruff from 0.9.7 to 0.9.9. PR [#1166](https://github.com/fastapi/typer/pull/1166) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ✏️ Fix typo in test name. PR [#1165](https://github.com/fastapi/typer/pull/1165) by [@svlandeg](https://github.com/svlandeg).
 
 ## 0.15.2

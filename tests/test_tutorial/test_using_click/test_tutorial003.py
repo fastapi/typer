@@ -10,7 +10,7 @@ runner = CliRunner()
 
 def test_cli():
     result = runner.invoke(mod.typer_click_object, [])
-    assert "Missing command" in result.stdout
+    assert "Missing command" in result.output
 
 
 def test_help():
