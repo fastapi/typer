@@ -25,8 +25,7 @@ jobs:
       - name: Build CPython
         run: |
           cd cpython
-          ./configure --with-pydebug
-          make -j4
+          ./configure && make -j $(nproc)
       - name: Setup uv
         uses: astral-sh/setup-uv@v7
         with:
@@ -40,11 +39,17 @@ jobs:
       - name: Install Dependencies
         run: uv pip install -r requirements-tests.txt
       - name: Lint
-        run: uv run bash scripts/lint.sh
+        run: |
+          source .venv/bin/activate
+          bash scripts/lint.sh
       - run: mkdir coverage
-      - run: uv run bash ./scripts/test-files.sh
+      - run: |
+          source .venv/bin/activate
+          bash ./scripts/test-files.sh
       - name: Test
-        run: uv run bash scripts/test.sh
+        run: |
+          source .venv/bin/activate
+          bash scripts/test.sh
         env:
           COVERAGE_FILE: coverage/.coverage.ubuntu-cpython-main
           CONTEXT: ubuntu-cpython-main
