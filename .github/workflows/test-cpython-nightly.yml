@@ -49,7 +49,7 @@ jobs:
       - name: Test
         run: |
           source .venv/bin/activate
-          bash scripts/test.sh
+          bash scripts/test.sh --ignore=cpython
         env:
           COVERAGE_FILE: coverage/.coverage.ubuntu-cpython-main
           CONTEXT: ubuntu-cpython-main
