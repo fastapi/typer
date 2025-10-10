@@ -5,7 +5,7 @@ pytest-cov >=2.10.0,<8.0.0
 coverage[toml] >=6.2,<8.0
 pytest-xdist >=1.32.0,<4.0.0
 pytest-sugar >=0.9.4,<1.2.0
-mypy ==1.4.1
+mypy ==1.11.2
 ruff ==0.13.3
 # Needed explicitly by typer-slim
 rich >=10.11.0
