@@ -198,7 +198,7 @@ Try 'main.py --help' for help.
 
 </div>
 
-If there are multiple close matches, Typer will suggest them. This feature uses Python's built-in `difflib.get_close_matches()` to find similar command names, making your CLI more user-friendly by helping users recover from typos.
+If there are multiple close matches, Typer will suggest them all. This feature uses Python's built-in `difflib.get_close_matches()` to find similar command names, making your CLI more user-friendly by helping users recover from typos.
 
 ## Rich Markdown and Markup
 
