@@ -4,6 +4,7 @@
 
 ### Internal
 
+* ⬆ Bump mkdocs-macros-plugin from 1.3.9 to 1.4.0. PR [#1354](https://github.com/fastapi/typer/pull/1354) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump mkdocs-material from 9.6.20 to 9.6.21. PR [#1360](https://github.com/fastapi/typer/pull/1360) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump mypy from 1.4.1 to 1.11.2. PR [#957](https://github.com/fastapi/typer/pull/957) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump astral-sh/setup-uv from 6 to 7. PR [#1369](https://github.com/fastapi/typer/pull/1369) by [@dependabot[bot]](https://github.com/apps/dependabot).
