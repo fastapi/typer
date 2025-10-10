@@ -36,7 +36,7 @@ jobs:
             requirements**.txt
             pyproject.toml
       - name: Install Dependencies
-        run: uv pip install --python ./cpython/python --system -r requirements-tests.txt
+        run: uv pip install --python ./cpython/python -r requirements-tests.txt -v
       - name: Lint
         run: bash scripts/lint.sh
       - run: mkdir coverage
