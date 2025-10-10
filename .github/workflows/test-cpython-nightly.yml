@@ -8,6 +8,9 @@ on:
     - cron: "0 0 * * *"
   workflow_dispatch:
 
+env:
+  UV_SYSTEM_PYTHON: 1
+
 jobs:
   test-latest-python:
     runs-on: ubuntu-latest
@@ -36,7 +39,7 @@ jobs:
             requirements**.txt
             pyproject.toml
       - name: Install Dependencies
-        run: uv pip install --python ./cpython/python -r requirements-tests.txt -v
+        run: uv pip install --python ./cpython/python -r requirements-tests.txt
       - name: Lint
         run: bash scripts/lint.sh
       - run: mkdir coverage
