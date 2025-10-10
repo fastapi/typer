@@ -40,11 +40,11 @@ jobs:
       - name: Install Dependencies
         run: uv pip install -r requirements-tests.txt
       - name: Lint
-        run: bash scripts/lint.sh
+        run: uv run bash scripts/lint.sh
       - run: mkdir coverage
-      - run: bash ./scripts/test-files.sh
+      - run: uv run bash ./scripts/test-files.sh
       - name: Test
-        run: bash scripts/test.sh
+        run: uv run bash scripts/test.sh
         env:
           COVERAGE_FILE: coverage/.coverage.ubuntu-cpython-main
           CONTEXT: ubuntu-cpython-main
