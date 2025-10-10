@@ -27,16 +27,16 @@ jobs:
           cd cpython
           ./configure --with-pydebug
           make -j4
-      - name: Setup uv
-        uses: astral-sh/setup-uv@v7
-        with:
-          version: "0.4.15"
-          enable-cache: true
-          cache-dependency-glob: |
-            requirements**.txt
-            pyproject.toml
+      # - name: Setup uv
+      #   uses: astral-sh/setup-uv@v7
+      #   with:
+      #     version: "0.4.15"
+      #     enable-cache: true
+      #     cache-dependency-glob: |
+      #       requirements**.txt
+      #       pyproject.toml
       - name: Install Dependencies
-        run: ./cpython/python -m pip install uv && ./cpython/python -m uv pip install --system -r requirements-tests.txt
+        run: ./cpython/python -m uv pip install --system -r requirements-tests.txt
       - name: Lint
         run: bash scripts/lint.sh
       - run: mkdir coverage
