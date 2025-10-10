@@ -24,11 +24,6 @@ except ImportError:  # pragma: no cover
         split_arg_string as click_split_arg_string,
     )
 
-try:
-    import shellingham
-except ImportError:  # pragma: no cover
-    shellingham = None
-
 
 def _sanitize_help_text(text: str) -> str:
     """Sanitizes the help text by removing rich tags"""
