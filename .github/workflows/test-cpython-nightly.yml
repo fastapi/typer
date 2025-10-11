@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - run-ci-on-cpython-main
+      - main
 
 jobs:
   test-latest-python:
@@ -19,12 +19,12 @@ jobs:
         with:
           repository: python/cpython
           ref: main
-          path: ${{ runner.temp }}/cpython
+          path: ./.cpython
       - name: Install CPython build dependencies
         run: sudo apt-get update && sudo apt-get install -y build-essential pkg-config libssl-dev zlib1g-dev
       - name: Build CPython
         run: |
-          cd ${{ runner.temp }}/cpython
+          cd ./.cpython
           ./configure && make -j $(nproc)
       - name: Setup uv
         uses: astral-sh/setup-uv@v7
@@ -35,7 +35,7 @@ jobs:
             requirements**.txt
             pyproject.toml
       - name: Create venv with CPython
-        run: uv venv --python ${{ runner.temp }}/cpython/python .venv
+        run: uv venv --python ./.cpython/python .venv
       - name: Install Dependencies
         run: uv pip install -r requirements-tests.txt
       - name: Activate venv
