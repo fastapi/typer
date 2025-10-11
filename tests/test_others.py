@@ -14,6 +14,7 @@ from typer.core import _split_opt
 from typer.main import solve_typer_info_defaults, solve_typer_info_help
 from typer.models import ParameterInfo, TyperInfo
 from typer.testing import CliRunner
+from typing_extensions import Annotated
 
 from .utils import requires_completion_permission
 
@@ -168,6 +169,22 @@ def test_callback_4_list_none():
 
     result = runner.invoke(app, [])
     assert "Hello World" in result.stdout
+
+
+def test_empty_list_default_generator():
+    def empty_list() -> typing.List[str]:
+        return []
+
+    app = typer.Typer()
+
+    @app.command()
+    def main(
+        names: Annotated[typing.List[str], typer.Option(default_factory=empty_list)],
+    ):
+        print(names)
+
+    result = runner.invoke(app)
+    assert "[]" in result.output
 
 
 def test_completion_argument():

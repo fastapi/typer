@@ -2,12 +2,33 @@
 
 ## Latest Changes
 
+### Internal
+
+* ⬆ Bump mkdocs-macros-plugin from 1.3.9 to 1.4.0. PR [#1354](https://github.com/fastapi/typer/pull/1354) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mkdocs-material from 9.6.20 to 9.6.21. PR [#1360](https://github.com/fastapi/typer/pull/1360) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mypy from 1.4.1 to 1.11.2. PR [#957](https://github.com/fastapi/typer/pull/957) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump astral-sh/setup-uv from 6 to 7. PR [#1369](https://github.com/fastapi/typer/pull/1369) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.13.2 to 0.13.3. PR [#1366](https://github.com/fastapi/typer/pull/1366) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1367](https://github.com/fastapi/typer/pull/1367) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump tiangolo/issue-manager from 0.5.1 to 0.6.0. PR [#1361](https://github.com/fastapi/typer/pull/1361) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.13.1 to 0.13.2. PR [#1357](https://github.com/fastapi/typer/pull/1357) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1358](https://github.com/fastapi/typer/pull/1358) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* 👷 Update docs previews comment, single comment, add failure status. PR [#1359](https://github.com/fastapi/typer/pull/1359) by [@tiangolo](https://github.com/tiangolo).
+
+## 0.19.2
+
+### Fixes
+
+* 🐛  Fix list convertor with an empty list default factory . PR [#1350](https://github.com/fastapi/typer/pull/1350) by [@svlandeg](https://github.com/svlandeg).
+
 ### Refactors
 
 * 🔥 Drop support for Python 3.7. PR [#830](https://github.com/fastapi/typer/pull/830) by [@kinuax](https://github.com/kinuax).
 
 ### Internal
 
+* ⬆ Bump ruff from 0.13.0 to 0.13.1. PR [#1339](https://github.com/fastapi/typer/pull/1339) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1351](https://github.com/fastapi/typer/pull/1351) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * ⬆ Bump markdown-include-variants from 0.0.4 to 0.0.5. PR [#1348](https://github.com/fastapi/typer/pull/1348) by [@dependabot[bot]](https://github.com/apps/dependabot).
 
 ## 0.19.1
