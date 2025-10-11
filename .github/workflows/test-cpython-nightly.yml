@@ -4,6 +4,9 @@ on:
   schedule:
     - cron: "0 0 * * *"
   workflow_dispatch:
+  push:
+    branches:
+      - run-ci-on-cpython-main
 
 jobs:
   test-latest-python:
@@ -16,12 +19,12 @@ jobs:
         with:
           repository: python/cpython
           ref: main
-          path: cpython
+          path: ${{ runner.temp }}/cpython
       - name: Install CPython build dependencies
         run: sudo apt-get update && sudo apt-get install -y build-essential pkg-config libssl-dev zlib1g-dev
       - name: Build CPython
         run: |
-          cd cpython
+          cd ${{ runner.temp }}/cpython
           ./configure && make -j $(nproc)
       - name: Setup uv
         uses: astral-sh/setup-uv@v7
@@ -32,21 +35,17 @@ jobs:
             requirements**.txt
             pyproject.toml
       - name: Create venv with CPython
-        run: uv venv --python ./cpython/python
+        run: uv venv --python ${{ runner.temp }}/cpython/python .venv
       - name: Install Dependencies
         run: uv pip install -r requirements-tests.txt
+      - name: Activate venv
+        run: echo "$PWD/.venv/bin" >> $GITHUB_PATH
       - name: Lint
-        run: |
-          source .venv/bin/activate
-          bash scripts/lint.sh
+        run: bash scripts/lint.sh
       - run: mkdir coverage
-      - run: |
-          source .venv/bin/activate
-          bash ./scripts/test-files.sh
+      - run: bash ./scripts/test-files.sh
       - name: Test
-        run: |
-          source .venv/bin/activate
-          bash scripts/test.sh --ignore=cpython
+        run: bash scripts/test.sh
         env:
           COVERAGE_FILE: coverage/.coverage.ubuntu-cpython-main
           CONTEXT: ubuntu-cpython-main
