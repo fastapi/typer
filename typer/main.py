@@ -1,6 +1,5 @@
 import inspect
 import os
-import platform
 import shutil
 import subprocess
 import sys
@@ -1072,12 +1071,14 @@ def run(function: Callable[..., Any]) -> None:
 
 
 def _is_macos() -> bool:
-    return platform.system() == "Darwin"
+    return sys.platform == "darwin"
 
 
 def _is_linux_or_bsd() -> bool:
-    if platform.system() == "Linux":
+    if sys.platform == "linux":
         return True
+
+    import platform
 
     return "BSD" in platform.system()
 
