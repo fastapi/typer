@@ -1,0 +1,54 @@
+name: Test CPython Nightly
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  test-latest-python:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v5
+      - name: Checkout CPython main
+        uses: actions/checkout@v5
+        with:
+          repository: python/cpython
+          ref: main
+          path: ./.cpython
+      - name: Install CPython build dependencies
+        run: sudo apt-get update && sudo apt-get install -y build-essential pkg-config libssl-dev zlib1g-dev
+      - name: Build CPython
+        run: |
+          cd ./.cpython
+          ./configure && make -j $(nproc)
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.4.15"
+          enable-cache: true
+          cache-dependency-glob: |
+            requirements**.txt
+            pyproject.toml
+      - name: Create venv with CPython
+        run: uv venv --python ./.cpython/python .venv
+      - name: Install Dependencies
+        run: uv pip install -r requirements-tests.txt
+      - name: Activate venv
+        run: echo "$PWD/.venv/bin" >> $GITHUB_PATH
+      - name: Lint
+        run: bash scripts/lint.sh
+      - run: mkdir coverage
+      - run: bash ./scripts/test-files.sh
+      - name: Test
+        run: bash scripts/test.sh
+        env:
+          COVERAGE_FILE: coverage/.coverage.ubuntu-cpython-main
+          CONTEXT: ubuntu-cpython-main
+      - name: Store coverage files
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-ubuntu-cpython-main
+          path: coverage
+          include-hidden-files: true
