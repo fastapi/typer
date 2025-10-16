@@ -4,6 +4,7 @@
 
 ### Internal
 
+* 🔧 Configure reminder for `waiting` label in `issue-manager`. PR [#1378](https://github.com/fastapi/typer/pull/1378) by [@YuriiMotov](https://github.com/YuriiMotov).
 * ⬆ Bump ruff from 0.13.3 to 0.14.0. PR [#1368](https://github.com/fastapi/typer/pull/1368) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1376](https://github.com/fastapi/typer/pull/1376) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * ⬆ Bump mkdocs-macros-plugin from 1.3.9 to 1.4.0. PR [#1354](https://github.com/fastapi/typer/pull/1354) by [@dependabot[bot]](https://github.com/apps/dependabot).
