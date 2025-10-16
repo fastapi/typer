@@ -32,6 +32,7 @@ from ._typing import Literal
 MarkupMode = Literal["markdown", "rich", None]
 
 HAS_RICH = importlib.util.find_spec("rich") is not None
+HAS_SHELLINGHAM = importlib.util.find_spec("shellingham") is not None
 
 if HAS_RICH:
     DEFAULT_MARKUP_MODE: MarkupMode = "rich"
