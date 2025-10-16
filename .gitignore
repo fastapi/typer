@@ -3,6 +3,7 @@
 __pycache__
 .venv*
 env
+venv
 dist
 .mypy_cache
 .idea
