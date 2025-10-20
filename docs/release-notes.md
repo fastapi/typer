@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Upgrades
+
+* ⬆️ Add support for Python 3.14. PR [#1372](https://github.com/fastapi/typer/pull/1372) by [@svlandeg](https://github.com/svlandeg).
+
 ### Internal
 
 * 👷 Add nightly workflow to run tests against CPython main branch. PR [#1374](https://github.com/fastapi/typer/pull/1374) by [@savannahostrowski](https://github.com/savannahostrowski).
