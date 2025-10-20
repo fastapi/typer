@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.20.0
+
 ### Features
 
 * ✨ Enable command suggestions on typo by default. PR [#1371](https://github.com/fastapi/typer/pull/1371) by [@savannahostrowski](https://github.com/savannahostrowski).
