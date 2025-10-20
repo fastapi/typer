@@ -189,11 +189,11 @@ If a user mistypes a command, they'll see a helpful suggestion:
 ```console
 $ python main.py crate
 
-Usage: main.py [OPTIONS] COMMAND [ARGS]...
-Try 'main.py --help' for help.
-╭─ Error ──────────────────────────────────────────────────────────────────────╮
-│ No such command 'crate'. Did you mean 'create'?                              │
-╰──────────────────────────────────────────────────────────────────────────────╯
+<font color="#C4A000">Usage: </font>main.py [OPTIONS] COMMAND [ARGS]...
+<font color="#AAAAAA">Try </font><font color="#22436D">&apos;main.py </font><font color="#4C6A8A"><b>--help</b></font><font color="#22436D">&apos;</font><font color="#AAAAAA"> for help.</font>
+<font color="#CC0000">╭─ Error ───────────────────────────────────────────────────────────╮</font>
+<font color="#CC0000">│</font> No such command &apos;crate&apos;. Did you mean &apos;create&apos;?                   <font color="#CC0000">│</font>
+<font color="#CC0000">╰───────────────────────────────────────────────────────────────────╯</font>
 ```
 
 </div>
