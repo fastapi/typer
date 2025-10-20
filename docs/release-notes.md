@@ -2,8 +2,21 @@
 
 ## Latest Changes
 
+## 0.20.0
+
+### Features
+
+* ✨ Enable command suggestions on typo by default. PR [#1371](https://github.com/fastapi/typer/pull/1371) by [@savannahostrowski](https://github.com/savannahostrowski).
+
+### Upgrades
+
+* ⬆️ Add support for Python 3.14. PR [#1372](https://github.com/fastapi/typer/pull/1372) by [@svlandeg](https://github.com/svlandeg).
+
 ### Internal
 
+* 👷 Add nightly workflow to run tests against CPython main branch. PR [#1374](https://github.com/fastapi/typer/pull/1374) by [@savannahostrowski](https://github.com/savannahostrowski).
+* ⬆ Bump mkdocs-material from 9.6.21 to 9.6.22. PR [#1377](https://github.com/fastapi/typer/pull/1377) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 🔧 Configure reminder for `waiting` label in `issue-manager`. PR [#1378](https://github.com/fastapi/typer/pull/1378) by [@YuriiMotov](https://github.com/YuriiMotov).
 * ⬆ Bump ruff from 0.13.3 to 0.14.0. PR [#1368](https://github.com/fastapi/typer/pull/1368) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1376](https://github.com/fastapi/typer/pull/1376) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * ⬆ Bump mkdocs-macros-plugin from 1.3.9 to 1.4.0. PR [#1354](https://github.com/fastapi/typer/pull/1354) by [@dependabot[bot]](https://github.com/apps/dependabot).

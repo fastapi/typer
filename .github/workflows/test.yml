@@ -20,7 +20,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
-        python-version: [ "3.13" ]
+        python-version: [ "3.14" ]
         include:
           - os: macos-latest
             python-version: "3.8"
@@ -32,6 +32,8 @@ jobs:
             python-version: "3.11"
           - os: windows-latest
             python-version: "3.12"
+          - os: ubuntu-latest
+            python-version: "3.13"
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
