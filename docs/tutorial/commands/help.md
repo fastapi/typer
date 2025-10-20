@@ -178,7 +178,7 @@ $ python main.py delete --help
 
 ## Suggest Commands
 
-When users mistype a command name, Typer can suggest the correct command. This feature is **disabled by default**, but you can enable it with the parameter `suggest_commands=True`:
+When users mistype a command name, Typer can suggest the correct command. This feature is **enabled by default**, but you can disable it with the parameter `suggest_commands=False`:
 
 {* docs_src/commands/index/tutorial005.py hl[3] *}
 

@@ -750,7 +750,7 @@ class TyperGroup(click.core.Group):
         # Rich settings
         rich_markup_mode: MarkupMode = DEFAULT_MARKUP_MODE,
         rich_help_panel: Union[str, None] = None,
-        suggest_commands: bool = False,
+        suggest_commands: bool = True,
         **attrs: Any,
     ) -> None:
         super().__init__(name=name, commands=commands, **attrs)

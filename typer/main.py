@@ -135,7 +135,7 @@ class Typer:
         # Rich settings
         rich_markup_mode: MarkupMode = Default(DEFAULT_MARKUP_MODE),
         rich_help_panel: Union[str, None] = Default(None),
-        suggest_commands: bool = False,
+        suggest_commands: bool = True,
         pretty_exceptions_enable: bool = True,
         pretty_exceptions_show_locals: bool = True,
         pretty_exceptions_short: bool = True,
