@@ -1,8 +1,10 @@
 import errno
+import importlib.util
 import inspect
 import os
 import sys
 import typing as t
+from difflib import get_close_matches
 from enum import Enum
 from gettext import gettext as _
 from typing import (
@@ -22,7 +24,6 @@ from typing import (
 import click
 import click.core
 import click.formatting
-import click.parser
 import click.shell_completion
 import click.types
 import click.utils
@@ -32,13 +33,11 @@ from ._typing import Literal
 
 MarkupMode = Literal["markdown", "rich", None]
 
-try:
-    import rich
+HAS_RICH = importlib.util.find_spec("rich") is not None
 
+if HAS_RICH:
     DEFAULT_MARKUP_MODE: MarkupMode = "rich"
-
-except ImportError:  # pragma: no cover
-    rich = None  # type: ignore
+else:  # pragma: no cover
     DEFAULT_MARKUP_MODE = None
 
 
@@ -212,7 +211,7 @@ def _main(
             if not standalone_mode:
                 raise
             # Typer override
-            if rich and rich_markup_mode is not None:
+            if HAS_RICH and rich_markup_mode is not None:
                 from . import rich_utils
 
                 rich_utils.rich_format_error(e)
@@ -244,7 +243,7 @@ def _main(
         if not standalone_mode:
             raise
         # Typer override
-        if rich and rich_markup_mode is not None:
+        if HAS_RICH and rich_markup_mode is not None:
             from . import rich_utils
 
             rich_utils.rich_abort_error()
@@ -372,9 +371,11 @@ class TyperArgument(click.core.Argument):
         if extra:
             extra_str = "; ".join(extra)
             extra_str = f"[{extra_str}]"
-            if rich is not None:
+            if HAS_RICH:
                 # This is needed for when we want to export to HTML
-                extra_str = rich.markup.escape(extra_str).strip()
+                from . import rich_utils
+
+                extra_str = rich_utils.escape_before_html_export(extra_str)
 
             help = f"{help}  {extra_str}" if help else f"{extra_str}"
         return name, help
@@ -402,6 +403,9 @@ class TyperArgument(click.core.Argument):
         if self.nargs != 1:
             var += "..."
         return var
+
+    def value_is_missing(self, value: Any) -> bool:
+        return _value_is_missing(self, value)
 
 
 class TyperOption(click.core.Option):
@@ -597,13 +601,32 @@ class TyperOption(click.core.Option):
         if extra:
             extra_str = "; ".join(extra)
             extra_str = f"[{extra_str}]"
-            if rich is not None:
+            if HAS_RICH:
                 # This is needed for when we want to export to HTML
-                extra_str = rich.markup.escape(extra_str).strip()
+                from . import rich_utils
+
+                extra_str = rich_utils.escape_before_html_export(extra_str)
 
             help = f"{help}  {extra_str}" if help else f"{extra_str}"
 
         return ("; " if any_prefix_is_slash else " / ").join(rv), help
+
+    def value_is_missing(self, value: Any) -> bool:
+        return _value_is_missing(self, value)
+
+
+def _value_is_missing(param: click.Parameter, value: Any) -> bool:
+    if value is None:
+        return True
+
+    # Click 8.3 and beyond
+    # if value is UNSET:
+    #     return True
+
+    if (param.nargs != 1 or param.multiple) and value == ():
+        return True  # pragma: no cover
+
+    return False
 
 
 def _typer_format_options(
@@ -721,7 +744,7 @@ class TyperCommand(click.core.Command):
         )
 
     def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
-        if not rich or self.rich_markup_mode is None:
+        if not HAS_RICH or self.rich_markup_mode is None:
             return super().format_help(ctx, formatter)
         from . import rich_utils
 
@@ -743,11 +766,13 @@ class TyperGroup(click.core.Group):
         # Rich settings
         rich_markup_mode: MarkupMode = DEFAULT_MARKUP_MODE,
         rich_help_panel: Union[str, None] = None,
+        suggest_commands: bool = True,
         **attrs: Any,
     ) -> None:
         super().__init__(name=name, commands=commands, **attrs)
         self.rich_markup_mode: MarkupMode = rich_markup_mode
         self.rich_help_panel = rich_help_panel
+        self.suggest_commands = suggest_commands
 
     def format_options(
         self, ctx: click.Context, formatter: click.HelpFormatter
@@ -764,6 +789,23 @@ class TyperGroup(click.core.Group):
         _typer_main_shell_completion(
             self, ctx_args=ctx_args, prog_name=prog_name, complete_var=complete_var
         )
+
+    def resolve_command(
+        self, ctx: click.Context, args: List[str]
+    ) -> Tuple[Optional[str], Optional[click.Command], List[str]]:
+        try:
+            return super().resolve_command(ctx, args)
+        except click.UsageError as e:
+            if self.suggest_commands:
+                available_commands = list(self.commands.keys())
+                if available_commands and args:
+                    typo = args[0]
+                    matches = get_close_matches(typo, available_commands)
+                    if matches:
+                        suggestions = ", ".join(f"{m!r}" for m in matches)
+                        message = e.message.rstrip(".")
+                        e.message = f"{message}. Did you mean {suggestions}?"
+            raise
 
     def main(
         self,
@@ -786,7 +828,7 @@ class TyperGroup(click.core.Group):
         )
 
     def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
-        if not rich or self.rich_markup_mode is None:
+        if not HAS_RICH or self.rich_markup_mode is None:
             return super().format_help(ctx, formatter)
         from . import rich_utils
 
