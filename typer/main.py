@@ -139,6 +139,7 @@ class Typer:
         pretty_exceptions_enable: bool = True,
         pretty_exceptions_show_locals: bool = True,
         pretty_exceptions_short: bool = True,
+        pretty_exceptions_width: Union[int, None] = Default(None),
     ):
         self._add_completion = add_completion
         self.rich_markup_mode: MarkupMode = rich_markup_mode
@@ -147,6 +148,7 @@ class Typer:
         self.pretty_exceptions_enable = pretty_exceptions_enable
         self.pretty_exceptions_show_locals = pretty_exceptions_show_locals
         self.pretty_exceptions_short = pretty_exceptions_short
+        self.pretty_exceptions_width = pretty_exceptions_width
         self.info = TyperInfo(
             name=name,
             cls=cls,
@@ -322,6 +324,7 @@ class Typer:
                     pretty_exceptions_enable=self.pretty_exceptions_enable,
                     pretty_exceptions_show_locals=self.pretty_exceptions_show_locals,
                     pretty_exceptions_short=self.pretty_exceptions_short,
+                    pretty_exceptions_width=self.pretty_exceptions_width,
                 ),
             )
             raise e
