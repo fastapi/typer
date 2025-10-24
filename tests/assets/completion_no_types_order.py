@@ -16,8 +16,8 @@ def complete(args, incomplete, ctx, param):
 
 
 @app.command()
-def main(name: str = typer.Option("World", autocompletion=complete)):
-    print(f"Hello {name}")
+def main(user: str = typer.Option("World", autocompletion=complete)):
+    print(f"Hello {user}")
 
 
 if __name__ == "__main__":

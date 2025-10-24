@@ -202,7 +202,7 @@ def test_completion_argument():
     )
     assert "Emma" in result.stdout or "_files" in result.stdout
     assert "ctx: completion_argument" in result.stderr
-    assert "arg is: name" in result.stderr
+    assert "arg is: user" in result.stderr
     assert "incomplete is: E" in result.stderr
 
 
@@ -215,12 +215,12 @@ def test_completion_untyped_parameters():
         env={
             **os.environ,
             "_COMPLETION_NO_TYPES.PY_COMPLETE": "complete_zsh",
-            "_TYPER_COMPLETE_ARGS": "completion_no_types.py --name Sebastian --name Ca",
+            "_TYPER_COMPLETE_ARGS": "completion_no_types.py --user Sebastian --user Ca",
         },
     )
     assert "info name is: completion_no_types.py" in result.stderr
     assert "args is: []" in result.stderr
-    assert "param is: name" in result.stderr
+    assert "param is: user" in result.stderr
     assert "incomplete is: Ca" in result.stderr
     assert '"Camila":"The reader of books."' in result.stdout
     assert '"Carlos":"The writer of scripts."' in result.stdout
@@ -242,12 +242,12 @@ def test_completion_untyped_parameters_different_order_correct_names():
         env={
             **os.environ,
             "_COMPLETION_NO_TYPES_ORDER.PY_COMPLETE": "complete_zsh",
-            "_TYPER_COMPLETE_ARGS": "completion_no_types_order.py --name Sebastian --name Ca",
+            "_TYPER_COMPLETE_ARGS": "completion_no_types_order.py --user Sebastian --user Ca",
         },
     )
     assert "info name is: completion_no_types_order.py" in result.stderr
     assert "args is: []" in result.stderr
-    assert "param is: name" in result.stderr
+    assert "param is: user" in result.stderr
     assert "incomplete is: Ca" in result.stderr
     assert '"Camila":"The reader of books."' in result.stdout
     assert '"Carlos":"The writer of scripts."' in result.stdout
@@ -271,7 +271,7 @@ def test_autocompletion_too_many_parameters():
         pass  # pragma: no cover
 
     with pytest.raises(click.ClickException) as exc_info:
-        runner.invoke(app, ["--name", "Camila"])
+        runner.invoke(app, ["--user", "Camila"])
     assert exc_info.value.message == "Invalid autocompletion callback parameters: val2"
 
 
