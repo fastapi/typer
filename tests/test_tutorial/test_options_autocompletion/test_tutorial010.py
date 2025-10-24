@@ -17,7 +17,7 @@ def test_completion():
         env={
             **os.environ,
             "_TUTORIAL010.PY_COMPLETE": "complete_zsh",
-            "_TYPER_COMPLETE_ARGS": "tutorial010.py --name Sebastian --name ",
+            "_TYPER_COMPLETE_ARGS": "tutorial010.py --user Sebastian --user ",
         },
     )
     assert '"Camila":"The reader of books."' in result.stdout
@@ -33,7 +33,7 @@ def test_completion_greeter1():
         env={
             **os.environ,
             "_TUTORIAL010.PY_COMPLETE": "complete_zsh",
-            "_TYPER_COMPLETE_ARGS": "tutorial010.py --name Sebastian --greeter Ca",
+            "_TYPER_COMPLETE_ARGS": "tutorial010.py --user Sebastian --greeter Ca",
         },
     )
     assert '"Camila":"The reader of books."' in result.stdout
@@ -49,7 +49,7 @@ def test_completion_greeter2():
         env={
             **os.environ,
             "_TUTORIAL010.PY_COMPLETE": "complete_zsh",
-            "_TYPER_COMPLETE_ARGS": "tutorial010.py --name Sebastian --greeter Carlos --greeter ",
+            "_TYPER_COMPLETE_ARGS": "tutorial010.py --user Sebastian --greeter Carlos --greeter ",
         },
     )
     assert '"Camila":"The reader of books."' in result.stdout
@@ -58,7 +58,7 @@ def test_completion_greeter2():
 
 
 def test_1():
-    result = runner.invoke(mod.app, ["--name", "Camila", "--name", "Sebastian"])
+    result = runner.invoke(mod.app, ["--user", "Camila", "--user", "Sebastian"])
     assert result.exit_code == 0
     assert "Hello Camila" in result.output
     assert "Hello Sebastian" in result.output
@@ -66,7 +66,7 @@ def test_1():
 
 def test_2():
     result = runner.invoke(
-        mod.app, ["--name", "Camila", "--name", "Sebastian", "--greeter", "Carlos"]
+        mod.app, ["--user", "Camila", "--user", "Sebastian", "--greeter", "Carlos"]
     )
     assert result.exit_code == 0
     assert "Hello Camila, from Carlos" in result.output
@@ -75,7 +75,7 @@ def test_2():
 
 def test_3():
     result = runner.invoke(
-        mod.app, ["--name", "Camila", "--greeter", "Carlos", "--greeter", "Sebastian"]
+        mod.app, ["--user", "Camila", "--greeter", "Carlos", "--greeter", "Sebastian"]
     )
     assert result.exit_code == 0
     assert "Hello Camila, from Carlos and Sebastian" in result.output

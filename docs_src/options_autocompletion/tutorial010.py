@@ -11,11 +11,11 @@ valid_completion_items = [
 ]
 
 
-def complete_name(ctx: typer.Context, param: click.Parameter, incomplete: str):
-    names = (ctx.params.get(param.name) if param.name else []) or []
-    for name, help_text in valid_completion_items:
-        if name.startswith(incomplete) and name not in names:
-            yield CompletionItem(name, help=help_text)
+def complete_user_or_greeter(ctx: typer.Context, param: click.Parameter, incomplete: str):
+    previous_items = (ctx.params.get(param.name) if param.name else []) or []
+    for item, help_text in valid_completion_items:
+        if item.startswith(incomplete) and item not in previous_items:
+            yield CompletionItem(item, help=help_text)
 
 
 app = typer.Typer()
@@ -23,15 +23,15 @@ app = typer.Typer()
 
 @app.command()
 def main(
-    name: List[str] = typer.Option(
-        ["World"], help="The name to say hi to.", autocompletion=complete_name
+    user: List[str] = typer.Option(
+        ["World"], help="The user to say hi to.", autocompletion=complete_user_or_greeter
     ),
     greeter: List[str] = typer.Option(
-        None, help="Who are the greeters?.", autocompletion=complete_name
+        None, help="The greeters.", autocompletion=complete_user_or_greeter
     ),
 ):
-    for n in name:
-        print(f"Hello {n}, from {' and '.join(greeter or [])}")
+    for u in user:
+        print(f"Hello {u}, from {' and '.join(greeter or [])}")
 
 
 if __name__ == "__main__":

@@ -7,11 +7,11 @@ valid_completion_items = [
 ]
 
 
-def complete_name(incomplete: str):
+def complete_user(incomplete: str):
     completion = []
-    for name, help_text in valid_completion_items:
-        if name.startswith(incomplete):
-            completion_item = (name, help_text)
+    for user, help_text in valid_completion_items:
+        if user.startswith(incomplete):
+            completion_item = (user, help_text)
             completion.append(completion_item)
     return completion
 
@@ -21,11 +21,11 @@ app = typer.Typer()
 
 @app.command()
 def main(
-    name: str = typer.Option(
-        "World", help="The name to say hi to.", autocompletion=complete_name
+    user: str = typer.Option(
+        "World", help="The user to say hi to.", autocompletion=complete_user
     ),
 ):
-    print(f"Hello {name}")
+    print(f"Hello {user}")
 
 
 if __name__ == "__main__":

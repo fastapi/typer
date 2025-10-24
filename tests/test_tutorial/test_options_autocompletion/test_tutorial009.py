@@ -17,7 +17,7 @@ def test_completion():
         env={
             **os.environ,
             "_TUTORIAL009.PY_COMPLETE": "complete_zsh",
-            "_TYPER_COMPLETE_ARGS": "tutorial009.py --name Sebastian --name ",
+            "_TYPER_COMPLETE_ARGS": "tutorial009.py --user Sebastian --user ",
         },
     )
     assert '"Camila":"The reader of books."' in result.stdout
@@ -27,7 +27,7 @@ def test_completion():
 
 
 def test_1():
-    result = runner.invoke(mod.app, ["--name", "Camila", "--name", "Sebastian"])
+    result = runner.invoke(mod.app, ["--user", "Camila", "--user", "Sebastian"])
     assert result.exit_code == 0
     assert "Hello Camila" in result.output
     assert "Hello Sebastian" in result.output

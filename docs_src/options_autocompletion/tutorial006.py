@@ -6,9 +6,9 @@ app = typer.Typer()
 
 
 @app.command()
-def main(name: List[str] = typer.Option(["World"], help="The name to say hi to.")):
-    for each_name in name:
-        print(f"Hello {each_name}")
+def main(user: List[str] = typer.Option(["World"], help="The user to say hi to.")):
+    for u in user:
+        print(f"Hello {u}")
 
 
 if __name__ == "__main__":

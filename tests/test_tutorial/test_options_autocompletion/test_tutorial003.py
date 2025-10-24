@@ -17,7 +17,7 @@ def test_completion_zsh():
         env={
             **os.environ,
             "_TUTORIAL003.PY_COMPLETE": "complete_zsh",
-            "_TYPER_COMPLETE_ARGS": "tutorial003.py --name Seb",
+            "_TYPER_COMPLETE_ARGS": "tutorial003.py --user Seb",
         },
     )
     assert "Camila" not in result.stdout
@@ -33,7 +33,7 @@ def test_completion_powershell():
         env={
             **os.environ,
             "_TUTORIAL003.PY_COMPLETE": "complete_powershell",
-            "_TYPER_COMPLETE_ARGS": "tutorial003.py --name Seb",
+            "_TYPER_COMPLETE_ARGS": "tutorial003.py --user Seb",
             "_TYPER_COMPLETE_WORD_TO_COMPLETE": "Seb",
         },
     )
@@ -43,7 +43,7 @@ def test_completion_powershell():
 
 
 def test_1():
-    result = runner.invoke(mod.app, ["--name", "Camila"])
+    result = runner.invoke(mod.app, ["--user", "Camila"])
     assert result.exit_code == 0
     assert "Hello Camila" in result.output
 
