@@ -11,7 +11,9 @@ valid_completion_items = [
 ]
 
 
-def complete_user_or_greeter(ctx: typer.Context, param: click.Parameter, incomplete: str):
+def complete_user_or_greeter(
+    ctx: typer.Context, param: click.Parameter, incomplete: str
+):
     previous_items = (ctx.params.get(param.name) if param.name else []) or []
     for item, help_text in valid_completion_items:
         if item.startswith(incomplete) and item not in previous_items:
@@ -24,7 +26,9 @@ app = typer.Typer()
 @app.command()
 def main(
     user: List[str] = typer.Option(
-        ["World"], help="The user to say hi to.", autocompletion=complete_user_or_greeter
+        ["World"],
+        help="The user to say hi to.",
+        autocompletion=complete_user_or_greeter,
     ),
     greeter: List[str] = typer.Option(
         None, help="The greeters.", autocompletion=complete_user_or_greeter
