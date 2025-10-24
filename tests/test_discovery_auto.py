@@ -7,11 +7,9 @@ import importlib
 import click
 import pytest
 import typer
+from typer.discovery import TyperDiscoveryError, register_package
 from typer.main import get_command
 from typer.testing import CliRunner
-
-from typer.discovery import TyperDiscoveryError, register_package
-
 
 runner = CliRunner()
 
