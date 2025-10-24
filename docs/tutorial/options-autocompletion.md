@@ -416,7 +416,7 @@ You can declare function parameters of these types:
 * `click.Parameter`: for the CLI parameter being completed.
 * `List[str]`: for the raw *CLI parameters*.
 
-It doesn't matter how you name them, in which order, or which ones of the 3 options you declare. It will all "**just work**" ✨
+It doesn't matter how you name them, in which order, or which ones of the 4 options you declare. It will all "**just work**" ✨
 
 ## Comparison to Click functionality
 
