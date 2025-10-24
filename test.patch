@@ -7,7 +7,7 @@ index 0000000..e2a5741
 +#!/bin/bash
 +set -euo pipefail
 +
-+case "" in
++case "${1:-}" in
 +  base)
 +    pytest tests/test_type_conversion.py -q
 +    ;;
