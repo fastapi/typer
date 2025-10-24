@@ -270,7 +270,7 @@ You may want to reuse completer functions across CLI applications or within the 
 
 This can be done by declaring a parameter of type <a href="https://click.palletsprojects.com/en/stable/api/#click.Parameter" class="external-link" target="_blank">click.Parameter</a>, and accessing its `param.name` attribute.
 
-For example, lets revisit our above example and a second greeter argument that reuses the same completer function, now called `complete_user_or_greeter`:
+For example, lets revisit our above example and add a second greeter argument that reuses the same completer function, now called `complete_user_or_greeter`:
 
 {* docs_src/options_autocompletion/tutorial010_an.py hl[15:16] *}
 
@@ -288,7 +288,7 @@ Check it:
 ```console
 $ typer ./main.py run --user Sebastian --greeter Camila --greeter [TAB][TAB]
 
-// Our function returns Sebastian too because it is completing 'greeter'
+// Our function returns Sebastian too because it is completing 'greeter', not 'user'
 Carlos     -- The writer of scripts.
 Sebastian  -- The type hints guy.
 ```
