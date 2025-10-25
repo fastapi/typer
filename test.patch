@@ -110,7 +110,7 @@ index 0000000..d611635
 +    typer.echo(f"deactivated user {name}")
 diff --git a/tests/assets/discovery_targets/__init__.py b/tests/assets/discovery_targets/__init__.py
 new file mode 100644
-index 0000000..e0d0c53
+index 0000000..e8cff10
 --- /dev/null
 +++ b/tests/assets/discovery_targets/__init__.py
 @@ -0,0 +1,5 @@
@@ -119,10 +119,9 @@ index 0000000..e0d0c53
 +from __future__ import annotations
 +
 +__all__ = ["users", "inventory"]
-\ No newline at end of file
 diff --git a/tests/assets/discovery_targets/inventory/__init__.py b/tests/assets/discovery_targets/inventory/__init__.py
 new file mode 100644
-index 0000000..ed26699
+index 0000000..50ddde8
 --- /dev/null
 +++ b/tests/assets/discovery_targets/inventory/__init__.py
 @@ -0,0 +1,14 @@
@@ -140,7 +139,6 @@ index 0000000..ed26699
 +    """Emit a fixed inventory summary value."""
 +
 +    typer.echo("inventory summary: 2 items")
-\ No newline at end of file
 diff --git a/tests/assets/discovery_targets/inventory/audit.py b/tests/assets/discovery_targets/inventory/audit.py
 new file mode 100644
 index 0000000..b614e3b
@@ -163,7 +161,7 @@ index 0000000..b614e3b
 +    typer.echo(f"inventory audit level {level}")
 diff --git a/tests/assets/discovery_targets/users.py b/tests/assets/discovery_targets/users.py
 new file mode 100644
-index 0000000..576ffad
+index 0000000..d611635
 --- /dev/null
 +++ b/tests/assets/discovery_targets/users.py
 @@ -0,0 +1,21 @@
@@ -188,13 +186,12 @@ index 0000000..576ffad
 +    """Report deactivated user."""
 +
 +    typer.echo(f"deactivated user {name}")
-\ No newline at end of file
 diff --git a/tests/test_discovery_auto.py b/tests/test_discovery_auto.py
 new file mode 100644
-index 0000000..82bea69
+index 0000000..2431835
 --- /dev/null
 +++ b/tests/test_discovery_auto.py
-@@ -0,0 +1,156 @@
+@@ -0,0 +1,154 @@
 +"""Tests defining the contract for automatic Typer command discovery."""
 +
 +from __future__ import annotations
@@ -204,11 +201,9 @@ index 0000000..82bea69
 +import click
 +import pytest
 +import typer
++from typer.discovery import TyperDiscoveryError, register_package
 +from typer.main import get_command
 +from typer.testing import CliRunner
-+
-+from typer.discovery import TyperDiscoveryError, register_package
-+
 +
 +runner = CliRunner()
 +
