@@ -4,6 +4,8 @@ build-backend = "pdm.backend"
 
 [project]
 name = "typer"
+license = "MIT"
+license-files = ["LICENSE"]
 dynamic = ["version"]
 description = "Typer, build great CLIs. Easy to code. Based on Python type hints."
 authors = [
