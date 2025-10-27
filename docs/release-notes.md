@@ -4,6 +4,7 @@
 
 ### Internal
 
+* 🔧 Add PEP-639 license metadata. PR [#1387](https://github.com/fastapi/typer/pull/1387) by [@svlandeg](https://github.com/svlandeg).
 * ⬆ Bump mypy from 1.11.2 to 1.14.1. PR [#1375](https://github.com/fastapi/typer/pull/1375) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1380](https://github.com/fastapi/typer/pull/1380) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * ⬆ Bump ruff from 0.14.0 to 0.14.1. PR [#1379](https://github.com/fastapi/typer/pull/1379) by [@dependabot[bot]](https://github.com/apps/dependabot).
