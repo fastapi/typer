@@ -4,6 +4,7 @@
 
 ### Internal
 
+* ⬆ Bump actions/upload-artifact from 4 to 5. PR [#1388](https://github.com/fastapi/typer/pull/1388) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump mkdocs-macros-plugin from 1.4.0 to 1.4.1. PR [#1389](https://github.com/fastapi/typer/pull/1389) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump actions/download-artifact from 5 to 6. PR [#1391](https://github.com/fastapi/typer/pull/1391) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * 🔧 Add PEP-639 license metadata. PR [#1387](https://github.com/fastapi/typer/pull/1387) by [@svlandeg](https://github.com/svlandeg).
