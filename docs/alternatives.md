@@ -76,7 +76,7 @@ Everything. 🚀
 
 **Typer** mainly adds a layer on top of Click, making the code simpler and easier to use, with autocompletion everywhere, etc, but providing all the powerful features of Click underneath.
 
-As someone pointed out: <em><a href="https://twitter.com/fishnets88/status/1210126833745838080" class="external-link" target="_blank">"Nice to see it is built on Click but adds the type stuff. Me gusta!"</a></em>
+As someone pointed out: <em>"Nice to see it is built on Click but adds the type stuff. Me gusta!"</em>
 
 ///
 
