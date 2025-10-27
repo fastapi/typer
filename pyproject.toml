@@ -4,6 +4,8 @@ build-backend = "pdm.backend"
 
 [project]
 name = "typer"
+license = "MIT"
+license-files = ["LICENSE"]
 dynamic = ["version"]
 description = "Typer, build great CLIs. Easy to code. Based on Python type hints."
 authors = [
@@ -31,7 +33,6 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
-    "License :: OSI Approved :: MIT License",
 ]
 dependencies = [
     "click >= 8.0.0",
