@@ -30,7 +30,7 @@ def test_invalid():
     assert result.exit_code != 0
     assert (
         "Invalid value for 'BIRTH:[%Y-%m-%d|%Y-%m-%dT%H:%M:%S|%Y-%m-%d %H:%M:%S]':"
-        in result.stdout
+        in result.output
     )
     assert "'july-19-1989' does not match the formats" in result.output
     assert "%Y-%m-%d" in result.output

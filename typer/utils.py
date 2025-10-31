@@ -3,7 +3,7 @@ import sys
 from copy import copy
 from typing import Any, Callable, Dict, List, Tuple, Type, cast
 
-from typing_extensions import (
+from ._typing import (
     Annotated,
     TypeAliasType,
     TypeVar,
@@ -11,7 +11,6 @@ from typing_extensions import (
     get_origin,
     get_type_hints,
 )
-
 from .models import ArgumentInfo, OptionInfo, ParameterInfo, ParamMeta
 
 T = TypeVar("T")

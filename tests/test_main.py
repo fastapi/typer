@@ -5,9 +5,9 @@ from uuid import UUID
 
 import click
 import pytest
+from typer._typing import TypeAliasType
 from typer.main import get_click_type
 from typer.models import FileBinaryRead, FileTextWrite, ParameterInfo
-from typing_extensions import TypeAliasType
 
 
 def test_get_click_type_with_custom_click_type():
@@ -95,7 +95,7 @@ def test_get_click_type_with_enum_annotation():
     param_info = ParameterInfo()
     result = get_click_type(annotation=Color, parameter_info=param_info)
     assert isinstance(result, click.Choice)
-    assert result.choices == ["red", "blue"]
+    assert result.choices == ("red", "blue")
 
 
 def test_get_click_type_with_file_text_write_annotation():
