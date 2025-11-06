@@ -91,3 +91,11 @@ Error: Option '--user' requires 3 arguments
 ```
 
 </div>
+
+### How to pass multiple values to an option
+
+When using an option that accepts multiple values, they must be provided **right after the option flag in a single invocation**.  
+For example, in the previous example, the values `Camila`, `50`, and `yes` are all passed after `--user`:
+
+```console
+$ python main.py --user Camila 50 yes
