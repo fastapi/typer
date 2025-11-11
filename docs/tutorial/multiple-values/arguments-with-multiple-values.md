@@ -21,6 +21,13 @@ woohoo!
 
 </div>
 
+### How to pass multiple argument values
+
+For arguments that accept multiple values, you provide them as **space-separated values** after the command, without repeating a flag:
+
+```console
+$ python main.py ./index.md ./first-steps.md foo bar baz
+
 /// tip
 
 We also declared a final *CLI argument* `celebration`, and it's correctly used even if we pass an arbitrary number of `files` first.
