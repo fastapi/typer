@@ -321,3 +321,33 @@ def test_split_opt():
     prefix, opt = _split_opt("verbose")
     assert prefix == ""
     assert opt == "verbose"
+
+
+def test_multiple_options_separator_1_unsupported_separator():
+    app = typer.Typer()
+
+    @app.command()
+    def main(names: typing.List[str] = typer.Option(..., separator="\t \n")):
+        pass  # pragma: no cover
+
+    with pytest.raises(typer.UnsupportedSeparatorError) as exc_info:
+        runner.invoke(app, [])
+    assert (
+        str(exc_info.value)
+        == "Error in definition of Option 'names'. Only single-character non-whitespace separators are supported, but got \"\t \n\"."
+    )
+
+
+def test_multiple_options_separator_2_non_list_type():
+    app = typer.Typer()
+
+    @app.command()
+    def main(names: str = typer.Option(..., separator=",")):
+        pass  # pragma: no cover
+
+    with pytest.raises(typer.SeparatorForNonListTypeError) as exc_info:
+        runner.invoke(app, [])
+    assert (
+        str(exc_info.value)
+        == "Multiple values are supported for List[T] types only. Annotate 'names' as List[str] to support multiple values."
+    )
