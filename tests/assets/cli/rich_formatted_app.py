@@ -1,5 +1,5 @@
 import typer
-from typing_extensions import Annotated
+from typer._typing import Annotated
 
 app = typer.Typer(rich_markup_mode="rich")
 
