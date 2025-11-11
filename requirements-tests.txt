@@ -10,3 +10,5 @@ ruff ==0.14.4
 # Needed explicitly by typer-slim
 rich >=10.11.0
 shellingham >=1.3.0
+PyYAML >= 6.0
+types-PyYAML >= 6.0
