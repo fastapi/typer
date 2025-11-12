@@ -208,25 +208,29 @@ def _get_help_text(
     if remaining_paragraphs:
         # Add a newline inbetween the header and the remaining paragraphs
         yield Text("")
-        if markup_mode not in (MARKUP_MODE_RICH, MARKUP_MODE_MARKDOWN):
-            # Remove single linebreaks
-            remaining_paragraphs = [
-                x.replace("\n", " ").strip()
-                if not x.startswith("\b")
-                else "{}\n".format(x.strip("\b\n"))
-                for x in remaining_paragraphs
-            ]
-            # Join back together
-            remaining_lines = "\n".join(remaining_paragraphs)
-        else:
-            # Join with double linebreaks if markdown or Rich markup
-            remaining_lines = "\n\n".join(remaining_paragraphs)
+        remaining_lines = _fix_linebreaks(remaining_paragraphs, markup_mode)
 
         yield _make_rich_text(
             text=remaining_lines,
             style=STYLE_HELPTEXT,
             markup_mode=markup_mode,
         )
+
+
+def _fix_linebreaks(paragraphs: List[str], markup_mode: MarkupMode) -> str:
+    if markup_mode not in (MARKUP_MODE_RICH, MARKUP_MODE_MARKDOWN):
+        # Remove single linebreaks
+        paragraphs = [
+            x.replace("\n", " ").strip()
+            if not x.startswith("\b")
+            else "{}\n".format(x.strip("\b\n"))
+            for x in paragraphs
+        ]
+        # Join back together
+        return "\n".join(paragraphs)
+    else:
+        # Join with double linebreaks if markdown or Rich markup
+        return "\n\n".join(paragraphs)
 
 
 def _get_parameter_help(
@@ -686,7 +690,7 @@ def rich_format_help(
     if obj.epilog:
         # Remove single linebreaks, replace double with single
         lines = obj.epilog.split("\n\n")
-        epilogue = "\n".join([x.replace("\n", " ").strip() for x in lines])
+        epilogue = _fix_linebreaks(lines, markup_mode)
         epilogue_text = _make_rich_text(text=epilogue, markup_mode=markup_mode)
         console.print(Padding(Align(epilogue_text, pad=False), 1))
 
