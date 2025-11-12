@@ -176,6 +176,30 @@ $ python main.py delete --help
 
 </div>
 
+## Suggest Commands
+
+As of version 0.20.0, Typer added support for suggesting mistyped command names. This feature is **enabled by default**, but you can disable it with the parameter `suggest_commands=False`:
+
+{* docs_src/commands/index/tutorial005.py hl[3] *}
+
+If a user mistypes a command, they'll see a helpful suggestion:
+
+<div class="termy">
+
+```console
+$ python main.py crate
+
+<font color="#C4A000">Usage: </font>main.py [OPTIONS] COMMAND [ARGS]...
+<font color="#AAAAAA">Try </font><font color="#22436D">&apos;main.py </font><font color="#4C6A8A"><b>--help</b></font><font color="#22436D">&apos;</font><font color="#AAAAAA"> for help.</font>
+<font color="#CC0000">╭─ Error ───────────────────────────────────────────────────────────╮</font>
+<font color="#CC0000">│</font> No such command &apos;crate&apos;. Did you mean &apos;create&apos;?                   <font color="#CC0000">│</font>
+<font color="#CC0000">╰───────────────────────────────────────────────────────────────────╯</font>
+```
+
+</div>
+
+If there are multiple close matches, Typer will suggest them all. This feature uses Python's built-in `difflib.get_close_matches()` to find similar command names, making your CLI more user-friendly by helping users recover from typos.
+
 ## Rich Markdown and Markup
 
 If you have **Rich** installed as described in [Printing and Colors](../printing.md){.internal-link target=_blank}, you can configure your app to enable markup text with the parameter `rich_markup_mode`.

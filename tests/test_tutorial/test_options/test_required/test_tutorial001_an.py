@@ -1,6 +1,7 @@
 import subprocess
 import sys
 
+import pytest
 import typer
 import typer.core
 from typer.testing import CliRunner
@@ -16,7 +17,7 @@ app.command()(mod.main)
 def test_1():
     result = runner.invoke(app, ["Camila"])
     assert result.exit_code != 0
-    assert "Missing option '--lastname'." in result.output
+    assert "Missing option '--lastname'" in result.output
 
 
 def test_option_lastname():
@@ -33,15 +34,13 @@ def test_help():
     assert "[required]" in result.output
 
 
-def test_help_no_rich():
-    rich = typer.core.rich
-    typer.core.rich = None
+def test_help_no_rich(monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setattr(typer.core, "HAS_RICH", False)
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     assert "--lastname" in result.output
     assert "TEXT" in result.output
     assert "[required]" in result.output
-    typer.core.rich = rich
 
 
 def test_script():
