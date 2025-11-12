@@ -11,6 +11,7 @@ from typing import Any, DefaultDict, Dict, Iterable, List, Optional, Union
 import click
 from rich import box
 from rich.align import Align
+from rich.columns import Columns
 from rich.console import Console, RenderableType, group
 from rich.emoji import Emoji
 from rich.highlighter import RegexHighlighter
@@ -233,7 +234,8 @@ def _get_parameter_help(
     param: Union[click.Option, click.Argument, click.Parameter],
     ctx: click.Context,
     markup_mode: MarkupMode,
-) -> Table:
+    rich_expand: bool = True,
+) -> Table | Columns:
     """Build primary help text for a click option or argument.
 
     Returns the prose help text for an option or argument, rendered either
@@ -312,9 +314,14 @@ def _get_parameter_help(
     if param.required:
         items.append(Text(REQUIRED_LONG_STRING, style=STYLE_REQUIRED_LONG))
 
+    if rich_expand:
+        # Use Columns - this allows us to group different renderable types
+        # (Text, Markdown) onto a single line.
+        return Columns(items)
+
     # Use Table - this allows us to group different renderable types
-    # (Text, Markdown) onto a single line.
-    help_table = Table.grid(padding=(0, 1), expand=True)
+    # (Text, Markdown) onto a single line without using the full screen width.
+    help_table = Table.grid(padding=(0, 1), expand=False)
     help_table.add_row(*items)
     return help_table
 
@@ -435,6 +442,7 @@ def _print_options_panel(
                     param=param,
                     ctx=ctx,
                     markup_mode=markup_mode,
+                    rich_expand=expand,
                 ),
             ]
         )
