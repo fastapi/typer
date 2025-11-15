@@ -361,11 +361,22 @@ def _print_options_panel(
         opt_short_strs = []
         secondary_opt_long_strs = []
         secondary_opt_short_strs = []
-        for opt_str in param.opts:
-            if "--" in opt_str:
-                opt_long_strs.append(opt_str)
+
+        # For Arguments, use the metavar as the display name
+        if isinstance(param, click.Argument):
+            if param.metavar is not None:
+                # Custom metavar
+                opt_long_strs = [param.metavar]
             else:
-                opt_short_strs.append(opt_str)
+                # Default metavar (param name)
+                opt_long_strs = [param.name if param.name else ""]
+        else:
+            for opt_str in param.opts:
+                if "--" in opt_str:
+                    opt_long_strs.append(opt_str)
+                else:
+                    opt_short_strs.append(opt_str)
+
         for opt_str in param.secondary_opts:
             if "--" in opt_str:
                 secondary_opt_long_strs.append(opt_str)
@@ -382,8 +393,12 @@ def _print_options_panel(
             # Click < 8.2
             metavar_str = param.make_metavar()  # type: ignore[call-arg]
 
-        # Do it ourselves if this is a positional argument
-        if (
+        # For Arguments with a custom metavar, show the type in the metavar column
+        if isinstance(param, click.Argument) and param.metavar is not None:
+            # Show the type in the metavar column
+            metavar_str = param.type.name.upper()
+        # Do it ourselves if this is a positional argument without custom metavar
+        elif (
             isinstance(param, click.Argument)
             and param.name
             and metavar_str == param.name.upper()
