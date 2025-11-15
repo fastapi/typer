@@ -1,4 +1,5 @@
 import sys
+from typing import List
 
 import pytest
 import typer
@@ -152,7 +153,7 @@ class TestArgumentMetavarDisplay:
     runner = CliRunner()
 
     @staticmethod
-    def _normalize_output(output: str) -> list[str]:
+    def _normalize_output(output: str) -> List[str]:
         """
         Helper function to normalize stdout for reliable assertions.
         It splits output into lines, collapses all internal whitespace to a
