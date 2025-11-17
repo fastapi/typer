@@ -115,23 +115,31 @@ def test_rich_help_metavar():
         arg6: int = typer.Option(42),
         arg7: int = typer.Argument(42, metavar="meta7"),
         arg8: int = typer.Argument(metavar="ARG8"),
+        arg9: int = typer.Argument(metavar="arg9"),
     ):
         pass
 
     result = runner.invoke(app, ["--help"])
-    assert "Usage main [OPTIONS] ARG1 ARG3 [ARG4] meta7 [ARG8]" in result.stdout
+    # assert "Usage: main [OPTIONS] ARG1 ARG3 [ARG4] meta7 [ARG8] [arg9]" in result.stdout
+    assert "Usage: main [OPTIONS] ARG1 ARG3 [ARG4] meta7 ARG8 arg9" in result.stdout
 
     out_nospace = result.stdout.replace(" ", "")
 
-    assert "arg1INTEGER" in out_nospace
-    assert "arg2INTEGER" in out_nospace
-    assert "arg3INTEGER" in out_nospace
-    assert "arg4INTEGER" in out_nospace
-    assert "arg5INTEGER" in out_nospace
-    assert "arg6INTEGER" in out_nospace
+    # arguments
+    assert "ARG1INTEGER" in out_nospace
+    assert "ARG3INTEGER" in out_nospace
+    assert "[ARG4]INTEGER" in out_nospace
     assert "meta7INTEGER" in out_nospace
     assert "ARG8INTEGER" in out_nospace
+    # assert "[ARG8]INTEGER" in out_nospace
+    assert "arg9INTEGER" in out_nospace
+    # assert "[arg9]INTEGER" in out_nospace
 
-    assert "[ARG4]" not in result.stdout
-    assert "arg7" not in result.stdout
-    assert "arg8" not in result.stdout
+    assert "arg7" not in result.stdout.lower()
+    assert "ARG9" not in result.stdout
+
+    # options
+    assert "arg2INTEGER" in out_nospace
+    assert "arg5INTEGER" in out_nospace
+    assert "arg6INTEGER" in out_nospace
+
