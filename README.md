@@ -42,7 +42,7 @@ The key features are:
 
 ## FastAPI of CLIs
 
-**Typer** is <a href="https://fastapi.tiangolo.com" class="external-link" target="_blank">FastAPI</a>'s little sibling, it's the FastAPI of CLIs.
+**Typer** is <a href="https://fastapi.tiangolo.com" class="external-link" target="_blank">FastAPI</a>'s little sibling; it's the FastAPI of CLIs.
 
 ## Installation
 
