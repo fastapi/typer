@@ -384,7 +384,7 @@ class TyperArgument(click.core.Argument):
         if self.metavar is not None:
             var = self.metavar
             if not self.required and not var.startswith("["):
-                return f"[{var}]"
+                var = f"[{var}]"
             return var
         var = (self.name or "").upper()
         if not self.required:
