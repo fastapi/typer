@@ -99,3 +99,39 @@ def test_rich_markup_import_regression():
     result = runner.invoke(app, ["--help"])
     assert "Usage" in result.stdout
     assert "BAR" in result.stdout
+
+
+def test_rich_help_metavar():
+    app = typer.Typer(rich_markup_mode="rich")
+
+    @app.command()
+    def main(
+        *,
+        arg1: int,
+        arg2: int = 42,
+        arg3: int = typer.Argument(...),
+        arg4: int = typer.Argument(42),
+        arg5: int = typer.Option(...),
+        arg6: int = typer.Option(42),
+        arg7: int = typer.Argument(42, metavar="meta7"),
+        arg8: int = typer.Argument(42, metavar="ARG8"),
+    ):
+        pass
+
+    result = runner.invoke(app, ["--help"])
+    assert "Usage" in result.stdout
+
+    out_nospace = result.stdout.replace(" ", "")
+
+    assert "arg1INTEGER" in out_nospace
+    assert "arg2INTEGER" in out_nospace
+    assert "arg3INTEGER" in out_nospace
+    assert "arg4INTEGER" in out_nospace
+    assert "arg5INTEGER" in out_nospace
+    assert "arg6INTEGER" in out_nospace
+    assert "meta7INTEGER" in out_nospace
+    assert "ARG8INTEGER" in out_nospace
+
+    assert "[ARG4]" not in result.stdout
+    assert "arg7" not in result.stdout
+    assert "arg8" not in result.stdout
