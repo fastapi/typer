@@ -73,7 +73,7 @@ def test_rich_doesnt_print_None_default():
 
     result = runner.invoke(app, ["--help"])
     assert "Usage" in result.stdout
-    assert "name" in result.stdout
+    assert "NAME" in result.stdout
     assert "option-1" in result.stdout
     assert "option-2" in result.stdout
     assert result.stdout.count("[default: None]") == 0
