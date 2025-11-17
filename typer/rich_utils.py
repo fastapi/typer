@@ -113,7 +113,7 @@ class OptionHighlighter(RegexHighlighter):
     highlights = [
         r"(^|\W)(?P<switch>\-\w+)(?![a-zA-Z0-9])",
         r"(^|\W)(?P<option>\-\-[\w\-]+)(?![a-zA-Z0-9])",
-        r"(?P<metavar>\<[^\>]+\>)",
+        r"(?P<types>\<[^\>]+\>)",
         r"(?P<usage>Usage: )",
     ]
 
@@ -362,29 +362,33 @@ def _print_options_panel(
         secondary_opt_long_strs = []
         secondary_opt_short_strs = []
 
-        # check whether argument has a metavar set
-        metavar_str = None
+        # check whether argument has a metavar name or type set
+        metavar_name = None
+        metavar_type = None
         # TODO: when deprecating Click < 8.2, make ctx required
+        signature = inspect.signature(param.make_metavar)
+        if "ctx" in signature.parameters:
+            metavar_str = param.make_metavar(ctx=ctx)
+        else:
+            # Click < 8.2
+            metavar_str = param.make_metavar()  # type: ignore[call-arg]
         if isinstance(param, click.Argument):
-            signature = inspect.signature(param.make_metavar)
-            if "ctx" in signature.parameters:
-                metavar_str = param.make_metavar(ctx=ctx)
-            else:
-                # Click < 8.2
-                metavar_str = param.make_metavar()  # type: ignore[call-arg]
+            metavar_name = metavar_str
+        if isinstance(param, click.Option):
+            metavar_type = metavar_str
 
         for opt_str in param.opts:
             if "--" in opt_str:
                 opt_long_strs.append(opt_str)
-            elif metavar_str:
-                opt_short_strs.append(metavar_str)
+            elif metavar_name:
+                opt_short_strs.append(metavar_name)
             else:
                 opt_short_strs.append(opt_str)
         for opt_str in param.secondary_opts:
             if "--" in opt_str:
                 secondary_opt_long_strs.append(opt_str)
-            elif metavar_str:
-                secondary_opt_short_strs.append(metavar_str)
+            elif metavar_name:
+                secondary_opt_short_strs.append(metavar_name)
             else:
                 secondary_opt_short_strs.append(opt_str)
 
@@ -392,9 +396,12 @@ def _print_options_panel(
         types = Text(style=STYLE_TYPES, overflow="fold")
 
         # Fetch type
-        type_str = param.type.name.upper()
-        if type_str != "BOOLEAN":
-            types.append(type_str)
+        if metavar_type and metavar_type != "BOOLEAN":
+            types.append(metavar_type)
+        else:
+            type_str = param.type.name.upper()
+            if type_str != "BOOLEAN":
+                types.append(type_str)
 
         # Range - from
         # https://github.com/pallets/click/blob/c63c70dabd3f86ca68678b4f00951f78f52d0270/src/click/core.py#L2698-L2706  # noqa: E501
