@@ -117,7 +117,7 @@ def test_rich_help_metavar():
         arg8: int = typer.Argument(metavar="ARG8"),
         arg9: int = typer.Argument(metavar="arg9"),
     ):
-        pass
+        pass  # pragma: no cover
 
     result = runner.invoke(app, ["--help"])
     # assert "Usage: main [OPTIONS] ARG1 ARG3 [ARG4] [meta7] ARG8 arg9" in result.stdout
