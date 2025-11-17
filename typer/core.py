@@ -499,11 +499,9 @@ class TyperOption(click.core.Option):
         return _extract_default_help_str(self, ctx=ctx)
 
     def make_metavar(self, ctx: Union[click.Context, None] = None) -> str:
-        print("make meta var L504")
         signature = inspect.signature(super().make_metavar)
         if "ctx" in signature.parameters:
             # Click >= 8.2
-            print("RETURNING option metavar", super().make_metavar(ctx=ctx))
             return super().make_metavar(ctx=ctx)  # type: ignore[arg-type]
         # Click < 8.2
         return super().make_metavar()  # type: ignore[call-arg]
