@@ -114,12 +114,12 @@ def test_rich_help_metavar():
         arg5: int = typer.Option(...),
         arg6: int = typer.Option(42),
         arg7: int = typer.Argument(42, metavar="meta7"),
-        arg8: int = typer.Argument(42, metavar="ARG8"),
+        arg8: int = typer.Argument(metavar="ARG8"),
     ):
         pass
 
     result = runner.invoke(app, ["--help"])
-    assert "Usage" in result.stdout
+    assert "Usage main [OPTIONS] ARG1 ARG3 [ARG4] [meta7] [ARG8]" in result.stdout
 
     out_nospace = result.stdout.replace(" ", "")
 
