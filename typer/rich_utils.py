@@ -387,7 +387,7 @@ def _print_options_panel(
         for opt_str in param.secondary_opts:
             if "--" in opt_str:
                 secondary_opt_long_strs.append(opt_str)
-            elif metavar_name:
+            elif metavar_name:  # pragma: no cover
                 secondary_opt_short_strs.append(metavar_name)
             else:
                 secondary_opt_short_strs.append(opt_str)
