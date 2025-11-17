@@ -120,7 +120,7 @@ def test_rich_help_metavar():
         pass
 
     result = runner.invoke(app, ["--help"])
-    # assert "Usage: main [OPTIONS] ARG1 ARG3 [ARG4] meta7 [ARG8] [arg9]" in result.stdout
+    # assert "Usage: main [OPTIONS] ARG1 ARG3 [ARG4] [meta7] ARG8 arg9" in result.stdout
     assert "Usage: main [OPTIONS] ARG1 ARG3 [ARG4] meta7 ARG8 arg9" in result.stdout
 
     out_nospace = result.stdout.replace(" ", "")
@@ -130,10 +130,9 @@ def test_rich_help_metavar():
     assert "ARG3INTEGER" in out_nospace
     assert "[ARG4]INTEGER" in out_nospace
     assert "meta7INTEGER" in out_nospace
+    # assert "[meta7]INTEGER" in out_nospace
     assert "ARG8INTEGER" in out_nospace
-    # assert "[ARG8]INTEGER" in out_nospace
     assert "arg9INTEGER" in out_nospace
-    # assert "[arg9]INTEGER" in out_nospace
 
     assert "arg7" not in result.stdout.lower()
     assert "ARG9" not in result.stdout
