@@ -1,7 +1,7 @@
 import typer
 
 
-def main(name: str = typer.Argument("World", metavar="✨username✨")):
+def main(name: str = typer.Argument("World", metavar="✨user✨")):
     print(f"Hello {name}")
 
 
