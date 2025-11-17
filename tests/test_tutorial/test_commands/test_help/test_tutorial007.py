@@ -24,10 +24,10 @@ def test_main_help():
 def test_create_help():
     result = runner.invoke(app, ["create", "--help"])
     assert result.exit_code == 0
-    assert "username" in result.output
+    assert "USERNAME" in result.output
     assert "The username to create" in result.output
     assert "Secondary Arguments" in result.output
-    assert "lastname" in result.output
+    assert "LASTNAME" in result.output
     assert "The last name of the new user" in result.output
     assert "--force" in result.output
     assert "--no-force" in result.output
