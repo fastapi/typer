@@ -142,4 +142,3 @@ def test_rich_help_metavar():
     assert "arg2INTEGER" in out_nospace
     assert "arg5INTEGER" in out_nospace
     assert "arg6INTEGER" in out_nospace
-
