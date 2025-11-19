@@ -1,5 +1,8 @@
 import subprocess
+import sys
 
+import pytest
+import typer.core
 from typer.testing import CliRunner
 
 from docs_src.commands.callback import tutorial001 as mod
@@ -13,7 +16,17 @@ def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     assert "Manage users in the awesome CLI app." in result.output
-    assert "--verbose / --no-verbose" in result.output
+    assert "--verbose" in result.output
+    assert "--no-verbose" in result.output
+
+
+def test_help_no_rich(monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setattr(typer.core, "HAS_RICH", False)
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "Manage users in the awesome CLI app." in result.output
+    assert "--verbose" in result.output
+    assert "--no-verbose" in result.output
 
 
 def test_create():
@@ -49,14 +62,13 @@ def test_delete_verbose():
 def test_wrong_verbose():
     result = runner.invoke(app, ["delete", "--verbose", "Camila"])
     assert result.exit_code != 0
-    assert "Error: no such option: --verbose" in result.output
+    assert "No such option: --verbose" in result.output
 
 
 def test_script():
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--help"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
+        capture_output=True,
         encoding="utf-8",
     )
     assert "Usage" in result.stdout

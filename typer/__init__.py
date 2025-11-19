@@ -1,6 +1,8 @@
 """Typer, build great CLIs. Easy to code. Based on Python type hints."""
 
-__version__ = "0.3.2"
+__version__ = "0.20.0"
+
+from shutil import get_terminal_size as get_terminal_size
 
 from click.exceptions import Abort as Abort
 from click.exceptions import BadParameter as BadParameter
@@ -9,9 +11,7 @@ from click.termui import clear as clear
 from click.termui import confirm as confirm
 from click.termui import echo_via_pager as echo_via_pager
 from click.termui import edit as edit
-from click.termui import get_terminal_size as get_terminal_size
 from click.termui import getchar as getchar
-from click.termui import launch as launch
 from click.termui import pause as pause
 from click.termui import progressbar as progressbar
 from click.termui import prompt as prompt
@@ -27,6 +27,7 @@ from click.utils import open_file as open_file
 
 from . import colors as colors
 from .main import Typer as Typer
+from .main import launch as launch
 from .main import run as run
 from .models import CallbackParam as CallbackParam
 from .models import Context as Context

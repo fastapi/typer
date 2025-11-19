@@ -26,7 +26,7 @@ app.add_typer(
 )
 
 
-@users_app.callback("call-users", help="Help from callback for users.")
+@users_app.callback(help="Help from callback for users.")
 def users():
     """
     Manage users in the app.
@@ -35,7 +35,7 @@ def users():
 
 @users_app.command()
 def create(name: str):
-    typer.echo(f"Creating user: {name}")
+    print(f"Creating user: {name}")
 
 
 if __name__ == "__main__":

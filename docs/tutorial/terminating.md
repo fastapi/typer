@@ -1,3 +1,5 @@
+# Terminating
+
 There are some cases where you might want to terminate a command at some point, and stop all subsequent execution.
 
 It could be that your code determined that the program completed successfully, or it could be an operation aborted.
@@ -10,9 +12,7 @@ This doesn't have to mean that there's an error, just that nothing else needs to
 
 In that case, you can raise a `typer.Exit()` exception:
 
-```Python hl_lines="9"
-{!../docs_src/terminating/tutorial001.py!}
-```
+{* docs_src/terminating/tutorial001.py hl[9] *}
 
 There are several things to see in this example.
 
@@ -40,12 +40,15 @@ The user already exists
 
 </div>
 
-!!! tip
-    Even though you are rasing an exception, it doesn't necessarily mean there's an error.
+/// tip
 
-    This is done with an exception because it works as an "error" and stops all execution.
-    
-    But then **Typer** (actually Click) catches it and just terminates the program normally.
+Even though you are raising an exception, it doesn't necessarily mean there's an error.
+
+This is done with an exception because it works as an "error" and stops all execution.
+
+But then **Typer** (actually Click) catches it and just terminates the program normally.
+
+///
 
 ## Exit with an error
 
@@ -53,9 +56,7 @@ The user already exists
 
 You can pass a `code` with a number other than `0` to tell the terminal that there was an error in the execution of the program:
 
-```Python hl_lines="7"
-{!../docs_src/terminating/tutorial002.py!}
-```
+{* docs_src/terminating/tutorial002.py hl[7] *}
 
 Check it:
 
@@ -86,8 +87,11 @@ $ echo $?
 
 </div>
 
-!!! tip
-    The error code might be used by other programs (for example a Bash script) that execute your CLI program.
+/// tip
+
+The error code might be used by other programs (for example a Bash script) that execute your CLI program.
+
+///
 
 ## Abort
 
@@ -95,9 +99,7 @@ There's a special exception that you can use to "abort" a program.
 
 It works more or less the same as `typer.Exit()` but will print `"Aborted!"` to the screen and can be useful in certain cases later to make it explicit that the execution was aborted:
 
-```Python hl_lines="7"
-{!../docs_src/terminating/tutorial003.py!}
-```
+{* docs_src/terminating/tutorial003.py hl[7] *}
 
 Check it:
 

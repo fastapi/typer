@@ -1,8 +1,8 @@
+# Password CLI Option and Confirmation Prompt
+
 Apart from having a prompt, you can make a *CLI option* have a `confirmation_prompt=True`:
 
-```Python hl_lines="5"
-{!../docs_src/options/password/tutorial001.py!}
-```
+{* docs_src/options/password/tutorial001_an.py hl[7] *}
 
 And the CLI program will ask for confirmation:
 
@@ -30,9 +30,7 @@ You can achieve the same using `hide_input=True`.
 
 And if you combine it with `confirmation_prompt=True` you can easily receive a password with double confirmation:
 
-```Python hl_lines="6 7 8"
-{!../docs_src/options/password/tutorial002.py!}
-```
+{* docs_src/options/password/tutorial002_an.py hl[8] *}
 
 Check it:
 
@@ -42,8 +40,8 @@ Check it:
 $ python main.py Camila
 
 // It prompts for the password, but doesn't show anything when you type
-# Password: $ 
-# Repeat for confirmation: $ 
+# Password: $
+# Repeat for confirmation: $
 
 // Let's imagine the password typed was "typerrocks"
 Hello Camila. Doing something very secure with password.

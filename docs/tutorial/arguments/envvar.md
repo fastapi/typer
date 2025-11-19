@@ -1,10 +1,16 @@
+# CLI Arguments with Environment Variables
+
 You can also configure a *CLI argument* to read a value from an environment variable if it is not provided in the command line as a *CLI argument*.
+
+/// tip
+
+You can learn more about environment variables in the [Environment Variables](../../environment-variables.md){.internal-link target=_blank} page.
+
+///
 
 To do that, use the `envvar` parameter for `typer.Argument()`:
 
-```Python hl_lines="4"
-{!../docs_src/arguments/envvar/tutorial001.py!}
-```
+{* docs_src/arguments/envvar/tutorial001_an.py hl[5] *}
 
 In this case, the *CLI argument* `name` will have a default value of `"World"`, but will also read any value passed to the environment variable `AWESOME_NAME` if no value is provided in the command line:
 
@@ -20,8 +26,6 @@ Arguments:
   [NAME]  [env var: AWESOME_NAME;default: World]
 
 Options:
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 
 // Call it without a CLI argument
@@ -51,9 +55,7 @@ Hello Mr. Czernobog
 
 You are not restricted to a single environment variable, you can declare a list of environment variables that could be used to get a value if it was not passed in the command line:
 
-```Python hl_lines="4"
-{!../docs_src/arguments/envvar/tutorial002.py!}
-```
+{* docs_src/arguments/envvar/tutorial002_an.py hl[6] *}
 
 Check it:
 
@@ -69,8 +71,6 @@ Arguments:
   [NAME]  [env var: AWESOME_NAME, GOD_NAME;default: World]
 
 Options:
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 
 // Try the first env var
@@ -90,9 +90,7 @@ Hello Mr. Anubis
 
 By default, environment variables used will be shown in the help text, but you can disable them with `show_envvar=False`:
 
-```Python hl_lines="4"
-{!../docs_src/arguments/envvar/tutorial003.py!}
-```
+{* docs_src/arguments/envvar/tutorial003_an.py hl[7] *}
 
 Check it:
 
@@ -109,8 +107,6 @@ Arguments:
   [NAME]  [default: World]
 
 Options:
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 
 // But it will still be able to use it
@@ -121,7 +117,10 @@ Hello Mr. Wednesday
 
 </div>
 
-!!! note "Technical Details"
-    In Click applications the env vars are hidden by default. 🙈
+/// note | Technical Details
 
-    In **Typer** these env vars are shown by default. 👀
+In Click applications the env vars are hidden by default. 🙈
+
+In **Typer** these env vars are shown by default. 👀
+
+///

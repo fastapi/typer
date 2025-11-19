@@ -1,3 +1,5 @@
+# CLI Option Name
+
 By default **Typer** will create a *CLI option* name from the function parameter.
 
 So, if you have a function with:
@@ -10,7 +12,7 @@ def main(user_name: Optional[str] = None):
 or
 
 ```Python
-def main(user_name: Optional[str] = typer.Option(None)):
+def main(user_name: Annotated[Optional[str], typer.Option()] = None):
     pass
 ```
 
@@ -24,22 +26,21 @@ But you can customize it if you want to.
 
 Let's say the function parameter name is `user_name` as above, but you want the *CLI option* to be just `--name`.
 
-You can pass the *CLI option* name that you want to have in the next positional argument passed to `typer.Option()`:
+You can pass the *CLI option* name that you want to have in the following positional argument passed to `typer.Option()`:
 
-```Python hl_lines="4"
-{!../docs_src/options/name/tutorial001.py!}
-```
+{* docs_src/options/name/tutorial001_an.py hl[5] *}
 
-Here you are passing the string `"--name"` as the second positional argument to `typer.Option()`.
+/// info
 
-!!! info
-    "<a href="https://docs.python.org/3.8/glossary.html#term-argument" class="external-link" target="_blank">Positional</a>" means that it's not a function argument with a keyword name.
-    
-    For example `show_default=True` is a keyword argument. "`show_default`" is the keyword.
+"<a href="https://docs.python.org/3.8/glossary.html#term-argument" class="external-link" target="_blank">Positional</a>" means that it's not a function argument with a keyword name.
 
-    But in `"--name"` there's no `option_name="--name"` or something similar, it's just the string value `"--name"` that goes in `typer.Option()` after the `...` value passed in the first position.
+For example `show_default=True` is a keyword argument. "`show_default`" is the keyword.
 
-    That's a "positional argument" in a function.
+But in `"--name"` there's no `option_name="--name"` or something similar, it's just the string value `"--name"` that goes in `typer.Option()`.
+
+That's a "positional argument" in a function.
+
+///
 
 Check it:
 
@@ -53,12 +54,10 @@ Usage: main.py [OPTIONS]
 
 Options:
   --name TEXT           [required]
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 
 // Try it
-$ python --name Camila
+$ python main.py --name Camila
 
 Hello Camila
 ```
@@ -172,20 +171,21 @@ tar: You must specify one of the blah, blah, error, error
 
 In **Typer** you can also define *CLI option* short names the same way you can customize the long names.
 
-`typer.Option()` receives as a first function argument the default value, e.g. `None`, and all the next *positional* values are to define the *CLI option* name(s).
+You can pass *positional* arguments to `typer.Option()` to define the *CLI option* name(s).
 
-!!! tip
-    Remember the *positional* function arguments are those that don't have a keyword.
+/// tip
 
-    All the other function arguments/parameters you pass to `typer.Option()` like `prompt=True` and `help="This option blah, blah"` require the keyword.
+Remember the *positional* function arguments are those that don't have a keyword.
+
+All the other function arguments/parameters you pass to `typer.Option()` like `prompt=True` and `help="This option blah, blah"` require the keyword.
+
+///
 
 You can overwrite the *CLI option* name to use as in the previous example, but you can also declare extra alternatives, including short names.
 
 For example, extending the previous example, let's add a *CLI option* short name `-n`:
 
-```Python hl_lines="4"
-{!../docs_src/options/name/tutorial002.py!}
-```
+{* docs_src/options/name/tutorial002_an.py hl[5] *}
 
 Here we are overwriting the *CLI option* name that by default would be `--user-name`, and we are defining it to be `--name`. And we are also declaring a *CLI option* short name of `-n`.
 
@@ -202,8 +202,6 @@ Usage: main.py [OPTIONS]
 
 Options:
   -n, --name TEXT       [required]
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 
 // Try the short version
@@ -218,9 +216,7 @@ Hello Camila
 
 If you only declare a short name like `-n` then that will be the only *CLI option* name. And neither `--name` nor `--user-name` will be available.
 
-```Python hl_lines="4"
-{!../docs_src/options/name/tutorial003.py!}
-```
+{* docs_src/options/name/tutorial003_an.py hl[5] *}
 
 Check it:
 
@@ -234,8 +230,6 @@ Usage: main.py [OPTIONS]
 
 Options:
   -n TEXT               [required]
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 
 // Try it
@@ -250,9 +244,7 @@ Hello Camila
 
 Continuing with the example above, as **Typer** allows you to declare a *CLI option* as having only a short name, if you want to have the default long name plus a short name, you have to declare both explicitly:
 
-```Python hl_lines="4"
-{!../docs_src/options/name/tutorial004.py!}
-```
+{* docs_src/options/name/tutorial004_an.py hl[5] *}
 
 Check it:
 
@@ -267,8 +259,6 @@ Usage: main.py [OPTIONS]
 
 Options:
   -n, --user-name TEXT  [required]
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 
 // Try it
@@ -288,12 +278,13 @@ You can create multiple short names and use them together.
 
 You don't have to do anything special for it to work (apart from declaring those short versions):
 
-```Python hl_lines="5 6"
-{!../docs_src/options/name/tutorial005.py!}
-```
+{* docs_src/options/name/tutorial005_an.py hl[6:7] *}
 
-!!! tip
-    Notice that, again, we are declaring the long and short version of the *CLI option* names.
+/// tip
+
+Notice that, again, we are declaring the long and short version of the *CLI option* names.
+
+///
 
 Check it:
 
@@ -309,8 +300,6 @@ Usage: main.py [OPTIONS]
 Options:
   -n, --name TEXT       [required]
   -f, --formal
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
   --help                Show this message and exit.
 
 // Try the short versions

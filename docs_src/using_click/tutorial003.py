@@ -9,7 +9,7 @@ def top():
     """
     Top level command, form Typer
     """
-    typer.echo("The Typer app is at the top level")
+    print("The Typer app is at the top level")
 
 
 @app.callback()
@@ -23,7 +23,7 @@ def callback():
 @click.option("--name", prompt="Your name", help="The person to greet.")
 def hello(name):
     """Simple program that greets NAME for a total of COUNT times."""
-    click.echo("Hello %s!" % name)
+    click.echo(f"Hello {name}!")
 
 
 typer_click_object = typer.main.get_command(app)
