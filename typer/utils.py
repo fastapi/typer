@@ -2,7 +2,17 @@ import asyncio
 import inspect
 import sys
 from copy import copy
-from typing import Any, Awaitable, Callable, Dict, List, Tuple, Type, TypeVar, cast
+from typing import (
+    Any,
+    Callable,
+    Coroutine,
+    Dict,
+    List,
+    Tuple,
+    Type,
+    TypeVar,
+    cast,
+)
 
 from ._typing import Annotated, get_args, get_origin, get_type_hints
 from .models import ArgumentInfo, OptionInfo, ParameterInfo, ParamMeta
@@ -193,7 +203,7 @@ def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
     return params
 
 
-def aio_run(aw: Awaitable[_T]) -> _T:
+def aio_run(aw: Coroutine[Any, Any, _T]) -> _T:
     """Run an async/awaitable function (Polyfill asyncio.run)
     Examples:
     >>> async def add(a, b):
@@ -202,16 +212,7 @@ def aio_run(aw: Awaitable[_T]) -> _T:
     >>> aio.run(add(1, 4))
     5
     """
-    if sys.version_info >= (3, 7):
-        return asyncio.run(aw)
-
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    try:
-        return loop.run_until_complete(aw)
-    finally:
-        loop.close()
-        asyncio.set_event_loop(None)
+    return asyncio.run(aw)
 
 
 def is_async(obj: Callable[..., Any]) -> bool:
