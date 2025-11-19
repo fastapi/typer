@@ -310,7 +310,7 @@ class Typer:
             cmd = get_command(self)
             if is_async(cmd):
                 return aio_run(cmd(*args, **kwargs))
-            return get_command(self)(*args, **kwargs)
+            return cmd(*args, **kwargs)
         except Exception as e:
             # Set a custom attribute to tell the hook to show nice exceptions for user
             # code. An alternative/first implementation was a custom exception with
