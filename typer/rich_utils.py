@@ -467,7 +467,7 @@ def _print_options_panel(
         options_table = Table(
             highlight=True,
             show_header=False,
-            expand=False,
+            expand=True,
             box=box_style,
             **t_styles,
         )
