@@ -1081,8 +1081,8 @@ def get_param_completion(
     return wrapper
 
 
-def run(function: Callable[..., Any], rich_expand: bool = True) -> None:
-    app = Typer(add_completion=False, rich_expand=rich_expand)
+def run(function: Callable[..., Any]) -> None:
+    app = Typer(add_completion=False)
     app.command()(function)
     app()
 

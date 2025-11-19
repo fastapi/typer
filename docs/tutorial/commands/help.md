@@ -481,12 +481,6 @@ You can do this by initializing your Typer with `rich_expand=False`, like this:
 app = typer.Typer(rich_expand=False)
 ```
 
-Or if you use `typer.run()`, for simple apps:
-
-```python
-typer.run(main, rich_expand=False)
-```
-
 Your help panels will all fit to their contents, which also means they will probably have different widths.
 It's a different look, and sometimes you might prefer it as an option.
 
