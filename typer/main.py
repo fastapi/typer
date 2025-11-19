@@ -694,7 +694,7 @@ def get_callback(
         return callback(**use_params)
 
     def wrapper_async(*args: Any, **kwargs: Any) -> Any:
-        return aio_run(callback(*args, **kwargs))  # type: ignore
+        return aio_run(callback(*args, **kwargs))
 
     update_wrapper(wrapper, callback)
 
@@ -1025,7 +1025,7 @@ def get_param_callback(
         return callback(**use_params)
 
     def wrapper_async(*args: Any, **kwargs: Any) -> Any:
-        return aio_run(callback(*args, **kwargs))  # type: ignore
+        return aio_run(callback(*args, **kwargs))
 
     update_wrapper(wrapper, callback)
 
@@ -1085,7 +1085,7 @@ def get_param_completion(
         return callback(**use_params)
 
     def wrapper_async(*args: Any, **kwargs: Any) -> Any:
-        return aio_run(callback(*args, **kwargs))  # type: ignore
+        return aio_run(callback(*args, **kwargs))
 
     update_wrapper(wrapper, callback)
 
