@@ -711,7 +711,7 @@ def rich_format_help(
         console.print(Padding(Align(epilogue_text, pad=False), 1))
 
 
-def rich_format_error(self: click.ClickException, expand: bool = True) -> None:
+def rich_format_error(self: click.ClickException, expand: bool) -> None:
     """Print richly formatted click errors.
 
     Called by custom exception handler to print richly formatted click errors.
