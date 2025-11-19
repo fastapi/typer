@@ -235,7 +235,7 @@ def _get_parameter_help(
     ctx: click.Context,
     markup_mode: MarkupMode,
     rich_expand: bool = True,
-) -> Table | Columns:
+) -> Union[Table, Column]:
     """Build primary help text for a click option or argument.
 
     Returns the prose help text for an option or argument, rendered either
