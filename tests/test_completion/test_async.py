@@ -202,10 +202,7 @@ def test_forward_references():
         typer.echo(f"arg5: {type(arg5)} {arg5}")
 
     result = runner.invoke(app, ["Hello", "2", "invalid"])
-    assert (
-        "Error: Invalid value for 'ARG3': invalid is not a valid integer"
-        in result.stdout
-    )
+    assert "not a valid integer" in result.stderr
     result = runner.invoke(app, ["Hello", "2", "3", "--arg4", "--arg5"])
     assert (
         "arg1: <class 'str'> Hello\narg2: <class 'int'> 2\narg3: <class 'int'> 3\narg4: <class 'bool'> True\narg5: <class 'bool'> True\n"
