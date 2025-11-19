@@ -234,7 +234,7 @@ def _get_parameter_help(
     param: Union[click.Option, click.Argument, click.Parameter],
     ctx: click.Context,
     markup_mode: MarkupMode,
-    rich_expand: bool = True,
+    rich_expand: bool,
 ) -> Union[Table, Columns]:
     """Build primary help text for a click option or argument.
 

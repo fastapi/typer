@@ -166,7 +166,7 @@ def _main(
     standalone_mode: bool = True,
     windows_expand_args: bool = True,
     rich_markup_mode: MarkupMode = DEFAULT_MARKUP_MODE,
-    rich_expand: bool = True,
+    rich_expand: bool,
     **extra: Any,
 ) -> Any:
     # Typer override, duplicated from click.main() to handle custom rich exceptions
