@@ -4,6 +4,7 @@
 
 ### Internal
 
+* 🔧 Upgrade Material for MkDocs and remove insiders. PR [#1416](https://github.com/fastapi/typer/pull/1416) by [@tiangolo](https://github.com/tiangolo).
 * ⬆ Bump mkdocs-material from 9.6.23 to 9.7.0. PR [#1404](https://github.com/fastapi/typer/pull/1404) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump mkdocs-macros-plugin from 1.4.1 to 1.5.0. PR [#1406](https://github.com/fastapi/typer/pull/1406) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ruff from 0.14.4 to 0.14.5. PR [#1407](https://github.com/fastapi/typer/pull/1407) by [@dependabot[bot]](https://github.com/apps/dependabot).
