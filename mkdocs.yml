@@ -1,4 +1,4 @@
-INHERIT: ./mkdocs.maybe-insiders.yml
+INHERIT: ./mkdocs.env.yml
 site_name: Typer
 site_description: Typer, build great CLIs. Easy to code. Based on Python type hints.
 site_url: https://typer.tiangolo.com/
@@ -59,6 +59,7 @@ plugins:
   # Material for MkDocs
   search:
   social:
+  typeset:
   # Other plugins
   macros:
     include_yaml:
@@ -148,6 +149,11 @@ nav:
   - release-notes.md
 
 markdown_extensions:
+  # Material for MkDocs Extensions
+  material.extensions.preview:
+    targets:
+      include:
+        - "*"
   # Python Markdown
   abbr:
   attr_list:
