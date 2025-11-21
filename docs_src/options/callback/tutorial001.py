@@ -2,7 +2,10 @@ from typing import Optional
 
 import typer
 
+app = typer.Typer()
 
+
+@app.command()
 def name_callback(value: str):
     if value != "Camila":
         raise typer.BadParameter("Only Camila is allowed")
@@ -14,4 +17,4 @@ def main(name: Optional[str] = typer.Option(default=None, callback=name_callback
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()

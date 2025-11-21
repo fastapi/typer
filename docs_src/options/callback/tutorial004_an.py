@@ -3,7 +3,10 @@ from typing import Optional
 import typer
 from typing_extensions import Annotated
 
+app = typer.Typer()
 
+
+@app.command()
 def name_callback(ctx: typer.Context, param: typer.CallbackParam, value: str):
     if ctx.resilient_parsing:
         return
@@ -18,4 +21,4 @@ def main(name: Annotated[Optional[str], typer.Option(callback=name_callback)] = 
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()

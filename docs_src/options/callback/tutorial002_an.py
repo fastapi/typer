@@ -3,7 +3,10 @@ from typing import Optional
 import typer
 from typing_extensions import Annotated
 
+app = typer.Typer()
 
+
+@app.command()
 def name_callback(value: str):
     print("Validating name")
     if value != "Camila":
@@ -16,4 +19,4 @@ def main(name: Annotated[Optional[str], typer.Option(callback=name_callback)] = 
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()
