@@ -26,15 +26,15 @@ So, the error you see will be **much clearer** and simpler, to help you detect t
 $ python main.py
 
 <font color="#F92672">╭──────────────── </font><font color="#F92672"><b>Traceback (most recent call last)</b></font><font color="#F92672"> ────────────────╮</font>
-<font color="#F92672">│</font> <font color="#A37F4E">/home/user/code/superapp/</font><font color="#F4BF75"><b>main.py</b></font>:<font color="#66D9EF">5</font> in <font color="#A6E22E">main</font>                        <font color="#F92672">│</font>
+<font color="#F92672">│</font> <font color="#A37F4E">/home/user/code/superapp/</font><font color="#F4BF75"><b>main.py</b></font>:<font color="#66D9EF">8</font> in <font color="#A6E22E">main</font>                        <font color="#F92672">│</font>
 <font color="#F92672">│</font>                                                                   <font color="#F92672">│</font>
-<font color="#F92672">│</font>    2                                                              <font color="#F92672">│</font>
-<font color="#F92672">│</font>    3                                                              <font color="#F92672">│</font>
-<font color="#F92672">│</font>    4 <font color="#66D9EF">def</font> <font color="#A6E22E">main</font>(name: <font color="#A1EFE4">str</font> = <font color="#F4BF75">&quot;morty&quot;</font>):                               <font color="#F92672">│</font>
-<font color="#F92672">│</font> <font color="#F92672">❱ </font> 5 │   <font color="#A1EFE4">print</font>(name + <font color="#66D9EF">3</font>)                                          <font color="#F92672">│</font>
-<font color="#F92672">│</font>    6                                                              <font color="#F92672">│</font>
-<font color="#F92672">│</font>    7                                                              <font color="#F92672">│</font>
-<font color="#F92672">│</font>    8 <font color="#66D9EF">if</font> <font color="#F92672">__name__</font> == <font color="#F4BF75">&quot;__main__&quot;</font>:                                   <font color="#F92672">│</font>
+<font color="#F92672">│</font>    5                                                              <font color="#F92672">│</font>
+<font color="#F92672">│</font>    6 <font color="#FF00FF">@app</font>.command()                                                                 <font color="#F92672">│</font>
+<font color="#F92672">│</font>    7 <font color="#66D9EF">def</font> <font color="#A6E22E">main</font>(name: <font color="#A1EFE4">str</font> = <font color="#F4BF75">&quot;morty&quot;</font>):                               <font color="#F92672">│</font>
+<font color="#F92672">│</font> <font color="#F92672">❱ </font> 8 │   <font color="#A1EFE4">print</font>(name + <font color="#66D9EF">3</font>)                                          <font color="#F92672">│</font>
+<font color="#F92672">│</font>    9                                                              <font color="#F92672">│</font>
+<font color="#F92672">│</font>    10                                                             <font color="#F92672">│</font>
+<font color="#F92672">│</font>    11 <font color="#66D9EF">if</font> <font color="#F92672">__name__</font> == <font color="#F4BF75">&quot;__main__&quot;</font>:                                   <font color="#F92672">│</font>
 <font color="#F92672">│</font>                                                                   <font color="#F92672">│</font>
 <font color="#F92672">│</font> <font color="#F4BF75">╭──── locals ────╮</font>                                                <font color="#F92672">│</font>
 <font color="#F92672">│</font> <font color="#F4BF75">│</font> name = <font color="#F4BF75">&apos;morty&apos;</font> <font color="#F4BF75">│</font>                                                <font color="#F92672">│</font>
