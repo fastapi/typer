@@ -8,7 +8,7 @@ Typer does some tricks to help you detect those errors quickly.
 
 Let's take this example broken app:
 
-{* docs_src/exceptions/tutorial001.py hl[5] *}
+{* docs_src/exceptions/tutorial001.py hl[8] *}
 
 This code is broken because you can't sum a string and a number (`name + 3`).
 
@@ -83,7 +83,7 @@ In this case, `name` is a local variable, it comes from a parameter passed to th
 
 But if it was something like a password, you would have liked to hide it.
 
-In that case, you can create the `typer.Typer()` application explicitly and set the parameter `pretty_exceptions_show_locals=False`:
+In that case, you can set the parameter `pretty_exceptions_show_locals=False` when creating the `typer.Typer()` application:
 
 {* docs_src/exceptions/tutorial002.py hl[3] *}
 
