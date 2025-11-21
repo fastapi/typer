@@ -215,3 +215,7 @@ banned-module-level-imports = ["typer.rich_utils"]
 
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
 "rich".msg = "Use 'typer.rich_utils' instead of importing from 'rich' directly."
+"shellingham.detect_shell".msg = """\
+Use 'typer._completion_shared._get_shell_name' instead of using \
+'shellingham.detect_shell' directly.
+"""
