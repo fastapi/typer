@@ -6,7 +6,7 @@ site_url: https://typer.tiangolo.com/
 theme:
   name: material
   font:
-    code: Cascadia Code
+    code: JetBrains Mono
   custom_dir: docs/overrides
   palette:
   - media: "(prefers-color-scheme)"
