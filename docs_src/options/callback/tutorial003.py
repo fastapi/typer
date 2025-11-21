@@ -5,7 +5,6 @@ import typer
 app = typer.Typer()
 
 
-@app.command()
 def name_callback(ctx: typer.Context, value: str):
     if ctx.resilient_parsing:
         return
@@ -15,6 +14,7 @@ def name_callback(ctx: typer.Context, value: str):
     return value
 
 
+@app.command()
 def main(name: Optional[str] = typer.Option(default=None, callback=name_callback)):
     print(f"Hello {name}")
 

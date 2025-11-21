@@ -6,7 +6,6 @@ from typing_extensions import Annotated
 app = typer.Typer()
 
 
-@app.command()
 def name_callback(ctx: typer.Context, value: str):
     if ctx.resilient_parsing:
         return
@@ -16,6 +15,7 @@ def name_callback(ctx: typer.Context, value: str):
     return value
 
 
+@app.command()
 def main(name: Annotated[Optional[str], typer.Option(callback=name_callback)] = None):
     print(f"Hello {name}")
 

@@ -6,13 +6,13 @@ from typing_extensions import Annotated
 app = typer.Typer()
 
 
-@app.command()
 def name_callback(value: str):
     if value != "Camila":
         raise typer.BadParameter("Only Camila is allowed")
     return value
 
 
+@app.command()
 def main(name: Annotated[Optional[str], typer.Option(callback=name_callback)] = None):
     print(f"Hello {name}")
 

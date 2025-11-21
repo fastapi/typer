@@ -5,7 +5,6 @@ import typer
 app = typer.Typer()
 
 
-@app.command()
 def name_callback(value: str):
     print("Validating name")
     if value != "Camila":
@@ -13,6 +12,7 @@ def name_callback(value: str):
     return value
 
 
+@app.command()
 def main(name: Optional[str] = typer.Option(default=None, callback=name_callback)):
     print(f"Hello {name}")
 
