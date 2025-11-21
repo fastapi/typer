@@ -234,7 +234,8 @@ def _get_parameter_help(
     param: Union[click.Option, click.Argument, click.Parameter],
     ctx: click.Context,
     markup_mode: MarkupMode,
-) -> Columns:
+    rich_expand: bool,
+) -> Union[Table, Columns]:
     """Build primary help text for a click option or argument.
 
     Returns the prose help text for an option or argument, rendered either
@@ -313,9 +314,16 @@ def _get_parameter_help(
     if param.required:
         items.append(Text(REQUIRED_LONG_STRING, style=STYLE_REQUIRED_LONG))
 
-    # Use Columns - this allows us to group different renderable types
-    # (Text, Markdown) onto a single line.
-    return Columns(items)
+    if rich_expand:
+        # Use Columns - this allows us to group different renderable types
+        # (Text, Markdown) onto a single line.
+        return Columns(items)
+
+    # Use Table - this allows us to group different renderable types
+    # (Text, Markdown) onto a single line without using the full screen width.
+    help_table = Table.grid(padding=(0, 1), expand=False)
+    help_table.add_row(*items)
+    return help_table
 
 
 def _make_command_help(
@@ -351,6 +359,7 @@ def _print_options_panel(
     params: Union[List[click.Option], List[click.Argument]],
     ctx: click.Context,
     markup_mode: MarkupMode,
+    expand: bool,
     console: Console,
 ) -> None:
     options_rows: List[List[RenderableType]] = []
@@ -433,6 +442,7 @@ def _print_options_panel(
                     param=param,
                     ctx=ctx,
                     markup_mode=markup_mode,
+                    rich_expand=expand,
                 ),
             ]
         )
@@ -468,6 +478,7 @@ def _print_options_panel(
                 options_table,
                 border_style=STYLE_OPTIONS_PANEL_BORDER,
                 title=name,
+                expand=expand,
                 title_align=ALIGN_OPTIONS_PANEL,
             )
         )
@@ -478,6 +489,7 @@ def _print_commands_panel(
     name: str,
     commands: List[click.Command],
     markup_mode: MarkupMode,
+    expand: bool,
     console: Console,
     cmd_len: int,
 ) -> None:
@@ -544,6 +556,7 @@ def _print_commands_panel(
                 commands_table,
                 border_style=STYLE_COMMANDS_PANEL_BORDER,
                 title=name,
+                expand=expand,
                 title_align=ALIGN_COMMANDS_PANEL,
             )
         )
@@ -554,6 +567,7 @@ def rich_format_help(
     obj: Union[click.Command, click.Group],
     ctx: click.Context,
     markup_mode: MarkupMode,
+    expand: bool,
 ) -> None:
     """Print nicely formatted help text using rich.
 
@@ -607,6 +621,7 @@ def rich_format_help(
         params=default_arguments,
         ctx=ctx,
         markup_mode=markup_mode,
+        expand=expand,
         console=console,
     )
     for panel_name, arguments in panel_to_arguments.items():
@@ -618,6 +633,7 @@ def rich_format_help(
             params=arguments,
             ctx=ctx,
             markup_mode=markup_mode,
+            expand=expand,
             console=console,
         )
     default_options = panel_to_options.get(OPTIONS_PANEL_TITLE, [])
@@ -626,6 +642,7 @@ def rich_format_help(
         params=default_options,
         ctx=ctx,
         markup_mode=markup_mode,
+        expand=expand,
         console=console,
     )
     for panel_name, options in panel_to_options.items():
@@ -637,6 +654,7 @@ def rich_format_help(
             params=options,
             ctx=ctx,
             markup_mode=markup_mode,
+            expand=expand,
             console=console,
         )
 
@@ -667,6 +685,7 @@ def rich_format_help(
             name=COMMANDS_PANEL_TITLE,
             commands=default_commands,
             markup_mode=markup_mode,
+            expand=expand,
             console=console,
             cmd_len=max_cmd_len,
         )
@@ -678,6 +697,7 @@ def rich_format_help(
                 name=panel_name,
                 commands=commands,
                 markup_mode=markup_mode,
+                expand=expand,
                 console=console,
                 cmd_len=max_cmd_len,
             )
@@ -691,7 +711,7 @@ def rich_format_help(
         console.print(Padding(Align(epilogue_text, pad=False), 1))
 
 
-def rich_format_error(self: click.ClickException) -> None:
+def rich_format_error(self: click.ClickException, expand: bool) -> None:
     """Print richly formatted click errors.
 
     Called by custom exception handler to print richly formatted click errors.
@@ -718,6 +738,7 @@ def rich_format_error(self: click.ClickException) -> None:
         Panel(
             highlighter(self.format_message()),
             border_style=STYLE_ERRORS_PANEL_BORDER,
+            expand=expand,
             title=ERRORS_PANEL_TITLE,
             title_align=ALIGN_ERRORS_PANEL,
         )
