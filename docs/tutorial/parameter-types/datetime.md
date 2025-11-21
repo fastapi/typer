@@ -4,7 +4,7 @@ You can specify a *CLI parameter* as a Python <a href="https://docs.python.org/3
 
 Your function will receive a standard Python `datetime` object, and again, your editor will give you completion, etc.
 
-{* docs_src/parameter_types/datetime/tutorial001.py hl[1,6,7,8] *}
+{* docs_src/parameter_types/datetime/tutorial001.py hl[1,9,10,11] *}
 
 Typer will accept any string from the following formats:
 
@@ -58,7 +58,7 @@ For example, let's imagine that you want to accept an ISO formatted datetime, bu
 
 ...It's a crazy example, but let's say you also needed that strange format:
 
-{* docs_src/parameter_types/datetime/tutorial002_an.py hl[11] *}
+{* docs_src/parameter_types/datetime/tutorial002_an.py hl[14] *}
 
 /// tip
 

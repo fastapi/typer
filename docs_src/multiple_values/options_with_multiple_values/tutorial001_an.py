@@ -3,7 +3,10 @@ from typing import Tuple
 import typer
 from typing_extensions import Annotated
 
+app = typer.Typer()
 
+
+@app.command()
 def main(user: Annotated[Tuple[str, int, bool], typer.Option()] = (None, None, None)):
     username, coins, is_wizard = user
     if not username:
@@ -15,4 +18,4 @@ def main(user: Annotated[Tuple[str, int, bool], typer.Option()] = (None, None, N
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()

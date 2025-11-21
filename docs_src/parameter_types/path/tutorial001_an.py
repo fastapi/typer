@@ -4,7 +4,10 @@ from typing import Optional
 import typer
 from typing_extensions import Annotated
 
+app = typer.Typer()
 
+
+@app.command()
 def main(config: Annotated[Optional[Path], typer.Option()] = None):
     if config is None:
         print("No config file")
@@ -19,4 +22,4 @@ def main(config: Annotated[Optional[Path], typer.Option()] = None):
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()

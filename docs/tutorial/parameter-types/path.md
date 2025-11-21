@@ -4,7 +4,7 @@ You can declare a *CLI parameter* to be a standard Python <a href="https://docs.
 
 This is what you would do for directory paths, file paths, etc:
 
-{* docs_src/parameter_types/path/tutorial001_an.py hl[1,8] *}
+{* docs_src/parameter_types/path/tutorial001_an.py hl[1,11] *}
 
 And again, as you receive a standard Python `Path` object the same as the type annotation, your editor will give you autocompletion for all its attributes and methods.
 
@@ -65,7 +65,7 @@ All these parameters come directly from <a href="https://click.palletsprojects.c
 
 For example:
 
-{* docs_src/parameter_types/path/tutorial002_an.py hl[11:16] *}
+{* docs_src/parameter_types/path/tutorial002_an.py hl[14:19] *}
 
 Check it:
 

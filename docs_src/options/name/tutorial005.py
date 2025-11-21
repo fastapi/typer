@@ -1,6 +1,9 @@
 import typer
 
+app = typer.Typer()
 
+
+@app.command()
 def main(
     name: str = typer.Option(..., "--name", "-n"),
     formal: bool = typer.Option(False, "--formal", "-f"),
@@ -12,4 +15,4 @@ def main(
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()

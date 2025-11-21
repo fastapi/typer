@@ -1,6 +1,9 @@
 import typer
 
+app = typer.Typer()
 
+
+@app.command()
 def main(
     name: str, lastname: str = typer.Option(..., prompt="Please tell me your last name")
 ):
@@ -8,4 +11,4 @@ def main(
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()

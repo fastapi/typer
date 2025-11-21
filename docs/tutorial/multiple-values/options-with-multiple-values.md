@@ -6,7 +6,7 @@ You can set the number of values and types to anything you want, but it has to b
 
 For this, use the standard Python `typing.Tuple`:
 
-{* docs_src/multiple_values/options_with_multiple_values/tutorial001_an.py hl[1,7] *}
+{* docs_src/multiple_values/options_with_multiple_values/tutorial001_an.py hl[1,10] *}
 
 Each of the internal types defines the type of each value in the tuple.
 

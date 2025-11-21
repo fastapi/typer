@@ -1,6 +1,9 @@
 import typer
 
+app = typer.Typer()
 
+
+@app.command()
 def main(
     name: str = typer.Argument(..., help="Who to greet"),
     lastname: str = typer.Argument(
@@ -17,4 +20,4 @@ def main(
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()

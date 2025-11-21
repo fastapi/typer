@@ -1,6 +1,9 @@
 import typer
 
+app = typer.Typer()
 
+
+@app.command()
 def main(file: typer.FileBinaryWrite = typer.Option(...)):
     first_line_str = "some settings\n"
     # You cannot write str directly to a binary file, you have to encode it to get bytes
@@ -14,4 +17,4 @@ def main(file: typer.FileBinaryWrite = typer.Option(...)):
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()

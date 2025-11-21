@@ -11,9 +11,13 @@ class Food(str, Enum):
     food_3 = "Cheese"
 
 
+app = typer.Typer()
+
+
+@app.command()
 def main(groceries: Annotated[List[Food], typer.Option()] = [Food.food_1, Food.food_3]):
     print(f"Buying groceries: {', '.join([f.value for f in groceries])}")
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()

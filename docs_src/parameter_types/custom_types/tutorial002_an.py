@@ -18,6 +18,10 @@ class CustomClassParser(click.ParamType):
         return CustomClass(value * 3)
 
 
+app = typer.Typer()
+
+
+@app.command()
 def main(
     custom_arg: Annotated[CustomClass, typer.Argument(click_type=CustomClassParser())],
     custom_opt: Annotated[

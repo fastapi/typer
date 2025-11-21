@@ -13,7 +13,7 @@ There are two ways to achieve this:
 
 `typer.Argument` and `typer.Option` can create custom parameter types with a `parser` <abbr title="something that can be called like a function">callable</abbr>.
 
-{* docs_src/parameter_types/custom_types/tutorial001_an.py hl[13:14,18:19] *}
+{* docs_src/parameter_types/custom_types/tutorial001_an.py hl[13:14,22:23] *}
 
 The function (or callable) that you pass to the parameter `parser` will receive the input value as a string and should return the parsed value with your own custom type.
 
@@ -21,4 +21,4 @@ The function (or callable) that you pass to the parameter `parser` will receive 
 
 If you already have a <a href="https://click.palletsprojects.com/en/8.1.x/parameters/#implementing-custom-types" class="external-link" target="_blank">Click Custom Type</a>, you can use it in `typer.Argument()` and `typer.Option()` with the `click_type` parameter.
 
-{* docs_src/parameter_types/custom_types/tutorial002_an.py hl[14:18,22:25] *}
+{* docs_src/parameter_types/custom_types/tutorial002_an.py hl[14:18,26:29] *}

@@ -9,6 +9,10 @@ class NeuralNetwork(str, Enum):
     lstm = "lstm"
 
 
+app = typer.Typer()
+
+
+@app.command()
 def main(
     network: NeuralNetwork = typer.Option(NeuralNetwork.simple, case_sensitive=False),
 ):
@@ -16,4 +20,4 @@ def main(
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()

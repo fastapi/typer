@@ -3,7 +3,10 @@ from typing import Tuple
 import typer
 from typing_extensions import Annotated
 
+app = typer.Typer()
 
+
+@app.command()
 def main(
     names: Annotated[
         Tuple[str, str, str], typer.Argument(help="Select 3 characters to play with")
@@ -14,4 +17,4 @@ def main(
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()

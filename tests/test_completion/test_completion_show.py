@@ -7,7 +7,7 @@ import shellingham
 import typer
 from typer.testing import CliRunner
 
-from docs_src.commands.index import tutorial001 as mod
+from docs_src.typer_instance import tutorial001 as mod
 
 runner = CliRunner()
 app = typer.Typer()
