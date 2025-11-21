@@ -6,7 +6,7 @@ site_url: https://typer.tiangolo.com/
 theme:
   name: material
   font:
-    code: JetBrains Mono
+    code: Fira Code
   custom_dir: docs/overrides
   palette:
   - media: "(prefers-color-scheme)"
