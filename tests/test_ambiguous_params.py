@@ -1,5 +1,6 @@
 import pytest
 import typer
+from typer._typing import Annotated
 from typer.testing import CliRunner
 from typer.utils import (
     AnnotatedParamWithDefaultValueError,
@@ -8,7 +9,6 @@ from typer.utils import (
     MultipleTyperAnnotationsError,
     _split_annotation_from_typer_annotations,
 )
-from typing_extensions import Annotated
 
 runner = CliRunner()
 
@@ -93,7 +93,7 @@ def test_allow_multiple_non_typer_params_in_annotated():
     app = typer.Typer()
 
     @app.command()
-    def cmd(my_param: Annotated[str, "someval", typer.Argument(), 4] = "hello"):
+    def cmd(my_param: Annotated[str, "someval", typer.Argument(), 4] = "hello"):  # noqa:F821
         print(my_param)
 
     result = runner.invoke(app)
