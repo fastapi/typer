@@ -17,6 +17,10 @@ class CustomClassParser(click.ParamType):
         return CustomClass(value * 3)
 
 
+app = typer.Typer()
+
+
+@app.command()
 def main(
     custom_arg: CustomClass = typer.Argument(click_type=CustomClassParser()),
     custom_opt: CustomClass = typer.Option("Foo", click_type=CustomClassParser()),
