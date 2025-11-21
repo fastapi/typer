@@ -2,7 +2,10 @@ import random
 
 import typer
 
+app = typer.Typer()
 
+
+@app.command()
 def get_name():
     return random.choice(["Deadpool", "Rick", "Morty", "Hiro"])
 
@@ -12,4 +15,4 @@ def main(name: str = typer.Argument(default_factory=get_name)):
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()
