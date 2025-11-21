@@ -57,7 +57,7 @@ $ python main.py
 Traceback (most recent call last):
 
   File "main.py", line 12, in <module>
-    typer.run(main)
+    app()
 
   File "main.py", line 8, in main
     print(name + 3)
