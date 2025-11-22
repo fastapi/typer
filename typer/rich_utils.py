@@ -556,22 +556,15 @@ PrintOptionsPanelFunc = Callable[
         Union[List[click.Option], List[click.Argument]],
         click.Context,
         MarkupMode,
-        Console
+        Console,
     ],
-    None
+    None,
 ]
 
 
 # Define acceptable function to pass as print_options_panel_func
 PrintCommandsPanelFunc = Callable[
-    [
-        str,
-        List[click.Command],
-        MarkupMode,
-        Console,
-        int
-    ],
-    None
+    [str, List[click.Command], MarkupMode, Console, int], None
 ]
 
 
