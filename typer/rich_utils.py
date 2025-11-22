@@ -6,7 +6,7 @@ import sys
 from collections import defaultdict
 from gettext import gettext as _
 from os import getenv
-from typing import Any, Callable, DefaultDict, Dict, Iterable, List, Optional, Union
+from typing import Any, DefaultDict, Dict, Iterable, List, Optional, Protocol, Union
 
 import click
 from rich import box
@@ -549,30 +549,40 @@ def _print_commands_panel(
         )
 
 
-# Define acceptable function to pass as print_options_panel_func
-PrintOptionsPanelFunc = Callable[
-    [
-        str,
-        Union[List[click.Option], List[click.Argument]],
-        click.Context,
-        MarkupMode,
-        Console
-    ],
-    None
-]
+class PrintOptionsPanelFunc(Protocol):
+    """
+    Define acceptable function to pass as print_options_panel_func
+
+    TODO: switch to using NamedArg once minimum supported python is 3.12
+    """
+
+    def __call__(
+        self,
+        *,
+        name: str,
+        params: Union[List[click.Option], List[click.Argument]],
+        ctx: click.Context,
+        markup_mode: MarkupMode,
+        console: Console,
+    ) -> None: ...
 
 
-# Define acceptable function to pass as print_options_panel_func
-PrintCommandsPanelFunc = Callable[
-    [
-        str,
-        List[click.Command],
-        MarkupMode,
-        Console,
-        int
-    ],
-    None
-]
+class PrintCommandsPanelFunc(Protocol):
+    """
+    Define acceptable function to pass as print_options_panel_func
+
+    TODO: switch to using NamedArg once minimum supported python is 3.12
+    """
+
+    def __call__(
+        self,
+        *,
+        name: str,
+        commands: List[click.Command],
+        markup_mode: MarkupMode,
+        console: Console,
+        cmd_len: int,
+    ) -> None: ...
 
 
 def rich_format_help(
