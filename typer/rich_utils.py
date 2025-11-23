@@ -526,7 +526,9 @@ def _print_commands_panel(
             cmd_name_display = cmd_name
 
         if command.deprecated:
-            command_name_text = Text(f"{cmd_name_display}", style=STYLE_DEPRECATED_COMMAND)
+            command_name_text = Text(
+                f"{cmd_name_display}", style=STYLE_DEPRECATED_COMMAND
+            )
             deprecated_rows.append(Text(DEPRECATED_STRING, style=STYLE_DEPRECATED))
         else:
             command_name_text = Text(cmd_name_display)

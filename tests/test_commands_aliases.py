@@ -86,7 +86,9 @@ def test_command_aliases_help_output():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     assert "list, ls" in result.stdout or "ls, list" in result.stdout
-    assert "remove, rm, delete" in result.stdout or "rm, delete, remove" in result.stdout
+    assert (
+        "remove, rm, delete" in result.stdout or "rm, delete, remove" in result.stdout
+    )
 
 
 def test_command_hidden_aliases():
@@ -139,4 +141,3 @@ def test_command_aliases_subcommands():
     result = runner.invoke(app, ["docs"])
     assert result.exit_code == 0
     assert "documents" in result.stdout
-
