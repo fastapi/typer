@@ -764,7 +764,9 @@ class TyperGroup(click.core.Group):
         _typer_format_options(self, ctx=ctx, formatter=formatter)
         self.format_commands(ctx, formatter)
 
-    def format_commands(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
+    def format_commands(
+        self, ctx: click.Context, formatter: click.HelpFormatter
+    ) -> None:
         commands = []
         for name in self.list_commands(ctx):
             cmd = self.get_command(ctx, name)
