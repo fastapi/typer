@@ -764,6 +764,28 @@ class TyperGroup(click.core.Group):
         _typer_format_options(self, ctx=ctx, formatter=formatter)
         self.format_commands(ctx, formatter)
 
+    def format_commands(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
+        commands = []
+        for name in self.list_commands(ctx):
+            cmd = self.get_command(ctx, name)
+            if cmd is None or cmd.hidden:
+                continue
+            aliases = getattr(cmd, "_typer_aliases", [])
+            hidden_aliases = getattr(cmd, "_typer_hidden_aliases", [])
+            visible_aliases = [a for a in aliases if a not in hidden_aliases]
+
+            if visible_aliases:
+                cmd_name = ", ".join([name] + visible_aliases)
+            else:
+                cmd_name = name
+
+            help_text = cmd.short_help or cmd.help or ""
+            commands.append((cmd_name, help_text))
+
+        if commands:
+            with formatter.section(_("Commands")):
+                formatter.write_dl(commands)
+
     def _main_shell_completion(
         self,
         ctx_args: MutableMapping[str, Any],
@@ -826,4 +848,10 @@ class TyperGroup(click.core.Group):
         """Returns a list of subcommand names.
         Note that in Click's Group class, these are sorted.
         In Typer, we wish to maintain the original order of creation (cf Issue #933)"""
-        return [n for n, c in self.commands.items()]
+        seen = set()
+        result = []
+        for name, cmd in self.commands.items():
+            if cmd.name and cmd.name not in seen:
+                seen.add(cmd.name)
+                result.append(cmd.name)
+        return result
