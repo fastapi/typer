@@ -850,7 +850,7 @@ class TyperGroup(click.core.Group):
         In Typer, we wish to maintain the original order of creation (cf Issue #933)"""
         seen = set()
         result = []
-        for name, cmd in self.commands.items():
+        for _name, cmd in self.commands.items():
             if cmd.name and cmd.name not in seen:
                 seen.add(cmd.name)
                 result.append(cmd.name)
