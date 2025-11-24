@@ -141,3 +141,41 @@ def test_command_aliases_subcommands():
     result = runner.invoke(app, ["docs"])
     assert result.exit_code == 0
     assert "documents" in result.stdout
+
+
+def test_command_no_aliases_help_output():
+    app = typer.Typer()
+
+    @app.command("list")
+    def list_items():
+        pass
+
+    @app.command("remove")
+    def remove_items():
+        pass
+
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "  list" in result.stdout or "list     " in result.stdout
+    assert "  remove" in result.stdout or "remove   " in result.stdout
+
+
+def test_command_empty_aliases_list():
+    app = typer.Typer()
+
+    @app.command("list", aliases=[])
+    def list_items():
+        print("listed")
+
+    @app.command("remove")
+    def remove_items():
+        pass
+
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "list" in result.stdout
+    assert "remove" in result.stdout
+
+    result = runner.invoke(app, ["list"])
+    assert result.exit_code == 0
+    assert "listed" in result.stdout
