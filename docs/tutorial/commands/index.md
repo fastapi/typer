@@ -48,7 +48,6 @@ Here I'll use **CLI application** or **program** to refer to the program you are
 
 ## A CLI application with multiple commands
 
-
 **Typer** allows creating CLI applications with multiple commands/subcommands.
 
 Now that you know how to create an explicit `typer.Typer()` application and add one command, let's see how to add multiple commands.
