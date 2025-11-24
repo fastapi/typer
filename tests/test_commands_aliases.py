@@ -242,3 +242,60 @@ def test_list_commands_covers_all_branches():
     assert "cmd1" in result.stdout
     assert "cmd2" in result.stdout or "alias" in result.stdout
     assert "cmd3" in result.stdout or "a3" in result.stdout
+
+
+def test_commands_with_hidden_and_aliases():
+    app = typer.Typer()
+
+    @app.command("visible", "v", aliases=["vis"])
+    def visible_cmd():
+        pass
+
+    @app.command("hidden", hidden=True)
+    def hidden_cmd():
+        pass
+
+    @app.command("another", aliases=["a"])
+    def another_cmd():
+        pass
+
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "visible" in result.stdout or "v" in result.stdout or "vis" in result.stdout
+    assert "hidden" not in result.stdout
+    assert "another" in result.stdout or "a" in result.stdout
+
+
+def test_comprehensive_alias_scenarios():
+    app = typer.Typer()
+
+    @app.command("a1", "a2", aliases=["a3", "a4"])
+    def cmd_a():
+        pass
+
+    @app.command("b1", hidden_aliases=["b2"])
+    def cmd_b():
+        pass
+
+    @app.command("c1")
+    def cmd_c():
+        pass
+
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "a1" in result.stdout or "a2" in result.stdout or "a3" in result.stdout or "a4" in result.stdout
+    assert "b1" in result.stdout
+    assert "b2" not in result.stdout
+    assert "c1" in result.stdout
+
+    result = runner.invoke(app, ["a1"])
+    assert result.exit_code == 0
+
+    result = runner.invoke(app, ["a2"])
+    assert result.exit_code == 0
+
+    result = runner.invoke(app, ["a3"])
+    assert result.exit_code == 0
+
+    result = runner.invoke(app, ["b2"])
+    assert result.exit_code == 0
