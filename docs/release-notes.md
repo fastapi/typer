@@ -4,6 +4,7 @@
 
 ### Internal
 
+* ⬆ Bump actions/checkout from 5 to 6. PR [#1417](https://github.com/fastapi/typer/pull/1417) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * 👷 Upgrade `latest-changes` GitHub Action and pin `actions/checkout@v5`. PR [#1424](https://github.com/fastapi/typer/pull/1424) by [@tiangolo](https://github.com/tiangolo).
 * 🔧 Upgrade Material for MkDocs and remove insiders. PR [#1416](https://github.com/fastapi/typer/pull/1416) by [@tiangolo](https://github.com/tiangolo).
 * ⬆ Bump mkdocs-material from 9.6.23 to 9.7.0. PR [#1404](https://github.com/fastapi/typer/pull/1404) by [@dependabot[bot]](https://github.com/apps/dependabot).
