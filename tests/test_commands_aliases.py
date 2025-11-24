@@ -179,3 +179,25 @@ def test_command_empty_aliases_list():
     result = runner.invoke(app, ["list"])
     assert result.exit_code == 0
     assert "listed" in result.stdout
+
+
+def test_multiple_commands_with_aliases():
+    app = typer.Typer()
+
+    @app.command("cmd1", "c1")
+    def command1():
+        pass
+
+    @app.command("cmd2", aliases=["c2"])
+    def command2():
+        pass
+
+    @app.command("cmd3")
+    def command3():
+        pass
+
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "cmd1, c1" in result.stdout or "c1, cmd1" in result.stdout
+    assert "cmd2, c2" in result.stdout or "c2, cmd2" in result.stdout
+    assert "cmd3" in result.stdout
