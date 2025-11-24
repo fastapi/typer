@@ -366,6 +366,8 @@ By default it also comes with extra standard dependencies:
 * <a href="https://github.com/sarugaku/shellingham" class="external-link" target="_blank"><code>shellingham</code></a>: to automatically detect the current shell when installing completion.
     * With `shellingham` you can just use `--install-completion`.
     * Without `shellingham`, you have to pass the name of the shell to install completion for, e.g. `--install-completion bash`.
+* <a href="https://github.com/agronholm/anyio" class="external-link" target="_blank"><code>anyio</code></a>: and Typer will automatically detect the appropriate engine to run asynchronous code.
+    * With <a href="https://github.com/python-trio/trio" class="external-link" target="_blank"><code>Trio</code></a> installed alongside Typer, Typer will use Trio to run asynchronous code by default.
 
 ### `typer-slim`
 
