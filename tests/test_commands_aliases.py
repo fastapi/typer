@@ -283,7 +283,12 @@ def test_comprehensive_alias_scenarios():
 
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "a1" in result.stdout or "a2" in result.stdout or "a3" in result.stdout or "a4" in result.stdout
+    assert (
+        "a1" in result.stdout
+        or "a2" in result.stdout
+        or "a3" in result.stdout
+        or "a4" in result.stdout
+    )
     assert "b1" in result.stdout
     assert "b2" not in result.stdout
     assert "c1" in result.stdout
