@@ -111,6 +111,6 @@ Having a standalone program like that allows setting up shell/tab completion.
 
 The first step to be able to create an installable package like that is to use an explicit `typer.Typer()` app.
 
-Later you can learn all the process to create a standalone CLI application and [Build a Package](../package.md){.internal-link target=_blank}.
+Later you can learn all the process to create a standalone CLI application and [Build a Package](./package.md){.internal-link target=_blank}.
 
 But for now, it's just good to know that you are on that path. 😎
