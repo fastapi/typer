@@ -8,6 +8,7 @@ def iterate_user_ids():
     for i in range(100):
         yield i
 
+
 app = typer.Typer()
 
 
