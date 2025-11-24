@@ -163,7 +163,7 @@ The progress bar is generated from the length of the iterable (e.g. the list of 
 
 But if the length is not available (for example, with something that fetches a new user from a web API each time) you can pass an explicit `length` to `typer.progressbar()`.
 
-{* docs_src/progressbar/tutorial004.py hl[17] *}
+{* docs_src/progressbar/tutorial004.py hl[18] *}
 
 Check it:
 
