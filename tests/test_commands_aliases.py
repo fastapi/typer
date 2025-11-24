@@ -201,3 +201,44 @@ def test_multiple_commands_with_aliases():
     assert "cmd1, c1" in result.stdout or "c1, cmd1" in result.stdout
     assert "cmd2, c2" in result.stdout or "c2, cmd2" in result.stdout
     assert "cmd3" in result.stdout
+
+
+def test_commands_list_deduplication():
+    app = typer.Typer()
+
+    @app.command("same", "alias1")
+    def cmd1():
+        pass
+
+    @app.command("other", "alias2")
+    def cmd2():
+        pass
+
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    commands_output = result.stdout
+    assert "same" in commands_output
+    assert "other" in commands_output
+    assert commands_output.count("same") == 1
+
+
+def test_list_commands_covers_all_branches():
+    app = typer.Typer()
+
+    @app.command("cmd1")
+    def command1():
+        pass
+
+    @app.command("cmd2", "alias")
+    def command2():
+        pass
+
+    @app.command("cmd3", aliases=["a3"])
+    def command3():
+        pass
+
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "cmd1" in result.stdout
+    assert "cmd2" in result.stdout or "alias" in result.stdout
+    assert "cmd3" in result.stdout or "a3" in result.stdout
