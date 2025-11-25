@@ -14,7 +14,7 @@ def test_traceback_no_rich():
     )
     assert "return get_command(self)(*args, **kwargs)" not in result.stderr
 
-    assert "typer.run(main)" in result.stderr
+    assert "app()" in result.stderr
     assert "print(name + 3)" in result.stderr
     assert 'TypeError: can only concatenate str (not "int") to str' in result.stderr
 

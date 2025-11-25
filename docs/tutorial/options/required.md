@@ -13,15 +13,15 @@ To make a *CLI option* required, you can put `typer.Option()` inside of `Annotat
 
 Let's make `--lastname` a required *CLI option*:
 
-{* docs_src/options/required/tutorial001_an.py hl[5] *}
+{* docs_src/options/required/tutorial001_an.py hl[8] *}
 
 The same way as with `typer.Argument()`, the old style of using the function parameter default value is also supported, in that case you would just not pass anything to the `default` parameter.
 
-{* docs_src/options/required/tutorial001.py hl[4] *}
+{* docs_src/options/required/tutorial001.py hl[7] *}
 
 Or you can explicitly pass `...` to `typer.Option(default=...)`:
 
-{* docs_src/options/required/tutorial002.py hl[4] *}
+{* docs_src/options/required/tutorial002.py hl[7] *}
 
 /// info
 

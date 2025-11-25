@@ -14,6 +14,10 @@ def parse_custom_class(value: str):
     return CustomClass(value * 2)
 
 
+app = typer.Typer()
+
+
+@app.command()
 def main(
     custom_arg: Annotated[CustomClass, typer.Argument(parser=parse_custom_class)],
     custom_opt: Annotated[CustomClass, typer.Option(parser=parse_custom_class)] = "Foo",
@@ -23,4 +27,4 @@ def main(
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()
