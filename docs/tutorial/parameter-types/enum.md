@@ -153,6 +153,6 @@ In order to use an `Enum` created using the <a href="https://docs.python.org/3/l
 
 You also need to supply the default value as a string (not the enum):
 
-{* docs_src/parameter_types/enum/tutorial005_an.py hl[6,10] *}
+{* docs_src/parameter_types/enum/tutorial005_an.py hl[6,13] *}
 
 Alternatively, you can create an `Enum` that extends both `str` and `Enum`. In Python 3.11+, there is <a href="https://docs.python.org/3.11/library/enum.html#enum.StrEnum" class="external-link" target="_blank">`enum.StrEnum`</a>. For Python 3.10 or earlier, there is the <a href="https://github.com/irgeek/StrEnum" class="external-link" target="_blank">StrEnum package</a>.

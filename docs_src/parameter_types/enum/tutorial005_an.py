@@ -5,7 +5,10 @@ from typing_extensions import Annotated
 
 NeuralNetwork = Enum("NeuralNetwork", {k: k for k in ["simple", "conv", "lstm"]})
 
+app = typer.Typer()
 
+
+@app.command()
 def main(
     network: Annotated[NeuralNetwork, typer.Option(case_sensitive=False)] = "simple",
 ):
@@ -13,4 +16,4 @@ def main(
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()
