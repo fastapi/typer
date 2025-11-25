@@ -712,7 +712,7 @@ def get_click_type(
     elif parameter_info.parser is not None:
         return click.types.FuncParamType(parameter_info.parser)
 
-    elif annotation in [str, bytes]:
+    elif annotation is str:
         return click.STRING
     elif annotation is dict:
         return DictParamType()
