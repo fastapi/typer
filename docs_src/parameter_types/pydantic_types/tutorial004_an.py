@@ -4,7 +4,10 @@ import typer
 from pydantic import AnyHttpUrl, IPvAnyAddress
 from typing_extensions import Annotated
 
+app = typer.Typer()
 
+
+@app.command()
 def main(
     server: Annotated[
         Tuple[str, IPvAnyAddress, AnyHttpUrl],
@@ -18,4 +21,4 @@ def main(
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()
