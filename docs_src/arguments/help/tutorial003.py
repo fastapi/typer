@@ -1,6 +1,9 @@
 import typer
 
+app = typer.Typer()
 
+
+@app.command()
 def main(name: str = typer.Argument("World", help="Who to greet")):
     """
     Say hi to NAME very gently, like Dirk.
@@ -9,4 +12,4 @@ def main(name: str = typer.Argument("World", help="Who to greet")):
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()
