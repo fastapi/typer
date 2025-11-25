@@ -2,6 +2,8 @@ from typing import Optional
 
 import typer
 
+app = typer.Typer()
+
 
 def name_callback(ctx: typer.Context, value: str):
     if ctx.resilient_parsing:
@@ -12,9 +14,10 @@ def name_callback(ctx: typer.Context, value: str):
     return value
 
 
+@app.command()
 def main(name: Optional[str] = typer.Option(default=None, callback=name_callback)):
     print(f"Hello {name}")
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()
