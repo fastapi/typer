@@ -2,7 +2,7 @@
 
 You might have noticed that if you create a single command, as in the following example:
 
-{* docs_src/typer_instance/tutorial001.py hl[3,6,12] *}
+{* docs_src/typer_app/tutorial001.py hl[3,6,12] *}
 
 **Typer** is smart enough to create a CLI application with that single function as the main CLI application, not as a command/subcommand:
 
