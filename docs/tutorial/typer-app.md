@@ -29,7 +29,7 @@ You put it on top of a function. Like a pretty decorative hat (I guess that's wh
 A "decorator" takes the function below and does something with it.
 
 In our case, this decorator tells **Typer** that the function below is a "`command`".
-You will learn more about commands later in the section [commands](./tutorial/commands.md){.internal-link target=_blank}.
+You will learn more about commands later in the section [commands](./commands/index.md){.internal-link target=_blank}.
 
 ///
 
