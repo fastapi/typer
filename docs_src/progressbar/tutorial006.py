@@ -2,7 +2,10 @@ import time
 
 import typer
 
+app = typer.Typer()
 
+
+@app.command()
 def main():
     total = 1000
     with typer.progressbar(length=total) as progress:
@@ -16,4 +19,4 @@ def main():
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()

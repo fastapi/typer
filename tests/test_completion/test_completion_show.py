@@ -4,14 +4,12 @@ import sys
 from unittest import mock
 
 import shellingham
-import typer
 from typer.testing import CliRunner
 
-from docs_src.commands.index import tutorial001 as mod
+from docs_src.typer_app import tutorial001 as mod
 
 runner = CliRunner()
-app = typer.Typer()
-app.command()(mod.main)
+app = mod.app
 
 
 def test_completion_show_no_shell():
