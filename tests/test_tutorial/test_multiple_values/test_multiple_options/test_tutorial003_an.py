@@ -4,6 +4,7 @@ import sys
 from typer.testing import CliRunner
 
 from docs_src.multiple_values.multiple_options import tutorial003_an as mod
+
 app = mod.app
 
 runner = CliRunner()
