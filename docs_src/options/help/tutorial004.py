@@ -1,6 +1,9 @@
 import typer
 
+app = typer.Typer()
 
+
+@app.command()
 def main(
     fullname: str = typer.Option(
         "Wade Wilson", show_default="Deadpoolio the amazing's name"
@@ -10,4 +13,4 @@ def main(
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()

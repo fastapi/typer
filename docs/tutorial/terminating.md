@@ -56,7 +56,7 @@ But then **Typer** (actually Click) catches it and just terminates the program n
 
 You can pass a `code` with a number other than `0` to tell the terminal that there was an error in the execution of the program:
 
-{* docs_src/terminating/tutorial002.py hl[7] *}
+{* docs_src/terminating/tutorial002.py hl[10] *}
 
 Check it:
 
@@ -99,7 +99,7 @@ There's a special exception that you can use to "abort" a program.
 
 It works more or less the same as `typer.Exit()` but will print `"Aborted!"` to the screen and can be useful in certain cases later to make it explicit that the execution was aborted:
 
-{* docs_src/terminating/tutorial003.py hl[7] *}
+{* docs_src/terminating/tutorial003.py hl[10] *}
 
 Check it:
 
