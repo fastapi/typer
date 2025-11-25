@@ -4,6 +4,8 @@ import typer
 
 __version__ = "0.1.0"
 
+app = typer.Typer()
+
 
 def version_callback(value: bool):
     if value:
@@ -11,6 +13,7 @@ def version_callback(value: bool):
         raise typer.Exit()
 
 
+@app.command()
 def main(
     name: str = typer.Option("World"),
     version: Optional[bool] = typer.Option(
@@ -21,4 +24,4 @@ def main(
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()
