@@ -2,7 +2,7 @@
 
 You can declare a *CLI parameter* to be a standard Python `dict`:
 
-{* docs_src/parameter_types/dict/tutorial001_an.py hl[5] *}
+{* docs_src/parameter_types/dict/tutorial001_an.py hl[8] *}
 
 Check it:
 
