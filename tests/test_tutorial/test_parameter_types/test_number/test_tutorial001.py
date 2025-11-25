@@ -9,9 +9,7 @@ from typer.testing import CliRunner
 from docs_src.parameter_types.number import tutorial001 as mod
 
 runner = CliRunner()
-
-app = typer.Typer(rich_markup_mode=None)
-app.command()(mod.main)
+app = mod.app
 
 
 def test_help():
@@ -56,7 +54,8 @@ def test_invalid_age():
     assert "15 is not in the range x>=18" in result.output
 
 
-def test_invalid_score():
+def test_invalid_score(monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setattr(typer.core, "HAS_RICH", False)
     result = runner.invoke(app, ["5", "--age", "20", "--score", "100.5"])
     assert result.exit_code != 0
     assert "Invalid value for '--score'" in result.output

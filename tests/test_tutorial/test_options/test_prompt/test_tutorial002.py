@@ -1,15 +1,12 @@
 import subprocess
 import sys
 
-import typer
 from typer.testing import CliRunner
 
 from docs_src.options.prompt import tutorial002 as mod
 
 runner = CliRunner()
-
-app = typer.Typer()
-app.command()(mod.main)
+app = mod.app
 
 
 def test_option_lastname():
