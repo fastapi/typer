@@ -4,7 +4,7 @@ The same rules apply for the number of values for each use and their types; the 
 
 For this, we use the standard Python `typing.List` and declare its internal type to be a `typing.Tuple`:
 
-{* ../docs_src/multiple_values/multiple_options_with_multiple_values/tutorial001_an.py hl[1,7] *}
+{* docs_src/multiple_values/multiple_options_with_multiple_values/tutorial001_an.py hl[1,10] *}
 
 Just as before, the types internal to the `Tuple` define the type of each value in the tuple.
 

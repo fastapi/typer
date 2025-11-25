@@ -2,7 +2,10 @@ from typing import List, Tuple
 
 import typer
 
+app = typer.Typer()
 
+
+@app.command()
 def main(borrow: List[Tuple[float, str]] = typer.Option([])):
     if not borrow:
         print("Congratulations, you're debt-free!")
@@ -16,4 +19,4 @@ def main(borrow: List[Tuple[float, str]] = typer.Option([])):
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()
