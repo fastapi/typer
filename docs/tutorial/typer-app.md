@@ -1,3 +1,5 @@
+# Typer App
+
 ## Explicit application
 
 So far, you have seen how to create a single function and then pass that function to `typer.run()`.
