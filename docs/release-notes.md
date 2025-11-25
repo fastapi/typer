@@ -2,8 +2,19 @@
 
 ## Latest Changes
 
+### Docs
+
+* 📝 Update docs to use `Typer()` more prominently. PR [#1418](https://github.com/fastapi/typer/pull/1418) by [@svlandeg](https://github.com/svlandeg).
+* 💄 Use font 'Fira Code' to fix display of Rich panels in docs in Windows. PR [#1419](https://github.com/fastapi/typer/pull/1419) by [@tiangolo](https://github.com/tiangolo).
+
 ### Internal
 
+* ⬆ Bump actions/checkout from 5 to 6. PR [#1426](https://github.com/fastapi/typer/pull/1426) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1425](https://github.com/fastapi/typer/pull/1425) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump ruff from 0.14.5 to 0.14.6. PR [#1423](https://github.com/fastapi/typer/pull/1423) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump actions/checkout from 5 to 6. PR [#1417](https://github.com/fastapi/typer/pull/1417) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 👷 Upgrade `latest-changes` GitHub Action and pin `actions/checkout@v5`. PR [#1424](https://github.com/fastapi/typer/pull/1424) by [@tiangolo](https://github.com/tiangolo).
+* 🔧 Upgrade Material for MkDocs and remove insiders. PR [#1416](https://github.com/fastapi/typer/pull/1416) by [@tiangolo](https://github.com/tiangolo).
 * ⬆ Bump mkdocs-material from 9.6.23 to 9.7.0. PR [#1404](https://github.com/fastapi/typer/pull/1404) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump mkdocs-macros-plugin from 1.4.1 to 1.5.0. PR [#1406](https://github.com/fastapi/typer/pull/1406) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ruff from 0.14.4 to 0.14.5. PR [#1407](https://github.com/fastapi/typer/pull/1407) by [@dependabot[bot]](https://github.com/apps/dependabot).
