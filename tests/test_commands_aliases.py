@@ -319,7 +319,9 @@ def test_list_commands_deduplication_with_aliases():
 
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "main1" in result.stdout or "alias1" in result.stdout or "a1" in result.stdout
+    assert (
+        "main1" in result.stdout or "alias1" in result.stdout or "a1" in result.stdout
+    )
     assert "main2" in result.stdout or "alias2" in result.stdout
     assert result.stdout.count("main1") <= 1
     assert result.stdout.count("main2") <= 1
