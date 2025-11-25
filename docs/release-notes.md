@@ -4,6 +4,7 @@
 
 ### Docs
 
+* 📝 Update docs to use `Typer()` more prominently. PR [#1418](https://github.com/fastapi/typer/pull/1418) by [@svlandeg](https://github.com/svlandeg).
 * 💄 Use font 'Fira Code' to fix display of Rich panels in docs in Windows. PR [#1419](https://github.com/fastapi/typer/pull/1419) by [@tiangolo](https://github.com/tiangolo).
 
 ### Internal
