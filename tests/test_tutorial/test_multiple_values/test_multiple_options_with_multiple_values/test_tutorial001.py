@@ -35,8 +35,7 @@ def test_3_user():
 def test_script():
     result = subprocess.run(
         ["coverage", "run", mod.__file__, "--help"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         encoding="utf-8",
     )
     assert "Usage" in result.stdout
