@@ -4,9 +4,7 @@ For example, let's say you want to accept several users with their first and las
 
 For this, use the standard Python `typing.List` to declare it as a `list` of `tuple[str, str]`:
 
-```Python hl_lines="1  6"
-{!../docs_src/multiple_values/multiple_options_with_multiple_values/tutorial001.py!}
-```
+{* docs_src/multiple_values/multiple_options_with_multiple_values/tutorial001.py hl[1,9] *}
 
 You will receive the values as you declared them, as a `list` of `tuple[str, str]`.
 
