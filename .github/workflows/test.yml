@@ -20,10 +20,8 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
-        python-version: [ "3.13" ]
+        python-version: [ "3.14" ]
         include:
-          - os: ubuntu-22.04
-            python-version: "3.7"
           - os: macos-latest
             python-version: "3.8"
           - os: windows-latest
@@ -34,6 +32,8 @@ jobs:
             python-version: "3.11"
           - os: windows-latest
             python-version: "3.12"
+          - os: ubuntu-latest
+            python-version: "3.13"
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
@@ -41,13 +41,13 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
       - name: Setup uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v7
         with:
           version: "0.4.15"
           enable-cache: true
@@ -67,7 +67,7 @@ jobs:
           COVERAGE_FILE: coverage/.coverage.${{ runner.os }}-py${{ matrix.python-version }}
           CONTEXT: ${{ runner.os }}-py${{ matrix.python-version }}
       - name: Store coverage files
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: coverage-${{ runner.os }}-${{ matrix.python-version }}
           path: coverage
@@ -81,12 +81,12 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.8'
       - name: Setup uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v7
         with:
           version: "0.4.15"
           enable-cache: true
@@ -94,7 +94,7 @@ jobs:
             requirements**.txt
             pyproject.toml
       - name: Get coverage files
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           pattern: coverage-*
           path: coverage
@@ -106,7 +106,7 @@ jobs:
       - run: coverage report
       - run: coverage html --show-contexts --title "Coverage for ${{ github.sha }}"
       - name: Store coverage HTML
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: coverage-html
           path: htmlcov

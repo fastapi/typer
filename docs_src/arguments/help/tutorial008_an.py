@@ -1,7 +1,10 @@
 import typer
 from typing_extensions import Annotated
 
+app = typer.Typer()
 
+
+@app.command()
 def main(name: Annotated[str, typer.Argument(hidden=True)] = "World"):
     """
     Say hi to NAME very gently, like Dirk.
@@ -10,4 +13,4 @@ def main(name: Annotated[str, typer.Argument(hidden=True)] = "World"):
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()
