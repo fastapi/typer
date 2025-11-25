@@ -17,10 +17,11 @@ from uuid import UUID
 import click
 from typer._types import TyperChoice
 
-from ._typing import get_args, get_origin, is_union
+from ._typing import get_args, get_origin, is_literal_type, is_union, literal_values
 from .completion import get_completion_inspect_parameters
 from .core import (
     DEFAULT_MARKUP_MODE,
+    HAS_RICH,
     MarkupMode,
     TyperArgument,
     TyperCommand,
@@ -49,12 +50,6 @@ from .models import (
 )
 from .utils import get_params_from_function
 
-try:
-    import rich
-
-except ImportError:  # pragma: no cover
-    rich = None  # type: ignore
-
 _original_except_hook = sys.excepthook
 _typer_developer_exception_attr_name = "__typer_developer_exception__"
 
@@ -65,7 +60,9 @@ def except_hook(
     exception_config: Union[DeveloperExceptionConfig, None] = getattr(
         exc_value, _typer_developer_exception_attr_name, None
     )
-    standard_traceback = os.getenv("_TYPER_STANDARD_TRACEBACK")
+    standard_traceback = os.getenv(
+        "TYPER_STANDARD_TRACEBACK", os.getenv("_TYPER_STANDARD_TRACEBACK")
+    )
     if (
         standard_traceback
         or not exception_config
@@ -77,7 +74,7 @@ def except_hook(
     click_path = os.path.dirname(click.__file__)
     internal_dir_names = [typer_path, click_path]
     exc = exc_value
-    if rich:
+    if HAS_RICH:
         from . import rich_utils
 
         rich_tb = rich_utils.get_traceback(exc, exception_config, internal_dir_names)
@@ -140,6 +137,7 @@ class Typer:
         # Rich settings
         rich_markup_mode: MarkupMode = Default(DEFAULT_MARKUP_MODE),
         rich_help_panel: Union[str, None] = Default(None),
+        suggest_commands: bool = True,
         pretty_exceptions_enable: bool = True,
         pretty_exceptions_show_locals: bool = True,
         pretty_exceptions_short: bool = True,
@@ -147,6 +145,7 @@ class Typer:
         self._add_completion = add_completion
         self.rich_markup_mode: MarkupMode = rich_markup_mode
         self.rich_help_panel = rich_help_panel
+        self.suggest_commands = suggest_commands
         self.pretty_exceptions_enable = pretty_exceptions_enable
         self.pretty_exceptions_show_locals = pretty_exceptions_show_locals
         self.pretty_exceptions_short = pretty_exceptions_short
@@ -335,6 +334,7 @@ def get_group(typer_instance: Typer) -> TyperGroup:
         TyperInfo(typer_instance),
         pretty_exceptions_short=typer_instance.pretty_exceptions_short,
         rich_markup_mode=typer_instance.rich_markup_mode,
+        suggest_commands=typer_instance.suggest_commands,
     )
     return group
 
@@ -461,6 +461,7 @@ def get_group_from_info(
     group_info: TyperInfo,
     *,
     pretty_exceptions_short: bool,
+    suggest_commands: bool,
     rich_markup_mode: MarkupMode,
 ) -> TyperGroup:
     assert group_info.typer_instance, (
@@ -480,6 +481,7 @@ def get_group_from_info(
             sub_group_info,
             pretty_exceptions_short=pretty_exceptions_short,
             rich_markup_mode=rich_markup_mode,
+            suggest_commands=suggest_commands,
         )
         if sub_group.name:
             commands[sub_group.name] = sub_group
@@ -528,6 +530,7 @@ def get_group_from_info(
         rich_markup_mode=rich_markup_mode,
         # Rich settings
         rich_help_panel=solved_info.rich_help_panel,
+        suggest_commands=suggest_commands,
     )
     return group
 
@@ -632,9 +635,9 @@ def generate_enum_convertor(enum: Type[Enum]) -> Callable[[Any], Any]:
 
 def generate_list_convertor(
     convertor: Optional[Callable[[Any], Any]], default_value: Optional[Any]
-) -> Callable[[Sequence[Any]], Optional[List[Any]]]:
-    def internal_convertor(value: Sequence[Any]) -> Optional[List[Any]]:
-        if default_value is None and len(value) == 0:
+) -> Callable[[Optional[Sequence[Any]]], Optional[List[Any]]]:
+    def internal_convertor(value: Optional[Sequence[Any]]) -> Optional[List[Any]]:
+        if (value is None) or (default_value is None and len(value) == 0):
             return None
         return [convertor(v) if convertor else v for v in value]
 
@@ -786,6 +789,11 @@ def get_click_type(
         # Click < 8.2.0.
         return TyperChoice(
             [item.value for item in annotation],
+            case_sensitive=parameter_info.case_sensitive,
+        )
+    elif is_literal_type(annotation):
+        return click.Choice(
+            literal_values(annotation),
             case_sensitive=parameter_info.case_sensitive,
         )
     raise RuntimeError(f"Type not yet supported: {annotation}")  # pragma: no cover

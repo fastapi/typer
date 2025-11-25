@@ -16,10 +16,14 @@ def send_new_user_notification(username: str):
     print(f"Notification sent for new user: {username}")
 
 
+app = typer.Typer()
+
+
+@app.command()
 def main(username: str):
     maybe_create_user(username=username)
     send_new_user_notification(username=username)
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()
