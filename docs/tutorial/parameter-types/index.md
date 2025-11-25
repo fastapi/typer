@@ -8,7 +8,7 @@ When you declare a *CLI parameter* with some type **Typer** will convert the dat
 
 For example:
 
-{* docs_src/parameter_types/index/tutorial001.py hl[4] *}
+{* docs_src/parameter_types/index/tutorial001.py hl[7] *}
 
 In this example, the value received for the *CLI argument* `NAME` will be treated as `str`.
 
