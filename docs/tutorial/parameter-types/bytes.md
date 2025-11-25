@@ -8,7 +8,7 @@ By default, `bytes` are created by encoding the input string with UTF-8 (the sam
 
 This example declares a `bytes` argument using the default UTF-8 encoding:
 
-{* docs_src/parameter_types/bytes/tutorial001.py *}
+{* docs_src/parameter_types/bytes/tutorial001.py hl[7-9] *}
 
 Try it with non-ASCII characters and you will get UTF-8 encoded bytes.
 
@@ -16,7 +16,7 @@ Try it with non-ASCII characters and you will get UTF-8 encoded bytes.
 
 You can set a specific encoding for a `bytes` argument:
 
-{* docs_src/parameter_types/bytes/tutorial002.py hl[4] *}
+{* docs_src/parameter_types/bytes/tutorial002.py hl[7] *}
 
 Here the argument is configured with `encoding="latin-1"`, so the command line input will be encoded accordingly.
 
@@ -24,7 +24,7 @@ Here the argument is configured with `encoding="latin-1"`, so the command line i
 
 You can also configure a `bytes` option with a specific encoding and error handling mode:
 
-{* docs_src/parameter_types/bytes/tutorial003.py hl[4] *}
+{* docs_src/parameter_types/bytes/tutorial003.py hl[7] *}
 
 The `errors` parameter supports the same values as Python's `str.encode()` (e.g. `"strict"`, `"ignore"`, `"replace"`).
 
