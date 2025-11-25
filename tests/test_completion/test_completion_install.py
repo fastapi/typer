@@ -5,7 +5,6 @@ from pathlib import Path
 from unittest import mock
 
 import shellingham
-import typer
 from typer.testing import CliRunner
 
 from docs_src.typer_app import tutorial001 as mod
@@ -13,8 +12,7 @@ from docs_src.typer_app import tutorial001 as mod
 from ..utils import requires_completion_permission
 
 runner = CliRunner()
-app = typer.Typer()
-app.command()(mod.main)
+app = mod.app
 
 
 @requires_completion_permission
