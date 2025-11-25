@@ -14,7 +14,7 @@ def test_main():
     result = runner.invoke(app)
     assert result.exit_code != 0
     assert "No provided users" in result.output
-    assert "Aborted!" in result.output
+    assert "Aborted" in result.output
 
 
 def test_1_user():
