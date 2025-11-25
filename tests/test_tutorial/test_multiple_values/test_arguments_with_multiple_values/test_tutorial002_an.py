@@ -9,8 +9,7 @@ from docs_src.multiple_values.arguments_with_multiple_values import (
 )
 
 runner = CliRunner()
-app = typer.Typer()
-app.command()(mod.main)
+app = mod.app
 
 
 def test_help():
