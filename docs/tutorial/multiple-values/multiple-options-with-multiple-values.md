@@ -16,7 +16,7 @@ Check it:
 $ python main.py
 
 No provided users
-Aborted!
+Aborted.
 
 // Now pass a user
 $ python main.py --users Camila Evans
