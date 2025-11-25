@@ -1,7 +1,6 @@
 import subprocess
 import sys
 
-import typer
 from typer.testing import CliRunner
 
 from docs_src.terminating import tutorial001 as mod

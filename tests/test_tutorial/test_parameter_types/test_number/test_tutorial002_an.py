@@ -8,6 +8,7 @@ from docs_src.parameter_types.number import tutorial002_an as mod
 runner = CliRunner()
 app = mod.app
 
+
 def test_invalid_id():
     result = runner.invoke(app, ["1002"])
     assert result.exit_code != 0
