@@ -6,7 +6,6 @@ from typer.testing import CliRunner
 from docs_src.arguments.default import tutorial002 as mod
 
 runner = CliRunner()
-
 app = mod.app
 
 
