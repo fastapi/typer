@@ -13,7 +13,7 @@ def test_command_aliases_positional():
 
     @app.command("remove")
     def remove_items():
-        pass
+        pass  # pragma: no cover
 
     result = runner.invoke(app, ["list"])
     assert result.exit_code == 0
@@ -33,7 +33,7 @@ def test_command_aliases_keyword():
 
     @app.command("remove")
     def remove_items():
-        pass
+        pass  # pragma: no cover
 
     result = runner.invoke(app, ["list"])
     assert result.exit_code == 0
@@ -57,7 +57,7 @@ def test_command_aliases_combined():
 
     @app.command("remove")
     def remove_items():
-        pass
+        pass  # pragma: no cover
 
     result = runner.invoke(app, ["list"])
     assert result.exit_code == 0
@@ -77,11 +77,11 @@ def test_command_aliases_help_output():
 
     @app.command("list", "ls")
     def list_items():
-        pass
+        pass  # pragma: no cover
 
     @app.command("remove", aliases=["rm", "delete"])
     def remove_items():
-        pass
+        pass  # pragma: no cover
 
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
@@ -96,11 +96,11 @@ def test_command_hidden_aliases():
 
     @app.command("list", "ls", hidden_aliases=["secretlist"])
     def list_items():
-        pass
+        pass  # pragma: no cover
 
     @app.command("remove")
     def remove_items():
-        pass
+        pass  # pragma: no cover
 
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
@@ -148,11 +148,11 @@ def test_command_no_aliases_help_output():
 
     @app.command("list")
     def list_items():
-        pass
+        pass  # pragma: no cover
 
     @app.command("remove")
     def remove_items():
-        pass
+        pass  # pragma: no cover
 
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
@@ -169,7 +169,7 @@ def test_command_empty_aliases_list():
 
     @app.command("remove")
     def remove_items():
-        pass
+        pass  # pragma: no cover
 
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
@@ -186,15 +186,15 @@ def test_multiple_commands_with_aliases():
 
     @app.command("cmd1", "c1")
     def command1():
-        pass
+        pass  # pragma: no cover
 
     @app.command("cmd2", aliases=["c2"])
     def command2():
-        pass
+        pass  # pragma: no cover
 
     @app.command("cmd3")
     def command3():
-        pass
+        pass  # pragma: no cover
 
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
@@ -208,11 +208,11 @@ def test_commands_list_deduplication():
 
     @app.command("same", "alias1")
     def cmd1():
-        pass
+        pass  # pragma: no cover
 
     @app.command("other", "alias2")
     def cmd2():
-        pass
+        pass  # pragma: no cover
 
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
@@ -227,15 +227,15 @@ def test_list_commands_covers_all_branches():
 
     @app.command("cmd1")
     def command1():
-        pass
+        pass  # pragma: no cover
 
     @app.command("cmd2", "alias")
     def command2():
-        pass
+        pass  # pragma: no cover
 
     @app.command("cmd3", aliases=["a3"])
     def command3():
-        pass
+        pass  # pragma: no cover
 
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
@@ -249,15 +249,15 @@ def test_commands_with_hidden_and_aliases():
 
     @app.command("visible", "v", aliases=["vis"])
     def visible_cmd():
-        pass
+        pass  # pragma: no cover
 
     @app.command("hidden", hidden=True)
     def hidden_cmd():
-        pass
+        pass  # pragma: no cover
 
     @app.command("another", aliases=["a"])
     def another_cmd():
-        pass
+        pass  # pragma: no cover
 
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
@@ -271,15 +271,15 @@ def test_comprehensive_alias_scenarios():
 
     @app.command("a1", "a2", aliases=["a3", "a4"])
     def cmd_a():
-        pass
+        pass  # pragma: no cover
 
     @app.command("b1", hidden_aliases=["b2"])
     def cmd_b():
-        pass
+        pass  # pragma: no cover
 
     @app.command("c1")
     def cmd_c():
-        pass
+        pass  # pragma: no cover
 
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
