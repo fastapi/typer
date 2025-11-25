@@ -2,9 +2,7 @@ import logging
 import os
 import re
 import subprocess
-from functools import lru_cache
 from http.server import HTTPServer, SimpleHTTPRequestHandler
-from importlib import metadata
 from pathlib import Path
 
 import typer
@@ -17,17 +15,9 @@ en_docs_path = Path("")
 app = typer.Typer()
 
 
-@lru_cache
-def is_mkdocs_insiders() -> bool:
-    version = metadata.version("mkdocs-material")
-    return "insiders" in version
-
-
 @app.callback()
 def callback() -> None:
-    if is_mkdocs_insiders():
-        os.environ["INSIDERS_FILE"] = "./mkdocs.insiders.yml"
-    # For MacOS with insiders and Cairo
+    # For MacOS with Cairo
     os.environ["DYLD_FALLBACK_LIBRARY_PATH"] = "/opt/homebrew/lib"
 
 
@@ -100,10 +90,6 @@ def build() -> None:
     """
     Build the docs.
     """
-    insiders_env_file = os.environ.get("INSIDERS_FILE")
-    print(f"Insiders file {insiders_env_file}")
-    if is_mkdocs_insiders():
-        print("Using insiders")
     print("Building docs")
     subprocess.run(["mkdocs", "build"], check=True)
     typer.secho("Successfully built docs", color=typer.colors.GREEN)
