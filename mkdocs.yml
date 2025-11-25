@@ -113,6 +113,7 @@ nav:
           - tutorial/parameter-types/enum.md
           - tutorial/parameter-types/path.md
           - tutorial/parameter-types/file.md
+          - tutorial/parameter-types/dict.md
           - tutorial/parameter-types/custom-types.md
       - SubCommands - Command Groups:
           - tutorial/subcommands/index.md
