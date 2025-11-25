@@ -1,7 +1,10 @@
 import typer
 from typing_extensions import Annotated
 
+app = typer.Typer()
 
+
+@app.command()
 def main(
     id: Annotated[int, typer.Argument(min=0, max=1000)],
     age: Annotated[int, typer.Option(min=18)] = 20,
@@ -13,4 +16,4 @@ def main(
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()

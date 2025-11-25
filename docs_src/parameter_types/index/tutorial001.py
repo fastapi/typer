@@ -1,6 +1,9 @@
 import typer
 
+app = typer.Typer()
 
+
+@app.command()
 def main(name: str, age: int = 20, height_meters: float = 1.89, female: bool = True):
     print(f"NAME is {name}, of type: {type(name)}")
     print(f"--age is {age}, of type: {type(age)}")
@@ -9,4 +12,4 @@ def main(name: str, age: int = 20, height_meters: float = 1.89, female: bool = T
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()
