@@ -16,7 +16,7 @@ You can also use the equivalent notation `bool | str`
 
 Let's add a *CLI option* `--tone` with optional value:
 
-{* docs_src/options/optional_value/tutorial001_an.py hl[5] *}
+{* docs_src/options/optional_value/tutorial001_an.py hl[9] *}
 
 Now, there are three possible configurations:
 

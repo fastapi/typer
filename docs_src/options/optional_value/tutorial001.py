@@ -1,6 +1,9 @@
 import typer
 
+app = typer.Typer()
 
+
+@app.command()
 def main(name: str, lastname: str, greeting: bool | str = "formal"):
     if not greeting:
         return
@@ -16,4 +19,4 @@ def main(name: str, lastname: str, greeting: bool | str = "formal"):
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()
