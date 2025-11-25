@@ -304,3 +304,31 @@ def test_comprehensive_alias_scenarios():
 
     result = runner.invoke(app, ["b2"])
     assert result.exit_code == 0
+
+
+def test_list_commands_deduplication_with_aliases():
+    app = typer.Typer()
+
+    @app.command("main1", "alias1", aliases=["a1"])
+    def cmd1():
+        pass  # pragma: no cover
+
+    @app.command("main2", "alias2")
+    def cmd2():
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "main1" in result.stdout or "alias1" in result.stdout or "a1" in result.stdout
+    assert "main2" in result.stdout or "alias2" in result.stdout
+    assert result.stdout.count("main1") <= 1
+    assert result.stdout.count("main2") <= 1
+
+    result = runner.invoke(app, ["main1"])
+    assert result.exit_code == 0
+
+    result = runner.invoke(app, ["alias1"])
+    assert result.exit_code == 0
+
+    result = runner.invoke(app, ["a1"])
+    assert result.exit_code == 0
