@@ -9,6 +9,7 @@
 
 ### Internal
 
+* ⬆ Bump actions/checkout from 5 to 6. PR [#1426](https://github.com/fastapi/typer/pull/1426) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1425](https://github.com/fastapi/typer/pull/1425) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * ⬆ Bump ruff from 0.14.5 to 0.14.6. PR [#1423](https://github.com/fastapi/typer/pull/1423) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump actions/checkout from 5 to 6. PR [#1417](https://github.com/fastapi/typer/pull/1417) by [@dependabot[bot]](https://github.com/apps/dependabot).
