@@ -8,9 +8,7 @@ from typer.testing import CliRunner
 from docs_src.parameter_types.dict import tutorial001_an as mod
 
 runner = CliRunner()
-
-app = typer.Typer()
-app.command()(mod.main)
+app = mod.app
 
 
 def test_help():
