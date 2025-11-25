@@ -10,6 +10,10 @@ class Food(str, Enum):
     f3 = "Cheese"
 
 
+app = typer.Typer()
+
+
+@app.command()
 def main(user: Tuple[str, int, bool, Food] = typer.Option((None, None, None, Food.f1))):
     username, coins, is_wizard, food = user
     if not username:
@@ -22,4 +26,4 @@ def main(user: Tuple[str, int, bool, Food] = typer.Option((None, None, None, Foo
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()

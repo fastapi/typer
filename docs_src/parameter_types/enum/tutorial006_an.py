@@ -11,6 +11,10 @@ class Food(str, Enum):
     f3 = "Cheese"
 
 
+app = typer.Typer()
+
+
+@app.command()
 def main(
     groceries: Annotated[List[Food], typer.Option(enum_by_name=True)] = ["f1", "f3"],
 ):
@@ -18,4 +22,4 @@ def main(
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()

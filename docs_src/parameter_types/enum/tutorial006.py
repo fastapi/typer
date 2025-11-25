@@ -10,9 +10,13 @@ class Food(str, Enum):
     f3 = "Cheese"
 
 
+app = typer.Typer()
+
+
+@app.command()
 def main(groceries: List[Food] = typer.Option(["f1", "f3"], enum_by_name=True)):
     print(f"Buying groceries: {', '.join([f.value for f in groceries])}")
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()

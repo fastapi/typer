@@ -10,9 +10,13 @@ class Access(enum.IntEnum):
     open = 4
 
 
+app = typer.Typer()
+
+
+@app.command()
 def main(access: Access = typer.Option("private", enum_by_name=True)):
     typer.echo(f"Access level: {access.name} ({access.value})")
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()

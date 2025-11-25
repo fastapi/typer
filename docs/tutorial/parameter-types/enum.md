@@ -80,7 +80,7 @@ Sometimes you want to accept `Enum` names from the command line and convert
 that into `Enum` values in the command handler. You can enable this by setting
 `enum_by_name=True`:
 
-{* docs_src/parameter_types/enum/tutorial007_an.py hl[14] *}
+{* docs_src/parameter_types/enum/tutorial007_an.py hl[18] *}
 
 And then the names of the `Enum` will be used instead of values:
 
@@ -96,7 +96,7 @@ Log level set to DEBUG
 
 This can be particularly useful if the enum values are not strings:
 
-{* docs_src/parameter_types/enum/tutorial005_an.py hl[8:11,14] *}
+{* docs_src/parameter_types/enum/tutorial005_an.py hl[8:11,18] *}
 
 ```console
 $ python main.py --access protected
@@ -145,7 +145,7 @@ Buying groceries: Eggs, Bacon
 
 You can also combine `enum_by_name=True` with a list of enums:
 
-{* docs_src/parameter_types/enum/tutorial006_an.py hl[15] *}
+{* docs_src/parameter_types/enum/tutorial006_an.py hl[19] *}
 
 This works exactly the same, but you're using the enum names instead of values:
 

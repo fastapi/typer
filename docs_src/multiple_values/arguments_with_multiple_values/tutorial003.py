@@ -10,6 +10,10 @@ class SuperHero(str, Enum):
     hero3 = "Wonder woman"
 
 
+app = typer.Typer()
+
+
+@app.command()
 def main(
     names: Tuple[str, str, str, SuperHero] = typer.Argument(
         ("Harry", "Hermione", "Ron", "hero3"),
@@ -26,4 +30,4 @@ def main(
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()

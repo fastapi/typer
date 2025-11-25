@@ -10,6 +10,10 @@ class Food(str, Enum):
     f3 = "Cheese"
 
 
+app = typer.Typer()
+
+
+@app.command()
 def main(
     user: Tuple[str, int, bool, Food] = typer.Option(
         (None, None, None, "f1"), enum_by_name=True
@@ -26,4 +30,4 @@ def main(
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()
