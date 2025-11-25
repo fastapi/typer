@@ -39,8 +39,11 @@ In the [First Steps](../first-steps.md#add-a-cli-argument){.internal-link target
 
 Now let's see an alternative way to create the same *CLI argument*:
 
+{* docs_src/arguments/optional/tutorial000.py hl[4] *}
 
-{* docs_src/arguments/optional/tutorial001_an.py hl[5] *}
+Or, using an explicit `Typer()` instance creation:
+
+{* docs_src/arguments/optional/tutorial001_an.py hl[8] *}
 
 /// info
 
@@ -111,7 +114,7 @@ Now, finally what we came for, an optional *CLI argument*.
 
 To make a *CLI argument* optional, use `typer.Argument()` and make sure to provide a "default" value, for example `"World"`:
 
-{* docs_src/arguments/optional/tutorial002_an.py hl[5] *}
+{* docs_src/arguments/optional/tutorial002_an.py hl[8] *}
 
 Now we have:
 
@@ -178,7 +181,7 @@ Notice that "`Camila`" here is an optional *CLI argument*, not a *CLI option*, b
 
 Instead of using `Annotated`, you can use `typer.Argument()` as the default value:
 
-{* docs_src/arguments/optional/tutorial001.py hl[4] *}
+{* docs_src/arguments/optional/tutorial001.py hl[7] *}
 
 /// tip
 
@@ -212,13 +215,13 @@ If you hadn't seen that `...` before: it is a special single value, it is <a hre
 
 ///
 
-{* docs_src/arguments/optional/tutorial003.py hl[4] *}
+{* docs_src/arguments/optional/tutorial003.py hl[7] *}
 
-And the same way, you can make it optional by passing a different `default` value, for example `None`:
+And the same way, you can make it optional by passing a different `default` value, for example `"World"`:
 
-{* docs_src/arguments/optional/tutorial002.py hl[6] *}
+{* docs_src/arguments/optional/tutorial002.py hl[7] *}
 
-Because the first parameter passed to `typer.Argument(default=None)` (the new "default" value) is `None`, **Typer** knows that this is an **optional** *CLI argument*, if no value is provided when calling it in the command line, it will have that default value of `None`.
+Because the first parameter passed to `typer.Argument(default="World")` (the new "default" value) is `"World"`, **Typer** knows that this is an **optional** *CLI argument*, if no value is provided when calling it in the command line, it will have that default value of `"World"`.
 
 The `default` argument is the first one, so it's possible that you see code that passes the value without explicitly using `default=`, like:
 
@@ -229,7 +232,7 @@ name: str = typer.Argument(...)
 ...or like:
 
 ```Python
-name: str = typer.Argument(None)
+name: str = typer.Argument("World")
 ```
 
 ...but again, try to use `Annotated` if possible, that way your code in terms of Python will mean the same thing as with **Typer** and you won't have to remember any of these details.
