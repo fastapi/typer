@@ -23,7 +23,7 @@ def test_main_help():
 
 def test_call():
     # Mainly for coverage
-    result = runner.invoke(app, ["create", "Morty"])
+    result = runner.invoke(app, ["create", "Morty", "--force"])
     assert result.exit_code == 0
     result = runner.invoke(app, ["config", "Morty"])
     assert result.exit_code == 0
