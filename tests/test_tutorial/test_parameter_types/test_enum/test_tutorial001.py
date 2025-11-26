@@ -7,7 +7,6 @@ import typer
 from typer import Typer
 from typer.testing import CliRunner
 
-from docs_src.parameter_types.enum import tutorial001 as mod
 from tests.utils import needs_py311
 
 runner = CliRunner()
