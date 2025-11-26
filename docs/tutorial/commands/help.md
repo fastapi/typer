@@ -519,21 +519,26 @@ When you now check the `--help` option, it will look like:
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ python main.py create --help
 
-<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] COMMAND [ARGS]...                   </b>
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py create [OPTIONS] USERNAME [LASTNAME]          </b>
 <b>                                                                     </b>
-<font color="#A5A5A1">╭─ Options ───────────────────────────────────────────────────────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--install-completion</b></font>          Install completion for the current shell.                              │</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--show-completion</b></font>             Show completion for the current shell, to copy it or customize the installation.                       │</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                        Show this message and exit.                                                       │
-<font color="#A5A5A1">╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</font>
-<font color="#A5A5A1">╭─ Commands ─────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>create          </b></font> <font color="#A6E22E">Create</font> a new user. ✨ │
-<font color="#A5A5A1">╰────────────────────────────────────────╯</font>
-<font color="#A5A5A1">╭─ Utils and Configs ──────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>config         </b></font> <font color="#66D9EF">Configure</font> the system. 🔧 │
-<font color="#A5A5A1">╰──────────────────────────────────────────╯</font>
+ <font color="#A6E22E">Create</font> a new user. ✨
+
+<font color="#A5A5A1">╭─ Arguments ──────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>TEXT</b></font>  The username <font color="#A6194C">[required]</font> │
+<font color="#A5A5A1">╰──────────────────────────────────────────────────╯</font>
+<font color="#A5A5A1">╭─ Secondary Arguments ─────────────────────╮</font>
+<font color="#A5A5A1">│   lastname      </font><font color="#A37F4E"><b>[LASTNAME]</b></font>  The last name │
+<font color="#A5A5A1">╰───────────────────────────────────────────╯</font>
+<font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--force</b></font>    <font color="#AE81FF"><b>--no-force</b></font>      Force the creation <font color="#A6194C">[required]</font>   │
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                     Show this message and exit.         │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+<font color="#A5A5A1">╭─ Additional Data ───────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--age</b></font>                   <font color="#F4BF75"><b>INTEGER</b></font>  The age    │</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--favorite-color</b></font>        <font color="#F4BF75"><b>TEXT   </b></font>  The favorite color  │</font>
+<font color="#A5A5A1">╰─────────────────────────────────────────────────────╯</font>
 ```
 
 </div>
