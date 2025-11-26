@@ -508,12 +508,35 @@ $ python main.py --help
 
 By default, the help panels all expand to match the width of your terminal window.
 
-For a CLI with few parameters, especially on wide terminal windows, you might prefer a more narrow layout.
+Sometimes, you might instead prefer that all panels fit their contents. This means that they will probably have different widths.
+
 You can do this by initializing your Typer with `rich_expand=False`, like this:
 
-```python
-app = typer.Typer(rich_expand=False)
+{* docs_src/commands/help/tutorial009.py hl[5] *}
+
+When you now check the `--help` option, it will look like:
+
+<div class="termy">
+
+```console
+$ python main.py --help
+
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] COMMAND [ARGS]...                   </b>
+<b>                                                                     </b>
+<font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--install-completion</b></font>          Install completion for the current  │
+<font color="#A5A5A1">│                               shell.                              │</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--show-completion</b></font>             Show completion for the current     │
+<font color="#A5A5A1">│                               shell, to copy it or customize the  │</font>
+<font color="#A5A5A1">│                               installation.                       │</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                        Show this message and exit.         │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+<font color="#A5A5A1">╭─ Commands ────────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>create          </b></font> <font color="#A6E22E">Create</font> a new user. ✨                            │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
+<font color="#A5A5A1">╭─ Utils and Configs ───────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>config         </b></font> <font color="#66D9EF">Configure</font> the system. 🔧                          │
+<font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 ```
 
-Your help panels will all fit to their contents, which also means they will probably have different widths.
-It's a different look, and sometimes you might prefer it as an option.
+</div>
