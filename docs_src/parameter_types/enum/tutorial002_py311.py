@@ -10,6 +10,10 @@ class NeuralNetwork(StrEnum):
     lstm = "lstm"
 
 
+app = typer.Typer()
+
+
+@app.command()
 def main(
     network: Annotated[
         NeuralNetwork, typer.Option(case_sensitive=False)
