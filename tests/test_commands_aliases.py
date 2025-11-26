@@ -1,4 +1,6 @@
+import pytest
 import typer
+import typer.core
 from typer.testing import CliRunner
 
 runner = CliRunner()
@@ -332,3 +334,46 @@ def test_list_commands_deduplication_with_aliases():
 
     result = runner.invoke(app, ["a1"])
     assert result.exit_code == 0
+
+
+def test_format_commands_with_aliases_no_rich(monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setattr(typer.core, "HAS_RICH", False)
+
+    app = typer.Typer()
+
+    @app.command("list", "ls", aliases=["l"])
+    def list_items():
+        pass  # pragma: no cover
+
+    @app.command("remove", aliases=["rm"])
+    def remove_items():
+        pass  # pragma: no cover
+
+    @app.command("create")
+    def create_items():
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "list" in result.stdout or "ls" in result.stdout or "l" in result.stdout
+    assert "remove" in result.stdout or "rm" in result.stdout
+    assert "create" in result.stdout
+
+
+def test_format_commands_no_aliases_no_rich(monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setattr(typer.core, "HAS_RICH", False)
+
+    app = typer.Typer()
+
+    @app.command("list")
+    def list_items():
+        pass  # pragma: no cover
+
+    @app.command("remove")
+    def remove_items():
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "list" in result.stdout
+    assert "remove" in result.stdout
