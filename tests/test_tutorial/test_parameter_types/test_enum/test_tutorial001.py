@@ -63,8 +63,6 @@ def test_invalid_other(mod):
 
 
 def test_script(mod):
-    from docs_src.parameter_types.enum import tutorial001 as mod
-
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
         capture_output=True,
