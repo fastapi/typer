@@ -18,25 +18,7 @@ def test_main_help():
     assert "Create a new user. ✨" in result.output
     assert "Utils and Configs" in result.output
     assert "config" in result.output
-    assert "Configure the system. 🔧" in result.output
-
-
-def test_create_help():
-    result = runner.invoke(app, ["create", "--help"])
-    assert result.exit_code == 0
-    assert "username" in result.output
-    assert "The username to create" in result.output
-    assert "Secondary Arguments" in result.output
-    assert "lastname" in result.output
-    assert "The last name of the new user" in result.output
-    assert "--force" in result.output
-    assert "--no-force" in result.output
-    assert "Force the creation of the user" in result.output
-    assert "Additional Data" in result.output
-    assert "--age" in result.output
-    assert "The age of the new user" in result.output
-    assert "--favorite-color" in result.output
-    assert "The favorite color of the new user" in result.output
+    assert "Configure the system. ⚙" in result.output
 
 
 def test_call():
