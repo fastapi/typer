@@ -1,6 +1,7 @@
 import subprocess
 import sys
 
+import pytest
 import typer
 import typer.core
 from typer.testing import CliRunner
@@ -8,9 +9,7 @@ from typer.testing import CliRunner
 from docs_src.parameter_types.number import tutorial001_an as mod
 
 runner = CliRunner()
-
-app = typer.Typer()
-app.command()(mod.main)
+app = mod.app
 
 
 def test_help():
@@ -22,16 +21,14 @@ def test_help():
     assert "FLOAT RANGE" in result.output
 
 
-def test_help_no_rich():
-    rich = typer.core.rich
-    typer.core.rich = None
+def test_help_no_rich(monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setattr(typer.core, "HAS_RICH", False)
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     assert "--age" in result.output
     assert "INTEGER RANGE" in result.output
     assert "--score" in result.output
     assert "FLOAT RANGE" in result.output
-    typer.core.rich = rich
 
 
 def test_params():
@@ -57,7 +54,8 @@ def test_invalid_age():
     assert "15 is not in the range x>=18" in result.output
 
 
-def test_invalid_score():
+def test_invalid_score(monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setattr(typer.core, "HAS_RICH", False)
     result = runner.invoke(app, ["5", "--age", "20", "--score", "100.5"])
     assert result.exit_code != 0
     assert "Invalid value for '--score'" in result.output

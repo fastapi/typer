@@ -16,7 +16,11 @@ def test_traceback_rich_pretty_short_disable():
         [sys.executable, "-m", "coverage", "run", str(file_path)],
         capture_output=True,
         encoding="utf-8",
-        env={**os.environ, "_TYPER_STANDARD_TRACEBACK": ""},
+        env={
+            **os.environ,
+            "TYPER_STANDARD_TRACEBACK": "",
+            "_TYPER_STANDARD_TRACEBACK": "",
+        },
     )
     assert "return get_command(self)(*args, **kwargs)" not in result.stderr
 

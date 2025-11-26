@@ -1,6 +1,7 @@
 import subprocess
 import sys
 
+import pytest
 import typer
 import typer.core
 from typer.testing import CliRunner
@@ -8,9 +9,7 @@ from typer.testing import CliRunner
 from docs_src.parameter_types.bool import tutorial002 as mod
 
 runner = CliRunner()
-
-app = typer.Typer()
-app.command()(mod.main)
+app = mod.app
 
 
 def test_help():
@@ -21,15 +20,13 @@ def test_help():
     assert "--no-accept" not in result.output
 
 
-def test_help_no_rich():
-    rich = typer.core.rich
-    typer.core.rich = None
+def test_help_no_rich(monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setattr(typer.core, "HAS_RICH", False)
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     assert "--accept" in result.output
     assert "--reject" in result.output
     assert "--no-accept" not in result.output
-    typer.core.rich = rich
 
 
 def test_main():
