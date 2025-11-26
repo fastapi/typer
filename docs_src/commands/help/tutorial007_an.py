@@ -37,7 +37,7 @@ def create(
 @app.command(rich_help_panel="Utils and Configs")
 def config(configuration: str):
     """
-    [blue]Configure[/blue] the system. :wrench:
+    [blue]Configure[/blue] the system. :gear:
     """
     print(f"Configuring the system with: {configuration}")
 
