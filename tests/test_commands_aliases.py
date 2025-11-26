@@ -379,3 +379,81 @@ def test_format_commands_no_aliases_no_rich(monkeypatch: pytest.MonkeyPatch):
     assert result.exit_code == 0
     assert "list" in result.stdout
     assert "remove" in result.stdout
+
+
+def test_format_commands_with_hidden_no_rich(monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setattr(typer.core, "HAS_RICH", False)
+
+    app = typer.Typer()
+
+    @app.command("visible")
+    def visible_cmd():
+        pass  # pragma: no cover
+
+    @app.command("hidden", hidden=True)
+    def hidden_cmd():
+        pass  # pragma: no cover
+
+    @app.command("another")
+    def another_cmd():
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "visible" in result.stdout
+    assert "hidden" not in result.stdout
+    assert "another" in result.stdout
+
+
+def test_format_commands_empty_no_rich(monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setattr(typer.core, "HAS_RICH", False)
+
+    app = typer.Typer()
+
+    @app.callback(invoke_without_command=True)
+    def main():
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "Commands" not in result.stdout or "Commands:" not in result.stdout
+
+
+def test_format_help_command_no_rich(monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setattr(typer.core, "HAS_RICH", False)
+
+    app = typer.Typer()
+
+    @app.command(help="Test command")
+    def test_cmd():
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["test-cmd", "--help"])
+    assert result.exit_code == 0
+    assert "Test command" in result.stdout
+
+
+def test_format_help_group_no_rich(monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setattr(typer.core, "HAS_RICH", False)
+
+    app = typer.Typer(help="Test group")
+
+    @app.command()
+    def test_cmd():
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "Test group" in result.stdout or "Usage:" in result.stdout
+
+
+def test_format_help_rich_markup_mode_none():
+    app = typer.Typer(rich_markup_mode=None)
+
+    @app.command(help="Test command")
+    def test_cmd():
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["test-cmd", "--help"])
+    assert result.exit_code == 0
+    assert "Test command" in result.stdout
