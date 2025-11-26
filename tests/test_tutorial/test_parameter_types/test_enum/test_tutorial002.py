@@ -3,8 +3,6 @@ import subprocess
 import sys
 
 import pytest
-import typer
-from typer import Typer
 from typer.testing import CliRunner
 
 from tests.utils import needs_py311
