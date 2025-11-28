@@ -6,7 +6,7 @@ import sys
 from collections import defaultdict
 from gettext import gettext as _
 from os import getenv
-from typing import Any, DefaultDict, Dict, Iterable, List, Optional, Union
+from typing import Any, DefaultDict, Dict, Iterable, List, Optional, Protocol, Union
 
 import click
 from rich import box
@@ -549,11 +549,49 @@ def _print_commands_panel(
         )
 
 
+class PrintOptionsPanelFunc(Protocol):
+    """
+    Define acceptable function to pass as print_options_panel_func
+
+    TODO: switch to using NamedArg once minimum supported python is 3.12
+    """
+
+    def __call__(
+        self,
+        *,
+        name: str,
+        params: Union[List[click.Option], List[click.Argument]],
+        ctx: click.Context,
+        markup_mode: MarkupMode,
+        console: Console,
+    ) -> None: ...
+
+
+class PrintCommandsPanelFunc(Protocol):
+    """
+    Define acceptable function to pass as print_options_panel_func
+
+    TODO: switch to using NamedArg once minimum supported python is 3.12
+    """
+
+    def __call__(
+        self,
+        *,
+        name: str,
+        commands: List[click.Command],
+        markup_mode: MarkupMode,
+        console: Console,
+        cmd_len: int,
+    ) -> None: ...
+
+
 def rich_format_help(
     *,
     obj: Union[click.Command, click.Group],
     ctx: click.Context,
     markup_mode: MarkupMode,
+    print_options_panel_func: PrintOptionsPanelFunc = _print_options_panel,
+    print_commands_panel_func: PrintCommandsPanelFunc = _print_commands_panel,
 ) -> None:
     """Print nicely formatted help text using rich.
 
@@ -602,7 +640,7 @@ def rich_format_help(
             )
             panel_to_options[panel_name].append(param)
     default_arguments = panel_to_arguments.get(ARGUMENTS_PANEL_TITLE, [])
-    _print_options_panel(
+    print_options_panel_func(
         name=ARGUMENTS_PANEL_TITLE,
         params=default_arguments,
         ctx=ctx,
@@ -613,7 +651,7 @@ def rich_format_help(
         if panel_name == ARGUMENTS_PANEL_TITLE:
             # Already printed above
             continue
-        _print_options_panel(
+        print_options_panel_func(
             name=panel_name,
             params=arguments,
             ctx=ctx,
@@ -621,7 +659,7 @@ def rich_format_help(
             console=console,
         )
     default_options = panel_to_options.get(OPTIONS_PANEL_TITLE, [])
-    _print_options_panel(
+    print_options_panel_func(
         name=OPTIONS_PANEL_TITLE,
         params=default_options,
         ctx=ctx,
@@ -632,7 +670,7 @@ def rich_format_help(
         if panel_name == OPTIONS_PANEL_TITLE:
             # Already printed above
             continue
-        _print_options_panel(
+        print_options_panel_func(
             name=panel_name,
             params=options,
             ctx=ctx,
@@ -663,7 +701,7 @@ def rich_format_help(
 
         # Print each command group panel
         default_commands = panel_to_commands.get(COMMANDS_PANEL_TITLE, [])
-        _print_commands_panel(
+        print_commands_panel_func(
             name=COMMANDS_PANEL_TITLE,
             commands=default_commands,
             markup_mode=markup_mode,
@@ -674,7 +712,7 @@ def rich_format_help(
             if panel_name == COMMANDS_PANEL_TITLE:
                 # Already printed above
                 continue
-            _print_commands_panel(
+            print_commands_panel_func(
                 name=panel_name,
                 commands=commands,
                 markup_mode=markup_mode,
