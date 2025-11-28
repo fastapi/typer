@@ -1,0 +1,15 @@
+from typing import List
+
+import typer
+from pydantic import AnyHttpUrl
+
+app = typer.Typer()
+
+
+@app.command()
+def main(urls: List[AnyHttpUrl] = typer.Option([], "--url")):
+    typer.echo(f"urls: {urls}")
+
+
+if __name__ == "__main__":
+    app()
