@@ -2,16 +2,16 @@
 
 When working on Python projects, it's best practice to use a **virtual environment** (or a similar mechanism) to isolate the packages installed for each project.
 
-> [!NOTE]
+> **Note**
 > If you already know about virtual environments, how to create and use them, feel free to skip this section. 🤓
 
-> [!TIP]
+> **Tip**
 > A **virtual environment** is different from an **environment variable**.
 >
 > * An **environment variable** is a system variable used by programs.
 > * A **virtual environment** is a directory containing specific files.
 
-> [!NOTE]
+> **Note**
 > This page explains how to use **virtual environments** and how they work.
 >
 > If you are ready to adopt a **tool that manages everything** for you (including installing Python), try <a href="https://github.com/astral-sh/uv" class="external-link" target="_blank">uv</a>.
@@ -21,8 +21,6 @@ When working on Python projects, it's best practice to use a **virtual environme
 First, create a directory for your project.
 
 I typically create a `code` directory inside my home/user directory, and then create one directory per project inside it.
-
-<div class="termy">
 
 ```console
 // Go to the home directory
@@ -37,26 +35,20 @@ $ mkdir awesome-project
 $ cd awesome-project
 ```
 
-</div>
-
 ## Create a Virtual Environment
 
 When starting a Python project **for the first time**, create a virtual environment **<abbr title="there are other options, this is a simple guideline">inside your project</abbr>**.
 
-> [!TIP]
+> **Tip**
 > You only need to do this **once per project**, not every time you work.
 
-//// tab | `venv`
+### Using `venv`
 
 To create a virtual environment, you can use the `venv` module included with Python.
-
-<div class="termy">
 
 ```console
 $ python -m venv .venv
 ```
-
-</div>
 
 <details>
 <summary>What that command means</summary>
@@ -68,26 +60,18 @@ $ python -m venv .venv
 
 </details>
 
-////
-
-//// tab | `uv`
+### Using `uv`
 
 If you have <a href="https://github.com/astral-sh/uv" class="external-link" target="_blank">`uv`</a> installed, you can use it to create a virtual environment.
-
-<div class="termy">
 
 ```console
 $ uv venv
 ```
 
-</div>
-
-> [!TIP]
+> **Tip**
 > By default, `uv` will create a virtual environment in a directory called `.venv`.
 >
 > You can customize this by passing an additional argument with the directory name.
-
-////
 
 That command creates a new virtual environment in a directory called `.venv`.
 
@@ -102,48 +86,30 @@ You could create the virtual environment in a different directory, but there's a
 
 Activate the new virtual environment so that any Python command you run or package you install uses it.
 
-> [!TIP]
+> **Tip**
 > Do this **every time** you start a **new terminal session** to work on the project.
 
-//// tab | Linux, macOS
-
-<div class="termy">
+### Linux, macOS
 
 ```console
 $ source .venv/bin/activate
 ```
 
-</div>
-
-////
-
-//// tab | Windows PowerShell
-
-<div class="termy">
+### Windows PowerShell
 
 ```console
 $ .venv\Scripts\Activate.ps1
 ```
 
-</div>
-
-////
-
-//// tab | Windows Bash
+### Windows Bash
 
 Or if you use Bash for Windows (e.g. <a href="https://gitforwindows.org/" class="external-link" target="_blank">Git Bash</a>):
-
-<div class="termy">
 
 ```console
 $ source .venv/Scripts/activate
 ```
 
-</div>
-
-////
-
-> [!TIP]
+> **Tip**
 > Every time you install a **new package** in that environment, **activate** the environment again.
 >
 > This ensures that if you use a **terminal (<abbr title="command line interface">CLI</abbr>) program** installed by that package, you use the one from your virtual environment and not any other that could be installed globally, possibly with a different version.
@@ -152,12 +118,10 @@ $ source .venv/Scripts/activate
 
 Check that the virtual environment is active (the previous command worked).
 
-> [!TIP]
+> **Tip**
 > This is **optional**, but it's a good way to **check** that everything is working as expected and you are using the intended virtual environment.
 
-//// tab | Linux, macOS, Windows Bash
-
-<div class="termy">
+### Linux, macOS, Windows Bash
 
 ```console
 $ which python
@@ -165,15 +129,9 @@ $ which python
 /home/user/code/awesome-project/.venv/bin/python
 ```
 
-</div>
-
 If it shows the `python` binary at `.venv/bin/python`, inside of your project (in this case `awesome-project`), then it worked. 🎉
 
-////
-
-//// tab | Windows PowerShell
-
-<div class="termy">
+### Windows PowerShell
 
 ```console
 $ Get-Command python
@@ -181,27 +139,21 @@ $ Get-Command python
 C:\Users\user\code\awesome-project\.venv\Scripts\python
 ```
 
-</div>
-
 If it shows the `python` binary at `.venv\Scripts\python`, inside of your project (in this case `awesome-project`), then it worked. 🎉
-
-////
 
 ## Upgrade `pip`
 
-> [!TIP]
+> **Tip**
 > If you use <a href="https://github.com/astral-sh/uv" class="external-link" target="_blank">`uv`</a>, you would use it to install things instead of `pip`, so you don't need to upgrade `pip`. 😎
 
 If you are using `pip` to install packages (it comes by default with Python), you should **upgrade** it to the latest version.
 
 Many exotic errors while installing a package are solved by just upgrading `pip` first.
 
-> [!TIP]
+> **Tip**
 > You would normally do this **once**, right after you create the virtual environment.
 
 Make sure the virtual environment is active (with the command above) and then run:
-
-<div class="termy">
 
 ```console
 $ python -m pip install --upgrade pip
@@ -209,25 +161,19 @@ $ python -m pip install --upgrade pip
 ---> 100%
 ```
 
-</div>
-
 ## Add `.gitignore`
 
 If you are using **Git** (you should), add a `.gitignore` file to exclude everything in your `.venv` from Git.
 
-> [!TIP]
+> **Tip**
 > If you used <a href="https://github.com/astral-sh/uv" class="external-link" target="_blank">`uv`</a> to create the virtual environment, it already did this for you, so you can skip this step. 😎
 
-> [!TIP]
+> **Tip**
 > Do this **once**, right after you create the virtual environment.
-
-<div class="termy">
 
 ```console
 $ echo "*" > .venv/.gitignore
 ```
-
-</div>
 
 <details>
 <summary>What that command means</summary>
@@ -250,7 +196,7 @@ That command will create a file `.gitignore` with the content:
 
 After activating the environment, you can install packages in it.
 
-> [!TIP]
+> **Tip**
 > Do this **once** when installing or upgrading the packages your project needs.
 >
 > If you need to upgrade a version or add a new package you would **do this again**.
@@ -259,12 +205,10 @@ After activating the environment, you can install packages in it.
 
 If you're in a hurry and don't want to use a file to declare your project's package requirements, you can install them directly.
 
-> [!TIP]
+> **Tip**
 > It's a (very) good idea to put the packages and versions your program needs in a file (for example `requirements.txt` or `pyproject.toml`).
 
-//// tab | `pip`
-
-<div class="termy">
+### Using `pip`
 
 ```console
 $ pip install typer
@@ -272,56 +216,34 @@ $ pip install typer
 ---> 100%
 ```
 
-</div>
-
-////
-
-//// tab | `uv`
+### Using `uv`
 
 If you have <a href="https://github.com/astral-sh/uv" class="external-link" target="_blank">`uv`</a>:
-
-<div class="termy">
 
 ```console
 $ uv pip install typer
 ---> 100%
 ```
 
-</div>
-
-////
-
 ### Install from `requirements.txt`
 
 If you have a `requirements.txt`, you can now use it to install its packages.
 
-//// tab | `pip`
-
-<div class="termy">
+### Using `pip`
 
 ```console
 $ pip install -r requirements.txt
 ---> 100%
 ```
 
-</div>
-
-////
-
-//// tab | `uv`
+### Using `uv`
 
 If you have <a href="https://github.com/astral-sh/uv" class="external-link" target="_blank">`uv`</a>:
-
-<div class="termy">
 
 ```console
 $ uv pip install -r requirements.txt
 ---> 100%
 ```
-
-</div>
-
-////
 
 <details>
 <summary><code>requirements.txt</code></summary>
@@ -339,15 +261,11 @@ rich==13.7.1
 
 After you activated the virtual environment, you can run your program, and it will use the Python inside of your virtual environment with the packages you installed there.
 
-<div class="termy">
-
 ```console
 $ python main.py
 
 Hello World
 ```
-
-</div>
 
 ## Configure Your Editor
 
@@ -358,20 +276,16 @@ For example:
 * <a href="https://code.visualstudio.com/docs/python/environments#_select-and-activate-an-environment" class="external-link" target="_blank">VS Code</a>
 * <a href="https://www.jetbrains.com/help/pycharm/creating-virtual-environment.html" class="external-link" target="_blank">PyCharm</a>
 
-> [!TIP]
+> **Tip**
 > You normally have to do this only **once**, when you create the virtual environment.
 
 ## Deactivate the Virtual Environment
 
 Once you are done working on your project you can **deactivate** the virtual environment.
 
-<div class="termy">
-
 ```console
 $ deactivate
 ```
-
-</div>
 
 This way, when you run `python` it won't try to run it from that virtual environment with the packages installed there.
 
@@ -379,7 +293,7 @@ This way, when you run `python` it won't try to run it from that virtual environ
 
 Now you're ready to start working on your project.
 
-> [!TIP]
+> **Tip**
 > Do you want to understand what's all that above?
 >
 > Continue reading. 👇🤓
@@ -418,13 +332,9 @@ But now the problem is, if you install the packages globally (in the global envi
 
 If you want to run `philosophers-stone` you will need to first install `harry` version `1`, for example with:
 
-<div class="termy">
-
 ```console
 $ pip install "harry==1"
 ```
-
-</div>
 
 And then you would end up with `harry` version `1` installed in your global Python environment.
 
@@ -440,13 +350,9 @@ flowchart LR
 
 But then if you want to run `prisoner-of-azkaban`, you will need to uninstall `harry` version `1` and install `harry` version `3` (or just installing version `3` would automatically uninstall version `1`).
 
-<div class="termy">
-
 ```console
 $ pip install "harry==3"
 ```
-
-</div>
 
 And then you would end up with `harry` version `3` installed in your global Python environment.
 
@@ -467,7 +373,7 @@ flowchart LR
     end
 ```
 
-> [!TIP]
+> **Tip**
 > It's very common in Python packages to try the best to **avoid breaking changes** in **new versions**, but it's better to be safe, and install newer versions intentionally and when you can run the tests to check everything is working correctly.
 
 Now, imagine that with **many** other **packages** that all your **projects depend on**. That's very difficult to manage. And you would probably end up running some projects with some **incompatible versions** of the packages, and not knowing why something isn't working.
@@ -482,15 +388,11 @@ Some of these directories are the ones in charge of having all the packages you 
 
 When you run:
 
-<div class="termy">
-
 ```console
 // Don't run this now, it's just an example 🤓
 $ pip install typer
 ---> 100%
 ```
-
-</div>
 
 That will download a compressed file with the Typer code, normally from <a href="https://pypi.org/project/typer/" class="external-link" target="_blank">PyPI</a>.
 
@@ -529,56 +431,38 @@ flowchart TB
 
 When you activate a virtual environment, for example with:
 
-//// tab | Linux, macOS
-
-<div class="termy">
+### Linux, macOS
 
 ```console
 $ source .venv/bin/activate
 ```
 
-</div>
-
-////
-
-//// tab | Windows PowerShell
-
-<div class="termy">
+### Windows PowerShell
 
 ```console
 $ .venv\Scripts\Activate.ps1
 ```
 
-</div>
-
-////
-
-//// tab | Windows Bash
+### Windows Bash
 
 Or if you use Bash for Windows (e.g. <a href="https://gitforwindows.org/" class="external-link" target="_blank">Git Bash</a>):
-
-<div class="termy">
 
 ```console
 $ source .venv/Scripts/activate
 ```
 
-</div>
-
-////
-
 That command will create or modify some [environment variables](environment-variables.md){.internal-link target=_blank} that will be available for the next commands.
 
 One of those variables is the `PATH` variable.
 
-> [!TIP]
+> **Tip**
 > You can learn more about the `PATH` environment variable in the [Environment Variables](environment-variables.md#path-environment-variable){.internal-link target=_blank} section.
 
 Activating a virtual environment adds its path `.venv/bin` (on Linux and macOS) or `.venv\Scripts` (on Windows) to the `PATH` environment variable.
 
 Let's say that before activating the environment, the `PATH` variable looked like this:
 
-//// tab | Linux, macOS
+### Linux, macOS
 
 ```plaintext
 /usr/bin:/bin:/usr/sbin:/sbin
@@ -591,9 +475,7 @@ That means that the system would look for programs in:
 * `/usr/sbin`
 * `/sbin`
 
-////
-
-//// tab | Windows
+### Windows
 
 ```plaintext
 C:\Windows\System32
@@ -603,11 +485,9 @@ That means that the system would look for programs in:
 
 * `C:\Windows\System32`
 
-////
-
 After activating the virtual environment, the `PATH` variable would look something like this:
 
-//// tab | Linux, macOS
+### Linux, macOS
 
 ```plaintext
 /home/user/code/awesome-project/.venv/bin:/usr/bin:/bin:/usr/sbin:/sbin
@@ -629,9 +509,7 @@ So, when you type `python` in the terminal, the system will find the Python prog
 
 and use that one.
 
-////
-
-//// tab | Windows
+### Windows
 
 ```plaintext
 C:\Users\user\code\awesome-project\.venv\Scripts;C:\Windows\System32
@@ -653,8 +531,6 @@ C:\Users\user\code\awesome-project\.venv\Scripts\python
 
 and use that one.
 
-////
-
 An important detail is that it will put the virtual environment path at the **beginning** of the `PATH` variable. The system will find it **before** finding any other Python available. This way, when you run `python`, it will use the Python **from the virtual environment** instead of any other `python` (for example, a `python` from a global environment).
 
 Activating a virtual environment also changes a couple of other things, but this is one of the most important things it does.
@@ -663,9 +539,7 @@ Activating a virtual environment also changes a couple of other things, but this
 
 When you check if a virtual environment is active, for example with:
 
-//// tab | Linux, macOS, Windows Bash
-
-<div class="termy">
+### Linux, macOS, Windows Bash
 
 ```console
 $ which python
@@ -673,23 +547,13 @@ $ which python
 /home/user/code/awesome-project/.venv/bin/python
 ```
 
-</div>
-
-////
-
-//// tab | Windows PowerShell
-
-<div class="termy">
+### Windows PowerShell
 
 ```console
 $ Get-Command python
 
 C:\Users\user\code\awesome-project\.venv\Scripts\python
 ```
-
-</div>
-
-////
 
 That means that the `python` program that will be used is the one **in the virtual environment**.
 
@@ -701,7 +565,7 @@ The most important part is that when you call `python`, that is the exact "`pyth
 
 So, you can confirm if you are in the correct virtual environment.
 
-> [!TIP]
+> **Tip**
 > It's easy to activate one virtual environment, get one Python, and then **go to another project**.
 >
 > And the second project **wouldn't work** because you are using the **incorrect Python**, from a virtual environment for another project.
@@ -716,17 +580,11 @@ And then you want to work on **another project** `prisoner-of-azkaban`.
 
 You go to that project:
 
-<div class="termy">
-
 ```console
 $ cd ~/code/prisoner-of-azkaban
 ```
 
-</div>
-
 If you don't deactivate the virtual environment for `philosophers-stone`, when you run `python` in the terminal, it will try to use the Python from `philosophers-stone`.
-
-<div class="termy">
 
 ```console
 $ cd ~/code/prisoner-of-azkaban
@@ -739,11 +597,7 @@ Traceback (most recent call last):
         import sirius
 ```
 
-</div>
-
 But if you deactivate the virtual environment and activate the new one for `prisoner-of-askaban` then when you run `python` it will use the Python from the virtual environment in `prisoner-of-azkaban`.
-
-<div class="termy">
 
 ```console
 $ cd ~/code/prisoner-of-azkaban
@@ -759,8 +613,6 @@ $ python main.py
 
 I solemnly swear 🐺
 ```
-
-</div>
 
 ## Alternatives
 
