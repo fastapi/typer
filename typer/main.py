@@ -185,7 +185,7 @@ class Typer:
         help: Optional[str] = Default(None),
         epilog: Optional[str] = Default(None),
         short_help: Optional[str] = Default(None),
-        options_metavar: str = Default("[OPTIONS]"),
+        options_metavar: Optional[str] = Default(None),
         add_help_option: bool = Default(True),
         hidden: bool = Default(False),
         deprecated: bool = Default(False),
@@ -205,7 +205,9 @@ class Typer:
                 help=help,
                 epilog=epilog,
                 short_help=short_help,
-                options_metavar=options_metavar,
+                options_metavar=(
+                    options_metavar or self._info_val_str("options_metavar")
+                ),
                 add_help_option=add_help_option,
                 hidden=hidden,
                 deprecated=deprecated,
@@ -224,7 +226,7 @@ class Typer:
         help: Optional[str] = None,
         epilog: Optional[str] = None,
         short_help: Optional[str] = None,
-        options_metavar: str = "[OPTIONS]",
+        options_metavar: Optional[str] = None,
         add_help_option: bool = True,
         no_args_is_help: bool = False,
         hidden: bool = False,
@@ -245,7 +247,9 @@ class Typer:
                     help=help,
                     epilog=epilog,
                     short_help=short_help,
-                    options_metavar=options_metavar,
+                    options_metavar=(
+                        options_metavar or self._info_val_str("options_metavar")
+                    ),
                     add_help_option=add_help_option,
                     no_args_is_help=no_args_is_help,
                     hidden=hidden,
@@ -275,7 +279,7 @@ class Typer:
         help: Optional[str] = Default(None),
         epilog: Optional[str] = Default(None),
         short_help: Optional[str] = Default(None),
-        options_metavar: str = Default("[OPTIONS]"),
+        options_metavar: Optional[str] = Default(None),
         add_help_option: bool = Default(True),
         hidden: bool = Default(False),
         deprecated: bool = Default(False),
@@ -297,7 +301,9 @@ class Typer:
                 help=help,
                 epilog=epilog,
                 short_help=short_help,
-                options_metavar=options_metavar,
+                options_metavar=(
+                    options_metavar or self._info_val_str("options_metavar")
+                ),
                 add_help_option=add_help_option,
                 hidden=hidden,
                 deprecated=deprecated,
@@ -327,6 +333,12 @@ class Typer:
                 ),
             )
             raise e
+
+    def _info_val_str(self, name: str) -> str:
+        val = getattr(self.info, name)
+        val_str = val.value if isinstance(val, DefaultPlaceholder) else val
+        assert isinstance(val_str, str)
+        return val_str
 
 
 def get_group(typer_instance: Typer) -> TyperGroup:
