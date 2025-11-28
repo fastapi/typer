@@ -98,6 +98,8 @@ class CommandInfo:
         no_args_is_help: bool = False,
         hidden: bool = False,
         deprecated: bool = False,
+        aliases: Optional[Sequence[str]] = None,
+        hidden_aliases: Optional[Sequence[str]] = None,
         # Rich settings
         rich_help_panel: Union[str, None] = None,
     ):
@@ -113,6 +115,8 @@ class CommandInfo:
         self.no_args_is_help = no_args_is_help
         self.hidden = hidden
         self.deprecated = deprecated
+        self.aliases = aliases or []
+        self.hidden_aliases = hidden_aliases or []
         # Rich settings
         self.rich_help_panel = rich_help_panel
 
