@@ -74,6 +74,37 @@ Training neural network of type: lstm
 
 </div>
 
+### Using Enum names instead of values
+
+Sometimes you want to accept `Enum` names from the command line and convert
+that into `Enum` values in the command handler. You can enable this by setting
+`enum_by_name=True`:
+
+{* docs_src/parameter_types/enum/tutorial007_an.py hl[18] *}
+
+And then the names of the `Enum` will be used instead of values:
+
+<div class="termy">
+
+```console
+$ python main.py --log-level debug
+
+Log level set to DEBUG
+```
+
+</div>
+
+This can be particularly useful if the enum values are not strings:
+
+{* docs_src/parameter_types/enum/tutorial005_an.py hl[8:11,18] *}
+
+```console
+$ python main.py --access protected
+
+Access level: protected (2)
+```
+
+
 ### List of Enum values
 
 A *CLI parameter* can also take a list of `Enum` values:
@@ -111,6 +142,29 @@ Buying groceries: Eggs, Bacon
 ```
 
 </div>
+
+You can also combine `enum_by_name=True` with a list of enums:
+
+{* docs_src/parameter_types/enum/tutorial006_an.py hl[19] *}
+
+This works exactly the same, but you're using the enum names instead of values:
+
+<div class="termy">
+
+```console
+// Try it with a single value
+$ python main.py --groceries "f1"
+
+Buying groceries: Eggs
+
+// Try it with multiple values
+$ python main.py --groceries "f1" --groceries "f2"
+
+Buying groceries: Eggs, Bacon
+```
+
+</div>
+
 
 ### Literal choices
 
