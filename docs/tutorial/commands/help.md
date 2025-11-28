@@ -384,7 +384,7 @@ $ python main.py --help
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Help and Others ─────────────────────────────────────────────────╮</font>
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>help         </b></font> Get <font color="#F4BF75">help</font> with the system. ❓                        │
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>report       </b></font> <font color="#F4BF75">Report</font> an issue. ❗                                  │
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>report       </b></font> <font color="#F4BF75">Report</font> an issue. ❗                                 │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 ```
 
