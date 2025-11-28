@@ -1,38 +1,26 @@
 # Virtual Environments
 
-When you work in Python projects you probably should use a **virtual environment** (or a similar mechanism) to isolate the packages you install for each project.
+When working on Python projects, it's best practice to use a **virtual environment** (or a similar mechanism) to isolate the packages installed for each project.
 
-/// info
+> [!NOTE]
+> If you already know about virtual environments, how to create and use them, feel free to skip this section. 🤓
 
-If you already know about virtual environments, how to create them and use them, you might want to skip this section. 🤓
+> [!TIP]
+> A **virtual environment** is different from an **environment variable**.
+>
+> * An **environment variable** is a system variable used by programs.
+> * A **virtual environment** is a directory containing specific files.
 
-///
-
-/// tip
-
-A **virtual environment** is different than an **environment variable**.
-
-An **environment variable** is a variable in the system that can be used by programs.
-
-A **virtual environment** is a directory with some files in it.
-
-///
-
-/// info
-
-This page will teach you how to use **virtual environments** and how they work.
-
-If you are ready to adopt a **tool that manages everything** for you (including installing Python), try <a href="https://github.com/astral-sh/uv" class="external-link" target="_blank">uv</a>.
-
-///
+> [!NOTE]
+> This page explains how to use **virtual environments** and how they work.
+>
+> If you are ready to adopt a **tool that manages everything** for you (including installing Python), try <a href="https://github.com/astral-sh/uv" class="external-link" target="_blank">uv</a>.
 
 ## Create a Project
 
 First, create a directory for your project.
 
-What I normally do is that I create a directory named `code` inside my home/user directory.
-
-And inside of that I create one directory per project.
+I typically create a `code` directory inside my home/user directory, and then create one directory per project inside it.
 
 <div class="termy">
 
@@ -53,17 +41,14 @@ $ cd awesome-project
 
 ## Create a Virtual Environment
 
-When you start working on a Python project **for the first time**, create a virtual environment **<abbr title="there are other options, this is a simple guideline">inside your project</abbr>**.
+When starting a Python project **for the first time**, create a virtual environment **<abbr title="there are other options, this is a simple guideline">inside your project</abbr>**.
 
-/// tip
-
-You only need to do this **once per project**, not every time you work.
-
-///
+> [!TIP]
+> You only need to do this **once per project**, not every time you work.
 
 //// tab | `venv`
 
-To create a virtual environment, you can use the `venv` module that comes with Python.
+To create a virtual environment, you can use the `venv` module included with Python.
 
 <div class="termy">
 
@@ -73,14 +58,15 @@ $ python -m venv .venv
 
 </div>
 
-/// details | What that command means
+<details>
+<summary>What that command means</summary>
 
 * `python`: use the program called `python`
 * `-m`: call a module as a script, we'll tell it which module next
 * `venv`: use the module called `venv` that normally comes installed with Python
 * `.venv`: create the virtual environment in the new directory `.venv`
 
-///
+</details>
 
 ////
 
@@ -96,33 +82,28 @@ $ uv venv
 
 </div>
 
-/// tip
-
-By default, `uv` will create a virtual environment in a directory called `.venv`.
-
-But you could customize it passing an additional argument with the directory name.
-
-///
+> [!TIP]
+> By default, `uv` will create a virtual environment in a directory called `.venv`.
+>
+> You can customize this by passing an additional argument with the directory name.
 
 ////
 
 That command creates a new virtual environment in a directory called `.venv`.
 
-/// details | `.venv` or other name
+<details>
+<summary>`.venv` or other name</summary>
 
 You could create the virtual environment in a different directory, but there's a convention of calling it `.venv`.
 
-///
+</details>
 
 ## Activate the Virtual Environment
 
 Activate the new virtual environment so that any Python command you run or package you install uses it.
 
-/// tip
-
-Do this **every time** you start a **new terminal session** to work on the project.
-
-///
+> [!TIP]
+> Do this **every time** you start a **new terminal session** to work on the project.
 
 //// tab | Linux, macOS
 
@@ -162,23 +143,17 @@ $ source .venv/Scripts/activate
 
 ////
 
-/// tip
-
-Every time you install a **new package** in that environment, **activate** the environment again.
-
-This makes sure that if you use a **terminal (<abbr title="command line interface">CLI</abbr>) program** installed by that package, you use the one from your virtual environment and not any other that could be installed globally, probably with a different version than what you need.
-
-///
+> [!TIP]
+> Every time you install a **new package** in that environment, **activate** the environment again.
+>
+> This ensures that if you use a **terminal (<abbr title="command line interface">CLI</abbr>) program** installed by that package, you use the one from your virtual environment and not any other that could be installed globally, possibly with a different version.
 
 ## Check the Virtual Environment is Active
 
 Check that the virtual environment is active (the previous command worked).
 
-/// tip
-
-This is **optional**, but it's a good way to **check** that everything is working as expected and you are using the virtual environment you intended.
-
-///
+> [!TIP]
+> This is **optional**, but it's a good way to **check** that everything is working as expected and you are using the intended virtual environment.
 
 //// tab | Linux, macOS, Windows Bash
 
@@ -214,21 +189,15 @@ If it shows the `python` binary at `.venv\Scripts\python`, inside of your projec
 
 ## Upgrade `pip`
 
-/// tip
-
-If you use <a href="https://github.com/astral-sh/uv" class="external-link" target="_blank">`uv`</a> you would use it to install things instead of `pip`, so you don't need to upgrade `pip`. 😎
-
-///
+> [!TIP]
+> If you use <a href="https://github.com/astral-sh/uv" class="external-link" target="_blank">`uv`</a>, you would use it to install things instead of `pip`, so you don't need to upgrade `pip`. 😎
 
 If you are using `pip` to install packages (it comes by default with Python), you should **upgrade** it to the latest version.
 
 Many exotic errors while installing a package are solved by just upgrading `pip` first.
 
-/// tip
-
-You would normally do this **once**, right after you create the virtual environment.
-
-///
+> [!TIP]
+> You would normally do this **once**, right after you create the virtual environment.
 
 Make sure the virtual environment is active (with the command above) and then run:
 
@@ -246,17 +215,11 @@ $ python -m pip install --upgrade pip
 
 If you are using **Git** (you should), add a `.gitignore` file to exclude everything in your `.venv` from Git.
 
-/// tip
+> [!TIP]
+> If you used <a href="https://github.com/astral-sh/uv" class="external-link" target="_blank">`uv`</a> to create the virtual environment, it already did this for you, so you can skip this step. 😎
 
-If you used <a href="https://github.com/astral-sh/uv" class="external-link" target="_blank">`uv`</a> to create the virtual environment, it already did this for you, you can skip this step. 😎
-
-///
-
-/// tip
-
-Do this **once**, right after you create the virtual environment.
-
-///
+> [!TIP]
+> Do this **once**, right after you create the virtual environment.
 
 <div class="termy">
 
@@ -266,7 +229,8 @@ $ echo "*" > .venv/.gitignore
 
 </div>
 
-/// details | What that command means
+<details>
+<summary>What that command means</summary>
 
 * `echo "*"`: will "print" the text `*` in the terminal (the next part changes that a bit)
 * `>`: anything printed to the terminal by the command to the left of `>` should not be printed but instead written to the file that goes to the right of `>`
@@ -280,29 +244,23 @@ That command will create a file `.gitignore` with the content:
 *
 ```
 
-///
+</details>
 
 ## Install Packages
 
 After activating the environment, you can install packages in it.
 
-/// tip
-
-Do this **once** when installing or upgrading the packages your project needs.
-
-If you need to upgrade a version or add a new package you would **do this again**.
-
-///
+> [!TIP]
+> Do this **once** when installing or upgrading the packages your project needs.
+>
+> If you need to upgrade a version or add a new package you would **do this again**.
 
 ### Install Packages Directly
 
 If you're in a hurry and don't want to use a file to declare your project's package requirements, you can install them directly.
 
-/// tip
-
-It's a (very) good idea to put the packages and versions your program needs in a file (for example `requirements.txt` or `pyproject.toml`).
-
-///
+> [!TIP]
+> It's a (very) good idea to put the packages and versions your program needs in a file (for example `requirements.txt` or `pyproject.toml`).
 
 //// tab | `pip`
 
@@ -365,7 +323,8 @@ $ uv pip install -r requirements.txt
 
 ////
 
-/// details | `requirements.txt`
+<details>
+<summary><code>requirements.txt</code></summary>
 
 A `requirements.txt` with some packages could look like:
 
@@ -374,7 +333,7 @@ typer==0.13.0
 rich==13.7.1
 ```
 
-///
+</details>
 
 ## Run Your Program
 
@@ -399,11 +358,8 @@ For example:
 * <a href="https://code.visualstudio.com/docs/python/environments#_select-and-activate-an-environment" class="external-link" target="_blank">VS Code</a>
 * <a href="https://www.jetbrains.com/help/pycharm/creating-virtual-environment.html" class="external-link" target="_blank">PyCharm</a>
 
-/// tip
-
-You normally have to do this only **once**, when you create the virtual environment.
-
-///
+> [!TIP]
+> You normally have to do this only **once**, when you create the virtual environment.
 
 ## Deactivate the Virtual Environment
 
@@ -423,15 +379,10 @@ This way, when you run `python` it won't try to run it from that virtual environ
 
 Now you're ready to start working on your project.
 
-
-
-/// tip
-
-Do you want to understand what's all that above?
-
-Continue reading. 👇🤓
-
-///
+> [!TIP]
+> Do you want to understand what's all that above?
+>
+> Continue reading. 👇🤓
 
 ## Why Virtual Environments
 
@@ -516,11 +467,8 @@ flowchart LR
     end
 ```
 
-/// tip
-
-It's very common in Python packages to try the best to **avoid breaking changes** in **new versions**, but it's better to be safe, and install newer versions intentionally and when you can run the tests to check everything is working correctly.
-
-///
+> [!TIP]
+> It's very common in Python packages to try the best to **avoid breaking changes** in **new versions**, but it's better to be safe, and install newer versions intentionally and when you can run the tests to check everything is working correctly.
 
 Now, imagine that with **many** other **packages** that all your **projects depend on**. That's very difficult to manage. And you would probably end up running some projects with some **incompatible versions** of the packages, and not knowing why something isn't working.
 
@@ -623,11 +571,8 @@ That command will create or modify some [environment variables](environment-vari
 
 One of those variables is the `PATH` variable.
 
-/// tip
-
-You can learn more about the `PATH` environment variable in the [Environment Variables](environment-variables.md#path-environment-variable){.internal-link target=_blank} section.
-
-///
+> [!TIP]
+> You can learn more about the `PATH` environment variable in the [Environment Variables](environment-variables.md#path-environment-variable){.internal-link target=_blank} section.
 
 Activating a virtual environment adds its path `.venv/bin` (on Linux and macOS) or `.venv\Scripts` (on Windows) to the `PATH` environment variable.
 
@@ -756,15 +701,12 @@ The most important part is that when you call `python`, that is the exact "`pyth
 
 So, you can confirm if you are in the correct virtual environment.
 
-/// tip
-
-It's easy to activate one virtual environment, get one Python, and then **go to another project**.
-
-And the second project **wouldn't work** because you are using the **incorrect Python**, from a virtual environment for another project.
-
-It's useful being able to check what `python` is being used. 🤓
-
-///
+> [!TIP]
+> It's easy to activate one virtual environment, get one Python, and then **go to another project**.
+>
+> And the second project **wouldn't work** because you are using the **incorrect Python**, from a virtual environment for another project.
+>
+> It's useful being able to check what `python` is being used. 🤓
 
 ## Why Deactivate a Virtual Environment
 
