@@ -103,7 +103,7 @@ MARKUP_MODE_MARKDOWN = "markdown"
 MARKUP_MODE_RICH = "rich"
 _RICH_HELP_PANEL_NAME = "rich_help_panel"
 
-MarkupMode = Literal["markdown", "rich", None]
+MarkupModeStrict = Literal["markdown", "rich"]
 
 
 # Rich regex highlighter
@@ -151,11 +151,10 @@ def _get_rich_console(stderr: bool = False) -> Console:
 
 
 def _make_rich_text(
-    *, text: str, style: str = "", markup_mode: MarkupMode
+    *, text: str, style: str = "", markup_mode: MarkupModeStrict
 ) -> Union[Markdown, Text]:
     """Take a string, remove indentations, and return styled text.
 
-    By default, the text is not parsed for any special formatting.
     If `markup_mode` is `"rich"`, the text is parsed for Rich markup strings.
     If `markup_mode` is `"markdown"`, parse as Markdown.
     """
@@ -164,17 +163,16 @@ def _make_rich_text(
     if markup_mode == MARKUP_MODE_MARKDOWN:
         text = Emoji.replace(text)
         return Markdown(text, style=style)
-    if markup_mode == MARKUP_MODE_RICH:
-        return highlighter(Text.from_markup(text, style=style))
     else:
-        return highlighter(Text(text, style=style))
+        assert markup_mode == MARKUP_MODE_RICH
+        return highlighter(Text.from_markup(text, style=style))
 
 
 @group()
 def _get_help_text(
     *,
     obj: Union[click.Command, click.Group],
-    markup_mode: MarkupMode,
+    markup_mode: MarkupModeStrict,
 ) -> Iterable[Union[Markdown, Text]]:
     """Build primary help text for a click command or group.
 
@@ -208,19 +206,8 @@ def _get_help_text(
     if remaining_paragraphs:
         # Add a newline inbetween the header and the remaining paragraphs
         yield Text("")
-        if markup_mode not in (MARKUP_MODE_RICH, MARKUP_MODE_MARKDOWN):
-            # Remove single linebreaks
-            remaining_paragraphs = [
-                x.replace("\n", " ").strip()
-                if not x.startswith("\b")
-                else "{}\n".format(x.strip("\b\n"))
-                for x in remaining_paragraphs
-            ]
-            # Join back together
-            remaining_lines = "\n".join(remaining_paragraphs)
-        else:
-            # Join with double linebreaks if markdown or Rich markup
-            remaining_lines = "\n\n".join(remaining_paragraphs)
+        # Join with double linebreaks for markdown and Rich markup
+        remaining_lines = "\n\n".join(remaining_paragraphs)
 
         yield _make_rich_text(
             text=remaining_lines,
@@ -233,7 +220,7 @@ def _get_parameter_help(
     *,
     param: Union[click.Option, click.Argument, click.Parameter],
     ctx: click.Context,
-    markup_mode: MarkupMode,
+    markup_mode: MarkupModeStrict,
 ) -> Columns:
     """Build primary help text for a click option or argument.
 
@@ -321,7 +308,7 @@ def _get_parameter_help(
 def _make_command_help(
     *,
     help_text: str,
-    markup_mode: MarkupMode,
+    markup_mode: MarkupModeStrict,
 ) -> Union[Text, Markdown]:
     """Build cli help text for a click group command.
 
@@ -350,7 +337,7 @@ def _print_options_panel(
     name: str,
     params: Union[List[click.Option], List[click.Argument]],
     ctx: click.Context,
-    markup_mode: MarkupMode,
+    markup_mode: MarkupModeStrict,
     console: Console,
 ) -> None:
     options_rows: List[List[RenderableType]] = []
@@ -477,7 +464,7 @@ def _print_commands_panel(
     *,
     name: str,
     commands: List[click.Command],
-    markup_mode: MarkupMode,
+    markup_mode: MarkupModeStrict,
     console: Console,
     cmd_len: int,
 ) -> None:
@@ -553,7 +540,7 @@ def rich_format_help(
     *,
     obj: Union[click.Command, click.Group],
     ctx: click.Context,
-    markup_mode: MarkupMode,
+    markup_mode: MarkupModeStrict,
 ) -> None:
     """Print nicely formatted help text using rich.
 
