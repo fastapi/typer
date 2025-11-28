@@ -13,11 +13,11 @@ valid_completion_items = [
 err_console = Console(stderr=True)
 
 
-def complete_name(args: List[str], incomplete: str):
+def complete_user(args: List[str], incomplete: str):
     err_console.print(f"{args}")
-    for name, help_text in valid_completion_items:
-        if name.startswith(incomplete):
-            yield (name, help_text)
+    for user, help_text in valid_completion_items:
+        if user.startswith(incomplete):
+            yield (user, help_text)
 
 
 app = typer.Typer()
@@ -25,13 +25,13 @@ app = typer.Typer()
 
 @app.command()
 def main(
-    name: Annotated[
+    user: Annotated[
         List[str],
-        typer.Option(help="The name to say hi to.", autocompletion=complete_name),
+        typer.Option(help="The user to say hi to.", autocompletion=complete_user),
     ] = ["World"],
 ):
-    for n in name:
-        print(f"Hello {n}")
+    for u in user:
+        print(f"Hello {u}")
 
 
 if __name__ == "__main__":
