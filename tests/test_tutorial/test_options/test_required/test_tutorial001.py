@@ -9,9 +9,7 @@ from typer.testing import CliRunner
 from docs_src.options.required import tutorial001 as mod
 
 runner = CliRunner()
-
-app = typer.Typer()
-app.command()(mod.main)
+app = mod.app
 
 
 def test_1():

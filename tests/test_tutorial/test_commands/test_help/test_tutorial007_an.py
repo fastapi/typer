@@ -18,7 +18,7 @@ def test_main_help():
     assert "Create a new user. ✨" in result.output
     assert "Utils and Configs" in result.output
     assert "config" in result.output
-    assert "Configure the system. 🔧" in result.output
+    assert "Configure the system. ⚙" in result.output
 
 
 def test_create_help():

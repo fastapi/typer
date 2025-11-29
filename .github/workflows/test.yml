@@ -20,7 +20,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
-        python-version: [ "3.13" ]
+        python-version: [ "3.14" ]
         include:
           - os: macos-latest
             python-version: "3.8"
@@ -32,6 +32,8 @@ jobs:
             python-version: "3.11"
           - os: windows-latest
             python-version: "3.12"
+          - os: ubuntu-latest
+            python-version: "3.13"
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
@@ -39,7 +41,7 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
@@ -65,7 +67,7 @@ jobs:
           COVERAGE_FILE: coverage/.coverage.${{ runner.os }}-py${{ matrix.python-version }}
           CONTEXT: ${{ runner.os }}-py${{ matrix.python-version }}
       - name: Store coverage files
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: coverage-${{ runner.os }}-${{ matrix.python-version }}
           path: coverage
@@ -79,7 +81,7 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
         with:
           python-version: '3.8'
@@ -92,7 +94,7 @@ jobs:
             requirements**.txt
             pyproject.toml
       - name: Get coverage files
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           pattern: coverage-*
           path: coverage
@@ -104,7 +106,7 @@ jobs:
       - run: coverage report
       - run: coverage html --show-contexts --title "Coverage for ${{ github.sha }}"
       - name: Store coverage HTML
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: coverage-html
           path: htmlcov

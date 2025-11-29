@@ -2,7 +2,10 @@ from typing import Tuple
 
 import typer
 
+app = typer.Typer()
 
+
+@app.command()
 def main(user: Tuple[str, int, bool] = typer.Option((None, None, None))):
     username, coins, is_wizard = user
     if not username:
@@ -14,4 +17,4 @@ def main(user: Tuple[str, int, bool] = typer.Option((None, None, None))):
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()

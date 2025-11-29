@@ -3,6 +3,7 @@ import importlib.util
 import inspect
 import os
 import sys
+from difflib import get_close_matches
 from enum import Enum
 from gettext import gettext as _
 from typing import (
@@ -22,7 +23,6 @@ from typing import (
 import click
 import click.core
 import click.formatting
-import click.parser
 import click.shell_completion
 import click.types
 import click.utils
@@ -750,11 +750,13 @@ class TyperGroup(click.core.Group):
         # Rich settings
         rich_markup_mode: MarkupMode = DEFAULT_MARKUP_MODE,
         rich_help_panel: Union[str, None] = None,
+        suggest_commands: bool = True,
         **attrs: Any,
     ) -> None:
         super().__init__(name=name, commands=commands, **attrs)
         self.rich_markup_mode: MarkupMode = rich_markup_mode
         self.rich_help_panel = rich_help_panel
+        self.suggest_commands = suggest_commands
 
     def format_options(
         self, ctx: click.Context, formatter: click.HelpFormatter
@@ -771,6 +773,23 @@ class TyperGroup(click.core.Group):
         _typer_main_shell_completion(
             self, ctx_args=ctx_args, prog_name=prog_name, complete_var=complete_var
         )
+
+    def resolve_command(
+        self, ctx: click.Context, args: List[str]
+    ) -> Tuple[Optional[str], Optional[click.Command], List[str]]:
+        try:
+            return super().resolve_command(ctx, args)
+        except click.UsageError as e:
+            if self.suggest_commands:
+                available_commands = list(self.commands.keys())
+                if available_commands and args:
+                    typo = args[0]
+                    matches = get_close_matches(typo, available_commands)
+                    if matches:
+                        suggestions = ", ".join(f"{m!r}" for m in matches)
+                        message = e.message.rstrip(".")
+                        e.message = f"{message}. Did you mean {suggestions}?"
+            raise
 
     def main(
         self,
