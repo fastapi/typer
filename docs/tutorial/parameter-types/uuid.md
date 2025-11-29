@@ -22,7 +22,7 @@ This wouldn't be true if you just used `int`s as identifiers, as most databases 
 
 You can declare a *CLI parameter* as a UUID:
 
-{* docs_src/parameter_types/uuid/tutorial001.py hl[1,6,7,8] *}
+{* docs_src/parameter_types/uuid/tutorial001.py hl[1,9:11] *}
 
 Your Python code will receive a standard Python <a href="https://docs.python.org/3.8/library/uuid.html" class="external-link" target="_blank">`UUID`</a> object with all its attributes and methods, and as you are annotating your function parameter with that type, you will have type checks, autocompletion in your editor, etc.
 

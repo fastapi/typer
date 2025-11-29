@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Checkout CPython main
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           repository: python/cpython
           ref: main
@@ -47,7 +47,7 @@ jobs:
           COVERAGE_FILE: coverage/.coverage.ubuntu-cpython-main
           CONTEXT: ubuntu-cpython-main
       - name: Store coverage files
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: coverage-ubuntu-cpython-main
           path: coverage

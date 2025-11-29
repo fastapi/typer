@@ -8,7 +8,7 @@ Typer does some tricks to help you detect those errors quickly.
 
 Let's take this example broken app:
 
-{* docs_src/exceptions/tutorial001.py hl[5] *}
+{* docs_src/exceptions/tutorial001.py hl[8] *}
 
 This code is broken because you can't sum a string and a number (`name + 3`).
 
@@ -26,15 +26,15 @@ So, the error you see will be **much clearer** and simpler, to help you detect t
 $ python main.py
 
 <font color="#F92672">╭──────────────── </font><font color="#F92672"><b>Traceback (most recent call last)</b></font><font color="#F92672"> ────────────────╮</font>
-<font color="#F92672">│</font> <font color="#A37F4E">/home/user/code/superapp/</font><font color="#F4BF75"><b>main.py</b></font>:<font color="#66D9EF">5</font> in <font color="#A6E22E">main</font>                        <font color="#F92672">│</font>
+<font color="#F92672">│</font> <font color="#A37F4E">/home/user/code/superapp/</font><font color="#F4BF75"><b>main.py</b></font>:<font color="#66D9EF">8</font> in <font color="#A6E22E">main</font>                        <font color="#F92672">│</font>
 <font color="#F92672">│</font>                                                                   <font color="#F92672">│</font>
-<font color="#F92672">│</font>    2                                                              <font color="#F92672">│</font>
-<font color="#F92672">│</font>    3                                                              <font color="#F92672">│</font>
-<font color="#F92672">│</font>    4 <font color="#66D9EF">def</font> <font color="#A6E22E">main</font>(name: <font color="#A1EFE4">str</font> = <font color="#F4BF75">&quot;morty&quot;</font>):                               <font color="#F92672">│</font>
-<font color="#F92672">│</font> <font color="#F92672">❱ </font> 5 │   <font color="#A1EFE4">print</font>(name + <font color="#66D9EF">3</font>)                                          <font color="#F92672">│</font>
-<font color="#F92672">│</font>    6                                                              <font color="#F92672">│</font>
-<font color="#F92672">│</font>    7                                                              <font color="#F92672">│</font>
-<font color="#F92672">│</font>    8 <font color="#66D9EF">if</font> <font color="#F92672">__name__</font> == <font color="#F4BF75">&quot;__main__&quot;</font>:                                   <font color="#F92672">│</font>
+<font color="#F92672">│</font>    5                                                              <font color="#F92672">│</font>
+<font color="#F92672">│</font>    6 <font color="#FF00FF">@app</font>.command()                                               <font color="#F92672">│</font>
+<font color="#F92672">│</font>    7 <font color="#66D9EF">def</font> <font color="#A6E22E">main</font>(name: <font color="#A1EFE4">str</font> = <font color="#F4BF75">&quot;morty&quot;</font>):                               <font color="#F92672">│</font>
+<font color="#F92672">│</font> <font color="#F92672">❱ </font> 8 │   <font color="#A1EFE4">print</font>(name + <font color="#66D9EF">3</font>)                                          <font color="#F92672">│</font>
+<font color="#F92672">│</font>    9                                                              <font color="#F92672">│</font>
+<font color="#F92672">│</font>    10                                                             <font color="#F92672">│</font>
+<font color="#F92672">│</font>    11 <font color="#66D9EF">if</font> <font color="#F92672">__name__</font> == <font color="#F4BF75">&quot;__main__&quot;</font>:                                  <font color="#F92672">│</font>
 <font color="#F92672">│</font>                                                                   <font color="#F92672">│</font>
 <font color="#F92672">│</font> <font color="#F4BF75">╭──── locals ────╮</font>                                                <font color="#F92672">│</font>
 <font color="#F92672">│</font> <font color="#F4BF75">│</font> name = <font color="#F4BF75">&apos;morty&apos;</font> <font color="#F4BF75">│</font>                                                <font color="#F92672">│</font>
@@ -57,7 +57,7 @@ $ python main.py
 Traceback (most recent call last):
 
   File "main.py", line 12, in <module>
-    typer.run(main)
+    app()
 
   File "main.py", line 8, in main
     print(name + 3)
@@ -83,7 +83,7 @@ In this case, `name` is a local variable, it comes from a parameter passed to th
 
 But if it was something like a password, you would have liked to hide it.
 
-In that case, you can create the `typer.Typer()` application explicitly and set the parameter `pretty_exceptions_show_locals=False`:
+In that case, you can set the parameter `pretty_exceptions_show_locals=False` when creating the `typer.Typer()` application:
 
 {* docs_src/exceptions/tutorial002.py hl[3] *}
 
@@ -235,14 +235,14 @@ TypeError: can only concatenate str (not "int") to str
 
 </div>
 
-You could also achieve the same with the environment variable `_TYPER_STANDARD_TRACEBACK=1`.
+You could also achieve the same with the environment variable `TYPER_STANDARD_TRACEBACK=1` (or by setting the deprecated variable `_TYPER_STANDARD_TRACEBACK=1`).
 
 This will work for any other Typer program too, in case you need to debug a problem in a Typer program made by someone else:
 
 <div class="termy">
 
 ```console
-export _TYPER_STANDARD_TRACEBACK=1
+export TYPER_STANDARD_TRACEBACK=1
 $ python main.py
 
 
