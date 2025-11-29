@@ -3,7 +3,10 @@ from typing import Optional
 
 import typer
 
+app = typer.Typer()
 
+
+@app.command()
 def main(config: Optional[Path] = typer.Option(None)):
     if config is None:
         print("No config file")
@@ -18,4 +21,4 @@ def main(config: Optional[Path] = typer.Option(None)):
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()

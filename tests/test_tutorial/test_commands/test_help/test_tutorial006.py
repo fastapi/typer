@@ -17,14 +17,14 @@ def test_main_help():
     assert "create" in result.output
     assert "Create a new user. ✨" in result.output
     assert "delete" in result.output
-    assert "Delete a user. 🔥" in result.output
+    assert "Delete a user. ❌" in result.output
     assert "Utils and Configs" in result.output
     assert "config" in result.output
-    assert "Configure the system. 🔧" in result.output
+    assert "Configure the system. ⚙" in result.output
     assert "Synchronize the system or something fancy like that. ♻" in result.output
     assert "Help and Others" in result.output
     assert "Get help with the system. ❓" in result.output
-    assert "Report an issue. 🐛" in result.output
+    assert "Report an issue. ❗" in result.output
 
 
 def test_call():

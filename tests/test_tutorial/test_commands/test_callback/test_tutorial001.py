@@ -1,6 +1,7 @@
 import subprocess
 import sys
 
+import pytest
 import typer.core
 from typer.testing import CliRunner
 
@@ -19,15 +20,13 @@ def test_help():
     assert "--no-verbose" in result.output
 
 
-def test_help_no_rich():
-    rich = typer.core.rich
-    typer.core.rich = None
+def test_help_no_rich(monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setattr(typer.core, "HAS_RICH", False)
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     assert "Manage users in the awesome CLI app." in result.output
     assert "--verbose" in result.output
     assert "--no-verbose" in result.output
-    typer.core.rich = rich
 
 
 def test_create():

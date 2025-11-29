@@ -1,6 +1,9 @@
 import typer
 
+app = typer.Typer()
 
+
+@app.command()
 def main(good: bool = True):
     message_start = "everything is "
     if good:
@@ -12,4 +15,4 @@ def main(good: bool = True):
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()

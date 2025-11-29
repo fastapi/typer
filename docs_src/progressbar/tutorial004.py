@@ -9,6 +9,10 @@ def iterate_user_ids():
         yield i
 
 
+app = typer.Typer()
+
+
+@app.command()
 def main():
     total = 0
     with typer.progressbar(iterate_user_ids(), length=100) as progress:
@@ -20,4 +24,4 @@ def main():
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()
