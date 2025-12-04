@@ -116,7 +116,6 @@ nav:
           - tutorial/parameter-types/path.md
           - tutorial/parameter-types/file.md
           - tutorial/parameter-types/bytes.md
-
           - tutorial/parameter-types/custom-types.md
       - SubCommands - Command Groups:
           - tutorial/subcommands/index.md
