@@ -8,7 +8,7 @@ By default, `bytes` are created by encoding the input string with UTF-8 (the sam
 
 This example declares a `bytes` argument using the default UTF-8 encoding:
 
-{* docs_src/parameter_types/bytes/tutorial001.py hl[7-9] *}
+{* docs_src/parameter_types/bytes/tutorial001.py hl[7:9] *}
 
 Try it with non-ASCII characters and you will get UTF-8 encoded bytes.
 
