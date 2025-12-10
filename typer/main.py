@@ -135,7 +135,7 @@ class Typer:
         deprecated: bool = Default(False),
         add_completion: bool = True,
         # Rich settings
-        rich_markup_mode: MarkupMode = Default(DEFAULT_MARKUP_MODE),
+        rich_markup_mode: MarkupMode = DEFAULT_MARKUP_MODE,
         rich_help_panel: Union[str, None] = Default(None),
         suggest_commands: bool = True,
         pretty_exceptions_enable: bool = True,
