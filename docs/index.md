@@ -13,10 +13,10 @@
 </p>
 <p align="center">
 <a href="https://github.com/fastapi/typer/actions?query=workflow%3ATest" target="_blank">
-    <img src="https://github.com/fastapi/typer/workflows/Test/badge.svg" alt="Test">
+    <img src="https://github.com/fastapi/typer/actions/workflows/Test/badge.svg" alt="Test">
 </a>
 <a href="https://github.com/fastapi/typer/actions?query=workflow%3APublish" target="_blank">
-    <img src="https://github.com/fastapi/typer/workflows/Publish/badge.svg" alt="Publish">
+    <img src="https://github.com/fastapi/typer/actions/workflows/Publish/badge.svg" alt="Publish">
 </a>
 <a href="https://coverage-badge.samuelcolvin.workers.dev/redirect/fastapi/typer" target="_blank">
     <img src="https://coverage-badge.samuelcolvin.workers.dev/fastapi/typer.svg" alt="Coverage">
