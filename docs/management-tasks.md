@@ -68,7 +68,7 @@ Make sure you use a supported label from the <a href="https://github.com/tiangol
 * `refactor`: Refactors
     * This is normally for changes to the internal code that don't change the behavior. Normally it improves maintainability, or enables future features, etc.
 * `upgrade`: Upgrades
-    * This is for upgrades to direct dependencies from the project, or extra optional dependencies, normally in `pyproject.toml`. So, things that would affect final users, they would end up receiving the upgrade in their code base once they update. But this is not for upgrades to internal dependencies used for development, testing, docs, etc. Those internal dependencies, normally in `requirements.txt` files or GitHub Action versions should be marked as `internal`, not `upgrade`.
+    * This is for upgrades to direct dependencies from the project, or extra optional dependencies, normally in `pyproject.toml`. So, things that would affect end users—they would end up receiving the upgrade in their code base once they update. But this is not for upgrades to internal dependencies used for development, testing, docs, etc. Those internal dependencies, normally in `requirements.txt` files or GitHub Action versions should be marked as `internal`, not `upgrade`.
 * `docs`: Docs
     * Changes in docs. This includes updating the docs, fixing typos. But it doesn't include changes to translations.
     * You can normally quickly detect it by going to the "Files changed" tab in the PR and checking if the updated file(s) starts with `docs/en/docs`. The original version of the docs is always in English, so in `docs/en/docs`.
