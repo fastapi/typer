@@ -3,7 +3,6 @@ import subprocess
 import sys
 from unittest import mock
 
-import shellingham
 import typer
 import typer.completion
 from typer.testing import CliRunner
