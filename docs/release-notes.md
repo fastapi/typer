@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Internal
+
+* 🔨 Add Typer script to generate example variants for Python files. PR [#1452](https://github.com/fastapi/typer/pull/1452) by [@tiangolo](https://github.com/tiangolo).
+
 ## 0.20.1
 
 ### Features
