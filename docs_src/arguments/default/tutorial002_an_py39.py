@@ -1,7 +1,7 @@
 import random
+from typing import Annotated
 
 import typer
-from typing_extensions import Annotated
 
 app = typer.Typer()
 
