@@ -383,7 +383,10 @@ class TyperArgument(click.core.Argument):
         # Modified version of click.core.Argument.make_metavar()
         # to include Argument name
         if self.metavar is not None:
-            return self.metavar
+            var = self.metavar
+            if not self.required and not var.startswith("["):
+                var = f"[{var}]"
+            return var
         var = (self.name or "").upper()
         if not self.required:
             var = f"[{var}]"
