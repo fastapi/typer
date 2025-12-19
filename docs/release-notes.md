@@ -8,6 +8,7 @@
 
 ### Fixes
 
+* 🐛 Ensure an optional argument is shown in brackets, even when `metavar` is set. PR [#1409](https://github.com/fastapi/typer/pull/1409) by [@svlandeg](https://github.com/svlandeg).
 * 🐛 Ensure that the default `rich_markup_mode` is interpreted correctly. PR [#1304](https://github.com/fastapi/typer/pull/1304) by [@svlandeg](https://github.com/svlandeg).
 
 ### Refactors
