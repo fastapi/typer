@@ -4,6 +4,7 @@
 
 ### Internal
 
+* 👷 Add pre-commit workflow. PR [#1453](https://github.com/fastapi/typer/pull/1453) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Configure coverage, error on main tests, don't wait for Smokeshow. PR [#1448](https://github.com/fastapi/typer/pull/1448) by [@YuriiMotov](https://github.com/YuriiMotov).
 * 👷 Run Smokeshow always, even on test failures. PR [#1447](https://github.com/fastapi/typer/pull/1447) by [@YuriiMotov](https://github.com/YuriiMotov).
 * 🔨 Add Typer script to generate example variants for Python files. PR [#1452](https://github.com/fastapi/typer/pull/1452) by [@tiangolo](https://github.com/tiangolo).
