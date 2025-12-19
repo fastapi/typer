@@ -14,7 +14,7 @@ def create(username: str):
 @app.command()
 def delete(username: str):
     """
-    [red]Delete[/red] a user. :fire:
+    [red]Delete[/red] a user. :x:
     """
     print(f"Deleting user: {username}")
 
@@ -22,7 +22,7 @@ def delete(username: str):
 @app.command(rich_help_panel="Utils and Configs")
 def config(configuration: str):
     """
-    [blue]Configure[/blue] the system. :wrench:
+    [blue]Configure[/blue] the system. :gear:
     """
     print(f"Configuring the system with: {configuration}")
 
@@ -46,7 +46,7 @@ def help():
 @app.command(rich_help_panel="Help and Others")
 def report():
     """
-    [yellow]Report[/yellow] an issue. :bug:
+    [yellow]Report[/yellow] an issue. :exclamation:
     """
     print("Please open a new issue online, not a direct message")
 
