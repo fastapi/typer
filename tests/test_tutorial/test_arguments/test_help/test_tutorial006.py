@@ -1,20 +1,24 @@
 import subprocess
 import sys
 
+import typer
 from typer.testing import CliRunner
 
 from docs_src.arguments.help import tutorial006 as mod
 
 runner = CliRunner()
-app = mod.app
+
+app = typer.Typer(rich_markup_mode=None)
+app.command()(mod.main)
 
 
 def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "[OPTIONS] ✨username✨" in result.output
+    assert "[OPTIONS] ✨user✨" in result.output
     assert "Arguments" in result.output
-    assert "✨username✨" in result.output
+    assert "✨user✨" in result.output
+    assert "name" not in result.output
     assert "[default: World]" in result.output
 
 

@@ -73,7 +73,7 @@ def test_rich_doesnt_print_None_default():
 
     result = runner.invoke(app, ["--help"])
     assert "Usage" in result.stdout
-    assert "name" in result.stdout
+    assert "NAME" in result.stdout
     assert "option-1" in result.stdout
     assert "option-2" in result.stdout
     assert result.stdout.count("[default: None]") == 0
@@ -99,3 +99,45 @@ def test_rich_markup_import_regression():
     result = runner.invoke(app, ["--help"])
     assert "Usage" in result.stdout
     assert "BAR" in result.stdout
+
+
+def test_rich_help_metavar():
+    app = typer.Typer(rich_markup_mode="rich")
+
+    @app.command()
+    def main(
+        *,
+        arg1: int,
+        arg2: int = 42,
+        arg3: int = typer.Argument(...),
+        arg4: int = typer.Argument(42),
+        arg5: int = typer.Option(...),
+        arg6: int = typer.Option(42),
+        arg7: int = typer.Argument(42, metavar="meta7"),
+        arg8: int = typer.Argument(metavar="ARG8"),
+        arg9: int = typer.Argument(metavar="arg9"),
+    ):
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["--help"])
+    # assert "Usage: main [OPTIONS] ARG1 ARG3 [ARG4] [meta7] ARG8 arg9" in result.stdout
+    assert "Usage: main [OPTIONS] ARG1 ARG3 [ARG4] meta7 ARG8 arg9" in result.stdout
+
+    out_nospace = result.stdout.replace(" ", "")
+
+    # arguments
+    assert "ARG1INTEGER" in out_nospace
+    assert "ARG3INTEGER" in out_nospace
+    assert "[ARG4]INTEGER" in out_nospace
+    assert "meta7INTEGER" in out_nospace
+    # assert "[meta7]INTEGER" in out_nospace
+    assert "ARG8INTEGER" in out_nospace
+    assert "arg9INTEGER" in out_nospace
+
+    assert "arg7" not in result.stdout.lower()
+    assert "ARG9" not in result.stdout
+
+    # options
+    assert "arg2INTEGER" in out_nospace
+    assert "arg5INTEGER" in out_nospace
+    assert "arg6INTEGER" in out_nospace
