@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.20.1
+
 ### Features
 
 * ✨ Add support for standard tracebacks via the env `TYPER_STANDARD_TRACEBACK`. PR [#1299](https://github.com/fastapi/typer/pull/1299) by [@colin-nolan](https://github.com/colin-nolan).
