@@ -20,6 +20,7 @@
 
 ### Internal
 
+* 🔨  Add `--showlocals` to `test.sh`. PR [#1169](https://github.com/fastapi/typer/pull/1169) by [@rickwporter](https://github.com/rickwporter).
 * ⬆ Bump ruff from 0.14.6 to 0.14.8. PR [#1436](https://github.com/fastapi/typer/pull/1436) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1434](https://github.com/fastapi/typer/pull/1434) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * ✅ Update tests to use `mod.app` . PR [#1427](https://github.com/fastapi/typer/pull/1427) by [@svlandeg](https://github.com/svlandeg).
