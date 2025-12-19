@@ -7,13 +7,14 @@
 </p>
 <p align="center">
 <a href="https://github.com/fastapi/typer/actions?query=workflow%3ATest" target="_blank">
-    <img src="https://github.com/fastapi/typer/workflows/Test/badge.svg" alt="Test">
+    <img src="https://github.com/fastapi/typer/actions/workflows/Test/badge.svg" alt="Test">
 </a>
 <a href="https://github.com/fastapi/typer/actions?query=workflow%3APublish" target="_blank">
-    <img src="https://github.com/fastapi/typer/workflows/Publish/badge.svg" alt="Publish">
+    <img src="https://github.com/fastapi/typer/actions/workflows/Publish/badge.svg" alt="Publish">
 </a>
 <a href="https://coverage-badge.samuelcolvin.workers.dev/redirect/fastapi/typer" target="_blank">
     <img src="https://coverage-badge.samuelcolvin.workers.dev/fastapi/typer.svg" alt="Coverage">
+</a>
 <a href="https://pypi.org/project/typer" target="_blank">
     <img src="https://img.shields.io/pypi/v/typer?color=%2334D058&label=pypi%20package" alt="Package version">
 </a>
@@ -34,7 +35,7 @@ It's also a command line tool to run scripts, automatically converting them to C
 The key features are:
 
 * **Intuitive to write**: Great editor support. <abbr title="also known as auto-complete, autocompletion, IntelliSense">Completion</abbr> everywhere. Less time debugging. Designed to be easy to use and learn. Less time reading docs.
-* **Easy to use**: It's easy to use for the final users. Automatic help, and automatic completion for all shells.
+* **Easy to use**: It's easy to use for end users. Automatic help, and automatic completion for all shells.
 * **Short**: Minimize code duplication. Multiple features from each parameter declaration. Fewer bugs.
 * **Start simple**: The simplest example adds only 2 lines of code to your app: **1 import, 1 function call**.
 * **Grow large**: Grow in complexity as much as you want, create arbitrarily complex trees of commands and groups of subcommands, with options and arguments.
