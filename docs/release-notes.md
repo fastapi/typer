@@ -10,6 +10,10 @@
 
 * 🐛 Ensure that the default `rich_markup_mode` is interpreted correctly. PR [#1304](https://github.com/fastapi/typer/pull/1304) by [@svlandeg](https://github.com/svlandeg).
 
+### Refactors
+
+* ♻️ Refactor the handling of `shellingham`. PR [#1347](https://github.com/fastapi/typer/pull/1347) by [@nathanjmcdougall](https://github.com/nathanjmcdougall).
+
 ### Docs
 
 * 📝 Ensure that bold letters are rendered correctly in `printing.md`. PR [#1365](https://github.com/fastapi/typer/pull/1365) by [@svlandeg](https://github.com/svlandeg).
