@@ -12,6 +12,7 @@
 
 ### Docs
 
+* 🩺 Update test badge to only reflect pushes to `master`. PR [#1414](https://github.com/fastapi/typer/pull/1414) by [@svlandeg](https://github.com/svlandeg).
 * 📝 Update console output on the Rich help formatting page. PR [#1430](https://github.com/fastapi/typer/pull/1430) by [@svlandeg](https://github.com/svlandeg).
 * 📝 Update emoji used in Rich help formatting tutorial. PR [#1429](https://github.com/fastapi/typer/pull/1429) by [@svlandeg](https://github.com/svlandeg).
 * 📝 Remove duplicate explanation how the path is resolved. PR [#956](https://github.com/fastapi/typer/pull/956) by [@dennis-rall](https://github.com/dennis-rall).
