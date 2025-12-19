@@ -6,6 +6,10 @@
 
 * ✨ Add support for standard tracebacks via the env `TYPER_STANDARD_TRACEBACK`. PR [#1299](https://github.com/fastapi/typer/pull/1299) by [@colin-nolan](https://github.com/colin-nolan).
 
+### Fixes
+
+* 🐛 Ensure that the default `rich_markup_mode` is interpreted correctly. PR [#1304](https://github.com/fastapi/typer/pull/1304) by [@svlandeg](https://github.com/svlandeg).
+
 ### Docs
 
 * 📝 Update console output on the Rich help formatting page. PR [#1430](https://github.com/fastapi/typer/pull/1430) by [@svlandeg](https://github.com/svlandeg).
