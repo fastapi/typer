@@ -336,6 +336,7 @@ class OptionInfo(ParameterInfo):
         path_type: Union[None, Type[str], Type[bytes]] = None,
         # Rich settings
         rich_help_panel: Union[str, None] = None,
+        separator: Optional[str] = None,
     ):
         super().__init__(
             default=default,
@@ -398,6 +399,7 @@ class OptionInfo(ParameterInfo):
         self.hide_input = hide_input
         self.count = count
         self.allow_from_autoenv = allow_from_autoenv
+        self.separator = separator
 
 
 class ArgumentInfo(ParameterInfo):
