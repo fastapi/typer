@@ -1,7 +1,10 @@
 import typer
 from typing_extensions import Annotated
 
+app = typer.Typer()
 
+
+@app.command()
 def main(
     name: str,
     lastname: Annotated[str, typer.Option(help="Last name of person to greet.")] = "",
@@ -19,4 +22,4 @@ def main(
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()

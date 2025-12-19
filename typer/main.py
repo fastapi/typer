@@ -60,7 +60,9 @@ def except_hook(
     exception_config: Union[DeveloperExceptionConfig, None] = getattr(
         exc_value, _typer_developer_exception_attr_name, None
     )
-    standard_traceback = os.getenv("_TYPER_STANDARD_TRACEBACK")
+    standard_traceback = os.getenv(
+        "TYPER_STANDARD_TRACEBACK", os.getenv("_TYPER_STANDARD_TRACEBACK")
+    )
     if (
         standard_traceback
         or not exception_config
@@ -133,8 +135,9 @@ class Typer:
         deprecated: bool = Default(False),
         add_completion: bool = True,
         # Rich settings
-        rich_markup_mode: MarkupMode = Default(DEFAULT_MARKUP_MODE),
+        rich_markup_mode: MarkupMode = DEFAULT_MARKUP_MODE,
         rich_help_panel: Union[str, None] = Default(None),
+        suggest_commands: bool = True,
         pretty_exceptions_enable: bool = True,
         pretty_exceptions_show_locals: bool = True,
         pretty_exceptions_short: bool = True,
@@ -142,6 +145,7 @@ class Typer:
         self._add_completion = add_completion
         self.rich_markup_mode: MarkupMode = rich_markup_mode
         self.rich_help_panel = rich_help_panel
+        self.suggest_commands = suggest_commands
         self.pretty_exceptions_enable = pretty_exceptions_enable
         self.pretty_exceptions_show_locals = pretty_exceptions_show_locals
         self.pretty_exceptions_short = pretty_exceptions_short
@@ -181,7 +185,7 @@ class Typer:
         help: Optional[str] = Default(None),
         epilog: Optional[str] = Default(None),
         short_help: Optional[str] = Default(None),
-        options_metavar: str = Default("[OPTIONS]"),
+        options_metavar: Optional[str] = Default(None),
         add_help_option: bool = Default(True),
         hidden: bool = Default(False),
         deprecated: bool = Default(False),
@@ -201,7 +205,9 @@ class Typer:
                 help=help,
                 epilog=epilog,
                 short_help=short_help,
-                options_metavar=options_metavar,
+                options_metavar=(
+                    options_metavar or self._info_val_str("options_metavar")
+                ),
                 add_help_option=add_help_option,
                 hidden=hidden,
                 deprecated=deprecated,
@@ -220,7 +226,7 @@ class Typer:
         help: Optional[str] = None,
         epilog: Optional[str] = None,
         short_help: Optional[str] = None,
-        options_metavar: str = "[OPTIONS]",
+        options_metavar: Optional[str] = None,
         add_help_option: bool = True,
         no_args_is_help: bool = False,
         hidden: bool = False,
@@ -241,7 +247,9 @@ class Typer:
                     help=help,
                     epilog=epilog,
                     short_help=short_help,
-                    options_metavar=options_metavar,
+                    options_metavar=(
+                        options_metavar or self._info_val_str("options_metavar")
+                    ),
                     add_help_option=add_help_option,
                     no_args_is_help=no_args_is_help,
                     hidden=hidden,
@@ -271,7 +279,7 @@ class Typer:
         help: Optional[str] = Default(None),
         epilog: Optional[str] = Default(None),
         short_help: Optional[str] = Default(None),
-        options_metavar: str = Default("[OPTIONS]"),
+        options_metavar: Optional[str] = Default(None),
         add_help_option: bool = Default(True),
         hidden: bool = Default(False),
         deprecated: bool = Default(False),
@@ -293,7 +301,9 @@ class Typer:
                 help=help,
                 epilog=epilog,
                 short_help=short_help,
-                options_metavar=options_metavar,
+                options_metavar=(
+                    options_metavar or self._info_val_str("options_metavar")
+                ),
                 add_help_option=add_help_option,
                 hidden=hidden,
                 deprecated=deprecated,
@@ -324,12 +334,19 @@ class Typer:
             )
             raise e
 
+    def _info_val_str(self, name: str) -> str:
+        val = getattr(self.info, name)
+        val_str = val.value if isinstance(val, DefaultPlaceholder) else val
+        assert isinstance(val_str, str)
+        return val_str
+
 
 def get_group(typer_instance: Typer) -> TyperGroup:
     group = get_group_from_info(
         TyperInfo(typer_instance),
         pretty_exceptions_short=typer_instance.pretty_exceptions_short,
         rich_markup_mode=typer_instance.rich_markup_mode,
+        suggest_commands=typer_instance.suggest_commands,
     )
     return group
 
@@ -456,6 +473,7 @@ def get_group_from_info(
     group_info: TyperInfo,
     *,
     pretty_exceptions_short: bool,
+    suggest_commands: bool,
     rich_markup_mode: MarkupMode,
 ) -> TyperGroup:
     assert group_info.typer_instance, (
@@ -475,6 +493,7 @@ def get_group_from_info(
             sub_group_info,
             pretty_exceptions_short=pretty_exceptions_short,
             rich_markup_mode=rich_markup_mode,
+            suggest_commands=suggest_commands,
         )
         if sub_group.name:
             commands[sub_group.name] = sub_group
@@ -523,6 +542,7 @@ def get_group_from_info(
         rich_markup_mode=rich_markup_mode,
         # Rich settings
         rich_help_panel=solved_info.rich_help_panel,
+        suggest_commands=suggest_commands,
     )
     return group
 
@@ -629,8 +649,8 @@ def generate_list_convertor(
     convertor: Optional[Callable[[Any], Any]], default_value: Optional[Any]
 ) -> Callable[[Optional[Sequence[Any]]], Optional[List[Any]]]:
     def internal_convertor(value: Optional[Sequence[Any]]) -> Optional[List[Any]]:
-        if value is None or len(value) == 0:
-            return default_value
+        if (value is None) or (default_value is None and len(value) == 0):
+            return None
         return [convertor(v) if convertor else v for v in value]
 
     return internal_convertor
