@@ -339,6 +339,7 @@ def test_json_param_type_convert_dict_input():
 def test_dict_param_tyoe_name():
     assert repr(DictParamType()) == "DICT"
 
+
 def test_options_metadata_typer_default():
     app = typer.Typer(options_metavar="[options]")
 
