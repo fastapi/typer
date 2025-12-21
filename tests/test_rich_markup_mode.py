@@ -284,3 +284,9 @@ def test_markup_mode_bullets_double_newline(mode: str, lines: List[str]):
     arg_start = [i for i, row in enumerate(result_lines) if "Arguments" in row][0]
     assert help_start != -1
     assert result_lines[help_start:arg_start] == lines
+
+
+def test_markup_mode_default():
+    # We're assuming the test suite is run with rich installed
+    app = typer.Typer()
+    assert app.rich_markup_mode == "rich"

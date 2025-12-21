@@ -32,6 +32,7 @@ from ._typing import Literal
 MarkupMode = Literal["markdown", "rich", None]
 
 HAS_RICH = importlib.util.find_spec("rich") is not None
+HAS_SHELLINGHAM = importlib.util.find_spec("shellingham") is not None
 
 if HAS_RICH:
     DEFAULT_MARKUP_MODE: MarkupMode = "rich"
@@ -382,7 +383,10 @@ class TyperArgument(click.core.Argument):
         # Modified version of click.core.Argument.make_metavar()
         # to include Argument name
         if self.metavar is not None:
-            return self.metavar
+            var = self.metavar
+            if not self.required and not var.startswith("["):
+                var = f"[{var}]"
+            return var
         var = (self.name or "").upper()
         if not self.required:
             var = f"[{var}]"
