@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Annotated
 
 import typer
 
@@ -6,7 +6,7 @@ app = typer.Typer()
 
 
 @app.command()
-def main(user: Optional[List[str]] = typer.Option(None)):
+def main(user: Annotated[list[str] | None, typer.Option()] = None):
     if not user:
         print(f"No provided users (raw input = {user})")
         raise typer.Abort()

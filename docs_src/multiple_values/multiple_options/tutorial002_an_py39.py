@@ -1,13 +1,12 @@
-from typing import List
+from typing import Annotated
 
 import typer
-from typing_extensions import Annotated
 
 app = typer.Typer()
 
 
 @app.command()
-def main(number: Annotated[List[float], typer.Option()] = []):
+def main(number: Annotated[list[float], typer.Option()] = []):
     print(f"The sum is {sum(number)}")
 
 

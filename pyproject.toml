@@ -187,7 +187,7 @@ ignore = [
 "docs_src/progressbar/tutorial004.py" = ["UP028", "B007"]
 # Default mutable data structure
 "docs_src/options_autocompletion/tutorial006_an.py" = ["B006"]
-"docs_src/multiple_values/multiple_options/tutorial002_an.py" = ["B006"]
+"docs_src/multiple_values/multiple_options/tutorial002_an_py39.py" = ["B006"]
 "docs_src/options_autocompletion/tutorial007_an.py" = ["B006"]
 "docs_src/options_autocompletion/tutorial008_an.py" = ["B006"]
 "docs_src/options_autocompletion/tutorial009_an.py" = ["B006"]
