@@ -4,7 +4,7 @@ In the *First Steps* section you saw how to add help for a CLI app/command by ad
 
 Here's how that last example looked like:
 
-{* docs_src/first_steps/tutorial006.py *}
+{* docs_src/first_steps/tutorial006_py39.py *}
 
 Now that you also know how to use `typer.Argument()`, let's use it to add documentation specific for a *CLI argument*.
 

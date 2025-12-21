@@ -6,7 +6,7 @@ So far, you have seen how to create a single function and then pass that functio
 
 For example:
 
-{* docs_src/first_steps/tutorial002.py hl[9] *}
+{* docs_src/first_steps/tutorial002_py39.py hl[9] *}
 
 But that is actually a shortcut. Under the hood, **Typer** converts that to a CLI application with `typer.Typer()` and executes it. All that inside of `typer.run()`.
 

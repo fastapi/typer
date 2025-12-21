@@ -35,7 +35,7 @@ __init__.py  test_tutorial
 
 In the [First Steps](../first-steps.md#add-a-cli-argument){.internal-link target=_blank} you saw how to add a *CLI argument*:
 
-{* docs_src/first_steps/tutorial002.py hl[4] *}
+{* docs_src/first_steps/tutorial002_py39.py hl[4] *}
 
 Now let's see an alternative way to create the same *CLI argument*:
 
