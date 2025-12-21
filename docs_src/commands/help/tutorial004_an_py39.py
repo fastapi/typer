@@ -1,5 +1,6 @@
+from typing import Annotated
+
 import typer
-from typing_extensions import Annotated
 
 app = typer.Typer(rich_markup_mode="rich")
 
@@ -11,7 +12,7 @@ def create(
     ],
 ):
     """
-    [bold green]Create[/bold green] a new [italic]shinny[/italic] user. :sparkles:
+    [bold green]Create[/bold green] a new [italic]shiny[/italic] user. :sparkles:
 
     This requires a [underline]username[/underline].
     """

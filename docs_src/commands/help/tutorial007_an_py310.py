@@ -1,7 +1,6 @@
-from typing import Union
+from typing import Annotated
 
 import typer
-from typing_extensions import Annotated
 
 app = typer.Typer(rich_markup_mode="rich")
 
@@ -17,11 +16,11 @@ def create(
     ] = "",
     force: Annotated[bool, typer.Option(help="Force the creation of the user")] = False,
     age: Annotated[
-        Union[int, None],
+        int | None,
         typer.Option(help="The age of the new user", rich_help_panel="Additional Data"),
     ] = None,
     favorite_color: Annotated[
-        Union[str, None],
+        str | None,
         typer.Option(
             help="The favorite color of the new user",
             rich_help_panel="Additional Data",

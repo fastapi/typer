@@ -1,5 +1,6 @@
+from typing import Annotated
+
 import typer
-from typing_extensions import Annotated
 
 app = typer.Typer(rich_markup_mode="markdown")
 
@@ -9,7 +10,7 @@ def create(
     username: Annotated[str, typer.Argument(help="The username to be **created**")],
 ):
     """
-    **Create** a new *shinny* user. :sparkles:
+    **Create** a new *shiny* user. :sparkles:
 
     * Create a username
 

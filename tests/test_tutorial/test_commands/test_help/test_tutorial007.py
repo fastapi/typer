@@ -1,18 +1,34 @@
+import importlib
 import os
 import subprocess
 import sys
+from types import ModuleType
 
+import pytest
 from typer.testing import CliRunner
 
-from docs_src.commands.help import tutorial007 as mod
-
-app = mod.app
+from ....utils import needs_py310
 
 runner = CliRunner()
 
 
-def test_main_help():
-    result = runner.invoke(app, ["--help"])
+@pytest.fixture(
+    name="mod",
+    params=[
+        pytest.param("tutorial007_py39"),
+        pytest.param("tutorial007_py310", marks=needs_py310),
+        pytest.param("tutorial007_an_py39"),
+        pytest.param("tutorial007_an_py310", marks=needs_py310),
+    ],
+)
+def get_mod(request: pytest.FixtureRequest) -> ModuleType:
+    module_name = f"docs_src.commands.help.{request.param}"
+    mod = importlib.import_module(module_name)
+    return mod
+
+
+def test_main_help(mod: ModuleType):
+    result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
     assert "create" in result.output
     assert "Create a new user. ✨" in result.output
@@ -21,8 +37,8 @@ def test_main_help():
     assert "Configure the system. ⚙" in result.output
 
 
-def test_create_help():
-    result = runner.invoke(app, ["create", "--help"])
+def test_create_help(mod: ModuleType):
+    result = runner.invoke(mod.app, ["create", "--help"])
     assert result.exit_code == 0
     assert "username" in result.output
     assert "The username to create" in result.output
@@ -39,15 +55,15 @@ def test_create_help():
     assert "The favorite color of the new user" in result.output
 
 
-def test_call():
+def test_call(mod: ModuleType):
     # Mainly for coverage
-    result = runner.invoke(app, ["create", "Morty"])
+    result = runner.invoke(mod.app, ["create", "Morty"])
     assert result.exit_code == 0
-    result = runner.invoke(app, ["config", "Morty"])
+    result = runner.invoke(mod.app, ["config", "Morty"])
     assert result.exit_code == 0
 
 
-def test_script():
+def test_script(mod: ModuleType):
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
         capture_output=True,
