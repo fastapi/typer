@@ -2,7 +2,7 @@
 
 You can use the normal `print()` to show information on the screen:
 
-{* docs_src/typer_app/tutorial001.py hl[8] *}
+{* docs_src/typer_app/tutorial001_py39.py hl[8] *}
 
 It will show the output normally:
 

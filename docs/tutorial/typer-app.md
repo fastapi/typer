@@ -12,7 +12,7 @@ But that is actually a shortcut. Under the hood, **Typer** converts that to a CL
 
 There's also a more explicit way to achieve the same:
 
-{* docs_src/typer_app/tutorial001.py hl[3,6,12] *}
+{* docs_src/typer_app/tutorial001_py39.py hl[3,6,12] *}
 
 When you use `typer.run()`, **Typer** is doing more or less the same as above, it will:
 
