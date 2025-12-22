@@ -3,7 +3,7 @@ import sys
 
 from click.testing import CliRunner
 
-from docs_src.using_click import tutorial004 as mod
+from docs_src.using_click import tutorial004_py39 as mod
 
 runner = CliRunner()
 
