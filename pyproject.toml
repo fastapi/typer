@@ -141,6 +141,9 @@ omit = [
     "docs_src/options/password/tutorial002_*.py",    # ToDo: add test
     "docs_src/options/version/tutorial001_*.py",  # ToDo: add test
     "docs_src/options/version/tutorial002_*.py",  # ToDo: add test
+    "docs_src/options_autocompletion/tutorial001_*.py",  # ToDo: add test
+    "docs_src/options_autocompletion/tutorial005_*.py",  # ToDo: add test
+    "docs_src/options_autocompletion/tutorial006_*.py",  # ToDo: add test
 ]
 context = '${CONTEXT}'
 relative_files = true
@@ -192,11 +195,11 @@ ignore = [
 # This file is more readable without yield from
 "docs_src/progressbar/tutorial004.py" = ["UP028", "B007"]
 # Default mutable data structure
-"docs_src/options_autocompletion/tutorial006_an.py" = ["B006"]
+"docs_src/options_autocompletion/tutorial006_an_py39.py" = ["B006"]
 "docs_src/multiple_values/multiple_options/tutorial002_an_py39.py" = ["B006"]
-"docs_src/options_autocompletion/tutorial007_an.py" = ["B006"]
-"docs_src/options_autocompletion/tutorial008_an.py" = ["B006"]
-"docs_src/options_autocompletion/tutorial009_an.py" = ["B006"]
+"docs_src/options_autocompletion/tutorial007_an_py39.py" = ["B006"]
+"docs_src/options_autocompletion/tutorial008_an_py39.py" = ["B006"]
+"docs_src/options_autocompletion/tutorial009_an_py39.py" = ["B006"]
 "docs_src/parameter_types/enum/tutorial003_an.py" = ["B006"]
 # Loop control variable `value` not used within loop body
 "docs_src/progressbar/tutorial001.py" = ["B007"]

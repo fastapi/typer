@@ -1,19 +1,15 @@
-import typer
-from typing_extensions import Annotated
+from typing import Annotated
 
-valid_completion_items = [
-    ("Camila", "The reader of books."),
-    ("Carlos", "The writer of scripts."),
-    ("Sebastian", "The type hints guy."),
-]
+import typer
+
+valid_names = ["Camila", "Carlos", "Sebastian"]
 
 
 def complete_name(incomplete: str):
     completion = []
-    for name, help_text in valid_completion_items:
+    for name in valid_names:
         if name.startswith(incomplete):
-            completion_item = (name, help_text)
-            completion.append(completion_item)
+            completion.append(name)
     return completion
 
 

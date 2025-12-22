@@ -1,4 +1,4 @@
-from typing import List
+from typing import Annotated
 
 import typer
 
@@ -21,9 +21,10 @@ app = typer.Typer()
 
 @app.command()
 def main(
-    name: List[str] = typer.Option(
-        ["World"], help="The name to say hi to.", autocompletion=complete_name
-    ),
+    name: Annotated[
+        list[str],
+        typer.Option(help="The name to say hi to.", autocompletion=complete_name),
+    ] = ["World"],
 ):
     for n in name:
         print(f"Hello {n}")
