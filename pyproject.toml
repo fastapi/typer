@@ -144,6 +144,12 @@ omit = [
     "docs_src/options_autocompletion/tutorial001_*.py",  # ToDo: add test
     "docs_src/options_autocompletion/tutorial005_*.py",  # ToDo: add test
     "docs_src/options_autocompletion/tutorial006_*.py",  # ToDo: add test
+    "docs_src/printing/tutorial001_py39.py",  # ToDo: add test
+    "docs_src/printing/tutorial002_py39.py",  # ToDo: add test
+    "docs_src/printing/tutorial003_py39.py",  # ToDo: add test
+    "docs_src/printing/tutorial004_py39.py",  # ToDo: add test
+    "docs_src/printing/tutorial005_py39.py",  # ToDo: add test
+    "docs_src/printing/tutorial006_py39.py",  # ToDo: add test
 ]
 context = '${CONTEXT}'
 relative_files = true
