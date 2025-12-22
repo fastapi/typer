@@ -135,6 +135,12 @@ omit = [
     "docs_src/arguments/optional/tutorial000_py39.py",  # ToDo: add test
     "docs_src/launch/tutorial001_py39.py",  # ToDo: add test
     "docs_src/launch/tutorial002_py39.py",  # ToDo: add test
+    "docs_src/options/callback/tutorial002_*.py",   # ToDo: add test
+    "docs_src/options/help/tutorial004_*.py",   # ToDo: add test
+    "docs_src/options/password/tutorial001_*.py",    # ToDo: add test
+    "docs_src/options/password/tutorial002_*.py",    # ToDo: add test
+    "docs_src/options/version/tutorial001_*.py",  # ToDo: add test
+    "docs_src/options/version/tutorial002_*.py",  # ToDo: add test
 ]
 context = '${CONTEXT}'
 relative_files = true
