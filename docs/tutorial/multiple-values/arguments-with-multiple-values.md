@@ -2,7 +2,7 @@
 
 *CLI arguments* can also receive multiple values.
 
-You can define the type of a *CLI argument* using `typing.List`.
+You can define the type of a *CLI argument* using `list`.
 
 {* docs_src/multiple_values/arguments_with_multiple_values/tutorial001_py39.py hl[9] *}
 
@@ -29,7 +29,7 @@ We also declared a final *CLI argument* `celebration`, and it's correctly used e
 
 /// info
 
-A `List` can only be used in the last command (if there are subcommands), as this will take anything to the right and assume it's part of the expected *CLI arguments*.
+A `list` can only be used in the last command (if there are subcommands), as this will take anything to the right and assume it's part of the expected *CLI arguments*.
 
 ///
 

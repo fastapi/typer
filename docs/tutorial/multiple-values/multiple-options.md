@@ -4,7 +4,7 @@ You can declare a *CLI option* that can be used multiple times, and then get all
 
 For example, let's say you want to accept several users in a single execution.
 
-For this, use the standard Python `list` to declare it as a `list` of `str`:
+For this, use the standard Python `list` to declare it as a list of `str`:
 
 {* docs_src/multiple_values/multiple_options/tutorial001_an_py310.py hl[9] *}
 
