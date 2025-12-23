@@ -1,7 +1,6 @@
-from typing import Annotated
+from typing import Annotated, Literal
 
 import typer
-from typing_extensions import Literal
 
 app = typer.Typer()
 

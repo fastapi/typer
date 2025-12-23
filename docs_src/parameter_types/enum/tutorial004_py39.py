@@ -1,5 +1,6 @@
+from typing import Literal
+
 import typer
-from typing_extensions import Literal
 
 app = typer.Typer()
 
