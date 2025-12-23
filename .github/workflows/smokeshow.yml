@@ -10,9 +10,6 @@ on:
 permissions:
   statuses: write
 
-env:
-  UV_SYSTEM_PYTHON: 1
-
 jobs:
   smokeshow:
     runs-on: ubuntu-latest
@@ -24,14 +21,14 @@ jobs:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
         with:
-          python-version: '3.13'
+          python-version-file: ".python-version"
       - name: Setup uv
         uses: astral-sh/setup-uv@v7
         with:
           cache-dependency-glob: |
-            requirements**.txt
             pyproject.toml
-      - run: uv pip install -r requirements-github-actions.txt
+            uv.lock
+      - run: uv sync --locked --no-dev --group github-actions
       - uses: actions/download-artifact@v7
         with:
           name: coverage-html
