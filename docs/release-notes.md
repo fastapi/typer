@@ -4,6 +4,7 @@
 
 ### Internal
 
+* ⬆ Bump markdown-include-variants from 0.0.5 to 0.0.8. PR [#1442](https://github.com/fastapi/typer/pull/1442) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * 👷 Add pre-commit workflow. PR [#1453](https://github.com/fastapi/typer/pull/1453) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Configure coverage, error on main tests, don't wait for Smokeshow. PR [#1448](https://github.com/fastapi/typer/pull/1448) by [@YuriiMotov](https://github.com/YuriiMotov).
 * 👷 Run Smokeshow always, even on test failures. PR [#1447](https://github.com/fastapi/typer/pull/1447) by [@YuriiMotov](https://github.com/YuriiMotov).
