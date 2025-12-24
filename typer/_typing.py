@@ -1,28 +1,22 @@
 # Copied from pydantic 1.9.2 (the latest version to support python 3.6.)
 # https://github.com/pydantic/pydantic/blob/v1.9.2/pydantic/typing.py
-# Reduced drastically to only include Typer-specific 3.8+ functionality
+# Reduced drastically to only include Typer-specific 3.9+ functionality
 # mypy: ignore-errors
 
 import sys
 from typing import (
+    Annotated,
     Any,
     Callable,
+    Literal,
     Optional,
     Tuple,
     Type,
     Union,
+    get_args,
+    get_origin,
+    get_type_hints,
 )
-
-if sys.version_info >= (3, 9):
-    from typing import Annotated, Literal, get_args, get_origin, get_type_hints
-else:
-    from typing_extensions import (
-        Annotated,
-        Literal,
-        get_args,
-        get_origin,
-        get_type_hints,
-    )
 
 if sys.version_info < (3, 10):
 
@@ -57,25 +51,11 @@ NoneType = None.__class__
 NONE_TYPES: Tuple[Any, Any, Any] = (None, NoneType, Literal[None])
 
 
-if sys.version_info[:2] == (3, 8):
-    # We can use the fast implementation for 3.8 but there is a very weird bug
-    # where it can fail for `Literal[None]`.
-    # We just need to redefine a useless `Literal[None]` inside the function body to fix this
-
-    def is_none_type(type_: Any) -> bool:
-        Literal[None]  # fix edge case
-        for none_type in NONE_TYPES:
-            if type_ is none_type:
-                return True
-        return False
-
-else:
-
-    def is_none_type(type_: Any) -> bool:
-        for none_type in NONE_TYPES:
-            if type_ is none_type:
-                return True
-        return False
+def is_none_type(type_: Any) -> bool:
+    for none_type in NONE_TYPES:
+        if type_ is none_type:
+            return True
+    return False
 
 
 def is_callable_type(type_: Type[Any]) -> bool:
