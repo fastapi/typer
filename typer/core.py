@@ -3,6 +3,7 @@ import importlib.util
 import inspect
 import os
 import sys
+from collections.abc import MutableMapping, Sequence
 from difflib import get_close_matches
 from enum import Enum
 from gettext import gettext as _
@@ -11,9 +12,7 @@ from typing import (
     Callable,
     Dict,
     List,
-    MutableMapping,
     Optional,
-    Sequence,
     TextIO,
     Tuple,
     Union,

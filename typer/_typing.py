@@ -16,8 +16,9 @@ from typing import (
 if sys.version_info >= (3, 9):
     from typing import Annotated, Literal, get_args, get_origin, get_type_hints
 else:
+    from typing import Annotated
+
     from typing_extensions import (
-        Annotated,
         Literal,
         get_args,
         get_origin,

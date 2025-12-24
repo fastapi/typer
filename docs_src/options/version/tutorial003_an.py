@@ -1,7 +1,6 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 import typer
-from typing_extensions import Annotated
 
 __version__ = "0.1.0"
 

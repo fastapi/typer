@@ -1,6 +1,7 @@
+from typing import Annotated
+
 import click
 import typer
-from typing_extensions import Annotated
 
 
 class CustomClass:

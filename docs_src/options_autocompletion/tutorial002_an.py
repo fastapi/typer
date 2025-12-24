@@ -1,5 +1,6 @@
+from typing import Annotated
+
 import typer
-from typing_extensions import Annotated
 
 
 def complete_name():

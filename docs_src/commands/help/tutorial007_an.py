@@ -1,7 +1,6 @@
-from typing import Union
+from typing import Annotated, Union
 
 import typer
-from typing_extensions import Annotated
 
 app = typer.Typer(rich_markup_mode="rich")
 

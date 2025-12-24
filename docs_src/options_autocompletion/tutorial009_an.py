@@ -1,8 +1,7 @@
-from typing import List
+from typing import Annotated, List
 
 import typer
 from rich.console import Console
-from typing_extensions import Annotated
 
 valid_completion_items = [
     ("Camila", "The reader of books."),

@@ -1,7 +1,7 @@
 from enum import Enum
+from typing import Annotated
 
 import typer
-from typing_extensions import Annotated
 
 
 class NeuralNetwork(str, Enum):

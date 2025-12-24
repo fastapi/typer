@@ -1,7 +1,6 @@
-from typing import Tuple
+from typing import Annotated, Tuple
 
 import typer
-from typing_extensions import Annotated
 
 app = typer.Typer()
 
