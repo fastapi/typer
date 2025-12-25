@@ -5,7 +5,7 @@
 ### Breaking Changes
 
 * ➖ Drop support for Python 3.8. PR [#1464](https://github.com/fastapi/typer/pull/1464) by [@tiangolo](https://github.com/tiangolo).
-* ➖ Drop support for Python 3.8. PR [#1463](https://github.com/fastapi/typer/pull/1463) by [@tiangolo](https://github.com/tiangolo).
+* ➖ Drop support for Python 3.8 in CI. PR [#1463](https://github.com/fastapi/typer/pull/1463) by [@YuriiMotov](https://github.com/YuriiMotov) and [@tiangolo](https://github.com/tiangolo).
 
 ### Docs
 
