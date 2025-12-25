@@ -869,7 +869,7 @@ def get_click_param(
                 "List types with complex sub-types are not currently supported"
             )
             is_list = True
-        elif lenient_issubclass(origin, tuple):  # type: ignore
+        elif lenient_issubclass(origin, tuple):
             types = []
             for type_ in get_args(main_type):
                 assert not get_origin(type_), (
