@@ -1,3 +1,4 @@
+import re
 import sys
 from os import getenv
 
@@ -21,3 +22,7 @@ requires_completion_permission = pytest.mark.skipif(
     not getenv("_TYPER_RUN_INSTALL_COMPLETION_TESTS", False),
     reason="Test requires permission to run completion installation tests",
 )
+
+
+def strip_double_spaces(text: str) -> str:
+    return re.sub(r" {2,}", " ", text)
