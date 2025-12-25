@@ -217,8 +217,8 @@ class Typer:
         self,
         name: Optional[str] = None,
         *positional_aliases: str,
-        cls: Optional[Type[TyperCommand]] = None,
-        context_settings: Optional[Dict[Any, Any]] = None,
+        cls: Optional[type[TyperCommand]] = None,
+        context_settings: Optional[dict[Any, Any]] = None,
         help: Optional[str] = None,
         epilog: Optional[str] = None,
         short_help: Optional[str] = None,
@@ -235,7 +235,7 @@ class Typer:
         if cls is None:
             cls = TyperCommand
 
-        all_aliases_list: List[str] = []
+        all_aliases_list: list[str] = []
         if positional_aliases:
             all_aliases_list.extend(positional_aliases)
         if aliases:
