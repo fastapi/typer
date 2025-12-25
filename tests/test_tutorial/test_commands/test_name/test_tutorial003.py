@@ -38,4 +38,3 @@ def test_remove():
     result = runner.invoke(app, ["remove"])
     assert result.exit_code == 0
     assert "Removing items" in result.output
-

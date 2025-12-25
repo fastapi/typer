@@ -12,7 +12,9 @@ def test_help():
     assert result.exit_code == 0
     assert "Commands" in result.output
     assert "list" in result.output or "ls" in result.output
-    assert "remove" in result.output or "rm" in result.output or "delete" in result.output
+    assert (
+        "remove" in result.output or "rm" in result.output or "delete" in result.output
+    )
 
 
 def test_list():
@@ -43,4 +45,3 @@ def test_delete():
     result = runner.invoke(app, ["delete"])
     assert result.exit_code == 0
     assert "Removing items" in result.output
-
