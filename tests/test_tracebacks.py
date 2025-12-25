@@ -10,7 +10,11 @@ def test_traceback_no_rich():
         [sys.executable, "-m", "coverage", "run", str(file_path)],
         capture_output=True,
         encoding="utf-8",
-        env={**os.environ, "_TYPER_STANDARD_TRACEBACK": ""},
+        env={
+            **os.environ,
+            "TYPER_STANDARD_TRACEBACK": "",
+            "_TYPER_STANDARD_TRACEBACK": "",
+        },
     )
     assert "return get_command(self)(*args, **kwargs)" not in result.stderr
 
@@ -25,7 +29,11 @@ def test_traceback_no_rich_short_disable():
         [sys.executable, "-m", "coverage", "run", str(file_path)],
         capture_output=True,
         encoding="utf-8",
-        env={**os.environ, "_TYPER_STANDARD_TRACEBACK": ""},
+        env={
+            **os.environ,
+            "TYPER_STANDARD_TRACEBACK": "",
+            "_TYPER_STANDARD_TRACEBACK": "",
+        },
     )
     assert "return get_command(self)(*args, **kwargs)" not in result.stderr
 
@@ -40,7 +48,11 @@ def test_unmodified_traceback():
         [sys.executable, "-m", "coverage", "run", str(file_path)],
         capture_output=True,
         encoding="utf-8",
-        env={**os.environ, "_TYPER_STANDARD_TRACEBACK": ""},
+        env={
+            **os.environ,
+            "TYPER_STANDARD_TRACEBACK": "",
+            "_TYPER_STANDARD_TRACEBACK": "",
+        },
     )
     assert "morty" in result.stdout, "the call to the first app should work normally"
     assert "return callback(**use_params)" in result.stderr, (

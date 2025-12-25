@@ -1,14 +1,12 @@
 import subprocess
 import sys
 
-import typer
 from typer.testing import CliRunner
 
 from docs_src.multiple_values.multiple_options import tutorial001 as mod
 
 runner = CliRunner()
-app = typer.Typer()
-app.command()(mod.main)
+app = mod.app
 
 
 def test_main():
