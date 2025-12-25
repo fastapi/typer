@@ -10,8 +10,6 @@ from typing import (
     Callable,
     Literal,
     Optional,
-    Tuple,
-    Type,
     Union,
     get_args,
     get_origin,
@@ -20,13 +18,13 @@ from typing import (
 
 if sys.version_info < (3, 10):
 
-    def is_union(tp: Optional[Type[Any]]) -> bool:
+    def is_union(tp: Optional[type[Any]]) -> bool:
         return tp is Union
 
 else:
     import types
 
-    def is_union(tp: Optional[Type[Any]]) -> bool:
+    def is_union(tp: Optional[type[Any]]) -> bool:
         return tp is Union or tp is types.UnionType  # noqa: E721
 
 
@@ -48,7 +46,7 @@ __all__ = (
 NoneType = None.__class__
 
 
-NONE_TYPES: Tuple[Any, Any, Any] = (None, NoneType, Literal[None])
+NONE_TYPES: tuple[Any, Any, Any] = (None, NoneType, Literal[None])
 
 
 def is_none_type(type_: Any) -> bool:
@@ -58,21 +56,21 @@ def is_none_type(type_: Any) -> bool:
     return False
 
 
-def is_callable_type(type_: Type[Any]) -> bool:
+def is_callable_type(type_: type[Any]) -> bool:
     return type_ is Callable or get_origin(type_) is Callable
 
 
-def is_literal_type(type_: Type[Any]) -> bool:
+def is_literal_type(type_: type[Any]) -> bool:
     import typing_extensions
 
     return get_origin(type_) in (Literal, typing_extensions.Literal)
 
 
-def literal_values(type_: Type[Any]) -> Tuple[Any, ...]:
+def literal_values(type_: type[Any]) -> tuple[Any, ...]:
     return get_args(type_)
 
 
-def all_literal_values(type_: Type[Any]) -> Tuple[Any, ...]:
+def all_literal_values(type_: type[Any]) -> tuple[Any, ...]:
     """
     This method is used to retrieve all Literal values as
     Literal can be used recursively (see https://www.python.org/dev/peps/pep-0586)

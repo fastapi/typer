@@ -3,7 +3,7 @@ import re
 import subprocess
 from enum import Enum
 from pathlib import Path
-from typing import Optional, Tuple, Union
+from typing import Optional, Union
 
 import click
 from typer.core import HAS_SHELLINGHAM
@@ -206,7 +206,7 @@ def install(
     shell: Optional[str] = None,
     prog_name: Optional[str] = None,
     complete_var: Optional[str] = None,
-) -> Tuple[str, Path]:
+) -> tuple[str, Path]:
     prog_name = prog_name or click.get_current_context().find_root().info_name
     assert prog_name
     if complete_var is None:
