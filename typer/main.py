@@ -11,13 +11,30 @@ from functools import update_wrapper
 from pathlib import Path
 from traceback import FrameSummary, StackSummary
 from types import TracebackType
-from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, Union
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    List,
+    Optional,
+    Sequence,
+    Tuple,
+    Type,
+    Union,
+)
 from uuid import UUID
 
 import click
 from typer._types import TyperChoice
 
-from ._typing import get_args, get_origin, is_literal_type, is_union, literal_values
+from ._typing import (
+    TypeAliasType,
+    get_args,
+    get_origin,
+    is_literal_type,
+    is_union,
+    literal_values,
+)
 from .completion import get_completion_inspect_parameters
 from .core import (
     DEFAULT_MARKUP_MODE,
@@ -48,7 +65,7 @@ from .models import (
     TyperInfo,
     TyperPath,
 )
-from .utils import get_params_from_function
+from .utils import get_original_type, get_params_from_function
 
 _original_except_hook = sys.excepthook
 _typer_developer_exception_attr_name = "__typer_developer_exception__"
@@ -711,6 +728,9 @@ def get_callback(
 def get_click_type(
     *, annotation: Any, parameter_info: ParameterInfo
 ) -> click.ParamType:
+    if isinstance(annotation, TypeAliasType):
+        annotation = get_original_type(annotation)
+
     if parameter_info.click_type is not None:
         return parameter_info.click_type
 

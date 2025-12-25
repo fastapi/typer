@@ -30,6 +30,11 @@ else:
         return tp is Union or tp is types.UnionType  # noqa: E721
 
 
+if sys.version_info < (3, 12):
+    from typing_extensions import TypeAliasType, TypeVar
+else:
+    from typing import TypeAliasType, TypeVar
+
 __all__ = (
     "NoneType",
     "is_none_type",
@@ -39,6 +44,8 @@ __all__ = (
     "is_union",
     "Annotated",
     "Literal",
+    "TypeAliasType",
+    "TypeVar",
     "get_args",
     "get_origin",
     "get_type_hints",
