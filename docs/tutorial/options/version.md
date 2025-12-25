@@ -8,7 +8,7 @@ It would show the version of your CLI program and then it would terminate it. Ev
 
 Let's see a first version of how it could look like:
 
-{* docs_src/options/version/tutorial001_an.py hl[11:14,20:22] *}
+{* docs_src/options/version/tutorial001_an_py310.py hl[10:13,19:21] *}
 
 /// tip
 
@@ -57,7 +57,7 @@ Awesome CLI Version: 0.1.0
 
 But now let's say that the `--name` *CLI option* that we declared before `--version` is required, and it has a callback that could exit the program:
 
-{* docs_src/options/version/tutorial002_an.py hl[17:19,25:27] *}
+{* docs_src/options/version/tutorial002_an_py310.py hl[16:18,24:26] *}
 
 Then our CLI program could not work as expected in some cases as it is *right now*, because if we use `--version` after `--name` then the callback for `--name` will be processed before and we can get its error:
 
@@ -96,7 +96,7 @@ For those cases, we can mark a *CLI parameter* (a *CLI option* or *CLI argument*
 
 That will tell **Typer** (actually Click) that it should process this *CLI parameter* before the others:
 
-{* docs_src/options/version/tutorial003_an.py hl[26:29] *}
+{* docs_src/options/version/tutorial003_an_py310.py hl[25:28] *}
 
 Check it:
 

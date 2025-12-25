@@ -2,11 +2,11 @@
 
 import inspect
 import io
-import sys
 from collections import defaultdict
+from collections.abc import Iterable
 from gettext import gettext as _
 from os import getenv
-from typing import Any, DefaultDict, Dict, Iterable, List, Optional, Union
+from typing import Any, Literal, Optional, Union
 
 import click
 from rich import box
@@ -24,11 +24,6 @@ from rich.text import Text
 from rich.theme import Theme
 from rich.traceback import Traceback
 from typer.models import DeveloperExceptionConfig
-
-if sys.version_info >= (3, 9):
-    from typing import Literal
-else:
-    from typing_extensions import Literal
 
 # Default styles
 STYLE_OPTION = "bold cyan"
@@ -103,7 +98,7 @@ MARKUP_MODE_MARKDOWN = "markdown"
 MARKUP_MODE_RICH = "rich"
 _RICH_HELP_PANEL_NAME = "rich_help_panel"
 
-MarkupMode = Literal["markdown", "rich", None]
+MarkupModeStrict = Literal["markdown", "rich"]
 
 
 # Rich regex highlighter
@@ -151,11 +146,10 @@ def _get_rich_console(stderr: bool = False) -> Console:
 
 
 def _make_rich_text(
-    *, text: str, style: str = "", markup_mode: MarkupMode
+    *, text: str, style: str = "", markup_mode: MarkupModeStrict
 ) -> Union[Markdown, Text]:
     """Take a string, remove indentations, and return styled text.
 
-    By default, the text is not parsed for any special formatting.
     If `markup_mode` is `"rich"`, the text is parsed for Rich markup strings.
     If `markup_mode` is `"markdown"`, parse as Markdown.
     """
@@ -164,17 +158,16 @@ def _make_rich_text(
     if markup_mode == MARKUP_MODE_MARKDOWN:
         text = Emoji.replace(text)
         return Markdown(text, style=style)
-    if markup_mode == MARKUP_MODE_RICH:
-        return highlighter(Text.from_markup(text, style=style))
     else:
-        return highlighter(Text(text, style=style))
+        assert markup_mode == MARKUP_MODE_RICH
+        return highlighter(Text.from_markup(text, style=style))
 
 
 @group()
 def _get_help_text(
     *,
     obj: Union[click.Command, click.Group],
-    markup_mode: MarkupMode,
+    markup_mode: MarkupModeStrict,
 ) -> Iterable[Union[Markdown, Text]]:
     """Build primary help text for a click command or group.
 
@@ -208,19 +201,8 @@ def _get_help_text(
     if remaining_paragraphs:
         # Add a newline inbetween the header and the remaining paragraphs
         yield Text("")
-        if markup_mode not in (MARKUP_MODE_RICH, MARKUP_MODE_MARKDOWN):
-            # Remove single linebreaks
-            remaining_paragraphs = [
-                x.replace("\n", " ").strip()
-                if not x.startswith("\b")
-                else "{}\n".format(x.strip("\b\n"))
-                for x in remaining_paragraphs
-            ]
-            # Join back together
-            remaining_lines = "\n".join(remaining_paragraphs)
-        else:
-            # Join with double linebreaks if markdown or Rich markup
-            remaining_lines = "\n\n".join(remaining_paragraphs)
+        # Join with double linebreaks for markdown and Rich markup
+        remaining_lines = "\n\n".join(remaining_paragraphs)
 
         yield _make_rich_text(
             text=remaining_lines,
@@ -233,7 +215,7 @@ def _get_parameter_help(
     *,
     param: Union[click.Option, click.Argument, click.Parameter],
     ctx: click.Context,
-    markup_mode: MarkupMode,
+    markup_mode: MarkupModeStrict,
 ) -> Columns:
     """Build primary help text for a click option or argument.
 
@@ -245,7 +227,7 @@ def _get_parameter_help(
     # import here to avoid cyclic imports
     from .core import TyperArgument, TyperOption
 
-    items: List[Union[Text, Markdown]] = []
+    items: list[Union[Text, Markdown]] = []
 
     # Get the environment variable first
 
@@ -321,7 +303,7 @@ def _get_parameter_help(
 def _make_command_help(
     *,
     help_text: str,
-    markup_mode: MarkupMode,
+    markup_mode: MarkupModeStrict,
 ) -> Union[Text, Markdown]:
     """Build cli help text for a click group command.
 
@@ -348,13 +330,13 @@ def _make_command_help(
 def _print_options_panel(
     *,
     name: str,
-    params: Union[List[click.Option], List[click.Argument]],
+    params: Union[list[click.Option], list[click.Argument]],
     ctx: click.Context,
-    markup_mode: MarkupMode,
+    markup_mode: MarkupModeStrict,
     console: Console,
 ) -> None:
-    options_rows: List[List[RenderableType]] = []
-    required_rows: List[Union[str, Text]] = []
+    options_rows: list[list[RenderableType]] = []
+    required_rows: list[Union[str, Text]] = []
     for param in params:
         # Short and long form
         opt_long_strs = []
@@ -436,14 +418,14 @@ def _print_options_panel(
                 ),
             ]
         )
-    rows_with_required: List[List[RenderableType]] = []
+    rows_with_required: list[list[RenderableType]] = []
     if any(required_rows):
         for required, row in zip(required_rows, options_rows):
             rows_with_required.append([required, *row])
     else:
         rows_with_required = options_rows
     if options_rows:
-        t_styles: Dict[str, Any] = {
+        t_styles: dict[str, Any] = {
             "show_lines": STYLE_OPTIONS_TABLE_SHOW_LINES,
             "leading": STYLE_OPTIONS_TABLE_LEADING,
             "box": STYLE_OPTIONS_TABLE_BOX,
@@ -476,12 +458,12 @@ def _print_options_panel(
 def _print_commands_panel(
     *,
     name: str,
-    commands: List[click.Command],
-    markup_mode: MarkupMode,
+    commands: list[click.Command],
+    markup_mode: MarkupModeStrict,
     console: Console,
     cmd_len: int,
 ) -> None:
-    t_styles: Dict[str, Any] = {
+    t_styles: dict[str, Any] = {
         "show_lines": STYLE_COMMANDS_TABLE_SHOW_LINES,
         "leading": STYLE_COMMANDS_TABLE_LEADING,
         "box": STYLE_COMMANDS_TABLE_BOX,
@@ -511,8 +493,8 @@ def _print_commands_panel(
     # available instead of allowing the command column to grow and misalign with
     # other panels.
     commands_table.add_column("Description", justify="left", no_wrap=False, ratio=10)
-    rows: List[List[Union[RenderableType, None]]] = []
-    deprecated_rows: List[Union[RenderableType, None]] = []
+    rows: list[list[Union[RenderableType, None]]] = []
+    deprecated_rows: list[Union[RenderableType, None]] = []
     for command in commands:
         helptext = command.short_help or command.help or ""
         cmd_name = command.name or ""
@@ -564,7 +546,7 @@ def rich_format_help(
     *,
     obj: Union[click.Command, click.Group],
     ctx: click.Context,
-    markup_mode: MarkupMode,
+    markup_mode: MarkupModeStrict,
 ) -> None:
     """Print nicely formatted help text using rich.
 
@@ -596,8 +578,8 @@ def rich_format_help(
                 (0, 1, 1, 1),
             )
         )
-    panel_to_arguments: DefaultDict[str, List[click.Argument]] = defaultdict(list)
-    panel_to_options: DefaultDict[str, List[click.Option]] = defaultdict(list)
+    panel_to_arguments: defaultdict[str, list[click.Argument]] = defaultdict(list)
+    panel_to_options: defaultdict[str, list[click.Option]] = defaultdict(list)
     for param in obj.get_params(ctx):
         # Skip if option is hidden
         if getattr(param, "hidden", False):
@@ -652,7 +634,7 @@ def rich_format_help(
         )
 
     if isinstance(obj, click.Group):
-        panel_to_commands: DefaultDict[str, List[click.Command]] = defaultdict(list)
+        panel_to_commands: defaultdict[str, list[click.Command]] = defaultdict(list)
         for command_name in obj.list_commands(ctx):
             command = obj.get_command(ctx, command_name)
             if command and not command.hidden:
@@ -776,7 +758,7 @@ def rich_render_text(text: str) -> str:
 def get_traceback(
     exc: BaseException,
     exception_config: DeveloperExceptionConfig,
-    internal_dir_names: List[str],
+    internal_dir_names: list[str],
 ) -> Traceback:
     rich_tb = Traceback.from_exception(
         type(exc),

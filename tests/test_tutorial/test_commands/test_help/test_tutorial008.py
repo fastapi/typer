@@ -3,7 +3,7 @@ import sys
 
 from typer.testing import CliRunner
 
-from docs_src.commands.help import tutorial008 as mod
+from docs_src.commands.help import tutorial008_py39 as mod
 
 app = mod.app
 
