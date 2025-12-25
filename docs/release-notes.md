@@ -6,6 +6,10 @@
 
 * ➖ Drop support for Python 3.8. PR [#1463](https://github.com/fastapi/typer/pull/1463) by [@tiangolo](https://github.com/tiangolo).
 
+### Docs
+
+* 📝 Update code examples to Python 3.9. PR [#1459](https://github.com/fastapi/typer/pull/1459) by [@YuriiMotov](https://github.com/YuriiMotov).
+
 ### Internal
 
 * 💚 Move `ruff` dependency to shared `requirements-docs-tests.txt` to fix "Build docs" workflow in CI. PR [#1458](https://github.com/fastapi/typer/pull/1458) by [@YuriiMotov](https://github.com/YuriiMotov).
