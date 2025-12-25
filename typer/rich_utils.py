@@ -2,11 +2,10 @@
 
 import inspect
 import io
-import sys
 from collections import defaultdict
 from gettext import gettext as _
 from os import getenv
-from typing import Any, DefaultDict, Dict, Iterable, List, Optional, Union
+from typing import Any, DefaultDict, Dict, Iterable, List, Literal, Optional, Union
 
 import click
 from rich import box
@@ -24,11 +23,6 @@ from rich.text import Text
 from rich.theme import Theme
 from rich.traceback import Traceback
 from typer.models import DeveloperExceptionConfig
-
-if sys.version_info >= (3, 9):
-    from typing import Literal
-else:
-    from typing_extensions import Literal
 
 # Default styles
 STYLE_OPTION = "bold cyan"
