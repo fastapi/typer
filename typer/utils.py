@@ -1,10 +1,23 @@
+import asyncio
 import inspect
 import sys
 from copy import copy
-from typing import Any, Callable, Dict, List, Tuple, Type, cast
+from typing import (
+    Any,
+    Callable,
+    Coroutine,
+    Dict,
+    List,
+    Tuple,
+    Type,
+    TypeVar,
+    cast,
+)
 
 from ._typing import Annotated, get_args, get_origin, get_type_hints
 from .models import ArgumentInfo, OptionInfo, ParameterInfo, ParamMeta
+
+_T = TypeVar("_T")
 
 
 def _param_type_to_user_string(param_type: Type[ParameterInfo]) -> str:
@@ -188,3 +201,20 @@ def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
             name=param.name, default=default, annotation=annotation
         )
     return params
+
+
+def aio_run(aw: Coroutine[Any, Any, _T]) -> _T:
+    """Run an async/awaitable function (Polyfill asyncio.run)
+    Examples:
+    >>> async def add(a, b):
+    ...     return a + b
+    ...
+    >>> aio.run(add(1, 4))
+    5
+    """
+    return asyncio.run(aw)
+
+
+def is_async(obj: Callable[..., Any]) -> bool:
+    """Return True if function/obj is is async/awaitable"""
+    return asyncio.iscoroutinefunction(obj) or asyncio.iscoroutine(obj)

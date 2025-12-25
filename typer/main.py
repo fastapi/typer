@@ -48,7 +48,7 @@ from .models import (
     TyperInfo,
     TyperPath,
 )
-from .utils import get_params_from_function
+from .utils import aio_run, get_params_from_function, is_async
 
 _original_except_hook = sys.excepthook
 _typer_developer_exception_attr_name = "__typer_developer_exception__"
@@ -315,7 +315,10 @@ class Typer:
         if sys.excepthook != except_hook:
             sys.excepthook = except_hook
         try:
-            return get_command(self)(*args, **kwargs)
+            cmd = get_command(self)
+            if is_async(cmd):
+                return aio_run(cmd(*args, **kwargs))
+            return cmd(*args, **kwargs)
         except Exception as e:
             # Set a custom attribute to tell the hook to show nice exceptions for user
             # code. An alternative/first implementation was a custom exception with
@@ -704,7 +707,14 @@ def get_callback(
             use_params[context_param_name] = click.get_current_context()
         return callback(**use_params)
 
+    def wrapper_async(*args: Any, **kwargs: Any) -> Any:
+        return aio_run(callback(*args, **kwargs))
+
     update_wrapper(wrapper, callback)
+
+    if is_async(callback):
+        update_wrapper(wrapper_async, callback)
+        return wrapper_async
     return wrapper
 
 
@@ -1028,7 +1038,14 @@ def get_param_callback(
             use_params[value_name] = use_value
         return callback(**use_params)
 
+    def wrapper_async(*args: Any, **kwargs: Any) -> Any:
+        return aio_run(callback(*args, **kwargs))
+
     update_wrapper(wrapper, callback)
+
+    if is_async(callback):
+        update_wrapper(wrapper_async, callback)
+        return wrapper_async
     return wrapper
 
 
@@ -1081,7 +1098,14 @@ def get_param_completion(
             use_params[incomplete_name] = incomplete
         return callback(**use_params)
 
+    def wrapper_async(*args: Any, **kwargs: Any) -> Any:
+        return aio_run(callback(*args, **kwargs))
+
     update_wrapper(wrapper, callback)
+
+    if is_async(callback):
+        update_wrapper(wrapper_async, callback)
+        return wrapper_async
     return wrapper
 
 
