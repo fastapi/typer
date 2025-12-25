@@ -130,7 +130,6 @@ source = [
 ]
 omit = [
     "typer/_typing.py",
-    "docs_src/options/password/tutorial002_*.py",    # ToDo: add test
     "docs_src/options/version/tutorial001_*.py",  # ToDo: add test
     "docs_src/options/version/tutorial002_*.py",  # ToDo: add test
     "docs_src/options_autocompletion/tutorial001_*.py",  # ToDo: add test
