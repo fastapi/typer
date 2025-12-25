@@ -35,15 +35,15 @@ __init__.py  test_tutorial
 
 In the [First Steps](../first-steps.md#add-a-cli-argument){.internal-link target=_blank} you saw how to add a *CLI argument*:
 
-{* docs_src/first_steps/tutorial002.py hl[4] *}
+{* docs_src/first_steps/tutorial002_py39.py hl[4] *}
 
 Now let's see an alternative way to create the same *CLI argument*:
 
-{* docs_src/arguments/optional/tutorial000.py hl[4] *}
+{* docs_src/arguments/optional/tutorial000_py39.py hl[4] *}
 
 Or, using an explicit `Typer()` instance creation:
 
-{* docs_src/arguments/optional/tutorial001_an.py hl[8] *}
+{* docs_src/arguments/optional/tutorial001_an_py39.py hl[9] *}
 
 /// info
 
@@ -114,7 +114,7 @@ Now, finally what we came for, an optional *CLI argument*.
 
 To make a *CLI argument* optional, use `typer.Argument()` and make sure to provide a "default" value, for example `"World"`:
 
-{* docs_src/arguments/optional/tutorial002_an.py hl[8] *}
+{* docs_src/arguments/optional/tutorial002_an_py39.py hl[9] *}
 
 Now we have:
 
@@ -181,7 +181,7 @@ Notice that "`Camila`" here is an optional *CLI argument*, not a *CLI option*, b
 
 Instead of using `Annotated`, you can use `typer.Argument()` as the default value:
 
-{* docs_src/arguments/optional/tutorial001.py hl[7] *}
+{* docs_src/arguments/optional/tutorial001_py39.py hl[7] *}
 
 /// tip
 
@@ -215,11 +215,11 @@ If you hadn't seen that `...` before: it is a special single value, it is <a hre
 
 ///
 
-{* docs_src/arguments/optional/tutorial003.py hl[7] *}
+{* docs_src/arguments/optional/tutorial003_py39.py hl[7] *}
 
 And the same way, you can make it optional by passing a different `default` value, for example `"World"`:
 
-{* docs_src/arguments/optional/tutorial002.py hl[7] *}
+{* docs_src/arguments/optional/tutorial002_py39.py hl[7] *}
 
 Because the first parameter passed to `typer.Argument(default="World")` (the new "default" value) is `"World"`, **Typer** knows that this is an **optional** *CLI argument*, if no value is provided when calling it in the command line, it will have that default value of `"World"`.
 
