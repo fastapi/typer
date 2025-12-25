@@ -1,5 +1,6 @@
 import inspect
 import io
+from collections.abc import Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -7,7 +8,6 @@ from typing import (
     Dict,
     List,
     Optional,
-    Sequence,
     Type,
     TypeVar,
     Union,

@@ -3,9 +3,10 @@
 import inspect
 import io
 from collections import defaultdict
+from collections.abc import Iterable
 from gettext import gettext as _
 from os import getenv
-from typing import Any, DefaultDict, Dict, Iterable, List, Literal, Optional, Union
+from typing import Any, DefaultDict, Dict, List, Literal, Optional, Union
 
 import click
 from rich import box

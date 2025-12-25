@@ -1,6 +1,7 @@
 import os
 import sys
-from typing import Any, MutableMapping, Tuple
+from collections.abc import MutableMapping
+from typing import Any, Tuple
 
 import click
 
