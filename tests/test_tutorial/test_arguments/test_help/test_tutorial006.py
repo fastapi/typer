@@ -12,9 +12,8 @@ app = mod.app
 def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "[OPTIONS] ✨username✨" in result.output
+    assert "Usage: main [OPTIONS] [✨username✨]" in result.output
     assert "Arguments" in result.output
-    assert "✨username✨" in result.output
     assert "[default: World]" in result.output
 
 
