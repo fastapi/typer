@@ -1,7 +1,6 @@
 import subprocess
 import sys
 from pathlib import Path
-from typing import List
 
 import pytest
 
@@ -13,7 +12,7 @@ SUBCMD_FOOTNOTE = "* denotes "
 OVERHEAD_LINES = 3  # footnote plus top/bottom of panel
 
 
-def prepare_lines(s: str) -> List[str]:
+def prepare_lines(s: str) -> list[str]:
     """
     Takes a string and massages it to a list of modified lines.
 
@@ -27,7 +26,7 @@ def prepare_lines(s: str) -> List[str]:
     return [line[2:].rstrip(". ") for line in unified.split("\n")]
 
 
-def find_in_lines(lines: List[str], cmd: str, help: str) -> bool:
+def find_in_lines(lines: list[str], cmd: str, help: str) -> bool:
     """
     Looks for a line that starts with 'cmd', and also contains the 'help'.
     """
@@ -54,7 +53,7 @@ def find_in_lines(lines: List[str], cmd: str, help: str) -> bool:
         pytest.param(["pets", "list"], False, id="pets-list"),
     ],
 )
-def test_subcommands_help(args: List[str], expected: bool):
+def test_subcommands_help(args: list[str], expected: bool):
     full_args = (
         [sys.executable, "-m", "coverage", "run", str(SUBCOMMANDS)] + args + ["--help"]
     )
@@ -193,7 +192,7 @@ def test_subcommands_users_update_tree():
         pytest.param(["pets", "list"], "Need to compile list of pets", id="pets-list"),
     ],
 )
-def test_subcommands_execute(args: List[str], message: str):
+def test_subcommands_execute(args: list[str], message: str):
     full_args = [sys.executable, "-m", "coverage", "run", str(SUBCOMMANDS)] + args
     result = subprocess.run(
         full_args,
