@@ -6,7 +6,7 @@ from collections import defaultdict
 from collections.abc import Iterable
 from gettext import gettext as _
 from os import getenv
-from typing import Any, Literal, Optional, Thple, Union
+from typing import Any, Literal, Optional, Union
 
 import click
 from rich import box
