@@ -3,4 +3,4 @@
 -r requirements-tests.txt
 -r requirements-docs.txt
 
-prek==0.2.22
+prek>=0.2.24,<1.0.0
