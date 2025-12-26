@@ -2,7 +2,7 @@ import importlib.util
 import re
 import sys
 from pathlib import Path
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 import click
 import typer
@@ -53,7 +53,7 @@ def maybe_update_state(ctx: click.Context) -> None:
 
 
 class TyperCLIGroup(typer.core.TyperGroup):
-    def list_commands(self, ctx: click.Context) -> List[str]:
+    def list_commands(self, ctx: click.Context) -> list[str]:
         self.maybe_add_run(ctx)
         return super().list_commands(ctx)
 
