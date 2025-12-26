@@ -130,7 +130,6 @@ source = [
 ]
 omit = [
     "typer/_typing.py",
-    "docs_src/progressbar/tutorial006_py39.py",  # ToDo: add test
     "docs_src/prompt/tutorial004_py39.py",  # ToDo: add test
     "docs_src/using_click/tutorial001_py39.py",  # ToDo: add test
     "docs_src/using_click/tutorial002_py39.py",  # ToDo: add test
