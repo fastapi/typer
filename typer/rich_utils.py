@@ -677,10 +677,10 @@ def rich_format_help(
 
 def rich_format_subcommands(
     ctx: click.Context,
-    subcommands: List[Tuple[str, str]],
+    subcommands: list[tuple[str, str]],
 ) -> None:
     console = _get_rich_console()
-    t_styles: Dict[str, Any] = {
+    t_styles: dict[str, Any] = {
         "show_lines": STYLE_OPTIONS_TABLE_SHOW_LINES,
         "leading": STYLE_OPTIONS_TABLE_LEADING,
         "box": STYLE_OPTIONS_TABLE_BOX,

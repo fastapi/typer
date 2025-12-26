@@ -1,6 +1,6 @@
 import sys
 from gettext import gettext as _
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 import click
 
@@ -14,8 +14,8 @@ SUBCOMMAND_TITLE = _("Sub-Commands")
 
 
 def _commands_from_info(
-    info: Dict[str, Any], indent_level: int
-) -> List[Tuple[str, str]]:
+    info: dict[str, Any], indent_level: int
+) -> list[tuple[str, str]]:
     items = []
     subcommands = info.get("commands", {})
 
