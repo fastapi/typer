@@ -4,6 +4,8 @@ from os import getenv
 import pytest
 from typer._completion_shared import _get_shell_name
 
+needs_py38 = pytest.mark.skipif(sys.version_info < (3, 8), reason="requires python3.8+")
+
 needs_py310 = pytest.mark.skipif(
     sys.version_info < (3, 10), reason="requires python3.10+"
 )
