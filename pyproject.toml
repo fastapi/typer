@@ -11,7 +11,7 @@ description = "Typer, build great CLIs. Easy to code. Based on Python type hints
 authors = [
     {name = "Sebastián Ramírez", email = "tiangolo@gmail.com"},
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 classifiers = [
     "Intended Audience :: Information Technology",
     "Intended Audience :: System Administrators",
@@ -26,7 +26,6 @@ classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -130,7 +129,35 @@ source = [
     "typer"
 ]
 omit = [
-    "typer/_typing.py"
+    "typer/_typing.py",
+    "docs_src/app_dir/tutorial001_py39.py",  # ToDo: add test
+    "docs_src/arguments/optional/tutorial000_py39.py",  # ToDo: add test
+    "docs_src/launch/tutorial001_py39.py",  # ToDo: add test
+    "docs_src/launch/tutorial002_py39.py",  # ToDo: add test
+    "docs_src/options/callback/tutorial002_*.py",   # ToDo: add test
+    "docs_src/options/help/tutorial004_*.py",   # ToDo: add test
+    "docs_src/options/password/tutorial001_*.py",    # ToDo: add test
+    "docs_src/options/password/tutorial002_*.py",    # ToDo: add test
+    "docs_src/options/version/tutorial001_*.py",  # ToDo: add test
+    "docs_src/options/version/tutorial002_*.py",  # ToDo: add test
+    "docs_src/options_autocompletion/tutorial001_*.py",  # ToDo: add test
+    "docs_src/options_autocompletion/tutorial005_*.py",  # ToDo: add test
+    "docs_src/options_autocompletion/tutorial006_*.py",  # ToDo: add test
+    "docs_src/printing/tutorial001_py39.py",  # ToDo: add test
+    "docs_src/printing/tutorial002_py39.py",  # ToDo: add test
+    "docs_src/printing/tutorial003_py39.py",  # ToDo: add test
+    "docs_src/printing/tutorial004_py39.py",  # ToDo: add test
+    "docs_src/printing/tutorial005_py39.py",  # ToDo: add test
+    "docs_src/printing/tutorial006_py39.py",  # ToDo: add test
+    "docs_src/progressbar/tutorial001_py39.py",  # ToDo: add test
+    "docs_src/progressbar/tutorial002_py39.py",  # ToDo: add test
+    "docs_src/progressbar/tutorial003_py39.py",  # ToDo: add test
+    "docs_src/progressbar/tutorial004_py39.py",  # ToDo: add test
+    "docs_src/progressbar/tutorial005_py39.py",  # ToDo: add test
+    "docs_src/progressbar/tutorial006_py39.py",  # ToDo: add test
+    "docs_src/prompt/tutorial004_py39.py",  # ToDo: add test
+    "docs_src/using_click/tutorial001_py39.py",  # ToDo: add test
+    "docs_src/using_click/tutorial002_py39.py",  # ToDo: add test
 ]
 context = '${CONTEXT}'
 relative_files = true
@@ -180,23 +207,23 @@ ignore = [
 # rich_utils is allowed to use rich imports
 "typer/rich_utils.py" = ["TID251"]
 # This file is more readable without yield from
-"docs_src/progressbar/tutorial004.py" = ["UP028", "B007"]
+"docs_src/progressbar/tutorial004_py39.py" = ["UP028", "B007"]
 # Default mutable data structure
-"docs_src/options_autocompletion/tutorial006_an.py" = ["B006"]
-"docs_src/multiple_values/multiple_options/tutorial002_an.py" = ["B006"]
-"docs_src/options_autocompletion/tutorial007_an.py" = ["B006"]
-"docs_src/options_autocompletion/tutorial008_an.py" = ["B006"]
-"docs_src/options_autocompletion/tutorial009_an.py" = ["B006"]
-"docs_src/parameter_types/enum/tutorial003_an.py" = ["B006"]
+"docs_src/options_autocompletion/tutorial006_an_py39.py" = ["B006"]
+"docs_src/multiple_values/multiple_options/tutorial002_an_py39.py" = ["B006"]
+"docs_src/options_autocompletion/tutorial007_an_py39.py" = ["B006"]
+"docs_src/options_autocompletion/tutorial008_an_py39.py" = ["B006"]
+"docs_src/options_autocompletion/tutorial009_an_py39.py" = ["B006"]
+"docs_src/parameter_types/enum/tutorial003_an_py39.py" = ["B006"]
 # Loop control variable `value` not used within loop body
-"docs_src/progressbar/tutorial001.py" = ["B007"]
-"docs_src/progressbar/tutorial003.py" = ["B007"]
-"docs_src/progressbar/tutorial005.py" = ["B007"]
-"docs_src/progressbar/tutorial006.py" = ["B007"]
+"docs_src/progressbar/tutorial001_py39.py" = ["B007"]
+"docs_src/progressbar/tutorial003_py39.py" = ["B007"]
+"docs_src/progressbar/tutorial005_py39.py" = ["B007"]
+"docs_src/progressbar/tutorial006_py39.py" = ["B007"]
 # Local variable `delete` is assigned to but never used
-"docs_src/prompt/tutorial003.py" = ["F841"]
+"docs_src/prompt/tutorial003_py39.py" = ["F841"]
 # Loop control variable `x` not used within loop body
-"docs_src/using_click/tutorial001.py" = ["B007"]
+"docs_src/using_click/tutorial001_py39.py" = ["B007"]
 # No need to worry about rich imports in docs
 "docs_src/*" = ["TID"]
 

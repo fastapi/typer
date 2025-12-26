@@ -4,7 +4,7 @@ Commands can also have their own *CLI options*.
 
 In fact, each command can have different *CLI arguments* and *CLI options*:
 
-{* docs_src/commands/options/tutorial001_an.py hl[8,14:17,27:29,38] *}
+{* docs_src/commands/options/tutorial001_an_py39.py hl[9,15:18,28:30,39] *}
 
 Here we have multiple commands, with different *CLI parameters*:
 
