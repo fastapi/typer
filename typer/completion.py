@@ -1,6 +1,7 @@
 import os
 import sys
-from typing import Any, MutableMapping, Tuple
+from collections.abc import MutableMapping
+from typing import Any
 
 import click
 
@@ -14,7 +15,7 @@ from .utils import get_params_from_function
 _click_patched = False
 
 
-def get_completion_inspect_parameters() -> Tuple[ParamMeta, ParamMeta]:
+def get_completion_inspect_parameters() -> tuple[ParamMeta, ParamMeta]:
     completion_init()
     test_disable_detection = os.getenv("_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION")
     if HAS_SHELLINGHAM and not test_disable_detection:

@@ -1,6 +1,6 @@
 from enum import Enum
 from pathlib import Path
-from typing import Any, List, Optional, Tuple
+from typing import Any, Optional
 
 import click
 import pytest
@@ -55,7 +55,7 @@ def test_optional_tuple():
     app = typer.Typer()
 
     @app.command()
-    def opt(number: Optional[Tuple[int, int]] = None):
+    def opt(number: Optional[tuple[int, int]] = None):
         if number:
             print(f"Number: {number}")
         else:
@@ -90,7 +90,7 @@ class SomeEnum(Enum):
 
 @pytest.mark.parametrize(
     "type_annotation",
-    [List[Path], List[SomeEnum], List[str]],
+    [list[Path], list[SomeEnum], list[str]],
 )
 def test_list_parameters_convert_to_lists(type_annotation):
     # Lists containing objects that are converted by Click (i.e. not Path or Enum)
@@ -111,11 +111,11 @@ def test_list_parameters_convert_to_lists(type_annotation):
 @pytest.mark.parametrize(
     "type_annotation",
     [
-        Tuple[str, str],
-        Tuple[str, Path],
-        Tuple[Path, Path],
-        Tuple[str, SomeEnum],
-        Tuple[SomeEnum, SomeEnum],
+        tuple[str, str],
+        tuple[str, Path],
+        tuple[Path, Path],
+        tuple[str, SomeEnum],
+        tuple[SomeEnum, SomeEnum],
     ],
 )
 def test_tuple_parameter_elements_are_converted_recursively(type_annotation):

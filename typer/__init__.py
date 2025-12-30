@@ -1,6 +1,6 @@
 """Typer, build great CLIs. Easy to code. Based on Python type hints."""
 
-__version__ = "0.20.1"
+__version__ = "0.21.0"
 
 from shutil import get_terminal_size as get_terminal_size
 
