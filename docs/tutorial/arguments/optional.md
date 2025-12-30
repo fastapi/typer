@@ -39,7 +39,7 @@ In the [First Steps](../first-steps.md#add-a-cli-argument){.internal-link target
 
 Now let's see an alternative way to create the same *CLI argument*:
 
-{* docs_src/arguments/optional/tutorial000_py39.py hl[4] *}
+{* docs_src/arguments/optional/tutorial000_an_py39.py hl[6] *}
 
 Or, using an explicit `Typer()` instance creation:
 

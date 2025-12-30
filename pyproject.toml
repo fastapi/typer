@@ -130,34 +130,6 @@ source = [
 ]
 omit = [
     "typer/_typing.py",
-    "docs_src/app_dir/tutorial001_py39.py",  # ToDo: add test
-    "docs_src/arguments/optional/tutorial000_py39.py",  # ToDo: add test
-    "docs_src/launch/tutorial001_py39.py",  # ToDo: add test
-    "docs_src/launch/tutorial002_py39.py",  # ToDo: add test
-    "docs_src/options/callback/tutorial002_*.py",   # ToDo: add test
-    "docs_src/options/help/tutorial004_*.py",   # ToDo: add test
-    "docs_src/options/password/tutorial001_*.py",    # ToDo: add test
-    "docs_src/options/password/tutorial002_*.py",    # ToDo: add test
-    "docs_src/options/version/tutorial001_*.py",  # ToDo: add test
-    "docs_src/options/version/tutorial002_*.py",  # ToDo: add test
-    "docs_src/options_autocompletion/tutorial001_*.py",  # ToDo: add test
-    "docs_src/options_autocompletion/tutorial005_*.py",  # ToDo: add test
-    "docs_src/options_autocompletion/tutorial006_*.py",  # ToDo: add test
-    "docs_src/printing/tutorial001_py39.py",  # ToDo: add test
-    "docs_src/printing/tutorial002_py39.py",  # ToDo: add test
-    "docs_src/printing/tutorial003_py39.py",  # ToDo: add test
-    "docs_src/printing/tutorial004_py39.py",  # ToDo: add test
-    "docs_src/printing/tutorial005_py39.py",  # ToDo: add test
-    "docs_src/printing/tutorial006_py39.py",  # ToDo: add test
-    "docs_src/progressbar/tutorial001_py39.py",  # ToDo: add test
-    "docs_src/progressbar/tutorial002_py39.py",  # ToDo: add test
-    "docs_src/progressbar/tutorial003_py39.py",  # ToDo: add test
-    "docs_src/progressbar/tutorial004_py39.py",  # ToDo: add test
-    "docs_src/progressbar/tutorial005_py39.py",  # ToDo: add test
-    "docs_src/progressbar/tutorial006_py39.py",  # ToDo: add test
-    "docs_src/prompt/tutorial004_py39.py",  # ToDo: add test
-    "docs_src/using_click/tutorial001_py39.py",  # ToDo: add test
-    "docs_src/using_click/tutorial002_py39.py",  # ToDo: add test
 ]
 context = '${CONTEXT}'
 relative_files = true
