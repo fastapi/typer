@@ -3,7 +3,7 @@ import sys
 
 from typer.testing import CliRunner
 
-from docs_src.subcommands.name_help import tutorial002 as mod
+from docs_src.subcommands.name_help import tutorial002_py39 as mod
 
 runner = CliRunner()
 
