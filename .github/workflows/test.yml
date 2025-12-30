@@ -22,8 +22,6 @@ jobs:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
         python-version: [ "3.14" ]
         include:
-          - os: macos-latest
-            python-version: "3.8"
           - os: windows-latest
             python-version: "3.9"
           - os: ubuntu-latest
@@ -57,7 +55,7 @@ jobs:
       - name: Install Dependencies
         run: uv pip install -r requirements-tests.txt
       - name: Lint
-        if: matrix.python-version != '3.7' && matrix.python-version != '3.8' && matrix.python-version != '3.9'
+        if: matrix.python-version != '3.9'
         run: bash scripts/lint.sh
       - run: mkdir coverage
       - run: bash ./scripts/test-files.sh
@@ -84,7 +82,7 @@ jobs:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
         with:
-          python-version: '3.8'
+          python-version: '3.13'
       - name: Setup uv
         uses: astral-sh/setup-uv@v7
         with:
@@ -103,7 +101,6 @@ jobs:
         run: uv pip install -r requirements-tests.txt
       - run: ls -la coverage
       - run: coverage combine coverage
-      - run: coverage report
       - run: coverage html --show-contexts --title "Coverage for ${{ github.sha }}"
       - name: Store coverage HTML
         uses: actions/upload-artifact@v5
@@ -111,6 +108,7 @@ jobs:
           name: coverage-html
           path: htmlcov
           include-hidden-files: true
+      - run: coverage report --fail-under=100
 
   # https://github.com/marketplace/actions/alls-green#why
   check:  # This job does nothing and is only used for the branch protection

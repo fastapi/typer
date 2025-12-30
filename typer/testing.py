@@ -1,4 +1,5 @@
-from typing import IO, Any, Mapping, Optional, Sequence, Union
+from collections.abc import Mapping, Sequence
+from typing import IO, Any, Optional, Union
 
 from click.testing import CliRunner as ClickCliRunner  # noqa
 from click.testing import Result
