@@ -4,6 +4,7 @@
 
 ### Internal
 
+* ✅ Add missing tests for code examples. PR [#1465](https://github.com/fastapi/typer/pull/1465) by [@YuriiMotov](https://github.com/YuriiMotov).
 * 🔧 Update pre-commit to use local Ruff instead of hook, unpin `prek`. PR [#1466](https://github.com/fastapi/typer/pull/1466) by [@YuriiMotov](https://github.com/YuriiMotov).
 * ⬆ Bump mypy from 1.14.1 to 1.18.2. PR [#1382](https://github.com/fastapi/typer/pull/1382) by [@dependabot[bot]](https://github.com/apps/dependabot).
 
