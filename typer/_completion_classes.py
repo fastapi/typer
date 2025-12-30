@@ -2,7 +2,7 @@ import importlib.util
 import os
 import re
 import sys
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 import click
 import click.parser
@@ -24,11 +24,6 @@ except ImportError:  # pragma: no cover
         split_arg_string as click_split_arg_string,
     )
 
-try:
-    import shellingham
-except ImportError:  # pragma: no cover
-    shellingham = None
-
 
 def _sanitize_help_text(text: str) -> str:
     """Sanitizes the help text by removing rich tags"""
@@ -43,14 +38,14 @@ class BashComplete(click.shell_completion.BashComplete):
     name = Shells.bash.value
     source_template = COMPLETION_SCRIPT_BASH
 
-    def source_vars(self) -> Dict[str, Any]:
+    def source_vars(self) -> dict[str, Any]:
         return {
             "complete_func": self.func_name,
             "autocomplete_var": self.complete_var,
             "prog_name": self.prog_name,
         }
 
-    def get_completion_args(self) -> Tuple[List[str], str]:
+    def get_completion_args(self) -> tuple[list[str], str]:
         cwords = click_split_arg_string(os.environ["COMP_WORDS"])
         cword = int(os.environ["COMP_CWORD"])
         args = cwords[1:cword]
@@ -79,14 +74,14 @@ class ZshComplete(click.shell_completion.ZshComplete):
     name = Shells.zsh.value
     source_template = COMPLETION_SCRIPT_ZSH
 
-    def source_vars(self) -> Dict[str, Any]:
+    def source_vars(self) -> dict[str, Any]:
         return {
             "complete_func": self.func_name,
             "autocomplete_var": self.complete_var,
             "prog_name": self.prog_name,
         }
 
-    def get_completion_args(self) -> Tuple[List[str], str]:
+    def get_completion_args(self) -> tuple[list[str], str]:
         completion_args = os.getenv("_TYPER_COMPLETE_ARGS", "")
         cwords = click_split_arg_string(completion_args)
         args = cwords[1:]
@@ -130,14 +125,14 @@ class FishComplete(click.shell_completion.FishComplete):
     name = Shells.fish.value
     source_template = COMPLETION_SCRIPT_FISH
 
-    def source_vars(self) -> Dict[str, Any]:
+    def source_vars(self) -> dict[str, Any]:
         return {
             "complete_func": self.func_name,
             "autocomplete_var": self.complete_var,
             "prog_name": self.prog_name,
         }
 
-    def get_completion_args(self) -> Tuple[List[str], str]:
+    def get_completion_args(self) -> tuple[list[str], str]:
         completion_args = os.getenv("_TYPER_COMPLETE_ARGS", "")
         cwords = click_split_arg_string(completion_args)
         args = cwords[1:]
@@ -183,14 +178,14 @@ class PowerShellComplete(click.shell_completion.ShellComplete):
     name = Shells.powershell.value
     source_template = COMPLETION_SCRIPT_POWER_SHELL
 
-    def source_vars(self) -> Dict[str, Any]:
+    def source_vars(self) -> dict[str, Any]:
         return {
             "complete_func": self.func_name,
             "autocomplete_var": self.complete_var,
             "prog_name": self.prog_name,
         }
 
-    def get_completion_args(self) -> Tuple[List[str], str]:
+    def get_completion_args(self) -> tuple[list[str], str]:
         completion_args = os.getenv("_TYPER_COMPLETE_ARGS", "")
         incomplete = os.getenv("_TYPER_COMPLETE_WORD_TO_COMPLETE", "")
         cwords = click_split_arg_string(completion_args)

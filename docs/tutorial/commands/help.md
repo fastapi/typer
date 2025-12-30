@@ -4,7 +4,7 @@ The same as before, you can add help for the commands in the docstrings and the 
 
 And the `typer.Typer()` application receives a parameter `help` that you can pass with the main help text for your CLI program:
 
-{* docs_src/commands/help/tutorial001_an.py hl[4,9:11,22,26:30,43,47:51,60:62] *}
+{* docs_src/commands/help/tutorial001_an_py39.py hl[5,10:12,23,27:31,44,48:52,61:63] *}
 
 Check it:
 
@@ -92,7 +92,7 @@ You will also see how to use "Callbacks" later, and those include a way to add t
 
 You will probably be better adding the help text as a docstring to your functions, but if for some reason you wanted to overwrite it, you can use the `help` function argument passed to `@app.command()`:
 
-{* docs_src/commands/help/tutorial002.py hl[6,14] *}
+{* docs_src/commands/help/tutorial002_py39.py hl[6,14] *}
 
 Check it:
 
@@ -126,7 +126,7 @@ There could be cases where you have a command in your app that you need to depre
 
 You can mark it with the parameter `deprecated=True`:
 
-{* docs_src/commands/help/tutorial003.py hl[14] *}
+{* docs_src/commands/help/tutorial003_py39.py hl[14] *}
 
 And when you show the `--help` option you will see it's marked as "`deprecated`":
 
@@ -180,7 +180,7 @@ $ python main.py delete --help
 
 As of version 0.20.0, Typer added support for suggesting mistyped command names. This feature is **enabled by default**, but you can disable it with the parameter `suggest_commands=False`:
 
-{* docs_src/commands/index/tutorial005.py hl[3] *}
+{* docs_src/commands/index/tutorial005_py39.py hl[3] *}
 
 If a user mistypes a command, they'll see a helpful suggestion:
 
@@ -216,7 +216,7 @@ By default, `rich_markup_mode` is `None` if Rich is not installed, and `"rich"` 
 
 If you set `rich_markup_mode="rich"` when creating the `typer.Typer()` app, you will be able to use <a href="https://rich.readthedocs.io/en/stable/markup.html" class="external-link" target="_blank">Rich Console Markup</a> in the docstring, and even in the help for the *CLI arguments* and options:
 
-{* docs_src/commands/help/tutorial004_an.py hl[4,10,14:16,21,24,27] *}
+{* docs_src/commands/help/tutorial004_an_py39.py hl[5,11,15:17,22,25,28] *}
 
 With that, you can use <a href="https://rich.readthedocs.io/en/stable/markup.html" class="external-link" target="_blank">Rich Console Markup</a> to format the text in the docstring for the command `create`, make the word "`create`" bold and green, and even use an <a href="https://rich.readthedocs.io/en/stable/markup.html#emoji" class="external-link" target="_blank">emoji</a>.
 
@@ -279,7 +279,7 @@ $ python main.py delete --help
 
 If you set `rich_markup_mode="markdown"` when creating the `typer.Typer()` app, you will be able to use Markdown in the docstring:
 
-{* docs_src/commands/help/tutorial005_an.py hl[4,9,12:20,25,27:28] *}
+{* docs_src/commands/help/tutorial005_an_py39.py hl[5,10,13:21,26,28:29] *}
 
 With that, you can use Markdown to format the text in the docstring for the command `create`, make the word "`create`" bold, show a list of items, and even use an <a href="https://rich.readthedocs.io/en/stable/markup.html#emoji" class="external-link" target="_blank">emoji</a>.
 
@@ -355,7 +355,7 @@ If you installed <a href="https://rich.readthedocs.io/" class="external-link" ta
 
 To set the panel for a command you can pass the argument `rich_help_panel` with the name of the panel you want to use:
 
-{* docs_src/commands/help/tutorial006.py hl[22,30,38,46] *}
+{* docs_src/commands/help/tutorial006_py39.py hl[22,30,38,46] *}
 
 Commands without a panel will be shown in the default panel `Commands`, and the rest will be shown in the next panels:
 
@@ -396,7 +396,7 @@ The same way, you can configure the panels for *CLI arguments* and *CLI options*
 
 And of course, in the same application you can also set the `rich_help_panel` for commands.
 
-{* docs_src/commands/help/tutorial007_an.py hl[15,21,27,37] *}
+{* docs_src/commands/help/tutorial007_an_py310.py hl[14,20,26,36] *}
 
 Then if you run the application you will see all the *CLI parameters* in their respective panels.
 
@@ -474,7 +474,7 @@ You can see the custom panel for the commands for "`Utils and Configs`".
 
 If you need, you can also add an epilog section to the help of your commands:
 
-{* docs_src/commands/help/tutorial008.py hl[6] *}
+{* docs_src/commands/help/tutorial008_py39.py hl[6] *}
 
 And when you check the `--help` option it will look like:
 
