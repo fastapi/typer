@@ -44,7 +44,7 @@ def test_version_not_camila(mod: ModuleType):
 def test_version_camila_no_version(mod: ModuleType):
     result = runner.invoke(mod.app, ["--name", "Camila"])
     assert result.exit_code == 0
-    assert "Hello None" in result.output
+    assert "Hello Camila" in result.output
 
 
 def test_script(mod: ModuleType):
