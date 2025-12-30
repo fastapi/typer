@@ -1,36 +1,49 @@
+import importlib
 import subprocess
 import sys
+from types import ModuleType
 
+import pytest
 from typer.testing import CliRunner
 
-from docs_src.options.prompt import tutorial001 as mod
-
 runner = CliRunner()
-app = mod.app
 
 
-def test_option_lastname():
-    result = runner.invoke(app, ["Camila", "--lastname", "Gutiérrez"])
+@pytest.fixture(
+    name="mod",
+    params=[
+        pytest.param("tutorial001_py39"),
+        pytest.param("tutorial001_an_py39"),
+    ],
+)
+def get_mod(request: pytest.FixtureRequest) -> ModuleType:
+    module_name = f"docs_src.options.prompt.{request.param}"
+    mod = importlib.import_module(module_name)
+    return mod
+
+
+def test_option_lastname(mod: ModuleType):
+    result = runner.invoke(mod.app, ["Camila", "--lastname", "Gutiérrez"])
     assert result.exit_code == 0
     assert "Hello Camila Gutiérrez" in result.output
 
 
-def test_option_lastname_prompt():
-    result = runner.invoke(app, ["Camila"], input="Gutiérrez")
+def test_option_lastname_prompt(mod: ModuleType):
+    result = runner.invoke(mod.app, ["Camila"], input="Gutiérrez")
     assert result.exit_code == 0
     assert "Lastname: " in result.output
     assert "Hello Camila Gutiérrez" in result.output
 
 
-def test_help():
-    result = runner.invoke(app, ["--help"])
+def test_help(mod: ModuleType):
+    result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
     assert "--lastname" in result.output
     assert "TEXT" in result.output
     assert "[required]" in result.output
 
 
-def test_script():
+def test_script(mod: ModuleType):
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
         capture_output=True,

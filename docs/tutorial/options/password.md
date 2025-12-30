@@ -2,7 +2,7 @@
 
 Apart from having a prompt, you can make a *CLI option* have a `confirmation_prompt=True`:
 
-{* docs_src/options/password/tutorial001_an.py hl[10] *}
+{* docs_src/options/password/tutorial001_an_py39.py hl[11] *}
 
 And the CLI program will ask for confirmation:
 
@@ -30,7 +30,7 @@ You can achieve the same using `hide_input=True`.
 
 And if you combine it with `confirmation_prompt=True` you can easily receive a password with double confirmation:
 
-{* docs_src/options/password/tutorial002_an.py hl[11] *}
+{* docs_src/options/password/tutorial002_an_py39.py hl[12] *}
 
 Check it:
 
