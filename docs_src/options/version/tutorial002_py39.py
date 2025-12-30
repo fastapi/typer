@@ -16,6 +16,7 @@ def version_callback(value: bool):
 def name_callback(name: str):
     if name != "Camila":
         raise typer.BadParameter("Only Camila is allowed")
+    return name
 
 
 @app.command()

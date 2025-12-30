@@ -57,7 +57,7 @@ Awesome CLI Version: 0.1.0
 
 But now let's say that the `--name` *CLI option* that we declared before `--version` is required, and it has a callback that could exit the program:
 
-{* docs_src/options/version/tutorial002_an_py310.py hl[16:18,24:26] *}
+{* docs_src/options/version/tutorial002_an_py310.py hl[16:19,25:27] *}
 
 Then our CLI program could not work as expected in some cases as it is *right now*, because if we use `--version` after `--name` then the callback for `--name` will be processed before and we can get its error:
 
