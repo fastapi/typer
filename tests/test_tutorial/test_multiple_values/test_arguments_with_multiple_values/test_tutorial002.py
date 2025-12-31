@@ -1,14 +1,14 @@
 import subprocess
 import sys
 
-import typer
 from typer.testing import CliRunner
 
-from docs_src.multiple_values.arguments_with_multiple_values import tutorial002 as mod
+from docs_src.multiple_values.arguments_with_multiple_values import (
+    tutorial002_py39 as mod,
+)
 
 runner = CliRunner()
-app = typer.Typer()
-app.command()(mod.main)
+app = mod.app
 
 
 def test_help():
