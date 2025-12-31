@@ -4,6 +4,7 @@
 
 ### Internal
 
+* ⬆ Bump actions/cache from 4 to 5. PR [#1441](https://github.com/fastapi/typer/pull/1441) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * 👷 Update secrets check. PR [#1471](https://github.com/fastapi/typer/pull/1471) by [@YuriiMotov](https://github.com/YuriiMotov).
 * ✅ Add missing tests for code examples. PR [#1465](https://github.com/fastapi/typer/pull/1465) by [@YuriiMotov](https://github.com/YuriiMotov).
 * 🔧 Update pre-commit to use local Ruff instead of hook, unpin `prek`. PR [#1466](https://github.com/fastapi/typer/pull/1466) by [@YuriiMotov](https://github.com/YuriiMotov).
