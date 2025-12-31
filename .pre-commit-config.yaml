@@ -1,25 +1,29 @@
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
-default_language_version:
-    python: python3.10
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
-    -   id: check-added-large-files
-    -   id: check-toml
-    -   id: check-yaml
+      - id: check-added-large-files
+      - id: check-toml
+      - id: check-yaml
         args:
         -   --unsafe
-    -   id: end-of-file-fixer
-    -   id: trailing-whitespace
--   repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.8
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+
+-   repo: local
     hooks:
-    -   id: ruff
-        args:
-        - --fix
-    -   id: ruff-format
-ci:
-    autofix_commit_msg: 🎨 [pre-commit.ci] Auto format from pre-commit.com hooks
-    autoupdate_commit_msg: ⬆ [pre-commit.ci] pre-commit autoupdate
+      - id: local-ruff-check
+        name: ruff check
+        entry: uv run ruff check --force-exclude --fix --exit-non-zero-on-fix
+        require_serial: true
+        language: unsupported
+        types: [python]
+
+      - id: local-ruff-format
+        name: ruff format
+        entry: uv run ruff format --force-exclude --exit-non-zero-on-format
+        require_serial: true
+        language: unsupported
+        types: [python]

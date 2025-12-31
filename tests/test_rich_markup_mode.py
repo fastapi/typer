@@ -1,5 +1,3 @@
-from typing import List
-
 import pytest
 import typer
 import typer.completion
@@ -59,7 +57,7 @@ def test_rich_markup_mode_rich():
         ),
     ],
 )
-def test_markup_mode_newline_pr815(mode: str, lines: List[str]):
+def test_markup_mode_newline_pr815(mode: str, lines: list[str]):
     app = typer.Typer(rich_markup_mode=mode)
 
     @app.command()
@@ -97,7 +95,7 @@ def test_markup_mode_newline_pr815(mode: str, lines: List[str]):
         pytest.param(None, ["First line", "", "Line 1 Line 2 Line 3", ""]),
     ],
 )
-def test_markup_mode_newline_issue447(mode: str, lines: List[str]):
+def test_markup_mode_newline_issue447(mode: str, lines: list[str]):
     app = typer.Typer(rich_markup_mode=mode)
 
     @app.command()
@@ -170,7 +168,7 @@ def test_markup_mode_newline_issue447(mode: str, lines: List[str]):
         ),
     ],
 )
-def test_markup_mode_newline_mixed(mode: str, lines: List[str]):
+def test_markup_mode_newline_mixed(mode: str, lines: list[str]):
     app = typer.Typer(rich_markup_mode=mode)
 
     @app.command()
@@ -214,7 +212,7 @@ def test_markup_mode_newline_mixed(mode: str, lines: List[str]):
         pytest.param(None, ["First line", "", "- 1 - 2 - 3", ""]),
     ],
 )
-def test_markup_mode_bullets_single_newline(mode: str, lines: List[str]):
+def test_markup_mode_bullets_single_newline(mode: str, lines: list[str]):
     app = typer.Typer(rich_markup_mode=mode)
 
     @app.command()
@@ -257,7 +255,7 @@ def test_markup_mode_bullets_single_newline(mode: str, lines: List[str]):
         (None, ["First line", "", "- 1", "", "- 2", "", "- 3", ""]),
     ],
 )
-def test_markup_mode_bullets_double_newline(mode: str, lines: List[str]):
+def test_markup_mode_bullets_double_newline(mode: str, lines: list[str]):
     app = typer.Typer(rich_markup_mode=mode)
 
     @app.command()

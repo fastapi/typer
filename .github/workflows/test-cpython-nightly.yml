@@ -47,7 +47,7 @@ jobs:
           COVERAGE_FILE: coverage/.coverage.ubuntu-cpython-main
           CONTEXT: ubuntu-cpython-main
       - name: Store coverage files
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: coverage-ubuntu-cpython-main
           path: coverage

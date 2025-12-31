@@ -5,13 +5,14 @@ import shutil
 import subprocess
 import sys
 import traceback
+from collections.abc import Sequence
 from datetime import datetime
 from enum import Enum
 from functools import update_wrapper
 from pathlib import Path
 from traceback import FrameSummary, StackSummary
 from types import TracebackType
-from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Type, Union
+from typing import Any, Callable, Optional, Union
 from uuid import UUID
 
 import click
@@ -55,7 +56,7 @@ _typer_developer_exception_attr_name = "__typer_developer_exception__"
 
 
 def except_hook(
-    exc_type: Type[BaseException], exc_value: BaseException, tb: Optional[TracebackType]
+    exc_type: type[BaseException], exc_value: BaseException, tb: Optional[TracebackType]
 ) -> None:
     exception_config: Union[DeveloperExceptionConfig, None] = getattr(
         exc_value, _typer_developer_exception_attr_name, None
@@ -82,7 +83,7 @@ def except_hook(
         console_stderr.print(rich_tb)
         return
     tb_exc = traceback.TracebackException.from_exception(exc)
-    stack: List[FrameSummary] = []
+    stack: list[FrameSummary] = []
     for frame in tb_exc.stack:
         if any(frame.filename.startswith(path) for path in internal_dir_names):
             if not exception_config.pretty_exceptions_short:
@@ -105,7 +106,7 @@ def except_hook(
     return
 
 
-def get_install_completion_arguments() -> Tuple[click.Parameter, click.Parameter]:
+def get_install_completion_arguments() -> tuple[click.Parameter, click.Parameter]:
     install_param, show_param = get_completion_inspect_parameters()
     click_install_param, _ = get_click_param(install_param)
     click_show_param, _ = get_click_param(show_param)
@@ -117,14 +118,14 @@ class Typer:
         self,
         *,
         name: Optional[str] = Default(None),
-        cls: Optional[Type[TyperGroup]] = Default(None),
+        cls: Optional[type[TyperGroup]] = Default(None),
         invoke_without_command: bool = Default(False),
         no_args_is_help: bool = Default(False),
         subcommand_metavar: Optional[str] = Default(None),
         chain: bool = Default(False),
         result_callback: Optional[Callable[..., Any]] = Default(None),
         # Command
-        context_settings: Optional[Dict[Any, Any]] = Default(None),
+        context_settings: Optional[dict[Any, Any]] = Default(None),
         callback: Optional[Callable[..., Any]] = Default(None),
         help: Optional[str] = Default(None),
         epilog: Optional[str] = Default(None),
@@ -167,21 +168,21 @@ class Typer:
             hidden=hidden,
             deprecated=deprecated,
         )
-        self.registered_groups: List[TyperInfo] = []
-        self.registered_commands: List[CommandInfo] = []
+        self.registered_groups: list[TyperInfo] = []
+        self.registered_commands: list[CommandInfo] = []
         self.registered_callback: Optional[TyperInfo] = None
 
     def callback(
         self,
         *,
-        cls: Optional[Type[TyperGroup]] = Default(None),
+        cls: Optional[type[TyperGroup]] = Default(None),
         invoke_without_command: bool = Default(False),
         no_args_is_help: bool = Default(False),
         subcommand_metavar: Optional[str] = Default(None),
         chain: bool = Default(False),
         result_callback: Optional[Callable[..., Any]] = Default(None),
         # Command
-        context_settings: Optional[Dict[Any, Any]] = Default(None),
+        context_settings: Optional[dict[Any, Any]] = Default(None),
         help: Optional[str] = Default(None),
         epilog: Optional[str] = Default(None),
         short_help: Optional[str] = Default(None),
@@ -221,8 +222,8 @@ class Typer:
         self,
         name: Optional[str] = None,
         *,
-        cls: Optional[Type[TyperCommand]] = None,
-        context_settings: Optional[Dict[Any, Any]] = None,
+        cls: Optional[type[TyperCommand]] = None,
+        context_settings: Optional[dict[Any, Any]] = None,
         help: Optional[str] = None,
         epilog: Optional[str] = None,
         short_help: Optional[str] = None,
@@ -267,14 +268,14 @@ class Typer:
         typer_instance: "Typer",
         *,
         name: Optional[str] = Default(None),
-        cls: Optional[Type[TyperGroup]] = Default(None),
+        cls: Optional[type[TyperGroup]] = Default(None),
         invoke_without_command: bool = Default(False),
         no_args_is_help: bool = Default(False),
         subcommand_metavar: Optional[str] = Default(None),
         chain: bool = Default(False),
         result_callback: Optional[Callable[..., Any]] = Default(None),
         # Command
-        context_settings: Optional[Dict[Any, Any]] = Default(None),
+        context_settings: Optional[dict[Any, Any]] = Default(None),
         callback: Optional[Callable[..., Any]] = Default(None),
         help: Optional[str] = Default(None),
         epilog: Optional[str] = Default(None),
@@ -435,7 +436,7 @@ def solve_typer_info_help(typer_info: TyperInfo) -> str:
 
 
 def solve_typer_info_defaults(typer_info: TyperInfo) -> TyperInfo:
-    values: Dict[str, Any] = {}
+    values: dict[str, Any] = {}
     for name, value in typer_info.__dict__.items():
         # Priority 1: Value was set in app.add_typer()
         if not isinstance(value, DefaultPlaceholder):
@@ -479,7 +480,7 @@ def get_group_from_info(
     assert group_info.typer_instance, (
         "A Typer instance is needed to generate a Click Group"
     )
-    commands: Dict[str, click.Command] = {}
+    commands: dict[str, click.Command] = {}
     for command_info in group_info.typer_instance.registered_commands:
         command = get_command_from_info(
             command_info=command_info,
@@ -553,7 +554,7 @@ def get_command_name(name: str) -> str:
 
 def get_params_convertors_ctx_param_name_from_function(
     callback: Optional[Callable[..., Any]],
-) -> Tuple[List[Union[click.Argument, click.Option]], Dict[str, Any], Optional[str]]:
+) -> tuple[list[Union[click.Argument, click.Option]], dict[str, Any], Optional[str]]:
     params = []
     convertors = {}
     context_param_name = None
@@ -632,7 +633,7 @@ def param_path_convertor(value: Optional[str] = None) -> Optional[Path]:
     return None
 
 
-def generate_enum_convertor(enum: Type[Enum]) -> Callable[[Any], Any]:
+def generate_enum_convertor(enum: type[Enum]) -> Callable[[Any], Any]:
     val_map = {str(val.value): val for val in enum}
 
     def convertor(value: Any) -> Any:
@@ -647,8 +648,8 @@ def generate_enum_convertor(enum: Type[Enum]) -> Callable[[Any], Any]:
 
 def generate_list_convertor(
     convertor: Optional[Callable[[Any], Any]], default_value: Optional[Any]
-) -> Callable[[Optional[Sequence[Any]]], Optional[List[Any]]]:
-    def internal_convertor(value: Optional[Sequence[Any]]) -> Optional[List[Any]]:
+) -> Callable[[Optional[Sequence[Any]]], Optional[list[Any]]]:
+    def internal_convertor(value: Optional[Sequence[Any]]) -> Optional[list[Any]]:
         if (value is None) or (default_value is None and len(value) == 0):
             return None
         return [convertor(v) if convertor else v for v in value]
@@ -658,12 +659,12 @@ def generate_list_convertor(
 
 def generate_tuple_convertor(
     types: Sequence[Any],
-) -> Callable[[Optional[Tuple[Any, ...]]], Optional[Tuple[Any, ...]]]:
+) -> Callable[[Optional[tuple[Any, ...]]], Optional[tuple[Any, ...]]]:
     convertors = [determine_type_convertor(type_) for type_ in types]
 
     def internal_convertor(
-        param_args: Optional[Tuple[Any, ...]],
-    ) -> Optional[Tuple[Any, ...]]:
+        param_args: Optional[tuple[Any, ...]],
+    ) -> Optional[tuple[Any, ...]]:
         if param_args is None:
             return None
         return tuple(
@@ -678,7 +679,7 @@ def get_callback(
     *,
     callback: Optional[Callable[..., Any]] = None,
     params: Sequence[click.Parameter] = [],
-    convertors: Optional[Dict[str, Callable[[str], Any]]] = None,
+    convertors: Optional[dict[str, Callable[[str], Any]]] = None,
     context_param_name: Optional[str] = None,
     pretty_exceptions_short: bool,
 ) -> Optional[Callable[..., Any]]:
@@ -686,7 +687,7 @@ def get_callback(
     if not callback:
         return None
     parameters = get_params_from_function(callback)
-    use_params: Dict[str, Any] = {}
+    use_params: dict[str, Any] = {}
     for param_name in parameters:
         use_params[param_name] = None
     for param in params:
@@ -812,14 +813,14 @@ def get_click_type(
 
 
 def lenient_issubclass(
-    cls: Any, class_or_tuple: Union[AnyType, Tuple[AnyType, ...]]
+    cls: Any, class_or_tuple: Union[AnyType, tuple[AnyType, ...]]
 ) -> bool:
     return isinstance(cls, type) and issubclass(cls, class_or_tuple)
 
 
 def get_click_param(
     param: ParamMeta,
-) -> Tuple[Union[click.Argument, click.Option], Any]:
+) -> tuple[Union[click.Argument, click.Option], Any]:
     # First, find out what will be:
     # * ParamInfo (ArgumentInfo or OptionInfo)
     # * default_value
@@ -862,13 +863,13 @@ def get_click_param(
             main_type = types[0]
             origin = get_origin(main_type)
         # Handle Tuples and Lists
-        if lenient_issubclass(origin, List):
+        if lenient_issubclass(origin, list):
             main_type = get_args(main_type)[0]
             assert not get_origin(main_type), (
                 "List types with complex sub-types are not currently supported"
             )
             is_list = True
-        elif lenient_issubclass(origin, Tuple):  # type: ignore
+        elif lenient_issubclass(origin, tuple):
             types = []
             for type_ in get_args(main_type):
                 assert not get_origin(type_), (
@@ -991,7 +992,7 @@ def get_param_callback(
     ctx_name = None
     click_param_name = None
     value_name = None
-    untyped_names: List[str] = []
+    untyped_names: list[str] = []
     for param_name, param_sig in parameters.items():
         if lenient_issubclass(param_sig.annotation, click.Context):
             ctx_name = param_name
@@ -1015,7 +1016,7 @@ def get_param_callback(
             )
 
     def wrapper(ctx: click.Context, param: click.Parameter, value: Any) -> Any:
-        use_params: Dict[str, Any] = {}
+        use_params: dict[str, Any] = {}
         if ctx_name:
             use_params[ctx_name] = ctx
         if click_param_name:
@@ -1047,7 +1048,7 @@ def get_param_completion(
         if lenient_issubclass(param_sig.annotation, click.Context):
             ctx_name = param_sig.name
             unassigned_params.remove(param_sig)
-        elif lenient_issubclass(origin, List):
+        elif lenient_issubclass(origin, list):
             args_name = param_sig.name
             unassigned_params.remove(param_sig)
         elif lenient_issubclass(param_sig.annotation, str):
@@ -1071,8 +1072,8 @@ def get_param_completion(
             f"Invalid autocompletion callback parameters: {show_params}"
         )
 
-    def wrapper(ctx: click.Context, args: List[str], incomplete: Optional[str]) -> Any:
-        use_params: Dict[str, Any] = {}
+    def wrapper(ctx: click.Context, args: list[str], incomplete: Optional[str]) -> Any:
+        use_params: dict[str, Any] = {}
         if ctx_name:
             use_params[ctx_name] = ctx
         if args_name:

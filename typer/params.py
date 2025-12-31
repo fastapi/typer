@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Callable, List, Optional, Type, Union, overload
+from typing import TYPE_CHECKING, Any, Callable, Optional, Union, overload
 
 import click
 
@@ -18,13 +18,13 @@ def Option(
     metavar: Optional[str] = None,
     expose_value: bool = True,
     is_eager: bool = False,
-    envvar: Optional[Union[str, List[str]]] = None,
+    envvar: Optional[Union[str, list[str]]] = None,
     # Note that shell_complete is not fully supported and will be removed in future versions
     # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Optional[
         Callable[
             [click.Context, click.Parameter, str],
-            Union[List["click.shell_completion.CompletionItem"], List[str]],
+            Union[list["click.shell_completion.CompletionItem"], list[str]],
         ]
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
@@ -53,7 +53,7 @@ def Option(
     max: Optional[Union[int, float]] = None,
     clamp: bool = False,
     # DateTime
-    formats: Optional[List[str]] = None,
+    formats: Optional[list[str]] = None,
     # File
     mode: Optional[str] = None,
     encoding: Optional[str] = None,
@@ -68,7 +68,7 @@ def Option(
     readable: bool = True,
     resolve_path: bool = False,
     allow_dash: bool = False,
-    path_type: Union[None, Type[str], Type[bytes]] = None,
+    path_type: Union[None, type[str], type[bytes]] = None,
     # Rich settings
     rich_help_panel: Union[str, None] = None,
 ) -> Any: ...
@@ -84,13 +84,13 @@ def Option(
     metavar: Optional[str] = None,
     expose_value: bool = True,
     is_eager: bool = False,
-    envvar: Optional[Union[str, List[str]]] = None,
+    envvar: Optional[Union[str, list[str]]] = None,
     # Note that shell_complete is not fully supported and will be removed in future versions
     # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Optional[
         Callable[
             [click.Context, click.Parameter, str],
-            Union[List["click.shell_completion.CompletionItem"], List[str]],
+            Union[list["click.shell_completion.CompletionItem"], list[str]],
         ]
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
@@ -119,7 +119,7 @@ def Option(
     max: Optional[Union[int, float]] = None,
     clamp: bool = False,
     # DateTime
-    formats: Optional[List[str]] = None,
+    formats: Optional[list[str]] = None,
     # File
     mode: Optional[str] = None,
     encoding: Optional[str] = None,
@@ -134,7 +134,7 @@ def Option(
     readable: bool = True,
     resolve_path: bool = False,
     allow_dash: bool = False,
-    path_type: Union[None, Type[str], Type[bytes]] = None,
+    path_type: Union[None, type[str], type[bytes]] = None,
     # Rich settings
     rich_help_panel: Union[str, None] = None,
 ) -> Any: ...
@@ -148,13 +148,13 @@ def Option(
     metavar: Optional[str] = None,
     expose_value: bool = True,
     is_eager: bool = False,
-    envvar: Optional[Union[str, List[str]]] = None,
+    envvar: Optional[Union[str, list[str]]] = None,
     # Note that shell_complete is not fully supported and will be removed in future versions
     # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Optional[
         Callable[
             [click.Context, click.Parameter, str],
-            Union[List["click.shell_completion.CompletionItem"], List[str]],
+            Union[list["click.shell_completion.CompletionItem"], list[str]],
         ]
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
@@ -184,7 +184,7 @@ def Option(
     max: Optional[Union[int, float]] = None,
     clamp: bool = False,
     # DateTime
-    formats: Optional[List[str]] = None,
+    formats: Optional[list[str]] = None,
     # File
     mode: Optional[str] = None,
     encoding: Optional[str] = None,
@@ -199,7 +199,7 @@ def Option(
     readable: bool = True,
     resolve_path: bool = False,
     allow_dash: bool = False,
-    path_type: Union[None, Type[str], Type[bytes]] = None,
+    path_type: Union[None, type[str], type[bytes]] = None,
     # Rich settings
     rich_help_panel: Union[str, None] = None,
 ) -> Any:
@@ -270,13 +270,13 @@ def Argument(
     metavar: Optional[str] = None,
     expose_value: bool = True,
     is_eager: bool = False,
-    envvar: Optional[Union[str, List[str]]] = None,
+    envvar: Optional[Union[str, list[str]]] = None,
     # Note that shell_complete is not fully supported and will be removed in future versions
     # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Optional[
         Callable[
             [click.Context, click.Parameter, str],
-            Union[List["click.shell_completion.CompletionItem"], List[str]],
+            Union[list["click.shell_completion.CompletionItem"], list[str]],
         ]
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
@@ -296,7 +296,7 @@ def Argument(
     max: Optional[Union[int, float]] = None,
     clamp: bool = False,
     # DateTime
-    formats: Optional[List[str]] = None,
+    formats: Optional[list[str]] = None,
     # File
     mode: Optional[str] = None,
     encoding: Optional[str] = None,
@@ -311,7 +311,7 @@ def Argument(
     readable: bool = True,
     resolve_path: bool = False,
     allow_dash: bool = False,
-    path_type: Union[None, Type[str], Type[bytes]] = None,
+    path_type: Union[None, type[str], type[bytes]] = None,
     # Rich settings
     rich_help_panel: Union[str, None] = None,
 ) -> Any: ...
@@ -327,13 +327,13 @@ def Argument(
     metavar: Optional[str] = None,
     expose_value: bool = True,
     is_eager: bool = False,
-    envvar: Optional[Union[str, List[str]]] = None,
+    envvar: Optional[Union[str, list[str]]] = None,
     # Note that shell_complete is not fully supported and will be removed in future versions
     # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Optional[
         Callable[
             [click.Context, click.Parameter, str],
-            Union[List["click.shell_completion.CompletionItem"], List[str]],
+            Union[list["click.shell_completion.CompletionItem"], list[str]],
         ]
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
@@ -353,7 +353,7 @@ def Argument(
     max: Optional[Union[int, float]] = None,
     clamp: bool = False,
     # DateTime
-    formats: Optional[List[str]] = None,
+    formats: Optional[list[str]] = None,
     # File
     mode: Optional[str] = None,
     encoding: Optional[str] = None,
@@ -368,7 +368,7 @@ def Argument(
     readable: bool = True,
     resolve_path: bool = False,
     allow_dash: bool = False,
-    path_type: Union[None, Type[str], Type[bytes]] = None,
+    path_type: Union[None, type[str], type[bytes]] = None,
     # Rich settings
     rich_help_panel: Union[str, None] = None,
 ) -> Any: ...
@@ -382,13 +382,13 @@ def Argument(
     metavar: Optional[str] = None,
     expose_value: bool = True,
     is_eager: bool = False,
-    envvar: Optional[Union[str, List[str]]] = None,
+    envvar: Optional[Union[str, list[str]]] = None,
     # Note that shell_complete is not fully supported and will be removed in future versions
     # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Optional[
         Callable[
             [click.Context, click.Parameter, str],
-            Union[List["click.shell_completion.CompletionItem"], List[str]],
+            Union[list["click.shell_completion.CompletionItem"], list[str]],
         ]
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
@@ -409,7 +409,7 @@ def Argument(
     max: Optional[Union[int, float]] = None,
     clamp: bool = False,
     # DateTime
-    formats: Optional[List[str]] = None,
+    formats: Optional[list[str]] = None,
     # File
     mode: Optional[str] = None,
     encoding: Optional[str] = None,
@@ -424,7 +424,7 @@ def Argument(
     readable: bool = True,
     resolve_path: bool = False,
     allow_dash: bool = False,
-    path_type: Union[None, Type[str], Type[bytes]] = None,
+    path_type: Union[None, type[str], type[bytes]] = None,
     # Rich settings
     rich_help_panel: Union[str, None] = None,
 ) -> Any:
