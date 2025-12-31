@@ -105,21 +105,21 @@ def test_make_rich_text_with_ansi_escape_sequences():
     from typer.rich_utils import Text, _make_rich_text
 
     ansi_text = "This is \x1b[4munderlined\x1b[0m text"
-    result = _make_rich_text(text=ansi_text, markup_mode=None)
+    result = _make_rich_text(text=ansi_text, markup_mode="rich")
 
     assert isinstance(result, Text)
     assert "\x1b[" not in result.plain
     assert "underlined" in result.plain
 
     mixed_text = "Start \x1b[31mred\x1b[0m middle \x1b[32mgreen\x1b[0m end"
-    result = _make_rich_text(text=mixed_text, markup_mode=None)
+    result = _make_rich_text(text=mixed_text, markup_mode="rich")
     assert isinstance(result, Text)
     assert "\x1b[" not in result.plain
     assert "red" in result.plain
     assert "green" in result.plain
 
     fake_ansi = "This contains \x1b[ but not a complete sequence"
-    result = _make_rich_text(text=fake_ansi, markup_mode=None)
+    result = _make_rich_text(text=fake_ansi, markup_mode="rich")
     assert isinstance(result, Text)
     assert "\x1b[" not in result.plain
     assert "This contains " in result.plain
