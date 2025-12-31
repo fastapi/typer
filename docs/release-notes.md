@@ -4,6 +4,7 @@
 
 ### Internal
 
+* ⬆ Bump actions/download-artifact from 6 to 7. PR [#1444](https://github.com/fastapi/typer/pull/1444) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ruff from 0.14.8 to 0.14.10. PR [#1449](https://github.com/fastapi/typer/pull/1449) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump mkdocs-material from 9.7.0 to 9.7.1. PR [#1446](https://github.com/fastapi/typer/pull/1446) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump actions/upload-artifact from 5 to 6. PR [#1443](https://github.com/fastapi/typer/pull/1443) by [@dependabot[bot]](https://github.com/apps/dependabot).
