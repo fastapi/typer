@@ -20,9 +20,9 @@ If you already have a favorite way of creating Python packages, feel free to ski
 
 ## Prerequisites
 
-For this guide we'll use <a href="https://python-poetry.org/" class="external-link" target="_blank">Poetry</a>.
+For this guide we'll use <a href="https://docs.astral.sh/uv/" class="external-link" target="_blank">uv</a>.
 
-Poetry's docs are great, so go ahead, check them and install it.
+uv's docs are great, so go ahead, check them and install it.
 
 ## Create a project
 
@@ -32,14 +32,14 @@ To make sure your package doesn't collide with the package created by someone el
 
 So, if your name is Rick, we'll call it `rick-portal-gun`.
 
-Create a project with Poetry:
+Create a project with uv:
 
 <div class="termy">
 
 ```console
-$ poetry new rick-portal-gun
+$ uv init --package rick-portal-gun
 
-Created package rick_portal_gun in rick-portal-gun
+Initialized project `rick-portal-gun` at `/git/rick-portal-gun`
 
 // Enter the new project directory
 cd ./rick-portal-gun
@@ -54,34 +54,30 @@ Add `typer` to your dependencies:
 <div class="termy">
 
 ```console
-$ poetry add typer
+$ uv add typer
 
 // It creates a virtual environment for your project
-Creating virtualenv rick-portal-gun-w31dJa0b-py3.10 in /home/rick/.cache/pypoetry/virtualenvs
-Using version ^0.12.0 for typer
+Using CPython 3.14.0 interpreter at: /location/of/python/
+Creating virtual environment at: .venv
 
-Updating dependencies
-Resolving dependencies... (1.2s)
+Resolved 10 packages in 21ms
+      Built rick-portal-gun @ file:/git/rick-portal-gun
+Prepared 1 package in 19ms
+Installed 10 packages in 34ms
+ + click==8.3.1
+ + colorama==0.4.6
+ + markdown-it-py==4.0.0
+ + mdurl==0.1.2
+ + pygments==2.19.2
+ + rich==14.2.0
+ + rick-portal-gun==0.1.0 (from file:/git/rick-portal-gun)
+ + shellingham==1.5.4
+ + typer==0.21.0
+ + typing-extensions==4.15.0
 
----> 100%
-
-Package operations: 8 installs, 0 updates, 0 removals
-
-  - Installing mdurl (0.1.2)
-  - Installing markdown-it-py (3.0.0)
-  - Installing pygments (2.17.2)
-  - Installing click (8.1.7)
-  - Installing rich (13.7.1)
-  - Installing shellingham (1.5.4)
-  - Installing typing-extensions (4.11.0)
-  - Installing typer (0.12.3)
-
-Writing lock file
 
 // Activate that new virtual environment
-$ poetry shell
-
-Spawning shell within /home/rick/.cache/pypoetry/virtualenvs/rick-portal-gun-w31dJa0b-py3.10
+$ source .venv/bin/activate
 
 // Open an editor using this new environment, for example VS Code
 $ code ./
@@ -93,20 +89,19 @@ You can see that you have a generated project structure that looks like:
 
 ```
 .
-├── poetry.lock
 ├── pyproject.toml
 ├── README.md
-├── rick_portal_gun
-│   └── __init__.py
-└── tests
-    └── __init__.py
+├── src
+│   └── rick_portal_gun
+│     └── __init__.py
+└── uv.lock
 ```
 
 ## Create your app
 
 Now let's create an extremely simple **Typer** app.
 
-Create a file `rick_portal_gun/main.py` with:
+Create a file `src/rick_portal_gun/main.py` with:
 
 ```Python
 import typer
@@ -160,26 +155,26 @@ We are creating a Python package that can be installed with `pip install`.
 
 But we want it to provide a CLI program that can be executed in the shell.
 
-To do that, we add a configuration to the `pyproject.toml` in the section `[tool.poetry.scripts]`:
+To do that, we add a configuration to the `pyproject.toml` in the section `[project.scripts]`:
 
-```TOML hl_lines="8 9"
-[tool.poetry]
+```TOML hl_lines="11 12"
+[project]
 name = "rick-portal-gun"
 version = "0.1.0"
-description = ""
-authors = ["Rick Sanchez <rick@example.com>"]
+description = "Add your description here"
 readme = "README.md"
+authors = ["Rick Sanchez <rick@example.com>"]
+requires-python = ">=3.14"
+dependencies = [
+    "typer>=0.21.0",
+]
 
-[tool.poetry.scripts]
+[project.scripts]
 rick-portal-gun = "rick_portal_gun.main:app"
 
-[tool.poetry.dependencies]
-python = "^3.10"
-typer = "^0.12.0"
-
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["uv_build>=0.8.14,<0.9.0"]
+build-backend = "uv_build"
 ```
 
 Here's what that line means:
@@ -222,20 +217,22 @@ You can now install it:
 <div class="termy">
 
 ```console
-$ poetry install
+$ uv sync
 
-Installing dependencies from lock file
+Resolved 10 packages in 1ms
+      Built rick-portal-gun @ file:/git/rick-portal-gun
+Prepared 1 package in 18ms
+Uninstalled 1 package in 1ms
+Installed 1 package in 13ms
+ ~ rick-portal-gun==0.1.0 (from file:/git/rick-portal-gun)
 
-No dependencies to install or update
-
-  - Installing the current project: rick-portal-gun (0.1.0)
 ```
 
 </div>
 
 ## Try your CLI program
 
-Your package is installed in the environment created by Poetry, but you can already use it.
+Your package is installed in the environment created by uv, but you can already use it.
 
 <div class="termy">
 
@@ -244,7 +241,7 @@ Your package is installed in the environment created by Poetry, but you can alre
 $ which rick-portal-gun
 
 // You get the one from your environment
-/home/rick/.cache/pypoetry/virtualenvs/rick-portal-gun-w31dJa0b-py3.10/bin/rick-portal-gun
+/git/rick-portal-gun/.venv/bin/rick-portal-gun
 
 // Try it
 $ rick-portal-gun --help
@@ -261,8 +258,8 @@ Options:
   --help                Show this message and exit.
 
 Commands:
-  load   Load the portal gun
   shoot  Shoot the portal gun
+  load   Load the portal gun
 ```
 
 </div>
@@ -271,18 +268,17 @@ Commands:
 
 Python packages have a standard format called a "wheel". It's a file that ends in `.whl`.
 
-You can create a wheel with Poetry:
+You can create a wheel with uv:
 
 <div class="termy">
 
 ```console
-$ poetry build
+$ uv build
 
-Building rick-portal-gun (0.1.0)
- - Building sdist
- - Built rick-portal-gun-0.1.0.tar.gz
- - Building wheel
- - Built rick_portal_gun-0.1.0-py3-none-any.whl
+Building source distribution (uv build backend)...
+Building wheel from source distribution (uv build backend)...
+Successfully built dist\rick_portal_gun-0.1.0.tar.gz
+Successfully built dist\rick_portal_gun-0.1.0-py3-none-any.whl
 ```
 
 </div>
@@ -419,15 +415,14 @@ The file would live right beside `__init__.py`:
 
 ``` hl_lines="7"
 .
-├── poetry.lock
+├── uv.lock
 ├── pyproject.toml
 ├── README.md
 ├── rick_portal_gun
 │   ├── __init__.py
 │   ├── __main__.py
 │   └── main.py
-└── tests
-    └── __init__.py
+└── uv.lock
 ```
 
 No other file has to import it, you don't have to reference it in your `pyproject.toml` or anything else, it just works by default, as it is standard Python behavior.
@@ -478,7 +473,7 @@ See the `__main__.py` in the help instead of `rick-portal-gun`? We'll fix that n
 We are setting the program name in the file `pyproject.toml` in the line like:
 
 ```TOML
-[tool.poetry.scripts]
+[project.scripts]
 rick-portal-gun = "rick_portal_gun.main:app"
 ```
 
@@ -561,7 +556,7 @@ Let's say your new API token is:
 pypi-wubalubadubdub-deadbeef1234
 ```
 
-Now configure Poetry to use this token with the command `poetry config pypi-token.pypi`:
+Now configure uv to use this token with the command `poetry config pypi-token.pypi`:
 
 <div class="termy">
 
