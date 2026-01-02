@@ -6,18 +6,14 @@ First, you might want to see the basic ways to [help Typer and get help](help-ty
 
 If you already cloned the <a href="https://github.com/fastapi/typer" class="external-link" target="_blank">typer repository</a> and you want to deep dive in the code, here are some guidelines to set up your environment.
 
-### Virtual Environment
+### Install Requirements Using `uv`
 
-Follow the instructions to create and activate a [virtual environment](virtual-environments.md){.internal-link target=_blank} for the internal code of `typer`.
-
-### Install Requirements Using `pip`
-
-After activating the environment, install the required packages:
+Create a virtual environment and install the required packages in one command:
 
 <div class="termy">
 
 ```console
-$ pip install -r requirements.txt
+$ uv sync
 
 ---> 100%
 ```

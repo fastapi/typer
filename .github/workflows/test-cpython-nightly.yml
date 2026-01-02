@@ -5,6 +5,9 @@ on:
     - cron: "0 0 * * *"
   workflow_dispatch:
 
+env:
+  UV_NO_SYNC: true
+
 jobs:
   test-latest-python:
     runs-on: ubuntu-latest
@@ -26,23 +29,18 @@ jobs:
       - name: Setup uv
         uses: astral-sh/setup-uv@v7
         with:
-          version: "0.4.15"
           enable-cache: true
           cache-dependency-glob: |
-            requirements**.txt
             pyproject.toml
-      - name: Create venv with CPython
-        run: uv venv --python ./.cpython/python .venv
+            uv.lock
       - name: Install Dependencies
-        run: uv pip install -r requirements-tests.txt
-      - name: Activate venv
-        run: echo "$PWD/.venv/bin" >> $GITHUB_PATH
+        run: uv sync --locked --no-dev --group tests --python ./.cpython/python
       - name: Lint
-        run: bash scripts/lint.sh
+        run: uv run bash scripts/lint.sh
       - run: mkdir coverage
-      - run: bash ./scripts/test-files.sh
+      - run: uv run bash scripts/test-files.sh
       - name: Test
-        run: bash scripts/test.sh
+        run: uv run bash scripts/test.sh
         env:
           COVERAGE_FILE: coverage/.coverage.ubuntu-cpython-main
           CONTEXT: ubuntu-cpython-main
