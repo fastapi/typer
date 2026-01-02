@@ -157,7 +157,7 @@ But we want it to provide a CLI program that can be executed in the shell.
 
 To do that, we add a configuration to the `pyproject.toml` in the section `[project.scripts]`:
 
-```TOML hl_lines="11 12"
+```TOML hl_lines="12 13"
 [project]
 name = "rick-portal-gun"
 version = "0.1.0"
