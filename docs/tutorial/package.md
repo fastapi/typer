@@ -415,7 +415,6 @@ The file would live right beside `__init__.py`:
 
 ``` hl_lines="7"
 .
-├── uv.lock
 ├── pyproject.toml
 ├── README.md
 ├── rick_portal_gun
