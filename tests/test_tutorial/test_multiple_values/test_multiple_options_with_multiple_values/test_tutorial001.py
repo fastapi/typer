@@ -1,31 +1,45 @@
+import importlib
 import subprocess
+import sys
+from types import ModuleType
 
 from typer.testing import CliRunner
 
-from docs_src.multiple_values.multiple_options_with_multiple_values import (
-    tutorial001 as mod,
-)
+from ....utils import needs_py310
 
 runner = CliRunner()
-app = mod.app
+
+@pytest.fixture(
+    name="mod",
+    params=[
+        pytest.param("tutorial001_py39"),
+        pytest.param("tutorial001_py310", marks=needs_py310),
+        pytest.param("tutorial001_an_py39"),
+        pytest.param("tutorial001_an_py310", marks=needs_py310),
+    ],
+)
+def get_mod(request: pytest.FixtureRequest) -> ModuleType:
+    module_name = f"docs_src.multiple_values.multiple_options_with_multiple_values.{request.param}"
+    mod = importlib.import_module(module_name)
+    return mod
 
 
-def test_main():
-    result = runner.invoke(app)
+def test_main(mod: ModuleType):
+    result = runner.invoke(mod.app)
     assert result.exit_code == 0
     assert "Congratulations, you're debt-free!" in result.output
 
 
-def test_borrow_1():
-    result = runner.invoke(app, ["--borrow", "2.5", "Mark"])
+def test_borrow_1(mod: ModuleType):
+    result = runner.invoke(mod.app, ["--borrow", "2.5", "Mark"])
     assert result.exit_code == 0
     assert "Borrowed 2.50 from Mark" in result.output
     assert "Total borrowed: 2.50" in result.output
 
 
-def test_borrow_many():
+def test_borrow_many(mod: ModuleType):
     result = runner.invoke(
-        app,
+        mod.app,
         [
             "--borrow",
             "2.5",
@@ -45,8 +59,8 @@ def test_borrow_many():
     assert "Total borrowed: 9.50" in result.output
 
 
-def test_invalid_borrow():
-    result = runner.invoke(app, ["--borrow", "2.5"])
+def test_invalid_borrow(mod: ModuleType):
+    result = runner.invoke(mod.app, ["--borrow", "2.5"])
     assert result.exit_code != 0
     # TODO: when deprecating Click 7, remove second option
 
@@ -56,9 +70,9 @@ def test_invalid_borrow():
     )
 
 
-def test_script():
+def test_script(mod: ModuleType):
     result = subprocess.run(
-        ["coverage", "run", mod.__file__, "--help"],
+        [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
         capture_output=True,
         encoding="utf-8",
     )

@@ -2,11 +2,11 @@ For when simple doesn't quite cut it, you may also declare a *CLI option* that t
 
 The same rules apply for the number of values for each use and their types; the types may be anything you want, but there must be a fixed number of values.
 
-For this, we use the standard Python `typing.List` and declare its internal type to be a `typing.Tuple`:
+For this, we use the standard Python `list` and declare it as a list of `tuple`:
 
-{* docs_src/multiple_values/multiple_options_with_multiple_values/tutorial001_an.py hl[1,10] *}
+{* docs_src/multiple_values/multiple_options_with_multiple_values/tutorial001_an_py310.py hl[1,10] *}
 
-Just as before, the types internal to the `Tuple` define the type of each value in the tuple.
+Just as before, the types internal to the `tuple` define the type of each value in the tuple.
 
 ## Check it
 
