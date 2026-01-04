@@ -9,6 +9,7 @@ from ....utils import needs_py310
 
 runner = CliRunner()
 
+
 @pytest.fixture(
     name="mod",
     params=[
