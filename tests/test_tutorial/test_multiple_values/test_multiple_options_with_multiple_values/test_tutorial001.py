@@ -3,6 +3,7 @@ import subprocess
 import sys
 from types import ModuleType
 
+import pytest
 from typer.testing import CliRunner
 
 from ....utils import needs_py310
