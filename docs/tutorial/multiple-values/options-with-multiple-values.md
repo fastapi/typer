@@ -4,16 +4,16 @@ You can also declare a *CLI option* that takes several values of different types
 
 You can set the number of values and types to anything you want, but it has to be a fixed number of values.
 
-For this, use the standard Python `typing.Tuple`:
+For this, use the standard Python `tuple`:
 
-{* docs_src/multiple_values/options_with_multiple_values/tutorial001_an.py hl[1,10] *}
+{* docs_src/multiple_values/options_with_multiple_values/tutorial001_an_py39.py hl[9] *}
 
 Each of the internal types defines the type of each value in the tuple.
 
 So:
 
 ```Python
-user: Tuple[str, int, bool]
+user: tuple[str, int, bool]
 ```
 
 means that the parameter `user` is a tuple of 3 values.

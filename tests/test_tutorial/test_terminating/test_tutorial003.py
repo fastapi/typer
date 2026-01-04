@@ -6,12 +6,10 @@ import typer
 import typer.core
 from typer.testing import CliRunner
 
-from docs_src.terminating import tutorial003 as mod
+from docs_src.terminating import tutorial003_py39 as mod
 
 runner = CliRunner()
-
-app = typer.Typer()
-app.command()(mod.main)
+app = mod.app
 
 
 def test_cli():
