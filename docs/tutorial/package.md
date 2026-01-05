@@ -488,7 +488,7 @@ But you can still support `python -m` for the cases where it's useful.
 
 You can publish that new package to <a href="https://pypi.org/" class="external-link" target="_blank">PyPI</a> to make it public, so others can install it easily.
 
-So, go ahead and create an account there (it's free). If you just want to experiment, you can use https://test.pypi.org/ instead.
+So, go ahead and create an account there (it's free).
 
 ### PyPI API token
 
@@ -524,7 +524,6 @@ You could build the package (as we did above) and then publish later, or you cou
 <div class="termy">
 
 ```console
-// Add --publish-url https://test.pypi.org/legacy/ if you want to publish on PyPI's test server instead.
 $ uv publish
 
 Publishing 2 files https://upload.pypi.org/legacy/
@@ -564,7 +563,6 @@ And now install it again, but this time using just the name, so that `pip` pulls
 <div class="termy">
 
 ```console
-// Add --index-url https://test.pypi.org/simple if you're downloading from PyPI's test server
 $ pip install --user rick-portal-gun
 
 // Notice that it says "Downloading" 🚀
