@@ -901,7 +901,7 @@ def get_click_param(
     convertor = determine_type_convertor(main_type)
     if is_list:
         if list_origin_is_tuple:
-            converter = generate_tuple_convertor(get_args(main_type))
+            convertor = generate_tuple_convertor(get_args(main_type))
         convertor = generate_list_convertor(
             convertor=convertor, default_value=default_value
         )
