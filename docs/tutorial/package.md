@@ -677,7 +677,7 @@ This is a very simple guide. You could add many more steps.
 
 For example, you should use <a href="https://git-scm.com/" class="external-link" target="_blank">Git</a>, the version control system, to save your code.
 
-You can add a lot of extra metadata to your `pyproject.toml`, check the docs for <a href="https://python-poetry.org/docs/libraries/" class="external-link" target="_blank">Poetry: Libraries</a>.
+You can add a lot of extra metadata to your `pyproject.toml`, check the docs for <a href="https://docs.astral.sh/uv/reference/settings/#no-build-isolation" class="external-link" target="_blank">Poetry metadata</a> settings.
 
 You could use <a href="https://github.com/pipxproject/pipx" class="external-link" target="_blank">`pipx`</a> to manage your installed CLI Python programs in isolated environments.
 
