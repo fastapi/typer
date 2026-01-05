@@ -6,6 +6,12 @@ resolution-markers = [
     "python_full_version < '3.10'",
 ]
 
+[manifest]
+members = [
+    "rick-portal-gun",
+    "typer",
+]
+
 [[package]]
 name = "click"
 version = "8.1.8"
@@ -106,6 +112,17 @@ sdist = { url = "https://files.pythonhosted.org/packages/fb/d2/8920e102050a0de7b
 wheels = [
     { url = "https://files.pythonhosted.org/packages/25/7a/b0178788f8dc6cafce37a212c99565fa1fe7872c70c6c9c1e1a372d9d88f/rich-14.2.0-py3-none-any.whl", hash = "sha256:76bc51fe2e57d2b1be1f96c524b890b816e334ab4c1e45888799bfaab0021edd", size = 243393, upload-time = "2025-10-09T14:16:51.245Z" },
 ]
+
+[[package]]
+name = "rick-portal-gun"
+version = "0.1.0"
+source = { editable = "rick-portal-gun" }
+dependencies = [
+    { name = "typer" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "typer", editable = "." }]
 
 [[package]]
 name = "shellingham"
