@@ -866,16 +866,18 @@ def get_click_param(
         if lenient_issubclass(origin, list):
             main_type = get_args(main_type)[0]
             list_origin = get_origin(main_type)
-            is_tuple = lenient_issubclass(list_origin, tuple)
-            assert is_tuple or not list_origin, (
-                "List types with complex sub-types are not currently supported"
-            )
+            list_origin_is_tuple = lenient_issubclass(list_origin, tuple)
+            if not list_origin_is_tuple:
+                assert not list_origin, (
+                    "List types with complex sub-types are not currently supported"
+                )
             is_list = True
-            if is_tuple:
+            if list_origin_is_tuple:
                 types = []
-                for type_ in main_type.__args__:
-                    assert not getattr(type_, "__origin__", None), (
-                        "List[Tuple] types with complex Tuple sub-types are not currently supported"
+                for type_ in get_args(main_type):
+                    assert not get_origin(type_), (
+                        "List[Tuple] types with complex Tuple sub-types are not "
+                        "currently supported"
                     )
                     types.append(
                         get_click_type(annotation=type_, parameter_info=parameter_info)
@@ -897,12 +899,14 @@ def get_click_param(
             annotation=main_type, parameter_info=parameter_info
         )
     convertor = determine_type_convertor(main_type)
-    if is_tuple:
-        convertor = generate_tuple_convertor(get_args(main_type))
     if is_list:
+        if list_origin_is_tuple:
+            converter = generate_tuple_convertor(get_args(main_type))
         convertor = generate_list_convertor(
             convertor=convertor, default_value=default_value
         )
+    if is_tuple:
+        convertor = generate_tuple_convertor(get_args(main_type))
     if isinstance(parameter_info, OptionInfo):
         if main_type is bool:
             is_flag = True
