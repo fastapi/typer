@@ -519,8 +519,6 @@ $ export UV_PUBLISH_TOKEN=pypi-wubalubadubdub-deadbeef1234
 
 Now you can publish your package.
 
-You could build the package (as we did above) and then publish later, or you could tell uv to build it before publishing in one go:
-
 <div class="termy">
 
 ```console
