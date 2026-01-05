@@ -2054,17 +2054,6 @@ wheels = [
 ]
 
 [[package]]
-name = "rick-portal-gun"
-version = "0.1.0"
-source = { editable = "rick-portal-gun" }
-dependencies = [
-    { name = "typer" },
-]
-
-[package.metadata]
-requires-dist = [{ name = "typer", editable = "." }]
-
-[[package]]
 name = "ruff"
 version = "0.14.10"
 source = { registry = "https://pypi.org/simple" }

@@ -256,8 +256,3 @@ banned-module-level-imports = ["typer.rich_utils"]
 Use 'typer._completion_shared._get_shell_name' instead of using \
 'shellingham.detect_shell' directly.
 """
-
-[tool.uv.workspace]
-members = [
-    "rick-portal-gun",
-]
