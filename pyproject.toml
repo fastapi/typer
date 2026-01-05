@@ -240,8 +240,8 @@ ignore = [
 "docs_src/using_click/tutorial001_py39.py" = ["B007"]
 # No need to worry about rich imports in docs
 "docs_src/*" = ["TID"]
-# Python 3.9 files use old typing format
-"docs_src/**/*_py39.py" = ["UP006", "UP035"]
+# Python 3.9 files use old typing format for list, tuple
+"docs_src/multiple_values/**/*_py39.py" = ["UP006", "UP035"]
 
 [tool.ruff.lint.isort]
 known-third-party = ["typer", "click"]
