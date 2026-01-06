@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Fixes
+
+* 🐛 Fix escaping in help text when `rich` is installed but not used. PR [#1089](https://github.com/fastapi/typer/pull/1089) by [@svlandeg](https://github.com/svlandeg).
+
 ### Internal
 
 * ⬆️  Migrate to uv. PR [#1472](https://github.com/fastapi/typer/pull/1472) by [@DoctorJohn](https://github.com/DoctorJohn).
