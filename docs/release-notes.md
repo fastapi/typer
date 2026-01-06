@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.21.1
+
 ### Fixes
 
 * 🐛 Fix escaping in help text when `rich` is installed but not used. PR [#1089](https://github.com/fastapi/typer/pull/1089) by [@svlandeg](https://github.com/svlandeg).
