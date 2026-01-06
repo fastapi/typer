@@ -2,7 +2,7 @@ import importlib.util
 import os
 import re
 import sys
-from typing import Any
+from typing import Any, Callable, cast
 
 import click
 import click.parser
@@ -17,12 +17,15 @@ from ._completion_shared import (
 )
 
 try:
-    from click.shell_completion import split_arg_string as click_split_arg_string
+    from click.shell_completion import split_arg_string as _split_arg_string
 except ImportError:  # pragma: no cover
-    # TODO: when removing support for Click < 8.2, remove this import
+    # TODO: when removing support for Click < 8.2, remove this import & the cast
     from click.parser import (  # type: ignore[no-redef]
-        split_arg_string as click_split_arg_string,
+        split_arg_string as _split_arg_string,
     )
+
+# We need this cast to make ty happy
+click_split_arg_string = cast(Callable[[str], list[str]], _split_arg_string)
 
 
 def _sanitize_help_text(text: str) -> str:
