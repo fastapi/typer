@@ -11,7 +11,6 @@ from click import Command, Group, Option
 
 from . import __version__
 from .core import HAS_RICH, MARKUP_MODE_KEY
-from .models import DefaultPlaceholder
 
 default_app_names = ("app", "cli", "main")
 default_func_names = ("main", "cli", "app")

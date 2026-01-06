@@ -24,7 +24,6 @@ import click.types
 import click.utils
 
 from ._typing import Literal
-from .models import DefaultPlaceholder
 
 MarkupMode = Literal["markdown", "rich", None]
 MARKUP_MODE_KEY = "TYPER_RICH_MARKUP_MODE"
