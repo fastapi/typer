@@ -72,6 +72,7 @@ def except_hook(
         _original_except_hook(exc_type, exc_value, tb)
         return
     typer_path = os.path.dirname(__file__)
+    assert click.__file__ is not None
     click_path = os.path.dirname(click.__file__)
     internal_dir_names = [typer_path, click_path]
     exc = exc_value
