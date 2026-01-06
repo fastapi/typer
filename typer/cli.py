@@ -57,9 +57,9 @@ class TyperCLIGroup(typer.core.TyperGroup):
         self.maybe_add_run(ctx)
         return super().list_commands(ctx)
 
-    def get_command(self, ctx: click.Context, name: str) -> Optional[Command]:
+    def get_command(self, ctx: click.Context, cmd_name: str) -> Optional[Command]:
         self.maybe_add_run(ctx)
-        return super().get_command(ctx, name)
+        return super().get_command(ctx, cmd_name)
 
     def invoke(self, ctx: click.Context) -> Any:
         self.maybe_add_run(ctx)
