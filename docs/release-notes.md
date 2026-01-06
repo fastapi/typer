@@ -4,6 +4,7 @@
 
 ### Internal
 
+* ⬆️  Migrate to uv. PR [#1472](https://github.com/fastapi/typer/pull/1472) by [@DoctorJohn](https://github.com/DoctorJohn).
 * ⬆ Bump mypy from 1.18.2 to 1.19.1. PR [#1469](https://github.com/fastapi/typer/pull/1469) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump actions/checkout from 5 to 6. PR [#1456](https://github.com/fastapi/typer/pull/1456) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump actions/download-artifact from 6 to 7. PR [#1444](https://github.com/fastapi/typer/pull/1444) by [@dependabot[bot]](https://github.com/apps/dependabot).
