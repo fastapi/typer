@@ -740,10 +740,7 @@ class TyperCommand(click.core.Command):
             if not hasattr(ctx, "obj") or ctx.obj is None:
                 ctx.ensure_object(dict)
             if isinstance(ctx.obj, dict):
-                if isinstance(self.rich_markup_mode, DefaultPlaceholder):
-                    ctx.obj[MARKUP_MODE_KEY] = self.rich_markup_mode.value
-                else:
-                    ctx.obj[MARKUP_MODE_KEY] = self.rich_markup_mode
+                ctx.obj[MARKUP_MODE_KEY] = self.rich_markup_mode
             return super().format_help(ctx, formatter)
         from . import rich_utils
 
