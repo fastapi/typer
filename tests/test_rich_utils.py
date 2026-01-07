@@ -128,8 +128,7 @@ def test_rich_help_metavar():
     assert "ARG1INTEGER" in out_nospace
     assert "ARG3INTEGER" in out_nospace
     assert "[ARG4]INTEGER" in out_nospace
-    assert "meta7INTEGER" in out_nospace
-    # assert "[meta7]INTEGER" in out_nospace
+    assert "[meta7]INTEGER" in out_nospace
     assert "ARG8INTEGER" in out_nospace
     assert "arg9INTEGER" in out_nospace
 
