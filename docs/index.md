@@ -125,7 +125,7 @@ This is the simplest use case, not even using Typer internally, but it can alrea
 
 ## Use Typer in your code
 
-Now let's start using Typer in your own code, update `main.py` with:
+Now let's start using Typer in your own code. update `main.py` with:
 
 ```Python
 import typer
