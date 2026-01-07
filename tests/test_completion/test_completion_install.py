@@ -7,7 +7,7 @@ from unittest import mock
 import shellingham
 from typer.testing import CliRunner
 
-from docs_src.typer_app import tutorial001 as mod
+from docs_src.typer_app import tutorial001_py39 as mod
 
 from ..utils import requires_completion_permission
 
@@ -54,7 +54,7 @@ def test_completion_install_bash():
     )
     new_text = bash_completion_path.read_text()
     bash_completion_path.write_text(text)
-    install_source = Path(".bash_completions/tutorial001.py.sh")
+    install_source = Path(".bash_completions/tutorial001_py39.py.sh")
     assert str(install_source) not in text
     assert str(install_source) in new_text
     assert "completion installed in" in result.stdout
@@ -64,7 +64,7 @@ def test_completion_install_bash():
     install_content = install_source_path.read_text()
     install_source_path.unlink()
     assert (
-        "complete -o default -F _tutorial001py_completion tutorial001.py"
+        "complete -o default -F _tutorial001_py39py_completion tutorial001_py39.py"
         in install_content
     )
 
@@ -100,11 +100,13 @@ def test_completion_install_zsh():
     assert zfunc_fragment in new_text
     assert "completion installed in" in result.stdout
     assert "Completion will take effect once you restart the terminal" in result.stdout
-    install_source_path = Path.home() / ".zfunc/_tutorial001.py"
+    install_source_path = Path.home() / ".zfunc/_tutorial001_py39.py"
     assert install_source_path.is_file()
     install_content = install_source_path.read_text()
     install_source_path.unlink()
-    assert "compdef _tutorial001py_completion tutorial001.py" in install_content
+    assert (
+        "compdef _tutorial001_py39py_completion tutorial001_py39.py" in install_content
+    )
 
 
 @requires_completion_permission
@@ -132,7 +134,7 @@ def test_completion_install_fish():
     )
     new_text = completion_path.read_text()
     completion_path.unlink()
-    assert "complete --command tutorial001.py" in new_text
+    assert "complete --command tutorial001_py39.py" in new_text
     assert "completion installed in" in result.stdout
     assert "Completion will take effect once you restart the terminal" in result.stdout
 

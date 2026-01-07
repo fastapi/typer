@@ -8,7 +8,7 @@ In those cases you can use a *CLI parameter* callback function.
 
 For example, you could do some validation before the rest of the code is executed.
 
-{* docs_src/options/callback/tutorial001_an.py hl[9:12,16] *}
+{* docs_src/options/callback/tutorial001_an_py310.py hl[8:11,15] *}
 
 Here you pass a function to `typer.Option()` or `typer.Argument()` with the keyword argument `callback`.
 
@@ -94,7 +94,7 @@ But the main **important point** is that it is all based on values printed by yo
 
 Let's say that when the callback is running, we want to show a message saying that it's validating the name:
 
-{* docs_src/options/callback/tutorial002_an.py hl[10] *}
+{* docs_src/options/callback/tutorial002_an_py310.py hl[9] *}
 
 And because the callback will be called when the shell calls your program asking for completion, that message `"Validating name"` will be printed and it will break completion.
 
@@ -129,7 +129,7 @@ But you can access the context by declaring a function parameter of type `typer.
 
 The "context" has some additional data about the current execution of your program:
 
-{* docs_src/options/callback/tutorial003_an.py hl[9:11] *}
+{* docs_src/options/callback/tutorial003_an_py310.py hl[8:10] *}
 
 The `ctx.resilient_parsing` will be `True` when handling completion, so you can just return without printing anything else.
 
@@ -161,7 +161,7 @@ Hello Camila
 
 The same way you can access the `typer.Context` by declaring a function parameter with its value, you can declare another function parameter with type `typer.CallbackParam` to get the specific Click `Parameter` object.
 
-{* docs_src/options/callback/tutorial004_an.py hl[9,12] *}
+{* docs_src/options/callback/tutorial004_an_py310.py hl[8,11] *}
 
 It's probably not very common, but you could do it if you need it.
 

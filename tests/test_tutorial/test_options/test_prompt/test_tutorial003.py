@@ -1,45 +1,58 @@
+import importlib
 import subprocess
 import sys
+from types import ModuleType
 
+import pytest
 from typer.testing import CliRunner
 
-from docs_src.options.prompt import tutorial003 as mod
-
 runner = CliRunner()
-app = mod.app
 
 
-def test_prompt():
-    result = runner.invoke(app, input="Old Project\nOld Project\n")
+@pytest.fixture(
+    name="mod",
+    params=[
+        pytest.param("tutorial003_py39"),
+        pytest.param("tutorial003_an_py39"),
+    ],
+)
+def get_mod(request: pytest.FixtureRequest) -> ModuleType:
+    module_name = f"docs_src.options.prompt.{request.param}"
+    mod = importlib.import_module(module_name)
+    return mod
+
+
+def test_prompt(mod: ModuleType):
+    result = runner.invoke(mod.app, input="Old Project\nOld Project\n")
     assert result.exit_code == 0
     assert "Deleting project Old Project" in result.output
 
 
-def test_prompt_not_equal():
+def test_prompt_not_equal(mod: ModuleType):
     result = runner.invoke(
-        app, input="Old Project\nNew Spice\nOld Project\nOld Project\n"
+        mod.app, input="Old Project\nNew Spice\nOld Project\nOld Project\n"
     )
     assert result.exit_code == 0
     assert "Error: The two entered values do not match" in result.output
     assert "Deleting project Old Project" in result.output
 
 
-def test_option():
-    result = runner.invoke(app, ["--project-name", "Old Project"])
+def test_option(mod: ModuleType):
+    result = runner.invoke(mod.app, ["--project-name", "Old Project"])
     assert result.exit_code == 0
     assert "Deleting project Old Project" in result.output
     assert "Project name: " not in result.output
 
 
-def test_help():
-    result = runner.invoke(app, ["--help"])
+def test_help(mod: ModuleType):
+    result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
     assert "--project-name" in result.output
     assert "TEXT" in result.output
     assert "[required]" in result.output
 
 
-def test_script():
+def test_script(mod: ModuleType):
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
         capture_output=True,

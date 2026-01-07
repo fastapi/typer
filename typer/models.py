@@ -1,14 +1,11 @@
 import inspect
 import io
+from collections.abc import Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    Dict,
-    List,
     Optional,
-    Sequence,
-    Type,
     TypeVar,
     Union,
 )
@@ -23,7 +20,7 @@ if TYPE_CHECKING:  # pragma: no cover
 
 NoneType = type(None)
 
-AnyType = Type[Any]
+AnyType = type[Any]
 
 Required = ...
 
@@ -87,8 +84,8 @@ class CommandInfo:
         self,
         name: Optional[str] = None,
         *,
-        cls: Optional[Type["TyperCommand"]] = None,
-        context_settings: Optional[Dict[Any, Any]] = None,
+        cls: Optional[type["TyperCommand"]] = None,
+        context_settings: Optional[dict[Any, Any]] = None,
         callback: Optional[Callable[..., Any]] = None,
         help: Optional[str] = None,
         epilog: Optional[str] = None,
@@ -123,14 +120,14 @@ class TyperInfo:
         typer_instance: Optional["Typer"] = Default(None),
         *,
         name: Optional[str] = Default(None),
-        cls: Optional[Type["TyperGroup"]] = Default(None),
+        cls: Optional[type["TyperGroup"]] = Default(None),
         invoke_without_command: bool = Default(False),
         no_args_is_help: bool = Default(False),
         subcommand_metavar: Optional[str] = Default(None),
         chain: bool = Default(False),
         result_callback: Optional[Callable[..., Any]] = Default(None),
         # Command
-        context_settings: Optional[Dict[Any, Any]] = Default(None),
+        context_settings: Optional[dict[Any, Any]] = Default(None),
         callback: Optional[Callable[..., Any]] = Default(None),
         help: Optional[str] = Default(None),
         epilog: Optional[str] = Default(None),
@@ -172,13 +169,13 @@ class ParameterInfo:
         metavar: Optional[str] = None,
         expose_value: bool = True,
         is_eager: bool = False,
-        envvar: Optional[Union[str, List[str]]] = None,
+        envvar: Optional[Union[str, list[str]]] = None,
         # Note that shell_complete is not fully supported and will be removed in future versions
         # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Optional[
             Callable[
                 [click.Context, click.Parameter, str],
-                Union[List["click.shell_completion.CompletionItem"], List[str]],
+                Union[list["click.shell_completion.CompletionItem"], list[str]],
             ]
         ] = None,
         autocompletion: Optional[Callable[..., Any]] = None,
@@ -199,7 +196,7 @@ class ParameterInfo:
         max: Optional[Union[int, float]] = None,
         clamp: bool = False,
         # DateTime
-        formats: Optional[List[str]] = None,
+        formats: Optional[list[str]] = None,
         # File
         mode: Optional[str] = None,
         encoding: Optional[str] = None,
@@ -214,7 +211,7 @@ class ParameterInfo:
         readable: bool = True,
         resolve_path: bool = False,
         allow_dash: bool = False,
-        path_type: Union[None, Type[str], Type[bytes]] = None,
+        path_type: Union[None, type[str], type[bytes]] = None,
         # Rich settings
         rich_help_panel: Union[str, None] = None,
     ):
@@ -282,13 +279,13 @@ class OptionInfo(ParameterInfo):
         metavar: Optional[str] = None,
         expose_value: bool = True,
         is_eager: bool = False,
-        envvar: Optional[Union[str, List[str]]] = None,
+        envvar: Optional[Union[str, list[str]]] = None,
         # Note that shell_complete is not fully supported and will be removed in future versions
         # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Optional[
             Callable[
                 [click.Context, click.Parameter, str],
-                Union[List["click.shell_completion.CompletionItem"], List[str]],
+                Union[list["click.shell_completion.CompletionItem"], list[str]],
             ]
         ] = None,
         autocompletion: Optional[Callable[..., Any]] = None,
@@ -318,7 +315,7 @@ class OptionInfo(ParameterInfo):
         max: Optional[Union[int, float]] = None,
         clamp: bool = False,
         # DateTime
-        formats: Optional[List[str]] = None,
+        formats: Optional[list[str]] = None,
         # File
         mode: Optional[str] = None,
         encoding: Optional[str] = None,
@@ -333,7 +330,7 @@ class OptionInfo(ParameterInfo):
         readable: bool = True,
         resolve_path: bool = False,
         allow_dash: bool = False,
-        path_type: Union[None, Type[str], Type[bytes]] = None,
+        path_type: Union[None, type[str], type[bytes]] = None,
         # Rich settings
         rich_help_panel: Union[str, None] = None,
     ):
@@ -411,13 +408,13 @@ class ArgumentInfo(ParameterInfo):
         metavar: Optional[str] = None,
         expose_value: bool = True,
         is_eager: bool = False,
-        envvar: Optional[Union[str, List[str]]] = None,
+        envvar: Optional[Union[str, list[str]]] = None,
         # Note that shell_complete is not fully supported and will be removed in future versions
         # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Optional[
             Callable[
                 [click.Context, click.Parameter, str],
-                Union[List["click.shell_completion.CompletionItem"], List[str]],
+                Union[list["click.shell_completion.CompletionItem"], list[str]],
             ]
         ] = None,
         autocompletion: Optional[Callable[..., Any]] = None,
@@ -438,7 +435,7 @@ class ArgumentInfo(ParameterInfo):
         max: Optional[Union[int, float]] = None,
         clamp: bool = False,
         # DateTime
-        formats: Optional[List[str]] = None,
+        formats: Optional[list[str]] = None,
         # File
         mode: Optional[str] = None,
         encoding: Optional[str] = None,
@@ -453,7 +450,7 @@ class ArgumentInfo(ParameterInfo):
         readable: bool = True,
         resolve_path: bool = False,
         allow_dash: bool = False,
-        path_type: Union[None, Type[str], Type[bytes]] = None,
+        path_type: Union[None, type[str], type[bytes]] = None,
         # Rich settings
         rich_help_panel: Union[str, None] = None,
     ):
@@ -537,7 +534,7 @@ class TyperPath(click.Path):
     # Overwrite Click's behaviour to be compatible with Typer's autocompletion system
     def shell_complete(
         self, ctx: click.Context, param: click.Parameter, incomplete: str
-    ) -> List[click.shell_completion.CompletionItem]:
+    ) -> list[click.shell_completion.CompletionItem]:
         """Return an empty list so that the autocompletion functionality
         will work properly from the commandline.
         """

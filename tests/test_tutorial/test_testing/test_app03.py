@@ -1,8 +1,8 @@
 import subprocess
 import sys
 
-from docs_src.testing.app03 import main as mod
-from docs_src.testing.app03.test_main import test_app
+from docs_src.testing.app03_py39 import main as mod
+from docs_src.testing.app03_py39.test_main import test_app
 
 
 def test_app03():
