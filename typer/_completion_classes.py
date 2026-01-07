@@ -2,7 +2,7 @@ import importlib.util
 import os
 import re
 import sys
-from typing import Any, Callable, cast
+from typing import Any
 
 import click
 import click.parser
@@ -17,15 +17,12 @@ from ._completion_shared import (
 )
 
 try:
-    from click.shell_completion import split_arg_string as _split_arg_string
+    from click.shell_completion import split_arg_string as click_split_arg_string
 except ImportError:  # pragma: no cover
-    # TODO: when removing support for Click < 8.2, remove this import & the cast
+    # TODO: when removing support for Click < 8.2, remove this import
     from click.parser import (  # type: ignore[no-redef]
-        split_arg_string as _split_arg_string,
+        split_arg_string as click_split_arg_string,
     )
-
-# We need this cast to make ty happy
-click_split_arg_string = cast(Callable[[str], list[str]], _split_arg_string)
 
 
 def _sanitize_help_text(text: str) -> str:
@@ -49,7 +46,7 @@ class BashComplete(click.shell_completion.BashComplete):
         }
 
     def get_completion_args(self) -> tuple[list[str], str]:
-        cwords = click_split_arg_string(os.environ["COMP_WORDS"])
+        cwords = click_split_arg_string(os.environ["COMP_WORDS"])  # ty: ignore[call-non-callable]
         cword = int(os.environ["COMP_CWORD"])
         args = cwords[1:cword]
 
@@ -86,7 +83,7 @@ class ZshComplete(click.shell_completion.ZshComplete):
 
     def get_completion_args(self) -> tuple[list[str], str]:
         completion_args = os.getenv("_TYPER_COMPLETE_ARGS", "")
-        cwords = click_split_arg_string(completion_args)
+        cwords = click_split_arg_string(completion_args)  # ty: ignore[call-non-callable]
         args = cwords[1:]
         if args and not completion_args.endswith(" "):
             incomplete = args[-1]
@@ -137,7 +134,7 @@ class FishComplete(click.shell_completion.FishComplete):
 
     def get_completion_args(self) -> tuple[list[str], str]:
         completion_args = os.getenv("_TYPER_COMPLETE_ARGS", "")
-        cwords = click_split_arg_string(completion_args)
+        cwords = click_split_arg_string(completion_args)  # ty: ignore[call-non-callable]
         args = cwords[1:]
         if args and not completion_args.endswith(" "):
             incomplete = args[-1]
@@ -191,7 +188,7 @@ class PowerShellComplete(click.shell_completion.ShellComplete):
     def get_completion_args(self) -> tuple[list[str], str]:
         completion_args = os.getenv("_TYPER_COMPLETE_ARGS", "")
         incomplete = os.getenv("_TYPER_COMPLETE_WORD_TO_COMPLETE", "")
-        cwords = click_split_arg_string(completion_args)
+        cwords = click_split_arg_string(completion_args)  # ty: ignore[call-non-callable]
         args = cwords[1:-1] if incomplete else cwords[1:]
         return args, incomplete
 
