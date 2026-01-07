@@ -4,7 +4,7 @@ import sys
 import typer
 from typer.testing import CliRunner
 
-from docs_src.arguments.help import tutorial006_an as mod
+from docs_src.arguments.help import tutorial006_an_py39 as mod
 
 runner = CliRunner()
 
