@@ -120,8 +120,7 @@ def test_rich_help_metavar():
         pass  # pragma: no cover
 
     result = runner.invoke(app, ["--help"])
-    # assert "Usage: main [OPTIONS] ARG1 ARG3 [ARG4] [meta7] ARG8 arg9" in result.stdout
-    assert "Usage: main [OPTIONS] ARG1 ARG3 [ARG4] meta7 ARG8 arg9" in result.stdout
+    assert "Usage: main [OPTIONS] ARG1 ARG3 [ARG4] [meta7] ARG8 arg9" in result.stdout
 
     out_nospace = result.stdout.replace(" ", "")
 
