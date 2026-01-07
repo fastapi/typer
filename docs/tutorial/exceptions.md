@@ -8,7 +8,7 @@ Typer does some tricks to help you detect those errors quickly.
 
 Let's take this example broken app:
 
-{* docs_src/exceptions/tutorial001.py hl[8] *}
+{* docs_src/exceptions/tutorial001_py39.py hl[8] *}
 
 This code is broken because you can't sum a string and a number (`name + 3`).
 
@@ -85,7 +85,7 @@ But if it was something like a password, you would have liked to hide it.
 
 In that case, you can set the parameter `pretty_exceptions_show_locals=False` when creating the `typer.Typer()` application:
 
-{* docs_src/exceptions/tutorial002.py hl[3] *}
+{* docs_src/exceptions/tutorial002_py39.py hl[3] *}
 
 And now when you run it, you will see the error without the local variables:
 
@@ -118,7 +118,7 @@ Being able to see the values of local variables is normally very **helpful** to 
 
 If you want to show the full exception, including the parts in Typer and Click, you can use the parameter `pretty_exceptions_short=False`:
 
-{* docs_src/exceptions/tutorial003.py hl[3] *}
+{* docs_src/exceptions/tutorial003_py39.py hl[3] *}
 
 Now when you run it, you will see the whole output:
 
@@ -200,7 +200,7 @@ $ python main.py
 
 You can also entirely disable pretty exceptions with the parameter `pretty_exceptions_enable=False`:
 
-{* docs_src/exceptions/tutorial004.py hl[3] *}
+{* docs_src/exceptions/tutorial004_py39.py hl[3] *}
 
 And now you will see the full standard exception as with any other Python program:
 

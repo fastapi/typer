@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, Union
 
 from mkdocs.config.defaults import MkDocsConfig
 from mkdocs.structure.files import Files
@@ -7,9 +7,9 @@ from mkdocs.structure.pages import Page
 
 
 def generate_renamed_section_items(
-    items: List[Union[Page, Section, Link]], *, config: MkDocsConfig
-) -> List[Union[Page, Section, Link]]:
-    new_items: List[Union[Page, Section, Link]] = []
+    items: list[Union[Page, Section, Link]], *, config: MkDocsConfig
+) -> list[Union[Page, Section, Link]]:
+    new_items: list[Union[Page, Section, Link]] = []
     for item in items:
         if isinstance(item, Section):
             new_title = item.title

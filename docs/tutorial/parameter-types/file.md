@@ -47,7 +47,7 @@ content = b"la cig\xc3\xbce\xc3\xb1a trae al ni\xc3\xb1o"
 
 You will get all the correct editor support, attributes, methods, etc for the file-like object:`
 
-{* docs_src/parameter_types/file/tutorial001_an.py hl[8] *}
+{* docs_src/parameter_types/file/tutorial001_an_py39.py hl[9] *}
 
 Check it:
 
@@ -74,7 +74,7 @@ Config line: some more settings
 
 For writing text, you can use `typer.FileTextWrite`:
 
-{* docs_src/parameter_types/file/tutorial002_an.py hl[8:9] *}
+{* docs_src/parameter_types/file/tutorial002_an_py39.py hl[9:10] *}
 
 This would be for writing human text, like:
 
@@ -118,7 +118,7 @@ You will receive `bytes` from it.
 
 It's useful for reading binary files like images:
 
-{* docs_src/parameter_types/file/tutorial003_an.py hl[8] *}
+{* docs_src/parameter_types/file/tutorial003_an_py39.py hl[9] *}
 
 Check it:
 
@@ -147,7 +147,7 @@ Have in mind that you have to pass `bytes` to its `.write()` method, not `str`.
 
 If you have a `str`, you have to encode it first to get `bytes`.
 
-{* docs_src/parameter_types/file/tutorial004_an.py hl[8] *}
+{* docs_src/parameter_types/file/tutorial004_an_py39.py hl[9] *}
 
 <div class="termy">
 
@@ -197,7 +197,7 @@ You can override the `mode` from the defaults above.
 
 For example, you could use `mode="a"` to write "appending" to the same file:
 
-{* docs_src/parameter_types/file/tutorial005_an.py hl[8] *}
+{* docs_src/parameter_types/file/tutorial005_an_py39.py hl[9] *}
 
 /// tip
 

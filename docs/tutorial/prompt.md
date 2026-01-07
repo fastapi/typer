@@ -4,7 +4,7 @@ When you need to ask the user for info interactively you should normally use [*C
 
 But if you absolutely need to ask for interactive information without using a *CLI option*, you can use `typer.prompt()`:
 
-{* docs_src/prompt/tutorial001.py hl[8] *}
+{* docs_src/prompt/tutorial001_py39.py hl[8] *}
 
 Check it:
 
@@ -24,7 +24,7 @@ Hello Camila
 
 There's also an alternative to ask for confirmation. Again, if possible, you should use a [*CLI Option* with a confirmation prompt](options/prompt.md){.internal-link target=_blank}:
 
-{* docs_src/prompt/tutorial002.py hl[8] *}
+{* docs_src/prompt/tutorial002_py39.py hl[8] *}
 
 Check it:
 
@@ -52,7 +52,7 @@ Aborted!
 
 As it's very common to abort if the user doesn't confirm, there's an integrated parameter `abort` that does it automatically:
 
-{* docs_src/prompt/tutorial003.py hl[8] *}
+{* docs_src/prompt/tutorial003_py39.py hl[8] *}
 
 <div class="termy">
 
@@ -77,7 +77,7 @@ Aborted!
 
 If you installed Rich as described in [Printing and Colors](printing.md){.internal-link target=_blank}, you can use Rich to prompt the user for input:
 
-{* docs_src/prompt/tutorial004.py hl[2,9] *}
+{* docs_src/prompt/tutorial004_py39.py hl[2,9] *}
 
 And when you run it, it will look like:
 
