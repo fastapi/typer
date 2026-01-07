@@ -240,6 +240,20 @@ There you could buy me a coffee ☕️ to say thanks. 😄
 
 As you have seen in the documentation, Typer is built on top of Click.
 
+## Relationship between Typer and Click
+
+Typer is built on top of Click. Click handles most command line behavior,
+including parsing commands and generating help output.
+
+Typer uses Python type hints and function signatures to create Click
+commands automatically. Internally, Typer turns functions into Click
+objects and relies on Click to run commands and display help text.
+
+In most cases, you do not need to work with Click directly. Typer
+provides a simpler interface based on Python types, while still allowing
+the use of Click features when more control is needed.
+
+
 You can also sponsor:
 
 * Pallets Project (Click maintainers) <a href="https://palletsprojects.com/donate" class="external-link" target="_blank">via the PSF</a> or <a href="https://tidelift.com/subscription/pkg/pypi-click" class="external-link" target="_blank">via Tidelift</a>
