@@ -3,8 +3,8 @@ import subprocess
 import sys
 from types import ModuleType
 
-import typer
 import pytest
+import typer
 from typer.testing import CliRunner
 
 runner = CliRunner()
