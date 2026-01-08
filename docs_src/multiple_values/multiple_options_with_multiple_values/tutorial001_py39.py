@@ -1,12 +1,10 @@
-from typing import List, Tuple
-
 import typer
 
 app = typer.Typer()
 
 
 @app.command()
-def main(borrow: List[Tuple[float, str]] = typer.Option([])):
+def main(borrow: list[tuple[float, str]] = typer.Option([])):
     if not borrow:
         print("Congratulations, you're debt-free!")
         raise typer.Exit(0)

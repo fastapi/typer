@@ -15,9 +15,7 @@ runner = CliRunner()
     name="mod",
     params=[
         pytest.param("tutorial001_py39"),
-        pytest.param("tutorial001_py310", marks=needs_py310),
         pytest.param("tutorial001_an_py39"),
-        pytest.param("tutorial001_an_py310", marks=needs_py310),
     ],
 )
 def get_mod(request: pytest.FixtureRequest) -> ModuleType:

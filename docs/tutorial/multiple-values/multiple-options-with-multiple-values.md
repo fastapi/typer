@@ -1,10 +1,10 @@
-For when simple doesn't quite cut it, you may also declare a *CLI option* that takes several values of different types and can be used multiple times.
+# Multiple options with multiple values
 
-The same rules apply for the number of values for each use and their types; the types may be anything you want, but there must be a fixed number of values.
+For when simple doesn't quite cut it, you may also declare a *CLI option* that takes several values of different types and can be used multiple times.
 
 For this, we use the standard Python `list` and declare it as a list of `tuple`:
 
-{* docs_src/multiple_values/multiple_options_with_multiple_values/tutorial001_an_py310.py hl[9] *}
+{* docs_src/multiple_values/multiple_options_with_multiple_values/tutorial001_an_py39.py hl[9] *}
 
 Just as before, the types internal to the `tuple` define the type of each value in the tuple.
 

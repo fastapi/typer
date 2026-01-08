@@ -1,4 +1,4 @@
-from typing import Annotated, List, Tuple
+from typing import Annotated
 
 import typer
 
@@ -6,7 +6,7 @@ app = typer.Typer()
 
 
 @app.command()
-def main(borrow: Annotated[List[Tuple[float, str]], typer.Option()] = []):
+def main(borrow: Annotated[list[tuple[float, str]], typer.Option()] = []):
     if not borrow:
         print("Congratulations, you're debt-free!")
         raise typer.Exit(0)

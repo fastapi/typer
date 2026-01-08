@@ -222,9 +222,7 @@ ignore = [
 "docs_src/options_autocompletion/tutorial006_an_py39.py" = ["B006"]
 "docs_src/multiple_values/multiple_options/tutorial002_an_py39.py" = ["B006"]
 "docs_src/multiple_values/multiple_options_with_multiple_values/tutorial001_py39.py" = ["B006"]
-"docs_src/multiple_values/multiple_options_with_multiple_values/tutorial001_py310.py" = ["B006"]
 "docs_src/multiple_values/multiple_options_with_multiple_values/tutorial001_an_py39.py" = ["B006"]
-"docs_src/multiple_values/multiple_options_with_multiple_values/tutorial001_an_py310.py" = ["B006"]
 "docs_src/options_autocompletion/tutorial007_an_py39.py" = ["B006"]
 "docs_src/options_autocompletion/tutorial008_an_py39.py" = ["B006"]
 "docs_src/options_autocompletion/tutorial009_an_py39.py" = ["B006"]
@@ -240,8 +238,6 @@ ignore = [
 "docs_src/using_click/tutorial001_py39.py" = ["B007"]
 # No need to worry about rich imports in docs
 "docs_src/*" = ["TID"]
-# Python 3.9 files use old typing format for list, tuple
-"docs_src/multiple_values/**/*_py39.py" = ["UP006", "UP035"]
 
 [tool.ruff.lint.isort]
 known-third-party = ["typer", "click"]
