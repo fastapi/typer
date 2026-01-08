@@ -390,7 +390,7 @@ This project is licensed under the terms of the MIT license.
 We welcome contributions of all kinds \(*v*)/ :
 1) Documentation improvements - good for beginners
 2) Bug fixes - AFTER GAINING EXPERIENCE AND LEARNING CODEBASE ONLY :)
-3) New features - Same as above 
+3) New features - Same as above
 4) Tests - Always welcome \(*v*)/
 5) Typo fixes - Show your english mastery (._.)
 
