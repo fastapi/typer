@@ -384,3 +384,22 @@ The `standard` extra dependencies are `rich` and `shellingham`.
 ## License
 
 This project is licensed under the terms of the MIT license.
+
+## Contributing
+
+We welcome contributions of all kinds \(*v*)/ :
+1) Documentation improvements - good for beginners
+2) Bug fixes - AFTER GAINING EXPERIENCE AND LEARNING CODEBASE ONLY :)
+3) New features - Same as above 
+4) Tests - Always welcome \(*v*)/
+5) Typo fixes - Show your english mastery (._.)
+
+### Development Setup
+1. Fork the repository
+2. Create a virtual environment
+3. Merge your changes if accepted (:
+
+### Pull Request Guidelines
+Keep PRs focused
+Add tests for new features
+Update documentation if behavior changes ( otherwise you can face linting issues (;;))
