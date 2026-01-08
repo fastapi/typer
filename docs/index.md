@@ -1,5 +1,5 @@
-<style> 
-  .md-content .md-typeset h1 { display: none; } 
+<style>
+  .md-content .md-typeset h1 { display: none; }
 </style>
 
 <p align="center">
