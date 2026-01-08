@@ -6,7 +6,13 @@ Learn more about it below. 👇
 
 ## Versions
 
-The latest versions of Typer are supported.
+We actively provide security fixes for the latest stable release.
+
+| Version | Supported          | Comments                                      |
+| ------- | ------------------ | --------------------------------------------- |
+| Latest  | ✅ Supported       | Recommended version for all users.            |
+| 0.12.0 - 0.21.0 | ⚠️ Limited | Maintenance mode. Security patches may be backported if critical. |
+| < 0.12.0| ❌ Update Required | Legacy version. No longer receiving updates.  |
 
 You are encouraged to [write tests](https://typer.tiangolo.com/tutorial/testing/) for your application and update your Typer version frequently after ensuring that your tests are passing. This way you will benefit from the latest features, bug fixes, and **security fixes**.
 
