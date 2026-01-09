@@ -10,9 +10,9 @@ valid_completion_items = [
 
 
 def complete_user(ctx: typer.Context, incomplete: str):
-    users = ctx.params.get("name") or []
+    previous_users = ctx.params.get("user") or []
     for user, help_text in valid_completion_items:
-        if user.startswith(incomplete) and user not in users:
+        if user.startswith(incomplete) and user not in previous_users:
             yield (user, help_text)
 
 
