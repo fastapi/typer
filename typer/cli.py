@@ -2,6 +2,7 @@ import importlib.util
 import re
 import sys
 from collections import defaultdict
+from itertools import chain
 from pathlib import Path
 from typing import Any, Optional
 
