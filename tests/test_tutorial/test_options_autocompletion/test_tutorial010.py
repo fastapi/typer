@@ -1,15 +1,28 @@
+import importlib
 import os
 import subprocess
 import sys
+from types import ModuleType
 
+import pytest
 from typer.testing import CliRunner
-
-from docs_src.options_autocompletion import tutorial010_py39 as mod
 
 runner = CliRunner()
 
+@pytest.fixture(
+    name="mod",
+    params=[
+        pytest.param("tutorial010_py39"),
+        pytest.param("tutorial010_an_py39"),
+    ],
+)
+def get_mod(request: pytest.FixtureRequest) -> ModuleType:
+    module_name = f"docs_src.options_autocompletion.{request.param}"
+    mod = importlib.import_module(module_name)
+    return mod
 
-def test_completion():
+
+def test_completion(mod: ModuleType):
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
         capture_output=True,
@@ -25,7 +38,7 @@ def test_completion():
     assert '"Sebastian":"The type hints guy."' not in result.stdout
 
 
-def test_completion_greeter1():
+def test_completion_greeter1(mod: ModuleType):
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
         capture_output=True,
@@ -41,7 +54,7 @@ def test_completion_greeter1():
     assert '"Sebastian":"The type hints guy."' not in result.stdout
 
 
-def test_completion_greeter2():
+def test_completion_greeter2(mod: ModuleType):
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
         capture_output=True,
@@ -57,14 +70,14 @@ def test_completion_greeter2():
     assert '"Sebastian":"The type hints guy."' in result.stdout
 
 
-def test_1():
+def test_1(mod: ModuleType):
     result = runner.invoke(mod.app, ["--user", "Camila", "--user", "Sebastian"])
     assert result.exit_code == 0
     assert "Hello Camila" in result.output
     assert "Hello Sebastian" in result.output
 
 
-def test_2():
+def test_2(mod: ModuleType):
     result = runner.invoke(
         mod.app, ["--user", "Camila", "--user", "Sebastian", "--greeter", "Carlos"]
     )
@@ -73,7 +86,7 @@ def test_2():
     assert "Hello Sebastian, from Carlos" in result.output
 
 
-def test_3():
+def test_3(mod: ModuleType):
     result = runner.invoke(
         mod.app, ["--user", "Camila", "--greeter", "Carlos", "--greeter", "Sebastian"]
     )
@@ -81,7 +94,7 @@ def test_3():
     assert "Hello Camila, from Carlos and Sebastian" in result.output
 
 
-def test_script():
+def test_script(mod: ModuleType):
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
         capture_output=True,
