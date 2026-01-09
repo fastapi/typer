@@ -324,6 +324,22 @@ def test_split_opt():
     assert opt == "verbose"
 
 
+def test_json_param_type_convert():
+    data = {"name": "Camila", "age": 15, "height_meters": 1.7, "female": True}
+    converted = DictParamType().convert(json.dumps(data), None, None)
+    assert data == converted
+
+
+def test_json_param_type_convert_dict_input():
+    data = {"name": "Camila", "age": 15, "height_meters": 1.7, "female": True}
+    converted = DictParamType().convert(data, None, None)
+    assert data == converted
+
+
+def test_dict_param_tyoe_name():
+    assert repr(DictParamType()) == "DICT"
+
+
 def test_options_metadata_typer_default():
     app = typer.Typer(options_metavar="[options]")
 
@@ -340,19 +356,3 @@ def test_options_metadata_typer_default():
 
     result = runner.invoke(app, ["c2", "--help"])
     assert "Usage: root c2 [OPTS]" in result.stdout
-
-
-def test_json_param_type_convert():
-    data = {"name": "Camila", "age": 15, "height_meters": 1.7, "female": True}
-    converted = DictParamType().convert(json.dumps(data), None, None)
-    assert data == converted
-
-
-def test_json_param_type_convert_dict_input():
-    data = {"name": "Camila", "age": 15, "height_meters": 1.7, "female": True}
-    converted = DictParamType().convert(data, None, None)
-    assert data == converted
-
-
-def test_dict_param_tyoe_name():
-    assert repr(DictParamType()) == "DICT"
