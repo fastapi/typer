@@ -1,5 +1,6 @@
 import inspect
 import io
+import json
 from collections.abc import Sequence
 from typing import (
     TYPE_CHECKING,
@@ -47,6 +48,23 @@ class FileBinaryWrite(io.BufferedWriter):
 
 class CallbackParam(click.Parameter):
     pass
+
+
+class DictParamType(click.ParamType):
+    name = "dict"
+
+    def convert(
+        self,
+        value: Any,
+        param: Optional["click.Parameter"],
+        ctx: Optional["click.Context"],
+    ) -> Any:
+        if isinstance(value, dict):
+            return value
+        return json.loads(value)
+
+    def __repr__(self) -> str:
+        return "DICT"
 
 
 class DefaultPlaceholder:
