@@ -272,7 +272,7 @@ This can be done by declaring a parameter of type <a href="https://click.pallets
 
 For example, lets revisit our above example and add a second greeter argument that reuses the same completer function, now called `complete_user_or_greeter`:
 
-{* docs_src/options_autocompletion/tutorial010_an.py hl[15:16] *}
+{* docs_src/options_autocompletion/tutorial010_an_py39.py hl[15:16] *}
 
 /// tip
 
