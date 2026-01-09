@@ -9,6 +9,7 @@ from typer.testing import CliRunner
 
 runner = CliRunner()
 
+
 @pytest.fixture(
     name="mod",
     params=[
