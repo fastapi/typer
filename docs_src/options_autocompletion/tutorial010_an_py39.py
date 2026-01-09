@@ -1,9 +1,8 @@
-from typing import List
+from typing import Annotated
 
 import click
 import typer
 from click.shell_completion import CompletionItem
-from typing_extensions import Annotated
 
 valid_completion_items = [
     ("Camila", "The reader of books."),
@@ -27,13 +26,13 @@ app = typer.Typer()
 @app.command()
 def main(
     user: Annotated[
-        List[str],
+        list[str],
         typer.Option(
             help="The user to say hi to.", autocompletion=complete_user_or_greeter
         ),
     ] = ["World"],
     greeter: Annotated[
-        List[str],
+        list[str],
         typer.Option(help="The greeters.", autocompletion=complete_user_or_greeter),
     ] = [],
 ):

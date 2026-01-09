@@ -3,7 +3,7 @@ import sys
 
 from typer.testing import CliRunner
 
-from docs_src.subcommands.callback_override import tutorial003 as mod
+from docs_src.subcommands.callback_override import tutorial003_py39 as mod
 
 runner = CliRunner()
 

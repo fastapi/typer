@@ -3,7 +3,7 @@ import typer
 valid_users = ["Camila", "Carlos", "Sebastian"]
 
 
-def complete_user(incomplete: str):
+def complete_name(incomplete: str):
     completion = []
     for user in valid_users:
         if user.startswith(incomplete):
@@ -17,7 +17,7 @@ app = typer.Typer()
 @app.command()
 def main(
     user: str = typer.Option(
-        "World", help="The user to say hi to.", autocompletion=complete_user
+        "World", help="The name to say hi to.", autocompletion=complete_name
     ),
 ):
     print(f"Hello {user}")

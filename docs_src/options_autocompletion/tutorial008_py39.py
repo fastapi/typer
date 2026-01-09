@@ -1,5 +1,3 @@
-from typing import List
-
 import typer
 from rich.console import Console
 
@@ -12,7 +10,7 @@ valid_completion_items = [
 err_console = Console(stderr=True)
 
 
-def complete_user(args: List[str], incomplete: str):
+def complete_user(args: list[str], incomplete: str):
     err_console.print(f"{args}")
     for user, help_text in valid_completion_items:
         if user.startswith(incomplete):
@@ -24,8 +22,8 @@ app = typer.Typer()
 
 @app.command()
 def main(
-    user: List[str] = typer.Option(
-        ["World"], help="The user to say hi to.", autocompletion=complete_user
+    user: list[str] = typer.Option(
+        ["World"], help="The name to say hi to.", autocompletion=complete_user
     ),
 ):
     for u in user:

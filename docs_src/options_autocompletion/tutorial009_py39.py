@@ -1,5 +1,3 @@
-from typing import List
-
 import typer
 from click.core import Parameter
 from rich.console import Console
@@ -14,7 +12,7 @@ err_console = Console(stderr=True)
 
 
 def complete_user(
-    ctx: typer.Context, args: List[str], param: Parameter, incomplete: str
+    ctx: typer.Context, args: list[str], param: Parameter, incomplete: str
 ):
     err_console.print(f"{args}")
     previous_users = ctx.params.get(param.name) or []
@@ -28,7 +26,7 @@ app = typer.Typer()
 
 @app.command()
 def main(
-    user: List[str] = typer.Option(
+    user: list[str] = typer.Option(
         ["World"], help="The user to say hi to.", autocompletion=complete_user
     ),
 ):

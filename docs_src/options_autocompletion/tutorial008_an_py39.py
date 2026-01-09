@@ -1,8 +1,7 @@
-from typing import List
+from typing import Annotated
 
 import typer
 from rich.console import Console
-from typing_extensions import Annotated
 
 valid_completion_items = [
     ("Camila", "The reader of books."),
@@ -13,7 +12,7 @@ valid_completion_items = [
 err_console = Console(stderr=True)
 
 
-def complete_user(args: List[str], incomplete: str):
+def complete_user(args: list[str], incomplete: str):
     err_console.print(f"{args}")
     for user, help_text in valid_completion_items:
         if user.startswith(incomplete):
@@ -26,7 +25,7 @@ app = typer.Typer()
 @app.command()
 def main(
     user: Annotated[
-        List[str],
+        list[str],
         typer.Option(help="The user to say hi to.", autocompletion=complete_user),
     ] = ["World"],
 ):

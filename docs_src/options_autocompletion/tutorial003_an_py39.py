@@ -1,10 +1,11 @@
+from typing import Annotated
+
 import typer
-from typing_extensions import Annotated
 
 valid_users = ["Camila", "Carlos", "Sebastian"]
 
 
-def complete_user(incomplete: str):
+def complete_name(incomplete: str):
     completion = []
     for user in valid_users:
         if user.startswith(incomplete):
@@ -18,7 +19,7 @@ app = typer.Typer()
 @app.command()
 def main(
     user: Annotated[
-        str, typer.Option(help="The user to say hi to.", autocompletion=complete_user)
+        str, typer.Option(help="The user to say hi to.", autocompletion=complete_name)
     ] = "World",
 ):
     print(f"Hello {user}")

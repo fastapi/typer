@@ -5,7 +5,7 @@ import sys
 import pytest
 from typer.testing import CliRunner
 
-from docs_src.subcommands import tutorial001
+from docs_src.subcommands import tutorial001_py39
 
 runner = CliRunner()
 
@@ -13,8 +13,8 @@ runner = CliRunner()
 @pytest.fixture()
 def mod(monkeypatch):
     with monkeypatch.context():
-        monkeypatch.syspath_prepend(list(tutorial001.__path__)[0])
-        from docs_src.subcommands.tutorial001 import main
+        monkeypatch.syspath_prepend(list(tutorial001_py39.__path__)[0])
+        from docs_src.subcommands.tutorial001_py39 import main
 
         return main
 
@@ -84,10 +84,10 @@ def test_users_delete(app):
 
 
 def test_scripts(mod):
-    from docs_src.subcommands.tutorial001 import items, users
+    from docs_src.subcommands.tutorial001_py39 import items, users
 
     env = os.environ.copy()
-    env["PYTHONPATH"] = ":".join(list(tutorial001.__path__))
+    env["PYTHONPATH"] = ":".join(list(tutorial001_py39.__path__))
 
     for module in [mod, items, users]:
         result = subprocess.run(

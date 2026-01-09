@@ -1,9 +1,8 @@
-from typing import List
+from typing import Annotated
 
 import typer
 from click.core import Parameter
 from rich.console import Console
-from typing_extensions import Annotated
 
 valid_completion_items = [
     ("Camila", "The reader of books."),
@@ -15,7 +14,7 @@ err_console = Console(stderr=True)
 
 
 def complete_user(
-    ctx: typer.Context, args: List[str], param: Parameter, incomplete: str
+    ctx: typer.Context, args: list[str], param: Parameter, incomplete: str
 ):
     err_console.print(f"{args}")
     previous_users = ctx.params.get(param.name) or []
@@ -30,12 +29,12 @@ app = typer.Typer()
 @app.command()
 def main(
     user: Annotated[
-        List[str],
+        list[str],
         typer.Option(help="The user to say hi to.", autocompletion=complete_user),
     ] = ["World"],
 ):
-    for u in user:
-        print(f"Hello {u}")
+    for n in user:
+        print(f"Hello {n}")
 
 
 if __name__ == "__main__":

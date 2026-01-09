@@ -1,5 +1,3 @@
-from typing import List
-
 import typer
 
 valid_completion_items = [
@@ -10,7 +8,7 @@ valid_completion_items = [
 
 
 def complete_user(ctx: typer.Context, incomplete: str):
-    previous_users = ctx.params.get("user") or []
+    previous_users = ctx.params.get("name") or []
     for user, help_text in valid_completion_items:
         if user.startswith(incomplete) and user not in previous_users:
             yield (user, help_text)
@@ -21,7 +19,7 @@ app = typer.Typer()
 
 @app.command()
 def main(
-    user: List[str] = typer.Option(
+    user: list[str] = typer.Option(
         ["World"], help="The user to say hi to.", autocompletion=complete_user
     ),
 ):

@@ -3,18 +3,18 @@ import subprocess
 import sys
 import typing
 from pathlib import Path
+from typing import Annotated
 from unittest import mock
 
 import click
 import pytest
-import shellingham
 import typer
+import typer._completion_shared
 import typer.completion
 from typer.core import _split_opt
 from typer.main import solve_typer_info_defaults, solve_typer_info_help
 from typer.models import ParameterInfo, TyperInfo
 from typer.testing import CliRunner
-from typing_extensions import Annotated
 
 from .utils import requires_completion_permission
 
@@ -86,7 +86,7 @@ def test_install_invalid_shell():
         print("Hello World")
 
     with mock.patch.object(
-        shellingham, "detect_shell", return_value=("xshell", "/usr/bin/xshell")
+        typer._completion_shared, "_get_shell_name", return_value="xshell"
     ):
         result = runner.invoke(app, ["--install-completion"])
         assert "Shell xshell is not supported." in result.stdout
@@ -148,14 +148,14 @@ def test_callback_3_untyped_parameters():
 def test_callback_4_list_none():
     app = typer.Typer()
 
-    def names_callback(ctx, param, values: typing.Optional[typing.List[str]]):
+    def names_callback(ctx, param, values: typing.Optional[list[str]]):
         if values is None:
             return values
         return [value.upper() for value in values]
 
     @app.command()
     def main(
-        names: typing.Optional[typing.List[str]] = typer.Option(
+        names: typing.Optional[list[str]] = typer.Option(
             None, "--name", callback=names_callback
         ),
     ):
@@ -172,14 +172,14 @@ def test_callback_4_list_none():
 
 
 def test_empty_list_default_generator():
-    def empty_list() -> typing.List[str]:
+    def empty_list() -> list[str]:
         return []
 
     app = typer.Typer()
 
     @app.command()
     def main(
-        names: Annotated[typing.List[str], typer.Option(default_factory=empty_list)],
+        names: Annotated[list[str], typer.Option(default_factory=empty_list)],
     ):
         print(names)
 
@@ -323,3 +323,21 @@ def test_split_opt():
     prefix, opt = _split_opt("verbose")
     assert prefix == ""
     assert opt == "verbose"
+
+
+def test_options_metadata_typer_default():
+    app = typer.Typer(options_metavar="[options]")
+
+    @app.command()
+    def c1():
+        pass  # pragma: no cover
+
+    @app.command(options_metavar="[OPTS]")
+    def c2():
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["c1", "--help"])
+    assert "Usage: root c1 [options]" in result.stdout
+
+    result = runner.invoke(app, ["c2", "--help"])
+    assert "Usage: root c2 [OPTS]" in result.stdout

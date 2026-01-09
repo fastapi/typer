@@ -1,5 +1,3 @@
-from typing import List
-
 import click
 import typer
 from click.shell_completion import CompletionItem
@@ -25,12 +23,12 @@ app = typer.Typer()
 
 @app.command()
 def main(
-    user: List[str] = typer.Option(
+    user: list[str] = typer.Option(
         ["World"],
         help="The user to say hi to.",
         autocompletion=complete_user_or_greeter,
     ),
-    greeter: List[str] = typer.Option(
+    greeter: list[str] = typer.Option(
         None, help="The greeters.", autocompletion=complete_user_or_greeter
     ),
 ):

@@ -3,19 +3,15 @@ import importlib.util
 import inspect
 import os
 import sys
+from collections.abc import MutableMapping, Sequence
 from difflib import get_close_matches
 from enum import Enum
 from gettext import gettext as _
 from typing import (
     Any,
     Callable,
-    Dict,
-    List,
-    MutableMapping,
     Optional,
-    Sequence,
     TextIO,
-    Tuple,
     Union,
     cast,
 )
@@ -30,8 +26,10 @@ import click.utils
 from ._typing import Literal
 
 MarkupMode = Literal["markdown", "rich", None]
+MARKUP_MODE_KEY = "TYPER_RICH_MARKUP_MODE"
 
 HAS_RICH = importlib.util.find_spec("rich") is not None
+HAS_SHELLINGHAM = importlib.util.find_spec("shellingham") is not None
 
 if HAS_RICH:
     DEFAULT_MARKUP_MODE: MarkupMode = "rich"
@@ -40,7 +38,7 @@ else:  # pragma: no cover
 
 
 # Copy from click.parser._split_opt
-def _split_opt(opt: str) -> Tuple[str, str]:
+def _split_opt(opt: str) -> tuple[str, str]:
     first = opt[:1]
     if first.isalnum():
         return "", opt
@@ -54,8 +52,8 @@ def _typer_param_setup_autocompletion_compat(
     *,
     autocompletion: Optional[
         Callable[
-            [click.Context, List[str], click.core.Parameter, str],
-            List[Union[Tuple[str, str], str, "click.shell_completion.CompletionItem"]],
+            [click.Context, list[str], click.core.Parameter, str],
+            list[Union[tuple[str, str], str, "click.shell_completion.CompletionItem"]],
         ]
     ] = None,
 ) -> None:
@@ -73,7 +71,7 @@ def _typer_param_setup_autocompletion_compat(
 
         def compat_autocompletion(
             ctx: click.Context, param: click.core.Parameter, incomplete: str
-        ) -> List["click.shell_completion.CompletionItem"]:
+        ) -> list["click.shell_completion.CompletionItem"]:
             from click.shell_completion import CompletionItem
 
             out = []
@@ -100,7 +98,7 @@ def _get_default_string(
     *,
     ctx: click.Context,
     show_default_is_str: bool,
-    default_value: Union[List[Any], Tuple[Any, ...], str, Callable[..., Any], Any],
+    default_value: Union[list[Any], tuple[Any, ...], str, Callable[..., Any], Any],
 ) -> str:
     # Extracted from click.core.Option.get_help_record() to be reused by
     # rich_utils avoiding RegEx hacks
@@ -261,7 +259,7 @@ class TyperArgument(click.core.Argument):
         self,
         *,
         # Parameter
-        param_decls: List[str],
+        param_decls: list[str],
         type: Optional[Any] = None,
         required: Optional[bool] = None,
         default: Optional[Any] = None,
@@ -270,13 +268,13 @@ class TyperArgument(click.core.Argument):
         metavar: Optional[str] = None,
         expose_value: bool = True,
         is_eager: bool = False,
-        envvar: Optional[Union[str, List[str]]] = None,
+        envvar: Optional[Union[str, list[str]]] = None,
         # Note that shell_complete is not fully supported and will be removed in future versions
         # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Optional[
             Callable[
                 [click.Context, click.Parameter, str],
-                Union[List["click.shell_completion.CompletionItem"], List[str]],
+                Union[list["click.shell_completion.CompletionItem"], list[str]],
             ]
         ] = None,
         autocompletion: Optional[Callable[..., Any]] = None,
@@ -316,7 +314,7 @@ class TyperArgument(click.core.Argument):
         *,
         ctx: click.Context,
         show_default_is_str: bool,
-        default_value: Union[List[Any], Tuple[Any, ...], str, Callable[..., Any], Any],
+        default_value: Union[list[Any], tuple[Any, ...], str, Callable[..., Any], Any],
     ) -> str:
         return _get_default_string(
             self,
@@ -330,7 +328,7 @@ class TyperArgument(click.core.Argument):
     ) -> Optional[Union[Any, Callable[[], Any]]]:
         return _extract_default_help_str(self, ctx=ctx)
 
-    def get_help_record(self, ctx: click.Context) -> Optional[Tuple[str, str]]:
+    def get_help_record(self, ctx: click.Context) -> Optional[tuple[str, str]]:
         # Modified version of click.core.Option.get_help_record()
         # to support Arguments
         if self.hidden:
@@ -374,7 +372,10 @@ class TyperArgument(click.core.Argument):
         if extra:
             extra_str = "; ".join(extra)
             extra_str = f"[{extra_str}]"
-            if HAS_RICH:
+            rich_markup_mode = None
+            if hasattr(ctx, "obj") and isinstance(ctx.obj, dict):
+                rich_markup_mode = ctx.obj.get(MARKUP_MODE_KEY, None)
+            if HAS_RICH and rich_markup_mode == "rich":
                 # This is needed for when we want to export to HTML
                 from . import rich_utils
 
@@ -387,7 +388,10 @@ class TyperArgument(click.core.Argument):
         # Modified version of click.core.Argument.make_metavar()
         # to include Argument name
         if self.metavar is not None:
-            return self.metavar
+            var = self.metavar
+            if not self.required and not var.startswith("["):
+                var = f"[{var}]"
+            return var
         var = (self.name or "").upper()
         if not self.required:
             var = f"[{var}]"
@@ -416,7 +420,7 @@ class TyperOption(click.core.Option):
         self,
         *,
         # Parameter
-        param_decls: List[str],
+        param_decls: list[str],
         type: Optional[Union[click.types.ParamType, Any]] = None,
         required: Optional[bool] = None,
         default: Optional[Any] = None,
@@ -425,13 +429,13 @@ class TyperOption(click.core.Option):
         metavar: Optional[str] = None,
         expose_value: bool = True,
         is_eager: bool = False,
-        envvar: Optional[Union[str, List[str]]] = None,
+        envvar: Optional[Union[str, list[str]]] = None,
         # Note that shell_complete is not fully supported and will be removed in future versions
         # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Optional[
             Callable[
                 [click.Context, click.Parameter, str],
-                Union[List["click.shell_completion.CompletionItem"], List[str]],
+                Union[list["click.shell_completion.CompletionItem"], list[str]],
             ]
         ] = None,
         autocompletion: Optional[Callable[..., Any]] = None,
@@ -486,7 +490,7 @@ class TyperOption(click.core.Option):
         *,
         ctx: click.Context,
         show_default_is_str: bool,
-        default_value: Union[List[Any], Tuple[Any, ...], str, Callable[..., Any], Any],
+        default_value: Union[list[Any], tuple[Any, ...], str, Callable[..., Any], Any],
     ) -> str:
         return _get_default_string(
             self,
@@ -508,7 +512,7 @@ class TyperOption(click.core.Option):
         # Click < 8.2
         return super().make_metavar()  # type: ignore[call-arg]
 
-    def get_help_record(self, ctx: click.Context) -> Optional[Tuple[str, str]]:
+    def get_help_record(self, ctx: click.Context) -> Optional[tuple[str, str]]:
         # Duplicate all of Click's logic only to modify a single line, to allow boolean
         # flags with only names for False values as it's currently supported by Typer
         # Ref: https://typer.tiangolo.com/tutorial/parameter-types/bool/#only-names-for-false
@@ -590,7 +594,10 @@ class TyperOption(click.core.Option):
         if extra:
             extra_str = "; ".join(extra)
             extra_str = f"[{extra_str}]"
-            if HAS_RICH:
+            rich_markup_mode = None
+            if hasattr(ctx, "obj") and isinstance(ctx.obj, dict):
+                rich_markup_mode = ctx.obj.get(MARKUP_MODE_KEY, None)
+            if HAS_RICH and rich_markup_mode == "rich":
                 # This is needed for when we want to export to HTML
                 from . import rich_utils
 
@@ -665,9 +672,9 @@ class TyperCommand(click.core.Command):
         self,
         name: Optional[str],
         *,
-        context_settings: Optional[Dict[str, Any]] = None,
+        context_settings: Optional[dict[str, Any]] = None,
         callback: Optional[Callable[..., Any]] = None,
-        params: Optional[List[click.Parameter]] = None,
+        params: Optional[list[click.Parameter]] = None,
         help: Optional[str] = None,
         epilog: Optional[str] = None,
         short_help: Optional[str] = None,
@@ -734,6 +741,10 @@ class TyperCommand(click.core.Command):
 
     def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
         if not HAS_RICH or self.rich_markup_mode is None:
+            if not hasattr(ctx, "obj") or ctx.obj is None:
+                ctx.ensure_object(dict)
+            if isinstance(ctx.obj, dict):
+                ctx.obj[MARKUP_MODE_KEY] = self.rich_markup_mode
             return super().format_help(ctx, formatter)
         from . import rich_utils
 
@@ -750,7 +761,7 @@ class TyperGroup(click.core.Group):
         *,
         name: Optional[str] = None,
         commands: Optional[
-            Union[Dict[str, click.Command], Sequence[click.Command]]
+            Union[dict[str, click.Command], Sequence[click.Command]]
         ] = None,
         # Rich settings
         rich_markup_mode: MarkupMode = DEFAULT_MARKUP_MODE,
@@ -780,8 +791,8 @@ class TyperGroup(click.core.Group):
         )
 
     def resolve_command(
-        self, ctx: click.Context, args: List[str]
-    ) -> Tuple[Optional[str], Optional[click.Command], List[str]]:
+        self, ctx: click.Context, args: list[str]
+    ) -> tuple[Optional[str], Optional[click.Command], list[str]]:
         try:
             return super().resolve_command(ctx, args)
         except click.UsageError as e:
@@ -827,7 +838,7 @@ class TyperGroup(click.core.Group):
             markup_mode=self.rich_markup_mode,
         )
 
-    def list_commands(self, ctx: click.Context) -> List[str]:
+    def list_commands(self, ctx: click.Context) -> list[str]:
         """Returns a list of subcommand names.
         Note that in Click's Group class, these are sorted.
         In Typer, we wish to maintain the original order of creation (cf Issue #933)"""

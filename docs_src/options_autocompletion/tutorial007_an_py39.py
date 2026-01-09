@@ -1,7 +1,6 @@
-from typing import List
+from typing import Annotated
 
 import typer
-from typing_extensions import Annotated
 
 valid_completion_items = [
     ("Camila", "The reader of books."),
@@ -11,7 +10,7 @@ valid_completion_items = [
 
 
 def complete_user(ctx: typer.Context, incomplete: str):
-    users = ctx.params.get("user") or []
+    users = ctx.params.get("name") or []
     for user, help_text in valid_completion_items:
         if user.startswith(incomplete) and user not in users:
             yield (user, help_text)
@@ -23,7 +22,7 @@ app = typer.Typer()
 @app.command()
 def main(
     user: Annotated[
-        List[str],
+        list[str],
         typer.Option(help="The user to say hi to.", autocompletion=complete_user),
     ] = ["World"],
 ):

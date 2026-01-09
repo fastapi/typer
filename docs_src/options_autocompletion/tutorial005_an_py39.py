@@ -1,5 +1,6 @@
+from typing import Annotated
+
 import typer
-from typing_extensions import Annotated
 
 valid_completion_items = [
     ("Camila", "The reader of books."),
