@@ -281,9 +281,9 @@ def get_docs_for_click(
                         docs += f": {_parse_html(to_parse, command_help)}"
                     docs += "\n"
                 docs += "\n"
-            for command in commands:
-                command_obj = group.get_command(ctx, command)
-                assert command_obj
+            for command_obj in chain.from_iterable(
+                command_objs for command_objs in panel_to_commands.values()
+            ):
                 use_prefix = ""
                 if command_name:
                     use_prefix += f"{command_name}"

@@ -138,7 +138,7 @@ def test_doc_no_typer():
             "run",
             "-m",
             "typer",
-            "tests/assets/cli/empty_script.py",
+            "tests.assets.cli.empty_script",
             "utils",
             "docs",
         ],
