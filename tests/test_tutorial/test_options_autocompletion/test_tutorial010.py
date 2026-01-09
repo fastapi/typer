@@ -2,6 +2,7 @@ import importlib
 import os
 import subprocess
 import sys
+from pathlib import Path
 from types import ModuleType
 
 import pytest
@@ -24,14 +25,15 @@ def get_mod(request: pytest.FixtureRequest) -> ModuleType:
 
 
 def test_completion(mod: ModuleType):
+    file_name = Path(mod.__file__).name
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
         capture_output=True,
         encoding="utf-8",
         env={
             **os.environ,
-            "_TUTORIAL010.PY_COMPLETE": "complete_zsh",
-            "_TYPER_COMPLETE_ARGS": "tutorial010.py --user Sebastian --user ",
+            f"_{file_name.upper()}_COMPLETE": "complete_zsh",
+            "_TYPER_COMPLETE_ARGS": f"{file_name} --user Sebastian --user ",
         },
     )
     assert '"Camila":"The reader of books."' in result.stdout
@@ -40,14 +42,15 @@ def test_completion(mod: ModuleType):
 
 
 def test_completion_greeter1(mod: ModuleType):
+    file_name = Path(mod.__file__).name
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
         capture_output=True,
         encoding="utf-8",
         env={
             **os.environ,
-            "_TUTORIAL010.PY_COMPLETE": "complete_zsh",
-            "_TYPER_COMPLETE_ARGS": "tutorial010.py --user Sebastian --greeter Ca",
+            f"_{file_name.upper()}_COMPLETE": "complete_zsh",
+            "_TYPER_COMPLETE_ARGS": f"{file_name} --user Sebastian --greeter Ca",
         },
     )
     assert '"Camila":"The reader of books."' in result.stdout
@@ -56,14 +59,15 @@ def test_completion_greeter1(mod: ModuleType):
 
 
 def test_completion_greeter2(mod: ModuleType):
+    file_name = Path(mod.__file__).name
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
         capture_output=True,
         encoding="utf-8",
         env={
             **os.environ,
-            "_TUTORIAL010.PY_COMPLETE": "complete_zsh",
-            "_TYPER_COMPLETE_ARGS": "tutorial010.py --user Sebastian --greeter Carlos --greeter ",
+            f"_{file_name.upper()}_COMPLETE": "complete_zsh",
+            "_TYPER_COMPLETE_ARGS": f"{file_name} --user Sebastian --greeter Carlos --greeter ",
         },
     )
     assert '"Camila":"The reader of books."' in result.stdout

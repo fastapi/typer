@@ -33,7 +33,7 @@ def test_completion(mod: ModuleType):
         env={
             **os.environ,
             f"_{file_name.upper()}_COMPLETE": "complete_zsh",
-            "_TYPER_COMPLETE_ARGS": f"{file_name} --user Sebastian --name ",
+            "_TYPER_COMPLETE_ARGS": f"{file_name} --user Sebastian --user ",
         },
     )
     assert '"Camila":"The reader of books."' in result.stdout
