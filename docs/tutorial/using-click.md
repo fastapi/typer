@@ -28,7 +28,7 @@ A `Command` can have its own *CLI arguments* and *CLI options*, and it has a fun
 
 For example, in this Click app:
 
-{* docs_src/using_click/tutorial001.py hl[7,14] *}
+{* docs_src/using_click/tutorial001_py39.py hl[7,14] *}
 
 The original `hello` variable is converted by Click from a function to a `Command` object. And the original `hello` function is used by that `Command` internally, but it is no longer named `hello` (as `hello` is now a Click `Command`).
 
@@ -44,7 +44,7 @@ And a `Group` can also have a function that it calls, right before calling the f
 
 For example:
 
-{* docs_src/using_click/tutorial002.py hl[5,19,20] *}
+{* docs_src/using_click/tutorial002_py39.py hl[5,19,20] *}
 
 The `cli` variable is converted by Click from a function to a `Group` object. And the original `cli` function is used by that `Group` internally.
 
@@ -86,7 +86,7 @@ You can use it directly, and use the Click object with other Click applications.
 
 For example, you could have a **Typer** app, generate a Click `Group` from it, and then include other Click apps in it:
 
-{* docs_src/using_click/tutorial003.py hl[15,16,29,31,34] *}
+{* docs_src/using_click/tutorial003_py39.py hl[15,16,29,31,34] *}
 
 Notice that we add a callback that does nothing (only document the CLI program), to make sure **Typer** creates a Click `Group`. That way we can add sub-commands to that Click `Group`.
 
@@ -130,7 +130,7 @@ Hello Camila!
 
 The same way, you can do the contrary and include a **Typer** sub app in a bigger Click app:
 
-{* docs_src/using_click/tutorial004.py hl[31,33,36] *}
+{* docs_src/using_click/tutorial004_py39.py hl[31,33,36] *}
 
 Notice that we don't have to add a callback or more commands, we can just create a **Typer** app that generates a single Click `Command`, as we don't need to include anything under the Typer app.
 
