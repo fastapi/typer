@@ -104,7 +104,9 @@ def test_doc_no_rich():
         capture_output=True,
         encoding="utf-8",
     )
-    docs_path: Path = Path(__file__).parent.parent / "assets/cli/multiapp-docs-norich.md"
+    docs_path: Path = (
+        Path(__file__).parent.parent / "assets/cli/multiapp-docs-norich.md"
+    )
     docs = docs_path.read_text()
     assert docs in result.stdout
     assert "**Arguments**" in result.stdout
