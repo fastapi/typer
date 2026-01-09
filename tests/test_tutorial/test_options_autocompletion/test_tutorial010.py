@@ -4,7 +4,7 @@ import sys
 
 from typer.testing import CliRunner
 
-from docs_src.options_autocompletion import tutorial010 as mod
+from docs_src.options_autocompletion import tutorial010_py39 as mod
 
 runner = CliRunner()
 
