@@ -134,12 +134,22 @@ def shell_complete(
     comp = comp_cls(cli, ctx_args, prog_name, complete_var)
 
     if instruction == "source":
-        click.echo(comp.source())
+        try:
+            click.echo(comp.source())
+        except (click.exceptions.Abort, click.exceptions.Exit):
+            # During shell completion we should never show a traceback.
+            # If completion callbacks abort/exit, just return no output.
+            return 0
         return 0
 
     # Typer override to print the completion help msg with Rich
     if instruction == "complete":
-        click.echo(comp.complete())
+        try:
+            click.echo(comp.complete())
+        except (click.exceptions.Abort, click.exceptions.Exit):
+            # During shell completion we should never show a traceback.
+            # If completion callbacks abort/exit, just return no output.
+            return 0
         return 0
     # Typer override end
 
