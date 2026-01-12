@@ -28,14 +28,12 @@ class _FakeCompletion:
     [click.exceptions.Abort, click.exceptions.Exit],
 )
 def test_shell_complete_handles_abort_and_exit(monkeypatch, capsys, instruction, exc):
-    # Make Click return our fake completion class
     monkeypatch.setattr(
         click.shell_completion,
         "get_completion_class",
         lambda shell: _FakeCompletion,
     )
 
-    # Patch the specific method used by the instruction to raise
     if instruction.startswith("complete"):
         monkeypatch.setattr(
             _FakeCompletion, "complete", lambda self: (_ for _ in ()).throw(exc())
@@ -47,7 +45,6 @@ def test_shell_complete_handles_abort_and_exit(monkeypatch, capsys, instruction,
 
     cli = click.Command("demo")
 
-    # Should not raise, should just exit 0 with no output
     code = shell_complete(
         cli=cli,
         ctx_args={},
@@ -59,3 +56,10 @@ def test_shell_complete_handles_abort_and_exit(monkeypatch, capsys, instruction,
     out = capsys.readouterr()
     assert code == 0
     assert out.out == ""
+    assert out.err == ""
+
+
+def test_fake_completion_default_methods_are_covered():
+    fc = _FakeCompletion(click.Command("demo"), {}, "demo", "_DEMO_COMPLETE")
+    assert fc.complete() == ""
+    assert fc.source() == ""
