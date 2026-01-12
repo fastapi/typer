@@ -1,27 +1,40 @@
+import importlib
 import subprocess
 import sys
+from types import ModuleType
 
+import pytest
 from typer.testing import CliRunner
 
-from docs_src.parameter_types.datetime import tutorial002 as mod
-
 runner = CliRunner()
-app = mod.app
 
 
-def test_main():
-    result = runner.invoke(app, ["1969-10-29"])
+@pytest.fixture(
+    name="mod",
+    params=[
+        pytest.param("tutorial002_py39"),
+        pytest.param("tutorial002_an_py39"),
+    ],
+)
+def get_mod(request: pytest.FixtureRequest) -> ModuleType:
+    module_name = f"docs_src.parameter_types.datetime.{request.param}"
+    mod = importlib.import_module(module_name)
+    return mod
+
+
+def test_main(mod: ModuleType):
+    result = runner.invoke(mod.app, ["1969-10-29"])
     assert result.exit_code == 0
     assert "Launch will be at: 1969-10-29 00:00:00" in result.output
 
 
-def test_usa_weird_date_format():
-    result = runner.invoke(app, ["10/29/1969"])
+def test_usa_weird_date_format(mod: ModuleType):
+    result = runner.invoke(mod.app, ["10/29/1969"])
     assert result.exit_code == 0
     assert "Launch will be at: 1969-10-29 00:00:00" in result.output
 
 
-def test_script():
+def test_script(mod: ModuleType):
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
         capture_output=True,

@@ -6,13 +6,13 @@ So far, you have seen how to create a single function and then pass that functio
 
 For example:
 
-{* docs_src/first_steps/tutorial002.py hl[9] *}
+{* docs_src/first_steps/tutorial002_py39.py hl[9] *}
 
 But that is actually a shortcut. Under the hood, **Typer** converts that to a CLI application with `typer.Typer()` and executes it. All that inside of `typer.run()`.
 
 There's also a more explicit way to achieve the same:
 
-{* docs_src/typer_app/tutorial001.py hl[3,6,12] *}
+{* docs_src/typer_app/tutorial001_py39.py hl[3,6,12] *}
 
 When you use `typer.run()`, **Typer** is doing more or less the same as above, it will:
 
