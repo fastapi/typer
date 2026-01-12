@@ -1,15 +1,12 @@
 import subprocess
 import sys
 
-import typer
 from typer.testing import CliRunner
 
-from docs_src.parameter_types.index import tutorial001 as mod
+from docs_src.parameter_types.index import tutorial001_py39 as mod
 
 runner = CliRunner()
-
-app = typer.Typer()
-app.command()(mod.main)
+app = mod.app
 
 
 def test_help():
@@ -35,7 +32,8 @@ def test_params():
 def test_invalid():
     result = runner.invoke(app, ["Camila", "--age", "15.3"])
     assert result.exit_code != 0
-    assert "Invalid value for '--age': '15.3' is not a valid integer" in result.output
+    assert "Invalid value for '--age'" in result.output
+    assert "'15.3' is not a valid integer" in result.output
 
 
 def test_script():

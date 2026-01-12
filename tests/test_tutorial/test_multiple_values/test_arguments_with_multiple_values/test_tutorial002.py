@@ -1,14 +1,14 @@
 import subprocess
 import sys
 
-import typer
 from typer.testing import CliRunner
 
-from docs_src.multiple_values.arguments_with_multiple_values import tutorial002 as mod
+from docs_src.multiple_values.arguments_with_multiple_values import (
+    tutorial002_py39 as mod,
+)
 
 runner = CliRunner()
-app = typer.Typer()
-app.command()(mod.main)
+app = mod.app
 
 
 def test_help():
@@ -30,7 +30,7 @@ def test_defaults():
 def test_invalid_args():
     result = runner.invoke(app, ["Draco", "Hagrid"])
     assert result.exit_code != 0
-    assert "Argument 'names' takes 3 values" in result.stdout
+    assert "Argument 'names' takes 3 values" in result.output
 
 
 def test_valid_args():

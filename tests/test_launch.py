@@ -16,9 +16,11 @@ url = "http://example.com"
     ],
 )
 def test_launch_url_unix(system: str, command: str):
-    with patch("platform.system", return_value=system), patch(
-        "shutil.which", return_value=True
-    ), patch("subprocess.Popen") as mock_popen:
+    with (
+        patch("platform.system", return_value=system),
+        patch("shutil.which", return_value=True),
+        patch("subprocess.Popen") as mock_popen,
+    ):
         typer.launch(url)
 
     mock_popen.assert_called_once_with(
@@ -27,18 +29,21 @@ def test_launch_url_unix(system: str, command: str):
 
 
 def test_launch_url_windows():
-    with patch("platform.system", return_value="Windows"), patch(
-        "webbrowser.open"
-    ) as mock_webbrowser_open:
+    with (
+        patch("platform.system", return_value="Windows"),
+        patch("webbrowser.open") as mock_webbrowser_open,
+    ):
         typer.launch(url)
 
     mock_webbrowser_open.assert_called_once_with(url)
 
 
 def test_launch_url_no_xdg_open():
-    with patch("platform.system", return_value="Linux"), patch(
-        "shutil.which", return_value=None
-    ), patch("webbrowser.open") as mock_webbrowser_open:
+    with (
+        patch("platform.system", return_value="Linux"),
+        patch("shutil.which", return_value=None),
+        patch("webbrowser.open") as mock_webbrowser_open,
+    ):
         typer.launch(url)
 
     mock_webbrowser_open.assert_called_once_with(url)

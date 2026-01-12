@@ -1,0 +1,52 @@
+name: Test CPython Nightly
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+env:
+  UV_NO_SYNC: true
+
+jobs:
+  test-latest-python:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v6
+      - name: Checkout CPython main
+        uses: actions/checkout@v6
+        with:
+          repository: python/cpython
+          ref: main
+          path: ./.cpython
+      - name: Install CPython build dependencies
+        run: sudo apt-get update && sudo apt-get install -y build-essential pkg-config libssl-dev zlib1g-dev
+      - name: Build CPython
+        run: |
+          cd ./.cpython
+          ./configure && make -j $(nproc)
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+          cache-dependency-glob: |
+            pyproject.toml
+            uv.lock
+      - name: Install Dependencies
+        run: uv sync --locked --no-dev --group tests --python ./.cpython/python
+      - name: Lint
+        run: uv run bash scripts/lint.sh
+      - run: mkdir coverage
+      - run: uv run bash scripts/test-files.sh
+      - name: Test
+        run: uv run bash scripts/test.sh
+        env:
+          COVERAGE_FILE: coverage/.coverage.ubuntu-cpython-main
+          CONTEXT: ubuntu-cpython-main
+      - name: Store coverage files
+        uses: actions/upload-artifact@v6
+        with:
+          name: coverage-ubuntu-cpython-main
+          path: coverage
+          include-hidden-files: true

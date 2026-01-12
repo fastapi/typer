@@ -1,15 +1,12 @@
 import subprocess
 import sys
 
-import typer
 from typer.testing import CliRunner
 
-from docs_src.parameter_types.enum import tutorial001 as mod
+from docs_src.parameter_types.enum import tutorial001_py39 as mod
 
 runner = CliRunner()
-
-app = typer.Typer()
-app.command()(mod.main)
+app = mod.app
 
 
 def test_help():
@@ -26,10 +23,17 @@ def test_main():
     assert "Training neural network of type: conv" in result.output
 
 
+def test_main_default():
+    result = runner.invoke(app)
+    assert result.exit_code == 0
+    assert "Training neural network of type: simple" in result.output
+
+
 def test_invalid_case():
     result = runner.invoke(app, ["--network", "CONV"])
     assert result.exit_code != 0
-    assert "Invalid value for '--network': 'CONV' is not one of" in result.output
+    assert "Invalid value for '--network'" in result.output
+    assert "'CONV' is not one of" in result.output
     assert "simple" in result.output
     assert "conv" in result.output
     assert "lstm" in result.output
@@ -38,7 +42,8 @@ def test_invalid_case():
 def test_invalid_other():
     result = runner.invoke(app, ["--network", "capsule"])
     assert result.exit_code != 0
-    assert "Invalid value for '--network': 'capsule' is not one of" in result.output
+    assert "Invalid value for '--network'" in result.output
+    assert "'capsule' is not one of" in result.output
     assert "simple" in result.output
     assert "conv" in result.output
     assert "lstm" in result.output

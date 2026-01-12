@@ -3,12 +3,13 @@ import subprocess
 import sys
 import typing
 from pathlib import Path
+from typing import Annotated
 from unittest import mock
 
 import click
 import pytest
-import shellingham
 import typer
+import typer._completion_shared
 import typer.completion
 from typer.core import _split_opt
 from typer.main import solve_typer_info_defaults, solve_typer_info_help
@@ -85,7 +86,7 @@ def test_install_invalid_shell():
         print("Hello World")
 
     with mock.patch.object(
-        shellingham, "detect_shell", return_value=("xshell", "/usr/bin/xshell")
+        typer._completion_shared, "_get_shell_name", return_value="xshell"
     ):
         result = runner.invoke(app, ["--install-completion"])
         assert "Shell xshell is not supported." in result.stdout
@@ -142,6 +143,48 @@ def test_callback_3_untyped_parameters():
     assert "info name is: main" in result.stdout
     assert "param name is: name" in result.stdout
     assert "value is: Camila" in result.stdout
+
+
+def test_callback_4_list_none():
+    app = typer.Typer()
+
+    def names_callback(ctx, param, values: typing.Optional[list[str]]):
+        if values is None:
+            return values
+        return [value.upper() for value in values]
+
+    @app.command()
+    def main(
+        names: typing.Optional[list[str]] = typer.Option(
+            None, "--name", callback=names_callback
+        ),
+    ):
+        if names is None:
+            print("Hello World")
+        else:
+            print(f"Hello {', '.join(names)}")
+
+    result = runner.invoke(app, ["--name", "Sideshow", "--name", "Bob"])
+    assert "Hello SIDESHOW, BOB" in result.stdout
+
+    result = runner.invoke(app, [])
+    assert "Hello World" in result.stdout
+
+
+def test_empty_list_default_generator():
+    def empty_list() -> list[str]:
+        return []
+
+    app = typer.Typer()
+
+    @app.command()
+    def main(
+        names: Annotated[list[str], typer.Option(default_factory=empty_list)],
+    ):
+        print(names)
+
+    result = runner.invoke(app)
+    assert "[]" in result.output
 
 
 def test_completion_argument():
@@ -243,7 +286,7 @@ def test_forward_references():
 
     result = runner.invoke(app, ["Hello", "2", "invalid"])
 
-    assert "Invalid value for 'ARG3': 'invalid' is not a valid integer" in result.stdout
+    assert "Invalid value for 'ARG3': 'invalid' is not a valid integer" in result.output
     result = runner.invoke(app, ["Hello", "2", "3", "--arg4", "--arg5"])
     assert (
         "arg1: <class 'str'> Hello\narg2: <class 'int'> 2\narg3: <class 'int'> 3\narg4: <class 'bool'> True\narg5: <class 'bool'> True\n"
@@ -278,3 +321,21 @@ def test_split_opt():
     prefix, opt = _split_opt("verbose")
     assert prefix == ""
     assert opt == "verbose"
+
+
+def test_options_metadata_typer_default():
+    app = typer.Typer(options_metavar="[options]")
+
+    @app.command()
+    def c1():
+        pass  # pragma: no cover
+
+    @app.command(options_metavar="[OPTS]")
+    def c2():
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["c1", "--help"])
+    assert "Usage: root c1 [options]" in result.stdout
+
+    result = runner.invoke(app, ["c2", "--help"])
+    assert "Usage: root c2 [OPTS]" in result.stdout

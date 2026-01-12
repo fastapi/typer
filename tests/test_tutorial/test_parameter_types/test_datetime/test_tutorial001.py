@@ -1,15 +1,12 @@
 import subprocess
 import sys
 
-import typer
 from typer.testing import CliRunner
 
-from docs_src.parameter_types.datetime import tutorial001 as mod
+from docs_src.parameter_types.datetime import tutorial001_py39 as mod
 
 runner = CliRunner()
-
-app = typer.Typer()
-app.command()(mod.main)
+app = mod.app
 
 
 def test_help():
@@ -30,7 +27,7 @@ def test_invalid():
     assert result.exit_code != 0
     assert (
         "Invalid value for 'BIRTH:[%Y-%m-%d|%Y-%m-%dT%H:%M:%S|%Y-%m-%d %H:%M:%S]':"
-        in result.stdout
+        in result.output
     )
     assert "'july-19-1989' does not match the formats" in result.output
     assert "%Y-%m-%d" in result.output

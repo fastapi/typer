@@ -3,16 +3,16 @@ import sys
 
 from click.testing import CliRunner
 
-from docs_src.using_click import tutorial004 as mod
+from docs_src.using_click import tutorial004_py39 as mod
 
 runner = CliRunner()
 
 
 def test_cli():
     result = runner.invoke(mod.cli, [])
-    assert "Usage" in result.stdout
-    assert "dropdb" in result.stdout
-    assert "sub" in result.stdout
+    assert "Usage" in result.output
+    assert "dropdb" in result.output
+    assert "sub" in result.output
 
 
 def test_typer():

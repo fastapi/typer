@@ -3,7 +3,7 @@ import sys
 
 from typer.testing import CliRunner
 
-from docs_src.commands.index import tutorial003 as mod
+from docs_src.commands.index import tutorial003_py39 as mod
 
 app = mod.app
 
@@ -12,11 +12,17 @@ runner = CliRunner()
 
 def test_no_arg():
     result = runner.invoke(app)
-    assert result.exit_code == 0
     assert "[OPTIONS] COMMAND [ARGS]..." in result.output
     assert "Commands" in result.output
     assert "create" in result.output
     assert "delete" in result.output
+
+
+def test_no_additional_output():
+    """Ensure that no additional output was generated (cf. PR #1262)"""
+    result = runner.invoke(app)
+    assert result.output.count("Usage") == 1
+    assert "Error" not in result.output
 
 
 def test_create():

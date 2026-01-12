@@ -13,19 +13,15 @@ on:
     - cron: "0 0 * * 1"
 
 env:
-  UV_SYSTEM_PYTHON: 1
+  UV_NO_SYNC: true
 
 jobs:
   test:
     strategy:
       matrix:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
-        python-version: [ "3.13" ]
+        python-version: [ "3.14" ]
         include:
-          - os: ubuntu-22.04
-            python-version: "3.7"
-          - os: macos-latest
-            python-version: "3.8"
           - os: windows-latest
             python-version: "3.9"
           - os: ubuntu-latest
@@ -34,39 +30,43 @@ jobs:
             python-version: "3.11"
           - os: windows-latest
             python-version: "3.12"
+          - os: ubuntu-latest
+            python-version: "3.13"
       fail-fast: false
     runs-on: ${{ matrix.os }}
+    env:
+      UV_PYTHON: ${{ matrix.python-version }}
     steps:
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
       - name: Setup uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v7
         with:
-          version: "0.4.15"
           enable-cache: true
           cache-dependency-glob: |
-            requirements**.txt
             pyproject.toml
+            uv.lock
       - name: Install Dependencies
-        run: uv pip install -r requirements-tests.txt
+        run: uv sync --locked --no-dev --group tests
       - name: Lint
-        run: bash scripts/lint.sh
+        if: matrix.python-version != '3.9'
+        run: uv run bash scripts/lint.sh
       - run: mkdir coverage
-      - run: bash ./scripts/test-files.sh
+      - run: uv run bash scripts/test-files.sh
       - name: Test
-        run: bash scripts/test.sh
+        run: uv run bash scripts/test.sh
         env:
           COVERAGE_FILE: coverage/.coverage.${{ runner.os }}-py${{ matrix.python-version }}
           CONTEXT: ${{ runner.os }}-py${{ matrix.python-version }}
       - name: Store coverage files
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: coverage-${{ runner.os }}-${{ matrix.python-version }}
           path: coverage
@@ -80,36 +80,35 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with:
-          python-version: '3.8'
+          python-version-file: ".python-version"
       - name: Setup uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v7
         with:
-          version: "0.4.15"
           enable-cache: true
           cache-dependency-glob: |
-            requirements**.txt
             pyproject.toml
+            uv.lock
       - name: Get coverage files
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           pattern: coverage-*
           path: coverage
           merge-multiple: true
       - name: Install Dependencies
-        run: uv pip install -r requirements-tests.txt
+        run: uv sync --locked --no-dev --group tests
       - run: ls -la coverage
-      - run: coverage combine coverage
-      - run: coverage report
-      - run: coverage html --show-contexts --title "Coverage for ${{ github.sha }}"
+      - run: uv run coverage combine coverage
+      - run: uv run coverage html --show-contexts --title "Coverage for ${{ github.sha }}"
       - name: Store coverage HTML
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: coverage-html
           path: htmlcov
           include-hidden-files: true
+      - run: uv run coverage report --fail-under=100
 
   # https://github.com/marketplace/actions/alls-green#why
   check:  # This job does nothing and is only used for the branch protection
