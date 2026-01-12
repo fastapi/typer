@@ -3,15 +3,14 @@ import subprocess
 import sys
 from unittest import mock
 
-import shellingham
 import typer
+import typer.completion
 from typer.testing import CliRunner
 
-from docs_src.commands.index import tutorial001 as mod
+from docs_src.typer_app import tutorial001_py39 as mod
 
 runner = CliRunner()
-app = typer.Typer()
-app.command()(mod.main)
+app = mod.app
 
 
 def test_completion_show_no_shell():
@@ -46,7 +45,7 @@ def test_completion_show_bash():
         },
     )
     assert (
-        "complete -o default -F _tutorial001py_completion tutorial001.py"
+        "complete -o default -F _tutorial001_py39py_completion tutorial001_py39.py"
         in result.stdout
     )
 
@@ -69,7 +68,7 @@ def test_completion_source_zsh():
             "_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION": "True",
         },
     )
-    assert "compdef _tutorial001py_completion tutorial001.py" in result.stdout
+    assert "compdef _tutorial001_py39py_completion tutorial001_py39.py" in result.stdout
 
 
 def test_completion_source_fish():
@@ -90,7 +89,7 @@ def test_completion_source_fish():
             "_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION": "True",
         },
     )
-    assert "complete --command tutorial001.py --no-files" in result.stdout
+    assert "complete --command tutorial001_py39.py --no-files" in result.stdout
 
 
 def test_completion_source_powershell():
@@ -112,7 +111,7 @@ def test_completion_source_powershell():
         },
     )
     assert (
-        "Register-ArgumentCompleter -Native -CommandName tutorial001.py -ScriptBlock $scriptblock"
+        "Register-ArgumentCompleter -Native -CommandName tutorial001_py39.py -ScriptBlock $scriptblock"
         in result.stdout
     )
 
@@ -136,14 +135,12 @@ def test_completion_source_pwsh():
         },
     )
     assert (
-        "Register-ArgumentCompleter -Native -CommandName tutorial001.py -ScriptBlock $scriptblock"
+        "Register-ArgumentCompleter -Native -CommandName tutorial001_py39.py -ScriptBlock $scriptblock"
         in result.stdout
     )
 
 
 def test_completion_show_invalid_shell():
-    with mock.patch.object(
-        shellingham, "detect_shell", return_value=("xshell", "/usr/bin/xshell")
-    ):
+    with mock.patch.object(typer.completion, "_get_shell_name", return_value="xshell"):
         result = runner.invoke(app, ["--show-completion"])
     assert "Shell xshell not supported" in result.output
