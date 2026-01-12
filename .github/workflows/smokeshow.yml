@@ -10,38 +10,32 @@ on:
 permissions:
   statuses: write
 
-env:
-  UV_SYSTEM_PYTHON: 1
-
 jobs:
   smokeshow:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
         with:
-          python-version: '3.9'
+          python-version-file: ".python-version"
       - name: Setup uv
         uses: astral-sh/setup-uv@v7
         with:
-          version: "0.4.15"
-          enable-cache: true
           cache-dependency-glob: |
-            requirements**.txt
             pyproject.toml
-      - run: uv pip install -r requirements-github-actions.txt
-      - uses: actions/download-artifact@v5
+            uv.lock
+      - run: uv sync --locked --no-dev --group github-actions
+      - uses: actions/download-artifact@v7
         with:
           name: coverage-html
           path: htmlcov
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ github.event.workflow_run.id }}
-      - run: smokeshow upload htmlcov
+      - run: uv run smokeshow upload htmlcov
         env:
           SMOKESHOW_GITHUB_STATUS_DESCRIPTION: Coverage {coverage-percentage}
           SMOKESHOW_GITHUB_COVERAGE_THRESHOLD: 100
