@@ -1,6 +1,5 @@
 import click
 import pytest
-
 from typer.completion import shell_complete
 
 
@@ -38,9 +37,13 @@ def test_shell_complete_handles_abort_and_exit(monkeypatch, capsys, instruction,
 
     # Patch the specific method used by the instruction to raise
     if instruction.startswith("complete"):
-        monkeypatch.setattr(_FakeCompletion, "complete", lambda self: (_ for _ in ()).throw(exc()))
+        monkeypatch.setattr(
+            _FakeCompletion, "complete", lambda self: (_ for _ in ()).throw(exc())
+        )
     else:
-        monkeypatch.setattr(_FakeCompletion, "source", lambda self: (_ for _ in ()).throw(exc()))
+        monkeypatch.setattr(
+            _FakeCompletion, "source", lambda self: (_ for _ in ()).throw(exc())
+        )
 
     cli = click.Command("demo")
 
