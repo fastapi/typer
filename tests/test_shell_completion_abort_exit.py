@@ -59,3 +59,11 @@ def test_shell_complete_handles_abort_and_exit(monkeypatch, capsys, instruction,
     out = capsys.readouterr()
     assert code == 0
     assert out.out == ""
+<<<<<<< HEAD
+=======
+
+def test_fake_completion_default_methods_are_covered():
+    fc = _FakeCompletion(click.Command("demo"), {}, "demo", "_DEMO_COMPLETE")
+    assert fc.complete() == ""
+    assert fc.source() == ""
+>>>>>>> 5db882f (Add small test to cover default completion methods)
