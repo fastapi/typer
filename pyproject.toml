@@ -151,7 +151,6 @@ source-includes = [""]
 addopts = [
   "--strict-config",
   "--strict-markers",
-  "--import-mode=importlib",
 ]
 xfail_strict = true
 junit_family = "xunit2"
