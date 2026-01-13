@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import List
 
 import typer
 
@@ -14,7 +13,7 @@ app = typer.Typer()
 
 
 @app.command()
-def main(groceries: List[Food] = typer.Option(["f1", "f3"], enum_by_name=True)):
+def main(groceries: list[Food] = typer.Option(["f1", "f3"], enum_by_name=True)):
     print(f"Buying groceries: {', '.join([f.value for f in groceries])}")
 
 

@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import Tuple
 
 import typer
 
@@ -14,7 +13,7 @@ app = typer.Typer()
 
 
 @app.command()
-def main(user: Tuple[str, int, bool, Food] = typer.Option((None, None, None, Food.f1))):
+def main(user: tuple[str, int, bool, Food] = typer.Option((None, None, None, Food.f1))):
     username, coins, is_wizard, food = user
     if not username:
         print("No user provided")

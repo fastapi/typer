@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import Tuple
 
 import typer
 
@@ -15,7 +14,7 @@ app = typer.Typer()
 
 @app.command()
 def main(
-    user: Tuple[str, int, bool, Food] = typer.Option(
+    user: tuple[str, int, bool, Food] = typer.Option(
         (None, None, None, "f1"), enum_by_name=True
     ),
 ):

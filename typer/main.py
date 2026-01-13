@@ -651,7 +651,7 @@ def generate_enum_convertor(enum: type[Enum]) -> Callable[[Any], Any]:
     return convertor
 
 
-def generate_enum_name_convertor(enum: Type[Enum]) -> Callable[..., Any]:
+def generate_enum_name_convertor(enum: type[Enum]) -> Callable[..., Any]:
     val_map = {str(item.name): item for item in enum}
 
     def convertor(value: Any) -> Any:

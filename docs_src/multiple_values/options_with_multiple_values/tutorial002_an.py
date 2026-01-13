@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Annotated, Tuple
+from typing import Annotated
 
 import typer
 
@@ -15,7 +15,7 @@ app = typer.Typer()
 
 @app.command()
 def main(
-    user: Annotated[Tuple[str, int, bool, Food], typer.Option()] = (
+    user: Annotated[tuple[str, int, bool, Food], typer.Option()] = (
         None,
         None,
         None,

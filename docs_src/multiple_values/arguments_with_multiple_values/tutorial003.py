@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import Tuple
 
 import typer
 
@@ -15,7 +14,7 @@ app = typer.Typer()
 
 @app.command()
 def main(
-    names: Tuple[str, str, str, SuperHero] = typer.Argument(
+    names: tuple[str, str, str, SuperHero] = typer.Argument(
         ("Harry", "Hermione", "Ron", "hero3"),
         enum_by_name=True,
         case_sensitive=False,

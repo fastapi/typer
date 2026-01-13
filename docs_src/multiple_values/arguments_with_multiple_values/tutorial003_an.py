@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Annotated, Tuple
+from typing import Annotated
 
 import typer
 
@@ -16,7 +16,7 @@ app = typer.Typer()
 @app.command()
 def main(
     names: Annotated[
-        Tuple[str, str, str, SuperHero],
+        tuple[str, str, str, SuperHero],
         typer.Argument(
             enum_by_name=True,
             help="Select 4 characters to play with",
