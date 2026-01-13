@@ -1,4 +1,4 @@
-from typing import Annotated, List
+from typing import Annotated
 
 import typer
 from pydantic import AnyHttpUrl
@@ -8,7 +8,7 @@ app = typer.Typer()
 
 @app.command()
 def main(
-    urls: Annotated[List[AnyHttpUrl], typer.Option("--url", default_factory=list)],
+    urls: Annotated[list[AnyHttpUrl], typer.Option("--url", default_factory=list)],
 ):
     typer.echo(f"urls: {urls}")
 

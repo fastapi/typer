@@ -1,4 +1,4 @@
-from typing import Annotated, Tuple
+from typing import Annotated
 
 import typer
 from pydantic import AnyHttpUrl, IPvAnyAddress
@@ -9,7 +9,7 @@ app = typer.Typer()
 @app.command()
 def main(
     server: Annotated[
-        Tuple[str, IPvAnyAddress, AnyHttpUrl],
+        tuple[str, IPvAnyAddress, AnyHttpUrl],
         typer.Option(help="User name, age, email and social media URL"),
     ],
 ):
