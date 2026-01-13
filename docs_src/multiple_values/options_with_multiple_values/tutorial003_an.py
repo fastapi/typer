@@ -1,8 +1,7 @@
 from enum import Enum
-from typing import Tuple
+from typing import Annotated, Tuple
 
 import typer
-from typing_extensions import Annotated
 
 
 class Food(str, Enum):
