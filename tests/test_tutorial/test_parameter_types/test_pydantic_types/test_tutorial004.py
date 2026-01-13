@@ -28,7 +28,9 @@ def test_help(mod: ModuleType):
 
 
 def test_tuple(mod: ModuleType):
-    result = runner.invoke(mod.app, ["--server", "Example", "::1", "https://example.com"])
+    result = runner.invoke(
+        mod.app, ["--server", "Example", "::1", "https://example.com"]
+    )
     assert result.exit_code == 0
     assert "name: Example" in result.output
     assert "address: ::1" in result.output

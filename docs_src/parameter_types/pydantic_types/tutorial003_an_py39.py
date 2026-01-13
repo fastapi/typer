@@ -1,8 +1,7 @@
-from typing import List
+from typing import Annotated, List
 
 import typer
 from pydantic import AnyHttpUrl
-from typing_extensions import Annotated
 
 app = typer.Typer()
 

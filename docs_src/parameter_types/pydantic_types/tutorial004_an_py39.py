@@ -1,8 +1,7 @@
-from typing import Tuple
+from typing import Annotated, Tuple
 
 import typer
 from pydantic import AnyHttpUrl, IPvAnyAddress
-from typing_extensions import Annotated
 
 app = typer.Typer()
 

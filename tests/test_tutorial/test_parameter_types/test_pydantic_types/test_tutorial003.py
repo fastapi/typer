@@ -37,7 +37,9 @@ def test_url_list(mod: ModuleType):
 
 
 def test_url_invalid(mod: ModuleType):
-    result = runner.invoke(mod.app, ["--url", "invalid", "--url", "https://example.org"])
+    result = runner.invoke(
+        mod.app, ["--url", "invalid", "--url", "https://example.org"]
+    )
     assert result.exit_code != 0
     assert "Input should be a valid URL" in result.output
 
