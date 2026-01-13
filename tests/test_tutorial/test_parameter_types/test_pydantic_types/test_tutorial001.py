@@ -1,32 +1,45 @@
+import importlib
 import subprocess
 import sys
+from types import ModuleType
 
+import pytest
 from typer.testing import CliRunner
 
-from docs_src.parameter_types.pydantic_types import tutorial001_py39 as mod
-
 runner = CliRunner()
-app = mod.app
 
 
-def test_help():
-    result = runner.invoke(app, ["--help"])
+@pytest.fixture(
+    name="mod",
+    params=[
+        pytest.param("tutorial001_py39"),
+        pytest.param("tutorial001_an_py39"),
+    ],
+)
+def get_mod(request: pytest.FixtureRequest) -> ModuleType:
+    module_name = f"docs_src.parameter_types.pydantic_types.{request.param}"
+    mod = importlib.import_module(module_name)
+    return mod
+
+
+def test_help(mod: ModuleType):
+    result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
 
 
-def test_url_arg():
-    result = runner.invoke(app, ["https://typer.tiangolo.com"])
+def test_url_arg(mod: ModuleType):
+    result = runner.invoke(mod.app, ["https://typer.tiangolo.com"])
     assert result.exit_code == 0
     assert "url_arg: https://typer.tiangolo.com" in result.output
 
 
-def test_url_arg_invalid():
-    result = runner.invoke(app, ["invalid"])
+def test_url_arg_invalid(mod: ModuleType):
+    result = runner.invoke(mod.app, ["invalid"])
     assert result.exit_code != 0
     assert "Input should be a valid URL" in result.output
 
 
-def test_script():
+def test_script(mod: ModuleType):
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
         capture_output=True,
