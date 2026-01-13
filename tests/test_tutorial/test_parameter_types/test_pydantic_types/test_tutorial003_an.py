@@ -3,7 +3,7 @@ import sys
 
 from typer.testing import CliRunner
 
-from docs_src.parameter_types.pydantic_types import tutorial003_an as mod
+from docs_src.parameter_types.pydantic_types import tutorial003_an_py39 as mod
 
 runner = CliRunner()
 app = mod.app
