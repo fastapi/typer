@@ -4,6 +4,7 @@
 
 ### Docs
 
+* 📝 Add contribution instructions about LLM generated code and comments and automated tools for PRs. PR [#1489](https://github.com/fastapi/typer/pull/1489) by [@alejsdev](https://github.com/alejsdev).
 * 🐛 Fix copy button in `custom.js`. PR [#1488](https://github.com/fastapi/typer/pull/1488) by [@alejsdev](https://github.com/alejsdev).
 
 ## 0.21.1
