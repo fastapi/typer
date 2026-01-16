@@ -7,10 +7,10 @@ app = typer.Typer()
 
 @app.command()
 def main(
-    name: Annotated[list[str], typer.Option(help="The name to say hi to.")] = ["World"],
+    user: Annotated[list[str], typer.Option(help="The user to say hi to.")] = ["World"],
 ):
-    for each_name in name:
-        print(f"Hello {each_name}")
+    for u in user:
+        print(f"Hello {u}")
 
 
 if __name__ == "__main__":
