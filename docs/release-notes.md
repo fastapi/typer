@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Docs
+
+* 🐛 Fix copy button in `custom.js`. PR [#1488](https://github.com/fastapi/typer/pull/1488) by [@alejsdev](https://github.com/alejsdev).
+
 ## 0.21.1
 
 ### Fixes
