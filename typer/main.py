@@ -37,6 +37,7 @@ from .models import (
     Default,
     DefaultPlaceholder,
     DeveloperExceptionConfig,
+    DictParamType,
     FileBinaryRead,
     FileBinaryWrite,
     FileText,
@@ -720,6 +721,8 @@ def get_click_type(
 
     elif annotation is str:
         return click.STRING
+    elif annotation is dict:
+        return DictParamType()
     elif annotation is int:
         if parameter_info.min is not None or parameter_info.max is not None:
             min_ = None
