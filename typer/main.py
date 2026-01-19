@@ -168,11 +168,63 @@ class Typer:
                 """
             ),
         ] = Default(False),
-        subcommand_metavar: Optional[str] = Default(None),
-        chain: bool = Default(False),
-        result_callback: Optional[Callable[..., Any]] = Default(None),
+        subcommand_metavar: Annotated[
+            Optional[str],
+            Doc(
+                """
+                **Note**: you probably shouldn't use this parameter, it is inherited
+                from Click and supported for compatibility.
+
+                ---
+
+                How to represent the subcommand argument in help.
+                """
+            ),
+        ] = Default(None),
+        chain: Annotated[
+            bool,
+            Doc(
+                """
+                **Note**: you probably shouldn't use this parameter, it is inherited
+                from Click and supported for compatibility.
+
+                ---
+
+                Allow passing more than one subcommand argument.
+                """
+            ),
+        ] = Default(False),
+        result_callback: Annotated[
+            Optional[Callable[..., Any]],
+            Doc(
+                """
+                **Note**: you probably shouldn't use this parameter, it is inherited
+                from Click and supported for compatibility.
+
+                ---
+
+                A function to call after the group's and subcommand's callbacks.
+                """
+            ),
+        ] = Default(None),
         # Command
-        context_settings: Optional[dict[Any, Any]] = Default(None),
+        context_settings: Annotated[
+            Optional[dict[Any, Any]],
+            Doc(
+                """
+                Pass configurations for the [context](https://typer.tiangolo.com/tutorial/commands/context/).
+                Available configurations can be found in the docs for Click's `Context` [here](https://click.palletsprojects.com/en/stable/api/#context).
+
+                **Example**
+
+                ```python
+                import typer
+
+                app = typer.Typer(context_settings={"help_option_names": ["-h", "--help"]})
+                ```
+                """
+            ),
+        ] = Default(None),
         callback: Annotated[
             Optional[Callable[..., Any]],
             Doc(
@@ -344,11 +396,55 @@ class Typer:
         cls: Optional[type[TyperGroup]] = Default(None),
         invoke_without_command: bool = Default(False),
         no_args_is_help: bool = Default(False),
-        subcommand_metavar: Optional[str] = Default(None),
-        chain: bool = Default(False),
-        result_callback: Optional[Callable[..., Any]] = Default(None),
+        subcommand_metavar: Annotated[
+            Optional[str],
+            Doc(
+                """
+                **Note**: you probably shouldn't use this parameter, it is inherited
+                from Click and supported for compatibility.
+
+                ---
+
+                How to represent the subcommand argument in help.
+                """
+            ),
+        ] = Default(None),
+        chain: Annotated[
+            bool,
+            Doc(
+                """
+                **Note**: you probably shouldn't use this parameter, it is inherited
+                from Click and supported for compatibility.
+
+                ---
+
+                Allow passing more than one subcommand argument.
+                """
+            ),
+        ] = Default(False),
+        result_callback: Annotated[
+            Optional[Callable[..., Any]],
+            Doc(
+                """
+                **Note**: you probably shouldn't use this parameter, it is inherited
+                from Click and supported for compatibility.
+    
+                ---
+    
+                A function to call after the group's and subcommand's callbacks.
+                """
+            ),
+        ] = Default(None),
         # Command
-        context_settings: Optional[dict[Any, Any]] = Default(None),
+        context_settings: Annotated[
+            Optional[dict[Any, Any]],
+            Doc(
+                """
+                Pass configurations for the [context](https://typer.tiangolo.com/tutorial/commands/context/).
+                Available configurations can be found in the docs for Click's `Context` [here](https://click.palletsprojects.com/en/stable/api/#context).
+                """
+            ),
+        ] = Default(None),
         help: Optional[str] = Default(None),
         epilog: Optional[str] = Default(None),
         short_help: Optional[str] = Default(None),
@@ -389,7 +485,15 @@ class Typer:
         name: Optional[str] = None,
         *,
         cls: Optional[type[TyperCommand]] = None,
-        context_settings: Optional[dict[Any, Any]] = None,
+        context_settings: Annotated[
+            Optional[dict[Any, Any]],
+            Doc(
+                """
+                Pass configurations for the [context](https://typer.tiangolo.com/tutorial/commands/context/).
+                Available configurations can be found in the docs for Click's `Context` [here](https://click.palletsprojects.com/en/stable/api/#context).
+                """
+            ),
+        ] = Default(None),
         help: Optional[str] = None,
         epilog: Optional[str] = None,
         short_help: Optional[str] = None,
@@ -437,11 +541,55 @@ class Typer:
         cls: Optional[type[TyperGroup]] = Default(None),
         invoke_without_command: bool = Default(False),
         no_args_is_help: bool = Default(False),
-        subcommand_metavar: Optional[str] = Default(None),
-        chain: bool = Default(False),
-        result_callback: Optional[Callable[..., Any]] = Default(None),
+        subcommand_metavar: Annotated[
+            Optional[str],
+            Doc(
+                """
+                **Note**: you probably shouldn't use this parameter, it is inherited
+                from Click and supported for compatibility.
+
+                ---
+
+                How to represent the subcommand argument in help.
+                """
+            ),
+        ] = Default(None),
+        chain: Annotated[
+            bool,
+            Doc(
+                """
+                **Note**: you probably shouldn't use this parameter, it is inherited
+                from Click and supported for compatibility.
+
+                ---
+
+                Allow passing more than one subcommand argument.
+                """
+            ),
+        ] = Default(False),
+        result_callback: Annotated[
+            Optional[Callable[..., Any]],
+            Doc(
+                """
+                **Note**: you probably shouldn't use this parameter, it is inherited
+                from Click and supported for compatibility.
+
+                ---
+
+                A function to call after the group's and subcommand's callbacks.
+                """
+            ),
+        ] = Default(None),
         # Command
-        context_settings: Optional[dict[Any, Any]] = Default(None),
+        context_settings: Annotated[
+            Optional[dict[Any, Any]],
+            Doc(
+                """
+                Pass configurations for the [context](https://typer.tiangolo.com/tutorial/commands/context/).
+                Available configurations can be found in the docs for Click's `Context` [here](https://click.palletsprojects.com/en/stable/api/#context).
+                """
+            ),
+        ] = Default(None),
         callback: Optional[Callable[..., Any]] = Default(None),
         help: Optional[str] = Default(None),
         epilog: Optional[str] = Default(None),
