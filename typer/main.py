@@ -5,6 +5,7 @@ import shutil
 import subprocess
 import sys
 import traceback
+from annotated_doc import Doc
 from collections.abc import Sequence
 from datetime import datetime
 from enum import Enum
@@ -12,7 +13,7 @@ from functools import update_wrapper
 from pathlib import Path
 from traceback import FrameSummary, StackSummary
 from types import TracebackType
-from typing import Any, Callable, Optional, Union
+from typing import Annotated, Any, Callable, Optional, Union
 from uuid import UUID
 
 import click
@@ -114,6 +115,21 @@ def get_install_completion_arguments() -> tuple[click.Parameter, click.Parameter
 
 
 class Typer:
+    """
+    `Typer` main class, the main entrypoint to use Typer.
+
+    Read more in the
+    [Typer docs for First Steps](https://typer.tiangolo.com/tutorial/typer-app/).
+
+    ## Example
+
+    ```python
+    import typer
+
+    app = typer.Typer()
+    ```
+    """
+
     def __init__(
         self,
         *,
