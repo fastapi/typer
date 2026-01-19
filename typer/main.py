@@ -156,7 +156,7 @@ class Typer:
             bool,
             Doc(
                 """
-                If this is set to `True`, running a CLI program without any [command](https://typer.tiangolo.com/tutorial/commands/) will automatically show the help page.
+                If this is set to `True`, running a command without any arguments will automatically show the help page.
 
                 **Example**
 
@@ -263,7 +263,22 @@ class Typer:
                 """
             ),
         ] = Default(None),
-        epilog: Optional[str] = Default(None),
+        epilog: Annotated[
+            Optional[str],
+            Doc(
+                """
+                Text that will be printed right after the help text.
+
+                **Example**
+
+                ```python
+                import typer
+
+                app = typer.Typer(epilog="May the force be with you")
+                ```
+                """
+            ),
+        ] = Default(None),
         short_help: Optional[str] = Default(None),
         options_metavar: str = Default("[OPTIONS]"),
         add_help_option: bool = Default(True),
@@ -395,7 +410,14 @@ class Typer:
         *,
         cls: Optional[type[TyperGroup]] = Default(None),
         invoke_without_command: bool = Default(False),
-        no_args_is_help: bool = Default(False),
+        no_args_is_help: Annotated[
+            bool,
+            Doc(
+                """
+                If this is set to `True`, running a command without any arguments will automatically show the help page.
+                """
+            ),
+        ] = Default(False),
         subcommand_metavar: Annotated[
             Optional[str],
             Doc(
@@ -445,8 +467,24 @@ class Typer:
                 """
             ),
         ] = Default(None),
-        help: Optional[str] = Default(None),
-        epilog: Optional[str] = Default(None),
+        help: Annotated[
+            Optional[str],
+            Doc(
+                """
+                Help text for the command.
+                See [the tutorial about name and help](https://typer.tiangolo.com/tutorial/subcommands/name-and-help) for different ways of setting a command's help,
+                and which one takes priority.
+                """
+            ),
+        ] = Default(None),
+        epilog: Annotated[
+            Optional[str],
+            Doc(
+                """
+                Text that will be printed right after the help text.
+                """
+            ),
+        ] = Default(None),
         short_help: Optional[str] = Default(None),
         options_metavar: Optional[str] = Default(None),
         add_help_option: bool = Default(True),
@@ -455,6 +493,33 @@ class Typer:
         # Rich settings
         rich_help_panel: Union[str, None] = Default(None),
     ) -> Callable[[CommandFunctionType], CommandFunctionType]:
+        """
+        Using the decorator `@app.callback`, you can declare the CLI parameters for the main CLI application.
+
+        Read more in the
+        [Typer docs for Callbacks](https://typer.tiangolo.com/tutorial/commands/callback/).
+
+        ## Example
+
+        ```python
+        import typer
+
+        app = typer.Typer()
+        state = {"verbose": False}
+
+        @app.callback()
+        def main(verbose: bool = False):
+            if verbose:
+                print("Will write verbose output")
+                state["verbose"] = True
+
+        @app.command()
+            def delete(username: str):
+                # define subcommand
+                ...
+        ```
+        """
+
         def decorator(f: CommandFunctionType) -> CommandFunctionType:
             self.registered_callback = TyperInfo(
                 cls=cls,
@@ -494,17 +559,62 @@ class Typer:
                 """
             ),
         ] = Default(None),
-        help: Optional[str] = None,
-        epilog: Optional[str] = None,
+        help: Annotated[
+            Optional[str],
+            Doc(
+                """
+                Help text for the command.
+                See [the tutorial about name and help](https://typer.tiangolo.com/tutorial/subcommands/name-and-help) for different ways of setting a command's help,
+                and which one takes priority.
+                """
+            ),
+        ] = None,
+        epilog: Annotated[
+            Optional[str],
+            Doc(
+                """
+                Text that will be printed right after the help text.
+                """
+            ),
+        ] = None,
         short_help: Optional[str] = None,
         options_metavar: Optional[str] = None,
         add_help_option: bool = True,
-        no_args_is_help: bool = False,
+        no_args_is_help: Annotated[
+            bool,
+            Doc(
+                """
+                If this is set to `True`, running a command without any arguments will automatically show the help page.
+                """
+            ),
+        ] = False,
         hidden: bool = False,
         deprecated: bool = False,
         # Rich settings
         rich_help_panel: Union[str, None] = Default(None),
     ) -> Callable[[CommandFunctionType], CommandFunctionType]:
+        """
+        Using the decorator `@app.command`, you can define a subcommand of the previously defined Typer app.
+
+        Read more in the
+        [Typer docs for Commands](https://typer.tiangolo.com/tutorial/commands/).
+
+        ## Example
+
+        ```python
+        import typer
+
+        app = typer.Typer()
+
+        @app.command()
+        def create():
+            print("Creating user: Hiro Hamada")
+
+        @app.command()
+        def delete():
+            print("Deleting user: Hiro Hamada")
+        ```
+        """
         if cls is None:
             cls = TyperCommand
 
@@ -540,7 +650,14 @@ class Typer:
         name: Optional[str] = Default(None),
         cls: Optional[type[TyperGroup]] = Default(None),
         invoke_without_command: bool = Default(False),
-        no_args_is_help: bool = Default(False),
+        no_args_is_help: Annotated[
+            bool,
+            Doc(
+                """
+                If this is set to `True`, running a command without any arguments will automatically show the help page.
+                """
+            ),
+        ] = Default(False),
         subcommand_metavar: Annotated[
             Optional[str],
             Doc(
@@ -591,8 +708,24 @@ class Typer:
             ),
         ] = Default(None),
         callback: Optional[Callable[..., Any]] = Default(None),
-        help: Optional[str] = Default(None),
-        epilog: Optional[str] = Default(None),
+        help: Annotated[
+            Optional[str],
+            Doc(
+                """
+                Help text for the subcommand.
+                See [the tutorial about name and help](https://typer.tiangolo.com/tutorial/subcommands/name-and-help) for different ways of setting a command's help,
+                and which one takes priority.
+                """
+            ),
+        ] = Default(None),
+        epilog: Annotated[
+            Optional[str],
+            Doc(
+                """
+                Text that will be printed right after the help text.
+                """
+            ),
+        ] = Default(None),
         short_help: Optional[str] = Default(None),
         options_metavar: Optional[str] = Default(None),
         add_help_option: bool = Default(True),
@@ -601,6 +734,27 @@ class Typer:
         # Rich settings
         rich_help_panel: Union[str, None] = Default(None),
     ) -> None:
+        """
+        Add subcommands to the main app using `app.add_typer()`.
+        Subcommands may be defined in separate modules, ensuring clean separation of code by functionality.
+
+        Read more in the
+        [Typer docs for SubCommands](https://typer.tiangolo.com/tutorial/subcommands/add-typer/).
+
+        ## Example
+
+        ```python
+        import typer
+
+        from .add import app as add_app
+        from .delete import app as delete_app
+
+        app = typer.Typer()
+
+        app.add_typer(add_app)
+        app.add_typer(delete_app)
+        ```
+        """
         self.registered_groups.append(
             TyperInfo(
                 typer_instance,
