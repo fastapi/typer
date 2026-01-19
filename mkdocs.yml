@@ -159,6 +159,7 @@ nav:
       - tutorial/typer-command.md
   - Reference (Code API):
     - reference/index.md
+    - reference/typer.md
   - Resources:
     - resources/index.md
     - help-typer.md
