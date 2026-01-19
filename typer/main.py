@@ -558,7 +558,7 @@ class Typer:
                 Available configurations can be found in the docs for Click's `Context` [here](https://click.palletsprojects.com/en/stable/api/#context).
                 """
             ),
-        ] = Default(None),
+        ] = None,
         help: Annotated[
             Optional[str],
             Doc(
