@@ -138,6 +138,8 @@ nav:
       - tutorial/exceptions.md
       - tutorial/one-file-per-command.md
       - tutorial/typer-command.md
+  - Reference (Code API):
+    - reference/index.md
   - Resources:
     - resources/index.md
     - help-typer.md
