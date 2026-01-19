@@ -133,17 +133,84 @@ class Typer:
     def __init__(
         self,
         *,
-        name: Optional[str] = Default(None),
+        name: Annotated[
+            Optional[str],
+            Doc(
+                """
+                The name of this application. 
+                Mostly used to set the name for [subcommands](https://typer.tiangolo.com/tutorial/subcommands/), in which case it can be overridden by `add_typer(name=...)`.
+                
+                **Example**
+
+                ```python
+                import typer
+
+                app = typer.Typer(name="users")
+                ```
+                """
+            ),
+        ] = Default(None),
         cls: Optional[type[TyperGroup]] = Default(None),
         invoke_without_command: bool = Default(False),
-        no_args_is_help: bool = Default(False),
+        no_args_is_help: Annotated[
+            bool,
+            Doc(
+                """
+                If this is set to `True`, running a CLI program without any [command](https://typer.tiangolo.com/tutorial/commands/) will automatically show the help page.
+
+                **Example**
+
+                ```python
+                import typer
+
+                app = typer.Typer(no_args_is_help=True)
+                ```
+                """
+            ),
+        ] = Default(False),
         subcommand_metavar: Optional[str] = Default(None),
         chain: bool = Default(False),
         result_callback: Optional[Callable[..., Any]] = Default(None),
         # Command
         context_settings: Optional[dict[Any, Any]] = Default(None),
-        callback: Optional[Callable[..., Any]] = Default(None),
-        help: Optional[str] = Default(None),
+        callback: Annotated[
+            Optional[Callable[..., Any]],
+            Doc(
+                """
+                Add a callback to the main Typer app. Can be overridden with `@app.callback()`.
+                See [the tutorial about callbacks](https://typer.tiangolo.com/tutorial/commands/callback/) for more details.
+
+                **Example**
+
+                ```python
+                import typer
+
+                def callback():
+                    print("Running a command")
+                
+                app = typer.Typer(callback=callback)
+                ```
+                """
+            ),
+        ] = Default(None),
+        help: Annotated[
+            Optional[str],
+            Doc(
+                """
+                Help text for the main Typer app.
+                See [the tutorial about name and help](https://typer.tiangolo.com/tutorial/subcommands/name-and-help) for different ways of setting a command's help, 
+                and which one takes priority.
+
+                **Example**
+
+                ```python
+                import typer
+
+                app = typer.Typer(help="Some help.")
+                ```
+                """
+            ),
+        ] = Default(None),
         epilog: Optional[str] = Default(None),
         short_help: Optional[str] = Default(None),
         options_metavar: str = Default("[OPTIONS]"),
@@ -152,12 +219,95 @@ class Typer:
         deprecated: bool = Default(False),
         add_completion: bool = True,
         # Rich settings
-        rich_markup_mode: MarkupMode = DEFAULT_MARKUP_MODE,
+        rich_markup_mode: Annotated[
+            MarkupMode,
+            Doc(
+                """
+                Enable markup text if you have Rich installed.
+                By default, `rich_markup_mode` is `None` if Rich is not installed, and `"rich"` if it is installed.
+                See [the tutorial on help formatting](https://typer.tiangolo.com/tutorial/commands/help/#rich-markdown-and-markup) for more information.
+
+                **Example**
+
+                ```python
+                import typer
+
+                app = typer.Typer(rich_markup_mode="rich")
+                ```
+                """
+            ),
+        ] = DEFAULT_MARKUP_MODE,
         rich_help_panel: Union[str, None] = Default(None),
-        suggest_commands: bool = True,
-        pretty_exceptions_enable: bool = True,
-        pretty_exceptions_show_locals: bool = True,
-        pretty_exceptions_short: bool = True,
+        suggest_commands: Annotated[
+            bool,
+            Doc(
+                """
+                As of version 0.20.0, Typer provides [support for mistyped command names](https://typer.tiangolo.com/tutorial/commands/help/#suggest-commands) by printing helpful suggestions.
+                You can turn this setting off with `suggest_commands`:
+
+                **Example**
+
+                ```python
+                import typer
+
+                app = typer.Typer(suggest_commands=False)
+                ```
+                """
+            ),
+        ] = True,
+        pretty_exceptions_enable: Annotated[
+            bool,
+            Doc(
+                """
+                If you want to disable [pretty exceptions with Rich](https://typer.tiangolo.com/tutorial/exceptions/#exceptions-with-rich) entirely,
+                you can set `pretty_exceptions_enable` to `False`. When doing so, you will see the usual standard exception trace.
+
+                **Example**
+
+                ```python
+                import typer
+
+                app = typer.Typer(pretty_exceptions_enable=False)
+                ```
+                """
+            ),
+        ] = True,
+        pretty_exceptions_show_locals: Annotated[
+            bool,
+            Doc(
+                """
+                If Rich is installed, [error messages](https://typer.tiangolo.com/tutorial/exceptions/#exceptions-and-errors) 
+                will be nicely printed and include the values of local variables for easy debugging.
+                However, if such a variable contains delicate information, you should consider setting `pretty_exceptions_show_locals` to `False`
+                to enhance security. 
+
+                **Example**
+
+                ```python
+                import typer
+
+                app = typer.Typer(pretty_exceptions_show_locals=False)
+                ```
+                """
+            ),
+        ] = True,
+        pretty_exceptions_short: Annotated[
+            bool,
+            Doc(
+                """
+                By default, [pretty exceptions formatted with Rich](https://typer.tiangolo.com/tutorial/exceptions/#exceptions-with-rich) hide the long stack trace.
+                If you want to show the full trace instead, you can set the parameter `pretty_exceptions_short` to `False`:
+
+                **Example**
+
+                ```python
+                import typer
+
+                app = typer.Typer(pretty_exceptions_short=False)
+                ```
+                """
+            ),
+        ] = True,
     ):
         self._add_completion = add_completion
         self.rich_markup_mode: MarkupMode = rich_markup_mode
