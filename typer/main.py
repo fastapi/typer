@@ -279,12 +279,102 @@ class Typer:
                 """
             ),
         ] = Default(None),
-        short_help: Optional[str] = Default(None),
-        options_metavar: str = Default("[OPTIONS]"),
-        add_help_option: bool = Default(True),
-        hidden: bool = Default(False),
-        deprecated: bool = Default(False),
-        add_completion: bool = True,
+        short_help: Annotated[
+            Optional[str],
+            Doc(
+                """
+                A shortened version of the help text that can be used e.g. in the help table listing subcommands.
+                When not defined, the normal `help` text will be used instead.
+
+                **Example**
+
+                ```python
+                import typer
+
+                app = typer.Typer(help="A lot of explanation about user management", short_help="user management")
+                ```
+                """
+            ),
+        ] = Default(None),
+        options_metavar: Annotated[
+            str,
+            Doc(
+                """
+                In the example usage string of the help text for a command, the default placeholder for various arguments is `[OPTIONS]`.
+                Set `options_metavar` to change this into a different string.
+
+                **Example**
+
+                ```python
+                import typer
+
+                app = typer.Typer(options_metavar="[OPTS]")
+                ```
+                """
+            ),
+        ] = Default("[OPTIONS]"),
+        add_help_option: Annotated[
+            bool,
+            Doc(
+                """
+                **Note**: you probably shouldn't use this parameter, it is inherited
+                from Click and supported for compatibility.
+
+                ---
+
+                By default each command registers a --help option. This can be disabled by this parameter.
+                """
+            ),
+        ] = Default(True),
+        hidden: Annotated[
+            bool,
+            Doc(
+                """
+                Hide this command from help outputs. `False` by default.
+
+                **Example**
+
+                ```python
+                import typer
+
+                app = typer.Typer(hidden=True)
+                ```
+                """
+            ),
+        ] = Default(False),
+        deprecated: Annotated[
+            bool,
+            Doc(
+                """
+                Mark this command as being deprecated in the help text. `False` by default.
+
+                **Example**
+
+                ```python
+                import typer
+
+                app = typer.Typer(deprecated=True)
+                ```
+                """
+            ),
+        ] = Default(False),
+        add_completion: Annotated[
+            bool,
+            Doc(
+                """
+                Toggle whether or not to add the `--install-completion` and `--show-completion` options to the app.
+                Set to `True` by default.
+
+                **Example**
+
+                ```python
+                import typer
+
+                app = typer.Typer(add_completion=False)
+                ```
+                """
+            ),
+        ] = True,
         # Rich settings
         rich_markup_mode: Annotated[
             MarkupMode,
@@ -304,7 +394,22 @@ class Typer:
                 """
             ),
         ] = DEFAULT_MARKUP_MODE,
-        rich_help_panel: Union[str, None] = Default(None),
+        rich_help_panel: Annotated[
+            Union[str, None],
+            Doc(
+                """
+                Set the panel name of the command when the help is printed with Rich.
+
+                **Example**
+
+                ```python
+                import typer
+
+                app = typer.Typer(rich_help_panel="Utils and Configs")
+                ```
+                """
+            ),
+        ] = Default(None),
         suggest_commands: Annotated[
             bool,
             Doc(
@@ -485,13 +590,62 @@ class Typer:
                 """
             ),
         ] = Default(None),
-        short_help: Optional[str] = Default(None),
-        options_metavar: Optional[str] = Default(None),
-        add_help_option: bool = Default(True),
-        hidden: bool = Default(False),
-        deprecated: bool = Default(False),
+        short_help: Annotated[
+            Optional[str],
+            Doc(
+                """
+                A shortened version of the help text that can be used e.g. in the help table listing subcommands.
+                When not defined, the normal `help` text will be used instead.
+                """
+            ),
+        ] = Default(None),
+        options_metavar: Annotated[
+            Optional[str],
+            Doc(
+                """
+                In the example usage string of the help text for a command, the default placeholder for various arguments is `[OPTIONS]`.
+                Set `options_metavar` to change this into a different string. When `None`, the default value will be used.
+                """
+            ),
+        ] = Default(None),
+        add_help_option: Annotated[
+            bool,
+            Doc(
+                """
+                **Note**: you probably shouldn't use this parameter, it is inherited
+                from Click and supported for compatibility.
+
+                ---
+
+                By default each command registers a --help option. This can be disabled by this parameter.
+                """
+            ),
+        ] = Default(True),
+        hidden: Annotated[
+            bool,
+            Doc(
+                """
+                Hide this command from help outputs. `False` by default.
+                """
+            ),
+        ] = Default(False),
+        deprecated: Annotated[
+            bool,
+            Doc(
+                """
+                Mark this command as deprecated in the help text. `False` by default.
+                """
+            ),
+        ] = Default(False),
         # Rich settings
-        rich_help_panel: Union[str, None] = Default(None),
+        rich_help_panel: Annotated[
+            Union[str, None],
+            Doc(
+                """
+                Set the panel name of the command when the help is printed with Rich.
+                """
+            ),
+        ] = Default(None),
     ) -> Callable[[CommandFunctionType], CommandFunctionType]:
         """
         Using the decorator `@app.callback`, you can declare the CLI parameters for the main CLI application.
@@ -577,9 +731,37 @@ class Typer:
                 """
             ),
         ] = None,
-        short_help: Optional[str] = None,
-        options_metavar: Optional[str] = None,
-        add_help_option: bool = True,
+        short_help: Annotated[
+            Optional[str],
+            Doc(
+                """
+                A shortened version of the help text that can be used e.g. in the help table listing subcommands.
+                When not defined, the normal `help` text will be used instead.
+                """
+            ),
+        ] = None,
+        options_metavar: Annotated[
+            Optional[str],
+            Doc(
+                """
+                In the example usage string of the help text for a command, the default placeholder for various arguments is `[OPTIONS]`.
+                Set `options_metavar` to change this into a different string. When `None`, the default value will be used.
+                """
+            ),
+        ] = Default(None),
+        add_help_option: Annotated[
+            bool,
+            Doc(
+                """
+                **Note**: you probably shouldn't use this parameter, it is inherited
+                from Click and supported for compatibility.
+
+                ---
+
+                By default each command registers a --help option. This can be disabled by this parameter.
+                """
+            ),
+        ] = True,
         no_args_is_help: Annotated[
             bool,
             Doc(
@@ -588,10 +770,31 @@ class Typer:
                 """
             ),
         ] = False,
-        hidden: bool = False,
-        deprecated: bool = False,
+        hidden: Annotated[
+            bool,
+            Doc(
+                """
+                Hide this command from help outputs. `False` by default.
+                """
+            ),
+        ] = False,
+        deprecated: Annotated[
+            bool,
+            Doc(
+                """
+                Mark this command as deprecated in the help outputs. `False` by default.
+                """
+            ),
+        ] = False,
         # Rich settings
-        rich_help_panel: Union[str, None] = Default(None),
+        rich_help_panel: Annotated[
+            Union[str, None],
+            Doc(
+                """
+                Set the panel name of the command when the help is printed with Rich.
+                """
+            ),
+        ] = Default(None),
     ) -> Callable[[CommandFunctionType], CommandFunctionType]:
         """
         Using the decorator `@app.command`, you can define a subcommand of the previously defined Typer app.
@@ -726,13 +929,62 @@ class Typer:
                 """
             ),
         ] = Default(None),
-        short_help: Optional[str] = Default(None),
-        options_metavar: Optional[str] = Default(None),
-        add_help_option: bool = Default(True),
-        hidden: bool = Default(False),
-        deprecated: bool = Default(False),
+        short_help: Annotated[
+            Optional[str],
+            Doc(
+                """
+                A shortened version of the help text that can be used e.g. in the help table listing subcommands.
+                When not defined, the normal `help` text will be used instead.
+                """
+            ),
+        ] = Default(None),
+        options_metavar: Annotated[
+            Optional[str],
+            Doc(
+                """
+                In the example usage string of the help text for a command, the default placeholder for various arguments is `[OPTIONS]`.
+                Set `options_metavar` to change this into a different string. When `None`, the default value will be used.
+                """
+            ),
+        ] = Default(None),
+        add_help_option: Annotated[
+            bool,
+            Doc(
+                """
+                **Note**: you probably shouldn't use this parameter, it is inherited
+                from Click and supported for compatibility.
+
+                ---
+
+                By default each command registers a --help option. This can be disabled by this parameter.
+                """
+            ),
+        ] = Default(True),
+        hidden: Annotated[
+            bool,
+            Doc(
+                """
+                Hide this command from help outputs. `False` by default.
+                """
+            ),
+        ] = Default(False),
+        deprecated: Annotated[
+            bool,
+            Doc(
+                """
+                Mark this command as deprecated in the help outputs. `False` by default.
+                """
+            ),
+        ] = False,
         # Rich settings
-        rich_help_panel: Union[str, None] = Default(None),
+        rich_help_panel: Annotated[
+            Union[str, None],
+            Doc(
+                """
+                Set the panel name of the command when the help is printed with Rich.
+                """
+            ),
+        ] = Default(None),
     ) -> None:
         """
         Add subcommands to the main app using `app.add_typer()`.
