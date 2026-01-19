@@ -5,7 +5,6 @@ import shutil
 import subprocess
 import sys
 import traceback
-from annotated_doc import Doc
 from collections.abc import Sequence
 from datetime import datetime
 from enum import Enum
@@ -17,6 +16,7 @@ from typing import Annotated, Any, Callable, Optional, Union
 from uuid import UUID
 
 import click
+from annotated_doc import Doc
 from typer._types import TyperChoice
 
 from ._typing import get_args, get_origin, is_literal_type, is_union, literal_values
@@ -137,9 +137,9 @@ class Typer:
             Optional[str],
             Doc(
                 """
-                The name of this application. 
+                The name of this application.
                 Mostly used to set the name for [subcommands](https://typer.tiangolo.com/tutorial/subcommands/), in which case it can be overridden by `add_typer(name=...)`.
-                
+
                 **Example**
 
                 ```python
@@ -239,7 +239,7 @@ class Typer:
 
                 def callback():
                     print("Running a command")
-                
+
                 app = typer.Typer(callback=callback)
                 ```
                 """
@@ -250,7 +250,7 @@ class Typer:
             Doc(
                 """
                 Help text for the main Typer app.
-                See [the tutorial about name and help](https://typer.tiangolo.com/tutorial/subcommands/name-and-help) for different ways of setting a command's help, 
+                See [the tutorial about name and help](https://typer.tiangolo.com/tutorial/subcommands/name-and-help) for different ways of setting a command's help,
                 and which one takes priority.
 
                 **Example**
@@ -328,10 +328,10 @@ class Typer:
             bool,
             Doc(
                 """
-                If Rich is installed, [error messages](https://typer.tiangolo.com/tutorial/exceptions/#exceptions-and-errors) 
+                If Rich is installed, [error messages](https://typer.tiangolo.com/tutorial/exceptions/#exceptions-and-errors)
                 will be nicely printed and include the values of local variables for easy debugging.
                 However, if such a variable contains delicate information, you should consider setting `pretty_exceptions_show_locals` to `False`
-                to enhance security. 
+                to enhance security.
 
                 **Example**
 
@@ -428,9 +428,9 @@ class Typer:
                 """
                 **Note**: you probably shouldn't use this parameter, it is inherited
                 from Click and supported for compatibility.
-    
+
                 ---
-    
+
                 A function to call after the group's and subcommand's callbacks.
                 """
             ),
