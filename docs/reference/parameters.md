@@ -1,6 +1,6 @@
 # Parameters
 
-Parameters to our command line interface may be both [options](https://typer.tiangolo.com/tutorial/options/) and [arguments](https://typer.tiangolo.com/tutorial/arguments/):
+Parameters to our command line interface may be both [CLI Options](https://typer.tiangolo.com/tutorial/options/) and [CLI Arguments](https://typer.tiangolo.com/tutorial/arguments/):
 
 ```python
 from typing import Annotated

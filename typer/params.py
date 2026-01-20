@@ -277,14 +277,134 @@ def Option(
             """
         ),
     ] = None,
-    autocompletion: Optional[Callable[..., Any]] = None,
-    default_factory: Optional[Callable[[], Any]] = None,
+    autocompletion: Annotated[
+        Optional[Callable[..., Any]],
+        Doc(
+            """
+            Provide a custom function that helps to autocomplete the values of this option.
+            See [the tutorial on parameter autocompletion](https://typer.tiangolo.com/tutorial/options-autocompletion) for more details.
+
+            **Example**
+
+            ```python
+            def name_complete():
+                return ["Me", "Myself", "I"]
+
+            @app.command()
+            def main(name: Annotated[str, typer.Option(autocompletion=name_complete)] = "World"):
+                print(f"Hello {name}")
+            ```
+            """
+        ),
+    ] = None,
+    default_factory: Annotated[
+        Optional[Callable[[], Any]],
+        Doc(
+            """
+            Provide a custom function that dynamically generates a [default](https://typer.tiangolo.com/tutorial/arguments/default) for this option.
+
+            **Example**
+
+            ```python
+            def get_name():
+                return random.choice(["Me", "Myself", "I"])
+
+            @app.command()
+            def main(name: Annotated[str, typer.Option(default_factory=get_name)]):
+                print(f"Hello {name}")
+            ```
+            """
+        ),
+    ] = None,
     # Custom type
-    parser: Optional[Callable[[str], Any]] = None,
-    click_type: Optional[click.ParamType] = None,
+    parser: Annotated[
+        Optional[Callable[[str], Any]],
+        Doc(
+            """
+            Use your own custom types in Typer applications by defining a `parser` function that parses input into your own types:
+
+            **Example**
+
+            ```python
+            class CustomClass:
+                def __init__(self, value: str):
+                    self.value = value
+
+                def __str__(self):
+                    return f"<CustomClass: value={self.value}>"
+
+            def my_parser(value: str):
+                return CustomClass(value * 2)
+
+            @app.command()
+            def main(opt: Annotated[CustomClass, typer.Option(parser=my_parser)] = "Foo"):
+                print(f"--opt is {opt}")
+            ```
+            """
+        ),
+    ] = None,
+    click_type: Annotated[
+        Optional[click.ParamType],
+        Doc(
+            """
+            Define this parameter to use a [custom Click type](https://click.palletsprojects.com/en/stable/parameters/#implementing-custom-types) in your Typer applications.
+
+            **Example**
+
+            ```python
+            class CustomClass:
+                def __init__(self, value: str):
+                    self.value = value
+
+                def __str__(self):
+                    return f"<CustomClass: value={self.value}>"
+
+            class CustomClassParser(click.ParamType):
+                name = "CustomClass"
+
+                def convert(self, value, param, ctx):
+                    return CustomClass(value * 3)
+
+            @app.command()
+            def main(opt: Annotated[CustomClass, typer.Option(click_type=CustomClassParser())] = "Foo"):
+                print(f"--opt is {opt}")
+            ```
+            """
+        ),
+    ] = None,
     # Option
-    show_default: Union[bool, str] = True,
-    prompt: Union[bool, str] = False,
+    show_default: Annotated[
+        Union[bool, str],
+        Doc(
+            """
+            When set to `False`, don't show the default value of this argument in the [help text](https://typer.tiangolo.com/tutorial/options/help/).
+
+            **Example**
+
+            ```python
+            @app.command()
+            def main(fullname: Annotated[str, typer.Option(show_default=False)] = "Wade Wilson"):
+                print(f"Hello {fullname}")
+            ```
+            """
+        ),
+    ] = True,
+    prompt: Annotated[
+        Union[bool, str],
+        Doc(
+            """
+            When set to `True`, a prompt will appear to ask for a value if it was not provided:
+
+            **Example**
+
+            ```python
+            @app.command()
+            def main(name: str, lastname: Annotated[str, typer.Option(prompt=True)]):
+                print(f"Hello {name} {lastname}")
+            ```
+            """
+        ),
+    ] = False,
     confirmation_prompt: bool = False,
     prompt_required: bool = True,
     hide_input: bool = False,
@@ -644,13 +764,118 @@ def Argument(
             """
         ),
     ] = None,
-    autocompletion: Optional[Callable[..., Any]] = None,
-    default_factory: Optional[Callable[[], Any]] = None,
+    autocompletion: Annotated[
+        Optional[Callable[..., Any]],
+        Doc(
+            """
+            Provide a custom function that helps to autocomplete the values of this argument.
+            See [the tutorial on parameter autocompletion](https://typer.tiangolo.com/tutorial/options-autocompletion) for more details.
+
+            **Example**
+
+            ```python
+            def name_complete():
+                return ["Me", "Myself", "I"]
+
+            @app.command()
+            def main(name: Annotated[str, typer.Argument(autocompletion=name_complete)] = "World"):
+                print(f"Hello {name}")
+            ```
+            """
+        ),
+    ] = None,
+    default_factory: Annotated[
+        Optional[Callable[[], Any]],
+        Doc(
+            """
+            Provide a custom function that dynamically generates a [default](https://typer.tiangolo.com/tutorial/arguments/default) for this argument.
+
+            **Example**
+
+            ```python
+            def get_name():
+                return random.choice(["Me", "Myself", "I"])
+
+            @app.command()
+            def main(name: Annotated[str, typer.Argument(default_factory=get_name)]):
+                print(f"Hello {name}")
+            ```
+            """
+        ),
+    ] = None,
     # Custom type
-    parser: Optional[Callable[[str], Any]] = None,
-    click_type: Optional[click.ParamType] = None,
+    parser: Annotated[
+        Optional[Callable[[str], Any]],
+        Doc(
+            """
+            Use your own custom types in Typer applications by defining a `parser` function that parses input into your own types:
+
+            **Example**
+
+            ```python
+            class CustomClass:
+                def __init__(self, value: str):
+                    self.value = value
+
+                def __str__(self):
+                    return f"<CustomClass: value={self.value}>"
+
+            def my_parser(value: str):
+                return CustomClass(value * 2)
+
+            @app.command()
+            def main(arg: Annotated[CustomClass, typer.Argument(parser=my_parser):
+                print(f"arg is {arg}")
+            ```
+            """
+        ),
+    ] = None,
+    click_type: Annotated[
+        Optional[click.ParamType],
+        Doc(
+            """
+            Define this parameter to use a [custom Click type](https://click.palletsprojects.com/en/stable/parameters/#implementing-custom-types) in your Typer applications.
+
+            **Example**
+
+            ```python
+            class CustomClass:
+                def __init__(self, value: str):
+                    self.value = value
+
+                def __str__(self):
+                    return f"<CustomClass: value={self.value}>"
+
+            class CustomClassParser(click.ParamType):
+                name = "CustomClass"
+
+                def convert(self, value, param, ctx):
+                    return CustomClass(value * 3)
+
+            @app.command()
+            def main(arg: Annotated[CustomClass, typer.Argument(click_type=CustomClassParser())]):
+                print(f"arg is {arg}")
+            ```
+            """
+        ),
+    ] = None,
     # TyperArgument
-    show_default: Union[bool, str] = True,
+    show_default: Annotated[
+        Union[bool, str],
+        Doc(
+            """
+            When set to `False`, don't show the default value of this argument in the [help text](https://typer.tiangolo.com/tutorial/arguments/help/).
+
+            **Example**
+
+            ```python
+            @app.command()
+            def main(fullname: Annotated[str, typer.Argument(show_default=False)] = "Wade Wilson"):
+                print(f"Hello {fullname}")
+            ```
+            """
+        ),
+    ] = True,
     show_choices: bool = True,
     show_envvar: Annotated[
         bool,
