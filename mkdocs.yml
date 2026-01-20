@@ -160,6 +160,7 @@ nav:
   - Reference (Code API):
     - reference/index.md
     - reference/typer.md
+    - reference/parameters.md
   - Resources:
     - resources/index.md
     - help-typer.md
