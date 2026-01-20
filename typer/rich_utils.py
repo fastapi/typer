@@ -737,7 +737,6 @@ def rich_render_text(text: str) -> str:
     return rendered.rstrip("\n")
 
 
-
 def get_traceback(
     exc: BaseException,
     exception_config: DeveloperExceptionConfig,
