@@ -150,8 +150,39 @@ class Typer:
                 """
             ),
         ] = Default(None),
-        cls: Optional[type[TyperGroup]] = Default(None),
-        invoke_without_command: bool = Default(False),
+        cls: Annotated[
+            Optional[type[TyperGroup]],
+            Doc(
+                """
+                The class of this app. Mainly used when [using the Click library underneath](https://typer.tiangolo.com/tutorial/using-click/). Can usually be left at the default value `None`.
+                Otherwise, should be a subtype of `TyperGroup`.
+
+                **Example**
+
+                ```python
+                import typer
+
+                app = typer.Typer(cls=TyperGroup)
+                ```
+                """
+            ),
+        ] = Default(None),
+        invoke_without_command: Annotated[
+            bool,
+            Doc(
+                """
+                By setting this to `True`, you can make sure a callback is executed even when no subcommand is provided.
+
+                **Example**
+
+                ```python
+                import typer
+
+                app = typer.Typer(invoke_without_command=True)
+                ```
+                """
+            ),
+        ] = Default(False),
         no_args_is_help: Annotated[
             bool,
             Doc(
@@ -513,8 +544,23 @@ class Typer:
     def callback(
         self,
         *,
-        cls: Optional[type[TyperGroup]] = Default(None),
-        invoke_without_command: bool = Default(False),
+        cls: Annotated[
+            Optional[type[TyperGroup]],
+            Doc(
+                """
+                The class of this app. Mainly used when [using the Click library underneath](https://typer.tiangolo.com/tutorial/using-click/). Can usually be left at the default value `None`.
+                Otherwise, should be a subtype of `TyperGroup`.
+                """
+            ),
+        ] = Default(None),
+        invoke_without_command: Annotated[
+            bool,
+            Doc(
+                """
+                By setting this to `True`, you can make sure a callback is executed even when no subcommand is provided.
+                """
+            ),
+        ] = Default(False),
         no_args_is_help: Annotated[
             bool,
             Doc(
@@ -701,9 +747,24 @@ class Typer:
 
     def command(
         self,
-        name: Optional[str] = None,
+        name: Annotated[
+            Optional[str],
+            Doc(
+                """
+                The name of this command.
+                """
+            ),
+        ] = None,
         *,
-        cls: Optional[type[TyperCommand]] = None,
+        cls: Annotated[
+            Optional[type[TyperCommand]],
+            Doc(
+                """
+                The class of this command. Mainly used when [using the Click library underneath](https://typer.tiangolo.com/tutorial/using-click/). Can usually be left at the default value `None`.
+                Otherwise, should be a subtype of `TyperCommand`.
+                """
+            ),
+        ] = None,
         context_settings: Annotated[
             Optional[dict[Any, Any]],
             Doc(
@@ -850,9 +911,33 @@ class Typer:
         self,
         typer_instance: "Typer",
         *,
-        name: Optional[str] = Default(None),
-        cls: Optional[type[TyperGroup]] = Default(None),
-        invoke_without_command: bool = Default(False),
+        name: Annotated[
+            Optional[str],
+            Doc(
+                """
+                The name of this subcommand.
+                See [the tutorial about name and help](https://typer.tiangolo.com/tutorial/subcommands/name-and-help) for different ways of setting a command's name,
+                and which one takes priority.
+                """
+            ),
+        ] = Default(None),
+        cls: Annotated[
+            Optional[type[TyperGroup]],
+            Doc(
+                """
+                The class of this subcommand. Mainly used when [using the Click library underneath](https://typer.tiangolo.com/tutorial/using-click/). Can usually be left at the default value `None`.
+                Otherwise, should be a subtype of `TyperGroup`.
+                """
+            ),
+        ] = Default(None),
+        invoke_without_command: Annotated[
+            bool,
+            Doc(
+                """
+                By setting this to `True`, you can make sure a callback is executed even when no subcommand is provided.
+                """
+            ),
+        ] = Default(False),
         no_args_is_help: Annotated[
             bool,
             Doc(
@@ -910,7 +995,15 @@ class Typer:
                 """
             ),
         ] = Default(None),
-        callback: Optional[Callable[..., Any]] = Default(None),
+        callback: Annotated[
+            Optional[Callable[..., Any]],
+            Doc(
+                """
+                Add a callback to this app.
+                See [the tutorial about callbacks](https://typer.tiangolo.com/tutorial/commands/callback/) for more details.
+                """
+            ),
+        ] = Default(None),
         help: Annotated[
             Optional[str],
             Doc(
