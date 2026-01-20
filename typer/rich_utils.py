@@ -733,7 +733,8 @@ def rich_to_html(input_text: str) -> str:
 def rich_render_text(text: str) -> str:
     """Remove rich tags and render a pure text representation"""
     rendered = Text.from_markup(text)
-    return rendered.plain.rstrip("\n")
+    return rendered.plain
+
 
 
 def get_traceback(
