@@ -9,4 +9,10 @@ from typer import Typer
 ```
 
 ::: typer.Typer
+    options:
+        members:
+            - callback
+            - command
+            - add_typer
+
 

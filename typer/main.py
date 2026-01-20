@@ -411,7 +411,7 @@ class Typer:
             MarkupMode,
             Doc(
                 """
-                Enable markup text if you have Rich installed.
+                Enable markup text if you have Rich installed. This can be set to `"markdown"`, `"rich"`, or `None`.
                 By default, `rich_markup_mode` is `None` if Rich is not installed, and `"rich"` if it is installed.
                 See [the tutorial on help formatting](https://typer.tiangolo.com/tutorial/commands/help/#rich-markdown-and-markup) for more information.
 
