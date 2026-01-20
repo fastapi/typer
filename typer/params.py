@@ -1,6 +1,7 @@
-from typing import TYPE_CHECKING, Any, Callable, Optional, Union, overload
+from typing import TYPE_CHECKING, Annotated, Any, Callable, Optional, Union, overload
 
 import click
+from annotated_doc import Doc
 
 from .models import ArgumentInfo, OptionInfo
 
@@ -142,20 +143,139 @@ def Option(
 
 def Option(
     # Parameter
-    default: Optional[Any] = ...,
-    *param_decls: str,
-    callback: Optional[Callable[..., Any]] = None,
-    metavar: Optional[str] = None,
-    expose_value: bool = True,
-    is_eager: bool = False,
-    envvar: Optional[Union[str, list[str]]] = None,
-    # Note that shell_complete is not fully supported and will be removed in future versions
+    default: Annotated[
+        Optional[Any],
+        Doc(
+            """
+            Usually, CLI options are optional and have a default value, passed on like this:
+
+            **Example**
+
+            ```python
+            @app.command()
+            def main(network: str = typer.Option("CNN")):
+                print(f"Training neural network of type: {network}")
+            ```
+
+            Note that this usage is deprecated, and we recommend to use `Annotated` instead:
+            ```
+            @app.command()
+            def main(network: Annotated[str, typer.Option()] = "CNN"):
+                print(f"Hello {name}!")
+            ```
+
+            You can also use `...` ([Ellipsis](https://docs.python.org/3/library/constants.html#Ellipsis)) as the "default" value to clarify that this is a required CLI option.
+            """
+        ),
+    ] = ...,
+    *param_decls: Annotated[
+        str,
+        Doc(
+            """
+            Positional argument that defines how users can call this option on the command line.
+            If not defined, Typer will automatically use the function parameter as default.
+            See [the tutorial about CLI Option Names](https://typer.tiangolo.com/tutorial/options/name/) for more details.
+
+            **Example**
+
+            ```python
+            @app.command()
+            def main(user_name: Annotated[str, typer.Option("--name", "-n", "-u")]):
+                print(f"Hello {user_name}")
+            ```
+            """
+        ),
+    ],
+    callback: Annotated[
+        Optional[Callable[..., Any]],
+        Doc(
+            """
+            Add a callback to this option, to execute additional logic after the value was received from the terminal.
+            See [the tutorial about callbacks](https://typer.tiangolo.com/tutorial/options/callback-and-context/) for more details.
+
+            **Example**
+
+            ```python
+            def name_callback(value: str):
+                if value != "Deadpool":
+                    raise typer.BadParameter("Only Deadpool is allowed")
+                return value
+
+            @app.command()
+            def main(name: Annotated[str | None, typer.Option(callback=name_callback)] = None):
+                print(f"Hello {name}")
+            ```
+            """
+        ),
+    ] = None,
+    metavar: Annotated[
+        Optional[str],
+        Doc(
+            """
+            Customize the name displayed in the help text to represent this CLI option. Note that this doesn't influence the way the option must be called.
+
+            **Example**
+
+            ```python
+            @app.command()
+            def main(user: Annotated[str, typer.Option(metavar="User name")]):
+                print(f"Hello {user}")
+            ```
+            """
+        ),
+    ] = None,
+    expose_value: Annotated[
+        bool,
+        Doc(
+            """
+            **Note**: you probably shouldn't use this parameter, it is inherited from Click and supported for compatibility.
+
+            ---
+
+            If this is `True` then the value is passed onwards to the command callback and stored on the context, otherwise it’s skipped.
+            """
+        ),
+    ] = True,
+    is_eager: Annotated[
+        bool,
+        Doc(
+            """
+            Set an option to "eager" to ensure it gets processed before other CLI parameters. This could be relevant when there are other parameters with callbacks that could exit the program early.
+            For more information and an extended example, see the documentation [here](https://typer.tiangolo.com/tutorial/options/version/#fix-with-is_eager).
+            """
+        ),
+    ] = False,
+    envvar: Annotated[
+        Optional[Union[str, list[str]]],
+        Doc(
+            """
+            Configure an option to read a value from an environment variable if it is not provided in the command line as a CLI option.
+            For more information, see the [documentation on Environment Variables](https://typer.tiangolo.com/tutorial/arguments/envvar/).
+
+            **Example**
+
+            ```python
+            @app.command()
+            def main(user: Annotated[str, typer.Option(envvar="AWESOME_PERSON")]):
+                print(f"Hello {user}")
+            ```
+            """
+        ),
+    ] = None,
     # TODO: Remove shell_complete in a future version (after 0.16.0)
-    shell_complete: Optional[
-        Callable[
-            [click.Context, click.Parameter, str],
-            Union[list["click.shell_completion.CompletionItem"], list[str]],
-        ]
+    shell_complete: Annotated[
+        Optional[
+            Callable[
+                [click.Context, click.Parameter, str],
+                Union[list["click.shell_completion.CompletionItem"], list[str]],
+            ]
+        ],
+        Doc(
+            """
+            **Note**: you probably shouldn't use this parameter, it is inherited from Click and supported for compatibility.
+            It is however not fully functional, and will likely be removed in future versions.
+            """
+        ),
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
     default_factory: Optional[Callable[[], Any]] = None,
@@ -169,14 +289,45 @@ def Option(
     prompt_required: bool = True,
     hide_input: bool = False,
     # TODO: remove is_flag and flag_value in a future release
-    is_flag: Optional[bool] = None,
-    flag_value: Optional[Any] = None,
+    is_flag: Annotated[
+        Optional[bool],
+        Doc(
+            """
+            **Note**: you probably shouldn't use this parameter, it is inherited from Click and supported for compatibility.
+            It is however not fully functional, and will likely be removed in future versions.
+            """
+        ),
+    ] = None,
+    flag_value: Annotated[
+        Optional[Any],
+        Doc(
+            """
+            **Note**: you probably shouldn't use this parameter, it is inherited from Click and supported for compatibility.
+            It is however not fully functional, and will likely be removed in future versions.
+            """
+        ),
+    ] = None,
     count: bool = False,
     allow_from_autoenv: bool = True,
     help: Optional[str] = None,
     hidden: bool = False,
     show_choices: bool = True,
-    show_envvar: bool = True,
+    show_envvar: Annotated[
+        bool,
+        Doc(
+            """
+            When an ["envvar"](https://typer.tiangolo.com/tutorial/arguments/envvar) is defined, prevent it from showing up in the help text:
+
+            **Example**
+
+            ```python
+            @app.command()
+            def main(user: Annotated[str, typer.Option(envvar="AWESOME_PERSON", show_envvar=False)]):
+                print(f"Hello {user}")
+            ```
+            """
+        ),
+    ] = True,
     # Choice
     case_sensitive: bool = True,
     # Numbers
@@ -376,20 +527,122 @@ def Argument(
 
 def Argument(
     # Parameter
-    default: Optional[Any] = ...,
+    default: Annotated[
+        Optional[Any],
+        Doc(
+            """
+            By default, CLI arguments are required. However, by giving them a default value they become [optional](https://typer.tiangolo.com/tutorial/arguments/optional):
+
+            **Example**
+
+            ```python
+            @app.command()
+                def main(name: str = typer.Argument("World")):
+                print(f"Hello {name}!")
+            ```
+
+            Note that this usage is deprecated, and we recommend to use `Annotated` instead:
+            ```
+            @app.command()
+            def main(name: Annotated[str, typer.Argument()] = "World"):
+                print(f"Hello {name}!")
+            ```
+            """
+        ),
+    ] = ...,
     *,
-    callback: Optional[Callable[..., Any]] = None,
-    metavar: Optional[str] = None,
-    expose_value: bool = True,
-    is_eager: bool = False,
-    envvar: Optional[Union[str, list[str]]] = None,
-    # Note that shell_complete is not fully supported and will be removed in future versions
+    callback: Annotated[
+        Optional[Callable[..., Any]],
+        Doc(
+            """
+            Add a callback to this argument, to execute additional logic with the value received from the terminal.
+            See [the tutorial about callbacks](https://typer.tiangolo.com/tutorial/options/callback-and-context/) for more details.
+
+            **Example**
+
+            ```python
+            def name_callback(value: str):
+                if value != "Deadpool":
+                    raise typer.BadParameter("Only Deadpool is allowed")
+                return value
+
+            @app.command()
+            def main(name: Annotated[str | None, typer.Argument(callback=name_callback)] = None):
+                print(f"Hello {name}")
+            ```
+            """
+        ),
+    ] = None,
+    metavar: Annotated[
+        Optional[str],
+        Doc(
+            """
+            Customize the name displayed in the help text to represent this CLI argument.
+            By default, it will be the same name you declared, in uppercase.
+            See [the tutorial about CLI Arguments with Help](https://typer.tiangolo.com/tutorial/arguments/help/#custom-help-name-metavar) for more details.
+
+            **Example**
+
+            ```python
+            @app.command()
+            def main(name: Annotated[str, typer.Argument(metavar="✨username✨")] = "World"):
+                print(f"Hello {name}")
+            ```
+            """
+        ),
+    ] = None,
+    expose_value: Annotated[
+        bool,
+        Doc(
+            """
+            **Note**: you probably shouldn't use this parameter, it is inherited from Click and supported for compatibility.
+
+            ---
+
+            If this is `True` then the value is passed onwards to the command callback and stored on the context, otherwise it’s skipped.
+            """
+        ),
+    ] = True,
+    is_eager: Annotated[
+        bool,
+        Doc(
+            """
+            Set an argument to "eager" to ensure it gets processed before other CLI parameters. This could be relevant when there are other parameters with callbacks that could exit the program early.
+            For more information and an extended example, see the documentation [here](https://typer.tiangolo.com/tutorial/options/version/#fix-with-is_eager).
+            """
+        ),
+    ] = False,
+    envvar: Annotated[
+        Optional[Union[str, list[str]]],
+        Doc(
+            """
+            Configure an argument to read a value from an environment variable if it is not provided in the command line as a CLI argument.
+            For more information, see the [documentation on Environment Variables](https://typer.tiangolo.com/tutorial/arguments/envvar/).
+
+            **Example**
+
+            ```python
+            @app.command()
+            def main(name: Annotated[str, typer.Argument(envvar="AWESOME_NAME")] = "World"):
+                print(f"Hello Mr. {name}")
+            ```
+            """
+        ),
+    ] = None,
     # TODO: Remove shell_complete in a future version (after 0.16.0)
-    shell_complete: Optional[
-        Callable[
-            [click.Context, click.Parameter, str],
-            Union[list["click.shell_completion.CompletionItem"], list[str]],
-        ]
+    shell_complete: Annotated[
+        Optional[
+            Callable[
+                [click.Context, click.Parameter, str],
+                Union[list["click.shell_completion.CompletionItem"], list[str]],
+            ]
+        ],
+        Doc(
+            """
+            **Note**: you probably shouldn't use this parameter, it is inherited from Click and supported for compatibility.
+            It is however not fully functional, and will likely be removed in future versions.
+            """
+        ),
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
     default_factory: Optional[Callable[[], Any]] = None,
@@ -399,7 +652,22 @@ def Argument(
     # TyperArgument
     show_default: Union[bool, str] = True,
     show_choices: bool = True,
-    show_envvar: bool = True,
+    show_envvar: Annotated[
+        bool,
+        Doc(
+            """
+            When an ["envvar"](https://typer.tiangolo.com/tutorial/arguments/envvar) is defined, prevent it from showing up in the help text:
+
+            **Example**
+
+            ```python
+            @app.command()
+            def main(name: Annotated[str, typer.Argument(envvar="AWESOME_NAME", show_envvar=False)] = "World"):
+                print(f"Hello Mr. {name}")
+            ```
+            """
+        ),
+    ] = True,
     help: Optional[str] = None,
     hidden: bool = False,
     # Choice
