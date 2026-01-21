@@ -556,7 +556,7 @@ def Option(
         bool,
         Doc(
             """
-            For a CLI Option capturing an [Enum (choice)](https://typer.tiangolo.com/tutorial/parameter-types/enum),
+            For a CLI Option representing an [Enum (choice)](https://typer.tiangolo.com/tutorial/parameter-types/enum),
             you can allow case-insensitive matching with this parameter:
 
             **Example**
@@ -584,7 +584,7 @@ def Option(
         Optional[Union[int, float]],
         Doc(
             """
-            For a CLI Option capturing a [number](https://typer.tiangolo.com/tutorial/parameter-types/number/) (`int` or `float`),
+            For a CLI Option representing a [number](https://typer.tiangolo.com/tutorial/parameter-types/number/) (`int` or `float`),
             you can define numeric validations with `min` and `max` values:
 
             **Example**
@@ -606,7 +606,7 @@ def Option(
         Optional[Union[int, float]],
         Doc(
             """
-            For a CLI Option capturing a [number](https://typer.tiangolo.com/tutorial/parameter-types/number/) (`int` or `float`),
+            For a CLI Option representing a [number](https://typer.tiangolo.com/tutorial/parameter-types/number/) (`int` or `float`),
             you can define numeric validations with `min` and `max` values:
 
             **Example**
@@ -628,7 +628,7 @@ def Option(
         bool,
         Doc(
             """
-            For a CLI Option capturing a [number](https://typer.tiangolo.com/tutorial/parameter-types/number/) and that is bounded by using `min` and/or `max`,
+            For a CLI Option representing a [number](https://typer.tiangolo.com/tutorial/parameter-types/number/) and that is bounded by using `min` and/or `max`,
             you can opt to use the closest minimum or maximum value instead of raising an error. This is done by setting `clamp` to `True`.
 
             **Example**
@@ -651,7 +651,7 @@ def Option(
         Optional[list[str]],
         Doc(
             """
-            For a CLI Option capturing a [DateTime object](https://typer.tiangolo.com/tutorial/parameter-types/datetime),
+            For a CLI Option representing a [DateTime object](https://typer.tiangolo.com/tutorial/parameter-types/datetime),
             you can customize the formats that can be parsed automatically:
 
             **Example**
@@ -678,7 +678,7 @@ def Option(
         Optional[str],
         Doc(
             """
-            For a CLI Option capturing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
+            For a CLI Option representing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
             you can customize the mode to open the file with. If unset, Typer will set a [sensible value by default](https://typer.tiangolo.com/tutorial/parameter-types/file/#advanced-mode).
 
             **Example**
@@ -696,7 +696,7 @@ def Option(
         Optional[str],
         Doc(
             """
-            For a CLI Option capturing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
+            For a CLI Option representing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
             you can customize the encoding to open the file with.
 
             **Example**
@@ -725,7 +725,7 @@ def Option(
         Optional[bool],
         Doc(
             """
-            For a CLI Option capturing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
+            For a CLI Option representing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
             by default the file will not be created until you actually start writing to it.
             You can change this behaviour by setting this parameter.
             By default, it's set to `True` for writing and to `False` for reading.
@@ -745,7 +745,7 @@ def Option(
         bool,
         Doc(
             """
-            For a CLI Option capturing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
+            For a CLI Option representing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
             you can ensure that all write instructions first go into a temporal file, and are only move to the final destination after completing
             by setting `atomic` to `True`. This can be useful for files with potential concurrent access.
 
@@ -760,16 +760,159 @@ def Option(
         ),
     ] = False,
     # Path
-    exists: bool = False,
-    file_okay: bool = True,
-    dir_okay: bool = True,
-    writable: bool = False,
-    readable: bool = True,
-    resolve_path: bool = False,
-    allow_dash: bool = False,
-    path_type: Union[None, type[str], type[bytes]] = None,
+    exists: Annotated[
+        bool,
+        Doc(
+            """
+            When set to `True` for a [`Path` CLI Option](https://typer.tiangolo.com/tutorial/parameter-types/path/),
+            additional validation is performed that the file or directory exists for this value to be valid.
+
+            **Example**
+
+            ```python
+            from pathlib import Path
+
+            @app.command()
+            def main(config: Annotated[Path, typer.Option(exists=True)]):
+                text = config.read_text()
+                print(f"Config file contents: {text}")
+            ```
+            """
+        ),
+    ] = False,
+    file_okay: Annotated[
+        bool,
+        Doc(
+            """
+            Determine whether or not a [`Path` CLI Option](https://typer.tiangolo.com/tutorial/parameter-types/path/),
+            can refer to a file. When this is set to `False`, the application will raise a validation error when a path to a file is given.
+
+            **Example**
+
+            ```python
+            from pathlib import Path
+
+            @app.command()
+            def main(config: Annotated[Path, typer.Option(exists=True, file_okay=False)]):
+                print(f"Directory listing: {[x.name for x in config.iterdir()]}")
+            ```
+            """
+        ),
+    ] = True,
+    dir_okay: Annotated[
+        bool,
+        Doc(
+            """
+            Determine whether or not a [`Path` CLI Option](https://typer.tiangolo.com/tutorial/parameter-types/path/),
+            can refer to a directory. When this is set to `False`, the application will raise a validation error when a path to a directory is given.
+
+            **Example**
+
+            ```python
+            from pathlib import Path
+
+            @app.command()
+            def main(config: Annotated[Path, typer.Argument(exists=True, dir_okay=False)]):
+                text = config.read_text()
+                print(f"Config file contents: {text}")
+            ```
+            """
+        ),
+    ] = True,
+    writable: Annotated[
+        bool,
+        Doc(
+            """
+            Whether or not to perform a writable check for this [`Path` CLI Option](https://typer.tiangolo.com/tutorial/parameter-types/path/).
+
+            **Example**
+
+            ```python
+            from pathlib import Path
+
+            @app.command()
+            def main(config: Annotated[Path, typer.Option(writable=True)]):
+                config.write_text("All the text")
+            ```
+            """
+        ),
+    ] = False,
+    readable: Annotated[
+        bool,
+        Doc(
+            """
+            Whether or not to perform a readable check for this [`Path` CLI Option](https://typer.tiangolo.com/tutorial/parameter-types/path/).
+
+            **Example**
+
+            ```python
+            from pathlib import Path
+
+            @app.command()
+            def main(config: Annotated[Path, typer.Option(readable=True)]):
+                config.read_text("All the text")
+            ```
+            """
+        ),
+    ] = True,
+    resolve_path: Annotated[
+        bool,
+        Doc(
+            """
+            Whether or not to fully resolve the path of this [`Path` CLI Option](https://typer.tiangolo.com/tutorial/parameter-types/path/),
+            meaning that the path becomes absolute and symlinks are resolved.
+
+            **Example**
+
+            ```python
+            from pathlib import Path
+
+            @app.command()
+            def main(config: Annotated[Path, typer.Option(resolve_path=True)]):
+                config.read_text("All the text")
+            ```
+            """
+        ),
+    ] = False,
+    allow_dash: Annotated[
+        bool,
+        Doc(
+            """
+            When set to `True`, a single dash for this [`Path` CLI Option](https://typer.tiangolo.com/tutorial/parameter-types/path/)
+            would be a valid value, indicating standard streams. This is a more advanced use-case.
+            """
+        ),
+    ] = False,
+    path_type: Annotated[
+        Union[None, type[str], type[bytes]],
+        Doc(
+            """
+             A string type that will be used to represent this [`Path` argument](https://typer.tiangolo.com/tutorial/parameter-types/path/).
+             The default is `None` which means the return value will be either bytes or unicode depending on what makes most sense given the input data.
+             This is a more advanced use-case.
+            """
+        ),
+    ] = None,
     # Rich settings
-    rich_help_panel: Union[str, None] = None,
+    rich_help_panel: Annotated[
+        Union[str, None],
+        Doc(
+            """
+            Set the panel name where you want this CLI Option to be shown in the [help text](https://typer.tiangolo.com/tutorial/arguments/help).
+
+            **Example**
+
+            ```python
+            @app.command()
+            def main(
+                name: Annotated[str, typer.Argument(help="Who to greet")],
+                age: Annotated[str, typer.Option(help="The user's age", rich_help_panel="Characteristics")] = "",
+            ):
+                print(f"Hello {name}")
+            ```
+            """
+        ),
+    ] = None,
 ) -> Any:
     return OptionInfo(
         # Parameter
@@ -1228,7 +1371,7 @@ def Argument(
         bool,
         Doc(
             """
-            For a CLI Argument capturing an [Enum (choice)](https://typer.tiangolo.com/tutorial/parameter-types/enum),
+            For a CLI Argument representing an [Enum (choice)](https://typer.tiangolo.com/tutorial/parameter-types/enum),
             you can allow case-insensitive matching with this parameter:
 
             **Example**
@@ -1256,7 +1399,7 @@ def Argument(
         Optional[Union[int, float]],
         Doc(
             """
-            For a CLI Argument capturing a [number](https://typer.tiangolo.com/tutorial/parameter-types/number/) (`int` or `float`),
+            For a CLI Argument representing a [number](https://typer.tiangolo.com/tutorial/parameter-types/number/) (`int` or `float`),
             you can define numeric validations with `min` and `max` values:
 
             **Example**
@@ -1278,7 +1421,7 @@ def Argument(
         Optional[Union[int, float]],
         Doc(
             """
-            For a CLI Argument capturing a [number](https://typer.tiangolo.com/tutorial/parameter-types/number/) (`int` or `float`),
+            For a CLI Argument representing a [number](https://typer.tiangolo.com/tutorial/parameter-types/number/) (`int` or `float`),
             you can define numeric validations with `min` and `max` values:
 
             **Example**
@@ -1300,7 +1443,7 @@ def Argument(
         bool,
         Doc(
             """
-            For a CLI Argument capturing a [number](https://typer.tiangolo.com/tutorial/parameter-types/number/) and that is bounded by using `min` and/or `max`,
+            For a CLI Argument representing a [number](https://typer.tiangolo.com/tutorial/parameter-types/number/) and that is bounded by using `min` and/or `max`,
             you can opt to use the closest minimum or maximum value instead of raising an error. This is done by setting `clamp` to `True`.
 
             **Example**
@@ -1323,7 +1466,7 @@ def Argument(
         Optional[list[str]],
         Doc(
             """
-            For a CLI Argument capturing a [DateTime object](https://typer.tiangolo.com/tutorial/parameter-types/datetime),
+            For a CLI Argument representing a [DateTime object](https://typer.tiangolo.com/tutorial/parameter-types/datetime),
             you can customize the formats that can be parsed automatically:
 
             **Example**
@@ -1350,7 +1493,7 @@ def Argument(
         Optional[str],
         Doc(
             """
-            For a CLI Argument capturing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
+            For a CLI Argument representing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
             you can customize the mode to open the file with. If unset, Typer will set a [sensible value by default](https://typer.tiangolo.com/tutorial/parameter-types/file/#advanced-mode).
 
             **Example**
@@ -1368,7 +1511,7 @@ def Argument(
         Optional[str],
         Doc(
             """
-            For a CLI Argument capturing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
+            For a CLI Argument representing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
             you can customize the encoding to open the file with.
 
             **Example**
@@ -1397,7 +1540,7 @@ def Argument(
         Optional[bool],
         Doc(
             """
-            For a CLI Argument capturing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
+            For a CLI Argument representing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
             by default the file will not be created until you actually start writing to it.
             You can change this behaviour by setting this parameter.
             By default, it's set to `True` for writing and to `False` for reading.
@@ -1417,7 +1560,7 @@ def Argument(
         bool,
         Doc(
             """
-            For a CLI Argument capturing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
+            For a CLI Argument representing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
             you can ensure that all write instructions first go into a temporal file, and are only move to the final destination after completing
             by setting `atomic` to `True`. This can be useful for files with potential concurrent access.
 
@@ -1432,16 +1575,159 @@ def Argument(
         ),
     ] = False,
     # Path
-    exists: bool = False,
-    file_okay: bool = True,
-    dir_okay: bool = True,
-    writable: bool = False,
-    readable: bool = True,
-    resolve_path: bool = False,
-    allow_dash: bool = False,
-    path_type: Union[None, type[str], type[bytes]] = None,
+    exists: Annotated[
+        bool,
+        Doc(
+            """
+            When set to `True` for a [`Path` argument](https://typer.tiangolo.com/tutorial/parameter-types/path/),
+            additional validation is performed that the file or directory exists for this value to be valid.
+
+            **Example**
+
+            ```python
+            from pathlib import Path
+
+            @app.command()
+            def main(config: Annotated[Path, typer.Argument(exists=True)]):
+                text = config.read_text()
+                print(f"Config file contents: {text}")
+            ```
+            """
+        ),
+    ] = False,
+    file_okay: Annotated[
+        bool,
+        Doc(
+            """
+            Determine whether or not a [`Path` argument](https://typer.tiangolo.com/tutorial/parameter-types/path/),
+            can refer to a file. When this is set to `False`, the application will raise a validation error when a path to a file is given.
+
+            **Example**
+
+            ```python
+            from pathlib import Path
+
+            @app.command()
+            def main(config: Annotated[Path, typer.Argument(exists=True, file_okay=False)]):
+                print(f"Directory listing: {[x.name for x in config.iterdir()]}")
+            ```
+            """
+        ),
+    ] = True,
+    dir_okay: Annotated[
+        bool,
+        Doc(
+            """
+            Determine whether or not a [`Path` argument](https://typer.tiangolo.com/tutorial/parameter-types/path/),
+            can refer to a directory. When this is set to `False`, the application will raise a validation error when a path to a directory is given.
+
+            **Example**
+
+            ```python
+            from pathlib import Path
+
+            @app.command()
+            def main(config: Annotated[Path, typer.Argument(exists=True, dir_okay=False)]):
+                text = config.read_text()
+                print(f"Config file contents: {text}")
+            ```
+            """
+        ),
+    ] = True,
+    writable: Annotated[
+        bool,
+        Doc(
+            """
+            Whether or not to perform a writable check for this [`Path` argument](https://typer.tiangolo.com/tutorial/parameter-types/path/).
+
+            **Example**
+
+            ```python
+            from pathlib import Path
+
+            @app.command()
+            def main(config: Annotated[Path, typer.Argument(writable=True)]):
+                config.write_text("All the text")
+            ```
+            """
+        ),
+    ] = False,
+    readable: Annotated[
+        bool,
+        Doc(
+            """
+            Whether or not to perform a readable check for this [`Path` argument](https://typer.tiangolo.com/tutorial/parameter-types/path/).
+
+            **Example**
+
+            ```python
+            from pathlib import Path
+
+            @app.command()
+            def main(config: Annotated[Path, typer.Argument(readable=True)]):
+                config.read_text("All the text")
+            ```
+            """
+        ),
+    ] = True,
+    resolve_path: Annotated[
+        bool,
+        Doc(
+            """
+            Whether or not to fully resolve the path of this [`Path` argument](https://typer.tiangolo.com/tutorial/parameter-types/path/),
+            meaning that the path becomes absolute and symlinks are resolved.
+
+            **Example**
+
+            ```python
+            from pathlib import Path
+
+            @app.command()
+            def main(config: Annotated[Path, typer.Argument(resolve_path=True)]):
+                config.read_text("All the text")
+            ```
+            """
+        ),
+    ] = False,
+    allow_dash: Annotated[
+        bool,
+        Doc(
+            """
+            When set to `True`, a single dash for this [`Path` argument](https://typer.tiangolo.com/tutorial/parameter-types/path/)
+            would be a valid value, indicating standard streams. This is a more advanced use-case.
+            """
+        ),
+    ] = False,
+    path_type: Annotated[
+        Union[None, type[str], type[bytes]],
+        Doc(
+            """
+             A string type that will be used to represent this [`Path` argument](https://typer.tiangolo.com/tutorial/parameter-types/path/).
+             The default is `None` which means the return value will be either bytes or unicode depending on what makes most sense given the input data.
+             This is a more advanced use-case.
+            """
+        ),
+    ] = None,
     # Rich settings
-    rich_help_panel: Union[str, None] = None,
+    rich_help_panel: Annotated[
+        Union[str, None],
+        Doc(
+            """
+            Set the panel name where you want this CLI argument to be shown in the [help text](https://typer.tiangolo.com/tutorial/arguments/help).
+
+            **Example**
+
+            ```python
+            @app.command()
+            def main(
+                name: Annotated[str, typer.Argument(help="Who to greet")],
+                age: Annotated[str, typer.Option(help="The user's age", rich_help_panel="Characteristics")] = "",
+            ):
+                print(f"Hello {name}")
+            ```
+            """
+        ),
+    ] = None,
 ) -> Any:
     return ArgumentInfo(
         # Parameter
