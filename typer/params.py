@@ -405,9 +405,54 @@ def Option(
             """
         ),
     ] = False,
-    confirmation_prompt: bool = False,
-    prompt_required: bool = True,
-    hide_input: bool = False,
+    confirmation_prompt: Annotated[
+        bool,
+        Doc(
+            """
+            When set to `True`, a user will need to type a prompted value twice (may be useful for passwords etc.).
+
+            **Example**
+
+            ```python
+            @app.command()
+            def main(project_name: Annotated[str, typer.Option(prompt=True, confirmation_prompt=True)]):
+                print(f"Deleting project {project_name}")
+            ```
+            """
+        ),
+    ] = False,
+    prompt_required: Annotated[
+        bool,
+        Doc(
+            """
+            **Note**: you probably shouldn't use this parameter, it is inherited from Click and supported for compatibility.
+
+            ---
+
+            If this is `False` then a prompt is only shown if the option's flag is given without a value.
+            """
+        ),
+    ] = True,
+    hide_input: Annotated[
+        bool,
+        Doc(
+            """
+            When configuring a prompt, for instance [querying a password](https://typer.tiangolo.com/tutorial/options/password/),
+            don't show anything on the screen while the user is typing the value.
+
+            **Example**
+
+            ```python
+            @app.command()
+            def login(
+                name: str,
+                password: Annotated[str, typer.Option(prompt=True, hide_input=True)],
+            ):
+                print(f"Hello {name}. Doing something very secure with password.")
+            ```
+            """
+        ),
+    ] = False,
     # TODO: remove is_flag and flag_value in a future release
     is_flag: Annotated[
         Optional[bool],
@@ -427,11 +472,69 @@ def Option(
             """
         ),
     ] = None,
-    count: bool = False,
+    count: Annotated[
+        bool,
+        Doc(
+            """
+            Make a CLI Option work as a [counter](https://typer.tiangolo.com/tutorial/parameter-types/number/#counter-cli-options).
+            The option will have the `int` value representing the number of times the option was used on the command line.
+
+            **Example**
+
+            ```python
+            @app.command()
+            def main(verbose: Annotated[int, typer.Option("--verbose", "-v", count=True)] = 0):
+                print(f"Verbose level is {verbose}")
+            ```
+            """
+        ),
+    ] = False,
     allow_from_autoenv: bool = True,
-    help: Optional[str] = None,
-    hidden: bool = False,
-    show_choices: bool = True,
+    help: Annotated[
+        Optional[str],
+        Doc(
+            """
+            Help text for this option.
+            See [the tutorial about CLI Options with help](https://typer.tiangolo.com/tutorial/options/help/) for more dedails.
+
+            **Example**
+
+            ```python
+            @app.command()
+            def greet(name: Annotated[str, typer.Option(help="The person to greet.")] = "Deadpool"):
+                print(f"Hello {name}")
+            ```
+            """
+        ),
+    ] = None,
+    hidden: Annotated[
+        bool,
+        Doc(
+            """
+            Hide this option from [help outputs](https://typer.tiangolo.com/tutorial/options/help). `False` by default.
+
+            **Example**
+
+            ```python
+            @app.command()
+            def greet(name: Annotated[str, typer.Option(hidden=True)] = "Deadpool"):
+                print(f"Hello {name}")
+            ```
+            """
+        ),
+    ] = False,
+    show_choices: Annotated[
+        bool,
+        Doc(
+            """
+            **Note**: you probably shouldn't use this parameter, it is inherited from Click and supported for compatibility.
+
+            ---
+
+            When set to `True`, this suppresses choices from being displayed inline when `prompt` is used.
+            """
+        ),
+    ] = True,
     show_envvar: Annotated[
         bool,
         Doc(
@@ -449,19 +552,213 @@ def Option(
         ),
     ] = True,
     # Choice
-    case_sensitive: bool = True,
+    case_sensitive: Annotated[
+        bool,
+        Doc(
+            """
+            For a CLI Option capturing an [Enum (choice)](https://typer.tiangolo.com/tutorial/parameter-types/enum),
+            you can allow case-insensitive matching with this parameter:
+
+            **Example**
+
+            ```python
+            from enum import Enum
+
+            class NeuralNetwork(str, Enum):
+                simple = "simple"
+                conv = "conv"
+                lstm = "lstm"
+
+            @app.command()
+            def main(
+                network: Annotated[NeuralNetwork, typer.Option(case_sensitive=False)]):
+                print(f"Training neural network of type: {network.value}")
+            ```
+
+            With this setting, "LSTM" or "lstm" will both be valid values that will be resolved to `NeuralNetwork.lstm`.
+            """
+        ),
+    ] = True,
     # Numbers
-    min: Optional[Union[int, float]] = None,
-    max: Optional[Union[int, float]] = None,
-    clamp: bool = False,
+    min: Annotated[
+        Optional[Union[int, float]],
+        Doc(
+            """
+            For a CLI Option capturing a [number](https://typer.tiangolo.com/tutorial/parameter-types/number/) (`int` or `float`),
+            you can define numeric validations with `min` and `max` values:
+
+            **Example**
+
+            ```python
+            @app.command()
+            def main(
+                user: Annotated[str, typer.Argument()],
+                user_id: Annotated[int, typer.Option(min=1, max=1000)],
+            ):
+                print(f"ID for {user} is {user_id}")
+            ```
+
+            If the user attempts to input an invalid number, an error will be shown, explaining why the value is invalid.
+            """
+        ),
+    ] = None,
+    max: Annotated[
+        Optional[Union[int, float]],
+        Doc(
+            """
+            For a CLI Option capturing a [number](https://typer.tiangolo.com/tutorial/parameter-types/number/) (`int` or `float`),
+            you can define numeric validations with `min` and `max` values:
+
+            **Example**
+
+            ```python
+            @app.command()
+            def main(
+                user: Annotated[str, typer.Argument()],
+                user_id: Annotated[int, typer.Option(min=1, max=1000)],
+            ):
+                print(f"ID for {user} is {user_id}")
+            ```
+
+            If the user attempts to input an invalid number, an error will be shown, explaining why the value is invalid.
+            """
+        ),
+    ] = None,
+    clamp: Annotated[
+        bool,
+        Doc(
+            """
+            For a CLI Option capturing a [number](https://typer.tiangolo.com/tutorial/parameter-types/number/) and that is bounded by using `min` and/or `max`,
+            you can opt to use the closest minimum or maximum value instead of raising an error. This is done by setting `clamp` to `True`.
+
+            **Example**
+
+            ```python
+            @app.command()
+            def main(
+                user: Annotated[str, typer.Argument()],
+                user_id: Annotated[int, typer.Option(min=1, max=1000, clamp=True)],
+            ):
+                print(f"ID for {user} is {user_id}")
+            ```
+
+            If the user attempts to input 3420 for `user_id`, this will internally be converted to `1000`.
+            """
+        ),
+    ] = False,
     # DateTime
-    formats: Optional[list[str]] = None,
+    formats: Annotated[
+        Optional[list[str]],
+        Doc(
+            """
+            For a CLI Option capturing a [DateTime object](https://typer.tiangolo.com/tutorial/parameter-types/datetime),
+            you can customize the formats that can be parsed automatically:
+
+            **Example**
+
+            ```python
+            from datetime import datetime
+
+            @app.command()
+            def main(
+                birthday: Annotated[
+                    datetime,
+                    typer.Option(
+                        formats=["%Y-%m-%d", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d %H:%M:%S", "%m/%d/%Y"]
+                    ),
+                ],
+            ):
+                print(f"Birthday defined at: {birthday}")
+            ```
+            """
+        ),
+    ] = None,
     # File
-    mode: Optional[str] = None,
-    encoding: Optional[str] = None,
-    errors: Optional[str] = "strict",
-    lazy: Optional[bool] = None,
-    atomic: bool = False,
+    mode: Annotated[
+        Optional[str],
+        Doc(
+            """
+            For a CLI Option capturing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
+            you can customize the mode to open the file with. If unset, Typer will set a [sensible value by default](https://typer.tiangolo.com/tutorial/parameter-types/file/#advanced-mode).
+
+            **Example**
+
+            ```python
+            @app.command()
+            def main(config: Annotated[typer.FileText, typer.Option(mode="a")]):
+                config.write("This is a single line\n")
+                print("Config line written")
+            ```
+            """
+        ),
+    ] = None,
+    encoding: Annotated[
+        Optional[str],
+        Doc(
+            """
+            For a CLI Option capturing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
+            you can customize the encoding to open the file with.
+
+            **Example**
+
+            ```python
+            @app.command()
+            def main(config: Annotated[typer.FileText, typer.Option(encoding="utf-8")]):
+                config.write("All the text gets written\n")
+            ```
+            """
+        ),
+    ] = None,
+    errors: Annotated[
+        Optional[str],
+        Doc(
+            """
+            **Note**: you probably shouldn't use this parameter, it is inherited from Click and supported for compatibility.
+
+            ---
+
+            The error handling mode.
+            """
+        ),
+    ] = "strict",
+    lazy: Annotated[
+        Optional[bool],
+        Doc(
+            """
+            For a CLI Option capturing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
+            by default the file will not be created until you actually start writing to it.
+            You can change this behaviour by setting this parameter.
+            By default, it's set to `True` for writing and to `False` for reading.
+
+            **Example**
+
+            ```python
+            @app.command()
+            def main(config: Annotated[typer.FileText, typer.Option(mode="a", lazy=False)]):
+                config.write("This is a single line\n")
+                print("Config line written")
+            ```
+            """
+        ),
+    ] = None,
+    atomic: Annotated[
+        bool,
+        Doc(
+            """
+            For a CLI Option capturing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
+            you can ensure that all write instructions first go into a temporal file, and are only move to the final destination after completing
+            by setting `atomic` to `True`. This can be useful for files with potential concurrent access.
+
+            **Example**
+
+            ```python
+            @app.command()
+            def main(config: Annotated[typer.FileText, typer.Option(mode="a", atomic=True)]):
+                config.write("All the text")
+            ```
+            """
+        ),
+    ] = False,
     # Path
     exists: bool = False,
     file_okay: bool = True,
@@ -893,22 +1190,247 @@ def Argument(
             """
         ),
     ] = True,
-    help: Optional[str] = None,
-    hidden: bool = False,
+    help: Annotated[
+        Optional[str],
+        Doc(
+            """
+            Help text for this argument.
+            See [the tutorial about CLI Arguments with help](https://typer.tiangolo.com/tutorial/arguments/help/) for more dedails.
+
+            **Example**
+
+            ```python
+            @app.command()
+            def greet(name: Annotated[str, typer.Argument(help="The person to greet.")]):
+                print(f"Hello {name}")
+            ```
+            """
+        ),
+    ] = None,
+    hidden: Annotated[
+        bool,
+        Doc(
+            """
+            Hide this argument from [help outputs](https://typer.tiangolo.com/tutorial/arguments/help). `False` by default.
+
+            **Example**
+
+            ```python
+            @app.command()
+            def main(name: Annotated[str, typer.Argument(hidden=True)] = "World"):
+                print(f"Hello {name}")
+            ```
+            """
+        ),
+    ] = False,
     # Choice
-    case_sensitive: bool = True,
+    case_sensitive: Annotated[
+        bool,
+        Doc(
+            """
+            For a CLI Argument capturing an [Enum (choice)](https://typer.tiangolo.com/tutorial/parameter-types/enum),
+            you can allow case-insensitive matching with this parameter:
+
+            **Example**
+
+            ```python
+            from enum import Enum
+
+            class NeuralNetwork(str, Enum):
+                simple = "simple"
+                conv = "conv"
+                lstm = "lstm"
+
+            @app.command()
+            def main(
+                network: Annotated[NeuralNetwork, typer.Argument(case_sensitive=False)]):
+                print(f"Training neural network of type: {network.value}")
+            ```
+
+            With this setting, "LSTM" or "lstm" will both be valid values that will be resolved to `NeuralNetwork.lstm`.
+            """
+        ),
+    ] = True,
     # Numbers
-    min: Optional[Union[int, float]] = None,
-    max: Optional[Union[int, float]] = None,
-    clamp: bool = False,
+    min: Annotated[
+        Optional[Union[int, float]],
+        Doc(
+            """
+            For a CLI Argument capturing a [number](https://typer.tiangolo.com/tutorial/parameter-types/number/) (`int` or `float`),
+            you can define numeric validations with `min` and `max` values:
+
+            **Example**
+
+            ```python
+            @app.command()
+            def main(
+                user: Annotated[str, typer.Argument()],
+                user_id: Annotated[int, typer.Argument(min=1, max=1000)],
+            ):
+                print(f"ID for {user} is {user_id}")
+            ```
+
+            If the user attempts to input an invalid number, an error will be shown, explaining why the value is invalid.
+            """
+        ),
+    ] = None,
+    max: Annotated[
+        Optional[Union[int, float]],
+        Doc(
+            """
+            For a CLI Argument capturing a [number](https://typer.tiangolo.com/tutorial/parameter-types/number/) (`int` or `float`),
+            you can define numeric validations with `min` and `max` values:
+
+            **Example**
+
+            ```python
+            @app.command()
+            def main(
+                user: Annotated[str, typer.Argument()],
+                user_id: Annotated[int, typer.Argument(min=1, max=1000)],
+            ):
+                print(f"ID for {user} is {user_id}")
+            ```
+
+            If the user attempts to input an invalid number, an error will be shown, explaining why the value is invalid.
+            """
+        ),
+    ] = None,
+    clamp: Annotated[
+        bool,
+        Doc(
+            """
+            For a CLI Argument capturing a [number](https://typer.tiangolo.com/tutorial/parameter-types/number/) and that is bounded by using `min` and/or `max`,
+            you can opt to use the closest minimum or maximum value instead of raising an error. This is done by setting `clamp` to `True`.
+
+            **Example**
+
+            ```python
+            @app.command()
+            def main(
+                user: Annotated[str, typer.Argument()],
+                user_id: Annotated[int, typer.Argument(min=1, max=1000, clamp=True)],
+            ):
+                print(f"ID for {user} is {user_id}")
+            ```
+
+            If the user attempts to input 3420 for `user_id`, this will internally be converted to `1000`.
+            """
+        ),
+    ] = False,
     # DateTime
-    formats: Optional[list[str]] = None,
+    formats: Annotated[
+        Optional[list[str]],
+        Doc(
+            """
+            For a CLI Argument capturing a [DateTime object](https://typer.tiangolo.com/tutorial/parameter-types/datetime),
+            you can customize the formats that can be parsed automatically:
+
+            **Example**
+
+            ```python
+            from datetime import datetime
+
+            @app.command()
+            def main(
+                birthday: Annotated[
+                    datetime,
+                    typer.Argument(
+                        formats=["%Y-%m-%d", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d %H:%M:%S", "%m/%d/%Y"]
+                    ),
+                ],
+            ):
+                print(f"Birthday defined at: {birthday}")
+            ```
+            """
+        ),
+    ] = None,
     # File
-    mode: Optional[str] = None,
-    encoding: Optional[str] = None,
-    errors: Optional[str] = "strict",
-    lazy: Optional[bool] = None,
-    atomic: bool = False,
+    mode: Annotated[
+        Optional[str],
+        Doc(
+            """
+            For a CLI Argument capturing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
+            you can customize the mode to open the file with. If unset, Typer will set a [sensible value by default](https://typer.tiangolo.com/tutorial/parameter-types/file/#advanced-mode).
+
+            **Example**
+
+            ```python
+            @app.command()
+            def main(config: Annotated[typer.FileText, typer.Argument(mode="a")]):
+                config.write("This is a single line\n")
+                print("Config line written")
+            ```
+            """
+        ),
+    ] = None,
+    encoding: Annotated[
+        Optional[str],
+        Doc(
+            """
+            For a CLI Argument capturing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
+            you can customize the encoding to open the file with.
+
+            **Example**
+
+            ```python
+            @app.command()
+            def main(config: Annotated[typer.FileText, typer.Argument(encoding="utf-8")]):
+                config.write("All the text gets written\n")
+            ```
+            """
+        ),
+    ] = None,
+    errors: Annotated[
+        Optional[str],
+        Doc(
+            """
+            **Note**: you probably shouldn't use this parameter, it is inherited from Click and supported for compatibility.
+
+            ---
+
+            The error handling mode.
+            """
+        ),
+    ] = "strict",
+    lazy: Annotated[
+        Optional[bool],
+        Doc(
+            """
+            For a CLI Argument capturing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
+            by default the file will not be created until you actually start writing to it.
+            You can change this behaviour by setting this parameter.
+            By default, it's set to `True` for writing and to `False` for reading.
+
+            **Example**
+
+            ```python
+            @app.command()
+            def main(config: Annotated[typer.FileText, typer.Argument(mode="a", lazy=False)]):
+                config.write("This is a single line\n")
+                print("Config line written")
+            ```
+            """
+        ),
+    ] = None,
+    atomic: Annotated[
+        bool,
+        Doc(
+            """
+            For a CLI Argument capturing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
+            you can ensure that all write instructions first go into a temporal file, and are only move to the final destination after completing
+            by setting `atomic` to `True`. This can be useful for files with potential concurrent access.
+
+            **Example**
+
+            ```python
+            @app.command()
+            def main(config: Annotated[typer.FileText, typer.Argument(mode="a", atomic=True)]):
+                config.write("All the text")
+            ```
+            """
+        ),
+    ] = False,
     # Path
     exists: bool = False,
     file_okay: bool = True,
