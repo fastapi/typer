@@ -147,7 +147,7 @@ def Option(
         Optional[Any],
         Doc(
             """
-            Usually, CLI options are optional and have a default value, passed on like this:
+            Usually, [CLI options](https://typer.tiangolo.com/tutorial/options/) are optional and have a default value, passed on like this:
 
             **Example**
 
@@ -172,15 +172,15 @@ def Option(
         str,
         Doc(
             """
-            Positional argument that defines how users can call this option on the command line.
-            If not defined, Typer will automatically use the function parameter as default.
+            Positional argument that defines how users can call this option on the command line. This may be one or multiple aliases, all strings.
+            If not defined, Typer will automatically use the function parameter as default name.
             See [the tutorial about CLI Option Names](https://typer.tiangolo.com/tutorial/options/name/) for more details.
 
             **Example**
 
             ```python
             @app.command()
-            def main(user_name: Annotated[str, typer.Option("--name", "-n", "-u")]):
+            def main(user_name: Annotated[str, typer.Option("--user", "-u", "-x")]):
                 print(f"Hello {user_name}")
             ```
             """
@@ -190,7 +190,7 @@ def Option(
         Optional[Callable[..., Any]],
         Doc(
             """
-            Add a callback to this option, to execute additional logic after the value was received from the terminal.
+            Add a callback to this CLI Option, to execute additional logic after its value was received from the terminal.
             See [the tutorial about callbacks](https://typer.tiangolo.com/tutorial/options/callback-and-context/) for more details.
 
             **Example**
@@ -212,7 +212,8 @@ def Option(
         Optional[str],
         Doc(
             """
-            Customize the name displayed in the help text to represent this CLI option. Note that this doesn't influence the way the option must be called.
+            Customize the name displayed in the [help text](https://typer.tiangolo.com/tutorial/options/help/) to represent this CLI option.
+            Note that this doesn't influence the way the option must be called.
 
             **Example**
 
@@ -240,7 +241,7 @@ def Option(
         bool,
         Doc(
             """
-            Set an option to "eager" to ensure it gets processed before other CLI parameters. This could be relevant when there are other parameters with callbacks that could exit the program early.
+            Mark a CLI Option to be "eager", ensuring it gets processed before other CLI parameters. This could be relevant when there are other parameters with callbacks that could exit the program early.
             For more information and an extended example, see the documentation [here](https://typer.tiangolo.com/tutorial/options/version/#fix-with-is_eager).
             """
         ),
@@ -249,7 +250,7 @@ def Option(
         Optional[Union[str, list[str]]],
         Doc(
             """
-            Configure an option to read a value from an environment variable if it is not provided in the command line as a CLI option.
+            Configure a CLI Option to read its value from an environment variable if it is not provided in the command line.
             For more information, see the [documentation on Environment Variables](https://typer.tiangolo.com/tutorial/arguments/envvar/).
 
             **Example**
@@ -281,7 +282,7 @@ def Option(
         Optional[Callable[..., Any]],
         Doc(
             """
-            Provide a custom function that helps to autocomplete the values of this option.
+            Provide a custom function that helps to autocomplete the values of this CLI Option.
             See [the tutorial on parameter autocompletion](https://typer.tiangolo.com/tutorial/options-autocompletion) for more details.
 
             **Example**
@@ -301,7 +302,7 @@ def Option(
         Optional[Callable[[], Any]],
         Doc(
             """
-            Provide a custom function that dynamically generates a [default](https://typer.tiangolo.com/tutorial/arguments/default) for this option.
+            Provide a custom function that dynamically generates a [default](https://typer.tiangolo.com/tutorial/arguments/default) for this CLI Option.
 
             **Example**
 
@@ -377,7 +378,7 @@ def Option(
         Union[bool, str],
         Doc(
             """
-            When set to `False`, don't show the default value of this argument in the [help text](https://typer.tiangolo.com/tutorial/options/help/).
+            When set to `False`, don't show the default value of this CLI Option in the [help text](https://typer.tiangolo.com/tutorial/options/help/).
 
             **Example**
 
@@ -393,7 +394,7 @@ def Option(
         Union[bool, str],
         Doc(
             """
-            When set to `True`, a prompt will appear to ask for a value if it was not provided:
+            When set to `True`, a prompt will appear to ask for the value of this CLI Option if it was not provided:
 
             **Example**
 
@@ -437,7 +438,7 @@ def Option(
         bool,
         Doc(
             """
-            When configuring a prompt, for instance [querying a password](https://typer.tiangolo.com/tutorial/options/password/),
+            When you've configured a prompt, for instance for [querying a password](https://typer.tiangolo.com/tutorial/options/password/),
             don't show anything on the screen while the user is typing the value.
 
             **Example**
@@ -477,7 +478,7 @@ def Option(
         Doc(
             """
             Make a CLI Option work as a [counter](https://typer.tiangolo.com/tutorial/parameter-types/number/#counter-cli-options).
-            The option will have the `int` value representing the number of times the option was used on the command line.
+            The CLI option will have the `int` value representing the number of times the option was used on the command line.
 
             **Example**
 
@@ -489,12 +490,23 @@ def Option(
             """
         ),
     ] = False,
-    allow_from_autoenv: bool = True,
+    allow_from_autoenv: Annotated[
+        bool,
+        Doc(
+            """
+            **Note**: you probably shouldn't use this parameter, it is inherited from Click and supported for compatibility.
+
+            ---
+
+            If this is enabled then the value of this parameter will be pulled from an environment variable in case a prefix is defined on the context.
+            """
+        ),
+    ] = True,
     help: Annotated[
         Optional[str],
         Doc(
             """
-            Help text for this option.
+            Help text for this CLI Option.
             See [the tutorial about CLI Options with help](https://typer.tiangolo.com/tutorial/options/help/) for more dedails.
 
             **Example**
@@ -511,7 +523,7 @@ def Option(
         bool,
         Doc(
             """
-            Hide this option from [help outputs](https://typer.tiangolo.com/tutorial/options/help). `False` by default.
+            Hide this CLI Option from [help outputs](https://typer.tiangolo.com/tutorial/options/help). `False` by default.
 
             **Example**
 
@@ -531,7 +543,7 @@ def Option(
 
             ---
 
-            When set to `True`, this suppresses choices from being displayed inline when `prompt` is used.
+            When set to `False`, this suppresses choices from being displayed inline when `prompt` is used.
             """
         ),
     ] = True,
@@ -629,7 +641,7 @@ def Option(
         Doc(
             """
             For a CLI Option representing a [number](https://typer.tiangolo.com/tutorial/parameter-types/number/) and that is bounded by using `min` and/or `max`,
-            you can opt to use the closest minimum or maximum value instead of raising an error. This is done by setting `clamp` to `True`.
+            you can opt to use the closest minimum or maximum value instead of raising an error when the value is out of bounds. This is done by setting `clamp` to `True`.
 
             **Example**
 
@@ -696,8 +708,7 @@ def Option(
         Optional[str],
         Doc(
             """
-            For a CLI Option representing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
-            you can customize the encoding to open the file with.
+            Customize the encoding of this CLI Option represented by a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/).
 
             **Example**
 
@@ -746,7 +757,7 @@ def Option(
         Doc(
             """
             For a CLI Option representing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
-            you can ensure that all write instructions first go into a temporal file, and are only move to the final destination after completing
+            you can ensure that all write instructions first go into a temporal file, and are only moved to the final destination after completing
             by setting `atomic` to `True`. This can be useful for files with potential concurrent access.
 
             **Example**
@@ -765,7 +776,7 @@ def Option(
         Doc(
             """
             When set to `True` for a [`Path` CLI Option](https://typer.tiangolo.com/tutorial/parameter-types/path/),
-            additional validation is performed that the file or directory exists for this value to be valid.
+            additional validation is performed to check that the file or directory exists. If not, the value will be invalid.
 
             **Example**
 
@@ -785,7 +796,7 @@ def Option(
         Doc(
             """
             Determine whether or not a [`Path` CLI Option](https://typer.tiangolo.com/tutorial/parameter-types/path/),
-            can refer to a file. When this is set to `False`, the application will raise a validation error when a path to a file is given.
+            is allowed to refer to a file. When this is set to `False`, the application will raise a validation error when a path to a file is given.
 
             **Example**
 
@@ -804,7 +815,7 @@ def Option(
         Doc(
             """
             Determine whether or not a [`Path` CLI Option](https://typer.tiangolo.com/tutorial/parameter-types/path/),
-            can refer to a directory. When this is set to `False`, the application will raise a validation error when a path to a directory is given.
+            is allowed to refer to a directory. When this is set to `False`, the application will raise a validation error when a path to a directory is given.
 
             **Example**
 
@@ -888,7 +899,7 @@ def Option(
         Doc(
             """
              A string type that will be used to represent this [`Path` argument](https://typer.tiangolo.com/tutorial/parameter-types/path/).
-             The default is `None` which means the return value will be either bytes or unicode depending on what makes most sense given the input data.
+             The default is `None` which means the return value will be either bytes or unicode, depending on what makes most sense given the input data.
              This is a more advanced use-case.
             """
         ),
@@ -914,6 +925,26 @@ def Option(
         ),
     ] = None,
 ) -> Any:
+    """
+    A [CLI Option](https://typer.tiangolo.com/tutorial/options) is a parameter to your command line application that is called with a single or double dash, something like `--verbose` or `-v`.
+
+    Often, CLI Options are optional, meaning that users can omit them from the command. However, you can set them to be required by using `Annotated`
+    and omitting a default value.
+
+    ## Example
+
+    ```python
+    @app.command()
+    def register(
+        user: Annotated[str, typer.Argument()],
+        age: Annotated[int, typer.Option(min=18)],
+    ):
+        print(f"User is {user}")
+        print(f"--age is {age}")
+    ```
+
+    Note how in this example, `--age` is a required CLI Option.
+    """
     return OptionInfo(
         # Parameter
         default=default,
@@ -1115,7 +1146,7 @@ def Argument(
         Optional[Callable[..., Any]],
         Doc(
             """
-            Add a callback to this argument, to execute additional logic with the value received from the terminal.
+            Add a callback to this CLI Argument, to execute additional logic with the value received from the terminal.
             See [the tutorial about callbacks](https://typer.tiangolo.com/tutorial/options/callback-and-context/) for more details.
 
             **Example**
@@ -1137,7 +1168,7 @@ def Argument(
         Optional[str],
         Doc(
             """
-            Customize the name displayed in the help text to represent this CLI argument.
+            Customize the name displayed in the help text to represent this CLI Argument.
             By default, it will be the same name you declared, in uppercase.
             See [the tutorial about CLI Arguments with Help](https://typer.tiangolo.com/tutorial/arguments/help/#custom-help-name-metavar) for more details.
 
@@ -1208,7 +1239,7 @@ def Argument(
         Optional[Callable[..., Any]],
         Doc(
             """
-            Provide a custom function that helps to autocomplete the values of this argument.
+            Provide a custom function that helps to autocomplete the values of this CLI Argument.
             See [the tutorial on parameter autocompletion](https://typer.tiangolo.com/tutorial/options-autocompletion) for more details.
 
             **Example**
@@ -1228,7 +1259,7 @@ def Argument(
         Optional[Callable[[], Any]],
         Doc(
             """
-            Provide a custom function that dynamically generates a [default](https://typer.tiangolo.com/tutorial/arguments/default) for this argument.
+            Provide a custom function that dynamically generates a [default](https://typer.tiangolo.com/tutorial/arguments/default) for this CLI Argument.
 
             **Example**
 
@@ -1304,7 +1335,7 @@ def Argument(
         Union[bool, str],
         Doc(
             """
-            When set to `False`, don't show the default value of this argument in the [help text](https://typer.tiangolo.com/tutorial/arguments/help/).
+            When set to `False`, don't show the default value of this CLI Argument in the [help text](https://typer.tiangolo.com/tutorial/arguments/help/).
 
             **Example**
 
@@ -1316,7 +1347,18 @@ def Argument(
             """
         ),
     ] = True,
-    show_choices: bool = True,
+    show_choices: Annotated[
+        bool,
+        Doc(
+            """
+            **Note**: you probably shouldn't use this parameter, it is inherited from Click and supported for compatibility.
+
+            ---
+
+            When set to `False`, this suppresses choices from being displayed inline when `prompt` is used.
+            """
+        ),
+    ] = True,
     show_envvar: Annotated[
         bool,
         Doc(
@@ -1337,7 +1379,7 @@ def Argument(
         Optional[str],
         Doc(
             """
-            Help text for this argument.
+            Help text for this CLI Argument.
             See [the tutorial about CLI Arguments with help](https://typer.tiangolo.com/tutorial/arguments/help/) for more dedails.
 
             **Example**
@@ -1354,7 +1396,7 @@ def Argument(
         bool,
         Doc(
             """
-            Hide this argument from [help outputs](https://typer.tiangolo.com/tutorial/arguments/help). `False` by default.
+            Hide this CLI Argument from [help outputs](https://typer.tiangolo.com/tutorial/arguments/help). `False` by default.
 
             **Example**
 
@@ -1511,8 +1553,7 @@ def Argument(
         Optional[str],
         Doc(
             """
-            For a CLI Argument representing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
-            you can customize the encoding to open the file with.
+            Customize the encoding of this CLI Argument represented by a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/).
 
             **Example**
 
@@ -1561,7 +1602,7 @@ def Argument(
         Doc(
             """
             For a CLI Argument representing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
-            you can ensure that all write instructions first go into a temporal file, and are only move to the final destination after completing
+            you can ensure that all write instructions first go into a temporal file, and are only moved to the final destination after completing
             by setting `atomic` to `True`. This can be useful for files with potential concurrent access.
 
             **Example**
@@ -1580,7 +1621,7 @@ def Argument(
         Doc(
             """
             When set to `True` for a [`Path` argument](https://typer.tiangolo.com/tutorial/parameter-types/path/),
-            additional validation is performed that the file or directory exists for this value to be valid.
+            additional validation is performed to check that the file or directory exists. If not, the value will be invalid.
 
             **Example**
 
@@ -1600,7 +1641,7 @@ def Argument(
         Doc(
             """
             Determine whether or not a [`Path` argument](https://typer.tiangolo.com/tutorial/parameter-types/path/),
-            can refer to a file. When this is set to `False`, the application will raise a validation error when a path to a file is given.
+            is allowed to refer to a file. When this is set to `False`, the application will raise a validation error when a path to a file is given.
 
             **Example**
 
@@ -1619,7 +1660,7 @@ def Argument(
         Doc(
             """
             Determine whether or not a [`Path` argument](https://typer.tiangolo.com/tutorial/parameter-types/path/),
-            can refer to a directory. When this is set to `False`, the application will raise a validation error when a path to a directory is given.
+            is allowed to refer to a directory. When this is set to `False`, the application will raise a validation error when a path to a directory is given.
 
             **Example**
 
@@ -1703,7 +1744,7 @@ def Argument(
         Doc(
             """
              A string type that will be used to represent this [`Path` argument](https://typer.tiangolo.com/tutorial/parameter-types/path/).
-             The default is `None` which means the return value will be either bytes or unicode depending on what makes most sense given the input data.
+             The default is `None` which means the return value will be either bytes or unicode, depending on what makes most sense given the input data.
              This is a more advanced use-case.
             """
         ),
@@ -1713,7 +1754,7 @@ def Argument(
         Union[str, None],
         Doc(
             """
-            Set the panel name where you want this CLI argument to be shown in the [help text](https://typer.tiangolo.com/tutorial/arguments/help).
+            Set the panel name where you want this CLI Argument to be shown in the [help text](https://typer.tiangolo.com/tutorial/arguments/help).
 
             **Example**
 
@@ -1729,6 +1770,21 @@ def Argument(
         ),
     ] = None,
 ) -> Any:
+    """
+    A [CLI Argument](https://typer.tiangolo.com/tutorial/arguments) is a positional parameter to your command line application.
+
+    Often, CLI Arguments are required, meaning that users have to specify them. However, you can set them to be optional by defining a default value:
+
+    ## Example
+
+    ```python
+    @app.command()
+    def main(name: Annotated[str, typer.Argument()] = "World"):
+        print(f"Hello {name}!")
+    ```
+
+    Note how in this example, if `name` is not specified on the command line, the application will still execute normally and print "Hello World!".
+    """
     return ArgumentInfo(
         # Parameter
         default=default,
