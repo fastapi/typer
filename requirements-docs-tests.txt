@@ -1,2 +1,2 @@
 # For linting and generating docs versions
-ruff ==0.14.10
+ruff ==0.14.13
