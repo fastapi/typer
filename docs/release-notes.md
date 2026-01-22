@@ -9,6 +9,7 @@
 
 ### Internal
 
+* ⬆ Bump urllib3 from 2.6.2 to 2.6.3. PR [#1496](https://github.com/fastapi/typer/pull/1496) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump prek from 0.2.24 to 0.3.0. PR [#1495](https://github.com/fastapi/typer/pull/1495) by [@dependabot[bot]](https://github.com/apps/dependabot).
 
 ## 0.21.1
