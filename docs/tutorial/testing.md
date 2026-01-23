@@ -4,7 +4,7 @@ Testing **Typer** applications is very easy with <a href="https://docs.pytest.or
 
 Let's say you have an application `app/main.py` with:
 
-{* docs_src/testing/app01/main.py *}
+{* docs_src/testing/app01_py39/main.py *}
 
 So, you would use it like:
 
@@ -33,7 +33,7 @@ Import `CliRunner` and create a `runner` object.
 
 This runner is what will "invoke" or "call" your command line application.
 
-{* docs_src/testing/app01/test_main.py hl[1,5] *}
+{* docs_src/testing/app01_py39/test_main.py hl[1,5] *}
 
 /// tip
 
@@ -51,7 +51,7 @@ The first parameter to `runner.invoke()` is a `Typer` app.
 
 The second parameter is a `list` of `str`, with all the text you would pass in the command line, right as you would pass it:
 
-{* docs_src/testing/app01/test_main.py hl[8,9] *}
+{* docs_src/testing/app01_py39/test_main.py hl[8,9] *}
 
 /// tip
 
@@ -63,7 +63,7 @@ The name of the function has to start with `test_`, that way pytest can detect i
 
 Then, inside of the test function, add `assert` statements to ensure that everything in the result of the call is as it should be.
 
-{* docs_src/testing/app01/test_main.py hl[10,11,12] *}
+{* docs_src/testing/app01_py39/test_main.py hl[10,11,12] *}
 
 Here we are checking that the exit code is 0, as it is for programs that exit without errors.
 
@@ -109,7 +109,7 @@ test_main.py <span style="color: green; white-space: pre;">.                    
 
 If you have a CLI with prompts, like:
 
-{* docs_src/testing/app02_an/main.py hl[8] *}
+{* docs_src/testing/app02_an_py39/main.py hl[9] *}
 
 That you would use like:
 
@@ -139,17 +139,17 @@ When you hit the <kbd>ENTER</kbd> key after typing the email, that is just a "ne
 
 So, if you use `input="camila@example.com\n"` it means: "type `camila@example.com` in the terminal, then hit the <kbd>ENTER</kbd> key":
 
-{* docs_src/testing/app02/test_main.py hl[9] *}
+{* docs_src/testing/app02_py39/test_main.py hl[9] *}
 
 ## Test a function
 
 If you have a script and you never created an explicit `typer.Typer` app, like:
 
-{* docs_src/testing/app03/main.py hl[9] *}
+{* docs_src/testing/app03_py39/main.py hl[9] *}
 
 ...you can still test it, by creating an app during testing:
 
-{* docs_src/testing/app03/test_main.py hl[6,7,13] *}
+{* docs_src/testing/app03_py39/test_main.py hl[6,7,13] *}
 
 Of course, if you are testing that script, it's probably easier/cleaner to just create the explicit `typer.Typer` app in `main.py` instead of creating it just during the test.
 
