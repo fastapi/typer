@@ -759,12 +759,13 @@ def get_traceback(
     exception_config: DeveloperExceptionConfig,
     internal_dir_names: List[str],
 ) -> Traceback:
+    suppress = (*internal_dir_names, *exception_config.pretty_exceptions_suppress)
     rich_tb = Traceback.from_exception(
         type(exc),
         exc,
         exc.__traceback__,
         show_locals=exception_config.pretty_exceptions_show_locals,
-        suppress=internal_dir_names,
+        suppress=suppress,
         width=MAX_WIDTH,
     )
     return rich_tb
