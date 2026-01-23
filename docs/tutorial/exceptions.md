@@ -210,12 +210,12 @@ code or variables. ⚡
 
 For example, if you are developing a GitLab utility using the `python-gitlab`
 package, you might notice that tracebacks are very long and filled with internal
-calls inside `gitlab` module that you probably do not care about. In this case,
+calls inside the `gitlab` module that you probably do not care about. In this case,
 you can suppress the traceback frames inside the `gitlab` module:
 
-{* docs_src/exceptions/tutorial005.py hl[3] *}
+{* docs_src/exceptions/tutorial005.py hl[4] *}
 
-And now can see clearly which of your calls to `gitlab` caused the exception. 💡
+And now you can see clearly which of your calls to `gitlab` caused the exception. 💡
 
 ## Disable Pretty Exceptions
 
