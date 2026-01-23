@@ -1,12 +1,11 @@
 import inspect
 import io
+from collections.abc import Iterable, Sequence
 from types import ModuleType
-from collections.abc import Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    Iterable,
     Optional,
     TypeVar,
     Union,

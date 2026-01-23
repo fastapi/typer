@@ -5,14 +5,14 @@ import shutil
 import subprocess
 import sys
 import traceback
-from collections.abc import Sequence
+from collections.abc import Iterable, Sequence
 from datetime import datetime
 from enum import Enum
 from functools import update_wrapper
 from pathlib import Path
 from traceback import FrameSummary, StackSummary
 from types import ModuleType, TracebackType
-from typing import Any, Callable, Iterable, Optional, Union
+from typing import Any, Callable, Optional, Union
 from uuid import UUID
 
 import click
