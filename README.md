@@ -78,10 +78,10 @@ Run your application with the `typer` command:
 <div class="termy">
 
 ```console
-// Run your application
+# Run your application
 $ typer main.py run
 
-// You get a nice error, you are missing NAME
+# You get a nice error, you are missing NAME
 Usage: typer [PATH_OR_MODULE] run [OPTIONS] NAME
 Try 'typer [PATH_OR_MODULE] run --help' for help.
 ╭─ Error ───────────────────────────────────────────╮
@@ -89,7 +89,7 @@ Try 'typer [PATH_OR_MODULE] run --help' for help.
 ╰───────────────────────────────────────────────────╯
 
 
-// You get a --help for free
+# You get a --help for free
 $ typer main.py run --help
 
 Usage: typer [PATH_OR_MODULE] run [OPTIONS] NAME
@@ -103,12 +103,12 @@ Run the provided Typer app.
 │ --help          Show this message and exit.       │
 ╰───────────────────────────────────────────────────╯
 
-// Now pass the NAME argument
+# Now pass the NAME argument
 $ typer main.py run Camila
 
 Hello Camila
 
-// It works! 🎉
+# It works! 🎉
 ```
 
 </div>
@@ -138,10 +138,10 @@ Now you could run it with Python directly:
 <div class="termy">
 
 ```console
-// Run your application
+# Run your application
 $ python main.py
 
-// You get a nice error, you are missing NAME
+# You get a nice error, you are missing NAME
 Usage: main.py [OPTIONS] NAME
 Try 'main.py --help' for help.
 ╭─ Error ───────────────────────────────────────────╮
@@ -149,7 +149,7 @@ Try 'main.py --help' for help.
 ╰───────────────────────────────────────────────────╯
 
 
-// You get a --help for free
+# You get a --help for free
 $ python main.py --help
 
 Usage: main.py [OPTIONS] NAME
@@ -161,12 +161,12 @@ Usage: main.py [OPTIONS] NAME
 │ --help          Show this message and exit.       │
 ╰───────────────────────────────────────────────────╯
 
-// Now pass the NAME argument
+# Now pass the NAME argument
 $ python main.py Camila
 
 Hello Camila
 
-// It works! 🎉
+# It works! 🎉
 ```
 
 </div>
@@ -243,9 +243,9 @@ $ python main.py --help
 │ hello                                             │
 ╰───────────────────────────────────────────────────╯
 
-// When you create a package you get ✨ auto-completion ✨ for free, installed with --install-completion
+# When you create a package you get ✨ auto-completion ✨ for free, installed with --install-completion
 
-// You have 2 subcommands (the 2 functions): goodbye and hello
+# You have 2 subcommands (the 2 functions): goodbye and hello
 ```
 
 </div>
@@ -287,7 +287,7 @@ $ python main.py goodbye --help
 │                              and exit.            │
 ╰───────────────────────────────────────────────────╯
 
-// Automatic --formal and --no-formal for the bool option 🎉
+# Automatic --formal and --no-formal for the bool option 🎉
 ```
 
 </div>
@@ -297,13 +297,13 @@ Now you can try out the new command line application:
 <div class="termy">
 
 ```console
-// Use it with the hello command
+# Use it with the hello command
 
 $ python main.py hello Camila
 
 Hello Camila
 
-// And with the goodbye command
+# And with the goodbye command
 
 $ python main.py goodbye Camila
 
