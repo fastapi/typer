@@ -353,7 +353,7 @@ class Typer:
 
                 ---
 
-                By default each command registers a --help option. This can be disabled by this parameter.
+                By default each command registers a `--help` option. This can be disabled by this parameter.
                 """
             ),
         ] = Default(True),
@@ -663,7 +663,7 @@ class Typer:
 
                 ---
 
-                By default each command registers a --help option. This can be disabled by this parameter.
+                By default each command registers a `--help` option. This can be disabled by this parameter.
                 """
             ),
         ] = Default(True),
@@ -819,7 +819,7 @@ class Typer:
 
                 ---
 
-                By default each command registers a --help option. This can be disabled by this parameter.
+                By default each command registers a `--help` option. This can be disabled by this parameter.
                 """
             ),
         ] = True,
@@ -1049,7 +1049,7 @@ class Typer:
 
                 ---
 
-                By default each command registers a --help option. This can be disabled by this parameter.
+                By default each command registers a `--help` option. This can be disabled by this parameter.
                 """
             ),
         ] = Default(True),
