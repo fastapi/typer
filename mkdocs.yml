@@ -160,8 +160,9 @@ nav:
   - Reference (Code API):
     - reference/index.md
     - reference/typer.md
-    - reference/parameters.md
     - reference/run_launch.md
+    - reference/parameters.md
+    - reference/file_objects.md
   - Resources:
     - resources/index.md
     - help-typer.md
