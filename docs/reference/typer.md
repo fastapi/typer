@@ -14,5 +14,3 @@ from typer import Typer
             - callback
             - command
             - add_typer
-
-
