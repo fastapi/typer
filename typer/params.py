@@ -795,7 +795,7 @@ def Option(
         bool,
         Doc(
             """
-            Determine whether or not a [`Path` CLI Option](https://typer.tiangolo.com/tutorial/parameter-types/path/),
+            Determine whether or not a [`Path` CLI Option](https://typer.tiangolo.com/tutorial/parameter-types/path/)
             is allowed to refer to a file. When this is set to `False`, the application will raise a validation error when a path to a file is given.
 
             **Example**
@@ -814,7 +814,7 @@ def Option(
         bool,
         Doc(
             """
-            Determine whether or not a [`Path` CLI Option](https://typer.tiangolo.com/tutorial/parameter-types/path/),
+            Determine whether or not a [`Path` CLI Option](https://typer.tiangolo.com/tutorial/parameter-types/path/)
             is allowed to refer to a directory. When this is set to `False`, the application will raise a validation error when a path to a directory is given.
 
             **Example**
@@ -1640,7 +1640,7 @@ def Argument(
         bool,
         Doc(
             """
-            Determine whether or not a [`Path` argument](https://typer.tiangolo.com/tutorial/parameter-types/path/),
+            Determine whether or not a [`Path` argument](https://typer.tiangolo.com/tutorial/parameter-types/path/)
             is allowed to refer to a file. When this is set to `False`, the application will raise a validation error when a path to a file is given.
 
             **Example**
@@ -1659,7 +1659,7 @@ def Argument(
         bool,
         Doc(
             """
-            Determine whether or not a [`Path` argument](https://typer.tiangolo.com/tutorial/parameter-types/path/),
+            Determine whether or not a [`Path` argument](https://typer.tiangolo.com/tutorial/parameter-types/path/)
             is allowed to refer to a directory. When this is set to `False`, the application will raise a validation error when a path to a directory is given.
 
             **Example**
