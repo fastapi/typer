@@ -29,5 +29,3 @@ if __name__ == "__main__":
 ::: typer.Option
     options:
       show_overloads: false
-
-
