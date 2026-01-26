@@ -57,7 +57,7 @@ standard = [
 dev = [
     { include-group = "tests" },
     { include-group = "docs" },
-    "prek==0.2.24",
+    "prek==0.3.0",
 ]
 docs = [
     "cairosvg==2.8.2",
