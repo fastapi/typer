@@ -9,6 +9,7 @@
 
 ### Internal
 
+* ⬆ Bump rich from 14.2.0 to 14.3.1. PR [#1502](https://github.com/fastapi/typer/pull/1502) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ruff from 0.14.13 to 0.14.14. PR [#1499](https://github.com/fastapi/typer/pull/1499) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * 🔧 Ensure that an edit to `uv.lock` gets the `internal` label. PR [#1497](https://github.com/fastapi/typer/pull/1497) by [@svlandeg](https://github.com/svlandeg).
 * ⬆ Bump ruff from 0.14.10 to 0.14.13. PR [#1493](https://github.com/fastapi/typer/pull/1493) by [@dependabot[bot]](https://github.com/apps/dependabot).
