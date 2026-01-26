@@ -202,7 +202,7 @@ def Option(
                 return value
 
             @app.command()
-            def main(name: Annotated[str | None, typer.Option(callback=name_callback)] = None):
+            def main(name: Annotated[str, typer.Option(callback=name_callback)]):
                 print(f"Hello {name}")
             ```
             """
@@ -257,7 +257,7 @@ def Option(
 
             ```python
             @app.command()
-            def main(user: Annotated[str, typer.Option(envvar="AWESOME_PERSON")]):
+            def main(user: Annotated[str, typer.Option(envvar="ME")]):
                 print(f"Hello {user}")
             ```
             """
@@ -288,11 +288,11 @@ def Option(
             **Example**
 
             ```python
-            def name_complete():
+            def complete():
                 return ["Me", "Myself", "I"]
 
             @app.command()
-            def main(name: Annotated[str, typer.Option(autocompletion=name_complete)] = "World"):
+            def main(name: Annotated[str, typer.Option(autocompletion=complete)]):
                 print(f"Hello {name}")
             ```
             """
@@ -353,21 +353,21 @@ def Option(
             **Example**
 
             ```python
-            class CustomClass:
+            class MyClass:
                 def __init__(self, value: str):
                     self.value = value
 
                 def __str__(self):
-                    return f"<CustomClass: value={self.value}>"
+                    return f"<MyClass: value={self.value}>"
 
-            class CustomClassParser(click.ParamType):
-                name = "CustomClass"
+            class MyParser(click.ParamType):
+                name = "MyClass"
 
                 def convert(self, value, param, ctx):
-                    return CustomClass(value * 3)
+                    return MyClass(value * 3)
 
             @app.command()
-            def main(opt: Annotated[CustomClass, typer.Option(click_type=CustomClassParser())] = "Foo"):
+            def main(opt: Annotated[MyClass, typer.Option(click_type=MyParser())] = "Foo"):
                 print(f"--opt is {opt}")
             ```
             """
@@ -384,8 +384,8 @@ def Option(
 
             ```python
             @app.command()
-            def main(fullname: Annotated[str, typer.Option(show_default=False)] = "Wade Wilson"):
-                print(f"Hello {fullname}")
+            def main(name: Annotated[str, typer.Option(show_default=False)] = "Rick"):
+                print(f"Hello {name}")
             ```
             """
         ),
@@ -416,8 +416,8 @@ def Option(
 
             ```python
             @app.command()
-            def main(project_name: Annotated[str, typer.Option(prompt=True, confirmation_prompt=True)]):
-                print(f"Deleting project {project_name}")
+            def main(project: Annotated[str, typer.Option(prompt=True, confirmation_prompt=True)]):
+                print(f"Deleting project {project}")
             ```
             """
         ),
@@ -513,7 +513,7 @@ def Option(
 
             ```python
             @app.command()
-            def greet(name: Annotated[str, typer.Option(help="The person to greet.")] = "Deadpool"):
+            def greet(name: Annotated[str, typer.Option(help="Person to greet")] = "Deadpool"):
                 print(f"Hello {name}")
             ```
             """
@@ -557,7 +557,7 @@ def Option(
 
             ```python
             @app.command()
-            def main(user: Annotated[str, typer.Option(envvar="AWESOME_PERSON", show_envvar=False)]):
+            def main(user: Annotated[str, typer.Option(envvar="ME", show_envvar=False)]):
                 print(f"Hello {user}")
             ```
             """
@@ -676,7 +676,7 @@ def Option(
                 birthday: Annotated[
                     datetime,
                     typer.Option(
-                        formats=["%Y-%m-%d", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d %H:%M:%S", "%m/%d/%Y"]
+                        formats=["%Y-%m-%d", "%Y-%m-%d %H:%M:%S", "%m/%d/%Y"]
                     ),
                 ],
             ):
@@ -917,9 +917,9 @@ def Option(
             @app.command()
             def main(
                 name: Annotated[str, typer.Argument(help="Who to greet")],
-                age: Annotated[str, typer.Option(help="The user's age", rich_help_panel="Characteristics")] = "",
+                age: Annotated[str, typer.Option(help="Their age", rich_help_panel="Data")],
             ):
-                print(f"Hello {name}")
+                print(f"Hello {name} of age {age}")
             ```
             """
         ),
@@ -1158,7 +1158,7 @@ def Argument(
                 return value
 
             @app.command()
-            def main(name: Annotated[str | None, typer.Argument(callback=name_callback)] = None):
+            def main(name: Annotated[str, typer.Argument(callback=name_callback)]):
                 print(f"Hello {name}")
             ```
             """
@@ -1176,7 +1176,7 @@ def Argument(
 
             ```python
             @app.command()
-            def main(name: Annotated[str, typer.Argument(metavar="✨username✨")] = "World"):
+            def main(name: Annotated[str, typer.Argument(metavar="✨username✨")]):
                 print(f"Hello {name}")
             ```
             """
@@ -1214,7 +1214,7 @@ def Argument(
 
             ```python
             @app.command()
-            def main(name: Annotated[str, typer.Argument(envvar="AWESOME_NAME")] = "World"):
+            def main(name: Annotated[str, typer.Argument(envvar="ME")]):
                 print(f"Hello Mr. {name}")
             ```
             """
@@ -1245,11 +1245,11 @@ def Argument(
             **Example**
 
             ```python
-            def name_complete():
+            def complete():
                 return ["Me", "Myself", "I"]
 
             @app.command()
-            def main(name: Annotated[str, typer.Argument(autocompletion=name_complete)] = "World"):
+            def main(name: Annotated[str, typer.Argument(autocompletion=complete)]):
                 print(f"Hello {name}")
             ```
             """
@@ -1310,21 +1310,21 @@ def Argument(
             **Example**
 
             ```python
-            class CustomClass:
+            class MyClass:
                 def __init__(self, value: str):
                     self.value = value
 
                 def __str__(self):
-                    return f"<CustomClass: value={self.value}>"
+                    return f"<MyClass: value={self.value}>"
 
-            class CustomClassParser(click.ParamType):
-                name = "CustomClass"
+            class MyParser(click.ParamType):
+                name = "MyClass"
 
                 def convert(self, value, param, ctx):
-                    return CustomClass(value * 3)
+                    return MyClass(value * 3)
 
             @app.command()
-            def main(arg: Annotated[CustomClass, typer.Argument(click_type=CustomClassParser())]):
+            def main(arg: Annotated[MyClass, typer.Argument(click_type=MyParser())]):
                 print(f"arg is {arg}")
             ```
             """
@@ -1341,8 +1341,8 @@ def Argument(
 
             ```python
             @app.command()
-            def main(fullname: Annotated[str, typer.Argument(show_default=False)] = "Wade Wilson"):
-                print(f"Hello {fullname}")
+            def main(name: Annotated[str, typer.Argument(show_default=False)] = "Rick"):
+                print(f"Hello {name}")
             ```
             """
         ),
@@ -1369,7 +1369,7 @@ def Argument(
 
             ```python
             @app.command()
-            def main(name: Annotated[str, typer.Argument(envvar="AWESOME_NAME", show_envvar=False)] = "World"):
+            def main(name: Annotated[str, typer.Argument(envvar="ME", show_envvar=False)]):
                 print(f"Hello Mr. {name}")
             ```
             """
@@ -1386,7 +1386,7 @@ def Argument(
 
             ```python
             @app.command()
-            def greet(name: Annotated[str, typer.Argument(help="The person to greet.")]):
+            def greet(name: Annotated[str, typer.Argument(help="Person to greet")]):
                 print(f"Hello {name}")
             ```
             """
@@ -1521,7 +1521,7 @@ def Argument(
                 birthday: Annotated[
                     datetime,
                     typer.Argument(
-                        formats=["%Y-%m-%d", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d %H:%M:%S", "%m/%d/%Y"]
+                        formats=["%Y-%m-%d", "%Y-%m-%d %H:%M:%S", "%m/%d/%Y"]
                     ),
                 ],
             ):
@@ -1762,9 +1762,9 @@ def Argument(
             @app.command()
             def main(
                 name: Annotated[str, typer.Argument(help="Who to greet")],
-                age: Annotated[str, typer.Option(help="The user's age", rich_help_panel="Characteristics")] = "",
+                age: Annotated[str, typer.Option(help="Their age", rich_help_panel="Data")],
             ):
-                print(f"Hello {name}")
+                print(f"Hello {name} of age {age}")
             ```
             """
         ),
