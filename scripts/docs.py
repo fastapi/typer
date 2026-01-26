@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.INFO)
 mkdocs_name = "mkdocs.yml"
 en_docs_path = Path("")
 
-app = typer.Typer(no_args_is_help=True)
+app = typer.Typer()
 
 
 @app.callback()
@@ -83,7 +83,7 @@ def live(dirty: bool = False) -> None:
     args = ["mkdocs", "serve", "--dev-addr", "127.0.0.1:8008"]
     if dirty:
         args.append("--dirty")
-    subprocess.run(args, env={**os.environ}, check=True)
+    subprocess.run(args, env={**os.environ, "LINENUMS": "true"}, check=True)
 
 
 @app.command()
