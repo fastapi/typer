@@ -31,6 +31,7 @@ class Context(click.Context):
     When declaring it in a [callback](https://typer.tiangolo.com/tutorial/options/callback-and-context/) function,
     you can access this additional information.
     """
+
     pass
 
 
@@ -155,11 +156,11 @@ class FileBinaryWrite(io.BufferedWriter):
 
 
 class CallbackParam(click.Parameter):
-
     """
     In a callback function, you can declare a function parameter with type `CallbackParam`
     to access the specific Click [`Parameter`](https://click.palletsprojects.com/en/stable/api/#click.Parameter) object.
     """
+
     pass
 
 
