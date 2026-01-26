@@ -137,7 +137,7 @@ class FileBinaryWrite(io.BufferedWriter):
     @app.command()
     def main(file: Annotated[typer.FileBinaryWrite, typer.Option()]):
         first_line_str = "some settings\\n"
-        # You cannot write str directly to a binary file, you have to encode it to get bytes
+        # You cannot write str directly to a binary file; encode it first
         first_line_bytes = first_line_str.encode("utf-8")
         # Then you can write the bytes
         file.write(first_line_bytes)
