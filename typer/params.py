@@ -1128,12 +1128,12 @@ def Argument(
 
             ```python
             @app.command()
-                def main(name: str = typer.Argument("World")):
+            def main(name: str = typer.Argument("World")):
                 print(f"Hello {name}!")
             ```
 
             Note that this usage is deprecated, and we recommend to use `Annotated` instead:
-            ```
+            ```python
             @app.command()
             def main(name: Annotated[str, typer.Argument()] = "World"):
                 print(f"Hello {name}!")
