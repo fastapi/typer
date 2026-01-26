@@ -1899,7 +1899,31 @@ def get_param_completion(
     return wrapper
 
 
-def run(function: Callable[..., Any]) -> None:
+def run(
+    function: Annotated[
+        Callable[..., Any],
+        Doc(
+            """
+            The function that should power this CLI application.
+            """
+        ),
+    ],
+) -> None:
+    """
+    This function converts a given function to a CLI application with `Typer()` and executes it.
+
+    ## Example
+
+    ```python
+    import typer
+
+    def main(name: str):
+        print(f"Hello {name}")
+
+    if __name__ == "__main__":
+        typer.run(main)
+    ```
+    """
     app = Typer(add_completion=False)
     app.command()(function)
     app()
@@ -1916,35 +1940,61 @@ def _is_linux_or_bsd() -> bool:
     return "BSD" in platform.system()
 
 
-def launch(url: str, wait: bool = False, locate: bool = False) -> int:
-    """This function launches the given URL (or filename) in the default
+def launch(
+    url: Annotated[
+        str,
+        Doc(
+            """
+            URL or filename of the thing to launch.
+            """
+        ),
+    ],
+    wait: Annotated[
+        bool,
+        Doc(
+            """
+            Wait for the program to exit before returning. This only works if the launched program blocks.
+            In particular, `xdg-open` on Linux does not block.
+            """
+        ),
+    ] = False,
+    locate: Annotated[
+        bool,
+        Doc(
+            """
+            If this is set to `True`, then instead of launching the application associated with the URL, it will attempt to
+            launch a file manager with the file located. This might have weird effects if the URL does not point to the filesystem.
+            """
+        ),
+    ] = False,
+) -> int:
+    """
+    This function launches the given URL (or filename) in the default
     viewer application for this file type.  If this is an executable, it
     might launch the executable in a new session.  The return value is
-    the exit code of the launched application.  Usually, ``0`` indicates
+    the exit code of the launched application.  Usually, `0` indicates
     success.
 
     This function handles url in different operating systems separately:
-    - On macOS (Darwin), it uses the 'open' command.
-    - On Linux and BSD, it uses 'xdg-open' if available.
-    - On Windows (and other OSes), it uses the standard webbrowser module.
+     - On macOS (Darwin), it uses the `open` command.
+     - On Linux and BSD, it uses `xdg-open` if available.
+     - On Windows (and other OSes), it uses the standard webbrowser module.
 
     The function avoids, when possible, using the webbrowser module on Linux and macOS
     to prevent spammy terminal messages from some browsers (e.g., Chrome).
 
-    Examples::
+    ## Examples
+    ```python
+        import typer
 
         typer.launch("https://typer.tiangolo.com/")
-        typer.launch("/my/downloaded/file", locate=True)
+    ```
 
-    :param url: URL or filename of the thing to launch.
-    :param wait: Wait for the program to exit before returning. This
-        only works if the launched program blocks. In particular,
-        ``xdg-open`` on Linux does not block.
-    :param locate: if this is set to `True` then instead of launching the
-                   application associated with the URL it will attempt to
-                   launch a file manager with the file located.  This
-                   might have weird effects if the URL does not point to
-                   the filesystem.
+    ```python
+        import typer
+
+        typer.launch("/my/downloaded/file", locate=True)
+    ```
     """
 
     if url.startswith("http://") or url.startswith("https://"):

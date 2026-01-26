@@ -161,6 +161,7 @@ nav:
     - reference/index.md
     - reference/typer.md
     - reference/parameters.md
+    - reference/run_launch.md
   - Resources:
     - resources/index.md
     - help-typer.md

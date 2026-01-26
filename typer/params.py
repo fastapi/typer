@@ -1743,9 +1743,9 @@ def Argument(
         Union[None, type[str], type[bytes]],
         Doc(
             """
-             A string type that will be used to represent this [`Path` argument](https://typer.tiangolo.com/tutorial/parameter-types/path/).
-             The default is `None` which means the return value will be either bytes or unicode, depending on what makes most sense given the input data.
-             This is a more advanced use-case.
+            A string type that will be used to represent this [`Path` argument](https://typer.tiangolo.com/tutorial/parameter-types/path/).
+            The default is `None` which means the return value will be either bytes or unicode, depending on what makes most sense given the input data.
+            This is a more advanced use-case.
             """
         ),
     ] = None,
