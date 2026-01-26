@@ -163,6 +163,7 @@ nav:
     - reference/run_launch.md
     - reference/parameters.md
     - reference/file_objects.md
+    - reference/context.md
   - Resources:
     - resources/index.md
     - help-typer.md
