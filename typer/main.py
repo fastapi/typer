@@ -462,7 +462,7 @@ class Typer:
             bool,
             Doc(
                 """
-                If you want to disable [pretty exceptions with Rich](https://typer.tiangolo.com/tutorial/exceptions/#exceptions-with-rich) entirely,
+                If you want to disable [pretty exceptions with Rich](https://typer.tiangolo.com/tutorial/exceptions/#exceptions-with-rich),
                 you can set `pretty_exceptions_enable` to `False`. When doing so, you will see the usual standard exception trace.
 
                 **Example**
@@ -714,9 +714,9 @@ class Typer:
                 state["verbose"] = True
 
         @app.command()
-            def delete(username: str):
-                # define subcommand
-                ...
+        def delete(username: str):
+            # define subcommand
+            ...
         ```
         """
 
