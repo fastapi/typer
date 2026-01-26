@@ -698,7 +698,7 @@ def Option(
             ```python
             @app.command()
             def main(config: Annotated[typer.FileText, typer.Option(mode="a")]):
-                config.write("This is a single line\n")
+                config.write("This is a single line\\n")
                 print("Config line written")
             ```
             """
@@ -715,7 +715,7 @@ def Option(
             ```python
             @app.command()
             def main(config: Annotated[typer.FileText, typer.Option(encoding="utf-8")]):
-                config.write("All the text gets written\n")
+                config.write("All the text gets written\\n")
             ```
             """
         ),
@@ -746,7 +746,7 @@ def Option(
             ```python
             @app.command()
             def main(config: Annotated[typer.FileText, typer.Option(mode="a", lazy=False)]):
-                config.write("This is a single line\n")
+                config.write("This is a single line\\n")
                 print("Config line written")
             ```
             """
@@ -1543,7 +1543,7 @@ def Argument(
             ```python
             @app.command()
             def main(config: Annotated[typer.FileText, typer.Argument(mode="a")]):
-                config.write("This is a single line\n")
+                config.write("This is a single line\\n")
                 print("Config line written")
             ```
             """
@@ -1560,7 +1560,7 @@ def Argument(
             ```python
             @app.command()
             def main(config: Annotated[typer.FileText, typer.Argument(encoding="utf-8")]):
-                config.write("All the text gets written\n")
+                config.write("All the text gets written\\n")
             ```
             """
         ),
@@ -1591,7 +1591,7 @@ def Argument(
             ```python
             @app.command()
             def main(config: Annotated[typer.FileText, typer.Argument(mode="a", lazy=False)]):
-                config.write("This is a single line\n")
+                config.write("This is a single line\\n")
                 print("Config line written")
             ```
             """
