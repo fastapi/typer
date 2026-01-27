@@ -61,9 +61,7 @@ def is_callable_type(type_: type[Any]) -> bool:
 
 
 def is_literal_type(type_: type[Any]) -> bool:
-    import typing_extensions
-
-    return get_origin(type_) in (Literal, typing_extensions.Literal)
+    return get_origin(type_) is Literal
 
 
 def literal_values(type_: type[Any]) -> tuple[Any, ...]:
