@@ -1,24 +1,37 @@
+import importlib
 import subprocess
 import sys
+from types import ModuleType
 
+import pytest
 from typer.testing import CliRunner
 
-from docs_src.multiple_values.arguments_with_multiple_values import tutorial003 as mod
-
 runner = CliRunner()
-app = mod.app
 
 
-def test_help():
-    result = runner.invoke(app, ["--help"])
+@pytest.fixture(
+    name="mod",
+    params=[
+        pytest.param("tutorial003_py39"),
+        pytest.param("tutorial003_an_py39"),
+    ],
+)
+def get_mod(request: pytest.FixtureRequest) -> ModuleType:
+    module_name = f"docs_src.multiple_values.arguments_with_multiple_values.{request.param}"
+    mod = importlib.import_module(module_name)
+    return mod
+
+
+def test_help(mod: ModuleType):
+    result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
     assert "[OPTIONS] [NAMES]..." in result.output
     assert "Arguments" in result.output
     assert "[default: Harry, Hermione, Ron, hero3]" in result.output
 
 
-def test_defaults():
-    result = runner.invoke(app)
+def test_defaults(mod: ModuleType):
+    result = runner.invoke(mod.app)
     assert result.exit_code == 0
     assert "Hello Harry" in result.output
     assert "Hello Hermione" in result.output
@@ -26,14 +39,14 @@ def test_defaults():
     assert "Hello Wonder woman" in result.output
 
 
-def test_invalid_args():
-    result = runner.invoke(app, ["Draco", "Hagrid"])
+def test_invalid_args(mod: ModuleType):
+    result = runner.invoke(mod.app, ["Draco", "Hagrid"])
     assert result.exit_code != 0
     assert "Argument 'names' takes 4 values" in result.output
 
 
-def test_valid_args():
-    result = runner.invoke(app, ["Draco", "Hagrid", "Dobby", "hero1"])
+def test_valid_args(mod: ModuleType):
+    result = runner.invoke(mod.app, ["Draco", "Hagrid", "Dobby", "hero1"])
     assert result.exit_code == 0
     assert "Hello Draco" in result.stdout
     assert "Hello Hagrid" in result.stdout
@@ -41,7 +54,7 @@ def test_valid_args():
     assert "Hello Superman" in result.stdout
 
 
-def test_script():
+def test_script(mod: ModuleType):
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],
         capture_output=True,
