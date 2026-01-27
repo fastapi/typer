@@ -1,11 +1,11 @@
 import typer
 
-app = typer.Typer(pretty_exceptions_show_locals=False)
+app = typer.Typer(pretty_exceptions_show_locals=True)
 
 
 @app.command()
-def main(password: str):
-    print(password + 3)
+def main(name: str = "morty"):
+    print(name + 3)
 
 
 if __name__ == "__main__":
