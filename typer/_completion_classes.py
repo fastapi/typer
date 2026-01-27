@@ -46,7 +46,7 @@ class BashComplete(click.shell_completion.BashComplete):
         }
 
     def get_completion_args(self) -> tuple[list[str], str]:
-        cwords = click_split_arg_string(os.environ["COMP_WORDS"])
+        cwords = click_split_arg_string(os.environ["COMP_WORDS"])  # ty: ignore[call-non-callable]
         cword = int(os.environ["COMP_CWORD"])
         args = cwords[1:cword]
 
@@ -83,7 +83,7 @@ class ZshComplete(click.shell_completion.ZshComplete):
 
     def get_completion_args(self) -> tuple[list[str], str]:
         completion_args = os.getenv("_TYPER_COMPLETE_ARGS", "")
-        cwords = click_split_arg_string(completion_args)
+        cwords = click_split_arg_string(completion_args)  # ty: ignore[call-non-callable]
         args = cwords[1:]
         if args and not completion_args.endswith(" "):
             incomplete = args[-1]
@@ -134,7 +134,7 @@ class FishComplete(click.shell_completion.FishComplete):
 
     def get_completion_args(self) -> tuple[list[str], str]:
         completion_args = os.getenv("_TYPER_COMPLETE_ARGS", "")
-        cwords = click_split_arg_string(completion_args)
+        cwords = click_split_arg_string(completion_args)  # ty: ignore[call-non-callable]
         args = cwords[1:]
         if args and not completion_args.endswith(" "):
             incomplete = args[-1]
@@ -188,7 +188,7 @@ class PowerShellComplete(click.shell_completion.ShellComplete):
     def get_completion_args(self) -> tuple[list[str], str]:
         completion_args = os.getenv("_TYPER_COMPLETE_ARGS", "")
         incomplete = os.getenv("_TYPER_COMPLETE_WORD_TO_COMPLETE", "")
-        cwords = click_split_arg_string(completion_args)
+        cwords = click_split_arg_string(completion_args)  # ty: ignore[call-non-callable]
         args = cwords[1:-1] if incomplete else cwords[1:]
         return args, incomplete
 

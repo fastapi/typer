@@ -72,7 +72,7 @@ def except_hook(
         _original_except_hook(exc_type, exc_value, tb)
         return
     typer_path = os.path.dirname(__file__)
-    click_path = os.path.dirname(click.__file__)
+    click_path = os.path.dirname(click.__file__)  # ty: ignore[no-matching-overload]
     internal_dir_names = [typer_path, click_path]
     exc = exc_value
     if HAS_RICH:
@@ -395,42 +395,34 @@ def solve_typer_info_help(typer_info: TyperInfo) -> str:
     if not isinstance(typer_info.help, DefaultPlaceholder):
         return inspect.cleandoc(typer_info.help or "")
     # Priority 2: Explicit value was set in sub_app.callback()
-    try:
+    if typer_info.typer_instance and typer_info.typer_instance.registered_callback:
         callback_help = typer_info.typer_instance.registered_callback.help
         if not isinstance(callback_help, DefaultPlaceholder):
             return inspect.cleandoc(callback_help or "")
-    except AttributeError:
-        pass
     # Priority 3: Explicit value was set in sub_app = typer.Typer()
-    try:
+    if typer_info.typer_instance and typer_info.typer_instance.info:
         instance_help = typer_info.typer_instance.info.help
         if not isinstance(instance_help, DefaultPlaceholder):
             return inspect.cleandoc(instance_help or "")
-    except AttributeError:
-        pass
     # Priority 4: Implicit inference from callback docstring in app.add_typer()
     if typer_info.callback:
         doc = inspect.getdoc(typer_info.callback)
         if doc:
             return doc
     # Priority 5: Implicit inference from callback docstring in @app.callback()
-    try:
+    if typer_info.typer_instance and typer_info.typer_instance.registered_callback:
         callback = typer_info.typer_instance.registered_callback.callback
         if not isinstance(callback, DefaultPlaceholder):
             doc = inspect.getdoc(callback or "")
             if doc:
                 return doc
-    except AttributeError:
-        pass
     # Priority 6: Implicit inference from callback docstring in typer.Typer()
-    try:
+    if typer_info.typer_instance and typer_info.typer_instance.info:
         instance_callback = typer_info.typer_instance.info.callback
         if not isinstance(instance_callback, DefaultPlaceholder):
             doc = inspect.getdoc(instance_callback)
             if doc:
                 return doc
-    except AttributeError:
-        pass
     # Value not set, use the default
     return typer_info.help.value
 
@@ -578,7 +570,7 @@ def get_command_from_info(
     rich_markup_mode: MarkupMode,
 ) -> click.Command:
     assert command_info.callback, "A command must have a callback function"
-    name = command_info.name or get_command_name(command_info.callback.__name__)
+    name = command_info.name or get_command_name(command_info.callback.__name__)  # ty: ignore[possibly-missing-attribute]
     use_help = command_info.help
     if use_help is None:
         use_help = inspect.getdoc(command_info.callback)
