@@ -5,13 +5,13 @@ import shutil
 import subprocess
 import sys
 import traceback
-from collections.abc import Sequence
+from collections.abc import Iterable, Sequence
 from datetime import datetime
 from enum import Enum
 from functools import update_wrapper
 from pathlib import Path
 from traceback import FrameSummary, StackSummary
-from types import TracebackType
+from types import ModuleType, TracebackType
 from typing import Any, Callable, Optional, Union
 from uuid import UUID
 
@@ -142,6 +142,7 @@ class Typer:
         pretty_exceptions_enable: bool = True,
         pretty_exceptions_show_locals: bool = True,
         pretty_exceptions_short: bool = True,
+        pretty_exceptions_suppress: Iterable[Union[str, ModuleType]] = (),
     ):
         self._add_completion = add_completion
         self.rich_markup_mode: MarkupMode = rich_markup_mode
@@ -150,6 +151,7 @@ class Typer:
         self.pretty_exceptions_enable = pretty_exceptions_enable
         self.pretty_exceptions_show_locals = pretty_exceptions_show_locals
         self.pretty_exceptions_short = pretty_exceptions_short
+        self.pretty_exceptions_suppress = pretty_exceptions_suppress
         self.info = TyperInfo(
             name=name,
             cls=cls,
@@ -331,6 +333,7 @@ class Typer:
                     pretty_exceptions_enable=self.pretty_exceptions_enable,
                     pretty_exceptions_show_locals=self.pretty_exceptions_show_locals,
                     pretty_exceptions_short=self.pretty_exceptions_short,
+                    pretty_exceptions_suppress=self.pretty_exceptions_suppress,
                 ),
             )
             raise e
