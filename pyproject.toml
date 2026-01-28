@@ -56,7 +56,7 @@ standard = [
 dev = [
     { include-group = "tests" },
     { include-group = "docs" },
-    "prek==0.3.0",
+    "prek==0.2.24",
 ]
 docs = [
     "cairosvg==2.8.2",
@@ -86,7 +86,7 @@ tests = [
     "pytest-sugar>=0.9.4,<1.2.0",
     "pytest-xdist>=1.32.0,<4.0.0",
     "rich>=10.11.0",
-    "ruff==0.14.14",
+    "ruff==0.14.10",
     "shellingham>=1.3.0",
 ]
 
@@ -225,7 +225,7 @@ ignore = [
 "docs_src/options_autocompletion/tutorial008_an_py39.py" = ["B006"]
 "docs_src/options_autocompletion/tutorial009_an_py39.py" = ["B006"]
 "docs_src/parameter_types/enum/tutorial003_an_py39.py" = ["B006"]
-"docs_src/parameter_types/enum/tutorial006_an.py" = ["B006"]
+"docs_src/parameter_types/enum/tutorial006_an_py39.py" = ["B006"]
 # Loop control variable `value` not used within loop body
 "docs_src/progressbar/tutorial001_py39.py" = ["B007"]
 "docs_src/progressbar/tutorial003_py39.py" = ["B007"]

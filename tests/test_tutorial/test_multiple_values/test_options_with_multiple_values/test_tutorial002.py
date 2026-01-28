@@ -17,7 +17,9 @@ runner = CliRunner()
     ],
 )
 def get_mod(request: pytest.FixtureRequest) -> ModuleType:
-    module_name = f"docs_src.multiple_values.options_with_multiple_values.{request.param}"
+    module_name = (
+        f"docs_src.multiple_values.options_with_multiple_values.{request.param}"
+    )
     mod = importlib.import_module(module_name)
     return mod
 
