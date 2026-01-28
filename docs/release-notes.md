@@ -2,6 +2,21 @@
 
 ## Latest Changes
 
+### Docs
+
+* 📝 Add contribution instructions about LLM generated code and comments and automated tools for PRs. PR [#1489](https://github.com/fastapi/typer/pull/1489) by [@alejsdev](https://github.com/alejsdev).
+* 🐛 Fix copy button in `custom.js`. PR [#1488](https://github.com/fastapi/typer/pull/1488) by [@alejsdev](https://github.com/alejsdev).
+
+### Internal
+
+* ✅ Update test to use `mod` fixture. PR [#1506](https://github.com/fastapi/typer/pull/1506) by [@svlandeg](https://github.com/svlandeg).
+* ⬆ Bump rich from 14.2.0 to 14.3.1. PR [#1502](https://github.com/fastapi/typer/pull/1502) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.14.13 to 0.14.14. PR [#1499](https://github.com/fastapi/typer/pull/1499) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 🔧 Ensure that an edit to `uv.lock` gets the `internal` label. PR [#1497](https://github.com/fastapi/typer/pull/1497) by [@svlandeg](https://github.com/svlandeg).
+* ⬆ Bump ruff from 0.14.10 to 0.14.13. PR [#1493](https://github.com/fastapi/typer/pull/1493) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump urllib3 from 2.6.2 to 2.6.3. PR [#1496](https://github.com/fastapi/typer/pull/1496) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump prek from 0.2.24 to 0.3.0. PR [#1495](https://github.com/fastapi/typer/pull/1495) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
 ## 0.21.1
 
 ### Fixes
