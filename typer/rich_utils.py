@@ -398,7 +398,7 @@ def _print_options_panel(
             highlights = [
                 r"^(?P<metavar_sep>(\[|<))",
                 r"(?P<metavar_sep>\|)",
-                r"(?P<metavar_sep>(\]|>)$)",
+                r"(?P<metavar_sep>(\]|>))(\.\.\.)?$",
             ]
 
         metavar_highlighter = MetavarHighlighter()
