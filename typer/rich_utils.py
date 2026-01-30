@@ -120,8 +120,18 @@ class NegativeOptionHighlighter(RegexHighlighter):
     ]
 
 
+# Highlighter to make [ | ] and <> dim
+class MetavarHighlighter(RegexHighlighter):
+    highlights = [
+        r"^(?P<metavar_sep>(\[|<))",
+        r"(?P<metavar_sep>\|)",
+        r"(?P<metavar_sep>(\]|>))(\.\.\.)?$",
+    ]
+
+
 highlighter = OptionHighlighter()
 negative_highlighter = NegativeOptionHighlighter()
+metavar_highlighter = MetavarHighlighter()
 
 
 def _get_rich_console(stderr: bool = False) -> Console:
@@ -392,16 +402,6 @@ def _print_options_panel(
         required: Union[str, Text] = ""
         if param.required:
             required = Text(REQUIRED_SHORT_STRING, style=STYLE_REQUIRED_SHORT)
-
-        # Highlighter to make [ | ] and <> dim
-        class MetavarHighlighter(RegexHighlighter):
-            highlights = [
-                r"^(?P<metavar_sep>(\[|<))",
-                r"(?P<metavar_sep>\|)",
-                r"(?P<metavar_sep>(\]|>))(\.\.\.)?$",
-            ]
-
-        metavar_highlighter = MetavarHighlighter()
 
         required_rows.append(required)
         options_rows.append(
