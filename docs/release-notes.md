@@ -9,6 +9,7 @@
 
 ### Internal
 
+* ⬆ Bump rich from 14.3.1 to 14.3.2. PR [#1509](https://github.com/fastapi/typer/pull/1509) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ✅ Update test to use `mod` fixture. PR [#1506](https://github.com/fastapi/typer/pull/1506) by [@svlandeg](https://github.com/svlandeg).
 * ⬆ Bump rich from 14.2.0 to 14.3.1. PR [#1502](https://github.com/fastapi/typer/pull/1502) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ruff from 0.14.13 to 0.14.14. PR [#1499](https://github.com/fastapi/typer/pull/1499) by [@dependabot[bot]](https://github.com/apps/dependabot).
