@@ -34,4 +34,3 @@ repos:
         require_serial: true
         language: unsupported
         pass_filenames: false
-        types: [python]
