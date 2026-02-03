@@ -34,3 +34,10 @@ repos:
         require_serial: true
         language: unsupported
         pass_filenames: false
+
+      - id: generate-readme
+        language: unsupported
+        name: generate README.md from index.md
+        entry: uv run ./scripts/docs.py generate-readme
+        files: ^docs/index\.md|scripts/docs\.py$
+        pass_filenames: false
