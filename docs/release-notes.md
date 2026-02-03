@@ -10,6 +10,7 @@
 
 ### Internal
 
+* 🔧 Add generate-readme to pre-commit. PR [#1515](https://github.com/fastapi/typer/pull/1515) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Run mypy in pre-commit instead of `Lint` step in `test.yml` workflow. PR [#1511](https://github.com/fastapi/typer/pull/1511) by [@YuriiMotov](https://github.com/YuriiMotov).
 * ⬆ Bump prek from 0.3.0 to 0.3.1. PR [#1510](https://github.com/fastapi/typer/pull/1510) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump rich from 14.3.1 to 14.3.2. PR [#1509](https://github.com/fastapi/typer/pull/1509) by [@dependabot[bot]](https://github.com/apps/dependabot).
