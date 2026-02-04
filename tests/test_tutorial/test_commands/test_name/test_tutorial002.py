@@ -1,6 +1,6 @@
 from typer.testing import CliRunner
 
-from docs_src.commands.name import tutorial002 as mod
+from docs_src.commands.name import tutorial002_py39 as mod
 
 app = mod.app
 
