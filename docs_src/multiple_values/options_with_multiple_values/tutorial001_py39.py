@@ -1,3 +1,15 @@
+"""
+This example shows how to define a Typer option that accepts multiple values
+using a tuple type hint.
+
+The --user option expects exactly three values, in this order:
+1. username (str)
+2. coins (int)
+3. is_wizard (bool)
+
+Example usage:
+python tutorial001_py39.py --user Harry 100 true
+"""
 import typer
 
 app = typer.Typer()
