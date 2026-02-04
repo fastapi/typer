@@ -83,14 +83,18 @@ Some tools like Dependabot, will add some labels, like `dependencies`, but have 
 
 ## Review PRs
 
-If a PR doesn't explain what it does or why, ask for more information.
+* If a PR doesn't explain what it does or why, if it seems like it could be useful, ask for more information. Otherwise, feel free to close it.
 
-A PR should have a specific use case that it is solving.
+* If a PR seems to be spam, meaningless, only to change statistics (to appear as "contributor") or similar, you can simply mark it as `invalid`, and it will be automatically closed.
+
+* If a PR seems to be AI generated, and seems like reviewing it would take more time from you than the time it took to write the prompt, mark it as `maybe-ai`, and it will be automatically closed.
+
+* A PR should have a specific use case that it is solving.
 
 * If the PR is for a feature, it should have docs.
     * Unless it's a feature we want to discourage, like support for a corner case that we don't want users to use.
 * The docs should include a source example file, not write Python directly in Markdown.
-* If the source example(s) file can have different syntax for Python different Python versions, there should be different versions of the file, and they should be shown in tabs in the docs.
+* If the source example(s) file can have different syntax for different Python versions, there should be different versions of the file, and they should be shown in tabs in the docs.
 * There should be tests testing the source example.
 * Before the PR is applied, the new tests should fail.
 * After applying the PR, the new tests should pass.
