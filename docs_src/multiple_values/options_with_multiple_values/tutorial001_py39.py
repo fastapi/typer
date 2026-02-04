@@ -10,6 +10,7 @@ The --user option expects exactly three values, in this order:
 Example usage:
 python tutorial001_py39.py --user Harry 100 true
 """
+
 import typer
 
 app = typer.Typer()
