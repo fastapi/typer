@@ -40,6 +40,10 @@ The key features are:
 * **Grow large**: Grow in complexity as much as you want, create arbitrarily complex trees of commands and groups of subcommands, with options and arguments.
 * **Run scripts**: Typer includes a `typer` command/program that you can use to run scripts, automatically converting them to CLIs, even if they don't use Typer internally.
 
+## 2026 February - Typer developer survey
+
+Help us define Typer's future by filling the <a href="https://forms.gle/nYvutPrVkmBQZLas7" class="external-link" target="_blank">Typer developer survey</a>. ✨
+
 ## FastAPI of CLIs
 
 **Typer** is <a href="https://fastapi.tiangolo.com" class="external-link" target="_blank">FastAPI</a>'s little sibling, it's the FastAPI of CLIs.
