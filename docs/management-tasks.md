@@ -68,7 +68,7 @@ Make sure you use a supported label from the <a href="https://github.com/tiangol
 * `refactor`: Refactors
     * This is normally for changes to the internal code that don't change the behavior. Normally it improves maintainability, or enables future features, etc.
 * `upgrade`: Upgrades
-    * This is for upgrades to direct dependencies from the project, or extra optional dependencies, normally in `pyproject.toml`. So, things that would affect final users, they would end up receiving the upgrade in their code base once they update. But this is not for upgrades to internal dependencies used for development, testing, docs, etc. Those internal dependencies, normally in `requirements.txt` files or GitHub Action versions should be marked as `internal`, not `upgrade`.
+    * This is for upgrades to direct dependencies from the project, or extra optional dependencies, normally in `pyproject.toml`. So, things that would affect final users, they would end up receiving the upgrade in their code base once they update. But this is not for upgrades to internal dependencies used for development, testing, docs, etc. Those internal dependencies or GitHub Action versions should be marked as `internal`, not `upgrade`.
 * `docs`: Docs
     * Changes in docs. This includes updating the docs, fixing typos. But it doesn't include changes to translations.
     * You can normally quickly detect it by going to the "Files changed" tab in the PR and checking if the updated file(s) starts with `docs/en/docs`. The original version of the docs is always in English, so in `docs/en/docs`.
@@ -107,13 +107,11 @@ Some tools like Dependabot, will add some labels, like `dependencies`, but have 
 
 Dependabot will create PRs to update dependencies for several things, and those PRs all look similar, but some are way more delicate than others.
 
-* If the PR is for a direct dependency, so, Dependabot is modifying `pyproject.toml`, **don't merge it**. 😱 Let me check it first. There's a good chance that some additional tweaks or updates are needed.
-* If the PR updates one of the internal dependencies, for example it's modifying `requirements.txt` files, or GitHub Action versions, if the tests are passing, the release notes (shown in a summary in the PR) don't show any obvious potential breaking change, you can merge it. 😎
+* If the PR is for a direct dependency, so, Dependabot is modifying `pyproject.toml` in the main dependencies, **don't merge it**. 😱 Let me check it first. There's a good chance that some additional tweaks or updates are needed.
+* If the PR updates one of the internal dependencies, for example the group `dev` in `pyproject.toml`, or GitHub Action versions, if the tests are passing, the release notes (shown in a summary in the PR) don't show any obvious potential breaking change, you can merge it. 😎
 
 ## Mark GitHub Discussions Answers
 
 When a question in GitHub Discussions has been answered, mark the answer by clicking "Mark as answer".
-
-Many of the current Discussion Questions were migrated from old issues. Many have the label `answered`, that means they were answered when they were issues, but now in GitHub Discussions, it's not known what is the actual response from the messages.
 
 You can filter discussions by <a href="https://github.com/fastapi/typer/discussions/categories/questions?discussions_q=category:Questions+is:open+is:unanswered" class="external-link" target="_blank">`Questions` that are `Unanswered`</a>.
