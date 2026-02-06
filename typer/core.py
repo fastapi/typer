@@ -29,9 +29,8 @@ MarkupMode = Literal["markdown", "rich", None]
 MARKUP_MODE_KEY = "TYPER_RICH_MARKUP_MODE"
 
 HAS_RICH = importlib.util.find_spec("rich") is not None
-HAS_SHELLINGHAM = importlib.util.find_spec("shellingham") is not None
 
-if HAS_RICH:
+if USE_RICH:
     DEFAULT_MARKUP_MODE: MarkupMode = "rich"
 else:  # pragma: no cover
     DEFAULT_MARKUP_MODE = None
