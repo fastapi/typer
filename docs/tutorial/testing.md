@@ -159,7 +159,6 @@ So, if you use `input="camila@example.com\n"` it means: "type `camila@example.co
 
 {* docs_src/testing/app02_py39/test_main.py hl[9] *}
 
-
 ## Test a function
 
 If you have a script and you never created an explicit `typer.Typer` app, like:
