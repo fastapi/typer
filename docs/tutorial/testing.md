@@ -81,6 +81,24 @@ If you need a refresher about what is "standard output" and "standard error" che
 
 ///
 
+#### Checking rich output
+
+Rich attempts to adjust the formatting to the connected terminal's size, wrapping or shortening content to make it fit.
+However, in many test environments, there is no terminal attached to the process, and therefore Rich will fallback to a standard terminal width of 80 characters.
+
+In some cases this might not be sufficient to test the output of a command.
+It is possible to override the width of a Rich `Console` object using the environment variable `COLUMNS`.
+This applies to all instances of a console created in the application.
+
+Typer also creates such an instance, which is used for output produced by Typer, such as the help display.
+The terminal width of this console can be forced using the environment variable `TERMINAL_WIDTH`.
+
+/// tip
+
+It is necessary to set these variables *before* importing a Typer app for testing.
+
+///
+
 ### Call `pytest`
 
 Then you can call `pytest` in your directory and it will run your tests:
@@ -140,6 +158,7 @@ When you hit the <kbd>ENTER</kbd> key after typing the email, that is just a "ne
 So, if you use `input="camila@example.com\n"` it means: "type `camila@example.com` in the terminal, then hit the <kbd>ENTER</kbd> key":
 
 {* docs_src/testing/app02_py39/test_main.py hl[9] *}
+
 
 ## Test a function
 
