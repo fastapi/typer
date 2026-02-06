@@ -34,7 +34,7 @@ def test_help(mod: ModuleType):
 
 
 def test_help_no_rich(monkeypatch: pytest.MonkeyPatch, mod: ModuleType):
-    monkeypatch.setattr(typer.core, "HAS_RICH", False)
+    monkeypatch.setattr(typer.core, "USE_RICH", False)
     result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
     assert "--age" in result.output
@@ -67,7 +67,7 @@ def test_invalid_age(mod: ModuleType):
 
 
 def test_invalid_score(monkeypatch: pytest.MonkeyPatch, mod: ModuleType):
-    monkeypatch.setattr(typer.core, "HAS_RICH", False)
+    monkeypatch.setattr(typer.core, "USE_RICH", False)
     result = runner.invoke(mod.app, ["5", "--age", "20", "--score", "100.5"])
     assert result.exit_code != 0
     assert "Invalid value for '--score'" in result.output

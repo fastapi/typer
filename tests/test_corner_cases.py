@@ -18,7 +18,7 @@ def test_hidden_option():
 
 
 def test_hidden_option_no_rich(monkeypatch: pytest.MonkeyPatch):
-    monkeypatch.setattr(typer.core, "HAS_RICH", False)
+    monkeypatch.setattr(typer.core, "USE_RICH", False)
 
     result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0

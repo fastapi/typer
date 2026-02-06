@@ -37,7 +37,7 @@ def test_call_no_arg_standalone(mod: ModuleType):
 
 def test_call_no_arg_no_rich(monkeypatch: pytest.MonkeyPatch, mod: ModuleType):
     # Mainly for coverage
-    monkeypatch.setattr(typer.core, "HAS_RICH", False)
+    monkeypatch.setattr(typer.core, "USE_RICH", False)
     result = runner.invoke(mod.app)
     assert result.exit_code != 0
     assert "Error: Missing argument 'NAME'" in result.output

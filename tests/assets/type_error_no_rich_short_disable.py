@@ -1,7 +1,7 @@
 import typer
 import typer.main
 
-typer.main.HAS_RICH = False
+typer.main.USE_RICH = False
 
 
 app = typer.Typer(pretty_exceptions_short=False)
