@@ -373,7 +373,7 @@ By default it also comes with extra standard dependencies:
 
 ### `typer-slim`
 
-There used to be a slimmedd-down version of Typer called `typer-slim`, which didn't include the dependencies `rich` and `shellingham`, nor the `typer` command.
+There used to be a slimmed-down version of Typer called `typer-slim`, which didn't include the dependencies `rich` and `shellingham`, nor the `typer` command.
 
 However, since version 0.22.0, we have stopped supporting this, and `typer-slim` now simply installs (all of) Typer.
 
