@@ -4,6 +4,7 @@
 
 ### Docs
 
+* 📝 Update `management-tasks.md` to be in line with `management-tasks.md` in FastAPI repo. PR [#1519](https://github.com/fastapi/typer/pull/1519) by [@YuriiMotov](https://github.com/YuriiMotov).
 * 📝 Add link to Typer developer survey. PR [#1514](https://github.com/fastapi/typer/pull/1514) by [@tiangolo](https://github.com/tiangolo).
 * 📝 Add contribution instructions about LLM generated code and comments and automated tools for PRs. PR [#1489](https://github.com/fastapi/typer/pull/1489) by [@alejsdev](https://github.com/alejsdev).
 * 🐛 Fix copy button in `custom.js`. PR [#1488](https://github.com/fastapi/typer/pull/1488) by [@alejsdev](https://github.com/alejsdev).
