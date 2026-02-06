@@ -110,6 +110,9 @@ sync-dependencies = [
 
 [tool.tiangolo._internal-slim-build.packages.typer-slim.project]
 name = "typer-slim"
+dependencies = [
+    "typer",
+]
 
 [tool.tiangolo._internal-slim-build.packages.typer]
 include-optional-dependencies = ["standard"]
