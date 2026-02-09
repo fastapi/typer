@@ -16,7 +16,7 @@ from ._completion_shared import (
 )
 
 try:
-    from shell_completion import split_arg_string as click_split_arg_string
+    from ._click.shell_completion import split_arg_string as click_split_arg_string
 except ImportError:  # pragma: no cover
     # TODO: when removing support for Click < 8.2, remove this import
     from ._click.parser import (  # type: ignore[no-redef]
@@ -33,7 +33,7 @@ def _sanitize_help_text(text: str) -> str:
     return rich_utils.rich_render_text(text)
 
 
-class BashComplete(shell_completion.BashComplete):
+class BashComplete(_click.shell_completion.BashComplete):
     name = Shells.bash.value
     source_template = COMPLETION_SCRIPT_BASH
 
@@ -56,7 +56,7 @@ class BashComplete(shell_completion.BashComplete):
 
         return args, incomplete
 
-    def format_completion(self, item: shell_completion.CompletionItem) -> str:
+    def format_completion(self, item: _click.shell_completion.CompletionItem) -> str:
         # TODO: Explore replicating the new behavior from Click, with item types and
         # triggering completion for files and directories
         # return f"{item.type},{item.value}"
@@ -69,7 +69,7 @@ class BashComplete(shell_completion.BashComplete):
         return "\n".join(out)
 
 
-class ZshComplete(shell_completion.ZshComplete):
+class ZshComplete(_click.shell_completion.ZshComplete):
     name = Shells.zsh.value
     source_template = COMPLETION_SCRIPT_ZSH
 
@@ -91,7 +91,7 @@ class ZshComplete(shell_completion.ZshComplete):
             incomplete = ""
         return args, incomplete
 
-    def format_completion(self, item: shell_completion.CompletionItem) -> str:
+    def format_completion(self, item: _click.shell_completion.CompletionItem) -> str:
         def escape(s: str) -> str:
             return (
                 s.replace('"', '""')
@@ -120,7 +120,7 @@ class ZshComplete(shell_completion.ZshComplete):
             return "_files"
 
 
-class FishComplete(shell_completion.FishComplete):
+class FishComplete(_click.shell_completion.FishComplete):
     name = Shells.fish.value
     source_template = COMPLETION_SCRIPT_FISH
 
@@ -142,7 +142,7 @@ class FishComplete(shell_completion.FishComplete):
             incomplete = ""
         return args, incomplete
 
-    def format_completion(self, item: shell_completion.CompletionItem) -> str:
+    def format_completion(self, item: _click.shell_completion.CompletionItem) -> str:
         # TODO: Explore replicating the new behavior from Click, pay attention to
         # the difference with and without formatted help
         # if item.help:
@@ -173,7 +173,7 @@ class FishComplete(shell_completion.FishComplete):
         return ""  # pragma: no cover
 
 
-class PowerShellComplete(shell_completion.ShellComplete):
+class PowerShellComplete(_click.shell_completion.ShellComplete):
     name = Shells.powershell.value
     source_template = COMPLETION_SCRIPT_POWER_SHELL
 
@@ -196,10 +196,10 @@ class PowerShellComplete(shell_completion.ShellComplete):
 
 
 def completion_init() -> None:
-    shell_completion.add_completion_class(BashComplete, Shells.bash.value)
-    shell_completion.add_completion_class(ZshComplete, Shells.zsh.value)
-    shell_completion.add_completion_class(FishComplete, Shells.fish.value)
-    shell_completion.add_completion_class(
+    _click.shell_completion.add_completion_class(BashComplete, Shells.bash.value)
+    _click.shell_completion.add_completion_class(ZshComplete, Shells.zsh.value)
+    _click.shell_completion.add_completion_class(FishComplete, Shells.fish.value)
+    _click.shell_completion.add_completion_class(
         PowerShellComplete, Shells.powershell.value
     )
-    shell_completion.add_completion_class(PowerShellComplete, Shells.pwsh.value)
+    _click.shell_completion.add_completion_class(PowerShellComplete, Shells.pwsh.value)
