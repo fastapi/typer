@@ -10,7 +10,7 @@ import typer.core
 from click import Command, Group, Option
 
 from . import __version__
-from .core import USE_RICH, MARKUP_MODE_KEY
+from .core import MARKUP_MODE_KEY, USE_RICH
 
 default_app_names = ("app", "cli", "main")
 default_func_names = ("main", "cli", "app")
