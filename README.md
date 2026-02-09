@@ -366,7 +366,7 @@ For a more complete example including more features, see the <a href="https://ty
 
 There used to be a slimmed-down version of Typer called `typer-slim`, which didn't include the dependencies `rich` and `shellingham`, nor the `typer` command.
 
-However, since version 0.22.0, we have stopped supporting this, and `typer-slim` now simply installs (all of) Typer and its internal dependencies.
+However, since version 0.22.0, we have stopped supporting this, and `typer-slim` now simply installs (all of) Typer.
 If you want to disable Rich globally, you can set an environmental variable "TYPER_USE_RICH" to `False`/`0`.
 
 ## License
