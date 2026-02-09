@@ -50,7 +50,7 @@ def test_launch_url_no_xdg_open():
 
 
 def test_calls_original_launch_when_not_passing_urls():
-    with patch("typer.main.click.launch", return_value=0) as launch_mock:
+    with patch("typer.main._click.launch", return_value=0) as launch_mock:
         typer.launch("not a url")
 
     launch_mock.assert_called_once_with("not a url")

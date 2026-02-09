@@ -1,7 +1,7 @@
 import subprocess
 import sys
 
-from click.testing import CliRunner
+from typer._click.testing import CliRunner
 
 from docs_src.using_click import tutorial002_py39 as mod
 

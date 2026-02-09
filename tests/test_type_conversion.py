@@ -2,9 +2,9 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Optional
 
-import click
 import pytest
 import typer
+from typer import _click
 from typer.testing import CliRunner
 
 from .utils import needs_py310
@@ -148,14 +148,14 @@ def test_custom_parse():
 
 
 def test_custom_click_type():
-    class BaseNumberParamType(click.ParamType):
+    class BaseNumberParamType(_click.ParamType):
         name = "base_integer"
 
         def convert(
             self,
             value: Any,
-            param: Optional[click.Parameter],
-            ctx: Optional[click.Context],
+            param: Optional[_click.Parameter],
+            ctx: Optional[_click.Context],
         ) -> Any:
             return int(value, 0)
 

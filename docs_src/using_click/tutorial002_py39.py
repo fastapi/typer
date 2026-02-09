@@ -1,19 +1,19 @@
-import click
+from typer import _click
 
 
-@click.group()
+@_click.group()
 def cli():
     pass
 
 
-@click.command()
+@_click.command()
 def initdb():
-    click.echo("Initialized the database")
+    _click.echo("Initialized the database")
 
 
-@click.command()
+@_click.command()
 def dropdb():
-    click.echo("Dropped the database")
+    _click.echo("Dropped the database")
 
 
 cli.add_command(initdb)

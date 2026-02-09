@@ -1,11 +1,11 @@
 from typing import TYPE_CHECKING, Any, Callable, Optional, Union, overload
 
-import click
+from . import _click
 
 from .models import ArgumentInfo, OptionInfo
 
 if TYPE_CHECKING:  # pragma: no cover
-    import click.shell_completion
+    from ._click import shell_completion
 
 
 # Overload for Option created with custom type 'parser'
@@ -23,8 +23,8 @@ def Option(
     # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Optional[
         Callable[
-            [click.Context, click.Parameter, str],
-            Union[list["click.shell_completion.CompletionItem"], list[str]],
+            [_click.Context, _click.Parameter, str],
+            Union[list["_click.shell_completion.CompletionItem"], list[str]],
         ]
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
@@ -89,14 +89,14 @@ def Option(
     # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Optional[
         Callable[
-            [click.Context, click.Parameter, str],
-            Union[list["click.shell_completion.CompletionItem"], list[str]],
+            [_click.Context, _click.Parameter, str],
+            Union[list["_click.shell_completion.CompletionItem"], list[str]],
         ]
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
     default_factory: Optional[Callable[[], Any]] = None,
     # Custom type
-    click_type: Optional[click.ParamType] = None,
+    click_type: Optional[_click.ParamType] = None,
     # Option
     show_default: Union[bool, str] = True,
     prompt: Union[bool, str] = False,
@@ -153,15 +153,15 @@ def Option(
     # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Optional[
         Callable[
-            [click.Context, click.Parameter, str],
-            Union[list["click.shell_completion.CompletionItem"], list[str]],
+            [_click.Context, _click.Parameter, str],
+            Union[list["_click.shell_completion.CompletionItem"], list[str]],
         ]
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
     default_factory: Optional[Callable[[], Any]] = None,
     # Custom type
     parser: Optional[Callable[[str], Any]] = None,
-    click_type: Optional[click.ParamType] = None,
+    click_type: Optional[_click.ParamType] = None,
     # Option
     show_default: Union[bool, str] = True,
     prompt: Union[bool, str] = False,
@@ -275,8 +275,8 @@ def Argument(
     # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Optional[
         Callable[
-            [click.Context, click.Parameter, str],
-            Union[list["click.shell_completion.CompletionItem"], list[str]],
+            [_click.Context, _click.Parameter, str],
+            Union[list["_click.shell_completion.CompletionItem"], list[str]],
         ]
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
@@ -332,14 +332,14 @@ def Argument(
     # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Optional[
         Callable[
-            [click.Context, click.Parameter, str],
-            Union[list["click.shell_completion.CompletionItem"], list[str]],
+            [_click.Context, _click.Parameter, str],
+            Union[list["_click.shell_completion.CompletionItem"], list[str]],
         ]
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
     default_factory: Optional[Callable[[], Any]] = None,
     # Custom type
-    click_type: Optional[click.ParamType] = None,
+    click_type: Optional[_click.ParamType] = None,
     # TyperArgument
     show_default: Union[bool, str] = True,
     show_choices: bool = True,
@@ -387,15 +387,15 @@ def Argument(
     # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Optional[
         Callable[
-            [click.Context, click.Parameter, str],
-            Union[list["click.shell_completion.CompletionItem"], list[str]],
+            [_click.Context, _click.Parameter, str],
+            Union[list["_click.shell_completion.CompletionItem"], list[str]],
         ]
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
     default_factory: Optional[Callable[[], Any]] = None,
     # Custom type
     parser: Optional[Callable[[str], Any]] = None,
-    click_type: Optional[click.ParamType] = None,
+    click_type: Optional[_click.ParamType] = None,
     # TyperArgument
     show_default: Union[bool, str] = True,
     show_choices: bool = True,

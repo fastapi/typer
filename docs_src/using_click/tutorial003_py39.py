@@ -1,4 +1,4 @@
-import click
+from typer import _click
 import typer
 
 app = typer.Typer()
@@ -19,11 +19,11 @@ def callback():
     """
 
 
-@click.command()
-@click.option("--name", prompt="Your name", help="The person to greet.")
+@_click.command()
+@_click.option("--name", prompt="Your name", help="The person to greet.")
 def hello(name):
     """Simple program that greets NAME for a total of COUNT times."""
-    click.echo(f"Hello {name}!")
+    _click.echo(f"Hello {name}!")
 
 
 typer_click_object = typer.main.get_command(app)

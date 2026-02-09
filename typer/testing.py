@@ -1,8 +1,8 @@
 from collections.abc import Mapping, Sequence
 from typing import IO, Any, Optional, Union
 
-from click.testing import CliRunner as ClickCliRunner  # noqa
-from click.testing import Result
+from ._click.testing import CliRunner as ClickCliRunner  # noqa
+from ._click.testing import Result
 from typer.main import Typer
 from typer.main import get_command as _get_command
 

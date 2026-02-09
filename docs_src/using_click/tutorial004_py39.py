@@ -1,20 +1,20 @@
-import click
+from typer import _click
 import typer
 
 
-@click.group()
+@_click.group()
 def cli():
     pass
 
 
 @cli.command()
 def initdb():
-    click.echo("Initialized the database")
+    _click.echo("Initialized the database")
 
 
 @cli.command()
 def dropdb():
-    click.echo("Dropped the database")
+    _click.echo("Dropped the database")
 
 
 app = typer.Typer()

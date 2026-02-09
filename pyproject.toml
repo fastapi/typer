@@ -34,7 +34,6 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
-    "click >= 8.0.0",
     "typing-extensions >= 3.7.4.3",
 ]
 readme = "README.md"
@@ -238,7 +237,7 @@ ignore = [
 "docs_src/*" = ["TID"]
 
 [tool.ruff.lint.isort]
-known-third-party = ["typer", "click"]
+known-third-party = ["typer"]
 # For docs_src/subcommands/tutorial003/
 known-first-party = ["reigns", "towns", "lands", "items", "users"]
 
