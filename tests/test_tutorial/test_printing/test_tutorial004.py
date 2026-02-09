@@ -11,9 +11,7 @@ runner = CliRunner()
 
 
 def test_cli():
-    # Use mix_stderr=False so stderr is captured separately from stdout
-    run = CliRunner(mix_stderr=False)
-    result = run.invoke(app)
+    result = runner.invoke(app)
     assert result.exit_code == 0
     assert result.stdout == ""
     assert "Here is something written to standard error" in result.stderr

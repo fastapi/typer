@@ -1,14 +1,14 @@
 """
-Vendored Click: https://github.com/pallets/click/releases/tag/8.1.8
+Vendored Click: https://github.com/pallets/click/releases/tag/8.3.1
 """
 
+from __future__ import annotations
+
 from .core import Argument as Argument
-from .core import BaseCommand as BaseCommand
 from .core import Command as Command
 from .core import CommandCollection as CommandCollection
 from .core import Context as Context
 from .core import Group as Group
-from .core import MultiCommand as MultiCommand
 from .core import Option as Option
 from .core import Parameter as Parameter
 from .decorators import argument as argument
@@ -16,7 +16,6 @@ from .decorators import command as command
 from .decorators import confirmation_option as confirmation_option
 from .decorators import group as group
 from .decorators import help_option as help_option
-from .decorators import HelpOption as HelpOption
 from .decorators import make_pass_decorator as make_pass_decorator
 from .decorators import option as option
 from .decorators import pass_context as pass_context
@@ -35,7 +34,6 @@ from .exceptions import UsageError as UsageError
 from .formatting import HelpFormatter as HelpFormatter
 from .formatting import wrap_text as wrap_text
 from .globals import get_current_context as get_current_context
-from .parser import OptionParser as OptionParser
 from .termui import clear as clear
 from .termui import confirm as confirm
 from .termui import echo_via_pager as echo_via_pager
@@ -68,3 +66,55 @@ from .utils import get_app_dir as get_app_dir
 from .utils import get_binary_stream as get_binary_stream
 from .utils import get_text_stream as get_text_stream
 from .utils import open_file as open_file
+
+
+def __getattr__(name: str) -> object:
+    import warnings
+
+    if name == "BaseCommand":
+        from .core import _BaseCommand
+
+        warnings.warn(
+            "'BaseCommand' is deprecated and will be removed in Click 9.0. Use"
+            " 'Command' instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return _BaseCommand
+
+    if name == "MultiCommand":
+        from .core import _MultiCommand
+
+        warnings.warn(
+            "'MultiCommand' is deprecated and will be removed in Click 9.0. Use"
+            " 'Group' instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return _MultiCommand
+
+    if name == "OptionParser":
+        from .parser import _OptionParser
+
+        warnings.warn(
+            "'OptionParser' is deprecated and will be removed in Click 9.0. The"
+            " old parser is available in 'optparse'.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return _OptionParser
+
+    if name == "__version__":
+        import importlib.metadata
+        import warnings
+
+        warnings.warn(
+            "The '__version__' attribute is deprecated and will be removed in"
+            " Click 9.1. Use feature detection or"
+            " 'importlib.metadata.version(\"click\")' instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return importlib.metadata.version("click")
+
+    raise AttributeError(name)
