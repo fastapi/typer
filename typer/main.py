@@ -22,7 +22,7 @@ from ._typing import get_args, get_origin, is_literal_type, is_union, literal_va
 from .completion import get_completion_inspect_parameters
 from .core import (
     DEFAULT_MARKUP_MODE,
-    USE_RICH,
+    HAS_RICH,
     MarkupMode,
     TyperArgument,
     TyperCommand,
@@ -75,7 +75,7 @@ def except_hook(
     click_path = os.path.dirname(click.__file__)
     internal_dir_names = [typer_path, click_path]
     exc = exc_value
-    if USE_RICH:
+    if HAS_RICH:
         from . import rich_utils
 
         rich_tb = rich_utils.get_traceback(exc, exception_config, internal_dir_names)

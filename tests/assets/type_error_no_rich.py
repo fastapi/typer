@@ -1,7 +1,7 @@
 import typer
 import typer.main
 
-typer.main.USE_RICH = False
+typer.main.HAS_RICH = False
 
 app = typer.Typer()
 

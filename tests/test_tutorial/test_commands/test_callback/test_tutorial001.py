@@ -21,7 +21,7 @@ def test_help():
 
 
 def test_help_no_rich(monkeypatch: pytest.MonkeyPatch):
-    monkeypatch.setattr(typer.core, "USE_RICH", False)
+    monkeypatch.setattr(typer.core, "HAS_RICH", False)
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     assert "Manage users in the awesome CLI app." in result.output

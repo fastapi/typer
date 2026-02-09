@@ -10,7 +10,7 @@ import typer.core
 from click import Command, Group, Option
 
 from . import __version__
-from .core import MARKUP_MODE_KEY, USE_RICH
+from .core import MARKUP_MODE_KEY, HAS_RICH
 
 default_app_names = ("app", "cli", "main")
 default_func_names = ("main", "cli", "app")
@@ -202,7 +202,7 @@ def get_docs_for_click(
     rich_markup_mode = None
     if hasattr(ctx, "obj") and isinstance(ctx.obj, dict):
         rich_markup_mode = ctx.obj.get(MARKUP_MODE_KEY, None)
-    to_parse: bool = bool(USE_RICH and (rich_markup_mode == "rich"))
+    to_parse: bool = bool(HAS_RICH and (rich_markup_mode == "rich"))
     if obj.help:
         docs += f"{_parse_html(to_parse, obj.help)}\n\n"
     usage_pieces = obj.collect_usage_pieces(ctx)

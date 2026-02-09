@@ -27,9 +27,9 @@ from ._typing import Literal
 MarkupMode = Literal["markdown", "rich", None]
 MARKUP_MODE_KEY = "TYPER_RICH_MARKUP_MODE"
 
-USE_RICH = os.getenv("TYPER_USE_RICH", True)
+HAS_RICH = os.getenv("TYPER_USE_RICH", True)
 
-if USE_RICH:
+if HAS_RICH:
     DEFAULT_MARKUP_MODE: MarkupMode = "rich"
 else:  # pragma: no cover
     DEFAULT_MARKUP_MODE = None
@@ -205,7 +205,7 @@ def _main(
             if not standalone_mode:
                 raise
             # Typer override
-            if USE_RICH and rich_markup_mode is not None:
+            if HAS_RICH and rich_markup_mode is not None:
                 from . import rich_utils
 
                 rich_utils.rich_format_error(e)
@@ -237,7 +237,7 @@ def _main(
         if not standalone_mode:
             raise
         # Typer override
-        if USE_RICH and rich_markup_mode is not None:
+        if HAS_RICH and rich_markup_mode is not None:
             from . import rich_utils
 
             rich_utils.rich_abort_error()
@@ -368,7 +368,7 @@ class TyperArgument(click.core.Argument):
             rich_markup_mode = None
             if hasattr(ctx, "obj") and isinstance(ctx.obj, dict):
                 rich_markup_mode = ctx.obj.get(MARKUP_MODE_KEY, None)
-            if USE_RICH and rich_markup_mode == "rich":
+            if HAS_RICH and rich_markup_mode == "rich":
                 # This is needed for when we want to export to HTML
                 from . import rich_utils
 
@@ -590,7 +590,7 @@ class TyperOption(click.core.Option):
             rich_markup_mode = None
             if hasattr(ctx, "obj") and isinstance(ctx.obj, dict):
                 rich_markup_mode = ctx.obj.get(MARKUP_MODE_KEY, None)
-            if USE_RICH and rich_markup_mode == "rich":
+            if HAS_RICH and rich_markup_mode == "rich":
                 # This is needed for when we want to export to HTML
                 from . import rich_utils
 
@@ -733,7 +733,7 @@ class TyperCommand(click.core.Command):
         )
 
     def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
-        if not USE_RICH or self.rich_markup_mode is None:
+        if not HAS_RICH or self.rich_markup_mode is None:
             if not hasattr(ctx, "obj") or ctx.obj is None:
                 ctx.ensure_object(dict)
             if isinstance(ctx.obj, dict):
@@ -821,7 +821,7 @@ class TyperGroup(click.core.Group):
         )
 
     def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
-        if not USE_RICH or self.rich_markup_mode is None:
+        if not HAS_RICH or self.rich_markup_mode is None:
             return super().format_help(ctx, formatter)
         from . import rich_utils
 

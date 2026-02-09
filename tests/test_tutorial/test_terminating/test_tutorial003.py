@@ -33,7 +33,7 @@ def test_root_no_standalone():
 
 def test_root_no_rich(monkeypatch: pytest.MonkeyPatch):
     # Mainly for coverage
-    monkeypatch.setattr(typer.core, "USE_RICH", False)
+    monkeypatch.setattr(typer.core, "HAS_RICH", False)
     result = runner.invoke(app, ["root"])
     assert result.exit_code == 1
     assert "The root user is reserved" in result.output
