@@ -414,21 +414,21 @@ class Typer:
             ),
         ] = True,
         command_tree: Annotated[
-          bool,
-          Doc(
-            """
+            bool,
+            Doc(
+                """
             Toggle whether or not to add the `--show-sub-commands` option to the app.
             Set to `False` by default.
-            
+
             ***Example***
-            
+
             ```python
             import typer
-            
+
             app = typer.Typer(command_tree=True)
             ```
             """
-          ),
+            ),
         ] = Default(False),
         # Rich settings
         rich_markup_mode: Annotated[
