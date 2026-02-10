@@ -24,6 +24,7 @@
 
 ### Internal
 
+* 🔧 Update config for labeler. PR [#1530](https://github.com/fastapi/typer/pull/1530) by [@tiangolo](https://github.com/tiangolo).
 * 🔧 Remove no longer used requirements.txt file. PR [#1528](https://github.com/fastapi/typer/pull/1528) by [@tiangolo](https://github.com/tiangolo).
 * 📌 Update internal dependency limits. PR [#1529](https://github.com/fastapi/typer/pull/1529) by [@tiangolo](https://github.com/tiangolo).
 * 🔧 Add ty to pre-commit. PR [#1527](https://github.com/fastapi/typer/pull/1527) by [@tiangolo](https://github.com/tiangolo).
