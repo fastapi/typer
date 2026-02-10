@@ -57,7 +57,7 @@ class TyperCLIGroup(typer.core.TyperGroup):
         self.maybe_add_run(ctx)
         return super().list_commands(ctx)
 
-    def get_command(self, ctx: click.Context, name: str) -> Optional[Command]:
+    def get_command(self, ctx: click.Context, name: str) -> Optional[Command]:  # ty: ignore[invalid-method-override]
         self.maybe_add_run(ctx)
         return super().get_command(ctx, name)
 
@@ -131,7 +131,7 @@ def get_typer_from_state() -> Optional[typer.Typer]:
         else:
             typer.echo(f"Could not import as Python module: {state.module}", err=True)
         sys.exit(1)
-    module = importlib.util.module_from_spec(spec)
+    module = importlib.util.module_from_spec(spec)  # ty: ignore[invalid-argument-type]
     spec.loader.exec_module(module)  # type: ignore
     obj = get_typer_from_module(module)
     return obj
