@@ -277,8 +277,8 @@ $ uv build
 
 Building source distribution (uv build backend)...
 Building wheel from source distribution (uv build backend)...
-Successfully built dist\rick_portal_gun-0.1.0.tar.gz
-Successfully built dist\rick_portal_gun-0.1.0-py3-none-any.whl
+Successfully built dist/rick_portal_gun-0.1.0.tar.gz
+Successfully built dist/rick_portal_gun-0.1.0-py3-none-any.whl
 ```
 
 </div>
