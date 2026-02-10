@@ -35,6 +35,7 @@ classifiers = [
 ]
 dependencies = [
     "click >= 8.0.0",
+    "annotated-doc >=0.0.2",
 ]
 readme = "README.md"
 
