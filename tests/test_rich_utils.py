@@ -1,8 +1,11 @@
 import sys
 
+import pytest
 import typer
 import typer.completion
 from typer.testing import CliRunner
+
+from tests.utils import needs_rich
 
 runner = CliRunner()
 
@@ -99,6 +102,37 @@ def test_rich_markup_import_regression():
     result = runner.invoke(app, ["--help"])
     assert "Usage" in result.stdout
     assert "BAR" in result.stdout
+
+
+@needs_rich
+@pytest.mark.parametrize("input_text", ["[ARGS]", "[ARGS]..."])
+def test_metavar_highlighter(input_text: str):
+    """
+    Test that the MetavarHighlighter works correctly.
+    cf PR 1508
+    """
+    from typer.rich_utils import (
+        STYLE_METAVAR_SEPARATOR,
+        Text,
+        _get_rich_console,
+        metavar_highlighter,
+    )
+
+    console = _get_rich_console()
+
+    text = Text(input_text)
+    highlighted = metavar_highlighter(text)
+    console.print(highlighted)
+
+    # Get the style for each bracket
+    opening_bracket_style = highlighted.get_style_at_offset(console, 0)
+    closing_bracket_style = highlighted.get_style_at_offset(console, 5)
+
+    # The opening bracket should have metavar_sep style
+    assert str(opening_bracket_style) == STYLE_METAVAR_SEPARATOR
+
+    # The closing bracket should have metavar_sep style (fails before PR 1508 when there are 3 dots)
+    assert str(closing_bracket_style) == STYLE_METAVAR_SEPARATOR
 
 
 def test_make_rich_text_with_ansi_escape_sequences():
