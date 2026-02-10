@@ -83,7 +83,7 @@ def get_typer_from_module(module: Any) -> Optional[typer.Typer]:
         func_obj = getattr(module, state.func, None)
         if not callable(func_obj):
             typer.echo(f"Not a function: --func {state.func}", err=True)
-            sys.exit(1)
+            raise typer.Exit(1)
         sub_app = typer.Typer()
         sub_app.command()(func_obj)
         return sub_app
