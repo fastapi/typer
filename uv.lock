@@ -1799,13 +1799,36 @@ wheels = [
 ]
 
 [[package]]
+name = "ty"
+version = "0.0.15"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/4e/25/257602d316b9333089b688a7a11b33ebc660b74e8dacf400dc3dfdea1594/ty-0.0.15.tar.gz", hash = "sha256:4f9a5b8df208c62dba56e91b93bed8b5bb714839691b8cff16d12c983bfa1174", size = 5101936, upload-time = "2026-02-05T01:06:34.922Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ce/c5/35626e732b79bf0e6213de9f79aff59b5f247c0a1e3ce0d93e675ab9b728/ty-0.0.15-py3-none-linux_armv6l.whl", hash = "sha256:68e092458516c61512dac541cde0a5e4e5842df00b4e81881ead8f745ddec794", size = 10138374, upload-time = "2026-02-05T01:07:03.804Z" },
+    { url = "https://files.pythonhosted.org/packages/d5/8a/48fd81664604848f79d03879b3ca3633762d457a069b07e09fb1b87edd6e/ty-0.0.15-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:79f2e75289eae3cece94c51118b730211af4ba5762906f52a878041b67e54959", size = 9947858, upload-time = "2026-02-05T01:06:47.453Z" },
+    { url = "https://files.pythonhosted.org/packages/b6/85/c1ac8e97bcd930946f4c94db85b675561d590b4e72703bf3733419fc3973/ty-0.0.15-py3-none-macosx_11_0_arm64.whl", hash = "sha256:112a7b26e63e48cc72c8c5b03227d1db280cfa57a45f2df0e264c3a016aa8c3c", size = 9443220, upload-time = "2026-02-05T01:06:44.98Z" },
+    { url = "https://files.pythonhosted.org/packages/3c/d9/244bc02599d950f7a4298fbc0c1b25cc808646b9577bdf7a83470b2d1cec/ty-0.0.15-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:71f62a2644972975a657d9dc867bf901235cde51e8d24c20311067e7afd44a56", size = 9949976, upload-time = "2026-02-05T01:07:01.515Z" },
+    { url = "https://files.pythonhosted.org/packages/7e/ab/3a0daad66798c91a33867a3ececf17d314ac65d4ae2bbbd28cbfde94da63/ty-0.0.15-py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:9e48b42be2d257317c85b78559233273b655dd636fc61e7e1d69abd90fd3cba4", size = 9965918, upload-time = "2026-02-05T01:06:54.283Z" },
+    { url = "https://files.pythonhosted.org/packages/39/4e/e62b01338f653059a7c0cd09d1a326e9a9eedc351a0f0de9db0601658c3d/ty-0.0.15-py3-none-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:27dd5b52a421e6871c5bfe9841160331b60866ed2040250cb161886478ab3e4f", size = 10424943, upload-time = "2026-02-05T01:07:08.777Z" },
+    { url = "https://files.pythonhosted.org/packages/65/b5/7aa06655ce69c0d4f3e845d2d85e79c12994b6d84c71699cfb437e0bc8cf/ty-0.0.15-py3-none-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:76b85c9ec2219e11c358a7db8e21b7e5c6674a1fb9b6f633836949de98d12286", size = 10964692, upload-time = "2026-02-05T01:06:37.103Z" },
+    { url = "https://files.pythonhosted.org/packages/13/04/36fdfe1f3c908b471e246e37ce3d011175584c26d3853e6c5d9a0364564c/ty-0.0.15-py3-none-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:a9e8204c61d8ede4f21f2975dce74efdb80fafb2fae1915c666cceb33ea3c90b", size = 10692225, upload-time = "2026-02-05T01:06:49.714Z" },
+    { url = "https://files.pythonhosted.org/packages/13/41/5bf882649bd8b64ded5fbce7fb8d77fb3b868de1a3b1a6c4796402b47308/ty-0.0.15-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:af87c3be7c944bb4d6609d6c63e4594944b0028c7bd490a525a82b88fe010d6d", size = 10516776, upload-time = "2026-02-05T01:06:52.047Z" },
+    { url = "https://files.pythonhosted.org/packages/56/75/66852d7e004f859839c17ffe1d16513c1e7cc04bcc810edb80ca022a9124/ty-0.0.15-py3-none-musllinux_1_2_aarch64.whl", hash = "sha256:50dccf7398505e5966847d366c9e4c650b8c225411c2a68c32040a63b9521eea", size = 9928828, upload-time = "2026-02-05T01:06:56.647Z" },
+    { url = "https://files.pythonhosted.org/packages/65/72/96bc16c7b337a3ef358fd227b3c8ef0c77405f3bfbbfb59ee5915f0d9d71/ty-0.0.15-py3-none-musllinux_1_2_armv7l.whl", hash = "sha256:bd797b8f231a4f4715110259ad1ad5340a87b802307f3e06d92bfb37b858a8f3", size = 9978960, upload-time = "2026-02-05T01:06:29.567Z" },
+    { url = "https://files.pythonhosted.org/packages/a0/18/d2e316a35b626de2227f832cd36d21205e4f5d96fd036a8af84c72ecec1b/ty-0.0.15-py3-none-musllinux_1_2_i686.whl", hash = "sha256:9deb7f20e18b25440a9aa4884f934ba5628ef456dbde91819d5af1a73da48af3", size = 10135903, upload-time = "2026-02-05T01:06:59.256Z" },
+    { url = "https://files.pythonhosted.org/packages/02/d3/b617a79c9dad10c888d7c15cd78859e0160b8772273637b9c4241a049491/ty-0.0.15-py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:7b31b3de031255b90a5f4d9cb3d050feae246067c87130e5a6861a8061c71754", size = 10615879, upload-time = "2026-02-05T01:07:06.661Z" },
+    { url = "https://files.pythonhosted.org/packages/fb/b0/2652a73c71c77296a6343217063f05745da60c67b7e8a8e25f2064167fce/ty-0.0.15-py3-none-win32.whl", hash = "sha256:9362c528ceb62c89d65c216336d28d500bc9f4c10418413f63ebc16886e16cc1", size = 9578058, upload-time = "2026-02-05T01:06:42.928Z" },
+    { url = "https://files.pythonhosted.org/packages/84/6e/08a4aedebd2a6ce2784b5bc3760e43d1861f1a184734a78215c2d397c1df/ty-0.0.15-py3-none-win_amd64.whl", hash = "sha256:4db040695ae67c5524f59cb8179a8fa277112e69042d7dfdac862caa7e3b0d9c", size = 10457112, upload-time = "2026-02-05T01:06:39.885Z" },
+    { url = "https://files.pythonhosted.org/packages/b3/be/1991f2bc12847ae2d4f1e3ac5dcff8bb7bc1261390645c0755bb55616355/ty-0.0.15-py3-none-win_arm64.whl", hash = "sha256:e5a98d4119e77d6136461e16ae505f8f8069002874ab073de03fbcb1a5e8bf25", size = 9937490, upload-time = "2026-02-05T01:06:32.388Z" },
+]
+
+[[package]]
 name = "typer"
 source = { editable = "." }
 dependencies = [
     { name = "click" },
     { name = "rich" },
     { name = "shellingham" },
-    { name = "typing-extensions" },
 ]
 
 [package.dev-dependencies]
@@ -1831,6 +1854,7 @@ dev = [
     { name = "rich" },
     { name = "ruff" },
     { name = "shellingham" },
+    { name = "ty" },
 ]
 docs = [
     { name = "cairosvg" },
@@ -1862,6 +1886,7 @@ tests = [
     { name = "rich" },
     { name = "ruff" },
     { name = "shellingham" },
+    { name = "ty" },
 ]
 
 [package.metadata]
@@ -1869,63 +1894,64 @@ requires-dist = [
     { name = "click", specifier = ">=8.2.1" },
     { name = "rich", specifier = ">=12.3.0" },
     { name = "shellingham", specifier = ">=1.3.0" },
-    { name = "typing-extensions", specifier = ">=3.7.4.3" },
 ]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "cairosvg", specifier = "==2.8.2" },
-    { name = "coverage", extras = ["toml"], specifier = ">=6.2,<8.0" },
-    { name = "griffe-typingdoc", specifier = "==0.3.0" },
-    { name = "griffe-warnings-deprecated", specifier = "==1.1.0" },
-    { name = "markdown-include-variants", specifier = "==0.0.8" },
-    { name = "mdx-include", specifier = ">=1.4.1,<2.0.0" },
-    { name = "mkdocs-macros-plugin", specifier = "==1.5.0" },
-    { name = "mkdocs-material", specifier = "==9.7.1" },
-    { name = "mkdocs-redirects", specifier = ">=1.2.1,<1.3.0" },
-    { name = "mkdocstrings", extras = ["python"], specifier = "==0.30.1" },
-    { name = "mypy", specifier = "==1.19.1" },
-    { name = "pillow", specifier = "==11.3.0" },
-    { name = "prek", specifier = "==0.3.2" },
-    { name = "pytest", specifier = ">=7.4.0,<9.0.0" },
-    { name = "pytest-cov", specifier = ">=4.0.0,<8.0.0" },
-    { name = "pytest-sugar", specifier = ">=0.9.5,<1.2.0" },
-    { name = "pytest-xdist", specifier = ">=1.32.0,<4.0.0" },
-    { name = "pyyaml", specifier = ">=5.3.1,<7.0.0" },
+    { name = "cairosvg", specifier = ">=2.8.2" },
+    { name = "coverage", extras = ["toml"], specifier = ">=6.2" },
+    { name = "griffe-typingdoc", specifier = ">=0.3.0" },
+    { name = "griffe-warnings-deprecated", specifier = ">=1.1.0" },
+    { name = "markdown-include-variants", specifier = ">=0.0.8" },
+    { name = "mdx-include", specifier = ">=1.4.1" },
+    { name = "mkdocs-macros-plugin", specifier = ">=1.5.0" },
+    { name = "mkdocs-material", specifier = ">=9.7.1" },
+    { name = "mkdocs-redirects", specifier = ">=1.2.1" },
+    { name = "mkdocstrings", extras = ["python"], specifier = ">=0.30.1" },
+    { name = "mypy", specifier = ">=1.19.1" },
+    { name = "pillow", specifier = ">=11.3.0" },
+    { name = "prek", specifier = ">=0.3.2" },
+    { name = "pytest", specifier = ">=7.4.0" },
+    { name = "pytest-cov", specifier = ">=4.0.0" },
+    { name = "pytest-sugar", specifier = ">=0.9.5" },
+    { name = "pytest-xdist", specifier = ">=1.32.0" },
+    { name = "pyyaml", specifier = ">=5.3.1" },
     { name = "rich", specifier = ">=12.3.0" },
-    { name = "ruff", specifier = "==0.15.0" },
+    { name = "ruff", specifier = ">=0.15.0" },
     { name = "shellingham", specifier = ">=1.3.0" },
+    { name = "ty", specifier = ">=0.0.9" },
 ]
 docs = [
-    { name = "cairosvg", specifier = "==2.8.2" },
-    { name = "griffe-typingdoc", specifier = "==0.3.0" },
-    { name = "griffe-warnings-deprecated", specifier = "==1.1.0" },
-    { name = "markdown-include-variants", specifier = "==0.0.8" },
-    { name = "mdx-include", specifier = ">=1.4.1,<2.0.0" },
-    { name = "mkdocs-macros-plugin", specifier = "==1.5.0" },
-    { name = "mkdocs-material", specifier = "==9.7.1" },
-    { name = "mkdocs-redirects", specifier = ">=1.2.1,<1.3.0" },
-    { name = "mkdocstrings", extras = ["python"], specifier = "==0.30.1" },
-    { name = "pillow", specifier = "==11.3.0" },
-    { name = "pyyaml", specifier = ">=5.3.1,<7.0.0" },
+    { name = "cairosvg", specifier = ">=2.8.2" },
+    { name = "griffe-typingdoc", specifier = ">=0.3.0" },
+    { name = "griffe-warnings-deprecated", specifier = ">=1.1.0" },
+    { name = "markdown-include-variants", specifier = ">=0.0.8" },
+    { name = "mdx-include", specifier = ">=1.4.1" },
+    { name = "mkdocs-macros-plugin", specifier = ">=1.5.0" },
+    { name = "mkdocs-material", specifier = ">=9.7.1" },
+    { name = "mkdocs-redirects", specifier = ">=1.2.1" },
+    { name = "mkdocstrings", extras = ["python"], specifier = ">=0.30.1" },
+    { name = "pillow", specifier = ">=11.3.0" },
+    { name = "pyyaml", specifier = ">=5.3.1" },
 ]
 github-actions = [
-    { name = "httpx", specifier = ">=0.27.0,<0.29.0" },
-    { name = "pydantic", specifier = ">=2.5.3,<3.0.0" },
-    { name = "pydantic-settings", specifier = ">=2.1.0,<3.0.0" },
-    { name = "pygithub", specifier = ">=2.3.0,<3.0.0" },
+    { name = "httpx", specifier = ">=0.27.0" },
+    { name = "pydantic", specifier = ">=2.5.3" },
+    { name = "pydantic-settings", specifier = ">=2.1.0" },
+    { name = "pygithub", specifier = ">=2.3.0" },
     { name = "smokeshow", specifier = ">=0.5.0" },
 ]
 tests = [
-    { name = "coverage", extras = ["toml"], specifier = ">=6.2,<8.0" },
-    { name = "mypy", specifier = "==1.19.1" },
-    { name = "pytest", specifier = ">=7.4.0,<9.0.0" },
-    { name = "pytest-cov", specifier = ">=4.0.0,<8.0.0" },
-    { name = "pytest-sugar", specifier = ">=0.9.5,<1.2.0" },
-    { name = "pytest-xdist", specifier = ">=1.32.0,<4.0.0" },
+    { name = "coverage", extras = ["toml"], specifier = ">=6.2" },
+    { name = "mypy", specifier = ">=1.19.1" },
+    { name = "pytest", specifier = ">=7.4.0" },
+    { name = "pytest-cov", specifier = ">=4.0.0" },
+    { name = "pytest-sugar", specifier = ">=0.9.5" },
+    { name = "pytest-xdist", specifier = ">=1.32.0" },
     { name = "rich", specifier = ">=12.3.0" },
-    { name = "ruff", specifier = "==0.15.0" },
+    { name = "ruff", specifier = ">=0.15.0" },
     { name = "shellingham", specifier = ">=1.3.0" },
+    { name = "ty", specifier = ">=0.0.9" },
 ]
 
 [[package]]

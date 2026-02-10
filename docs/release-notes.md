@@ -2,6 +2,19 @@
 
 ## Latest Changes
 
+### Fixes
+
+* 🐛 Fix highlighting of optional variadic argument metavars. PR [#1508](https://github.com/fastapi/typer/pull/1508) by [@BenjyWiener](https://github.com/BenjyWiener).
+* 🐛 Fix `--help` text alignment when using `typer.style()` in option descriptions. PR [#1356](https://github.com/fastapi/typer/pull/1356) by [@mahimairaja](https://github.com/mahimairaja).
+
+### Refactors
+
+* 🎨 Update types and errors, comment ty for now. PR [#1531](https://github.com/fastapi/typer/pull/1531) by [@tiangolo](https://github.com/tiangolo).
+
+### Upgrades
+
+* ➖ Drop `typing-extensions` as external dependency. PR [#1467](https://github.com/fastapi/typer/pull/1467) by [@svlandeg](https://github.com/svlandeg).
+
 ### Docs
 
 * 📝 Update `management-tasks.md` to be in line with `management-tasks.md` in FastAPI repo. PR [#1519](https://github.com/fastapi/typer/pull/1519) by [@YuriiMotov](https://github.com/YuriiMotov).
@@ -11,6 +24,11 @@
 
 ### Internal
 
+* 🔧 Update config for labeler. PR [#1530](https://github.com/fastapi/typer/pull/1530) by [@tiangolo](https://github.com/tiangolo).
+* 🔧 Remove no longer used requirements.txt file. PR [#1528](https://github.com/fastapi/typer/pull/1528) by [@tiangolo](https://github.com/tiangolo).
+* 📌 Update internal dependency limits. PR [#1529](https://github.com/fastapi/typer/pull/1529) by [@tiangolo](https://github.com/tiangolo).
+* 🔧 Add ty to pre-commit. PR [#1527](https://github.com/fastapi/typer/pull/1527) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Add `ty` to the CI `lint` check. PR [#1477](https://github.com/fastapi/typer/pull/1477) by [@svlandeg](https://github.com/svlandeg).
 * ⬆ Bump prek from 0.3.1 to 0.3.2. PR [#1524](https://github.com/fastapi/typer/pull/1524) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ruff from 0.14.14 to 0.15.0. PR [#1516](https://github.com/fastapi/typer/pull/1516) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * 🔧 Add generate-readme to pre-commit. PR [#1515](https://github.com/fastapi/typer/pull/1515) by [@tiangolo](https://github.com/tiangolo).
