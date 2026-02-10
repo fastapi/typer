@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Fixes
+
+* 🐛 Fix `--help` text alignment when using `typer.style()` in option descriptions. PR [#1356](https://github.com/fastapi/typer/pull/1356) by [@mahimairaja](https://github.com/mahimairaja).
+
 ### Docs
 
 * 📝 Update `management-tasks.md` to be in line with `management-tasks.md` in FastAPI repo. PR [#1519](https://github.com/fastapi/typer/pull/1519) by [@YuriiMotov](https://github.com/YuriiMotov).
