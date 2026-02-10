@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.21.2
+
 ### Fixes
 
 * 🐛 Fix highlighting of optional variadic argument metavars. PR [#1508](https://github.com/fastapi/typer/pull/1508) by [@BenjyWiener](https://github.com/BenjyWiener).
