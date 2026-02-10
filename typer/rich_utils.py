@@ -99,6 +99,7 @@ SUBCOMMAND_NOTE = _("[{style}]*[/] denotes commands without subcommands")
 MARKUP_MODE_MARKDOWN = "markdown"
 MARKUP_MODE_RICH = "rich"
 _RICH_HELP_PANEL_NAME = "rich_help_panel"
+ANSI_PREFIX = "\033["
 
 MarkupModeStrict = Literal["markdown", "rich"]
 
@@ -122,8 +123,22 @@ class NegativeOptionHighlighter(RegexHighlighter):
     ]
 
 
+# Highlighter to make [ | ] and <> dim
+class MetavarHighlighter(RegexHighlighter):
+    highlights = [
+        r"^(?P<metavar_sep>(\[|<))",
+        r"(?P<metavar_sep>\|)",
+        r"(?P<metavar_sep>(\]|>))(\.\.\.)?$",
+    ]
+
+
 highlighter = OptionHighlighter()
 negative_highlighter = NegativeOptionHighlighter()
+metavar_highlighter = MetavarHighlighter()
+
+
+def _has_ansi_character(text: str) -> bool:
+    return ANSI_PREFIX in text
 
 
 def _get_rich_console(stderr: bool = False) -> Console:
@@ -162,7 +177,10 @@ def _make_rich_text(
         return Markdown(text, style=style)
     else:
         assert markup_mode == MARKUP_MODE_RICH
-        return highlighter(Text.from_markup(text, style=style))
+        if _has_ansi_character(text):
+            return highlighter(Text.from_ansi(text, style=style))
+        else:
+            return highlighter(Text.from_markup(text, style=style))
 
 
 @group()
@@ -394,16 +412,6 @@ def _print_options_panel(
         required: Union[str, Text] = ""
         if param.required:
             required = Text(REQUIRED_SHORT_STRING, style=STYLE_REQUIRED_SHORT)
-
-        # Highlighter to make [ | ] and <> dim
-        class MetavarHighlighter(RegexHighlighter):
-            highlights = [
-                r"^(?P<metavar_sep>(\[|<))",
-                r"(?P<metavar_sep>\|)",
-                r"(?P<metavar_sep>(\]|>)$)",
-            ]
-
-        metavar_highlighter = MetavarHighlighter()
 
         required_rows.append(required)
         options_rows.append(
