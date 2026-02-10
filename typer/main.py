@@ -15,9 +15,9 @@ from types import TracebackType
 from typing import Any, Callable, Optional, Union
 from uuid import UUID
 
-from . import _click
 from typer._types import TyperChoice
 
+from . import _click
 from ._typing import get_args, get_origin, is_literal_type, is_union, literal_values
 from .completion import get_completion_inspect_parameters
 from .core import (

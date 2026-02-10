@@ -9,16 +9,11 @@ import typing as t
 from contextlib import AbstractContextManager
 from gettext import gettext as _
 
-from ._compat import isatty
-from ._compat import strip_ansi
-from .exceptions import Abort
-from .exceptions import UsageError
+from ._compat import isatty, strip_ansi
+from .exceptions import Abort, UsageError
 from .globals import resolve_color_default
-from .types import Choice
-from .types import convert_type
-from .types import ParamType
-from .utils import echo
-from .utils import LazyFile
+from .types import Choice, ParamType, convert_type
+from .utils import LazyFile, echo
 
 if t.TYPE_CHECKING:
     from ._termui_impl import ProgressBar

@@ -5,8 +5,6 @@ import sys
 from typing import Any
 
 from . import _click
-from ._click import shell_completion
-
 from ._completion_shared import (
     COMPLETION_SCRIPT_BASH,
     COMPLETION_SCRIPT_FISH,

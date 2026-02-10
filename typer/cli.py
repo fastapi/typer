@@ -4,12 +4,11 @@ import sys
 from pathlib import Path
 from typing import Any, Optional
 
-from . import _click
 import typer
 import typer.core
-from ._click import Command, Group, Option
 
-from . import __version__
+from . import __version__, _click
+from ._click import Command, Group, Option
 from .core import HAS_RICH, MARKUP_MODE_KEY
 
 default_app_names = ("app", "cli", "main")

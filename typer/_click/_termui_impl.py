@@ -19,14 +19,16 @@ from io import StringIO
 from pathlib import Path
 from types import TracebackType
 
-from ._compat import _default_text_stdout
-from ._compat import CYGWIN
-from ._compat import get_best_encoding
-from ._compat import isatty
-from ._compat import open_stream
-from ._compat import strip_ansi
-from ._compat import term_len
-from ._compat import WIN
+from ._compat import (
+    CYGWIN,
+    WIN,
+    _default_text_stdout,
+    get_best_encoding,
+    isatty,
+    open_stream,
+    strip_ansi,
+    term_len,
+)
 from .exceptions import ClickException
 from .utils import echo
 

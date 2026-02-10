@@ -8,7 +8,6 @@ from gettext import gettext as _
 from os import getenv
 from typing import Any, Literal, Optional, Union
 
-from . import _click
 from rich import box
 from rich.align import Align
 from rich.columns import Columns
@@ -24,6 +23,8 @@ from rich.text import Text
 from rich.theme import Theme
 from rich.traceback import Traceback
 from typer.models import DeveloperExceptionConfig
+
+from . import _click
 
 # Default styles
 STYLE_OPTION = "bold cyan"

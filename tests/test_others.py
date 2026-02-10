@@ -8,9 +8,9 @@ from unittest import mock
 
 import pytest
 import typer
-from typer import _click
 import typer._completion_shared
 import typer.completion
+from typer import _click
 from typer.core import _split_opt
 from typer.main import solve_typer_info_defaults, solve_typer_info_help
 from typer.models import ParameterInfo, TyperInfo

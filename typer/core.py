@@ -17,7 +17,6 @@ from typing import (
 )
 
 from . import _click
-
 from ._typing import Literal
 
 MarkupMode = Literal["markdown", "rich", None]

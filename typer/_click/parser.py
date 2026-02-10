@@ -30,16 +30,11 @@ from collections import deque
 from gettext import gettext as _
 from gettext import ngettext
 
-from ._utils import FLAG_NEEDS_VALUE
-from ._utils import UNSET
-from .exceptions import BadArgumentUsage
-from .exceptions import BadOptionUsage
-from .exceptions import NoSuchOption
-from .exceptions import UsageError
+from ._utils import FLAG_NEEDS_VALUE, UNSET
+from .exceptions import BadArgumentUsage, BadOptionUsage, NoSuchOption, UsageError
 
 if t.TYPE_CHECKING:
-    from ._utils import T_FLAG_NEEDS_VALUE
-    from ._utils import T_UNSET
+    from ._utils import T_FLAG_NEEDS_VALUE, T_UNSET
     from .core import Argument as CoreArgument
     from .core import Context
     from .core import Option as CoreOption

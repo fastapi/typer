@@ -5,8 +5,9 @@ from enum import Enum
 from pathlib import Path
 from typing import Optional, Union
 
-from . import _click
 from typer.core import HAS_SHELLINGHAM
+
+from . import _click
 
 if HAS_SHELLINGHAM:
     import shellingham

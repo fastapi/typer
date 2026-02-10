@@ -1,11 +1,10 @@
 from typing import TYPE_CHECKING, Any, Callable, Optional, Union, overload
 
 from . import _click
-
 from .models import ArgumentInfo, OptionInfo
 
 if TYPE_CHECKING:  # pragma: no cover
-    from ._click import shell_completion
+    pass
 
 
 # Overload for Option created with custom type 'parser'

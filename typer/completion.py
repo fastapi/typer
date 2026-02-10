@@ -4,7 +4,6 @@ from collections.abc import MutableMapping
 from typing import Any
 
 from . import _click
-
 from ._completion_classes import completion_init
 from ._completion_shared import Shells, _get_shell_name, get_completion_script, install
 from .core import HAS_SHELLINGHAM
@@ -111,7 +110,6 @@ def shell_complete(
     instruction: str,
 ) -> int:
     from . import _click
-    from ._click import shell_completion
 
     if "_" not in instruction:
         _click.echo("Invalid completion instruction.", err=True)

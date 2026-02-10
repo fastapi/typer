@@ -1,5 +1,5 @@
-from typer import _click
 import typer
+from typer import _click
 
 
 @_click.group()

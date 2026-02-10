@@ -11,7 +11,6 @@ from typing import (
 )
 
 from . import _click
-from ._click import shell_completion
 
 if TYPE_CHECKING:  # pragma: no cover
     from .core import TyperCommand, TyperGroup
