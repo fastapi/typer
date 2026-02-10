@@ -11,17 +11,8 @@ from .core import Context as Context
 from .core import Group as Group
 from .core import Option as Option
 from .core import Parameter as Parameter
-from .decorators import argument as argument
-from .decorators import command as command
-from .decorators import confirmation_option as confirmation_option
-from .decorators import group as group
 from .decorators import help_option as help_option
-from .decorators import make_pass_decorator as make_pass_decorator
 from .decorators import option as option
-from .decorators import pass_context as pass_context
-from .decorators import pass_obj as pass_obj
-from .decorators import password_option as password_option
-from .decorators import version_option as version_option
 from .exceptions import Abort as Abort
 from .exceptions import BadArgumentUsage as BadArgumentUsage
 from .exceptions import BadOptionUsage as BadOptionUsage
