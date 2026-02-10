@@ -17,6 +17,7 @@
 
 ### Docs
 
+* 📝 Add reference (code API) docs. PR [#1504](https://github.com/fastapi/typer/pull/1504) by [@svlandeg](https://github.com/svlandeg).
 * 📝 Update the "Building a Package" tutorial to use `uv` instead of `poetry`. PR [#1474](https://github.com/fastapi/typer/pull/1474) by [@svlandeg](https://github.com/svlandeg).
 * 📝 Update `management-tasks.md` to be in line with `management-tasks.md` in FastAPI repo. PR [#1519](https://github.com/fastapi/typer/pull/1519) by [@YuriiMotov](https://github.com/YuriiMotov).
 * 📝 Add link to Typer developer survey. PR [#1514](https://github.com/fastapi/typer/pull/1514) by [@tiangolo](https://github.com/tiangolo).
