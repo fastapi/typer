@@ -10,44 +10,6 @@ from .core import Argument, Command, Context, Group, Option, Parameter, Paramete
 from .utils import echo
 
 
-def shell_complete(
-    cli: Command,
-    ctx_args: cabc.MutableMapping[str, t.Any],
-    prog_name: str,
-    complete_var: str,
-    instruction: str,
-) -> int:
-    """Perform shell completion for the given CLI program.
-
-    :param cli: Command being called.
-    :param ctx_args: Extra arguments to pass to
-        ``cli.make_context``.
-    :param prog_name: Name of the executable in the shell.
-    :param complete_var: Name of the environment variable that holds
-        the completion instruction.
-    :param instruction: Value of ``complete_var`` with the completion
-        instruction and shell, in the form ``instruction_shell``.
-    :return: Status code to exit with.
-    """
-    shell, _, instruction = instruction.partition("_")
-    comp_cls = get_completion_class(shell)
-
-    if comp_cls is None:
-        return 1
-
-    comp = comp_cls(cli, ctx_args, prog_name, complete_var)
-
-    if instruction == "source":
-        echo(comp.source())
-        return 0
-
-    if instruction == "complete":
-        echo(comp.complete())
-        return 0
-
-    return 1
-
-
 class CompletionItem:
     """Represents a completion value and metadata about the value. The
     default metadata is ``type`` to indicate special shell handling,
