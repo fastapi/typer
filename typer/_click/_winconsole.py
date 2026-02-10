@@ -32,10 +32,7 @@ from ._compat import _NonClosingTextIOWrapper
 
 assert sys.platform == "win32"
 import msvcrt  # noqa: E402
-from ctypes import (
-    WINFUNCTYPE,  # noqa: E402
-    windll,  # noqa: E402
-)
+from ctypes import WINFUNCTYPE, windll  # noqa: E402
 
 c_ssize_p = POINTER(c_ssize_t)
 
