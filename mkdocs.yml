@@ -4,6 +4,7 @@ site_description: Typer, build great CLIs. Easy to code. Based on Python type hi
 site_url: https://typer.tiangolo.com/
 
 theme:
+  variant: classic
   name: material
   custom_dir: docs/overrides
   palette:
@@ -71,7 +72,7 @@ plugins:
 nav:
   - Typer: index.md
   - features.md
-  - Tutorial - User Guide:
+  - Learn:
       - tutorial/index.md
       - environment-variables.md
       - virtual-environments.md

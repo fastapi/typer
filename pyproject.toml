@@ -69,6 +69,7 @@ docs = [
     "mkdocstrings[python]==0.30.1",
     "pillow==11.3.0",
     "pyyaml>=5.3.1,<7.0.0",
+    "zensical==0.0.15",
 ]
 github-actions = [
     "httpx>=0.27.0,<0.29.0",
