@@ -485,12 +485,7 @@ class TyperOption(_click.core.Option):
         return _extract_default_help_str(self, ctx=ctx)
 
     def make_metavar(self, ctx: Union[_click.Context, None] = None) -> str:
-        signature = inspect.signature(super().make_metavar)
-        if "ctx" in signature.parameters:
-            # Click >= 8.2
-            return super().make_metavar(ctx=ctx)  # type: ignore[arg-type]
-        # Click < 8.2
-        return super().make_metavar()  # type: ignore[call-arg]
+        return super().make_metavar(ctx=ctx)  # type: ignore[arg-type]
 
     def get_help_record(self, ctx: _click.Context) -> Optional[tuple[str, str]]:
         # Duplicate all of Click's logic only to modify a single line, to allow boolean

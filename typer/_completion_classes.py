@@ -13,13 +13,7 @@ from ._completion_shared import (
     Shells,
 )
 
-try:
-    from ._click.shell_completion import split_arg_string as click_split_arg_string
-except ImportError:  # pragma: no cover
-    # TODO: when removing support for Click < 8.2, remove this import
-    from ._click.parser import (  # type: ignore[no-redef]
-        split_arg_string as click_split_arg_string,
-    )
+from ._click.shell_completion import split_arg_string as click_split_arg_string
 
 
 def _sanitize_help_text(text: str) -> str:
