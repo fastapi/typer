@@ -7,6 +7,10 @@
 * 🐛 Fix highlighting of optional variadic argument metavars. PR [#1508](https://github.com/fastapi/typer/pull/1508) by [@BenjyWiener](https://github.com/BenjyWiener).
 * 🐛 Fix `--help` text alignment when using `typer.style()` in option descriptions. PR [#1356](https://github.com/fastapi/typer/pull/1356) by [@mahimairaja](https://github.com/mahimairaja).
 
+### Refactors
+
+* 🎨 Update types and errors, comment ty for now. PR [#1531](https://github.com/fastapi/typer/pull/1531) by [@tiangolo](https://github.com/tiangolo).
+
 ### Upgrades
 
 * ➖ Drop `typing-extensions` as external dependency. PR [#1467](https://github.com/fastapi/typer/pull/1467) by [@svlandeg](https://github.com/svlandeg).
