@@ -49,6 +49,7 @@ Changelog = "https://typer.tiangolo.com/release-notes/"
 standard = [
     "shellingham >=1.3.0",
     "rich >=10.11.0",
+    "pydantic >=2.0.0",
 ]
 
 [dependency-groups]
@@ -80,6 +81,7 @@ github-actions = [
 tests = [
     "coverage[toml]>=6.2,<8.0",
     "mypy==1.19.1",
+    "pydantic >=2.0.0",
     "pytest>=4.4.0,<9.0.0",
     "pytest-cov>=2.10.0,<8.0.0",
     "pytest-sugar>=0.9.4,<1.2.0",
