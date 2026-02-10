@@ -221,7 +221,7 @@ class Typer:
     def command(
         self,
         name: Optional[str] = None,
-        *,
+        *positional_aliases: str,
         cls: Optional[type[TyperCommand]] = None,
         context_settings: Optional[dict[Any, Any]] = None,
         help: Optional[str] = None,
@@ -232,11 +232,19 @@ class Typer:
         no_args_is_help: bool = False,
         hidden: bool = False,
         deprecated: bool = False,
+        aliases: Optional[Sequence[str]] = None,
+        hidden_aliases: Optional[Sequence[str]] = None,
         # Rich settings
         rich_help_panel: Union[str, None] = Default(None),
     ) -> Callable[[CommandFunctionType], CommandFunctionType]:
         if cls is None:
             cls = TyperCommand
+
+        all_aliases_list: list[str] = []
+        if positional_aliases:
+            all_aliases_list.extend(positional_aliases)
+        if aliases:
+            all_aliases_list.extend(aliases)
 
         def decorator(f: CommandFunctionType) -> CommandFunctionType:
             self.registered_commands.append(
@@ -255,6 +263,8 @@ class Typer:
                     no_args_is_help=no_args_is_help,
                     hidden=hidden,
                     deprecated=deprecated,
+                    aliases=all_aliases_list if all_aliases_list else None,
+                    hidden_aliases=hidden_aliases,
                     # Rich settings
                     rich_help_panel=rich_help_panel,
                 )
@@ -481,6 +491,10 @@ def get_group_from_info(
         )
         if command.name:
             commands[command.name] = command
+            cmd_aliases = getattr(command, "_typer_aliases", [])
+            cmd_hidden_aliases = getattr(command, "_typer_hidden_aliases", [])
+            for alias in cmd_aliases + cmd_hidden_aliases:
+                commands[alias] = command
     for sub_group_info in group_info.typer_instance.registered_groups:
         sub_group = get_group_from_info(
             sub_group_info,
@@ -605,6 +619,8 @@ def get_command_from_info(
         # Rich settings
         rich_help_panel=command_info.rich_help_panel,
     )
+    command._typer_aliases = command_info.aliases or []  # type: ignore
+    command._typer_hidden_aliases = command_info.hidden_aliases or []  # type: ignore
     return command
 
 
