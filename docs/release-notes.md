@@ -20,6 +20,7 @@
 
 ### Internal
 
+* 📌 Update internal dependency limits. PR [#1529](https://github.com/fastapi/typer/pull/1529) by [@tiangolo](https://github.com/tiangolo).
 * 🔧 Add ty to pre-commit. PR [#1527](https://github.com/fastapi/typer/pull/1527) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Add `ty` to the CI `lint` check. PR [#1477](https://github.com/fastapi/typer/pull/1477) by [@svlandeg](https://github.com/svlandeg).
 * ⬆ Bump prek from 0.3.1 to 0.3.2. PR [#1524](https://github.com/fastapi/typer/pull/1524) by [@dependabot[bot]](https://github.com/apps/dependabot).
