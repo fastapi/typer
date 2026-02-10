@@ -4,9 +4,9 @@ When you create a CLI program with **Typer** you probably want to create your ow
 
 That's what allows your users to install it and have it as an independent program that they can use in their terminal.
 
-And that's also required for shell auto completion to work (unless you use your program through `typer` command).
+And that's also required for shell auto completion to work (unless you use your program through the `typer` command).
 
-Nowadays, there are several ways and tools to create Python packages (what you install with `pip install something`).
+Nowadays, there are several ways and tools to create Python packages (what you install with `pip install something` or `uv add something`).
 
 You might even have your favorite already.
 
@@ -151,7 +151,7 @@ The awesome Portal Gun
 
 ## Add a "script"
 
-We are creating a Python package that can be installed with `pip install`.
+We are creating a Python package that can be installed with `uv add` or `pip install`.
 
 But we want it to provide a CLI program that can be executed in the shell.
 
@@ -321,7 +321,7 @@ If you installed it in the global system (e.g. with `sudo`) you could install a 
 
 /// tip
 
-Bonus points if you use <a href="https://github.com/pipxproject/pipx" class="external-link" target="_blank">`pipx`</a> to install it while keeping an isolated environment for your Python CLI programs 🚀
+Bonus points if you use <a href="https://docs.astral.sh/uv/" class="external-link" target="_blank">uvx</a> to install it while keeping an isolated environment for your Python CLI programs 🚀
 
 ///
 
@@ -644,12 +644,6 @@ requires = ["uv_build>=0.8.14,<0.9.0"]
 build-backend = "uv_build"
 ```
 
-And in the file `src/rick_portal_gun/__init__.py`:
-
-```Python
-__version__ = '0.2.0'
-```
-
 And then build and publish again:
 
 <div class="termy">
@@ -673,14 +667,12 @@ This is a very simple guide. You could add many more steps.
 
 For example, you should use <a href="https://git-scm.com/" class="external-link" target="_blank">Git</a>, the version control system, to save your code.
 
-You can add a lot of extra metadata to your `pyproject.toml`, check the docs for <a href="https://docs.astral.sh/uv/reference/settings/#no-build-isolation" class="external-link" target="_blank">Poetry metadata</a> settings.
+You could use <a href="https://docs.astral.sh/uv/" class="external-link" target="_blank">uv</a> to manage your installed CLI Python programs in isolated environments.
 
-You could use <a href="https://github.com/pipxproject/pipx" class="external-link" target="_blank">`pipx`</a> to manage your installed CLI Python programs in isolated environments.
-
-Maybe use automatic formatting with <a href="https://github.com/psf/black" class="external-link" target="_blank">Black</a>.
+Maybe use automatic formatting with <a href="https://docs.astral.sh/ruff/" class="external-link" target="_blank">Ruff</a>.
 
 You'll probably want to publish your code as open source to <a href="https://github.com/" class="external-link" target="_blank">GitHub</a>.
 
 And then you could integrate a <abbr title="Continuous Integration">CI</abbr> tool to run your tests and deploy your package automatically.
 
-And there's a long etc. But now you have the basics and you can continue on your own 🚀.
+And there's a long etc. But now you have the basics and you can continue on your own. 🚀
