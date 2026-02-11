@@ -112,7 +112,7 @@ In general, **Typer** tends to be the entry point to your program, taking the fi
 
 **Rich** is useful for the parts that need to *display* information. Showing beautiful content on the screen.
 
-The best results for your command line application would be achieved combining both **Typer** and **Rich**.
+The best results for your command line application are achieved combining both **Typer** and **Rich**.
 
 ## "Standard Output" and "Standard Error"
 

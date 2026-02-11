@@ -612,12 +612,6 @@ You just have to pass it the module to import (`rick_portal_gun.main`) and it wi
 
 By specifying the `--name` of the program it will be able to use it while generating the docs.
 
-/// tip
-
-If you installed `typer-slim` and don't have the `typer` command, you can use `python -m typer` instead.
-
-///
-
 ### Publish a new version with the docs
 
 Now you can publish a new version with the updated docs.

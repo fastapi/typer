@@ -2,6 +2,28 @@
 
 ## Latest Changes
 
+## 0.23.0
+
+### Breaking Changes
+
+* ♻️ When printing error tracebacks with Rich, default to not showing locals, which are sometimes verbose. PR [#1072](https://github.com/fastapi/typer/pull/1072) by [@tiangolo](https://github.com/tiangolo).
+
+### Docs
+
+* 📝 Add more explicit deprecation note in shell packages. PR [#1534](https://github.com/fastapi/typer/pull/1534) by [@tiangolo](https://github.com/tiangolo).
+
+### Internal
+
+* ⬆ Bump cryptography from 46.0.4 to 46.0.5. PR [#1532](https://github.com/fastapi/typer/pull/1532) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 🔨 Tweak PDM hook script, remove unnecessary default. PR [#1536](https://github.com/fastapi/typer/pull/1536) by [@tiangolo](https://github.com/tiangolo).
+* ♻️ Simplify build setup scripts and configs for deprecated wrapper packages. PR [#1535](https://github.com/fastapi/typer/pull/1535) by [@tiangolo](https://github.com/tiangolo).
+
+## 0.22.0
+
+### Breaking Changes
+
+* 💥 Make `typer-slim` a shallow wrapper around `typer`, always requiring `rich` and `shellingham`. PR [#1522](https://github.com/fastapi/typer/pull/1522) by [@svlandeg](https://github.com/svlandeg).
+
 ## 0.21.2
 
 ### Fixes

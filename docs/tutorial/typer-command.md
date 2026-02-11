@@ -18,13 +18,7 @@ pip install typer
 
 ...it includes the `typer` command.
 
-If you don't want to have the `typer` command, you can install instead:
-
-```bash
-pip install typer-slim
-```
-
-You can still use it by calling the Typer library as a module with:
+If you don't want to use the `typer` command, you can call the Typer library as a module with:
 
 ```bash
 python -m typer
@@ -261,7 +255,7 @@ $ typer some_script.py utils docs
 
 /// tip
 
-If you installed only `typer-slim` and you don't have the `typer` command, you can still generate docs with:
+If you don't want to use the `typer` command, you can still generate docs with:
 
 ```console
 $ python -m typer some_script.py utils docs

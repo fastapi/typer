@@ -300,7 +300,7 @@ Using `stderr=True` tells **Rich** that the output should be shown in "standard 
 
 /// info
 
-If you can't install and use Rich, you can also use `print(lastname, file=sys.stderr)` or `typer.echo("some text", err=True)` instead.
+If you have disabled Rich, you can also use `print(lastname, file=sys.stderr)` or `typer.echo("some text", err=True)` instead.
 
 ///
 

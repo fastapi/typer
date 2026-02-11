@@ -480,20 +480,23 @@ class Typer:
             Doc(
                 """
                 If Rich is installed, [error messages](https://typer.tiangolo.com/tutorial/exceptions/#exceptions-and-errors)
-                will be nicely printed and include the values of local variables for easy debugging.
-                However, if such a variable contains delicate information, you should consider setting `pretty_exceptions_show_locals` to `False`
-                to enhance security.
+                will be nicely printed.
+
+                If you set `pretty_exceptions_show_locals=True` it will also include the values of local variables for easy debugging.
+
+                However, if such a variable contains delicate information, you should consider leaving `pretty_exceptions_show_locals=False`
+                (the default) to `False` to enhance security.
 
                 **Example**
 
                 ```python
                 import typer
 
-                app = typer.Typer(pretty_exceptions_show_locals=False)
+                app = typer.Typer(pretty_exceptions_show_locals=True)
                 ```
                 """
             ),
-        ] = True,
+        ] = False,
         pretty_exceptions_short: Annotated[
             bool,
             Doc(

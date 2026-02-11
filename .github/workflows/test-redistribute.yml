@@ -12,12 +12,6 @@ on:
 jobs:
   test-redistribute:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        package:
-          - typer-slim
-          - typer
-          - typer-cli
     steps:
       - name: Dump GitHub context
         env:
@@ -34,22 +28,16 @@ jobs:
       - name: Install build dependencies
         run: pip install build
       - name: Build source distribution
-        env:
-          TIANGOLO_BUILD_PACKAGE: ${{ matrix.package }}
         run: python -m build --sdist
       - name: Decompress source distribution
         run: |
           cd dist
           tar xvf typer*.tar.gz
       - name: Install test dependencies
-        if: ${{ matrix.package != 'typer-cli' }}
         run: |
           cd dist/typer*/
           pip install --group tests --editable .
-        env:
-          TIANGOLO_BUILD_PACKAGE: ${{ matrix.package }}
       - name: Run source distribution tests
-        if: ${{ matrix.package != 'typer-cli' }}
         run: |
           cd dist/typer*/
           bash scripts/test.sh
