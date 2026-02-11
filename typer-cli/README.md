@@ -50,6 +50,8 @@ pip install typer
 
 That includes the `typer` command.
 
+This package is deprecated and will stop receiving any updates and published versions.
+
 ## License
 
 This project is licensed under the terms of the MIT license.
