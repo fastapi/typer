@@ -6,6 +6,10 @@
 
 * 📝 Add more explicit deprecation note in shell packages. PR [#1534](https://github.com/fastapi/typer/pull/1534) by [@tiangolo](https://github.com/tiangolo).
 
+### Internal
+
+* ♻️ Simplify build setup scripts and configs for deprecated wrapper packages. PR [#1535](https://github.com/fastapi/typer/pull/1535) by [@tiangolo](https://github.com/tiangolo).
+
 ## 0.22.0
 
 ### Breaking Changes
