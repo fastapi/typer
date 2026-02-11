@@ -5,8 +5,9 @@ from enum import Enum
 from pathlib import Path
 from typing import Optional, Union
 
-from . import _click
 import shellingham
+
+from . import _click
 
 
 class Shells(str, Enum):
