@@ -6,7 +6,7 @@ from pdm.backend.hooks import Context
 TIANGOLO_BUILD_PACKAGE = os.getenv("TIANGOLO_BUILD_PACKAGE", "typer")
 
 
-def pdm_build_initialize(context: Context):
+def pdm_build_initialize(context: Context) -> None:
     metadata = context.config.metadata
     # Get main version
     version = metadata["version"]
