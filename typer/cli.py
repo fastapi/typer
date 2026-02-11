@@ -56,9 +56,7 @@ class TyperCLIGroup(typer.core.TyperGroup):
         self.maybe_add_run(ctx)
         return super().list_commands(ctx)
 
-    def get_command(
-        self, ctx: _click.Context, name: str
-    ) -> Optional[Command]:  # ty: ignore[invalid-method-override]
+    def get_command(self, ctx: _click.Context, name: str) -> Optional[Command]:  # ty: ignore[invalid-method-override]
         self.maybe_add_run(ctx)
         return super().get_command(ctx, name)
 
