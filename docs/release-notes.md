@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Breaking Changes
+
+* ♻️ When printing error tracebacks with Rich, default to not showing locals, which are sometimes verbose. PR [#1072](https://github.com/fastapi/typer/pull/1072) by [@tiangolo](https://github.com/tiangolo).
+
 ### Docs
 
 * 📝 Add more explicit deprecation note in shell packages. PR [#1534](https://github.com/fastapi/typer/pull/1534) by [@tiangolo](https://github.com/tiangolo).
