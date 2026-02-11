@@ -49,7 +49,6 @@ Issues = "https://github.com/fastapi/typer/issues"
 Changelog = "https://typer.tiangolo.com/release-notes/"
 
 [project.scripts]
-
 typer = "typer.cli:main"
 
 [dependency-groups]
