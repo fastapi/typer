@@ -103,8 +103,6 @@ source-includes = [
 
 [tool.tiangolo._internal-slim-build]
 sync-dependencies = [
-    "typer-slim",
-    "typer-cli",
     "typer"
 ]
 
