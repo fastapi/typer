@@ -69,11 +69,13 @@ TypeError: can only concatenate str (not "int") to str
 
 When using Rich, you can get more verbose output by printing the values of the <abbr title="a variable that lives only inside a function, its value is only visible inside of it">local variables</abbr> as part of the error message.
 
-By default, this setting is disabled (since Typer v0.18.0) to avoid showing **delicate information**, for example a **password**, a **key** or a **token**.
+By default, this setting is disabled (since Typer 0.23.0) to avoid showing **delicate information**, for example a **password**, a **key** or a **token**.
+
 In these cases, it could be problematic if the automatic errors show the value in those local variables.
+
 This would be relevant in particular if your CLI application is being run on some CI (continuous integration) system that is recording the logs.
 
-However, if you do want to enable the setting, you can set the parameter `pretty_exceptions_show_locals=True` when creating the `typer.Typer()` application::
+However, if you do want to enable the setting, you can set the parameter `pretty_exceptions_show_locals=True` when creating the `typer.Typer()` application:
 
 {* docs_src/exceptions/tutorial002_py39.py hl[3] *}
 
