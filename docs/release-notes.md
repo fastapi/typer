@@ -8,6 +8,7 @@
 
 ### Internal
 
+* ⬆ Bump cryptography from 46.0.4 to 46.0.5. PR [#1532](https://github.com/fastapi/typer/pull/1532) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * 🔨 Tweak PDM hook script, remove unnecessary default. PR [#1536](https://github.com/fastapi/typer/pull/1536) by [@tiangolo](https://github.com/tiangolo).
 * ♻️ Simplify build setup scripts and configs for deprecated wrapper packages. PR [#1535](https://github.com/fastapi/typer/pull/1535) by [@tiangolo](https://github.com/tiangolo).
 
