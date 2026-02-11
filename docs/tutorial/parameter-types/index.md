@@ -60,10 +60,3 @@ Error: Invalid value for '--age': '15.3' is not a valid integer
 ## Watch next
 
 See more about specific types and validations in the next sections...
-
-
-/// info | Technical Details
-
-All the types you will see in the next sections are handled underneath by <a href="https://click.palletsprojects.com/en/7.x/parameters/#parameter-types" class="external-link" target="_blank">Click's Parameter Types</a>.
-
-///

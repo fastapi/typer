@@ -75,13 +75,7 @@ If you can use Rich, use the information above, the Rich docs, and skip the rest
 
 ///
 
-But if you can't use Rich and have it disabled, Typer (actually Click) comes with a simple utility to show progress bars.
-
-/// info
-
-`typer.progressbar()` comes directly from Click, you can read more about it in <a href="https://click.palletsprojects.com/en/8.1.x/utils/#showing-progress-bars" class="external-link" target="_blank">Click's docs</a>.
-
-///
+But if you can't use Rich and have it disabled, Typer comes with a simple utility to show progress bars.
 
 ### Use `typer.progressbar`
 
