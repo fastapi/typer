@@ -16,18 +16,8 @@ Successfully installed typer click shellingham rich
 
 By default, `typer` comes with `rich` and `shellingham`.
 
-/// note
-
-If you are an advanced user and want to opt out of these default extra dependencies, you can instead install `typer-slim`.
-
 ```bash
 pip install typer
-```
-
-...includes the same optional dependencies as:
-
-```bash
-pip install "typer-slim[standard]"
 ```
 
 ///
