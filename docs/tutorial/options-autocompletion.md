@@ -124,9 +124,7 @@ So, in the end, we return a `list` of `tuples` of `str`:
 
 If you want to have help text for each item, make sure each item in the list is a `tuple`. Not a `list`.
 
-Click checks specifically for a `tuple` when extracting the help text.
-
-So in the end, the return will be a `list` (or other iterable) of `tuples` of 2 `str`.
+In the end, the return will be a `list` (or other iterable) of `tuples` of 2 `str`.
 
 ///
 
@@ -157,7 +155,7 @@ Sebastian  -- The type hints guy.
 
 Instead of creating and returning a list with values (`str` or `tuple`), we can use `yield` with each value that we want in the completion.
 
-That way our function will be a <a href="https://docs.python.org/3.8/glossary.html#index-19" class="external-link" target="_blank">generator</a> that **Typer** (actually Click) can iterate:
+That way our function will be a <a href="https://docs.python.org/3.8/glossary.html#index-19" class="external-link" target="_blank">generator</a> that **Typer** can iterate:
 
 {* docs_src/options_autocompletion/tutorial005_an_py39.py hl[12:15] *}
 
@@ -308,7 +306,7 @@ We get all the *CLI parameters* as a raw `list` of `str` by declaring a paramete
 
 /// tip
 
-Here we name the list of all the raw *CLI parameters* `args` because that's the convention with Click.
+Here we name the list of all the raw *CLI parameters* `args` because that's the usual convention.
 
 But it doesn't contain only *CLI arguments*, it has everything, including *CLI options* and values, as a raw `list` of `str`.
 

@@ -16,7 +16,7 @@ This code is broken because you can't sum a string and a number (`name + 3`).
 
 **Typer** will automatically use Rich to automatically show you nicely printed errors.
 
-It will **omit** all the parts of the traceback (the chain of things that called your function) that come from the internal parts in Typer and Click.
+It will **omit** all the parts of the traceback (the chain of things that called your function) that come from the internal parts in Typer.
 
 So, the error you see will be **much clearer** and simpler, to help you detect the problem in your code quickly:
 
@@ -112,7 +112,7 @@ But you should only enable it if you're not dealing with delicate information.
 
 ## Disable Short Output
 
-If you want to show the full exception, including the parts in Typer and Click, you can use the parameter `pretty_exceptions_short=False`:
+If you want to show the full exception, including the internal parts in Typer, you can use the parameter `pretty_exceptions_short=False`:
 
 {* docs_src/exceptions/tutorial003_py39.py hl[3] *}
 

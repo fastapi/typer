@@ -157,7 +157,7 @@ Hello Camila
 
 ## Using the `CallbackParam` object
 
-The same way you can access the `typer.Context` by declaring a function parameter with its value, you can declare another function parameter with type `typer.CallbackParam` to get the specific Click `Parameter` object.
+The same way you can access the `typer.Context` by declaring a function parameter with its value, you can declare another function parameter with type `typer.CallbackParam` to get the specific `Parameter` object.
 
 {* docs_src/options/callback/tutorial004_an_py310.py hl[8,11] *}
 

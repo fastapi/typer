@@ -169,11 +169,3 @@ When you use `@app.command()` the function under the decorator is registered in 
 But Typer doesn't modify that function itself, the function is left as is.
 
 That means that if your function is simple enough that you could create it without using `typer.Option()` or `typer.Argument()`, you could use the same function for a **Typer** application and a **FastAPI** application putting both decorators on top, or similar tricks.
-
-/// note | Click Technical Details
-
-This behavior is a design difference with Click.
-
-In Click, when you add a `@click.command()` decorator it actually modifies the function underneath and replaces it with an object.
-
-///

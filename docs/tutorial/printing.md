@@ -188,7 +188,7 @@ You can probably skip the rest of this section. 🎉😎
 
 ///
 
-**Typer** also has a small utility `typer.echo()` to print information on the screen, it comes directly from Click. But normally you shouldn't need it.
+**Typer** also has a small utility `typer.echo()` to print information on the screen. But normally you shouldn't need it.
 
 For the simplest cases, you can use the standard Python `print()`.
 

@@ -107,7 +107,7 @@ with typer.progressbar(users) as progress:
 
 And the `with` statement using `typer.progressbar()` gives you an object that you can iterate over, just like if it was the same thing that you would iterate over normally.
 
-But by iterating over this object **Typer** (actually Click) will know to update the progress bar:
+But by iterating over this object **Typer** will know to update the progress bar:
 
 ```Python
 users = ["Camila", "Rick", "Morty"]
