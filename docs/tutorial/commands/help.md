@@ -202,19 +202,18 @@ If there are multiple close matches, Typer will suggest them all. This feature u
 
 ## Rich Markdown and Markup
 
-If you have **Rich** installed as described in [Printing and Colors](../printing.md){.internal-link target=_blank}, you can configure your app to enable markup text with the parameter `rich_markup_mode`.
-
-Then you can use more formatting in the docstrings and the `help` parameter for *CLI arguments* and *CLI options*. You will see more about it below. 👇
+Typer installs **Rich** to allow for more formatting in the docstrings and the `help` parameter for *CLI arguments* and *CLI options*. You will see more about it below. 👇
 
 /// info
 
-By default, `rich_markup_mode` is `None` if Rich is not installed, and `"rich"` if it is installed. In the latter case, you can set `rich_markup_mode` to `None` to disable rich text formatting.
+You can disable rich text formatting by setting `rich_markup_mode` to `None` for your specific app.
+Alternatively, you can disable it globally using an environmental variable `TYPER_USE_RICH` set to `False` or `0`.
 
 ///
 
 ### Rich Markup
 
-If you set `rich_markup_mode="rich"` when creating the `typer.Typer()` app, you will be able to use <a href="https://rich.readthedocs.io/en/stable/markup.html" class="external-link" target="_blank">Rich Console Markup</a> in the docstring, and even in the help for the *CLI arguments* and options:
+If you set `rich_markup_mode="rich"` when creating the `typer.Typer()` app (which is the default), you will be able to use <a href="https://rich.readthedocs.io/en/stable/markup.html" class="external-link" target="_blank">Rich Console Markup</a> in the docstring, and even in the help for the *CLI arguments* and options:
 
 {* docs_src/commands/help/tutorial004_an_py39.py hl[5,11,15:17,22,25,28] *}
 

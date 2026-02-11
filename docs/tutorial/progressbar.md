@@ -75,7 +75,7 @@ If you can use Rich, use the information above, the Rich docs, and skip the rest
 
 ///
 
-But if you can't use Rich, Typer (actually Click) comes with a simple utility to show progress bars.
+But if you can't use Rich and have it disabled, Typer (actually Click) comes with a simple utility to show progress bars.
 
 /// info
 

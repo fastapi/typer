@@ -14,7 +14,7 @@ This code is broken because you can't sum a string and a number (`name + 3`).
 
 ## Exceptions with Rich
 
-If you have **Rich** installed (for example if you installed `"typer[all]"`), **Typer** will use it to automatically show you nicely printed errors.
+**Typer** will automatically use Rich to automatically show you nicely printed errors.
 
 It will **omit** all the parts of the traceback (the chain of things that called your function) that come from the internal parts in Typer and Click.
 
@@ -35,10 +35,6 @@ $ python main.py
 <font color="#F92672">│</font>    9                                                              <font color="#F92672">│</font>
 <font color="#F92672">│</font>    10                                                             <font color="#F92672">│</font>
 <font color="#F92672">│</font>    11 <font color="#66D9EF">if</font> <font color="#F92672">__name__</font> == <font color="#F4BF75">&quot;__main__&quot;</font>:                                  <font color="#F92672">│</font>
-<font color="#F92672">│</font>                                                                   <font color="#F92672">│</font>
-<font color="#F92672">│</font> <font color="#F4BF75">╭──── locals ────╮</font>                                                <font color="#F92672">│</font>
-<font color="#F92672">│</font> <font color="#F4BF75">│</font> name = <font color="#F4BF75">&apos;morty&apos;</font> <font color="#F4BF75">│</font>                                                <font color="#F92672">│</font>
-<font color="#F92672">│</font> <font color="#F4BF75">╰────────────────╯</font>                                                <font color="#F92672">│</font>
 <font color="#F92672">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#F92672"><b>TypeError: </b></font>can only concatenate str <b>(</b>not <font color="#A6E22E">&quot;int&quot;</font><b>)</b> to str
 ```
@@ -47,7 +43,9 @@ $ python main.py
 
 ## Exceptions without Rich
 
-If you don't have Rich installed, Typer will still do some tricks to show you the information **as clearly as possible**:
+You can disable Rich globally using the environmental variable `TYPER_USE_RICH`.
+
+In this case, Typer will still do some tricks to show you the information **as clearly as possible**:
 
 <div class="termy">
 
@@ -67,52 +65,50 @@ TypeError: can only concatenate str (not "int") to str
 
 </div>
 
-## Disable Local Variables for Security
+## Show Local Variables for Detailed Debugging
 
-If your Typer application handles **delicate information**, for example a **password**, a **key**, a **token**, then it could be problematic if the automatic errors show the value in those <abbr title="a variable that lives only inside a function, its value is only visible inside of it">local variables</abbr>.
+When using Rich, you can get more verbose output by printing the values of the <abbr title="a variable that lives only inside a function, its value is only visible inside of it">local variables</abbr> as part of the error message.
+
+By default, this setting is disabled (since Typer 0.23.0) to avoid showing **delicate information**, for example a **password**, a **key** or a **token**.
+
+In these cases, it could be problematic if the automatic errors show the value in those local variables.
 
 This would be relevant in particular if your CLI application is being run on some CI (continuous integration) system that is recording the logs.
 
-The default errors above, when using Rich, show a section with:
-
-```Python
-name = 'morty'
-```
-
-In this case, `name` is a local variable, it comes from a parameter passed to the function.
-
-But if it was something like a password, you would have liked to hide it.
-
-In that case, you can set the parameter `pretty_exceptions_show_locals=False` when creating the `typer.Typer()` application:
+However, if you do want to enable the setting, you can set the parameter `pretty_exceptions_show_locals=True` when creating the `typer.Typer()` application:
 
 {* docs_src/exceptions/tutorial002_py39.py hl[3] *}
 
-And now when you run it, you will see the error without the local variables:
+Now, when using Rich, you will see the error with the local variables:
 
 <div class="termy">
 
 ```console
-$ python main.py supersecret
+$ python main.py
 
 <font color="#F92672">╭──────────────── </font><font color="#F92672"><b>Traceback (most recent call last)</b></font><font color="#F92672"> ────────────────╮</font>
-<font color="#F92672">│</font> <font color="#A37F4E">/home/user/code/superapp/</font><font color="#F4BF75"><b>main.py</b></font>:<font color="#66D9EF">8</font> in <font color="#A6E22E">main</font>                        <font color="#F92672">│</font>
+<font color="#F92672">│</font> <font color="#A37F4E">/home/user/code/superapp/</font><font color="#F4BF75"><b>main.py</b></font>:<font color="#66D9EF">5</font> in <font color="#A6E22E">main</font>                        <font color="#F92672">│</font>
 <font color="#F92672">│</font>                                                                   <font color="#F92672">│</font>
-<font color="#F92672">│</font>    5                                                              <font color="#F92672">│</font>
-<font color="#F92672">│</font>    6 <font color="#AE81FF"><b>@app</b></font>.command()                                               <font color="#F92672">│</font>
-<font color="#F92672">│</font>    7 <font color="#66D9EF">def</font> <font color="#A6E22E">main</font>(password: <font color="#A1EFE4">str</font>):                                     <font color="#F92672">│</font>
-<font color="#F92672">│</font> <font color="#F92672">❱ </font> 8 │   <font color="#A1EFE4">print</font>(password + <font color="#66D9EF">3</font>)                                      <font color="#F92672">│</font>
-<font color="#F92672">│</font>    9                                                              <font color="#F92672">│</font>
-<font color="#F92672">│</font>   10                                                              <font color="#F92672">│</font>
-<font color="#F92672">│</font>   11 <font color="#66D9EF">if</font> <font color="#F92672">__name__</font> == <font color="#F4BF75">&quot;__main__&quot;</font>:                                   <font color="#F92672">│</font>
+<font color="#F92672">│</font>    2                                                              <font color="#F92672">│</font>
+<font color="#F92672">│</font>    3                                                              <font color="#F92672">│</font>
+<font color="#F92672">│</font>    4 <font color="#66D9EF">def</font> <font color="#A6E22E">main</font>(name: <font color="#A1EFE4">str</font> = <font color="#F4BF75">&quot;morty&quot;</font>):                               <font color="#F92672">│</font>
+<font color="#F92672">│</font> <font color="#F92672">❱ </font> 5 │   <font color="#A1EFE4">print</font>(name + <font color="#66D9EF">3</font>)                                          <font color="#F92672">│</font>
+<font color="#F92672">│</font>    6                                                              <font color="#F92672">│</font>
+<font color="#F92672">│</font>    7                                                              <font color="#F92672">│</font>
+<font color="#F92672">│</font>    8 <font color="#66D9EF">if</font> <font color="#F92672">__name__</font> == <font color="#F4BF75">&quot;__main__&quot;</font>:                                   <font color="#F92672">│</font>
+<font color="#F92672">│</font>                                                                   <font color="#F92672">│</font>
+<font color="#F92672">│</font> <font color="#F4BF75">╭──── locals ────╮</font>                                                <font color="#F92672">│</font>
+<font color="#F92672">│</font> <font color="#F4BF75">│</font> name = <font color="#F4BF75">&apos;morty&apos;</font> <font color="#F4BF75">│</font>                                                <font color="#F92672">│</font>
+<font color="#F92672">│</font> <font color="#F4BF75">╰────────────────╯</font>                                                <font color="#F92672">│</font>
 <font color="#F92672">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#F92672"><b>TypeError: </b></font>can only concatenate str <b>(</b>not <font color="#A6E22E">&quot;int&quot;</font><b>)</b> to str
 ```
 
 </div>
 
-Note that you passed the password `supersecret`, but it's not shown anywhere in the error message.
+Being able to see the values of local variables is very **helpful** to diagnose, **debug**, and fix problems.
 
-Being able to see the values of local variables is normally very **helpful** to diagnose, **debug**, and fix problems, but if you are dealing with delicate information, now you know how to secure it. 🔒
+But you should only enable it if you're not dealing with delicate information.
 
 ## Disable Short Output
 

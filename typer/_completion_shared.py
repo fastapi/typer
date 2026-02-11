@@ -5,12 +5,8 @@ from enum import Enum
 from pathlib import Path
 from typing import Optional, Union
 
-from typer.core import HAS_SHELLINGHAM
-
 from . import _click
-
-if HAS_SHELLINGHAM:
-    import shellingham
+import shellingham
 
 
 class Shells(str, Enum):
@@ -247,14 +243,11 @@ def _get_shell_name() -> Union[str, None]:
     returned.
     """
     name: Union[str, None]  # N.B. shellingham is untyped
-    if HAS_SHELLINGHAM:
-        try:
-            # N.B. detect_shell returns a tuple of (shell name, shell command).
-            # We only need the name.
-            name, _cmd = shellingham.detect_shell()  # noqa: TID251
-        except shellingham.ShellDetectionFailure:  # pragma: no cover
-            name = None
-    else:
-        name = None  # pragma: no cover
+    try:
+        # N.B. detect_shell returns a tuple of (shell name, shell command).
+        # We only need the name.
+        name, _cmd = shellingham.detect_shell()  # noqa: TID251
+    except shellingham.ShellDetectionFailure:  # pragma: no cover
+        name = None
 
     return name

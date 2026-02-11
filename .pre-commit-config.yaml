@@ -35,6 +35,13 @@ repos:
         language: unsupported
         pass_filenames: false
 
+      # - id: local-ty
+      #   name: ty
+      #   entry: uv run ty check typer
+      #   require_serial: true
+      #   language: unsupported
+      #   pass_filenames: false
+
       - id: generate-readme
         language: unsupported
         name: generate README.md from index.md
