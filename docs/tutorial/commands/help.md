@@ -207,7 +207,7 @@ Typer installs **Rich** to allow for more formatting in the docstrings and the `
 /// info
 
 You can disable rich text formatting by setting `rich_markup_mode` to `None` for your specific app.
-Alternatively, you can disable it globally using an environmental variable "TYPER_USE_RICH" set to `False`/`0`.
+Alternatively, you can disable it globally using an environmental variable `TYPER_USE_RICH` set to `False` or `0`.
 
 ///
 
