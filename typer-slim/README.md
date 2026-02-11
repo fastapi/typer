@@ -44,7 +44,7 @@ If you want to disable Rich globally, you can set an environmental variable `TYP
 
 The only reason this package exists is as a migration path for old projects that used to depend on `typer-slim`, so that they can get the latest version of `typer`.
 
-You probably **should not** install this package.
+You **should not** install this package.
 
 Install instead:
 
