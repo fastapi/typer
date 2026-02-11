@@ -47,7 +47,7 @@ def pdm_build_initialize(context: Context) -> None:
     new_dependencies = []
     for dep in dependencies:
         if dep in sync_dependencies:
-            new_dep = f"{dep}=={version}"
+            new_dep = f"{dep}>={version}"
             new_dependencies.append(new_dep)
         else:
             new_dependencies.append(dep)
