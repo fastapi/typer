@@ -8,6 +8,7 @@
 
 ### Internal
 
+* 🔨 Tweak PDM hook script, remove unnecessary default. PR [#1536](https://github.com/fastapi/typer/pull/1536) by [@tiangolo](https://github.com/tiangolo).
 * ♻️ Simplify build setup scripts and configs for deprecated wrapper packages. PR [#1535](https://github.com/fastapi/typer/pull/1535) by [@tiangolo](https://github.com/tiangolo).
 
 ## 0.22.0
