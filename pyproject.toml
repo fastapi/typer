@@ -240,8 +240,6 @@ ignore = [
 "docs_src/progressbar/tutorial006_py39.py" = ["B007"]
 # Local variable `delete` is assigned to but never used
 "docs_src/prompt/tutorial003_py39.py" = ["F841"]
-# Loop control variable `x` not used within loop body
-"docs_src/using_click/tutorial001_py39.py" = ["B007"]
 # No need to worry about rich imports in docs
 "docs_src/*" = ["TID"]
 
