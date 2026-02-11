@@ -14,7 +14,7 @@ This code is broken because you can't sum a string and a number (`name + 3`).
 
 ## Exceptions with Rich
 
-If you have **Rich** installed (for example if you installed `"typer[all]"`), **Typer** will use it to automatically show you nicely printed errors.
+**Typer** will automatically use Rich to automatically show you nicely printed errors.
 
 It will **omit** all the parts of the traceback (the chain of things that called your function) that come from the internal parts in Typer and Click.
 
@@ -43,7 +43,9 @@ $ python main.py
 
 ## Exceptions without Rich
 
-If you don't have Rich installed, Typer will still do some tricks to show you the information **as clearly as possible**:
+You can disable Rich globally using the environmental variable `TYPER_USE_RICH`.
+
+In this case, Typer will still do some tricks to show you the information **as clearly as possible**:
 
 <div class="termy">
 
