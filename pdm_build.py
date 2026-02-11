@@ -10,10 +10,6 @@ def pdm_build_initialize(context: Context) -> None:
     metadata = context.config.metadata
     # Get main version
     version = metadata["version"]
-    # Get package names to keep in sync with the same main version
-    sync_dependencies: list[str] = context.config.data["tool"]["tiangolo"][
-        "_internal-slim-build"
-    ]["sync-dependencies"]
     # Get custom config for the current package, from the env var
     all_configs_config: dict[str, Any] = context.config.data["tool"]["tiangolo"][
         "_internal-slim-build"
@@ -39,10 +35,6 @@ def pdm_build_initialize(context: Context) -> None:
     # Sync versions in dependencies
     new_dependencies = []
     for dep in dependencies:
-        if dep in sync_dependencies:
-            new_dep = f"{dep}>={version}"
-            new_dependencies.append(new_dep)
-        else:
-            new_dependencies.append(dep)
-    if new_dependencies != dependencies:
-        metadata["dependencies"] = new_dependencies
+        new_dep = f"{dep}>={version}"
+        new_dependencies.append(new_dep)
+    metadata["dependencies"] = new_dependencies

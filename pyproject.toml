@@ -101,11 +101,6 @@ source-includes = [
     "scripts/",
 ]
 
-[tool.tiangolo._internal-slim-build]
-sync-dependencies = [
-    "typer"
-]
-
 [tool.tiangolo._internal-slim-build.packages.typer-slim.project]
 name = "typer-slim"
 readme = "typer-slim/README.md"
