@@ -28,6 +28,8 @@
 
 Typer is a library for building <abbr title="command line interface, programs executed from a terminal">CLI</abbr> applications that users will **love using** and developers will **love creating**. Based on Python type hints.
 
+It's also a command line tool to run scripts, automatically converting them to CLI applications.
+
 ## Typer CLI
 
 ⚠️ Do not install this package. ⚠️
