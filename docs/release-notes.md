@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Docs
+
+* 📝 Remove documentation pages that reference using Click directly. PR [#1538](https://github.com/fastapi/typer/pull/1538) by [@svlandeg](https://github.com/svlandeg).
+
 ### Internal
 
 * ⬆ Bump ty from 0.0.15 to 0.0.16. PR [#1533](https://github.com/fastapi/typer/pull/1533) by [@dependabot[bot]](https://github.com/apps/dependabot).
