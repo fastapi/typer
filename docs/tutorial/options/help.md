@@ -127,14 +127,6 @@ Options:
 
 </div>
 
-/// note | Technical Details
-
-In Click applications the default values are hidden by default. 🙈
-
-In **Typer** these default values are shown by default. 👀
-
-///
-
 ## Custom default string
 
 You can use the same `show_default` to pass a custom string (instead of a `bool`) to customize the default value to be shown in the help text:

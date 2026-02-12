@@ -112,14 +112,6 @@ Options:
 
 </div>
 
-/// note | Technical Details
-
-In Click applications the default values are hidden by default. 🙈
-
-In **Typer** these default values are shown by default. 👀
-
-///
-
 ## Custom default string
 
 You can use the same `show_default` to pass a custom string (instead of a `bool`) to customize the default value to be shown in the help text:
@@ -266,28 +258,10 @@ But it won't show up in the main help text under the `Arguments` section.
 
 ///
 
-### Help text for *CLI arguments* in Click
+### Help text for *CLI arguments*
 
-Click itself doesn't support adding help for *CLI arguments*, and it doesn't generate help for them as in the "`Arguments:`" sections in the examples above.
-
-Not supporting `help` in *CLI arguments* is an intentional <a href="https://click.palletsprojects.com/en/7.x/documentation/#documenting-arguments" class="external-link" target="_blank">design decision in Click</a>:
-
-> This is to follow the general convention of Unix tools of using arguments for only the most necessary things, and to document them in the command help text by referring to them by name.
-
-So, in Click applications, you are expected to write all the documentation for *CLI arguments* by hand in the <abbr title="a multi-line string as the first expression inside a function (not assigned to any variable) used for documentation">docstring</abbr>.
-
----
-
-Nevertheless, **Typer supports `help` for *CLI arguments***. ✨ 🤷‍♂
-
-**Typer** doesn't follow that convention and instead supports `help` to make it easier to have consistent help texts with a consistent format for your CLI programs. 🎨
+**Typer supports `help` for *CLI arguments*** to make it easier to have consistent help texts with a consistent format for your CLI programs. 🎨
 
 This is also to help you create CLI programs that are ✨ awesome ✨ *by default*. With very little code.
 
-If you want to keep Click's convention in a **Typer** app, you can do it with the `hidden` parameter as described above.
-
-/// note | Technical Details
-
-To support `help` in *CLI arguments* **Typer** does a lot of internal work in its own sub-classes of Click's internal classes.
-
-///
+If you don't want the CLI Argument to be shown in help outputs, you can set the `hidden` parameter to `True`.

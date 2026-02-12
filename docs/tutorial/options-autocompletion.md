@@ -124,9 +124,7 @@ So, in the end, we return a `list` of `tuples` of `str`:
 
 If you want to have help text for each item, make sure each item in the list is a `tuple`. Not a `list`.
 
-Click checks specifically for a `tuple` when extracting the help text.
-
-So in the end, the return will be a `list` (or other iterable) of `tuples` of 2 `str`.
+In the end, the return will be a `list` (or other iterable) of `tuples` of 2 `str`.
 
 ///
 
@@ -157,7 +155,7 @@ Sebastian  -- The type hints guy.
 
 Instead of creating and returning a list with values (`str` or `tuple`), we can use `yield` with each value that we want in the completion.
 
-That way our function will be a <a href="https://docs.python.org/3.8/glossary.html#index-19" class="external-link" target="_blank">generator</a> that **Typer** (actually Click) can iterate:
+That way our function will be a <a href="https://docs.python.org/3.8/glossary.html#index-19" class="external-link" target="_blank">generator</a> that **Typer** can iterate:
 
 {* docs_src/options_autocompletion/tutorial005_an_py39.py hl[12:15] *}
 
@@ -214,7 +212,7 @@ Hello Sebastian
 
 And the same way as before, we want to provide **completion** for those names. But we don't want to provide the **same names** for completion if they were already given in previous parameters.
 
-For that, we will access and use the "Context". When you create a **Typer** application it uses Click underneath. And every Click application has a special object called a <a href="https://click.palletsprojects.com/en/7.x/commands/#nested-handling-and-contexts" class="external-link" target="_blank">"Context"</a> that is normally hidden.
+For that, we will access and use the "Context". Every Typer application has a special object called a "Context" that is normally hidden.
 
 But you can access the context by declaring a function parameter of type `typer.Context`.
 
@@ -308,7 +306,7 @@ We get all the *CLI parameters* as a raw `list` of `str` by declaring a paramete
 
 /// tip
 
-Here we name the list of all the raw *CLI parameters* `args` because that's the convention with Click.
+Here we name the list of all the raw *CLI parameters* `args` because that's the usual convention.
 
 But it doesn't contain only *CLI arguments*, it has everything, including *CLI options* and values, as a raw `list` of `str`.
 
@@ -384,13 +382,3 @@ You can declare function parameters of these types:
 * `list[str]`: for the raw *CLI parameters*.
 
 It doesn't matter how you name them, in which order, or which ones of the 3 options you declare. It will all "**just work**" ✨
-
-## Comparison to Click functionality
-
-Note that Click 7 had a similar [`autocompletion` function](https://click.palletsprojects.com/en/7.x/bashcomplete/), but it worked slightly differently.
-
-It required the callback function to take exactly the 3 arguments `ctx`, `args` and `incomplete` in that exact order, instead of matching them dynamically based on types, as Typer does.
-
-Since Click 8, this functionality has been replaced by [`shell_complete`](https://click.palletsprojects.com/en/8.1.x/api/#click.ParamType.shell_complete), which still depends on the exact order of arguments for the callback function.
-
-However, Typer continues to use the `autocompletion` functionality as described on this page.

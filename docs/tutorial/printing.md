@@ -188,7 +188,7 @@ You can probably skip the rest of this section. 🎉😎
 
 ///
 
-**Typer** also has a small utility `typer.echo()` to print information on the screen, it comes directly from Click. But normally you shouldn't need it.
+**Typer** also has a small utility `typer.echo()` to print information on the screen. But normally you shouldn't need it.
 
 For the simplest cases, you can use the standard Python `print()`.
 
@@ -203,12 +203,6 @@ But in most of the cases you wouldn't need it, as in modern Python strings (`str
 If you have some `bytes` objects, you would probably want to decode them intentionally and directly before trying to print them.
 
 And if you want to print data with colors and other features, you are much better off with the more advanced tools in **Rich**.
-
-/// info
-
-`typer.echo()` comes directly from Click, you can read more about it in <a href="https://click.palletsprojects.com/en/7.x/quickstart/#echoing" class="external-link" target="_blank">Click's docs</a>.
-
-///
 
 ### Color
 
@@ -257,12 +251,6 @@ You can pass these function arguments to `typer.style()`:
 * `blink`: enable or disable blinking.
 * `reverse`: enable or disable inverse rendering (foreground becomes background and the other way round).
 * `reset`: by default a reset-all code is added at the end of the string which means that styles do not carry over.  This can be disabled to compose styles.
-
-/// info
-
-You can read more about it in <a href="https://click.palletsprojects.com/en/7.x/api/#click.style" class="external-link" target="_blank">Click's docs about `style()`</a>
-
-///
 
 ### `typer.secho()` - style and print
 

@@ -75,13 +75,7 @@ If you can use Rich, use the information above, the Rich docs, and skip the rest
 
 ///
 
-But if you can't use Rich and have it disabled, Typer (actually Click) comes with a simple utility to show progress bars.
-
-/// info
-
-`typer.progressbar()` comes directly from Click, you can read more about it in <a href="https://click.palletsprojects.com/en/8.1.x/utils/#showing-progress-bars" class="external-link" target="_blank">Click's docs</a>.
-
-///
+But if you can't use Rich and have it disabled, Typer comes with a simple utility to show progress bars.
 
 ### Use `typer.progressbar`
 
@@ -113,7 +107,7 @@ with typer.progressbar(users) as progress:
 
 And the `with` statement using `typer.progressbar()` gives you an object that you can iterate over, just like if it was the same thing that you would iterate over normally.
 
-But by iterating over this object **Typer** (actually Click) will know to update the progress bar:
+But by iterating over this object **Typer** will know to update the progress bar:
 
 ```Python
 users = ["Camila", "Rick", "Morty"]
