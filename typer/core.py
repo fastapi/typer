@@ -27,11 +27,11 @@ from ._typing import Literal
 MarkupMode = Literal["markdown", "rich", None]
 MARKUP_MODE_KEY = "TYPER_RICH_MARKUP_MODE"
 
-HAS_RICH = os.getenv("TYPER_USE_RICH", True)
+HAS_RICH = os.getenv("TYPER_USE_RICH") not in {"0", "false", "False", "FALSE"}
 
 if HAS_RICH:
     DEFAULT_MARKUP_MODE: MarkupMode = "rich"
-else:  # pragma: no cover
+else:
     DEFAULT_MARKUP_MODE = None
 
 

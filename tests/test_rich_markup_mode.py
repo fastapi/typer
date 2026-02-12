@@ -1,3 +1,7 @@
+import os
+import subprocess
+import sys
+
 import pytest
 import typer
 import typer.completion
@@ -40,6 +44,68 @@ def test_rich_markup_mode_rich():
 
     result = runner.invoke(app, ["--help"])
     assert any(c in result.stdout for c in rounded)
+
+
+def test_rich_markup_mode_disabled():
+    # for windows to not render as ascii
+    windows_support = {
+        "RICH_FORCE_TERMINAL": "1",
+        "PYTHONUTF8": "1",
+        "PYTHONIOENCODING": "utf-8",
+    }
+    # verify enabling rich works
+    result_rich = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "coverage",
+            "run",
+            "-m",
+            "typer",
+            "tests/assets/cli/sample.py",
+            "--help",
+        ],
+        capture_output=True,
+        env={**os.environ, "TYPER_USE_RICH": "1", **windows_support},
+        encoding="utf-8",
+    )
+    assert any(c in result_rich.stdout for c in rounded)
+
+    # verify TYPER_USE_RICH = 0 works
+    result_no_rich1 = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "coverage",
+            "run",
+            "-m",
+            "typer",
+            "tests/assets/cli/sample.py",
+            "--help",
+        ],
+        capture_output=True,
+        env={**os.environ, "TYPER_USE_RICH": "0", **windows_support},
+        encoding="utf-8",
+    )
+    assert not any(c in result_no_rich1.stdout for c in rounded)
+
+    # verify TYPER_USE_RICH = False works
+    result_no_rich2 = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "coverage",
+            "run",
+            "-m",
+            "typer",
+            "tests/assets/cli/sample.py",
+            "--help",
+        ],
+        capture_output=True,
+        env={**os.environ, "TYPER_USE_RICH": "False", **windows_support},
+        encoding="utf-8",
+    )
+    assert not any(c in result_no_rich2.stdout for c in rounded)
 
 
 @pytest.mark.parametrize(
