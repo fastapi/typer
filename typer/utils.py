@@ -1,5 +1,4 @@
 import inspect
-import sys
 from copy import copy
 from typing import Any, Callable, cast
 
@@ -105,10 +104,7 @@ def _split_annotation_from_typer_annotations(
 
 
 def get_params_from_function(func: Callable[..., Any]) -> dict[str, ParamMeta]:
-    if sys.version_info >= (3, 10):
-        signature = inspect.signature(func, eval_str=True)
-    else:
-        signature = inspect.signature(func)
+    signature = inspect.signature(func, eval_str=True)
 
     type_hints = get_type_hints(func)
     params = {}

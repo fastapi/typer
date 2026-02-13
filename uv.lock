@@ -2467,8 +2467,6 @@ name = "typer"
 source = { editable = "." }
 dependencies = [
     { name = "annotated-doc" },
-    { name = "click", version = "8.1.8", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
-    { name = "click", version = "8.3.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
     { name = "rich" },
     { name = "shellingham" },
 ]
@@ -2543,7 +2541,6 @@ tests = [
 [package.metadata]
 requires-dist = [
     { name = "annotated-doc", specifier = ">=0.0.2" },
-    { name = "click", specifier = ">=8.0.0" },
     { name = "rich", specifier = ">=10.11.0" },
     { name = "shellingham", specifier = ">=1.3.0" },
 ]

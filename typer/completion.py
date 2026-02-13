@@ -3,8 +3,7 @@ import sys
 from collections.abc import MutableMapping
 from typing import Any
 
-import click
-
+from . import _click
 from ._completion_classes import completion_init
 from ._completion_shared import Shells, _get_shell_name, get_completion_script, install
 from .models import ParamMeta
@@ -27,19 +26,19 @@ def get_completion_inspect_parameters() -> tuple[ParamMeta, ParamMeta]:
     return install_param, show_param
 
 
-def install_callback(ctx: click.Context, param: click.Parameter, value: Any) -> Any:
+def install_callback(ctx: _click.Context, param: _click.Parameter, value: Any) -> Any:
     if not value or ctx.resilient_parsing:
         return value  # pragma: no cover
     if isinstance(value, str):
         shell, path = install(shell=value)
     else:
         shell, path = install()
-    click.secho(f"{shell} completion installed in {path}", fg="green")
-    click.echo("Completion will take effect once you restart the terminal")
+    _click.secho(f"{shell} completion installed in {path}", fg="green")
+    _click.echo("Completion will take effect once you restart the terminal")
     sys.exit(0)
 
 
-def show_callback(ctx: click.Context, param: click.Parameter, value: Any) -> Any:
+def show_callback(ctx: _click.Context, param: _click.Parameter, value: Any) -> Any:
     if not value or ctx.resilient_parsing:
         return value  # pragma: no cover
     prog_name = ctx.find_root().info_name
@@ -56,7 +55,7 @@ def show_callback(ctx: click.Context, param: click.Parameter, value: Any) -> Any
     script_content = get_completion_script(
         prog_name=prog_name, complete_var=complete_var, shell=shell
     )
-    click.echo(script_content)
+    _click.echo(script_content)
     sys.exit(0)
 
 
@@ -103,17 +102,16 @@ def _install_completion_no_auto_placeholder_function(
 # And to add extra error messages, for compatibility with Typer in previous versions
 # This is only called in new Command method, only used by Click 8.x+
 def shell_complete(
-    cli: click.Command,
+    cli: _click.Command,
     ctx_args: MutableMapping[str, Any],
     prog_name: str,
     complete_var: str,
     instruction: str,
 ) -> int:
-    import click
-    import click.shell_completion
+    from . import _click
 
     if "_" not in instruction:
-        click.echo("Invalid completion instruction.", err=True)
+        _click.echo("Invalid completion instruction.", err=True)
         return 1
 
     # Click 8 changed the order/style of shell instructions from e.g.
@@ -124,23 +122,23 @@ def shell_complete(
     instruction, _, shell = instruction.partition("_")
     # Typer override end
 
-    comp_cls = click.shell_completion.get_completion_class(shell)
+    comp_cls = _click.shell_completion.get_completion_class(shell)
 
     if comp_cls is None:
-        click.echo(f"Shell {shell} not supported.", err=True)
+        _click.echo(f"Shell {shell} not supported.", err=True)
         return 1
 
     comp = comp_cls(cli, ctx_args, prog_name, complete_var)
 
     if instruction == "source":
-        click.echo(comp.source())
+        _click.echo(comp.source())
         return 0
 
     # Typer override to print the completion help msg with Rich
     if instruction == "complete":
-        click.echo(comp.complete())
+        _click.echo(comp.complete())
         return 0
     # Typer override end
 
-    click.echo(f'Completion instruction "{instruction}" not supported.', err=True)
+    _click.echo(f'Completion instruction "{instruction}" not supported.', err=True)
     return 1

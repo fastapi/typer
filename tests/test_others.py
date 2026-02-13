@@ -6,11 +6,11 @@ from pathlib import Path
 from typing import Annotated
 from unittest import mock
 
-import click
 import pytest
 import typer
 import typer._completion_shared
 import typer.completion
+from typer import _click
 from typer.core import _split_opt
 from typer.main import solve_typer_info_defaults, solve_typer_info_help
 from typer.models import ParameterInfo, TyperInfo
@@ -37,14 +37,14 @@ def test_too_many_parsers():
     def custom_parser(value: str) -> int:
         return int(value)  # pragma: no cover
 
-    class CustomClickParser(click.ParamType):
+    class CustomClickParser(_click.ParamType):
         name = "custom_parser"
 
         def convert(
             self,
             value: str,
-            param: typing.Optional[click.Parameter],
-            ctx: typing.Optional[click.Context],
+            param: typing.Optional[_click.Parameter],
+            ctx: typing.Optional[_click.Context],
         ) -> typing.Any:
             return int(value)  # pragma: no cover
 
@@ -61,14 +61,14 @@ def test_valid_parser_permutations():
     def custom_parser(value: str) -> int:
         return int(value)  # pragma: no cover
 
-    class CustomClickParser(click.ParamType):
+    class CustomClickParser(_click.ParamType):
         name = "custom_parser"
 
         def convert(
             self,
             value: str,
-            param: typing.Optional[click.Parameter],
-            ctx: typing.Optional[click.Context],
+            param: typing.Optional[_click.Parameter],
+            ctx: typing.Optional[_click.Context],
         ) -> typing.Any:
             return int(value)  # pragma: no cover
 
@@ -104,7 +104,7 @@ def test_callback_too_many_parameters():
     def main(name: str = typer.Option(..., callback=name_callback)):
         pass  # pragma: no cover
 
-    with pytest.raises(click.ClickException) as exc_info:
+    with pytest.raises(_click.ClickException) as exc_info:
         runner.invoke(app, ["--name", "Camila"])
     assert (
         exc_info.value.message == "Too many CLI parameter callback function parameters"
@@ -268,7 +268,7 @@ def test_autocompletion_too_many_parameters():
     def main(name: str = typer.Option(..., autocompletion=name_callback)):
         pass  # pragma: no cover
 
-    with pytest.raises(click.ClickException) as exc_info:
+    with pytest.raises(_click.ClickException) as exc_info:
         runner.invoke(app, ["--name", "Camila"])
     assert exc_info.value.message == "Invalid autocompletion callback parameters: val2"
 

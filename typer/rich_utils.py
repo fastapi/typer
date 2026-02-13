@@ -8,7 +8,6 @@ from gettext import gettext as _
 from os import getenv
 from typing import Any, Literal, Optional, Union
 
-import click
 from rich import box
 from rich.align import Align
 from rich.columns import Columns
@@ -24,6 +23,8 @@ from rich.text import Text
 from rich.theme import Theme
 from rich.traceback import Traceback
 from typer.models import DeveloperExceptionConfig
+
+from . import _click
 
 # Default styles
 STYLE_OPTION = "bold cyan"
@@ -184,7 +185,7 @@ def _make_rich_text(
 @group()
 def _get_help_text(
     *,
-    obj: Union[click.Command, click.Group],
+    obj: Union[_click.Command, _click.Group],
     markup_mode: MarkupModeStrict,
 ) -> Iterable[Union[Markdown, Text]]:
     """Build primary help text for a click command or group.
@@ -231,8 +232,8 @@ def _get_help_text(
 
 def _get_parameter_help(
     *,
-    param: Union[click.Option, click.Argument, click.Parameter],
-    ctx: click.Context,
+    param: Union[_click.Option, _click.Argument, _click.Parameter],
+    ctx: _click.Context,
     markup_mode: MarkupModeStrict,
 ) -> Columns:
     """Build primary help text for a click option or argument.
@@ -348,8 +349,8 @@ def _make_command_help(
 def _print_options_panel(
     *,
     name: str,
-    params: Union[list[click.Option], list[click.Argument]],
-    ctx: click.Context,
+    params: Union[list[_click.Option], list[_click.Argument]],
+    ctx: _click.Context,
     markup_mode: MarkupModeStrict,
     console: Console,
 ) -> None:
@@ -374,17 +375,11 @@ def _print_options_panel(
 
         # Column for a metavar, if we have one
         metavar = Text(style=STYLE_METAVAR, overflow="fold")
-        # TODO: when deprecating Click < 8.2, make ctx required
-        signature = inspect.signature(param.make_metavar)
-        if "ctx" in signature.parameters:
-            metavar_str = param.make_metavar(ctx=ctx)
-        else:
-            # Click < 8.2
-            metavar_str = param.make_metavar()  # type: ignore[call-arg]
+        metavar_str = param.make_metavar(ctx=ctx)
 
         # Do it ourselves if this is a positional argument
         if (
-            isinstance(param, click.Argument)
+            isinstance(param, _click.Argument)
             and param.name
             and metavar_str == param.name.upper()
         ):
@@ -398,8 +393,8 @@ def _print_options_panel(
         # https://github.com/pallets/click/blob/c63c70dabd3f86ca68678b4f00951f78f52d0270/src/click/core.py#L2698-L2706  # noqa: E501
         # skip count with default range type
         if (
-            isinstance(param.type, click.types._NumberRangeBase)
-            and isinstance(param, click.Option)
+            isinstance(param.type, _click.types._NumberRangeBase)
+            and isinstance(param, _click.Option)
             and not (param.count and param.type.min == 0 and param.type.max is None)
         ):
             range_str = param.type._describe_range()
@@ -466,7 +461,7 @@ def _print_options_panel(
 def _print_commands_panel(
     *,
     name: str,
-    commands: list[click.Command],
+    commands: list[_click.Command],
     markup_mode: MarkupModeStrict,
     console: Console,
     cmd_len: int,
@@ -541,8 +536,8 @@ def _print_commands_panel(
 
 def rich_format_help(
     *,
-    obj: Union[click.Command, click.Group],
-    ctx: click.Context,
+    obj: Union[_click.Command, _click.Group],
+    ctx: _click.Context,
     markup_mode: MarkupModeStrict,
 ) -> None:
     """Print nicely formatted help text using rich.
@@ -575,18 +570,18 @@ def rich_format_help(
                 (0, 1, 1, 1),
             )
         )
-    panel_to_arguments: defaultdict[str, list[click.Argument]] = defaultdict(list)
-    panel_to_options: defaultdict[str, list[click.Option]] = defaultdict(list)
+    panel_to_arguments: defaultdict[str, list[_click.Argument]] = defaultdict(list)
+    panel_to_options: defaultdict[str, list[_click.Option]] = defaultdict(list)
     for param in obj.get_params(ctx):
         # Skip if option is hidden
         if getattr(param, "hidden", False):
             continue
-        if isinstance(param, click.Argument):
+        if isinstance(param, _click.Argument):
             panel_name = (
                 getattr(param, _RICH_HELP_PANEL_NAME, None) or ARGUMENTS_PANEL_TITLE
             )
             panel_to_arguments[panel_name].append(param)
-        elif isinstance(param, click.Option):
+        elif isinstance(param, _click.Option):
             panel_name = (
                 getattr(param, _RICH_HELP_PANEL_NAME, None) or OPTIONS_PANEL_TITLE
             )
@@ -630,8 +625,8 @@ def rich_format_help(
             console=console,
         )
 
-    if isinstance(obj, click.Group):
-        panel_to_commands: defaultdict[str, list[click.Command]] = defaultdict(list)
+    if isinstance(obj, _click.Group):
+        panel_to_commands: defaultdict[str, list[_click.Command]] = defaultdict(list)
         for command_name in obj.list_commands(ctx):
             command = obj.get_command(ctx, command_name)
             if command and not command.hidden:
@@ -681,18 +676,18 @@ def rich_format_help(
         console.print(Padding(Align(epilogue_text, pad=False), 1))
 
 
-def rich_format_error(self: click.ClickException) -> None:
+def rich_format_error(self: _click.ClickException) -> None:
     """Print richly formatted click errors.
 
     Called by custom exception handler to print richly formatted click errors.
-    Mimics original click.ClickException.echo() function but with rich formatting.
+    Mimics original _click.ClickException.echo() function but with rich formatting.
     """
     # Don't do anything when it's a NoArgsIsHelpError (without importing it, cf. #1278)
     if self.__class__.__name__ == "NoArgsIsHelpError":
         return
 
     console = _get_rich_console(stderr=True)
-    ctx: Union[click.Context, None] = getattr(self, "ctx", None)
+    ctx: Union[_click.Context, None] = getattr(self, "ctx", None)
     if ctx is not None:
         console.print(ctx.get_usage())
 

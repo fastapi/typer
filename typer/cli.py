@@ -4,12 +4,11 @@ import sys
 from pathlib import Path
 from typing import Any, Optional
 
-import click
 import typer
 import typer.core
-from click import Command, Group, Option
 
-from . import __version__
+from . import __version__, _click
+from ._click import Command, Group, Option
 from .core import HAS_RICH, MARKUP_MODE_KEY
 
 default_app_names = ("app", "cli", "main")
@@ -31,7 +30,7 @@ class State:
 state = State()
 
 
-def maybe_update_state(ctx: click.Context) -> None:
+def maybe_update_state(ctx: _click.Context) -> None:
     path_or_module = ctx.params.get("path_or_module")
     if path_or_module:
         file_path = Path(path_or_module)
@@ -53,19 +52,19 @@ def maybe_update_state(ctx: click.Context) -> None:
 
 
 class TyperCLIGroup(typer.core.TyperGroup):
-    def list_commands(self, ctx: click.Context) -> list[str]:
+    def list_commands(self, ctx: _click.Context) -> list[str]:
         self.maybe_add_run(ctx)
         return super().list_commands(ctx)
 
-    def get_command(self, ctx: click.Context, name: str) -> Optional[Command]:  # ty: ignore[invalid-method-override]
+    def get_command(self, ctx: _click.Context, name: str) -> Optional[Command]:  # ty: ignore[invalid-method-override]
         self.maybe_add_run(ctx)
         return super().get_command(ctx, name)
 
-    def invoke(self, ctx: click.Context) -> Any:
+    def invoke(self, ctx: _click.Context) -> Any:
         self.maybe_add_run(ctx)
         return super().invoke(ctx)
 
-    def maybe_add_run(self, ctx: click.Context) -> None:
+    def maybe_add_run(self, ctx: _click.Context) -> None:
         maybe_update_state(ctx)
         maybe_add_run_to_cli(self)
 
@@ -137,7 +136,7 @@ def get_typer_from_state() -> Optional[typer.Typer]:
     return obj
 
 
-def maybe_add_run_to_cli(cli: click.Group) -> None:
+def maybe_add_run_to_cli(cli: _click.Group) -> None:
     if "run" not in cli.commands:
         if state.file or state.module:
             obj = get_typer_from_state()
@@ -150,7 +149,7 @@ def maybe_add_run_to_cli(cli: click.Group) -> None:
                 cli.add_command(click_obj)
 
 
-def print_version(ctx: click.Context, param: Option, value: bool) -> None:
+def print_version(ctx: _click.Context, param: Option, value: bool) -> None:
     if not value or ctx.resilient_parsing:
         return
     typer.echo(f"Typer version: {__version__}")

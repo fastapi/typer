@@ -1,7 +1,7 @@
 from typing import Annotated
 
-import click
 import typer
+from typer import _click
 
 
 class CustomClass:
@@ -12,7 +12,7 @@ class CustomClass:
         return f"<CustomClass: value={self.value}>"
 
 
-class CustomClassParser(click.ParamType):
+class CustomClassParser(_click.ParamType):
     name = "CustomClass"
 
     def convert(self, value, param, ctx):

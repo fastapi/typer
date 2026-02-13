@@ -34,7 +34,6 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
-    "click >= 8.0.0",
     "shellingham >=1.3.0",
     "rich >=10.11.0",
     "annotated-doc >=0.0.2",
@@ -240,13 +239,11 @@ ignore = [
 "docs_src/progressbar/tutorial006_py39.py" = ["B007"]
 # Local variable `delete` is assigned to but never used
 "docs_src/prompt/tutorial003_py39.py" = ["F841"]
-# Loop control variable `x` not used within loop body
-"docs_src/using_click/tutorial001_py39.py" = ["B007"]
 # No need to worry about rich imports in docs
 "docs_src/*" = ["TID"]
 
 [tool.ruff.lint.isort]
-known-third-party = ["typer", "click"]
+known-third-party = ["typer"]
 # For docs_src/subcommands/tutorial003/
 known-first-party = ["reigns", "towns", "lands", "items", "users"]
 

@@ -1,12 +1,12 @@
 from typing import TYPE_CHECKING, Annotated, Any, Callable, Optional, Union, overload
 
-import click
 from annotated_doc import Doc
 
+from . import _click
 from .models import ArgumentInfo, OptionInfo
 
 if TYPE_CHECKING:  # pragma: no cover
-    import click.shell_completion
+    pass
 
 
 # Overload for Option created with custom type 'parser'
@@ -24,8 +24,8 @@ def Option(
     # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Optional[
         Callable[
-            [click.Context, click.Parameter, str],
-            Union[list["click.shell_completion.CompletionItem"], list[str]],
+            [_click.Context, _click.Parameter, str],
+            Union[list["_click.shell_completion.CompletionItem"], list[str]],
         ]
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
@@ -90,14 +90,14 @@ def Option(
     # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Optional[
         Callable[
-            [click.Context, click.Parameter, str],
-            Union[list["click.shell_completion.CompletionItem"], list[str]],
+            [_click.Context, _click.Parameter, str],
+            Union[list["_click.shell_completion.CompletionItem"], list[str]],
         ]
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
     default_factory: Optional[Callable[[], Any]] = None,
     # Custom type
-    click_type: Optional[click.ParamType] = None,
+    click_type: Optional[_click.ParamType] = None,
     # Option
     show_default: Union[bool, str] = True,
     prompt: Union[bool, str] = False,
@@ -267,8 +267,8 @@ def Option(
     shell_complete: Annotated[
         Optional[
             Callable[
-                [click.Context, click.Parameter, str],
-                Union[list["click.shell_completion.CompletionItem"], list[str]],
+                [_click.Context, _click.Parameter, str],
+                Union[list["_click.shell_completion.CompletionItem"], list[str]],
             ]
         ],
         Doc(
@@ -345,7 +345,7 @@ def Option(
         ),
     ] = None,
     click_type: Annotated[
-        Optional[click.ParamType],
+        Optional[_click.ParamType],
         Doc(
             """
             Define this parameter to use a [custom Click type](https://click.palletsprojects.com/en/stable/parameters/#implementing-custom-types) in your Typer applications.
@@ -1017,8 +1017,8 @@ def Argument(
     # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Optional[
         Callable[
-            [click.Context, click.Parameter, str],
-            Union[list["click.shell_completion.CompletionItem"], list[str]],
+            [_click.Context, _click.Parameter, str],
+            Union[list["_click.shell_completion.CompletionItem"], list[str]],
         ]
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
@@ -1074,14 +1074,14 @@ def Argument(
     # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Optional[
         Callable[
-            [click.Context, click.Parameter, str],
-            Union[list["click.shell_completion.CompletionItem"], list[str]],
+            [_click.Context, _click.Parameter, str],
+            Union[list["_click.shell_completion.CompletionItem"], list[str]],
         ]
     ] = None,
     autocompletion: Optional[Callable[..., Any]] = None,
     default_factory: Optional[Callable[[], Any]] = None,
     # Custom type
-    click_type: Optional[click.ParamType] = None,
+    click_type: Optional[_click.ParamType] = None,
     # TyperArgument
     show_default: Union[bool, str] = True,
     show_choices: bool = True,
@@ -1224,8 +1224,8 @@ def Argument(
     shell_complete: Annotated[
         Optional[
             Callable[
-                [click.Context, click.Parameter, str],
-                Union[list["click.shell_completion.CompletionItem"], list[str]],
+                [_click.Context, _click.Parameter, str],
+                Union[list["_click.shell_completion.CompletionItem"], list[str]],
             ]
         ],
         Doc(
@@ -1302,7 +1302,7 @@ def Argument(
         ),
     ] = None,
     click_type: Annotated[
-        Optional[click.ParamType],
+        Optional[_click.ParamType],
         Doc(
             """
             Define this parameter to use a [custom Click type](https://click.palletsprojects.com/en/stable/parameters/#implementing-custom-types) in your Typer applications.

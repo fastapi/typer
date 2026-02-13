@@ -10,8 +10,7 @@ from typing import (
     Union,
 )
 
-import click
-import click.shell_completion
+from . import _click
 
 if TYPE_CHECKING:  # pragma: no cover
     from .core import TyperCommand, TyperGroup
@@ -25,7 +24,7 @@ AnyType = type[Any]
 Required = ...
 
 
-class Context(click.Context):
+class Context(_click.Context):
     """
     The [`Context`](https://click.palletsprojects.com/en/stable/api/#click.Context) has some additional data about the current execution of your program.
     When declaring it in a [callback](https://typer.tiangolo.com/tutorial/options/callback-and-context/) function,
@@ -155,7 +154,7 @@ class FileBinaryWrite(io.BufferedWriter):
     pass
 
 
-class CallbackParam(click.Parameter):
+class CallbackParam(_click.Parameter):
     """
     In a callback function, you can declare a function parameter with type `CallbackParam`
     to access the specific Click [`Parameter`](https://click.palletsprojects.com/en/stable/api/#click.Parameter) object.
@@ -289,15 +288,15 @@ class ParameterInfo:
         # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Optional[
             Callable[
-                [click.Context, click.Parameter, str],
-                Union[list["click.shell_completion.CompletionItem"], list[str]],
+                [_click.Context, _click.Parameter, str],
+                Union[list["_click.shell_completion.CompletionItem"], list[str]],
             ]
         ] = None,
         autocompletion: Optional[Callable[..., Any]] = None,
         default_factory: Optional[Callable[[], Any]] = None,
         # Custom type
         parser: Optional[Callable[[str], Any]] = None,
-        click_type: Optional[click.ParamType] = None,
+        click_type: Optional[_click.ParamType] = None,
         # TyperArgument
         show_default: Union[bool, str] = True,
         show_choices: bool = True,
@@ -399,15 +398,15 @@ class OptionInfo(ParameterInfo):
         # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Optional[
             Callable[
-                [click.Context, click.Parameter, str],
-                Union[list["click.shell_completion.CompletionItem"], list[str]],
+                [_click.Context, _click.Parameter, str],
+                Union[list["_click.shell_completion.CompletionItem"], list[str]],
             ]
         ] = None,
         autocompletion: Optional[Callable[..., Any]] = None,
         default_factory: Optional[Callable[[], Any]] = None,
         # Custom type
         parser: Optional[Callable[[str], Any]] = None,
-        click_type: Optional[click.ParamType] = None,
+        click_type: Optional[_click.ParamType] = None,
         # Option
         show_default: Union[bool, str] = True,
         prompt: Union[bool, str] = False,
@@ -528,15 +527,15 @@ class ArgumentInfo(ParameterInfo):
         # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Optional[
             Callable[
-                [click.Context, click.Parameter, str],
-                Union[list["click.shell_completion.CompletionItem"], list[str]],
+                [_click.Context, _click.Parameter, str],
+                Union[list["_click.shell_completion.CompletionItem"], list[str]],
             ]
         ] = None,
         autocompletion: Optional[Callable[..., Any]] = None,
         default_factory: Optional[Callable[[], Any]] = None,
         # Custom type
         parser: Optional[Callable[[str], Any]] = None,
-        click_type: Optional[click.ParamType] = None,
+        click_type: Optional[_click.ParamType] = None,
         # TyperArgument
         show_default: Union[bool, str] = True,
         show_choices: bool = True,
@@ -645,11 +644,11 @@ class DeveloperExceptionConfig:
         self.pretty_exceptions_short = pretty_exceptions_short
 
 
-class TyperPath(click.Path):
+class TyperPath(_click.Path):
     # Overwrite Click's behaviour to be compatible with Typer's autocompletion system
     def shell_complete(
-        self, ctx: click.Context, param: click.Parameter, incomplete: str
-    ) -> list[click.shell_completion.CompletionItem]:
+        self, ctx: _click.Context, param: _click.Parameter, incomplete: str
+    ) -> list[_click.shell_completion.CompletionItem]:
         """Return an empty list so that the autocompletion functionality
         will work properly from the commandline.
         """
