@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.23.1
+
 ### Fixes
 
 * 🐛 Fix `TYPER_USE_RICH` parsing to allow disabling Rich completely. PR [#1539](https://github.com/fastapi/typer/pull/1539) by [@bckohan](https://github.com/bckohan).
