@@ -57,6 +57,7 @@ def test_rich_markup_mode_rich():
         ("False", False),
         ("FALSE", False),
         ("false", False),
+        ("somerandomvalue", True),
     ],
 )
 def test_rich_markup_mode_envvar(env_var_value: str, expected_result: bool):
