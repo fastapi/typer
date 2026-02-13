@@ -23,11 +23,12 @@ import click.types
 import click.utils
 
 from ._typing import Literal
+from .utils import parse_boolean_env_var
 
 MarkupMode = Literal["markdown", "rich", None]
 MARKUP_MODE_KEY = "TYPER_RICH_MARKUP_MODE"
 
-HAS_RICH = os.getenv("TYPER_USE_RICH") not in {"0", "false", "False", "FALSE"}
+HAS_RICH = parse_boolean_env_var(os.getenv("TYPER_USE_RICH"), default=True)
 
 if HAS_RICH:
     DEFAULT_MARKUP_MODE: MarkupMode = "rich"
