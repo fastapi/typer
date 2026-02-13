@@ -72,7 +72,11 @@ def test_rich_markup_mode_envvar(env_var_value: str, expected_result: bool):
             "--help",
         ],
         capture_output=True,
-        env={**os.environ, "TYPER_USE_RICH": env_var_value, "PYTHONIOENCODING": "utf-8"},
+        env={
+            **os.environ,
+            "TYPER_USE_RICH": env_var_value,
+            "PYTHONIOENCODING": "utf-8",
+        },
         encoding="utf-8",
     )
     assert any(c in result.stdout for c in rounded) == expected_result
