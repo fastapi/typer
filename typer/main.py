@@ -2012,4 +2012,4 @@ def launch(
         return 0
 
     else:
-        return click.launch(url)
+        return click.launch(url, wait=wait, locate=locate)
