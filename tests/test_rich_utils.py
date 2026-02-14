@@ -108,7 +108,7 @@ def test_rich_markup_import_regression():
 @pytest.mark.parametrize("input_text", ["[ARGS]", "[ARGS]..."])
 def test_metavar_highlighter(input_text: str):
     """
-    Test that the MetavarHighlighter works correctly.
+    Test that the TypesHighlighter (used to be the MetavarHighlighter) works correctly.
     cf PR 1508
     """
     from typer.rich_utils import (
@@ -128,10 +128,10 @@ def test_metavar_highlighter(input_text: str):
     opening_bracket_style = highlighted.get_style_at_offset(console, 0)
     closing_bracket_style = highlighted.get_style_at_offset(console, 5)
 
-    # The opening bracket should have metavar_sep style
+    # The opening bracket should have types_sep style
     assert str(opening_bracket_style) == STYLE_TYPES_SEPARATOR
 
-    # The closing bracket should have metavar_sep style (fails before PR 1508 when there are 3 dots)
+    # The closing bracket should have types_sep style (fails before PR 1508 when there are 3 dots)
     assert str(closing_bracket_style) == STYLE_TYPES_SEPARATOR
 
 

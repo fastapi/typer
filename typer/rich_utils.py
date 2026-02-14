@@ -126,7 +126,7 @@ class TypesHighlighter(RegexHighlighter):
     highlights = [
         r"^(?P<types_sep>(\[|<))",
         r"(?P<types_sep>\|)",
-        r"(?P<types_sep>(\]|>)$)",
+        r"(?P<types_sep>(\]|>))(\.\.\.)?$",
     ]
 
 
