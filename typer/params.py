@@ -1472,7 +1472,7 @@ def Argument(
         bool,
         Doc(
             """
-            For a CLI Option representing an [Enum (choice)](https://typer.tiangolo.com/tutorial/parameter-types/enum),
+            For a CLI Argument representing an [Enum (choice)](https://typer.tiangolo.com/tutorial/parameter-types/enum),
             accept names from the command line instead of values.
 
             **Example**
