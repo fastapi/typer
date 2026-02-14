@@ -116,11 +116,3 @@ Hello Mr. Wednesday
 ```
 
 </div>
-
-/// note | Technical Details
-
-In Click applications the env vars are hidden by default. 🙈
-
-In **Typer** these env vars are shown by default. 👀
-
-///

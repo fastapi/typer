@@ -162,18 +162,6 @@ Commands:
 
 </div>
 
-## Click Group
-
-If you come from Click, a `typer.Typer` app with subcommands is more or less the equivalent of a <a href="https://click.palletsprojects.com/en/7.x/quickstart/#nesting-commands" class="external-link" target="_blank">Click Group</a>.
-
-/// note | Technical Details
-
-A `typer.Typer` app is *not* a Click Group, but it provides the equivalent functionality. And it creates a Click Group when calling it.
-
-It is not directly a Group because **Typer** doesn't modify the functions in your code to convert them to another type of object, it only registers them.
-
-///
-
 ## Decorator Technical Details
 
 When you use `@app.command()` the function under the decorator is registered in the **Typer** application and is then used later by the application.
@@ -181,11 +169,3 @@ When you use `@app.command()` the function under the decorator is registered in 
 But Typer doesn't modify that function itself, the function is left as is.
 
 That means that if your function is simple enough that you could create it without using `typer.Option()` or `typer.Argument()`, you could use the same function for a **Typer** application and a **FastAPI** application putting both decorators on top, or similar tricks.
-
-/// note | Click Technical Details
-
-This behavior is a design difference with Click.
-
-In Click, when you add a `@click.command()` decorator it actually modifies the function underneath and replaces it with an object.
-
-///

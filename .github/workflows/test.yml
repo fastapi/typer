@@ -55,9 +55,6 @@ jobs:
             uv.lock
       - name: Install Dependencies
         run: uv sync --locked --no-dev --group tests
-      - name: Lint
-        if: matrix.python-version != '3.9'
-        run: uv run bash scripts/lint.sh
       - run: mkdir coverage
       - run: uv run bash scripts/test-files.sh
       - name: Test

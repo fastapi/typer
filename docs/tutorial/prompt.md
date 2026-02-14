@@ -75,7 +75,7 @@ Aborted!
 
 ## Prompt with Rich
 
-If you installed Rich as described in [Printing and Colors](printing.md){.internal-link target=_blank}, you can use Rich to prompt the user for input:
+You can use Rich to prompt the user for input:
 
 {* docs_src/prompt/tutorial004_py39.py hl[2,9] *}
 
