@@ -159,27 +159,3 @@ Creating user: Camila
 ```
 
 </div>
-
-## Click Group
-
-If you come from Click, this **Typer** callback is the equivalent of the function in a <a href="https://click.palletsprojects.com/en/7.x/quickstart/#nesting-commands" class="external-link" target="_blank">Click Group</a>.
-
-For example:
-
-```Python
-import click
-
-@click.group()
-def cli():
-    pass
-```
-
-The original function `cli` would be the equivalent of a Typer callback.
-
-/// note | Technical Details
-
-When using Click, it converts that `cli` variable to a Click `Group` object. And then the original function no longer exists in that variable.
-
-**Typer** doesn't do that, the callback function is not modified, only registered in the `typer.Typer` app. This is intentional, it's part of **Typer**'s design, to allow having editor auto completion and type checks.
-
-///

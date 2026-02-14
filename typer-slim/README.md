@@ -30,15 +30,19 @@ Typer is a library for building <abbr title="command line interface, programs ex
 
 It's also a command line tool to run scripts, automatically converting them to CLI applications.
 
-## Typer CLI
+## `typer-slim`
 
 ⚠️ Do not install this package. ⚠️
 
-This package, `typer-cli`, does nothing other than depend on `typer`.
+This package, `typer-slim`, does nothing other than depend on `typer`.
 
-All the functionality has been integrated into `typer`.
+There used to be a slimmed-down version of Typer called `typer-slim`, which didn't include the dependencies `rich` and `shellingham`, nor the `typer` command.
 
-The only reason this package exists is as a migration path for old projects that used to depend on `typer-cli`, so that they can get the latest version of `typer`.
+However, since version 0.22.0, we have stopped supporting this, and `typer-slim` now simply installs (all of) Typer.
+
+If you want to disable Rich globally, you can set an environmental variable `TYPER_USE_RICH` to `False` or `0`.
+
+The only reason this package exists is as a migration path for old projects that used to depend on `typer-slim`, so that they can get the latest version of `typer`.
 
 You **should not** install this package.
 
@@ -47,8 +51,6 @@ Install instead:
 ```bash
 pip install typer
 ```
-
-That includes the `typer` command.
 
 This package is deprecated and will stop receiving any updates and published versions.
 

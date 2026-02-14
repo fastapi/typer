@@ -1,5 +1,4 @@
 import errno
-import importlib.util
 import inspect
 import os
 import sys
@@ -24,16 +23,16 @@ import click.types
 import click.utils
 
 from ._typing import Literal
+from .utils import parse_boolean_env_var
 
 MarkupMode = Literal["markdown", "rich", None]
 MARKUP_MODE_KEY = "TYPER_RICH_MARKUP_MODE"
 
-HAS_RICH = importlib.util.find_spec("rich") is not None
-HAS_SHELLINGHAM = importlib.util.find_spec("shellingham") is not None
+HAS_RICH = parse_boolean_env_var(os.getenv("TYPER_USE_RICH"), default=True)
 
 if HAS_RICH:
     DEFAULT_MARKUP_MODE: MarkupMode = "rich"
-else:  # pragma: no cover
+else:
     DEFAULT_MARKUP_MODE = None
 
 
