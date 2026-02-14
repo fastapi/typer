@@ -97,6 +97,7 @@ RICH_HELP = _("Try [blue]'{command_path} {help_option}'[/] for help.")
 MARKUP_MODE_MARKDOWN = "markdown"
 MARKUP_MODE_RICH = "rich"
 _RICH_HELP_PANEL_NAME = "rich_help_panel"
+ANSI_PREFIX = "\033["
 
 MarkupModeStrict = Literal["markdown", "rich"]
 
@@ -120,8 +121,22 @@ class NegativeOptionHighlighter(RegexHighlighter):
     ]
 
 
+# Highlighter to make [ | ] and <> dim
+class TypesHighlighter(RegexHighlighter):
+    highlights = [
+        r"^(?P<types_sep>(\[|<))",
+        r"(?P<types_sep>\|)",
+        r"(?P<types_sep>(\]|>)$)",
+    ]
+
+
 highlighter = OptionHighlighter()
 negative_highlighter = NegativeOptionHighlighter()
+types_highlighter = TypesHighlighter()
+
+
+def _has_ansi_character(text: str) -> bool:
+    return ANSI_PREFIX in text
 
 
 def _get_rich_console(stderr: bool = False) -> Console:
@@ -160,7 +175,10 @@ def _make_rich_text(
         return Markdown(text, style=style)
     else:
         assert markup_mode == MARKUP_MODE_RICH
-        return highlighter(Text.from_markup(text, style=style))
+        if _has_ansi_character(text):
+            return highlighter(Text.from_ansi(text, style=style))
+        else:
+            return highlighter(Text.from_markup(text, style=style))
 
 
 @group()
@@ -401,16 +419,6 @@ def _print_options_panel(
         required: Union[str, Text] = ""
         if param.required:
             required = Text(REQUIRED_SHORT_STRING, style=STYLE_REQUIRED_SHORT)
-
-        # Highlighter to make [ | ] and <> dim
-        class TypesHighlighter(RegexHighlighter):
-            highlights = [
-                r"^(?P<types_sep>(\[|<))",
-                r"(?P<types_sep>\|)",
-                r"(?P<types_sep>(\]|>)$)",
-            ]
-
-        types_highlighter = TypesHighlighter()
 
         required_rows.append(required)
         options_rows.append(

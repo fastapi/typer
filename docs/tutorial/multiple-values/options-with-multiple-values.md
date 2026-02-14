@@ -48,14 +48,6 @@ coins = user[1]
 is_wizard = user[2]
 ```
 
-/// tip
-
-Notice that the default is a tuple with `(None, None, None)`.
-
-You cannot simply use `None` here as the default because <a href="https://github.com/pallets/click/issues/472" class="external-link" target="_blank">Click doesn't support it</a>.
-
-///
-
 ## Check it
 
 Now let's see how this works in the terminal:

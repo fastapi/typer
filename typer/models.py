@@ -26,26 +26,141 @@ Required = ...
 
 
 class Context(click.Context):
+    """
+    The [`Context`](https://click.palletsprojects.com/en/stable/api/#click.Context) has some additional data about the current execution of your program.
+    When declaring it in a [callback](https://typer.tiangolo.com/tutorial/options/callback-and-context/) function,
+    you can access this additional information.
+    """
+
     pass
 
 
 class FileText(io.TextIOWrapper):
+    """
+    Gives you a file-like object for reading text, and you will get a `str` data from it.
+    The default mode of this class is `mode="r"`.
+
+    **Example**
+
+    ```python
+    from typing import Annotated
+
+    import typer
+
+    app = typer.Typer()
+
+    @app.command()
+    def main(config: Annotated[typer.FileText, typer.Option()]):
+        for line in config:
+            print(f"Config line: {line}")
+
+    if __name__ == "__main__":
+        app()
+    ```
+    """
+
     pass
 
 
 class FileTextWrite(FileText):
+    """
+    You can use this class for writing text. Alternatively, you can use `FileText` with `mode="w"`.
+    The default mode of this class is `mode="w"`.
+
+    **Example**
+
+    ```python
+    from typing import Annotated
+
+    import typer
+
+    app = typer.Typer()
+
+    @app.command()
+    def main(config: Annotated[typer.FileTextWrite, typer.Option()]):
+        config.write("Some config written by the app")
+        print("Config written")
+
+    if __name__ == "__main__":
+        app()
+    ```
+    """
+
     pass
 
 
 class FileBinaryRead(io.BufferedReader):
+    """
+    You can use this class to read binary data, receiving `bytes`.
+    The default mode of this class is `mode="rb"`.
+    It is useful for reading binary files like images:
+
+    **Example**
+
+    ```python
+    from typing import Annotated
+
+    import typer
+
+    app = typer.Typer()
+
+    @app.command()
+    def main(file: Annotated[typer.FileBinaryRead, typer.Option()]):
+        processed_total = 0
+        for bytes_chunk in file:
+            # Process the bytes in bytes_chunk
+            processed_total += len(bytes_chunk)
+            print(f"Processed bytes total: {processed_total}")
+
+    if __name__ == "__main__":
+        app()
+    ```
+    """
+
     pass
 
 
 class FileBinaryWrite(io.BufferedWriter):
+    """
+    You can use this class to write binary data: you pass `bytes` to it instead of strings.
+    The default mode of this class is `mode="wb"`.
+    It is useful for writing binary files like images:
+
+    **Example**
+
+    ```python
+    from typing import Annotated
+
+    import typer
+
+    app = typer.Typer()
+
+    @app.command()
+    def main(file: Annotated[typer.FileBinaryWrite, typer.Option()]):
+        first_line_str = "some settings\\n"
+        # You cannot write str directly to a binary file; encode it first
+        first_line_bytes = first_line_str.encode("utf-8")
+        # Then you can write the bytes
+        file.write(first_line_bytes)
+        # This is already bytes, it starts with b"
+        second_line = b"la cig\xc3\xbce\xc3\xb1a trae al ni\xc3\xb1o"
+        file.write(second_line)
+        print("Binary file written")
+
+    if __name__ == "__main__":
+        app()
+    ```
+    """
+
     pass
 
 
 class CallbackParam(click.Parameter):
+    """
+    In a callback function, you can declare a function parameter with type `CallbackParam`
+    to access the specific Click [`Parameter`](https://click.palletsprojects.com/en/stable/api/#click.Parameter) object.
+    """
+
     pass
 
 
