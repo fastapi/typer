@@ -600,7 +600,7 @@ def Option(
             """
             For a CLI Option representing an [Enum (choice)](https://typer.tiangolo.com/tutorial/parameter-types/enum),
             accept names from the command line instead of values.
-            
+
             **Example**
 
             ```python
@@ -610,7 +610,7 @@ def Option(
                 f1 = "Eggs"
                 f2 = "Bacon"
                 f3 = "Cheese"
-                
+
             @app.command()
             def main(
                 groceries: Annotated[list[Food], typer.Option(enum_by_name=True)] = ["f1", "f3"]
