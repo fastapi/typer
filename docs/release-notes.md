@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.23.2
+
 ### Features
 
 * ✅ Monkeypatch console width to allow running `pytest` directly. PR [#1542](https://github.com/fastapi/typer/pull/1542) by [@SwaatiR](https://github.com/SwaatiR).
