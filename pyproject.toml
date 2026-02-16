@@ -11,7 +11,7 @@ description = "Typer, build great CLIs. Easy to code. Based on Python type hints
 authors = [
     {name = "Sebastián Ramírez", email = "tiangolo@gmail.com"},
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 classifiers = [
     "Intended Audience :: Information Technology",
     "Intended Audience :: System Administrators",
@@ -26,7 +26,6 @@ classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -34,8 +33,7 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
-    "click >= 8.0.0; python_version < '3.10'",
-    "click >= 8.2.1; python_version >= '3.10'",
+    "click >= 8.2.1",
     "shellingham >=1.3.0",
     "rich >=12.3.0",
     "annotated-doc >=0.0.2",
@@ -226,21 +224,21 @@ ignore = [
 # rich_utils is allowed to use rich imports
 "typer/rich_utils.py" = ["TID251"]
 # This file is more readable without yield from
-"docs_src/progressbar/tutorial004_py39.py" = ["UP028", "B007"]
+"docs_src/progressbar/tutorial004_py310.py" = ["UP028", "B007"]
 # Default mutable data structure
-"docs_src/options_autocompletion/tutorial006_an_py39.py" = ["B006"]
-"docs_src/multiple_values/multiple_options/tutorial002_an_py39.py" = ["B006"]
-"docs_src/options_autocompletion/tutorial007_an_py39.py" = ["B006"]
-"docs_src/options_autocompletion/tutorial008_an_py39.py" = ["B006"]
-"docs_src/options_autocompletion/tutorial009_an_py39.py" = ["B006"]
-"docs_src/parameter_types/enum/tutorial003_an_py39.py" = ["B006"]
+"docs_src/options_autocompletion/tutorial006_an_py310.py" = ["B006"]
+"docs_src/multiple_values/multiple_options/tutorial002_an_py310.py" = ["B006"]
+"docs_src/options_autocompletion/tutorial007_an_py310.py" = ["B006"]
+"docs_src/options_autocompletion/tutorial008_an_py310.py" = ["B006"]
+"docs_src/options_autocompletion/tutorial009_an_py310.py" = ["B006"]
+"docs_src/parameter_types/enum/tutorial003_an_py310.py" = ["B006"]
 # Loop control variable `value` not used within loop body
-"docs_src/progressbar/tutorial001_py39.py" = ["B007"]
-"docs_src/progressbar/tutorial003_py39.py" = ["B007"]
-"docs_src/progressbar/tutorial005_py39.py" = ["B007"]
-"docs_src/progressbar/tutorial006_py39.py" = ["B007"]
+"docs_src/progressbar/tutorial001_py310.py" = ["B007"]
+"docs_src/progressbar/tutorial003_py310.py" = ["B007"]
+"docs_src/progressbar/tutorial005_py310.py" = ["B007"]
+"docs_src/progressbar/tutorial006_py310.py" = ["B007"]
 # Local variable `delete` is assigned to but never used
-"docs_src/prompt/tutorial003_py39.py" = ["F841"]
+"docs_src/prompt/tutorial003_py310.py" = ["F841"]
 # No need to worry about rich imports in docs
 "docs_src/*" = ["TID"]
 

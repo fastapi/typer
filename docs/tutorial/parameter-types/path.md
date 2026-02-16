@@ -59,7 +59,7 @@ It will not expand a tilde-prefix (something with `~`, like `~/Documents/`), as 
 
 For example:
 
-{* docs_src/parameter_types/path/tutorial002_an_py39.py hl[14:19] *}
+{* docs_src/parameter_types/path/tutorial002_an_py310.py hl[14:19] *}
 
 Check it:
 
