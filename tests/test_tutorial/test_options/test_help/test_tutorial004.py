@@ -31,8 +31,6 @@ def test_call(mod: ModuleType):
 def test_help(monkeypatch, mod: ModuleType):
     monkeypatch.setenv("COLUMNS", "200")
     result = runner.invoke(mod.app, ["--help"])
-    print(result.output)
-
     assert result.exit_code == 0
     assert "--fullname" in result.output
     assert "TEXT" in result.output
