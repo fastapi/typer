@@ -21,7 +21,7 @@ def test_show_completion():
         encoding="utf-8",
         env={**os.environ, "SHELL": "/bin/bash", "_TYPER_COMPLETE_TESTING": "True"},
     )
-    assert "_TUTORIAL001_py310.PY_COMPLETE=complete_bash" in result.stdout
+    assert "_TUTORIAL001_PY310.PY_COMPLETE=complete_bash" in result.stdout
 
 
 @needs_bash
@@ -57,7 +57,7 @@ def test_completion_invalid_instruction():
         encoding="utf-8",
         env={
             **os.environ,
-            "_TUTORIAL001_py310.PY_COMPLETE": "sourcebash",
+            "_TUTORIAL001_PY310.PY_COMPLETE": "sourcebash",
         },
     )
     assert result.returncode != 0
@@ -71,7 +71,7 @@ def test_completion_source_bash():
         encoding="utf-8",
         env={
             **os.environ,
-            "_TUTORIAL001_py310.PY_COMPLETE": "source_bash",
+            "_TUTORIAL001_PY310.PY_COMPLETE": "source_bash",
         },
     )
     assert (
@@ -87,7 +87,7 @@ def test_completion_source_invalid_shell():
         encoding="utf-8",
         env={
             **os.environ,
-            "_TUTORIAL001_py310.PY_COMPLETE": "source_xxx",
+            "_TUTORIAL001_PY310.PY_COMPLETE": "source_xxx",
         },
     )
     assert "Shell xxx not supported." in result.stderr
@@ -100,7 +100,7 @@ def test_completion_source_invalid_instruction():
         encoding="utf-8",
         env={
             **os.environ,
-            "_TUTORIAL001_py310.PY_COMPLETE": "explode_bash",
+            "_TUTORIAL001_PY310.PY_COMPLETE": "explode_bash",
         },
     )
     assert 'Completion instruction "explode" not supported.' in result.stderr
@@ -113,7 +113,7 @@ def test_completion_source_zsh():
         encoding="utf-8",
         env={
             **os.environ,
-            "_TUTORIAL001_py310.PY_COMPLETE": "source_zsh",
+            "_TUTORIAL001_PY310.PY_COMPLETE": "source_zsh",
         },
     )
     assert (
@@ -128,7 +128,7 @@ def test_completion_source_fish():
         encoding="utf-8",
         env={
             **os.environ,
-            "_TUTORIAL001_py310.PY_COMPLETE": "source_fish",
+            "_TUTORIAL001_PY310.PY_COMPLETE": "source_fish",
         },
     )
     assert "complete --command tutorial001_py310.py --no-files" in result.stdout
@@ -141,7 +141,7 @@ def test_completion_source_powershell():
         encoding="utf-8",
         env={
             **os.environ,
-            "_TUTORIAL001_py310.PY_COMPLETE": "source_powershell",
+            "_TUTORIAL001_PY310.PY_COMPLETE": "source_powershell",
         },
     )
     assert (
@@ -157,7 +157,7 @@ def test_completion_source_pwsh():
         encoding="utf-8",
         env={
             **os.environ,
-            "_TUTORIAL001_py310.PY_COMPLETE": "source_pwsh",
+            "_TUTORIAL001_PY310.PY_COMPLETE": "source_pwsh",
         },
     )
     assert (
