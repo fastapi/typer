@@ -6,7 +6,7 @@ app = typer.Typer()
 
 
 @app.command()
-def main(name: Annotated[str, typer.Argument(metavar="✨username✨")] = "World"):
+def main(name: Annotated[str, typer.Argument(metavar="✨user✨")] = "World"):
     print(f"Hello {name}")
 
 
