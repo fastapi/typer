@@ -6,7 +6,7 @@ from collections import defaultdict
 from collections.abc import Iterable
 from gettext import gettext as _
 from os import getenv
-from typing import Any, Literal, Optional, Union
+from typing import Any, Literal
 
 import click
 from rich import box
@@ -68,7 +68,7 @@ STYLE_ERRORS_SUGGESTION = "dim"
 STYLE_ABORTED = "red"
 _TERMINAL_WIDTH = getenv("TERMINAL_WIDTH")
 MAX_WIDTH = int(_TERMINAL_WIDTH) if _TERMINAL_WIDTH else None
-COLOR_SYSTEM: Optional[Literal["auto", "standard", "256", "truecolor", "windows"]] = (
+COLOR_SYSTEM: Literal["auto", "standard", "256", "truecolor", "windows"] | None = (
     "auto"  # Set to None to disable colors
 )
 _TYPER_FORCE_DISABLE_TERMINAL = getenv("_TYPER_FORCE_DISABLE_TERMINAL")
@@ -162,7 +162,7 @@ def _get_rich_console(stderr: bool = False) -> Console:
 
 def _make_rich_text(
     *, text: str, style: str = "", markup_mode: MarkupModeStrict
-) -> Union[Markdown, Text]:
+) -> Markdown | Text:
     """Take a string, remove indentations, and return styled text.
 
     If `markup_mode` is `"rich"`, the text is parsed for Rich markup strings.
@@ -184,9 +184,9 @@ def _make_rich_text(
 @group()
 def _get_help_text(
     *,
-    obj: Union[click.Command, click.Group],
+    obj: click.Command | click.Group,
     markup_mode: MarkupModeStrict,
-) -> Iterable[Union[Markdown, Text]]:
+) -> Iterable[Markdown | Text]:
     """Build primary help text for a click command or group.
 
     Returns the prose help text for a command or group, rendered either as a
@@ -231,7 +231,7 @@ def _get_help_text(
 
 def _get_parameter_help(
     *,
-    param: Union[click.Option, click.Argument, click.Parameter],
+    param: click.Option | click.Argument | click.Parameter,
     ctx: click.Context,
     markup_mode: MarkupModeStrict,
 ) -> Columns:
@@ -245,7 +245,7 @@ def _get_parameter_help(
     # import here to avoid cyclic imports
     from .core import TyperArgument, TyperOption
 
-    items: list[Union[Text, Markdown]] = []
+    items: list[Text | Markdown] = []
 
     # Get the environment variable first
 
@@ -265,7 +265,7 @@ def _get_parameter_help(
         )
 
     # Main help text
-    help_value: Union[str, None] = getattr(param, "help", None)
+    help_value: str | None = getattr(param, "help", None)
     if help_value:
         paragraphs = help_value.split("\n\n")
         # Remove single linebreaks
@@ -322,7 +322,7 @@ def _make_command_help(
     *,
     help_text: str,
     markup_mode: MarkupModeStrict,
-) -> Union[Text, Markdown]:
+) -> Text | Markdown:
     """Build cli help text for a click group command.
 
     That is, when calling help on groups with multiple subcommands
@@ -348,13 +348,13 @@ def _make_command_help(
 def _print_options_panel(
     *,
     name: str,
-    params: Union[list[click.Option], list[click.Argument]],
+    params: list[click.Option] | list[click.Argument],
     ctx: click.Context,
     markup_mode: MarkupModeStrict,
     console: Console,
 ) -> None:
     options_rows: list[list[RenderableType]] = []
-    required_rows: list[Union[str, Text]] = []
+    required_rows: list[str | Text] = []
     for param in params:
         # Short and long form
         opt_long_strs = []
@@ -374,14 +374,7 @@ def _print_options_panel(
 
         # Column for a metavar, if we have one
         metavar = Text(style=STYLE_METAVAR, overflow="fold")
-        # TODO: when deprecating Click < 8.2, make ctx required
-        signature = inspect.signature(param.make_metavar)
-        if "ctx" in signature.parameters:
-            metavar_str = param.make_metavar(ctx=ctx)
-        else:
-            # Click < 8.2
-            metavar_str = param.make_metavar()  # type: ignore[call-arg]
-
+        metavar_str = param.make_metavar(ctx=ctx)
         # Do it ourselves if this is a positional argument
         if (
             isinstance(param, click.Argument)
@@ -407,7 +400,7 @@ def _print_options_panel(
                 metavar.append(RANGE_STRING.format(range_str))
 
         # Required asterisk
-        required: Union[str, Text] = ""
+        required: str | Text = ""
         if param.required:
             required = Text(REQUIRED_SHORT_STRING, style=STYLE_REQUIRED_SHORT)
 
@@ -428,7 +421,7 @@ def _print_options_panel(
         )
     rows_with_required: list[list[RenderableType]] = []
     if any(required_rows):
-        for required, row in zip(required_rows, options_rows):
+        for required, row in zip(required_rows, options_rows, strict=True):
             rows_with_required.append([required, *row])
     else:
         rows_with_required = options_rows
@@ -501,8 +494,8 @@ def _print_commands_panel(
     # available instead of allowing the command column to grow and misalign with
     # other panels.
     commands_table.add_column("Description", justify="left", no_wrap=False, ratio=10)
-    rows: list[list[Union[RenderableType, None]]] = []
-    deprecated_rows: list[Union[RenderableType, None]] = []
+    rows: list[list[RenderableType | None]] = []
+    deprecated_rows: list[RenderableType | None] = []
     for command in commands:
         helptext = command.short_help or command.help or ""
         command_name = command.name or ""
@@ -524,7 +517,7 @@ def _print_commands_panel(
     rows_with_deprecated = rows
     if any(deprecated_rows):
         rows_with_deprecated = []
-        for row, deprecated_text in zip(rows, deprecated_rows):
+        for row, deprecated_text in zip(rows, deprecated_rows, strict=True):
             rows_with_deprecated.append([*row, deprecated_text])
     for row in rows_with_deprecated:
         commands_table.add_row(*row)
@@ -541,7 +534,7 @@ def _print_commands_panel(
 
 def rich_format_help(
     *,
-    obj: Union[click.Command, click.Group],
+    obj: click.Command | click.Group,
     ctx: click.Context,
     markup_mode: MarkupModeStrict,
 ) -> None:
@@ -692,7 +685,7 @@ def rich_format_error(self: click.ClickException) -> None:
         return
 
     console = _get_rich_console(stderr=True)
-    ctx: Union[click.Context, None] = getattr(self, "ctx", None)
+    ctx: click.Context | None = getattr(self, "ctx", None)
     if ctx is not None:
         console.print(ctx.get_usage())
 
