@@ -30,7 +30,7 @@ def test_call(mod: ModuleType):
 
 def test_help(monkeypatch, mod: ModuleType):
     monkeypatch.setenv("COLUMNS", "200")
-    
+
     result = runner.invoke(mod.app, ["--help"])
     print(result.output)
 
