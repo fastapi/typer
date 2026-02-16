@@ -29,6 +29,7 @@ def test_call(mod: ModuleType):
 
 
 def test_help(monkeypatch, mod: ModuleType):
+    # avoid default width of 80 for non-attached consoles during testing
     monkeypatch.setenv("COLUMNS", "200")
     result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
