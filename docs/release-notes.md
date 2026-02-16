@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Features
+
+* ✅ Monkeypatch console width to allow running `pytest` directly. PR [#1542](https://github.com/fastapi/typer/pull/1542) by [@SwaatiR](https://github.com/SwaatiR).
+
 ### Internal
 
 * ⬆ Bump ruff from 0.15.0 to 0.15.1. PR [#1541](https://github.com/fastapi/typer/pull/1541) by [@dependabot[bot]](https://github.com/apps/dependabot).
