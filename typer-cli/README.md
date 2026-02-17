@@ -40,7 +40,7 @@ All the functionality has been integrated into `typer`.
 
 The only reason this package exists is as a migration path for old projects that used to depend on `typer-cli`, so that they can get the latest version of `typer`.
 
-You probably **should not** install this package.
+You **should not** install this package.
 
 Install instead:
 
@@ -49,6 +49,8 @@ pip install typer
 ```
 
 That includes the `typer` command.
+
+This package is deprecated and will stop receiving any updates and published versions.
 
 ## License
 
