@@ -41,7 +41,7 @@ We'll create the `version` module, the `main` module, and the `users` package.
 
 Let's start by creating the `version` module. This module will contain the `version` command.
 
-{* docs_src/one_file_per_command/app_py39/version.py *}
+{* docs_src/one_file_per_command/app_py310/version.py *}
 
 In this file we are creating a new Typer app instance for the `version` command.
 
@@ -59,7 +59,7 @@ We'll see how to implement the users module in the next section.
 
 ///
 
-{* docs_src/one_file_per_command/app_py39/main.py hl[8,9] *}
+{* docs_src/one_file_per_command/app_py310/main.py hl[8,9] *}
 
 In this module, we import the `version` and `users` modules and add them to the main app using `app.add_typer()`.
 
@@ -81,13 +81,13 @@ Let's now create the `users` module with the `add` and `delete` commands.
 
 ### Users Add Command (`users/add.py`)
 
-{* docs_src/one_file_per_command/app_py39/users/add.py *}
+{* docs_src/one_file_per_command/app_py310/users/add.py *}
 
 Like the `version` module, we create a new Typer app instance for the `users/add` command. This allows us to include the `add` command in the users app.
 
 ### Users Delete Command (`users/delete.py`)
 
-{* docs_src/one_file_per_command/app_py39/users/delete.py *}
+{* docs_src/one_file_per_command/app_py310/users/delete.py *}
 
 And once again, we create a new Typer app instance for the `users/delete` command. This allows us to include the `delete` command in the users app.
 
@@ -95,7 +95,7 @@ And once again, we create a new Typer app instance for the `users/delete` comman
 
 Finally, we need to create an `__init__.py` file in the `users` directory to define the `users` app.
 
-{* docs_src/one_file_per_command/app_py39/users/__init__.py *}
+{* docs_src/one_file_per_command/app_py310/users/__init__.py *}
 
 Similarly to the `version` module, we create a new `Typer` app instance for the `users` module. This allows us to include the `add` and `delete` commands in the users app.
 

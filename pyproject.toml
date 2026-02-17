@@ -11,7 +11,7 @@ description = "Typer, build great CLIs. Easy to code. Based on Python type hints
 authors = [
     {name = "Sebastián Ramírez", email = "tiangolo@gmail.com"},
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 classifiers = [
     "Intended Audience :: Information Technology",
     "Intended Audience :: System Administrators",
@@ -26,7 +26,6 @@ classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -34,8 +33,10 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
-    "click >= 8.0.0",
-    "typing-extensions >= 3.7.4.3",
+    "click >= 8.2.1",
+    "shellingham >=1.3.0",
+    "rich >=12.3.0",
+    "annotated-doc >=0.0.2",
 ]
 readme = "README.md"
 
@@ -46,48 +47,46 @@ Repository = "https://github.com/fastapi/typer"
 Issues = "https://github.com/fastapi/typer/issues"
 Changelog = "https://typer.tiangolo.com/release-notes/"
 
-[project.optional-dependencies]
-standard = [
-    "shellingham >=1.3.0",
-    "rich >=10.11.0",
-]
+[project.scripts]
+typer = "typer.cli:main"
 
 [dependency-groups]
 dev = [
     { include-group = "tests" },
     { include-group = "docs" },
-    "prek==0.2.24",
+    "prek >=0.3.2",
 ]
 docs = [
-    "cairosvg==2.8.2",
-    "griffe-typingdoc==0.3.0",
-    "griffe-warnings-deprecated==1.1.0",
-    "markdown-include-variants==0.0.8",
-    "mdx-include>=1.4.1,<2.0.0",
-    "mkdocs-macros-plugin==1.5.0",
-    "mkdocs-material==9.7.1",
-    "mkdocs-redirects>=1.2.1,<1.3.0",
-    "mkdocstrings[python]==0.30.1",
-    "pillow==11.3.0",
-    "pyyaml>=5.3.1,<7.0.0",
+    "cairosvg >=2.8.2",
+    "griffe-typingdoc >=0.3.0",
+    "griffe-warnings-deprecated >=1.1.0",
+    "markdown-include-variants >=0.0.8",
+    "mdx-include >=1.4.1",
+    "mkdocs-macros-plugin >=1.5.0",
+    "mkdocs-material >=9.7.1",
+    "mkdocs-redirects >=1.2.1",
+    "mkdocstrings[python] >=0.30.1",
+    "pillow >=11.3.0",
+    "pyyaml >=5.3.1",
 ]
 github-actions = [
-    "httpx>=0.27.0,<0.29.0",
-    "pydantic>=2.5.3,<3.0.0",
-    "pydantic-settings>=2.1.0,<3.0.0",
-    "pygithub>=2.3.0,<3.0.0",
-    "smokeshow>=0.5.0",
+    "httpx >=0.27.0",
+    "pydantic >=2.5.3",
+    "pydantic-settings >=2.1.0",
+    "pygithub >=2.3.0",
+    "smokeshow >=0.5.0",
 ]
 tests = [
-    "coverage[toml]>=6.2,<8.0",
-    "mypy==1.19.1",
-    "pytest>=4.4.0,<9.0.0",
-    "pytest-cov>=2.10.0,<8.0.0",
-    "pytest-sugar>=0.9.4,<1.2.0",
-    "pytest-xdist>=1.32.0,<4.0.0",
-    "rich>=10.11.0",
-    "ruff==0.14.10",
-    "shellingham>=1.3.0",
+    "coverage[toml] >=6.2",
+    "mypy >=1.19.1",
+    "ty >=0.0.9",
+    "pytest >=7.4.0",
+    "pytest-cov >=4.0.0",
+    "pytest-sugar >=0.9.5",
+    "pytest-xdist >=1.32.0",
+    "rich >=12.3.0",
+    "ruff >=0.15.0",
+    "shellingham >=1.3.0",
 ]
 
 [tool.pdm]
@@ -101,24 +100,31 @@ source-includes = [
     "scripts/",
 ]
 
-[tool.tiangolo._internal-slim-build]
-sync-dependencies = [
-    "typer-slim[standard]",
-    "typer-cli",
-    "typer"
-]
-
 [tool.tiangolo._internal-slim-build.packages.typer-slim.project]
 name = "typer-slim"
-
-[tool.tiangolo._internal-slim-build.packages.typer]
-include-optional-dependencies = ["standard"]
-
-[tool.tiangolo._internal-slim-build.packages.typer.project]
+readme = "typer-slim/README.md"
+dependencies = [
+    "typer",
+]
 optional-dependencies = {}
+scripts = {}
 
-[tool.tiangolo._internal-slim-build.packages.typer.project.scripts]
-typer = "typer.cli:main"
+[tool.tiangolo._internal-slim-build.packages.typer-slim.tool.pdm.build]
+# excludes needs to explicitly exclude the top level python packages,
+# otherwise PDM includes them by default
+# A "*" glob pattern can't be used here because in PDM internals, the patterns are put
+# in a set (unordered, order varies) and each excluded file is assigned one of the
+# glob patterns that matches, as the set is unordered, the matched pattern could be "*"
+# independent of the order here. And then the internal code would give it a lower score
+# than the one for a default included file.
+# By not using "*" and explicitly excluding the top level packages, they get a higher
+# score than the default inclusion
+excludes = ["typer", "tests", "pdm_build.py"]
+# source-includes needs to explicitly define some value because PDM will check the
+# truthy value of the list, and if empty, will include some defaults, including "tests",
+# an empty string doesn't match anything, but makes the list truthy, so that PDM
+# doesn't override it during the build.
+source-includes = [""]
 
 [tool.tiangolo._internal-slim-build.packages.typer-cli.project]
 name = "typer-cli"
@@ -127,6 +133,7 @@ dependencies = [
     "typer",
 ]
 optional-dependencies = {}
+scripts = {}
 
 [tool.tiangolo._internal-slim-build.packages.typer-cli.tool.pdm.build]
 # excludes needs to explicitly exclude the top level python packages,
@@ -217,23 +224,21 @@ ignore = [
 # rich_utils is allowed to use rich imports
 "typer/rich_utils.py" = ["TID251"]
 # This file is more readable without yield from
-"docs_src/progressbar/tutorial004_py39.py" = ["UP028", "B007"]
+"docs_src/progressbar/tutorial004_py310.py" = ["UP028", "B007"]
 # Default mutable data structure
-"docs_src/options_autocompletion/tutorial006_an_py39.py" = ["B006"]
-"docs_src/multiple_values/multiple_options/tutorial002_an_py39.py" = ["B006"]
-"docs_src/options_autocompletion/tutorial007_an_py39.py" = ["B006"]
-"docs_src/options_autocompletion/tutorial008_an_py39.py" = ["B006"]
-"docs_src/options_autocompletion/tutorial009_an_py39.py" = ["B006"]
-"docs_src/parameter_types/enum/tutorial003_an_py39.py" = ["B006"]
+"docs_src/options_autocompletion/tutorial006_an_py310.py" = ["B006"]
+"docs_src/multiple_values/multiple_options/tutorial002_an_py310.py" = ["B006"]
+"docs_src/options_autocompletion/tutorial007_an_py310.py" = ["B006"]
+"docs_src/options_autocompletion/tutorial008_an_py310.py" = ["B006"]
+"docs_src/options_autocompletion/tutorial009_an_py310.py" = ["B006"]
+"docs_src/parameter_types/enum/tutorial003_an_py310.py" = ["B006"]
 # Loop control variable `value` not used within loop body
-"docs_src/progressbar/tutorial001_py39.py" = ["B007"]
-"docs_src/progressbar/tutorial003_py39.py" = ["B007"]
-"docs_src/progressbar/tutorial005_py39.py" = ["B007"]
-"docs_src/progressbar/tutorial006_py39.py" = ["B007"]
+"docs_src/progressbar/tutorial001_py310.py" = ["B007"]
+"docs_src/progressbar/tutorial003_py310.py" = ["B007"]
+"docs_src/progressbar/tutorial005_py310.py" = ["B007"]
+"docs_src/progressbar/tutorial006_py310.py" = ["B007"]
 # Local variable `delete` is assigned to but never used
-"docs_src/prompt/tutorial003_py39.py" = ["F841"]
-# Loop control variable `x` not used within loop body
-"docs_src/using_click/tutorial001_py39.py" = ["B007"]
+"docs_src/prompt/tutorial003_py310.py" = ["F841"]
 # No need to worry about rich imports in docs
 "docs_src/*" = ["TID"]
 
