@@ -4,7 +4,7 @@ import sys
 
 from typer.testing import CliRunner
 
-from docs_src.commands.help import tutorial009_py39 as mod
+from docs_src.commands.help import tutorial009_py310 as mod
 
 app = mod.app
 

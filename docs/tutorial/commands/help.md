@@ -511,7 +511,7 @@ Sometimes, you might prefer that all panels fit their contents instead. This mea
 
 You can do this by initializing your Typer with `rich_expand=False`, like this:
 
-{* docs_src/commands/help/tutorial009_py39.py hl[5] *}
+{* docs_src/commands/help/tutorial009_py310.py hl[5] *}
 
 When you now check the `--help` option, it will look like:
 
