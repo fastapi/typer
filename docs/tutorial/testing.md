@@ -95,7 +95,7 @@ The terminal width of this console can be forced using the environment variable 
 
 /// tip
 
-It is necessary to set these variables *before* importing a Typer app for testing.
+It is necessary to set `TERMINAL_WIDTH` *before* the Typer app is imported.
 
 ///
 
