@@ -1,4 +1,5 @@
-from typing import TYPE_CHECKING, Annotated, Any, Callable, Optional, Union, overload
+from collections.abc import Callable
+from typing import TYPE_CHECKING, Annotated, Any, overload
 
 import click
 from annotated_doc import Doc
@@ -13,37 +14,36 @@ if TYPE_CHECKING:  # pragma: no cover
 @overload
 def Option(
     # Parameter
-    default: Optional[Any] = ...,
+    default: Any | None = ...,
     *param_decls: str,
-    callback: Optional[Callable[..., Any]] = None,
-    metavar: Optional[str] = None,
+    callback: Callable[..., Any] | None = None,
+    metavar: str | None = None,
     expose_value: bool = True,
     is_eager: bool = False,
-    envvar: Optional[Union[str, list[str]]] = None,
+    envvar: str | list[str] | None = None,
     # Note that shell_complete is not fully supported and will be removed in future versions
     # TODO: Remove shell_complete in a future version (after 0.16.0)
-    shell_complete: Optional[
-        Callable[
-            [click.Context, click.Parameter, str],
-            Union[list["click.shell_completion.CompletionItem"], list[str]],
-        ]
-    ] = None,
-    autocompletion: Optional[Callable[..., Any]] = None,
-    default_factory: Optional[Callable[[], Any]] = None,
+    shell_complete: Callable[
+        [click.Context, click.Parameter, str],
+        list["click.shell_completion.CompletionItem"] | list[str],
+    ]
+    | None = None,
+    autocompletion: Callable[..., Any] | None = None,
+    default_factory: Callable[[], Any] | None = None,
     # Custom type
-    parser: Optional[Callable[[str], Any]] = None,
+    parser: Callable[[str], Any] | None = None,
     # Option
-    show_default: Union[bool, str] = True,
-    prompt: Union[bool, str] = False,
+    show_default: bool | str = True,
+    prompt: bool | str = False,
     confirmation_prompt: bool = False,
     prompt_required: bool = True,
     hide_input: bool = False,
     # TODO: remove is_flag and flag_value in a future release
-    is_flag: Optional[bool] = None,
-    flag_value: Optional[Any] = None,
+    is_flag: bool | None = None,
+    flag_value: Any | None = None,
     count: bool = False,
     allow_from_autoenv: bool = True,
-    help: Optional[str] = None,
+    help: str | None = None,
     hidden: bool = False,
     show_choices: bool = True,
     show_envvar: bool = True,
@@ -51,16 +51,16 @@ def Option(
     case_sensitive: bool = True,
     enum_by_name: bool = False,
     # Numbers
-    min: Optional[Union[int, float]] = None,
-    max: Optional[Union[int, float]] = None,
+    min: int | float | None = None,
+    max: int | float | None = None,
     clamp: bool = False,
     # DateTime
-    formats: Optional[list[str]] = None,
+    formats: list[str] | None = None,
     # File
-    mode: Optional[str] = None,
-    encoding: Optional[str] = None,
-    errors: Optional[str] = "strict",
-    lazy: Optional[bool] = None,
+    mode: str | None = None,
+    encoding: str | None = None,
+    errors: str | None = "strict",
+    lazy: bool | None = None,
     atomic: bool = False,
     # Path
     exists: bool = False,
@@ -70,9 +70,9 @@ def Option(
     readable: bool = True,
     resolve_path: bool = False,
     allow_dash: bool = False,
-    path_type: Union[None, type[str], type[bytes]] = None,
+    path_type: None | type[str] | type[bytes] = None,
     # Rich settings
-    rich_help_panel: Union[str, None] = None,
+    rich_help_panel: str | None = None,
 ) -> Any: ...
 
 
@@ -80,37 +80,36 @@ def Option(
 @overload
 def Option(
     # Parameter
-    default: Optional[Any] = ...,
+    default: Any | None = ...,
     *param_decls: str,
-    callback: Optional[Callable[..., Any]] = None,
-    metavar: Optional[str] = None,
+    callback: Callable[..., Any] | None = None,
+    metavar: str | None = None,
     expose_value: bool = True,
     is_eager: bool = False,
-    envvar: Optional[Union[str, list[str]]] = None,
+    envvar: str | list[str] | None = None,
     # Note that shell_complete is not fully supported and will be removed in future versions
     # TODO: Remove shell_complete in a future version (after 0.16.0)
-    shell_complete: Optional[
-        Callable[
-            [click.Context, click.Parameter, str],
-            Union[list["click.shell_completion.CompletionItem"], list[str]],
-        ]
-    ] = None,
-    autocompletion: Optional[Callable[..., Any]] = None,
-    default_factory: Optional[Callable[[], Any]] = None,
+    shell_complete: Callable[
+        [click.Context, click.Parameter, str],
+        list["click.shell_completion.CompletionItem"] | list[str],
+    ]
+    | None = None,
+    autocompletion: Callable[..., Any] | None = None,
+    default_factory: Callable[[], Any] | None = None,
     # Custom type
-    click_type: Optional[click.ParamType] = None,
+    click_type: click.ParamType | None = None,
     # Option
-    show_default: Union[bool, str] = True,
-    prompt: Union[bool, str] = False,
+    show_default: bool | str = True,
+    prompt: bool | str = False,
     confirmation_prompt: bool = False,
     prompt_required: bool = True,
     hide_input: bool = False,
     # TODO: remove is_flag and flag_value in a future release
-    is_flag: Optional[bool] = None,
-    flag_value: Optional[Any] = None,
+    is_flag: bool | None = None,
+    flag_value: Any | None = None,
     count: bool = False,
     allow_from_autoenv: bool = True,
-    help: Optional[str] = None,
+    help: str | None = None,
     hidden: bool = False,
     show_choices: bool = True,
     show_envvar: bool = True,
@@ -118,16 +117,16 @@ def Option(
     case_sensitive: bool = True,
     enum_by_name: bool = False,
     # Numbers
-    min: Optional[Union[int, float]] = None,
-    max: Optional[Union[int, float]] = None,
+    min: int | float | None = None,
+    max: int | float | None = None,
     clamp: bool = False,
     # DateTime
-    formats: Optional[list[str]] = None,
+    formats: list[str] | None = None,
     # File
-    mode: Optional[str] = None,
-    encoding: Optional[str] = None,
-    errors: Optional[str] = "strict",
-    lazy: Optional[bool] = None,
+    mode: str | None = None,
+    encoding: str | None = None,
+    errors: str | None = "strict",
+    lazy: bool | None = None,
     atomic: bool = False,
     # Path
     exists: bool = False,
@@ -137,16 +136,16 @@ def Option(
     readable: bool = True,
     resolve_path: bool = False,
     allow_dash: bool = False,
-    path_type: Union[None, type[str], type[bytes]] = None,
+    path_type: None | type[str] | type[bytes] = None,
     # Rich settings
-    rich_help_panel: Union[str, None] = None,
+    rich_help_panel: str | None = None,
 ) -> Any: ...
 
 
 def Option(
     # Parameter
     default: Annotated[
-        Optional[Any],
+        Any | None,
         Doc(
             """
             Usually, [CLI options](https://typer.tiangolo.com/tutorial/options/) are optional and have a default value, passed on like this:
@@ -189,7 +188,7 @@ def Option(
         ),
     ],
     callback: Annotated[
-        Optional[Callable[..., Any]],
+        Callable[..., Any] | None,
         Doc(
             """
             Add a callback to this CLI Option, to execute additional logic after its value was received from the terminal.
@@ -211,7 +210,7 @@ def Option(
         ),
     ] = None,
     metavar: Annotated[
-        Optional[str],
+        str | None,
         Doc(
             """
             Customize the name displayed in the [help text](https://typer.tiangolo.com/tutorial/options/help/) to represent this CLI option.
@@ -249,7 +248,7 @@ def Option(
         ),
     ] = False,
     envvar: Annotated[
-        Optional[Union[str, list[str]]],
+        str | list[str] | None,
         Doc(
             """
             Configure a CLI Option to read its value from an environment variable if it is not provided in the command line.
@@ -267,12 +266,11 @@ def Option(
     ] = None,
     # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Annotated[
-        Optional[
-            Callable[
-                [click.Context, click.Parameter, str],
-                Union[list["click.shell_completion.CompletionItem"], list[str]],
-            ]
-        ],
+        Callable[
+            [click.Context, click.Parameter, str],
+            list["click.shell_completion.CompletionItem"] | list[str],
+        ]
+        | None,
         Doc(
             """
             **Note**: you probably shouldn't use this parameter, it is inherited from Click and supported for compatibility.
@@ -281,7 +279,7 @@ def Option(
         ),
     ] = None,
     autocompletion: Annotated[
-        Optional[Callable[..., Any]],
+        Callable[..., Any] | None,
         Doc(
             """
             Provide a custom function that helps to autocomplete the values of this CLI Option.
@@ -301,7 +299,7 @@ def Option(
         ),
     ] = None,
     default_factory: Annotated[
-        Optional[Callable[[], Any]],
+        Callable[[], Any] | None,
         Doc(
             """
             Provide a custom function that dynamically generates a [default](https://typer.tiangolo.com/tutorial/arguments/default) for this CLI Option.
@@ -321,7 +319,7 @@ def Option(
     ] = None,
     # Custom type
     parser: Annotated[
-        Optional[Callable[[str], Any]],
+        Callable[[str], Any] | None,
         Doc(
             """
             Use your own custom types in Typer applications by defining a `parser` function that parses input into your own types:
@@ -347,7 +345,7 @@ def Option(
         ),
     ] = None,
     click_type: Annotated[
-        Optional[click.ParamType],
+        click.ParamType | None,
         Doc(
             """
             Define this parameter to use a [custom Click type](https://click.palletsprojects.com/en/stable/parameters/#implementing-custom-types) in your Typer applications.
@@ -377,7 +375,7 @@ def Option(
     ] = None,
     # Option
     show_default: Annotated[
-        Union[bool, str],
+        bool | str,
         Doc(
             """
             When set to `False`, don't show the default value of this CLI Option in the [help text](https://typer.tiangolo.com/tutorial/options/help/).
@@ -393,7 +391,7 @@ def Option(
         ),
     ] = True,
     prompt: Annotated[
-        Union[bool, str],
+        bool | str,
         Doc(
             """
             When set to `True`, a prompt will appear to ask for the value of this CLI Option if it was not provided:
@@ -458,7 +456,7 @@ def Option(
     ] = False,
     # TODO: remove is_flag and flag_value in a future release
     is_flag: Annotated[
-        Optional[bool],
+        bool | None,
         Doc(
             """
             **Note**: you probably shouldn't use this parameter, it is inherited from Click and supported for compatibility.
@@ -467,7 +465,7 @@ def Option(
         ),
     ] = None,
     flag_value: Annotated[
-        Optional[Any],
+        Any | None,
         Doc(
             """
             **Note**: you probably shouldn't use this parameter, it is inherited from Click and supported for compatibility.
@@ -505,7 +503,7 @@ def Option(
         ),
     ] = True,
     help: Annotated[
-        Optional[str],
+        str | None,
         Doc(
             """
             Help text for this CLI Option.
@@ -622,7 +620,7 @@ def Option(
     ] = False,
     # Numbers
     min: Annotated[
-        Optional[Union[int, float]],
+        int | float | None,
         Doc(
             """
             For a CLI Option representing a [number](https://typer.tiangolo.com/tutorial/parameter-types/number/) (`int` or `float`),
@@ -644,7 +642,7 @@ def Option(
         ),
     ] = None,
     max: Annotated[
-        Optional[Union[int, float]],
+        int | float | None,
         Doc(
             """
             For a CLI Option representing a [number](https://typer.tiangolo.com/tutorial/parameter-types/number/) (`int` or `float`),
@@ -689,7 +687,7 @@ def Option(
     ] = False,
     # DateTime
     formats: Annotated[
-        Optional[list[str]],
+        list[str] | None,
         Doc(
             """
             For a CLI Option representing a [DateTime object](https://typer.tiangolo.com/tutorial/parameter-types/datetime),
@@ -716,7 +714,7 @@ def Option(
     ] = None,
     # File
     mode: Annotated[
-        Optional[str],
+        str | None,
         Doc(
             """
             For a CLI Option representing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
@@ -734,7 +732,7 @@ def Option(
         ),
     ] = None,
     encoding: Annotated[
-        Optional[str],
+        str | None,
         Doc(
             """
             Customize the encoding of this CLI Option represented by a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/).
@@ -750,7 +748,7 @@ def Option(
         ),
     ] = None,
     errors: Annotated[
-        Optional[str],
+        str | None,
         Doc(
             """
             **Note**: you probably shouldn't use this parameter, it is inherited from Click and supported for compatibility.
@@ -762,7 +760,7 @@ def Option(
         ),
     ] = "strict",
     lazy: Annotated[
-        Optional[bool],
+        bool | None,
         Doc(
             """
             For a CLI Option representing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
@@ -924,7 +922,7 @@ def Option(
         ),
     ] = False,
     path_type: Annotated[
-        Union[None, type[str], type[bytes]],
+        None | type[str] | type[bytes],
         Doc(
             """
              A string type that will be used to represent this [`Path` argument](https://typer.tiangolo.com/tutorial/parameter-types/path/).
@@ -935,7 +933,7 @@ def Option(
     ] = None,
     # Rich settings
     rich_help_panel: Annotated[
-        Union[str, None],
+        str | None,
         Doc(
             """
             Set the panel name where you want this CLI Option to be shown in the [help text](https://typer.tiangolo.com/tutorial/arguments/help).
@@ -1036,45 +1034,44 @@ def Option(
 @overload
 def Argument(
     # Parameter
-    default: Optional[Any] = ...,
+    default: Any | None = ...,
     *,
-    callback: Optional[Callable[..., Any]] = None,
-    metavar: Optional[str] = None,
+    callback: Callable[..., Any] | None = None,
+    metavar: str | None = None,
     expose_value: bool = True,
     is_eager: bool = False,
-    envvar: Optional[Union[str, list[str]]] = None,
+    envvar: str | list[str] | None = None,
     # Note that shell_complete is not fully supported and will be removed in future versions
     # TODO: Remove shell_complete in a future version (after 0.16.0)
-    shell_complete: Optional[
-        Callable[
-            [click.Context, click.Parameter, str],
-            Union[list["click.shell_completion.CompletionItem"], list[str]],
-        ]
-    ] = None,
-    autocompletion: Optional[Callable[..., Any]] = None,
-    default_factory: Optional[Callable[[], Any]] = None,
+    shell_complete: Callable[
+        [click.Context, click.Parameter, str],
+        list["click.shell_completion.CompletionItem"] | list[str],
+    ]
+    | None = None,
+    autocompletion: Callable[..., Any] | None = None,
+    default_factory: Callable[[], Any] | None = None,
     # Custom type
-    parser: Optional[Callable[[str], Any]] = None,
+    parser: Callable[[str], Any] | None = None,
     # TyperArgument
-    show_default: Union[bool, str] = True,
+    show_default: bool | str = True,
     show_choices: bool = True,
     show_envvar: bool = True,
-    help: Optional[str] = None,
+    help: str | None = None,
     hidden: bool = False,
     # Choice
     case_sensitive: bool = True,
     enum_by_name: bool = False,
     # Numbers
-    min: Optional[Union[int, float]] = None,
-    max: Optional[Union[int, float]] = None,
+    min: int | float | None = None,
+    max: int | float | None = None,
     clamp: bool = False,
     # DateTime
-    formats: Optional[list[str]] = None,
+    formats: list[str] | None = None,
     # File
-    mode: Optional[str] = None,
-    encoding: Optional[str] = None,
-    errors: Optional[str] = "strict",
-    lazy: Optional[bool] = None,
+    mode: str | None = None,
+    encoding: str | None = None,
+    errors: str | None = "strict",
+    lazy: bool | None = None,
     atomic: bool = False,
     # Path
     exists: bool = False,
@@ -1084,9 +1081,9 @@ def Argument(
     readable: bool = True,
     resolve_path: bool = False,
     allow_dash: bool = False,
-    path_type: Union[None, type[str], type[bytes]] = None,
+    path_type: None | type[str] | type[bytes] = None,
     # Rich settings
-    rich_help_panel: Union[str, None] = None,
+    rich_help_panel: str | None = None,
 ) -> Any: ...
 
 
@@ -1094,45 +1091,44 @@ def Argument(
 @overload
 def Argument(
     # Parameter
-    default: Optional[Any] = ...,
+    default: Any | None = ...,
     *,
-    callback: Optional[Callable[..., Any]] = None,
-    metavar: Optional[str] = None,
+    callback: Callable[..., Any] | None = None,
+    metavar: str | None = None,
     expose_value: bool = True,
     is_eager: bool = False,
-    envvar: Optional[Union[str, list[str]]] = None,
+    envvar: str | list[str] | None = None,
     # Note that shell_complete is not fully supported and will be removed in future versions
     # TODO: Remove shell_complete in a future version (after 0.16.0)
-    shell_complete: Optional[
-        Callable[
-            [click.Context, click.Parameter, str],
-            Union[list["click.shell_completion.CompletionItem"], list[str]],
-        ]
-    ] = None,
-    autocompletion: Optional[Callable[..., Any]] = None,
-    default_factory: Optional[Callable[[], Any]] = None,
+    shell_complete: Callable[
+        [click.Context, click.Parameter, str],
+        list["click.shell_completion.CompletionItem"] | list[str],
+    ]
+    | None = None,
+    autocompletion: Callable[..., Any] | None = None,
+    default_factory: Callable[[], Any] | None = None,
     # Custom type
-    click_type: Optional[click.ParamType] = None,
+    click_type: click.ParamType | None = None,
     # TyperArgument
-    show_default: Union[bool, str] = True,
+    show_default: bool | str = True,
     show_choices: bool = True,
     show_envvar: bool = True,
-    help: Optional[str] = None,
+    help: str | None = None,
     hidden: bool = False,
     # Choice
     case_sensitive: bool = True,
     enum_by_name: bool = False,
     # Numbers
-    min: Optional[Union[int, float]] = None,
-    max: Optional[Union[int, float]] = None,
+    min: int | float | None = None,
+    max: int | float | None = None,
     clamp: bool = False,
     # DateTime
-    formats: Optional[list[str]] = None,
+    formats: list[str] | None = None,
     # File
-    mode: Optional[str] = None,
-    encoding: Optional[str] = None,
-    errors: Optional[str] = "strict",
-    lazy: Optional[bool] = None,
+    mode: str | None = None,
+    encoding: str | None = None,
+    errors: str | None = "strict",
+    lazy: bool | None = None,
     atomic: bool = False,
     # Path
     exists: bool = False,
@@ -1142,16 +1138,16 @@ def Argument(
     readable: bool = True,
     resolve_path: bool = False,
     allow_dash: bool = False,
-    path_type: Union[None, type[str], type[bytes]] = None,
+    path_type: None | type[str] | type[bytes] = None,
     # Rich settings
-    rich_help_panel: Union[str, None] = None,
+    rich_help_panel: str | None = None,
 ) -> Any: ...
 
 
 def Argument(
     # Parameter
     default: Annotated[
-        Optional[Any],
+        Any | None,
         Doc(
             """
             By default, CLI arguments are required. However, by giving them a default value they become [optional](https://typer.tiangolo.com/tutorial/arguments/optional):
@@ -1175,7 +1171,7 @@ def Argument(
     ] = ...,
     *,
     callback: Annotated[
-        Optional[Callable[..., Any]],
+        Callable[..., Any] | None,
         Doc(
             """
             Add a callback to this CLI Argument, to execute additional logic with the value received from the terminal.
@@ -1197,7 +1193,7 @@ def Argument(
         ),
     ] = None,
     metavar: Annotated[
-        Optional[str],
+        str | None,
         Doc(
             """
             Customize the name displayed in the help text to represent this CLI Argument.
@@ -1236,7 +1232,7 @@ def Argument(
         ),
     ] = False,
     envvar: Annotated[
-        Optional[Union[str, list[str]]],
+        str | list[str] | None,
         Doc(
             """
             Configure an argument to read a value from an environment variable if it is not provided in the command line as a CLI argument.
@@ -1254,12 +1250,11 @@ def Argument(
     ] = None,
     # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Annotated[
-        Optional[
-            Callable[
-                [click.Context, click.Parameter, str],
-                Union[list["click.shell_completion.CompletionItem"], list[str]],
-            ]
-        ],
+        Callable[
+            [click.Context, click.Parameter, str],
+            list["click.shell_completion.CompletionItem"] | list[str],
+        ]
+        | None,
         Doc(
             """
             **Note**: you probably shouldn't use this parameter, it is inherited from Click and supported for compatibility.
@@ -1268,7 +1263,7 @@ def Argument(
         ),
     ] = None,
     autocompletion: Annotated[
-        Optional[Callable[..., Any]],
+        Callable[..., Any] | None,
         Doc(
             """
             Provide a custom function that helps to autocomplete the values of this CLI Argument.
@@ -1288,7 +1283,7 @@ def Argument(
         ),
     ] = None,
     default_factory: Annotated[
-        Optional[Callable[[], Any]],
+        Callable[[], Any] | None,
         Doc(
             """
             Provide a custom function that dynamically generates a [default](https://typer.tiangolo.com/tutorial/arguments/default) for this CLI Argument.
@@ -1308,7 +1303,7 @@ def Argument(
     ] = None,
     # Custom type
     parser: Annotated[
-        Optional[Callable[[str], Any]],
+        Callable[[str], Any] | None,
         Doc(
             """
             Use your own custom types in Typer applications by defining a `parser` function that parses input into your own types:
@@ -1334,7 +1329,7 @@ def Argument(
         ),
     ] = None,
     click_type: Annotated[
-        Optional[click.ParamType],
+        click.ParamType | None,
         Doc(
             """
             Define this parameter to use a [custom Click type](https://click.palletsprojects.com/en/stable/parameters/#implementing-custom-types) in your Typer applications.
@@ -1364,7 +1359,7 @@ def Argument(
     ] = None,
     # TyperArgument
     show_default: Annotated[
-        Union[bool, str],
+        bool | str,
         Doc(
             """
             When set to `False`, don't show the default value of this CLI Argument in the [help text](https://typer.tiangolo.com/tutorial/arguments/help/).
@@ -1408,7 +1403,7 @@ def Argument(
         ),
     ] = True,
     help: Annotated[
-        Optional[str],
+        str | None,
         Doc(
             """
             Help text for this CLI Argument.
@@ -1496,7 +1491,7 @@ def Argument(
     ] = False,
     # Numbers
     min: Annotated[
-        Optional[Union[int, float]],
+        int | float | None,
         Doc(
             """
             For a CLI Argument representing a [number](https://typer.tiangolo.com/tutorial/parameter-types/number/) (`int` or `float`),
@@ -1518,7 +1513,7 @@ def Argument(
         ),
     ] = None,
     max: Annotated[
-        Optional[Union[int, float]],
+        int | float | None,
         Doc(
             """
             For a CLI Argument representing a [number](https://typer.tiangolo.com/tutorial/parameter-types/number/) (`int` or `float`),
@@ -1563,7 +1558,7 @@ def Argument(
     ] = False,
     # DateTime
     formats: Annotated[
-        Optional[list[str]],
+        list[str] | None,
         Doc(
             """
             For a CLI Argument representing a [DateTime object](https://typer.tiangolo.com/tutorial/parameter-types/datetime),
@@ -1590,7 +1585,7 @@ def Argument(
     ] = None,
     # File
     mode: Annotated[
-        Optional[str],
+        str | None,
         Doc(
             """
             For a CLI Argument representing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
@@ -1608,7 +1603,7 @@ def Argument(
         ),
     ] = None,
     encoding: Annotated[
-        Optional[str],
+        str | None,
         Doc(
             """
             Customize the encoding of this CLI Argument represented by a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/).
@@ -1624,7 +1619,7 @@ def Argument(
         ),
     ] = None,
     errors: Annotated[
-        Optional[str],
+        str | None,
         Doc(
             """
             **Note**: you probably shouldn't use this parameter, it is inherited from Click and supported for compatibility.
@@ -1636,7 +1631,7 @@ def Argument(
         ),
     ] = "strict",
     lazy: Annotated[
-        Optional[bool],
+        bool | None,
         Doc(
             """
             For a CLI Argument representing a [File object](https://typer.tiangolo.com/tutorial/parameter-types/file/),
@@ -1798,7 +1793,7 @@ def Argument(
         ),
     ] = False,
     path_type: Annotated[
-        Union[None, type[str], type[bytes]],
+        None | type[str] | type[bytes],
         Doc(
             """
             A string type that will be used to represent this [`Path` argument](https://typer.tiangolo.com/tutorial/parameter-types/path/).
@@ -1809,7 +1804,7 @@ def Argument(
     ] = None,
     # Rich settings
     rich_help_panel: Annotated[
-        Union[str, None],
+        str | None,
         Doc(
             """
             Set the panel name where you want this CLI Argument to be shown in the [help text](https://typer.tiangolo.com/tutorial/arguments/help).
