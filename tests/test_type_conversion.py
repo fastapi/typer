@@ -1,13 +1,11 @@
 from enum import Enum
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 import click
 import pytest
 import typer
 from typer.testing import CliRunner
-
-from .utils import needs_py310
 
 runner = CliRunner()
 
@@ -16,7 +14,7 @@ def test_optional():
     app = typer.Typer()
 
     @app.command()
-    def opt(user: Optional[str] = None):
+    def opt(user: str | None = None):
         if user:
             print(f"User: {user}")
         else:
@@ -31,7 +29,6 @@ def test_optional():
     assert "User: Camila" in result.output
 
 
-@needs_py310
 def test_union_type_optional():
     app = typer.Typer()
 
@@ -55,7 +52,7 @@ def test_optional_tuple():
     app = typer.Typer()
 
     @app.command()
-    def opt(number: Optional[tuple[int, int]] = None):
+    def opt(number: tuple[int, int] | None = None):
         if number:
             print(f"Number: {number}")
         else:
@@ -127,7 +124,9 @@ def test_tuple_parameter_elements_are_converted_recursively(type_annotation):
     @app.command()
     def tuple_recursive_conversion(container: type_annotation):
         assert isinstance(container, tuple)
-        for element, expected_type in zip(container, expected_element_types):
+        for element, expected_type in zip(
+            container, expected_element_types, strict=True
+        ):
             assert isinstance(element, expected_type)
 
     result = runner.invoke(app, ["one", "two"])
@@ -154,8 +153,8 @@ def test_custom_click_type():
         def convert(
             self,
             value: Any,
-            param: Optional[click.Parameter],
-            ctx: Optional[click.Context],
+            param: click.Parameter | None,
+            ctx: click.Context | None,
         ) -> Any:
             return int(value, 0)
 

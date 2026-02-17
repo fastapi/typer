@@ -152,7 +152,6 @@ nav:
       - tutorial/app-dir.md
       - tutorial/launch.md
       - tutorial/testing.md
-      - tutorial/using-click.md
       - tutorial/package.md
       - tutorial/exceptions.md
       - tutorial/one-file-per-command.md
