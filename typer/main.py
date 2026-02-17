@@ -1425,7 +1425,7 @@ def get_command_from_info(
 
 
 def determine_type_convertor(
-        type_: Any, enum_by_name: bool
+    type_: Any, enum_by_name: bool
 ) -> Callable[[Any], Any] | None:
     convertor: Callable[[Any], Any] | None = None
     if lenient_issubclass(type_, Path):
