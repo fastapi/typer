@@ -1,5 +1,3 @@
-from typing import Union
-
 import typer
 
 app = typer.Typer(rich_markup_mode="rich", rich_expand=False)
@@ -12,10 +10,10 @@ def create(
         "", help="The last name", rich_help_panel="Secondary Arguments"
     ),
     force: bool = typer.Option(..., help="Force the creation"),
-    age: Union[int, None] = typer.Option(
+    age: int | None = typer.Option(
         None, help="The age", rich_help_panel="Additional Data"
     ),
-    favorite_color: Union[str, None] = typer.Option(
+    favorite_color: str | None = typer.Option(
         None,
         help="The favorite color",
         rich_help_panel="Additional Data",
