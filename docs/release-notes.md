@@ -4,6 +4,7 @@
 
 ### Internal
 
+* 🎨 Upgrade types for Python 3.10. PR [#1549](https://github.com/fastapi/typer/pull/1549) by [@tiangolo](https://github.com/tiangolo).
 * 🔨 Add internal scripts to migrate docs from Python 3.9 to 3.10. PR [#1547](https://github.com/fastapi/typer/pull/1547) by [@tiangolo](https://github.com/tiangolo).
 * ⬆ Bump ty from 0.0.16 to 0.0.17. PR [#1544](https://github.com/fastapi/typer/pull/1544) by [@dependabot[bot]](https://github.com/apps/dependabot).
 

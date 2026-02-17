@@ -73,7 +73,7 @@ def except_hook(
         _original_except_hook(exc_type, exc_value, tb)
         return
     typer_path = os.path.dirname(__file__)
-    click_path = os.path.dirname(click.__file__)  # ty: ignore[no-matching-overload]
+    click_path = os.path.dirname(click.__file__)
     internal_dir_names = [typer_path, click_path]
     exc = exc_value
     if HAS_RICH:
@@ -1386,7 +1386,7 @@ def get_command_from_info(
     rich_markup_mode: MarkupMode,
 ) -> click.Command:
     assert command_info.callback, "A command must have a callback function"
-    name = command_info.name or get_command_name(command_info.callback.__name__)  # ty: ignore[possibly-missing-attribute]
+    name = command_info.name or get_command_name(command_info.callback.__name__)  # ty:ignore[unresolved-attribute]
     use_help = command_info.help
     if use_help is None:
         use_help = inspect.getdoc(command_info.callback)
@@ -1425,7 +1425,7 @@ def get_command_from_info(
 
 
 def determine_type_convertor(
-    type_: Any, enum_by_name: bool
+        type_: Any, enum_by_name: bool
 ) -> Callable[[Any], Any] | None:
     convertor: Callable[[Any], Any] | None = None
     if lenient_issubclass(type_, Path):
@@ -1495,7 +1495,7 @@ def generate_tuple_convertor(
             return None
         return tuple(
             convertor(arg) if convertor else arg
-            for (convertor, arg) in zip(convertors, param_args)
+            for (convertor, arg) in zip(convertors, param_args, strict=False)
         )
 
     return internal_convertor
