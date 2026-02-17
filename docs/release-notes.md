@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Internal
+
+* ⬆ Bump ty from 0.0.16 to 0.0.17. PR [#1544](https://github.com/fastapi/typer/pull/1544) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
 ## 0.24.0
 
 ### Breaking Changes
