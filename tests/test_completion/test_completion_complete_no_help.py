@@ -2,7 +2,7 @@ import os
 import subprocess
 import sys
 
-from docs_src.commands.index import tutorial002_py39 as mod
+from docs_src.commands.index import tutorial002_py310 as mod
 
 
 def test_completion_complete_subcommand_zsh():
@@ -12,8 +12,8 @@ def test_completion_complete_subcommand_zsh():
         encoding="utf-8",
         env={
             **os.environ,
-            "_TUTORIAL002_PY39.PY_COMPLETE": "complete_zsh",
-            "_TYPER_COMPLETE_ARGS": "tutorial002_py39.py ",
+            "_TUTORIAL002_PY310.PY_COMPLETE": "complete_zsh",
+            "_TYPER_COMPLETE_ARGS": "tutorial002_py310.py ",
         },
     )
     assert "create" in result.stdout
@@ -27,8 +27,8 @@ def test_completion_complete_subcommand_fish():
         encoding="utf-8",
         env={
             **os.environ,
-            "_TUTORIAL002_PY39.PY_COMPLETE": "complete_fish",
-            "_TYPER_COMPLETE_ARGS": "tutorial002_py39.py ",
+            "_TUTORIAL002_PY310.PY_COMPLETE": "complete_fish",
+            "_TYPER_COMPLETE_ARGS": "tutorial002_py310.py ",
             "_TYPER_COMPLETE_FISH_ACTION": "get-args",
         },
     )
@@ -42,8 +42,8 @@ def test_completion_complete_subcommand_powershell():
         encoding="utf-8",
         env={
             **os.environ,
-            "_TUTORIAL002_PY39.PY_COMPLETE": "complete_powershell",
-            "_TYPER_COMPLETE_ARGS": "tutorial002_py39.py ",
+            "_TUTORIAL002_PY310.PY_COMPLETE": "complete_powershell",
+            "_TYPER_COMPLETE_ARGS": "tutorial002_py310.py ",
         },
     )
     assert ("create::: \ndelete::: ") in result.stdout
@@ -56,8 +56,8 @@ def test_completion_complete_subcommand_pwsh():
         encoding="utf-8",
         env={
             **os.environ,
-            "_TUTORIAL002_PY39.PY_COMPLETE": "complete_pwsh",
-            "_TYPER_COMPLETE_ARGS": "tutorial002_py39.py ",
+            "_TUTORIAL002_PY310.PY_COMPLETE": "complete_pwsh",
+            "_TYPER_COMPLETE_ARGS": "tutorial002_py310.py ",
         },
     )
     assert ("create::: \ndelete::: ") in result.stdout

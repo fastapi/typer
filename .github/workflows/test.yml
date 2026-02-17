@@ -21,21 +21,26 @@ jobs:
       matrix:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
         python-version: [ "3.14" ]
+        uv-resolution:
+          - highest
         include:
-          - os: windows-latest
-            python-version: "3.9"
           - os: ubuntu-latest
             python-version: "3.10"
+            uv-resolution: lowest-direct
           - os: macos-latest
             python-version: "3.11"
+            uv-resolution: highest
           - os: windows-latest
             python-version: "3.12"
+            uv-resolution: lowest-direct
           - os: ubuntu-latest
             python-version: "3.13"
+            uv-resolution: highest
       fail-fast: false
     runs-on: ${{ matrix.os }}
     env:
       UV_PYTHON: ${{ matrix.python-version }}
+      UV_RESOLUTION: ${{ matrix.uv-resolution }}
     steps:
       - name: Dump GitHub context
         env:
@@ -54,7 +59,7 @@ jobs:
             pyproject.toml
             uv.lock
       - name: Install Dependencies
-        run: uv sync --locked --no-dev --group tests
+        run: uv sync --no-dev --group tests
       - run: mkdir coverage
       - run: uv run bash scripts/test-files.sh
       - name: Test
