@@ -1,12 +1,12 @@
 from enum import Enum
-from typing import Generic, TypeVar
+from typing import TypeVar
 
 import click
 
 ParamTypeValue = TypeVar("ParamTypeValue")
 
 
-class TyperChoice(click.Choice, Generic[ParamTypeValue]):  # type: ignore[type-arg]
+class TyperChoice(click.Choice[ParamTypeValue]):
     def normalize_choice(
         self, choice: ParamTypeValue, ctx: click.Context | None
     ) -> str:
