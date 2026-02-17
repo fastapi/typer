@@ -168,3 +168,27 @@ def test_custom_click_type():
 
     result = runner.invoke(app, ["0x56"])
     assert result.exit_code == 0
+
+
+def test_enum_with_callback():
+    """Test that Enum value is preserved when a callback is used (issue #223)."""
+    app = typer.Typer()
+
+    class Endpoint(str, Enum):
+        localhost = "localhost"
+        staging = "staging"
+
+    def validate_endpoint(value: Endpoint):
+        return value
+
+    @app.command()
+    def cmd(
+        endpoint: Endpoint = typer.Option(
+            ..., case_sensitive=False, callback=validate_endpoint
+        ),
+    ):
+        print(f"endpoint={endpoint.value}")
+
+    result = runner.invoke(app, ["--endpoint", "localhost"])
+    assert result.exit_code == 0, result.output
+    assert "endpoint=localhost" in result.output
