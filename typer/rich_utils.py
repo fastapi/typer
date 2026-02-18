@@ -376,12 +376,15 @@ def _print_options_panel(
         metavar = Text(style=STYLE_METAVAR, overflow="fold")
         metavar_str = param.make_metavar(ctx=ctx)
         # Do it ourselves if this is a positional argument
-        if (
-            isinstance(param, click.Argument)
-            and param.name
-            and metavar_str == param.name.upper()
-        ):
-            metavar_str = param.type.name.upper()
+        if isinstance(param, click.Argument) and param.name:
+            if param.metavar and metavar_str != param.name.upper():
+                # Custom metavar set: use it as the display name and show
+                # the type in the metavar column instead
+                opt_long_strs = [metavar_str]
+                opt_short_strs = []
+                metavar_str = param.type.name.upper()
+            elif metavar_str == param.name.upper():
+                metavar_str = param.type.name.upper()
 
         # Skip booleans and choices (handled above)
         if metavar_str != "BOOLEAN":
