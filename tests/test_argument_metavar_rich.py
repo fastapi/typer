@@ -8,10 +8,10 @@ When a custom metavar is set on an Argument, the rich help panel should:
 - NOT show the parameter name in the name column with the metavar in the type column
 """
 
-import typer
-from typing_extensions import Annotated
-from typer.testing import CliRunner
+from typing import Annotated
 
+import typer
+from typer.testing import CliRunner
 
 runner = CliRunner()
 
