@@ -2,6 +2,15 @@
 
 ## Latest Changes
 
+### Internal
+
+* ⬆ Bump pillow from 11.3.0 to 12.1.1. PR [#1550](https://github.com/fastapi/typer/pull/1550) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pytest from 8.4.2 to 9.0.2. PR [#1551](https://github.com/fastapi/typer/pull/1551) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pydantic-settings from 2.12.0 to 2.13.0. PR [#1552](https://github.com/fastapi/typer/pull/1552) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 🎨 Upgrade types for Python 3.10. PR [#1549](https://github.com/fastapi/typer/pull/1549) by [@tiangolo](https://github.com/tiangolo).
+* 🔨 Add internal scripts to migrate docs from Python 3.9 to 3.10. PR [#1547](https://github.com/fastapi/typer/pull/1547) by [@tiangolo](https://github.com/tiangolo).
+* ⬆ Bump ty from 0.0.16 to 0.0.17. PR [#1544](https://github.com/fastapi/typer/pull/1544) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
 ## 0.24.0
 
 ### Breaking Changes
