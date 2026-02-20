@@ -4,6 +4,7 @@
 
 ### Internal
 
+* ⬆ Bump rich from 14.3.2 to 14.3.3. PR [#1565](https://github.com/fastapi/typer/pull/1565) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pydantic-settings from 2.13.0 to 2.13.1. PR [#1566](https://github.com/fastapi/typer/pull/1566) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ruff from 0.15.1 to 0.15.2. PR [#1567](https://github.com/fastapi/typer/pull/1567) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump mkdocs-material from 9.7.1 to 9.7.2. PR [#1561](https://github.com/fastapi/typer/pull/1561) by [@dependabot[bot]](https://github.com/apps/dependabot).
