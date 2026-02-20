@@ -4,6 +4,7 @@
 
 ### Internal
 
+* ⬆ Bump ruff from 0.15.1 to 0.15.2. PR [#1567](https://github.com/fastapi/typer/pull/1567) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump mkdocs-material from 9.7.1 to 9.7.2. PR [#1561](https://github.com/fastapi/typer/pull/1561) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pillow from 11.3.0 to 12.1.1. PR [#1550](https://github.com/fastapi/typer/pull/1550) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pytest from 8.4.2 to 9.0.2. PR [#1551](https://github.com/fastapi/typer/pull/1551) by [@dependabot[bot]](https://github.com/apps/dependabot).
