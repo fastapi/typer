@@ -85,6 +85,15 @@ class SomeEnum(Enum):
     THREE = "three"
 
 
+def test_enum_convertor_already_converted():
+    """If the value is already an enum member, the convertor should return it as-is."""
+    from typer.main import generate_enum_convertor
+
+    convertor = generate_enum_convertor(SomeEnum)
+    result = convertor(SomeEnum.ONE)
+    assert result is SomeEnum.ONE
+
+
 @pytest.mark.parametrize(
     "type_annotation",
     [list[Path], list[SomeEnum], list[str]],
