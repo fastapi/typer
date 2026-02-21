@@ -1901,7 +1901,7 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "cairosvg", specifier = ">=2.8.2" },
-    { name = "coverage", extras = ["toml"], specifier = ">=6.2" },
+    { name = "coverage", extras = ["toml"], specifier = ">=7.13" },
     { name = "griffe-typingdoc", specifier = ">=0.3.0" },
     { name = "griffe-warnings-deprecated", specifier = ">=1.1.0" },
     { name = "markdown-include-variants", specifier = ">=0.0.8" },
@@ -1913,7 +1913,7 @@ dev = [
     { name = "mypy", specifier = ">=1.19.1" },
     { name = "pillow", specifier = ">=11.3.0" },
     { name = "prek", specifier = ">=0.3.2" },
-    { name = "pytest", specifier = ">=7.4.0" },
+    { name = "pytest", specifier = ">=9.0.0" },
     { name = "pytest-cov", specifier = ">=4.0.0" },
     { name = "pytest-sugar", specifier = ">=0.9.5" },
     { name = "pytest-xdist", specifier = ">=1.32.0" },
@@ -1944,9 +1944,9 @@ github-actions = [
     { name = "smokeshow", specifier = ">=0.5.0" },
 ]
 tests = [
-    { name = "coverage", extras = ["toml"], specifier = ">=6.2" },
+    { name = "coverage", extras = ["toml"], specifier = ">=7.13" },
     { name = "mypy", specifier = ">=1.19.1" },
-    { name = "pytest", specifier = ">=7.4.0" },
+    { name = "pytest", specifier = ">=9.0.0" },
     { name = "pytest-cov", specifier = ">=4.0.0" },
     { name = "pytest-sugar", specifier = ">=0.9.5" },
     { name = "pytest-xdist", specifier = ">=1.32.0" },
