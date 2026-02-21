@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.24.1
+
 ### Internal
 
 * 👷 Fix CI, do not attempt to build `typer-slim`, nor `typer-cli`. PR [#1569](https://github.com/fastapi/typer/pull/1569) by [@tiangolo](https://github.com/tiangolo).
