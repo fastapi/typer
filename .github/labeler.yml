@@ -16,7 +16,6 @@ internal:
         - scripts/**
         - .gitignore
         - .pre-commit-config.yaml
-        - pdm_build.py
         - uv.lock
       - all-globs-to-all-files:
         - '!docs/**'
