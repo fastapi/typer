@@ -1913,7 +1913,7 @@ dev = [
     { name = "mypy", specifier = ">=1.19.1" },
     { name = "pillow", specifier = ">=11.3.0" },
     { name = "prek", specifier = ">=0.3.2" },
-    { name = "pytest", specifier = ">=7.4.0" },
+    { name = "pytest", specifier = ">=9.0.0" },
     { name = "pytest-cov", specifier = ">=4.0.0" },
     { name = "pytest-sugar", specifier = ">=0.9.5" },
     { name = "pytest-xdist", specifier = ">=1.32.0" },
@@ -1946,7 +1946,7 @@ github-actions = [
 tests = [
     { name = "coverage", extras = ["toml"], specifier = ">=6.2" },
     { name = "mypy", specifier = ">=1.19.1" },
-    { name = "pytest", specifier = ">=7.4.0" },
+    { name = "pytest", specifier = ">=9.0.0" },
     { name = "pytest-cov", specifier = ">=4.0.0" },
     { name = "pytest-sugar", specifier = ">=0.9.5" },
     { name = "pytest-xdist", specifier = ">=1.32.0" },
