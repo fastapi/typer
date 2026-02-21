@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Internal
+
+* 🔧 Upgrade pytest version and config. PR [#1570](https://github.com/fastapi/typer/pull/1570) by [@tiangolo](https://github.com/tiangolo).
+
 ## 0.24.1
 
 ### Internal
