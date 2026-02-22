@@ -4,7 +4,7 @@ import sys
 from collections import defaultdict
 from itertools import chain
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 import click
 import typer
@@ -24,10 +24,10 @@ app.add_typer(utils_app, name="utils")
 
 class State:
     def __init__(self) -> None:
-        self.app: Optional[str] = None
-        self.func: Optional[str] = None
-        self.file: Optional[Path] = None
-        self.module: Optional[str] = None
+        self.app: str | None = None
+        self.func: str | None = None
+        self.file: Path | None = None
+        self.module: str | None = None
 
 
 state = State()
@@ -59,7 +59,7 @@ class TyperCLIGroup(typer.core.TyperGroup):
         self.maybe_add_run(ctx)
         return super().list_commands(ctx)
 
-    def get_command(self, ctx: click.Context, name: str) -> Optional[Command]:
+    def get_command(self, ctx: click.Context, name: str) -> Command | None:  # ty: ignore[invalid-method-override]
         self.maybe_add_run(ctx)
         return super().get_command(ctx, name)
 
@@ -72,7 +72,7 @@ class TyperCLIGroup(typer.core.TyperGroup):
         maybe_add_run_to_cli(self)
 
 
-def get_typer_from_module(module: Any) -> Optional[typer.Typer]:
+def get_typer_from_module(module: Any) -> typer.Typer | None:
     # Try to get defined app
     if state.app:
         obj = getattr(module, state.app, None)
@@ -85,7 +85,7 @@ def get_typer_from_module(module: Any) -> Optional[typer.Typer]:
         func_obj = getattr(module, state.func, None)
         if not callable(func_obj):
             typer.echo(f"Not a function: --func {state.func}", err=True)
-            sys.exit(1)
+            raise typer.Exit(1)
         sub_app = typer.Typer()
         sub_app.command()(func_obj)
         return sub_app
@@ -120,7 +120,7 @@ def get_typer_from_module(module: Any) -> Optional[typer.Typer]:
     return None
 
 
-def get_typer_from_state() -> Optional[typer.Typer]:
+def get_typer_from_state() -> typer.Typer | None:
     spec = None
     if state.file:
         module_name = state.file.name
@@ -192,7 +192,7 @@ def get_docs_for_click(
     indent: int = 0,
     name: str = "",
     call_prefix: str = "",
-    title: Optional[str] = None,
+    title: str | None = None,
 ) -> str:
     docs = "#" * (1 + indent)
     command_name = name or obj.name
@@ -305,13 +305,13 @@ def _parse_html(to_parse: bool, input_text: str) -> str:
 def docs(
     ctx: typer.Context,
     name: str = typer.Option("", help="The name of the CLI program to use in docs."),
-    output: Optional[Path] = typer.Option(
+    output: Path | None = typer.Option(
         None,
         help="An output file to write docs to, like README.md.",
         file_okay=True,
         dir_okay=False,
     ),
-    title: Optional[str] = typer.Option(
+    title: str | None = typer.Option(
         None,
         help="The title for the documentation page. If not provided, the name of "
         "the program is used.",

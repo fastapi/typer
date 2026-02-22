@@ -40,7 +40,7 @@ Processing user: Morty
 
 The same way, you can use other types and they will be converted by **Typer** to their declared type:
 
-{* docs_src/multiple_values/multiple_options/tutorial002_an_py39.py hl[9] *}
+{* docs_src/multiple_values/multiple_options/tutorial002_an_py310.py hl[9] *}
 
 Check it:
 
