@@ -4,6 +4,7 @@
 
 ### Internal
 
+* ⬆ Bump ty from 0.0.17 to 0.0.18. PR [#1602](https://github.com/fastapi/typer/pull/1602) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump griffe-warnings-deprecated from 1.1.0 to 1.1.1. PR [#1603](https://github.com/fastapi/typer/pull/1603) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump griffe-typingdoc from 0.3.0 to 0.3.1. PR [#1604](https://github.com/fastapi/typer/pull/1604) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * 🔧 Upgrade pytest version and config. PR [#1570](https://github.com/fastapi/typer/pull/1570) by [@tiangolo](https://github.com/tiangolo).
