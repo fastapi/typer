@@ -852,11 +852,6 @@ class Command:
                         its deprecation in --help. The message can be customized
                         by using a string as the value.
 
-    .. versionchanged:: 8.2
-        This is the base class for all commands, not ``BaseCommand``.
-        ``deprecated`` can be set to a string as well to customize the
-        deprecation message.
-
     .. versionchanged:: 8.1
         ``help``, ``epilog``, and ``short_help`` are stored unprocessed,
         all formatting is done when outputting help text, not at init,
@@ -1428,21 +1423,6 @@ class Command:
         return self.main(*args, **kwargs)
 
 
-class _FakeSubclassCheck(type):
-    def __subclasscheck__(cls, subclass: type) -> bool:
-        return issubclass(subclass, cls.__bases__[0])
-
-    def __instancecheck__(cls, instance: t.Any) -> bool:
-        return isinstance(instance, cls.__bases__[0])
-
-
-class _BaseCommand(Command, metaclass=_FakeSubclassCheck):
-    """
-    .. deprecated:: 8.2
-        Will be removed in Click 9.0. Use ``Command`` instead.
-    """
-
-
 class Group(Command):
     """A group is a command that nests other commands (or more groups).
 
@@ -1468,9 +1448,6 @@ class Group(Command):
 
     .. versionchanged:: 8.0
         The ``commands`` argument can be a list of command objects.
-
-    .. versionchanged:: 8.2
-        Merged with and replaces the ``MultiCommand`` base class.
     """
 
     allow_extra_args = True
@@ -1772,13 +1749,6 @@ class Group(Command):
         ]
         results.extend(super().shell_complete(ctx, incomplete))
         return results
-
-
-class _MultiCommand(Group, metaclass=_FakeSubclassCheck):
-    """
-    .. deprecated:: 8.2
-        Will be removed in Click 9.0. Use ``Group`` instead.
-    """
 
 
 def _check_iter(value: t.Any) -> cabc.Iterator[t.Any]:
@@ -3109,27 +3079,3 @@ class Argument(Parameter):
 
     def add_to_parser(self, parser: _OptionParser, ctx: Context) -> None:
         parser.add_argument(dest=self.name, nargs=self.nargs, obj=self)
-
-
-def __getattr__(name: str) -> object:
-    import warnings
-
-    if name == "BaseCommand":
-        warnings.warn(
-            "'BaseCommand' is deprecated and will be removed in Click 9.0. Use"
-            " 'Command' instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        return _BaseCommand
-
-    if name == "MultiCommand":
-        warnings.warn(
-            "'MultiCommand' is deprecated and will be removed in Click 9.0. Use"
-            " 'Group' instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        return _MultiCommand
-
-    raise AttributeError(name)
