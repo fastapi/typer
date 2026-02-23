@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import collections.abc as cabc
 import enum
+import errno
 import inspect
 import os
+import sys
 import typing as t
 from collections import Counter, abc
 from contextlib import AbstractContextManager, ExitStack, contextmanager
@@ -18,6 +20,7 @@ from ._utils import FLAG_NEEDS_VALUE, UNSET
 from .exceptions import (
     Abort,
     BadParameter,
+    ClickException,
     Exit,
     MissingParameter,
     NoArgsIsHelpError,
@@ -28,6 +31,9 @@ from .globals import pop_context, push_context
 from .parser import _OptionParser, _split_opt
 from .termui import confirm, prompt, style
 from .utils import (
+    PacifyFlushWrapper,
+    _detect_program_name,
+    _expand_args,
     echo,
     make_default_short_help,
     make_str,
