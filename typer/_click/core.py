@@ -1852,62 +1852,6 @@ class _MultiCommand(Group, metaclass=_FakeSubclassCheck):
     """
 
 
-class CommandCollection(Group):
-    """A :class:`Group` that looks up subcommands on other groups. If a command
-    is not found on this group, each registered source is checked in order.
-    Parameters on a source are not added to this group, and a source's callback
-    is not invoked when invoking its commands. In other words, this "flattens"
-    commands in many groups into this one group.
-
-    :param name: The name of the group command.
-    :param sources: A list of :class:`Group` objects to look up commands from.
-    :param kwargs: Other arguments passed to :class:`Group`.
-
-    .. versionchanged:: 8.2
-        This is a subclass of ``Group``. Commands are looked up first on this
-        group, then each of its sources.
-    """
-
-    def __init__(
-        self,
-        name: str | None = None,
-        sources: list[Group] | None = None,
-        **kwargs: t.Any,
-    ) -> None:
-        super().__init__(name, **kwargs)
-        #: The list of registered groups.
-        self.sources: list[Group] = sources or []
-
-    def add_source(self, group: Group) -> None:
-        """Add a group as a source of commands."""
-        self.sources.append(group)
-
-    def get_command(self, ctx: Context, cmd_name: str) -> Command | None:
-        rv = super().get_command(ctx, cmd_name)
-
-        if rv is not None:
-            return rv
-
-        for source in self.sources:
-            rv = source.get_command(ctx, cmd_name)
-
-            if rv is not None:
-                if self.chain:
-                    _check_nested_chain(self, cmd_name, rv)
-
-                return rv
-
-        return None
-
-    def list_commands(self, ctx: Context) -> list[str]:
-        rv: set[str] = set(super().list_commands(ctx))
-
-        for source in self.sources:
-            rv.update(source.list_commands(ctx))
-
-        return sorted(rv)
-
-
 def _check_iter(value: t.Any) -> cabc.Iterator[t.Any]:
     """Check if the value is iterable but not a string. Raises a type
     error, or return an iterator over the value.
