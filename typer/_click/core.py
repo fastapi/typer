@@ -447,27 +447,6 @@ class Context:
         )
         return self._protected_args
 
-    def to_info_dict(self) -> dict[str, t.Any]:
-        """Gather information that could be useful for a tool generating
-        user-facing documentation. This traverses the entire CLI
-        structure.
-
-        .. code-block:: python
-
-            with Context(cli) as ctx:
-                info = ctx.to_info_dict()
-
-        .. versionadded:: 8.0
-        """
-        return {
-            "command": self.command.to_info_dict(self),
-            "info_name": self.info_name,
-            "allow_extra_args": self.allow_extra_args,
-            "allow_interspersed_args": self.allow_interspersed_args,
-            "ignore_unknown_options": self.ignore_unknown_options,
-            "auto_envvar_prefix": self.auto_envvar_prefix,
-        }
-
     def __enter__(self) -> Context:
         self._depth += 1
         push_context(self)
@@ -970,17 +949,6 @@ class Command:
         self.no_args_is_help = no_args_is_help
         self.hidden = hidden
         self.deprecated = deprecated
-
-    def to_info_dict(self, ctx: Context) -> dict[str, t.Any]:
-        return {
-            "name": self.name,
-            "params": [param.to_info_dict() for param in self.get_params(ctx)],
-            "help": self.help,
-            "epilog": self.epilog,
-            "short_help": self.short_help,
-            "hidden": self.hidden,
-            "deprecated": self.deprecated,
-        }
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} {self.name}>"
@@ -1596,24 +1564,6 @@ class Group(Command):
                         "A group in chain mode cannot have optional arguments."
                     )
 
-    def to_info_dict(self, ctx: Context) -> dict[str, t.Any]:
-        info_dict = super().to_info_dict(ctx)
-        commands = {}
-
-        for name in self.list_commands(ctx):
-            command = self.get_command(ctx, name)
-
-            if command is None:
-                continue
-
-            sub_ctx = ctx._make_sub_context(command)
-
-            with sub_ctx.scope(cleanup=False):
-                commands[name] = command.to_info_dict(sub_ctx)
-
-        info_dict.update(commands=commands, chain=self.chain)
-        return info_dict
-
     def add_command(self, cmd: Command, name: str | None = None) -> None:
         """Registers another :class:`Command` with this group.  If the name
         is not provided, the name of the command is used.
@@ -2025,34 +1975,6 @@ class Parameter:
                     "is deprecated and still required. A deprecated "
                     f"{self.param_type_name} cannot be required."
                 )
-
-    def to_info_dict(self) -> dict[str, t.Any]:
-        """Gather information that could be useful for a tool generating
-        user-facing documentation.
-
-        Use :meth:`click.Context.to_info_dict` to traverse the entire
-        CLI structure.
-
-        .. versionchanged:: 8.3.0
-            Returns ``None`` for the :attr:`default` if it was not set.
-
-        .. versionadded:: 8.0
-        """
-        return {
-            "name": self.name,
-            "param_type_name": self.param_type_name,
-            "opts": self.opts,
-            "secondary_opts": self.secondary_opts,
-            "type": self.type.to_info_dict(),
-            "required": self.required,
-            "nargs": self.nargs,
-            "multiple": self.multiple,
-            # We explicitly hide the :attr:`UNSET` value to the user, as we choose to
-            # make it an implementation detail. And because ``to_info_dict`` has been
-            # designed for documentation purposes, we return ``None`` instead.
-            "default": self.default if self.default is not UNSET else None,
-            "envvar": self.envvar,
-        }
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} {self.name}>"
@@ -2700,25 +2622,6 @@ class Option(Parameter):
 
                 if self.is_flag:
                     raise TypeError("'count' is not valid with 'is_flag'.")
-
-    def to_info_dict(self) -> dict[str, t.Any]:
-        """
-        .. versionchanged:: 8.3.0
-            Returns ``None`` for the :attr:`flag_value` if it was not set.
-        """
-        info_dict = super().to_info_dict()
-        info_dict.update(
-            help=self.help,
-            prompt=self.prompt,
-            is_flag=self.is_flag,
-            # We explicitly hide the :attr:`UNSET` value to the user, as we choose to
-            # make it an implementation detail. And because ``to_info_dict`` has been
-            # designed for documentation purposes, we return ``None`` instead.
-            flag_value=self.flag_value if self.flag_value is not UNSET else None,
-            count=self.count,
-            hidden=self.hidden,
-        )
-        return info_dict
 
     def get_error_hint(self, ctx: Context) -> str:
         result = super().get_error_hint(ctx)

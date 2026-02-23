@@ -47,35 +47,6 @@ class ParamType:
     #: the descriptive name of this type
     name: str
 
-    #: if a list of this type is expected and the value is pulled from a
-    #: string environment variable, this is what splits it up.  `None`
-    #: means any whitespace.  For all parameters the general rule is that
-    #: whitespace splits them up.  The exception are paths and files which
-    #: are split by ``os.path.pathsep`` by default (":" on Unix and ";" on
-    #: Windows).
-    envvar_list_splitter: t.ClassVar[str | None] = None
-
-    def to_info_dict(self) -> dict[str, t.Any]:
-        """Gather information that could be useful for a tool generating
-        user-facing documentation.
-
-        Use :meth:`click.Context.to_info_dict` to traverse the entire
-        CLI structure.
-
-        .. versionadded:: 8.0
-        """
-        # The class name without the "ParamType" suffix.
-        param_type = type(self).__name__.partition("ParamType")[0]
-        param_type = param_type.partition("ParameterType")[0]
-
-        # Custom subclasses might not remember to set a name.
-        if hasattr(self, "name"):
-            name = self.name
-        else:
-            name = param_type
-
-        return {"param_type": param_type, "name": name}
-
     def __call__(
         self,
         value: t.Any,
@@ -169,11 +140,6 @@ class FuncParamType(ParamType):
         self.name: str = func.__name__
         self.func = func
 
-    def to_info_dict(self) -> dict[str, t.Any]:
-        info_dict = super().to_info_dict()
-        info_dict["func"] = self.func
-        return info_dict
-
     def convert(
         self, value: t.Any, param: Parameter | None, ctx: Context | None
     ) -> t.Any:
@@ -256,12 +222,6 @@ class Choice(ParamType, t.Generic[ParamTypeValue]):
     ) -> None:
         self.choices: cabc.Sequence[ParamTypeValue] = tuple(choices)
         self.case_sensitive = case_sensitive
-
-    def to_info_dict(self) -> dict[str, t.Any]:
-        info_dict = super().to_info_dict()
-        info_dict["choices"] = self.choices
-        info_dict["case_sensitive"] = self.case_sensitive
-        return info_dict
 
     def _normalized_mapping(
         self, ctx: Context | None = None
@@ -424,11 +384,6 @@ class DateTime(ParamType):
             "%Y-%m-%d %H:%M:%S",
         ]
 
-    def to_info_dict(self) -> dict[str, t.Any]:
-        info_dict = super().to_info_dict()
-        info_dict["formats"] = self.formats
-        return info_dict
-
     def get_metavar(self, param: Parameter, ctx: Context) -> str | None:
         return f"[{'|'.join(self.formats)}]"
 
@@ -497,17 +452,6 @@ class _NumberRangeBase(_NumberParamTypeBase):
         self.min_open = min_open
         self.max_open = max_open
         self.clamp = clamp
-
-    def to_info_dict(self) -> dict[str, t.Any]:
-        info_dict = super().to_info_dict()
-        info_dict.update(
-            min=self.min,
-            max=self.max,
-            min_open=self.min_open,
-            max_open=self.max_open,
-            clamp=self.clamp,
-        )
-        return info_dict
 
     def convert(
         self, value: t.Any, param: Parameter | None, ctx: Context | None
@@ -794,11 +738,6 @@ class File(ParamType):
         self.lazy = lazy
         self.atomic = atomic
 
-    def to_info_dict(self) -> dict[str, t.Any]:
-        info_dict = super().to_info_dict()
-        info_dict.update(mode=self.mode, encoding=self.encoding)
-        return info_dict
-
     def resolve_lazy_flag(self, value: str | os.PathLike[str]) -> bool:
         if self.lazy is not None:
             return self.lazy
@@ -936,18 +875,6 @@ class Path(ParamType):
         else:
             self.name = _("path")
 
-    def to_info_dict(self) -> dict[str, t.Any]:
-        info_dict = super().to_info_dict()
-        info_dict.update(
-            exists=self.exists,
-            file_okay=self.file_okay,
-            dir_okay=self.dir_okay,
-            writable=self.writable,
-            readable=self.readable,
-            allow_dash=self.allow_dash,
-        )
-        return info_dict
-
     def coerce_path_result(
         self, value: str | os.PathLike[str]
     ) -> str | bytes | os.PathLike[str]:
@@ -1069,11 +996,6 @@ class Tuple(CompositeParamType):
 
     def __init__(self, types: cabc.Sequence[type[t.Any] | ParamType]) -> None:
         self.types: cabc.Sequence[ParamType] = [convert_type(ty) for ty in types]
-
-    def to_info_dict(self) -> dict[str, t.Any]:
-        info_dict = super().to_info_dict()
-        info_dict["types"] = [t.to_info_dict() for t in self.types]
-        return info_dict
 
     @property
     def name(self) -> str:  # type: ignore
