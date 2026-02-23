@@ -10,13 +10,11 @@ import collections.abc as cabc
 import contextlib
 import math
 import os
-import shlex
 import sys
 import time
 import typing as t
 from gettext import gettext as _
 from io import StringIO
-from pathlib import Path
 from types import TracebackType
 
 from ._compat import (
@@ -25,8 +23,6 @@ from ._compat import (
     _default_text_stdout,
     get_best_encoding,
     isatty,
-    open_stream,
-    strip_ansi,
     term_len,
 )
 from .exceptions import ClickException

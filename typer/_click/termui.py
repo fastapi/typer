@@ -1,9 +1,7 @@
 from __future__ import annotations
 
 import collections.abc as cabc
-import inspect
 import io
-import itertools
 import sys
 import typing as t
 from contextlib import AbstractContextManager
