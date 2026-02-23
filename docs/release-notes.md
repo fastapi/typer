@@ -4,6 +4,7 @@
 
 ### Internal
 
+* ⬆ Bump griffe-typingdoc from 0.3.0 to 0.3.1. PR [#1604](https://github.com/fastapi/typer/pull/1604) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * 🔧 Upgrade pytest version and config. PR [#1570](https://github.com/fastapi/typer/pull/1570) by [@tiangolo](https://github.com/tiangolo).
 
 ## 0.24.1
