@@ -13,7 +13,6 @@ import os
 import sys
 import time
 import typing as t
-from gettext import gettext as _
 from io import StringIO
 from types import TracebackType
 
@@ -25,7 +24,6 @@ from ._compat import (
     isatty,
     term_len,
 )
-from .exceptions import ClickException
 from .utils import echo
 
 V = t.TypeVar("V")
@@ -362,118 +360,6 @@ class ProgressBar(t.Generic[V]):
 
             self.finish()
             self.render_progress()
-
-
-class Editor:
-    def __init__(
-        self,
-        editor: str | None = None,
-        env: cabc.Mapping[str, str] | None = None,
-        require_save: bool = True,
-        extension: str = ".txt",
-    ) -> None:
-        self.editor = editor
-        self.env = env
-        self.require_save = require_save
-        self.extension = extension
-
-    def get_editor(self) -> str:
-        if self.editor is not None:
-            return self.editor
-        for key in "VISUAL", "EDITOR":
-            rv = os.environ.get(key)
-            if rv:
-                return rv
-        if WIN:
-            return "notepad"
-
-        from shutil import which
-
-        for editor in "sensible-editor", "vim", "nano":
-            if which(editor) is not None:
-                return editor
-        return "vi"
-
-    def edit_files(self, filenames: cabc.Iterable[str]) -> None:
-        import subprocess
-
-        editor = self.get_editor()
-        environ: dict[str, str] | None = None
-
-        if self.env:
-            environ = os.environ.copy()
-            environ.update(self.env)
-
-        exc_filename = " ".join(f'"{filename}"' for filename in filenames)
-
-        try:
-            c = subprocess.Popen(
-                args=f"{editor} {exc_filename}", env=environ, shell=True
-            )
-            exit_code = c.wait()
-            if exit_code != 0:
-                raise ClickException(
-                    _("{editor}: Editing failed").format(editor=editor)
-                )
-        except OSError as e:
-            raise ClickException(
-                _("{editor}: Editing failed: {e}").format(editor=editor, e=e)
-            ) from e
-
-    @t.overload
-    def edit(self, text: bytes | bytearray) -> bytes | None: ...
-
-    # We cannot know whether or not the type expected is str or bytes when None
-    # is passed, so str is returned as that was what was done before.
-    @t.overload
-    def edit(self, text: str | None) -> str | None: ...
-
-    def edit(self, text: str | bytes | bytearray | None) -> str | bytes | None:
-        import tempfile
-
-        if text is None:
-            data: bytes | bytearray = b""
-        elif isinstance(text, (bytes, bytearray)):
-            data = text
-        else:
-            if text and not text.endswith("\n"):
-                text += "\n"
-
-            if WIN:
-                data = text.replace("\n", "\r\n").encode("utf-8-sig")
-            else:
-                data = text.encode("utf-8")
-
-        fd, name = tempfile.mkstemp(prefix="editor-", suffix=self.extension)
-        f: t.BinaryIO
-
-        try:
-            with os.fdopen(fd, "wb") as f:
-                f.write(data)
-
-            # If the filesystem resolution is 1 second, like Mac OS
-            # 10.12 Extended, or 2 seconds, like FAT32, and the editor
-            # closes very fast, require_save can fail. Set the modified
-            # time to be 2 seconds in the past to work around this.
-            os.utime(name, (os.path.getatime(name), os.path.getmtime(name) - 2))
-            # Depending on the resolution, the exact value might not be
-            # recorded, so get the new recorded value.
-            timestamp = os.path.getmtime(name)
-
-            self.edit_files((name,))
-
-            if self.require_save and os.path.getmtime(name) == timestamp:
-                return None
-
-            with open(name, "rb") as f:
-                rv = f.read()
-
-            if isinstance(text, (bytes, bytearray)):
-                return rv
-
-            return rv.decode("utf-8-sig").replace("\r\n", "\n")
-        finally:
-            os.unlink(name)
 
 
 def open_url(url: str, wait: bool = False, locate: bool = False) -> int:

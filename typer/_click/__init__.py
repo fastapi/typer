@@ -26,7 +26,6 @@ from .formatting import wrap_text as wrap_text
 from .globals import get_current_context as get_current_context
 from .termui import clear as clear
 from .termui import confirm as confirm
-from .termui import edit as edit
 from .termui import getchar as getchar
 from .termui import launch as launch
 from .termui import pause as pause
