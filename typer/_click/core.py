@@ -65,26 +65,6 @@ def _complete_visible_commands(
                 yield name, command
 
 
-def _check_nested_chain(
-    base_command: Group, cmd_name: str, cmd: Command, register: bool = False
-) -> None:
-    if not base_command.chain or not isinstance(cmd, Group):
-        return
-
-    if register:
-        message = (
-            f"It is not possible to add the group {cmd_name!r} to another"
-            f" group {base_command.name!r} that is in chain mode."
-        )
-    else:
-        message = (
-            f"Found the group {cmd_name!r} as subcommand to another group "
-            f" {base_command.name!r} that is in chain mode. This is not supported."
-        )
-
-    raise RuntimeError(message)
-
-
 def batch(iterable: cabc.Iterable[V], batch_size: int) -> list[tuple[V, ...]]:
     return list(zip(*repeat(iter(iterable), batch_size), strict=False))
 
@@ -1571,7 +1551,6 @@ class Group(Command):
         name = name or cmd.name
         if name is None:
             raise TypeError("Command has no name.")
-        _check_nested_chain(self, name, cmd, register=True)
         self.commands[name] = cmd
 
     def result_callback(self, replace: bool = False) -> t.Callable[[F], F]:
