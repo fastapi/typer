@@ -195,31 +195,6 @@ class LazyFile:
         return iter(self._f)  # type: ignore
 
 
-class KeepOpenFile:
-    def __init__(self, file: t.IO[t.Any]) -> None:
-        self._file: t.IO[t.Any] = file
-
-    def __getattr__(self, name: str) -> t.Any:
-        return getattr(self._file, name)
-
-    def __enter__(self) -> KeepOpenFile:
-        return self
-
-    def __exit__(
-        self,
-        exc_type: type[BaseException] | None,
-        exc_value: BaseException | None,
-        tb: TracebackType | None,
-    ) -> None:
-        pass
-
-    def __repr__(self) -> str:
-        return repr(self._file)
-
-    def __iter__(self) -> cabc.Iterator[t.AnyStr]:
-        return iter(self._file)
-
-
 def echo(
     message: t.Any | None = None,
     file: t.IO[t.Any] | None = None,
@@ -354,55 +329,6 @@ def get_text_stream(
     if opener is None:
         raise TypeError(f"Unknown standard stream '{name}'")
     return opener(encoding, errors)
-
-
-def open_file(
-    filename: str | os.PathLike[str],
-    mode: str = "r",
-    encoding: str | None = None,
-    errors: str | None = "strict",
-    lazy: bool = False,
-    atomic: bool = False,
-) -> t.IO[t.Any]:
-    """Open a file, with extra behavior to handle ``'-'`` to indicate
-    a standard stream, lazy open on write, and atomic write. Similar to
-    the behavior of the :class:`~click.File` param type.
-
-    If ``'-'`` is given to open ``stdout`` or ``stdin``, the stream is
-    wrapped so that using it in a context manager will not close it.
-    This makes it possible to use the function without accidentally
-    closing a standard stream:
-
-    .. code-block:: python
-
-        with open_file(filename) as f:
-            ...
-
-    :param filename: The name or Path of the file to open, or ``'-'`` for
-        ``stdin``/``stdout``.
-    :param mode: The mode in which to open the file.
-    :param encoding: The encoding to decode or encode a file opened in
-        text mode.
-    :param errors: The error handling mode.
-    :param lazy: Wait to open the file until it is accessed. For read
-        mode, the file is temporarily opened to raise access errors
-        early, then closed until it is read again.
-    :param atomic: Write to a temporary file and replace the given file
-        on close.
-
-    .. versionadded:: 3.0
-    """
-    if lazy:
-        return t.cast(
-            "t.IO[t.Any]", LazyFile(filename, mode, encoding, errors, atomic=atomic)
-        )
-
-    f, should_close = open_stream(filename, mode, encoding, errors, atomic=atomic)
-
-    if not should_close:
-        f = t.cast("t.IO[t.Any]", KeepOpenFile(f))
-
-    return f
 
 
 def format_filename(

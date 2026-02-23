@@ -55,27 +55,6 @@ class ParamType:
     #: Windows).
     envvar_list_splitter: t.ClassVar[str | None] = None
 
-    def to_info_dict(self) -> dict[str, t.Any]:
-        """Gather information that could be useful for a tool generating
-        user-facing documentation.
-
-        Use :meth:`click.Context.to_info_dict` to traverse the entire
-        CLI structure.
-
-        .. versionadded:: 8.0
-        """
-        # The class name without the "ParamType" suffix.
-        param_type = type(self).__name__.partition("ParamType")[0]
-        param_type = param_type.partition("ParameterType")[0]
-
-        # Custom subclasses might not remember to set a name.
-        if hasattr(self, "name"):
-            name = self.name
-        else:
-            name = param_type
-
-        return {"param_type": param_type, "name": name}
-
     def __call__(
         self,
         value: t.Any,
@@ -169,11 +148,6 @@ class FuncParamType(ParamType):
         self.name: str = func.__name__
         self.func = func
 
-    def to_info_dict(self) -> dict[str, t.Any]:
-        info_dict = super().to_info_dict()
-        info_dict["func"] = self.func
-        return info_dict
-
     def convert(
         self, value: t.Any, param: Parameter | None, ctx: Context | None
     ) -> t.Any:
@@ -186,18 +160,6 @@ class FuncParamType(ParamType):
                 value = value.decode("utf-8", "replace")
 
             self.fail(value, param, ctx)
-
-
-class UnprocessedParamType(ParamType):
-    name = "text"
-
-    def convert(
-        self, value: t.Any, param: Parameter | None, ctx: Context | None
-    ) -> t.Any:
-        return value
-
-    def __repr__(self) -> str:
-        return "UNPROCESSED"
 
 
 class StringParamType(ParamType):
@@ -256,12 +218,6 @@ class Choice(ParamType, t.Generic[ParamTypeValue]):
     ) -> None:
         self.choices: cabc.Sequence[ParamTypeValue] = tuple(choices)
         self.case_sensitive = case_sensitive
-
-    def to_info_dict(self) -> dict[str, t.Any]:
-        info_dict = super().to_info_dict()
-        info_dict["choices"] = self.choices
-        info_dict["case_sensitive"] = self.case_sensitive
-        return info_dict
 
     def _normalized_mapping(
         self, ctx: Context | None = None
@@ -424,11 +380,6 @@ class DateTime(ParamType):
             "%Y-%m-%d %H:%M:%S",
         ]
 
-    def to_info_dict(self) -> dict[str, t.Any]:
-        info_dict = super().to_info_dict()
-        info_dict["formats"] = self.formats
-        return info_dict
-
     def get_metavar(self, param: Parameter, ctx: Context) -> str | None:
         return f"[{'|'.join(self.formats)}]"
 
@@ -497,17 +448,6 @@ class _NumberRangeBase(_NumberParamTypeBase):
         self.min_open = min_open
         self.max_open = max_open
         self.clamp = clamp
-
-    def to_info_dict(self) -> dict[str, t.Any]:
-        info_dict = super().to_info_dict()
-        info_dict.update(
-            min=self.min,
-            max=self.max,
-            min_open=self.min_open,
-            max_open=self.max_open,
-            clamp=self.clamp,
-        )
-        return info_dict
 
     def convert(
         self, value: t.Any, param: Parameter | None, ctx: Context | None
@@ -794,11 +734,6 @@ class File(ParamType):
         self.lazy = lazy
         self.atomic = atomic
 
-    def to_info_dict(self) -> dict[str, t.Any]:
-        info_dict = super().to_info_dict()
-        info_dict.update(mode=self.mode, encoding=self.encoding)
-        return info_dict
-
     def resolve_lazy_flag(self, value: str | os.PathLike[str]) -> bool:
         if self.lazy is not None:
             return self.lazy
@@ -889,8 +824,7 @@ class Path(ParamType):
         symlinks. A ``~`` is not expanded, as this is supposed to be
         done by the shell only.
     :param allow_dash: Allow a single dash as a value, which indicates
-        a standard stream (but does not open it). Use
-        :func:`~click.open_file` to handle opening this value.
+        a standard stream (but does not open it).
     :param path_type: Convert the incoming path value to this type. If
         ``None``, keep Python's default, which is ``str``. Useful to
         convert to :class:`pathlib.Path`.
@@ -935,18 +869,6 @@ class Path(ParamType):
             self.name = _("directory")
         else:
             self.name = _("path")
-
-    def to_info_dict(self) -> dict[str, t.Any]:
-        info_dict = super().to_info_dict()
-        info_dict.update(
-            exists=self.exists,
-            file_okay=self.file_okay,
-            dir_okay=self.dir_okay,
-            writable=self.writable,
-            readable=self.readable,
-            allow_dash=self.allow_dash,
-        )
-        return info_dict
 
     def coerce_path_result(
         self, value: str | os.PathLike[str]
@@ -1070,11 +992,6 @@ class Tuple(CompositeParamType):
     def __init__(self, types: cabc.Sequence[type[t.Any] | ParamType]) -> None:
         self.types: cabc.Sequence[ParamType] = [convert_type(ty) for ty in types]
 
-    def to_info_dict(self) -> dict[str, t.Any]:
-        info_dict = super().to_info_dict()
-        info_dict["types"] = [t.to_info_dict() for t in self.types]
-        return info_dict
-
     @property
     def name(self) -> str:  # type: ignore
         return f"<{' '.join(ty.name for ty in self.types)}>"
@@ -1164,19 +1081,6 @@ def convert_type(ty: t.Any | None, default: t.Any | None = None) -> ParamType:
 
     return FuncParamType(ty)
 
-
-#: A dummy parameter type that just does nothing.  From a user's
-#: perspective this appears to just be the same as `STRING` but
-#: internally no string conversion takes place if the input was bytes.
-#: This is usually useful when working with file paths as they can
-#: appear in bytes and unicode.
-#:
-#: For path related uses the :class:`Path` type is a better choice but
-#: there are situations where an unprocessed type is useful which is why
-#: it is is provided.
-#:
-#: .. versionadded:: 4.0
-UNPROCESSED = UnprocessedParamType()
 
 #: A unicode string parameter type which is the implicit default.  This
 #: can also be selected by using ``str`` as type.

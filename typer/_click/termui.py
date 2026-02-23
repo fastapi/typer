@@ -1,15 +1,11 @@
 from __future__ import annotations
 
 import collections.abc as cabc
-import inspect
 import io
-import itertools
-import sys
 import typing as t
 from contextlib import AbstractContextManager
 from gettext import gettext as _
 
-from ._compat import isatty, strip_ansi
 from .exceptions import Abort, UsageError
 from .globals import resolve_color_default
 from .types import Choice, ParamType, convert_type
@@ -253,38 +249,6 @@ def confirm(
     return rv
 
 
-def echo_via_pager(
-    text_or_generator: cabc.Iterable[str] | t.Callable[[], cabc.Iterable[str]] | str,
-    color: bool | None = None,
-) -> None:
-    """This function takes a text and shows it via an environment specific
-    pager on stdout.
-
-    .. versionchanged:: 3.0
-       Added the `color` flag.
-
-    :param text_or_generator: the text to page, or alternatively, a
-                              generator emitting the text to page.
-    :param color: controls if the pager supports ANSI colors or not.  The
-                  default is autodetection.
-    """
-    color = resolve_color_default(color)
-
-    if inspect.isgeneratorfunction(text_or_generator):
-        i = t.cast("t.Callable[[], cabc.Iterable[str]]", text_or_generator)()
-    elif isinstance(text_or_generator, str):
-        i = [text_or_generator]
-    else:
-        i = iter(t.cast("cabc.Iterable[str]", text_or_generator))
-
-    # convert every element of i to a text type if necessary
-    text_generator = (el if isinstance(el, str) else str(el) for el in i)
-
-    from ._termui_impl import pager
-
-    return pager(itertools.chain(text_generator, "\n"), color)
-
-
 @t.overload
 def progressbar(
     *,
@@ -485,20 +449,6 @@ def progressbar(
     )
 
 
-def clear() -> None:
-    """Clears the terminal screen.  This will have the effect of clearing
-    the whole visible space of the terminal and moving the cursor to the
-    top left.  This does not do anything if not connected to a terminal.
-
-    .. versionadded:: 2.0
-    """
-    if not isatty(sys.stdout):
-        return
-
-    # ANSI escape \033[2J clears the screen, \033[1;1H moves the cursor
-    echo("\033[2J\033[1;1H", nl=False)
-
-
 def _interpret_color(color: int | tuple[int, int, int] | str, offset: int = 0) -> str:
     if isinstance(color, int):
         return f"{38 + offset};5;{color:d}"
@@ -639,18 +589,6 @@ def style(
     return "".join(bits)
 
 
-def unstyle(text: str) -> str:
-    """Removes ANSI styling information from a string.  Usually it's not
-    necessary to use this function as Click's echo function will
-    automatically remove styling if necessary.
-
-    .. versionadded:: 2.0
-
-    :param text: the text to remove style information from.
-    """
-    return strip_ansi(text)
-
-
 def secho(
     message: t.Any | None = None,
     file: t.IO[t.AnyStr] | None = None,
@@ -683,95 +621,6 @@ def secho(
         message = style(message, **styles)
 
     return echo(message, file=file, nl=nl, err=err, color=color)
-
-
-@t.overload
-def edit(
-    text: bytes | bytearray,
-    editor: str | None = None,
-    env: cabc.Mapping[str, str] | None = None,
-    require_save: bool = False,
-    extension: str = ".txt",
-) -> bytes | None: ...
-
-
-@t.overload
-def edit(
-    text: str,
-    editor: str | None = None,
-    env: cabc.Mapping[str, str] | None = None,
-    require_save: bool = True,
-    extension: str = ".txt",
-) -> str | None: ...
-
-
-@t.overload
-def edit(
-    text: None = None,
-    editor: str | None = None,
-    env: cabc.Mapping[str, str] | None = None,
-    require_save: bool = True,
-    extension: str = ".txt",
-    filename: str | cabc.Iterable[str] | None = None,
-) -> None: ...
-
-
-def edit(
-    text: str | bytes | bytearray | None = None,
-    editor: str | None = None,
-    env: cabc.Mapping[str, str] | None = None,
-    require_save: bool = True,
-    extension: str = ".txt",
-    filename: str | cabc.Iterable[str] | None = None,
-) -> str | bytes | bytearray | None:
-    r"""Edits the given text in the defined editor.  If an editor is given
-    (should be the full path to the executable but the regular operating
-    system search path is used for finding the executable) it overrides
-    the detected editor.  Optionally, some environment variables can be
-    used.  If the editor is closed without changes, `None` is returned.  In
-    case a file is edited directly the return value is always `None` and
-    `require_save` and `extension` are ignored.
-
-    If the editor cannot be opened a :exc:`UsageError` is raised.
-
-    Note for Windows: to simplify cross-platform usage, the newlines are
-    automatically converted from POSIX to Windows and vice versa.  As such,
-    the message here will have ``\n`` as newline markers.
-
-    :param text: the text to edit.
-    :param editor: optionally the editor to use.  Defaults to automatic
-                   detection.
-    :param env: environment variables to forward to the editor.
-    :param require_save: if this is true, then not saving in the editor
-                         will make the return value become `None`.
-    :param extension: the extension to tell the editor about.  This defaults
-                      to `.txt` but changing this might change syntax
-                      highlighting.
-    :param filename: if provided it will edit this file instead of the
-                     provided text contents.  It will not use a temporary
-                     file as an indirection in that case. If the editor supports
-                     editing multiple files at once, a sequence of files may be
-                     passed as well. Invoke `click.file` once per file instead
-                     if multiple files cannot be managed at once or editing the
-                     files serially is desired.
-
-    .. versionchanged:: 8.2.0
-        ``filename`` now accepts any ``Iterable[str]`` in addition to a ``str``
-        if the ``editor`` supports editing multiple files at once.
-
-    """
-    from ._termui_impl import Editor
-
-    ed = Editor(editor=editor, env=env, require_save=require_save, extension=extension)
-
-    if filename is None:
-        return ed.edit(text)
-
-    if isinstance(filename, str):
-        filename = (filename,)
-
-    ed.edit_files(filenames=filename)
-    return None
 
 
 def launch(url: str, wait: bool = False, locate: bool = False) -> int:
@@ -842,37 +691,3 @@ def raw_terminal() -> AbstractContextManager[int]:
     from ._termui_impl import raw_terminal as f
 
     return f()
-
-
-def pause(info: str | None = None, err: bool = False) -> None:
-    """This command stops execution and waits for the user to press any
-    key to continue.  This is similar to the Windows batch "pause"
-    command.  If the program is not run through a terminal, this command
-    will instead do nothing.
-
-    .. versionadded:: 2.0
-
-    .. versionadded:: 4.0
-       Added the `err` parameter.
-
-    :param info: The message to print before pausing. Defaults to
-        ``"Press any key to continue..."``.
-    :param err: if set to message goes to ``stderr`` instead of
-                ``stdout``, the same as with echo.
-    """
-    if not isatty(sys.stdin) or not isatty(sys.stdout):
-        return
-
-    if info is None:
-        info = _("Press any key to continue...")
-
-    try:
-        if info:
-            echo(info, nl=False, err=err)
-        try:
-            getchar()
-        except (KeyboardInterrupt, EOFError):
-            pass
-    finally:
-        if info:
-            echo(err=err)

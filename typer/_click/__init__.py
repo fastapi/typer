@@ -6,7 +6,6 @@ from __future__ import annotations
 
 from .core import Argument as Argument
 from .core import Command as Command
-from .core import CommandCollection as CommandCollection
 from .core import Context as Context
 from .core import Group as Group
 from .core import Option as Option
@@ -25,23 +24,17 @@ from .exceptions import UsageError as UsageError
 from .formatting import HelpFormatter as HelpFormatter
 from .formatting import wrap_text as wrap_text
 from .globals import get_current_context as get_current_context
-from .termui import clear as clear
 from .termui import confirm as confirm
-from .termui import echo_via_pager as echo_via_pager
-from .termui import edit as edit
 from .termui import getchar as getchar
 from .termui import launch as launch
-from .termui import pause as pause
 from .termui import progressbar as progressbar
 from .termui import prompt as prompt
 from .termui import secho as secho
 from .termui import style as style
-from .termui import unstyle as unstyle
 from .types import BOOL as BOOL
 from .types import FLOAT as FLOAT
 from .types import INT as INT
 from .types import STRING as STRING
-from .types import UNPROCESSED as UNPROCESSED
 from .types import UUID as UUID
 from .types import Choice as Choice
 from .types import DateTime as DateTime
@@ -56,4 +49,3 @@ from .utils import format_filename as format_filename
 from .utils import get_app_dir as get_app_dir
 from .utils import get_binary_stream as get_binary_stream
 from .utils import get_text_stream as get_text_stream
-from .utils import open_file as open_file
