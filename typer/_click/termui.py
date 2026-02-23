@@ -719,37 +719,3 @@ def raw_terminal() -> AbstractContextManager[int]:
     from ._termui_impl import raw_terminal as f
 
     return f()
-
-
-def pause(info: str | None = None, err: bool = False) -> None:
-    """This command stops execution and waits for the user to press any
-    key to continue.  This is similar to the Windows batch "pause"
-    command.  If the program is not run through a terminal, this command
-    will instead do nothing.
-
-    .. versionadded:: 2.0
-
-    .. versionadded:: 4.0
-       Added the `err` parameter.
-
-    :param info: The message to print before pausing. Defaults to
-        ``"Press any key to continue..."``.
-    :param err: if set to message goes to ``stderr`` instead of
-                ``stdout``, the same as with echo.
-    """
-    if not isatty(sys.stdin) or not isatty(sys.stdout):
-        return
-
-    if info is None:
-        info = _("Press any key to continue...")
-
-    try:
-        if info:
-            echo(info, nl=False, err=err)
-        try:
-            getchar()
-        except (KeyboardInterrupt, EOFError):
-            pass
-    finally:
-        if info:
-            echo(err=err)

@@ -28,7 +28,6 @@ from .termui import clear as clear
 from .termui import confirm as confirm
 from .termui import getchar as getchar
 from .termui import launch as launch
-from .termui import pause as pause
 from .termui import progressbar as progressbar
 from .termui import prompt as prompt
 from .termui import secho as secho

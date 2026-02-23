@@ -11,7 +11,6 @@ from ._click.exceptions import Exit as Exit
 from ._click.termui import clear as clear
 from ._click.termui import confirm as confirm
 from ._click.termui import getchar as getchar
-from ._click.termui import pause as pause
 from ._click.termui import progressbar as progressbar
 from ._click.termui import prompt as prompt
 from ._click.termui import secho as secho
