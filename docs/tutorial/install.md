@@ -19,5 +19,3 @@ By default, `typer` comes with `rich` and `shellingham`.
 ```bash
 pip install typer
 ```
-
-///
