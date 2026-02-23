@@ -8,14 +8,12 @@ from . import colors as colors
 from ._click.exceptions import Abort as Abort
 from ._click.exceptions import BadParameter as BadParameter
 from ._click.exceptions import Exit as Exit
-from ._click.termui import clear as clear
 from ._click.termui import confirm as confirm
 from ._click.termui import getchar as getchar
 from ._click.termui import progressbar as progressbar
 from ._click.termui import prompt as prompt
 from ._click.termui import secho as secho
 from ._click.termui import style as style
-from ._click.termui import unstyle as unstyle
 from ._click.utils import echo as echo
 from ._click.utils import format_filename as format_filename
 from ._click.utils import get_app_dir as get_app_dir

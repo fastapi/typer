@@ -2,12 +2,10 @@ from __future__ import annotations
 
 import collections.abc as cabc
 import io
-import sys
 import typing as t
 from contextlib import AbstractContextManager
 from gettext import gettext as _
 
-from ._compat import isatty, strip_ansi
 from .exceptions import Abort, UsageError
 from .globals import resolve_color_default
 from .types import Choice, ParamType, convert_type
@@ -451,20 +449,6 @@ def progressbar(
     )
 
 
-def clear() -> None:
-    """Clears the terminal screen.  This will have the effect of clearing
-    the whole visible space of the terminal and moving the cursor to the
-    top left.  This does not do anything if not connected to a terminal.
-
-    .. versionadded:: 2.0
-    """
-    if not isatty(sys.stdout):
-        return
-
-    # ANSI escape \033[2J clears the screen, \033[1;1H moves the cursor
-    echo("\033[2J\033[1;1H", nl=False)
-
-
 def _interpret_color(color: int | tuple[int, int, int] | str, offset: int = 0) -> str:
     if isinstance(color, int):
         return f"{38 + offset};5;{color:d}"
@@ -603,18 +587,6 @@ def style(
     if reset:
         bits.append(_ansi_reset_all)
     return "".join(bits)
-
-
-def unstyle(text: str) -> str:
-    """Removes ANSI styling information from a string.  Usually it's not
-    necessary to use this function as Click's echo function will
-    automatically remove styling if necessary.
-
-    .. versionadded:: 2.0
-
-    :param text: the text to remove style information from.
-    """
-    return strip_ansi(text)
 
 
 def secho(
