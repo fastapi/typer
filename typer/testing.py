@@ -1,5 +1,5 @@
 from collections.abc import Mapping, Sequence
-from typing import IO, Any, Optional, Union
+from typing import IO, Any
 
 from typer.main import Typer
 from typer.main import get_command as _get_command
@@ -12,9 +12,9 @@ class CliRunner(ClickCliRunner):
     def invoke(  # type: ignore
         self,
         app: Typer,
-        args: Optional[Union[str, Sequence[str]]] = None,
-        input: Optional[Union[bytes, str, IO[Any]]] = None,
-        env: Optional[Mapping[str, Optional[str]]] = None,
+        args: str | Sequence[str] | None = None,
+        input: bytes | str | IO[Any] | None = None,
+        env: Mapping[str, str | None] | None = None,
         catch_exceptions: bool = True,
         color: bool = False,
         **extra: Any,

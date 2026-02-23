@@ -1,6 +1,7 @@
 import inspect
+from collections.abc import Callable
 from copy import copy
-from typing import Any, Callable, cast
+from typing import Any, cast
 
 from ._typing import Annotated, get_args, get_origin, get_type_hints
 from .models import ArgumentInfo, OptionInfo, ParameterInfo, ParamMeta
@@ -105,7 +106,6 @@ def _split_annotation_from_typer_annotations(
 
 def get_params_from_function(func: Callable[..., Any]) -> dict[str, ParamMeta]:
     signature = inspect.signature(func, eval_str=True)
-
     type_hints = get_type_hints(func)
     params = {}
     for param in signature.parameters.values():
@@ -184,3 +184,14 @@ def get_params_from_function(func: Callable[..., Any]) -> dict[str, ParamMeta]:
             name=param.name, default=default, annotation=annotation
         )
     return params
+
+
+def parse_boolean_env_var(env_var_value: str | None, default: bool) -> bool:
+    if env_var_value is None:
+        return default
+    value = env_var_value.lower()
+    if value in ("y", "yes", "t", "true", "on", "1"):
+        return True
+    if value in ("n", "no", "f", "false", "off", "0"):
+        return False
+    return default

@@ -4,7 +4,7 @@
 
 The simplest **Typer** file could look like this:
 
-{* docs_src/first_steps/tutorial001_py39.py *}
+{* docs_src/first_steps/tutorial001_py310.py *}
 
 Copy that to a file `main.py`.
 
@@ -61,7 +61,7 @@ They are a bit different from **CLI options** that you will see later below.
 
 Update the previous example with an argument `name`:
 
-{* docs_src/first_steps/tutorial002_py39.py hl[4,5] *}
+{* docs_src/first_steps/tutorial002_py310.py hl[4,5] *}
 
 <div class="termy">
 
@@ -103,7 +103,7 @@ Now let's say we want to have the name and last name separated.
 
 So, extend that to have 2 arguments, `name` and `lastname`:
 
-{* docs_src/first_steps/tutorial003_py39.py hl[4,5] *}
+{* docs_src/first_steps/tutorial003_py310.py hl[4,5] *}
 
 <div class="termy">
 
@@ -228,7 +228,7 @@ This one doesn't receive any values. But *CLI options* can also receive values l
 
 Now add a `--formal` *CLI option*:
 
-{* docs_src/first_steps/tutorial004_py39.py hl[4,5] *}
+{* docs_src/first_steps/tutorial004_py310.py hl[4,5] *}
 
 Here `formal` is a `bool` that is `False` by default.
 
@@ -289,7 +289,7 @@ Good day Ms. Camila Gutiérrez.
 
 To convert the `lastname` from a *CLI argument* to a *CLI option*, give it a default value of `""`:
 
-{* docs_src/first_steps/tutorial005_py39.py hl[4] *}
+{* docs_src/first_steps/tutorial005_py310.py hl[4] *}
 
 As `lastname` now has a default value of `""` (an empty string) it is no longer required in the function, and **Typer** will now by default make it an optional *CLI option*.
 
@@ -360,7 +360,7 @@ Hello Camila Gutiérrez
 
 If you add a <abbr title="a multi-line string as the first expression inside a function (not assigned to any variable) used for documentation">docstring</abbr> to your function it will be used in the help text:
 
-{* docs_src/first_steps/tutorial006_py39.py hl[5,6,7,8,9] *}
+{* docs_src/first_steps/tutorial006_py310.py hl[5,6,7,8,9] *}
 
 Now see it with the `--help` option:
 

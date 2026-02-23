@@ -71,14 +71,6 @@ Then it extends those ideas with features and bug fixes. For example, **Typer** 
 
 ///
 
-## The power of Click
-
-<a href="https://click.palletsprojects.com" class="external-link" target="_blank">Click</a> is one of the most popular tools for building CLIs in Python.
-
-**Typer** is based on it, so you get all its benefits.
-
-But you can write simpler code with the benefits of modern Python.
-
 ## Tested
 
 * 100% <abbr title="The amount of code that is automatically tested">test coverage</abbr>.

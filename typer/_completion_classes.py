@@ -6,6 +6,7 @@ from typing import Any
 
 from . import _click
 from ._click.shell_completion import split_arg_string as click_split_arg_string
+
 from ._completion_shared import (
     COMPLETION_SCRIPT_BASH,
     COMPLETION_SCRIPT_FISH,
@@ -36,7 +37,7 @@ class BashComplete(_click.shell_completion.BashComplete):
         }
 
     def get_completion_args(self) -> tuple[list[str], str]:
-        cwords = click_split_arg_string(os.environ["COMP_WORDS"])  # ty: ignore[call-non-callable]
+        cwords = click_split_arg_string(os.environ["COMP_WORDS"])
         cword = int(os.environ["COMP_CWORD"])
         args = cwords[1:cword]
 
@@ -73,7 +74,7 @@ class ZshComplete(_click.shell_completion.ZshComplete):
 
     def get_completion_args(self) -> tuple[list[str], str]:
         completion_args = os.getenv("_TYPER_COMPLETE_ARGS", "")
-        cwords = click_split_arg_string(completion_args)  # ty: ignore[call-non-callable]
+        cwords = click_split_arg_string(completion_args)
         args = cwords[1:]
         if args and not completion_args.endswith(" "):
             incomplete = args[-1]
@@ -124,7 +125,7 @@ class FishComplete(_click.shell_completion.FishComplete):
 
     def get_completion_args(self) -> tuple[list[str], str]:
         completion_args = os.getenv("_TYPER_COMPLETE_ARGS", "")
-        cwords = click_split_arg_string(completion_args)  # ty: ignore[call-non-callable]
+        cwords = click_split_arg_string(completion_args)
         args = cwords[1:]
         if args and not completion_args.endswith(" "):
             incomplete = args[-1]
@@ -178,7 +179,7 @@ class PowerShellComplete(_click.shell_completion.ShellComplete):
     def get_completion_args(self) -> tuple[list[str], str]:
         completion_args = os.getenv("_TYPER_COMPLETE_ARGS", "")
         incomplete = os.getenv("_TYPER_COMPLETE_WORD_TO_COMPLETE", "")
-        cwords = click_split_arg_string(completion_args)  # ty: ignore[call-non-callable]
+        cwords = click_split_arg_string(completion_args)
         args = cwords[1:-1] if incomplete else cwords[1:]
         return args, incomplete
 
