@@ -1892,7 +1892,7 @@ tests = [
 [package.metadata]
 requires-dist = [
     { name = "annotated-doc", specifier = ">=0.0.2" },
-    { name = "rich", specifier = ">=10.11.0" },
+    { name = "rich", specifier = ">=12.3.0" },
     { name = "shellingham", specifier = ">=1.3.0" },
 ]
 
