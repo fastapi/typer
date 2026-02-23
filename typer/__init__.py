@@ -24,7 +24,6 @@ from ._click.utils import format_filename as format_filename
 from ._click.utils import get_app_dir as get_app_dir
 from ._click.utils import get_binary_stream as get_binary_stream
 from ._click.utils import get_text_stream as get_text_stream
-from ._click.utils import open_file as open_file
 from .main import Typer as Typer
 from .main import launch as launch
 from .main import run as run

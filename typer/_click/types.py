@@ -836,8 +836,7 @@ class Path(ParamType):
         symlinks. A ``~`` is not expanded, as this is supposed to be
         done by the shell only.
     :param allow_dash: Allow a single dash as a value, which indicates
-        a standard stream (but does not open it). Use
-        :func:`~click.open_file` to handle opening this value.
+        a standard stream (but does not open it).
     :param path_type: Convert the incoming path value to this type. If
         ``None``, keep Python's default, which is ``str``. Useful to
         convert to :class:`pathlib.Path`.
