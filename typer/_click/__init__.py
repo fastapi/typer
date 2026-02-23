@@ -40,7 +40,6 @@ from .types import BOOL as BOOL
 from .types import FLOAT as FLOAT
 from .types import INT as INT
 from .types import STRING as STRING
-from .types import UNPROCESSED as UNPROCESSED
 from .types import UUID as UUID
 from .types import Choice as Choice
 from .types import DateTime as DateTime

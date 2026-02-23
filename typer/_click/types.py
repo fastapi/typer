@@ -162,18 +162,6 @@ class FuncParamType(ParamType):
             self.fail(value, param, ctx)
 
 
-class UnprocessedParamType(ParamType):
-    name = "text"
-
-    def convert(
-        self, value: t.Any, param: Parameter | None, ctx: Context | None
-    ) -> t.Any:
-        return value
-
-    def __repr__(self) -> str:
-        return "UNPROCESSED"
-
-
 class StringParamType(ParamType):
     name = "text"
 
@@ -1093,19 +1081,6 @@ def convert_type(ty: t.Any | None, default: t.Any | None = None) -> ParamType:
 
     return FuncParamType(ty)
 
-
-#: A dummy parameter type that just does nothing.  From a user's
-#: perspective this appears to just be the same as `STRING` but
-#: internally no string conversion takes place if the input was bytes.
-#: This is usually useful when working with file paths as they can
-#: appear in bytes and unicode.
-#:
-#: For path related uses the :class:`Path` type is a better choice but
-#: there are situations where an unprocessed type is useful which is why
-#: it is is provided.
-#:
-#: .. versionadded:: 4.0
-UNPROCESSED = UnprocessedParamType()
 
 #: A unicode string parameter type which is the implicit default.  This
 #: can also be selected by using ``str`` as type.
