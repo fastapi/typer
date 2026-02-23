@@ -10,7 +10,6 @@ from ._click.exceptions import BadParameter as BadParameter
 from ._click.exceptions import Exit as Exit
 from ._click.termui import clear as clear
 from ._click.termui import confirm as confirm
-from ._click.termui import echo_via_pager as echo_via_pager
 from ._click.termui import edit as edit
 from ._click.termui import getchar as getchar
 from ._click.termui import pause as pause
