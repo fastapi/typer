@@ -8,7 +8,7 @@ Typer does some tricks to help you detect those errors quickly.
 
 Let's take this example broken app:
 
-{* docs_src/exceptions/tutorial001_py39.py hl[8] *}
+{* docs_src/exceptions/tutorial001_py310.py hl[8] *}
 
 This code is broken because you can't sum a string and a number (`name + 3`).
 
@@ -77,7 +77,7 @@ This would be relevant in particular if your CLI application is being run on som
 
 However, if you do want to enable the setting, you can set the parameter `pretty_exceptions_show_locals=True` when creating the `typer.Typer()` application:
 
-{* docs_src/exceptions/tutorial002_py39.py hl[3] *}
+{* docs_src/exceptions/tutorial002_py310.py hl[3] *}
 
 Now, when using Rich, you will see the error with the local variables:
 
@@ -114,7 +114,7 @@ But you should only enable it if you're not dealing with delicate information.
 
 If you want to show the full exception, including the internal parts in Typer, you can use the parameter `pretty_exceptions_short=False`:
 
-{* docs_src/exceptions/tutorial003_py39.py hl[3] *}
+{* docs_src/exceptions/tutorial003_py310.py hl[3] *}
 
 Now when you run it, you will see the whole output:
 
@@ -196,7 +196,7 @@ $ python main.py
 
 You can also entirely disable pretty exceptions with the parameter `pretty_exceptions_enable=False`:
 
-{* docs_src/exceptions/tutorial004_py39.py hl[3] *}
+{* docs_src/exceptions/tutorial004_py310.py hl[3] *}
 
 And now you will see the full standard exception as with any other Python program:
 

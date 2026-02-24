@@ -58,7 +58,7 @@ We'll have a command to `create` users and another command to `delete` them.
 
 To begin, let's say it can only create and delete one single predefined user:
 
-{* docs_src/commands/index/tutorial002_py39.py hl[6,11] *}
+{* docs_src/commands/index/tutorial002_py310.py hl[6,11] *}
 
 Now we have a CLI application with 2 commands, `create` and `delete`:
 
@@ -107,7 +107,7 @@ By default, we need to specify `--help` to get the command's help page.
 
 However, by setting `no_args_is_help=True` when defining the `typer.Typer()` application, the help function will be shown whenever no argument is given:
 
-{* docs_src/commands/index/tutorial003_py39.py hl[3] *}
+{* docs_src/commands/index/tutorial003_py310.py hl[3] *}
 
 Now we can run this:
 
@@ -138,7 +138,7 @@ Note that by design, **Typer** shows the commands in the order they've been decl
 
 So, if we take our original example, with `create` and `delete` commands, and reverse the order in the Python file:
 
-{* docs_src/commands/index/tutorial004_py39.py hl[7,12] *}
+{* docs_src/commands/index/tutorial004_py310.py hl[7,12] *}
 
 Then we will see the `delete` command first in the help output:
 

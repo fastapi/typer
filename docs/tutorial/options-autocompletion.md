@@ -16,7 +16,7 @@ To check it quickly without creating a new Python package, use the `typer` comma
 
 Then let's create a small example program:
 
-{* docs_src/options_autocompletion/tutorial001_an_py39.py *}
+{* docs_src/options_autocompletion/tutorial001_an_py310.py *}
 
 And let's try it with the `typer` command to get completion:
 
@@ -50,7 +50,7 @@ Right now we get completion for the *CLI option* names, but not for the values.
 
 We can provide completion for the values creating an `autocompletion` function, similar to the `callback` functions from [CLI Option Callback and Context](./options/callback-and-context.md){.internal-link target=_blank}:
 
-{* docs_src/options_autocompletion/tutorial002_an_py39.py hl[6:7,16] *}
+{* docs_src/options_autocompletion/tutorial002_an_py310.py hl[6:7,16] *}
 
 We return a `list` of strings from the `complete_name()` function.
 
@@ -79,7 +79,7 @@ Modify the `complete_name()` function to receive a parameter of type `str`, it w
 
 Then we can check and return only the values that start with the incomplete value from the command line:
 
-{* docs_src/options_autocompletion/tutorial003_an_py39.py hl[8:13] *}
+{* docs_src/options_autocompletion/tutorial003_an_py310.py hl[8:13] *}
 
 Now let's try it:
 
@@ -118,7 +118,7 @@ In the `complete_name()` function, instead of providing one `str` per completion
 
 So, in the end, we return a `list` of `tuples` of `str`:
 
-{* docs_src/options_autocompletion/tutorial004_an_py39.py hl[5:9,12:18] *}
+{* docs_src/options_autocompletion/tutorial004_an_py310.py hl[5:9,12:18] *}
 
 /// tip
 
@@ -157,7 +157,7 @@ Instead of creating and returning a list with values (`str` or `tuple`), we can 
 
 That way our function will be a <a href="https://docs.python.org/3.8/glossary.html#index-19" class="external-link" target="_blank">generator</a> that **Typer** can iterate:
 
-{* docs_src/options_autocompletion/tutorial005_an_py39.py hl[12:15] *}
+{* docs_src/options_autocompletion/tutorial005_an_py310.py hl[12:15] *}
 
 That simplifies our code a bit and works the same.
 
@@ -193,7 +193,7 @@ So, for now, take this as a sneak peek 😉.
 
 For this we use a `list` of `str`:
 
-{* docs_src/options_autocompletion/tutorial006_an_py39.py hl[8:13] *}
+{* docs_src/options_autocompletion/tutorial006_an_py310.py hl[8:13] *}
 
 And then we can use it like:
 
@@ -218,7 +218,7 @@ But you can access the context by declaring a function parameter of type `typer.
 
 And from that context you can get the current values for each parameter.
 
-{* docs_src/options_autocompletion/tutorial007_an_py39.py hl[12:13,15] *}
+{* docs_src/options_autocompletion/tutorial007_an_py310.py hl[12:13,15] *}
 
 We are getting the `names` already provided with `--name` in the command line before this completion was triggered.
 
@@ -294,7 +294,7 @@ You can print to "standard error" with a **Rich** `Console(stderr=True)`.
 
 Using `stderr=True` tells **Rich** that the output should be shown in "standard error".
 
-{* docs_src/options_autocompletion/tutorial008_an_py39.py hl[12,15:16] *}
+{* docs_src/options_autocompletion/tutorial008_an_py310.py hl[12,15:16] *}
 
 /// info
 
@@ -342,7 +342,7 @@ But it's probably useful only in very advanced use cases.
 
 Of course, you can declare everything if you need it, the context, the raw *CLI parameters*, and the incomplete `str`:
 
-{* docs_src/options_autocompletion/tutorial009_an_py39.py hl[15] *}
+{* docs_src/options_autocompletion/tutorial009_an_py310.py hl[15] *}
 
 Check it:
 
