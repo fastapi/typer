@@ -67,6 +67,25 @@ plugins:
   redirects:
     redirect_maps:
       typer-cli.md: tutorial/typer-command.md
+  mkdocstrings:
+    handlers:
+      python:
+        options:
+          extensions:
+            - griffe_typingdoc
+          show_root_heading: true
+          show_if_no_docstring: true
+          inherited_members: true
+          members_order: source
+          separate_signature: true
+          unwrap_annotated: true
+          filters:
+            - '!^_'
+          merge_init_into_class: true
+          docstring_section_style: spacy
+          signature_crossrefs: true
+          show_symbol_type_heading: true
+          show_symbol_type_toc: true
 
 nav:
   - Typer: index.md
@@ -133,11 +152,17 @@ nav:
       - tutorial/app-dir.md
       - tutorial/launch.md
       - tutorial/testing.md
-      - tutorial/using-click.md
       - tutorial/package.md
       - tutorial/exceptions.md
       - tutorial/one-file-per-command.md
       - tutorial/typer-command.md
+  - Reference (Code API):
+    - reference/index.md
+    - reference/typer.md
+    - reference/run_launch.md
+    - reference/parameters.md
+    - reference/file_objects.md
+    - reference/context.md
   - Resources:
     - resources/index.md
     - help-typer.md

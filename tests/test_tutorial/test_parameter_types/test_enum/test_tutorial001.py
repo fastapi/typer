@@ -13,7 +13,7 @@ runner = CliRunner()
 @pytest.fixture(
     name="mod",
     params=[
-        "tutorial001_py39",
+        "tutorial001_py310",
         pytest.param("tutorial001_py311", marks=needs_py311),
     ],
 )

@@ -78,7 +78,7 @@ Training neural network of type: lstm
 
 A *CLI parameter* can also take a list of `Enum` values:
 
-{* docs_src/parameter_types/enum/tutorial003_an_py39.py hl[17] *}
+{* docs_src/parameter_types/enum/tutorial003_an_py310.py hl[17] *}
 
 This works just like any other parameter value taking a list of things:
 
