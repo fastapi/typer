@@ -356,34 +356,19 @@ For a more complete example including more features, see the <a href="https://ty
 
 ## Dependencies
 
-**Typer** stands on the shoulders of a giant. Its only internal required dependency is <a href="https://click.palletsprojects.com/" class="external-link" target="_blank">Click</a>.
+**Typer** stands on the shoulders of giants. It has three required dependencies:
 
-By default it also comes with extra standard dependencies:
-
+* <a href="https://click.palletsprojects.com/" class="external-link" target="_blank">Click</a>: a popular tool for building CLIs in Python. Typer is based on it.
 * <a href="https://rich.readthedocs.io/en/stable/index.html" class="external-link" target="_blank"><code>rich</code></a>: to show nicely formatted errors automatically.
 * <a href="https://github.com/sarugaku/shellingham" class="external-link" target="_blank"><code>shellingham</code></a>: to automatically detect the current shell when installing completion.
-    * With `shellingham` you can just use `--install-completion`.
-    * Without `shellingham`, you have to pass the name of the shell to install completion for, e.g. `--install-completion bash`.
 
 ### `typer-slim`
 
-If you don't want the extra standard optional dependencies, install `typer-slim` instead.
+There used to be a slimmed-down version of Typer called `typer-slim`, which didn't include the dependencies `rich` and `shellingham`, nor the `typer` command.
 
-When you install with:
+However, since version 0.22.0, we have stopped supporting this, and `typer-slim` now simply installs (all of) Typer.
 
-```bash
-pip install typer
-```
-
-...it includes the same code and dependencies as:
-
-```bash
-pip install "typer-slim[standard]"
-```
-
-The `standard` extra dependencies are `rich` and `shellingham`.
-
-**Note**: The `typer` command is only included in the `typer` package.
+If you want to disable Rich globally, you can set an environmental variable `TYPER_USE_RICH` to `False` or `0`.
 
 ## License
 
