@@ -361,24 +361,23 @@ def _print_options_panel(
         opt_short_strs = []
         secondary_opt_long_strs = []
         secondary_opt_short_strs = []
-        
+
         # Determine if this parameter has a custom metavar
         metavar_str = param.make_metavar(ctx=ctx)
-        
+
         # For Arguments, check if metavar is a custom value or just the default
         # Default metavar is either PARAM_NAME or [PARAM_NAME] for optional args
         is_default_metavar = False
         if isinstance(param, click.Argument) and param.name:
             expected_upper = param.name.upper()
             # Check if metavar is the default (with or without brackets)
-            if metavar_str == expected_upper or metavar_str == f'[{expected_upper}]':
+            if metavar_str == expected_upper or metavar_str == f"[{expected_upper}]":
                 is_default_metavar = True
-        
+
         has_custom_metavar = (
-            isinstance(param, click.Argument)
-            and not is_default_metavar
+            isinstance(param, click.Argument) and not is_default_metavar
         )
-        
+
         # Process opts
         for opt_str in param.opts:
             if "--" in opt_str:
@@ -388,7 +387,7 @@ def _print_options_panel(
                 opt_short_strs.append(metavar_str)
             else:
                 opt_short_strs.append(opt_str)
-                
+
         for opt_str in param.secondary_opts:
             if "--" in opt_str:
                 secondary_opt_long_strs.append(opt_str)
@@ -397,7 +396,7 @@ def _print_options_panel(
 
         # Column for displaying type or metavar
         metavar = Text(style=STYLE_METAVAR, overflow="fold")
-        
+
         # For Arguments with custom metavar: show type in metavar column
         # For other parameters: use original logic
         if isinstance(param, click.Argument) and has_custom_metavar:
@@ -411,10 +410,13 @@ def _print_options_panel(
             if (
                 isinstance(param, click.Argument)
                 and param.name
-                and (metavar_str == param.name.upper() or metavar_str == f'[{param.name.upper()}]')
+                and (
+                    metavar_str == param.name.upper()
+                    or metavar_str == f"[{param.name.upper()}]"
+                )
             ):
                 metavar_str = param.type.name.upper()
-            
+
             if metavar_str != "BOOLEAN":
                 metavar.append(metavar_str)
 
