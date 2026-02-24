@@ -50,7 +50,8 @@ def _typer_param_setup_autocompletion_compat(
     autocompletion: Callable[
         [click.Context, list[str], click.core.Parameter, str],
         list[Union[tuple[str, str], str, "click.shell_completion.CompletionItem"]],
-    ] | None = None,
+    ]
+    | None = None,
 ) -> None:
     if self._custom_shell_complete is not None:
         import warnings
