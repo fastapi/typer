@@ -12,13 +12,12 @@ from functools import update_wrapper
 from pathlib import Path
 from traceback import FrameSummary, StackSummary
 from types import TracebackType
-from typing import Annotated, Any
+from typing import Annotated, Any, TypeAlias
 from uuid import UUID
 
 import click
 from annotated_doc import Doc
 from typer._types import TyperChoice
-from typing_extensions import TypeAlias
 
 from ._typing import get_args, get_origin, is_literal_type, is_union, literal_values
 from .completion import get_completion_inspect_parameters
