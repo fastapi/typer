@@ -63,7 +63,7 @@ You can define aliases for commands so users can call them with different names.
 
 Pass additional positional arguments to `@app.command()`:
 
-{* docs_src/commands/name/tutorial002_py39.py hl[6,9] *}
+{* docs_src/commands/name/tutorial002_py310.py hl[6,9] *}
 
 The `list` command can be called with `list` or `ls`:
 
@@ -110,7 +110,7 @@ Removing items
 
 Use the `aliases` parameter:
 
-{* docs_src/commands/name/tutorial002_py39.py hl[9] *}
+{* docs_src/commands/name/tutorial002_py310.py hl[9] *}
 
 Positional aliases and the `aliases` parameter can be combined.
 
@@ -118,7 +118,7 @@ Positional aliases and the `aliases` parameter can be combined.
 
 Use `hidden_aliases` for aliases that work but don't appear in help:
 
-{* docs_src/commands/name/tutorial003_py39.py hl[6] *}
+{* docs_src/commands/name/tutorial003_py310.py hl[6] *}
 
 <div class="termy">
 
