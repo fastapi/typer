@@ -208,8 +208,8 @@ class CommandInfo:
         no_args_is_help: bool = False,
         hidden: bool = False,
         deprecated: bool = False,
-        aliases: Optional[Sequence[str]] = None,
-        hidden_aliases: Optional[Sequence[str]] = None,
+        aliases: Sequence[str] | None = None,
+        hidden_aliases: Sequence[str] | None = None,
         # Rich settings
         rich_help_panel: str | None = None,
     ):
