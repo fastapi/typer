@@ -8,12 +8,6 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        package:
-          - typer-slim
-          - typer
-          - typer-cli
     permissions:
       id-token: write
       contents: read
@@ -31,7 +25,5 @@ jobs:
         uses: astral-sh/setup-uv@v7
       - name: Build distribution
         run: uv build
-        env:
-          TIANGOLO_BUILD_PACKAGE: ${{ matrix.package }}
       - name: Publish
         run: uv publish
