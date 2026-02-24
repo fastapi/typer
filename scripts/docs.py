@@ -207,7 +207,7 @@ def copy_py39_to_py310() -> None:
             continue
         logging.info(f"Copying directory {dir_path} -> {py310_dir}")
         shutil.copytree(dir_path, py310_dir)
-    # Handle file-level labels (e.g. tutorial001_py39.py)
+    # Handle file-level labels (e.g. tutorial001_py310.py)
     for file_path in sorted(docs_src_path.rglob("*_py39.py")):
         if not file_path.is_file():
             continue

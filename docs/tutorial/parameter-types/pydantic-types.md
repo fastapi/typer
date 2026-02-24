@@ -26,12 +26,12 @@ Successfully installed pydantic, email-validator
 
 You can then use them as parameter types.
 
-{* docs_src/parameter_types/pydantic_types/tutorial001_an_py39.py hl[9] *}
+{* docs_src/parameter_types/pydantic_types/tutorial001_an_py310.py hl[9] *}
 
-{* docs_src/parameter_types/pydantic_types/tutorial002_an_py39.py hl[9] *}
+{* docs_src/parameter_types/pydantic_types/tutorial002_an_py310.py hl[9] *}
 
 These types are also supported in lists or tuples:
 
-{* docs_src/parameter_types/pydantic_types/tutorial003_an_py39.py hl[9] *}
+{* docs_src/parameter_types/pydantic_types/tutorial003_an_py310.py hl[9] *}
 
-{* docs_src/parameter_types/pydantic_types/tutorial004_an_py39.py hl[9] *}
+{* docs_src/parameter_types/pydantic_types/tutorial004_an_py310.py hl[9] *}
