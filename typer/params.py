@@ -246,7 +246,7 @@ def Option(
         ),
     ] = False,
     envvar: Annotated[
-        str | list[str] | None,
+        str | Sequence[str] | None,
         Doc(
             """
             Configure a CLI Option to read its value from an environment variable if it is not provided in the command line.
@@ -1200,7 +1200,7 @@ def Argument(
         ),
     ] = False,
     envvar: Annotated[
-        str | list[str] | None,
+        str | Sequence[str] | None,
         Doc(
             """
             Configure an argument to read a value from an environment variable if it is not provided in the command line as a CLI argument.
