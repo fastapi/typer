@@ -747,6 +747,6 @@ def get_traceback(
 
 
 def get_panel_name(
-    obj: Union[click.Command, click.Argument, click.Option], default_name: str
+    obj: click.Command | click.Argument | click.Option, default_name: str
 ) -> str:
     return getattr(obj, _RICH_HELP_PANEL_NAME, None) or default_name
