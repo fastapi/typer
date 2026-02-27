@@ -9,6 +9,7 @@
 
 ### Internal
 
+* ⬆ Bump actions/download-artifact from 7 to 8. PR [#1614](https://github.com/fastapi/typer/pull/1614) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump actions/upload-artifact from 6 to 7. PR [#1613](https://github.com/fastapi/typer/pull/1613) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump mkdocs-material from 9.7.2 to 9.7.3. PR [#1611](https://github.com/fastapi/typer/pull/1611) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump mkdocstrings-python from 2.0.1 to 2.0.3. PR [#1605](https://github.com/fastapi/typer/pull/1605) by [@svlandeg](https://github.com/svlandeg).
