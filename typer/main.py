@@ -12,7 +12,7 @@ from functools import update_wrapper
 from pathlib import Path
 from traceback import FrameSummary, StackSummary
 from types import TracebackType
-from typing import Annotated, Any
+from typing import Annotated, Any, TypeAlias
 from uuid import UUID
 
 import click
@@ -51,6 +51,40 @@ from .models import (
     TyperPath,
 )
 from .utils import get_params_from_function
+
+try:
+    import pydantic
+
+    def is_pydantic_type(type_: Any) -> bool:
+        if get_origin(type_) is Annotated:
+            # While this is excluded from coverage, we need this check for older versions of Pydantic 2, cf PR 723
+            return is_pydantic_type(get_args(type_)[0])  # pragma: no cover
+        return type_.__module__.startswith("pydantic") and not lenient_issubclass(
+            type_, pydantic.BaseModel
+        )
+
+    def pydantic_convertor(type_: type) -> Callable[[str], Any]:
+        """Create a convertor for a parameter annotated with a pydantic type."""
+        T: TypeAlias = type_  # type: ignore[valid-type]
+        adapter: pydantic.TypeAdapter[T] = pydantic.TypeAdapter(type_)
+
+        def convertor(value: str) -> T:
+            try:
+                return adapter.validate_python(value)
+            except pydantic.ValidationError as e:
+                error_message = e.errors(
+                    include_context=False, include_input=False, include_url=False
+                )[0]["msg"]
+                raise click.BadParameter(error_message) from e
+
+        return convertor
+
+except ImportError:  # pragma: no cover
+    pydantic = None  # type: ignore
+
+    def is_pydantic_type(type_: Any) -> bool:
+        return False
+
 
 _original_except_hook = sys.excepthook
 _typer_developer_exception_attr_name = "__typer_developer_exception__"
@@ -1430,6 +1464,8 @@ def determine_type_convertor(type_: Any) -> Callable[[Any], Any] | None:
         convertor = param_path_convertor
     if lenient_issubclass(type_, Enum):
         convertor = generate_enum_convertor(type_)
+    if is_pydantic_type(type_):
+        convertor = pydantic_convertor(type_)
     return convertor
 
 
@@ -1617,11 +1653,18 @@ def get_click_type(
             literal_values(annotation),
             case_sensitive=parameter_info.case_sensitive,
         )
+    elif is_pydantic_type(annotation):
+        return click.STRING
     raise RuntimeError(f"Type not yet supported: {annotation}")  # pragma: no cover
 
 
 def lenient_issubclass(cls: Any, class_or_tuple: AnyType | tuple[AnyType, ...]) -> bool:
     return isinstance(cls, type) and issubclass(cls, class_or_tuple)
+
+
+def is_complex_subtype(type_: Any) -> bool:
+    # For pydantic types, such as `AnyUrl`, there's an extra `Annotated` layer that we don't need to treat as complex
+    return get_origin(type_) is not None and not is_pydantic_type(type_)
 
 
 def get_click_param(
@@ -1657,6 +1700,7 @@ def get_click_param(
     is_flag = None
     origin = get_origin(main_type)
 
+    callback = parameter_info.callback
     if origin is not None:
         # Handle SomeType | None and Optional[SomeType]
         if is_union(origin):
@@ -1671,14 +1715,14 @@ def get_click_param(
         # Handle Tuples and Lists
         if lenient_issubclass(origin, list):
             main_type = get_args(main_type)[0]
-            assert not get_origin(main_type), (
+            assert not is_complex_subtype(main_type), (
                 "List types with complex sub-types are not currently supported"
             )
             is_list = True
         elif lenient_issubclass(origin, tuple):
             types = []
             for type_ in get_args(main_type):
-                assert not get_origin(type_), (
+                assert not is_complex_subtype(type_), (
                     "Tuple types with complex sub-types are not currently supported"
                 )
                 types.append(
@@ -1736,9 +1780,7 @@ def get_click_param(
                 # Parameter
                 required=required,
                 default=default_value,
-                callback=get_param_callback(
-                    callback=parameter_info.callback, convertor=convertor
-                ),
+                callback=get_param_callback(callback=callback, convertor=convertor),
                 metavar=parameter_info.metavar,
                 expose_value=parameter_info.expose_value,
                 is_eager=parameter_info.is_eager,
@@ -1770,9 +1812,7 @@ def get_click_param(
                 hidden=parameter_info.hidden,
                 # Parameter
                 default=default_value,
-                callback=get_param_callback(
-                    callback=parameter_info.callback, convertor=convertor
-                ),
+                callback=get_param_callback(callback=callback, convertor=convertor),
                 metavar=parameter_info.metavar,
                 expose_value=parameter_info.expose_value,
                 is_eager=parameter_info.is_eager,
