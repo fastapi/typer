@@ -20,6 +20,7 @@ from annotated_doc import Doc
 from typer._types import TyperChoice
 
 from ._typing import get_args, get_origin, is_literal_type, is_union, literal_values
+from .command_tree import get_command_tree_param_meta
 from .completion import get_completion_inspect_parameters
 from .core import (
     DEFAULT_MARKUP_MODE,
@@ -112,6 +113,12 @@ def get_install_completion_arguments() -> tuple[click.Parameter, click.Parameter
     click_install_param, _ = get_click_param(install_param)
     click_show_param, _ = get_click_param(show_param)
     return click_install_param, click_show_param
+
+
+def get_command_tree_parameter() -> click.Parameter:
+    meta = get_command_tree_param_meta()
+    param, _ = get_click_param(meta)
+    return param
 
 
 class Typer:
@@ -406,6 +413,23 @@ class Typer:
                 """
             ),
         ] = True,
+        command_tree: Annotated[
+            bool,
+            Doc(
+                """
+            Toggle whether or not to add the `--show-sub-commands` option to the app.
+            Set to `False` by default.
+
+            ***Example***
+
+            ```python
+            import typer
+
+            app = typer.Typer(command_tree=True)
+            ```
+            """
+            ),
+        ] = Default(False),
         # Rich settings
         rich_markup_mode: Annotated[
             MarkupMode,
@@ -516,6 +540,7 @@ class Typer:
         ] = True,
     ):
         self._add_completion = add_completion
+        self._command_tree = command_tree
         self.rich_markup_mode: MarkupMode = rich_markup_mode
         self.rich_help_panel = rich_help_panel
         self.suggest_commands = suggest_commands
@@ -1163,6 +1188,7 @@ def get_group(typer_instance: Typer) -> TyperGroup:
         TyperInfo(typer_instance),
         pretty_exceptions_short=typer_instance.pretty_exceptions_short,
         rich_markup_mode=typer_instance.rich_markup_mode,
+        command_tree=typer_instance._command_tree,
         suggest_commands=typer_instance.suggest_commands,
     )
     return group
@@ -1284,6 +1310,7 @@ def get_group_from_info(
     pretty_exceptions_short: bool,
     suggest_commands: bool,
     rich_markup_mode: MarkupMode,
+    command_tree: bool,
 ) -> TyperGroup:
     assert group_info.typer_instance, (
         "A Typer instance is needed to generate a Click Group"
@@ -1302,6 +1329,7 @@ def get_group_from_info(
             sub_group_info,
             pretty_exceptions_short=pretty_exceptions_short,
             rich_markup_mode=rich_markup_mode,
+            command_tree=command_tree,
             suggest_commands=suggest_commands,
         )
         if sub_group.name:
@@ -1322,6 +1350,8 @@ def get_group_from_info(
         convertors,
         context_param_name,
     ) = get_params_convertors_ctx_param_name_from_function(solved_info.callback)
+    if command_tree:
+        params.append(get_command_tree_parameter())  # type: ignore[arg-type]
     cls = solved_info.cls or TyperGroup
     assert issubclass(cls, TyperGroup), f"{cls} should be a subclass of {TyperGroup}"
     group = cls(
