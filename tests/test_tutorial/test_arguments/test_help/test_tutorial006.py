@@ -4,6 +4,7 @@ import sys
 from types import ModuleType
 
 import pytest
+import typer
 from typer.testing import CliRunner
 
 runner = CliRunner()
@@ -22,16 +23,31 @@ def get_mod(request: pytest.FixtureRequest) -> ModuleType:
     return mod
 
 
-def test_help(mod: ModuleType):
-    result = runner.invoke(mod.app, ["--help"])
+@pytest.fixture(
+    name="app",
+    params=[
+        pytest.param(None),
+        pytest.param("rich"),
+    ],
+)
+def get_app(mod: ModuleType, request: pytest.FixtureRequest) -> typer.Typer:
+    rich_markup_mode = request.param
+    app = typer.Typer(rich_markup_mode=rich_markup_mode)
+    app.command()(mod.main)
+    return app
+
+
+def test_help(app):
+    result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "Usage: main [OPTIONS] [✨username✨]" in result.output
+    assert "Usage: main [OPTIONS] [✨user✨]" in result.output
     assert "Arguments" in result.output
+    assert "name" not in result.output
     assert "[default: World]" in result.output
 
 
-def test_call_arg(mod: ModuleType):
-    result = runner.invoke(mod.app, ["Camila"])
+def test_call_arg(app):
+    result = runner.invoke(app, ["Camila"])
     assert result.exit_code == 0
     assert "Hello Camila" in result.output
 
