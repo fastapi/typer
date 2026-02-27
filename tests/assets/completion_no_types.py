@@ -3,9 +3,10 @@ import typer
 app = typer.Typer()
 
 
-def complete(ctx, args, incomplete):
+def complete(ctx, args, param, incomplete):
     typer.echo(f"info name is: {ctx.info_name}", err=True)
     typer.echo(f"args is: {args}", err=True)
+    typer.echo(f"param is: {param.name}", err=True)
     typer.echo(f"incomplete is: {incomplete}", err=True)
     return [
         ("Camila", "The reader of books."),
@@ -15,8 +16,8 @@ def complete(ctx, args, incomplete):
 
 
 @app.command()
-def main(name: str = typer.Option("World", autocompletion=complete)):
-    print(f"Hello {name}")
+def main(user: str = typer.Option("World", autocompletion=complete)):
+    print(f"Hello {user}")
 
 
 if __name__ == "__main__":

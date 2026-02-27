@@ -1847,6 +1847,7 @@ def get_param_completion(
     parameters = get_params_from_function(callback)
     ctx_name = None
     args_name = None
+    param_name = None
     incomplete_name = None
     unassigned_params = list(parameters.values())
     for param_sig in unassigned_params[:]:
@@ -1856,6 +1857,9 @@ def get_param_completion(
             unassigned_params.remove(param_sig)
         elif lenient_issubclass(origin, list):
             args_name = param_sig.name
+            unassigned_params.remove(param_sig)
+        elif lenient_issubclass(param_sig.annotation, click.Parameter):
+            param_name = param_sig.name
             unassigned_params.remove(param_sig)
         elif lenient_issubclass(param_sig.annotation, str):
             incomplete_name = param_sig.name
@@ -1868,6 +1872,9 @@ def get_param_completion(
         elif args_name is None and param_sig.name == "args":
             args_name = param_sig.name
             unassigned_params.remove(param_sig)
+        elif param_name is None and param_sig.name == "param":
+            param_name = param_sig.name
+            unassigned_params.remove(param_sig)
         elif incomplete_name is None and param_sig.name == "incomplete":
             incomplete_name = param_sig.name
             unassigned_params.remove(param_sig)
@@ -1878,12 +1885,19 @@ def get_param_completion(
             f"Invalid autocompletion callback parameters: {show_params}"
         )
 
-    def wrapper(ctx: click.Context, args: list[str], incomplete: str | None) -> Any:
+    def wrapper(
+        ctx: click.Context,
+        args: list[str],
+        param: click.core.Parameter,
+        incomplete: str | None,
+    ) -> Any:
         use_params: dict[str, Any] = {}
         if ctx_name:
             use_params[ctx_name] = ctx
         if args_name:
             use_params[args_name] = args
+        if param_name:
+            use_params[param_name] = param
         if incomplete_name:
             use_params[incomplete_name] = incomplete
         return callback(**use_params)

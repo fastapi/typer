@@ -35,7 +35,7 @@ def test_completion(mod: ModuleType):
         env={
             **os.environ,
             f"_{file_name.upper()}_COMPLETE": "complete_zsh",
-            "_TYPER_COMPLETE_ARGS": f"{file_name} --name ",
+            "_TYPER_COMPLETE_ARGS": f"{file_name} --user ",
         },
     )
     assert '"Camila":"The reader of books."' in result.stdout
@@ -44,7 +44,7 @@ def test_completion(mod: ModuleType):
 
 
 def test_1(mod: ModuleType):
-    result = runner.invoke(mod.app, ["--name", "Camila"])
+    result = runner.invoke(mod.app, ["--user", "Camila"])
     assert result.exit_code == 0
     assert "Hello Camila" in result.output
 
