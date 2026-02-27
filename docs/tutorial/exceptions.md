@@ -192,6 +192,27 @@ $ python main.py
 
 </div>
 
+## Disable Tracebacks From Certain Modules
+
+If you are developing with Python frameworks other than **Typer** and **Click**,
+you might get very verbose tracebacks, which could make it difficult to find the
+line in your own code that triggered the exception.
+
+With pretty exceptions, you can use the parameter `pretty_exceptions_suppress`,
+which takes a list of Python modules, or `str` paths, to indicate which modules
+should have their traceback frames suppressed by the **Rich** traceback
+formatter. Only filename and line number will be shown for these modules, but no
+code or variables. ⚡
+
+For example, if you are developing a GitLab utility using the `python-gitlab`
+package, you might notice that tracebacks are very long and filled with internal
+calls inside the `gitlab` module that you probably do not care about. In this case,
+you can suppress the traceback frames inside the `gitlab` module:
+
+{* docs_src/exceptions/tutorial005_py310.py hl[4] *}
+
+And now you can see clearly which of your calls to `gitlab` caused the exception. 💡
+
 ## Disable Pretty Exceptions
 
 You can also entirely disable pretty exceptions with the parameter `pretty_exceptions_enable=False`:

@@ -1,6 +1,7 @@
 import inspect
 import io
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Iterable, Sequence
+from types import ModuleType
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -634,10 +635,12 @@ class DeveloperExceptionConfig:
         pretty_exceptions_enable: bool = True,
         pretty_exceptions_show_locals: bool = True,
         pretty_exceptions_short: bool = True,
+        pretty_exceptions_suppress: Iterable[str | ModuleType] = (),
     ) -> None:
         self.pretty_exceptions_enable = pretty_exceptions_enable
         self.pretty_exceptions_show_locals = pretty_exceptions_show_locals
         self.pretty_exceptions_short = pretty_exceptions_short
+        self.pretty_exceptions_suppress = pretty_exceptions_suppress
 
 
 class TyperPath(click.Path):
