@@ -94,7 +94,7 @@ jobs:
             pyproject.toml
             uv.lock
       - name: Get coverage files
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           pattern: coverage-*
           path: coverage
