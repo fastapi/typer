@@ -209,12 +209,40 @@ Hello Camila
 
 </div>
 
+### Run a package or module with specified function
+
+You can also specify a function directly using the colon syntax:
+
+<div class="termy">
+
+```console
+$ typer my_package.main:my_function run --name Camila
+
+Hello Camila
+```
+
+</div>
+
+or with the file path
+
+<div class="termy">
+
+```console
+$ typer main.py:my_function run --name Camila
+
+Hello Camila
+```
+
+</div>
+
 ## Options
 
 You can specify one of the following **CLI options**:
 
 * `--app`: the name of the variable with a `Typer()` object to run as the main app.
 * `--func`: the name of the variable with a function that would be used with `typer.run()`.
+
+Alternatively, you can specify the function directly using the syntax `module:function`.
 
 ### Defaults
 
