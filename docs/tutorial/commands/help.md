@@ -502,3 +502,42 @@ $ python main.py --help
 ```
 
 </div>
+
+## Expand or Fit
+
+By default, the help panels all expand to match the width of your terminal window.
+
+Sometimes, you might prefer that all panels fit their contents instead. This means that they will probably have different widths.
+
+You can do this by initializing your Typer with `rich_expand=False`, like this:
+
+{* docs_src/commands/help/tutorial009_py310.py hl[5] *}
+
+When you now check the `--help` option, it will look like:
+
+<div class="termy">
+
+```console
+$ python main.py create --help
+
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py create [OPTIONS] USERNAME [LASTNAME]          </b>
+<b>                                                                     </b>
+ <font color="#A6E22E">Create</font> a new user. ✨
+
+<font color="#A5A5A1">╭─ Arguments ──────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>TEXT</b></font>  The username <font color="#A6194C">[required]</font> │
+<font color="#A5A5A1">╰──────────────────────────────────────────────────╯</font>
+<font color="#A5A5A1">╭─ Secondary Arguments ─────────────────────╮</font>
+<font color="#A5A5A1">│   lastname      </font><font color="#A37F4E"><b>[LASTNAME]</b></font>  The last name │
+<font color="#A5A5A1">╰───────────────────────────────────────────╯</font>
+<font color="#A5A5A1">╭─ Options ────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--force</b></font>    <font color="#AE81FF"><b>--no-force</b></font>      Force the creation <font color="#A6194C">[required]</font> │
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                     Show this message and exit.   │
+<font color="#A5A5A1">╰──────────────────────────────────────────────────────────╯</font>
+<font color="#A5A5A1">╭─ Additional Data ───────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--age</b></font>                   <font color="#F4BF75"><b>INTEGER</b></font>  The age            │</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--favorite-color</b></font>        <font color="#F4BF75"><b>TEXT   </b></font>  The favorite color │</font>
+<font color="#A5A5A1">╰─────────────────────────────────────────────────────╯</font>
+```
+
+</div>

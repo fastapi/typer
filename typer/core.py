@@ -162,6 +162,7 @@ def _main(
     standalone_mode: bool = True,
     windows_expand_args: bool = True,
     rich_markup_mode: MarkupMode = DEFAULT_MARKUP_MODE,
+    rich_expand: bool,
     **extra: Any,
 ) -> Any:
     # Typer override, duplicated from click.main() to handle custom rich exceptions
@@ -208,7 +209,7 @@ def _main(
             if HAS_RICH and rich_markup_mode is not None:
                 from . import rich_utils
 
-                rich_utils.rich_format_error(e)
+                rich_utils.rich_format_error(e, expand=rich_expand)
             else:
                 e.show()
             # Typer override end
@@ -664,6 +665,7 @@ class TyperCommand(click.core.Command):
         # Rich settings
         rich_markup_mode: MarkupMode = DEFAULT_MARKUP_MODE,
         rich_help_panel: str | None = None,
+        rich_expand: bool = True,
     ) -> None:
         super().__init__(
             name=name,
@@ -681,6 +683,7 @@ class TyperCommand(click.core.Command):
         )
         self.rich_markup_mode: MarkupMode = rich_markup_mode
         self.rich_help_panel = rich_help_panel
+        self.rich_expand = rich_expand
 
     def format_options(
         self, ctx: click.Context, formatter: click.HelpFormatter
@@ -714,6 +717,7 @@ class TyperCommand(click.core.Command):
             standalone_mode=standalone_mode,
             windows_expand_args=windows_expand_args,
             rich_markup_mode=self.rich_markup_mode,
+            rich_expand=self.rich_expand,
             **extra,
         )
 
@@ -730,6 +734,7 @@ class TyperCommand(click.core.Command):
             obj=self,
             ctx=ctx,
             markup_mode=self.rich_markup_mode,
+            expand=self.rich_expand,
         )
 
 
@@ -742,12 +747,14 @@ class TyperGroup(click.core.Group):
         # Rich settings
         rich_markup_mode: MarkupMode = DEFAULT_MARKUP_MODE,
         rich_help_panel: str | None = None,
+        rich_expand: bool = True,
         suggest_commands: bool = True,
         **attrs: Any,
     ) -> None:
         super().__init__(name=name, commands=commands, **attrs)
         self.rich_markup_mode: MarkupMode = rich_markup_mode
         self.rich_help_panel = rich_help_panel
+        self.rich_expand = rich_expand
         self.suggest_commands = suggest_commands
 
     def format_options(
@@ -800,6 +807,7 @@ class TyperGroup(click.core.Group):
             standalone_mode=standalone_mode,
             windows_expand_args=windows_expand_args,
             rich_markup_mode=self.rich_markup_mode,
+            rich_expand=self.rich_expand,
             **extra,
         )
 
@@ -812,6 +820,7 @@ class TyperGroup(click.core.Group):
             obj=self,
             ctx=ctx,
             markup_mode=self.rich_markup_mode,
+            expand=self.rich_expand,
         )
 
     def list_commands(self, ctx: click.Context) -> list[str]:
