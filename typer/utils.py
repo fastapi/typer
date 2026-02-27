@@ -141,6 +141,7 @@ def get_params_from_function(func: Callable[..., Any]) -> dict[str, ParamMeta]:
             if (
                 isinstance(parameter_info, OptionInfo)
                 and parameter_info.default is not ...
+                and isinstance(parameter_info.default, str)
             ):
                 parameter_info.param_decls = (
                     cast(str, parameter_info.default),
