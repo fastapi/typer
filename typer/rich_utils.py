@@ -498,12 +498,23 @@ def _print_commands_panel(
     deprecated_rows: list[RenderableType | None] = []
     for command in commands:
         helptext = command.short_help or command.help or ""
-        command_name = command.name or ""
+        cmd_name = command.name or ""
+        aliases = getattr(command, "_typer_aliases", [])
+        hidden_aliases = getattr(command, "_typer_hidden_aliases", [])
+        visible_aliases = [a for a in aliases if a not in hidden_aliases]
+
+        if visible_aliases:
+            cmd_name_display = ", ".join([cmd_name] + visible_aliases)
+        else:
+            cmd_name_display = cmd_name
+
         if command.deprecated:
-            command_name_text = Text(f"{command_name}", style=STYLE_DEPRECATED_COMMAND)
+            command_name_text = Text(
+                f"{cmd_name_display}", style=STYLE_DEPRECATED_COMMAND
+            )
             deprecated_rows.append(Text(DEPRECATED_STRING, style=STYLE_DEPRECATED))
         else:
-            command_name_text = Text(command_name)
+            command_name_text = Text(cmd_name_display)
             deprecated_rows.append(None)
         rows.append(
             [
@@ -634,12 +645,20 @@ def rich_format_help(
                 )
                 panel_to_commands[panel_name].append(command)
 
-        # Identify the longest command name in all panels
         max_cmd_len = max(
             [
-                len(command.name or "")
-                for commands in panel_to_commands.values()
-                for command in commands
+                len(
+                    ", ".join(
+                        [cmd.name or ""]
+                        + [
+                            a
+                            for a in getattr(cmd, "_typer_aliases", [])
+                            if a not in getattr(cmd, "_typer_hidden_aliases", [])
+                        ]
+                    )
+                )
+                for cmds in panel_to_commands.values()
+                for cmd in cmds
             ],
             default=0,
         )
