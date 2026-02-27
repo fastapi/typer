@@ -575,14 +575,10 @@ def rich_format_help(
         if getattr(param, "hidden", False):
             continue
         if isinstance(param, click.Argument):
-            panel_name = (
-                getattr(param, _RICH_HELP_PANEL_NAME, None) or ARGUMENTS_PANEL_TITLE
-            )
+            panel_name = get_panel_name(param, ARGUMENTS_PANEL_TITLE)
             panel_to_arguments[panel_name].append(param)
         elif isinstance(param, click.Option):
-            panel_name = (
-                getattr(param, _RICH_HELP_PANEL_NAME, None) or OPTIONS_PANEL_TITLE
-            )
+            panel_name = get_panel_name(param, OPTIONS_PANEL_TITLE)
             panel_to_options[panel_name].append(param)
     default_arguments = panel_to_arguments.get(ARGUMENTS_PANEL_TITLE, [])
     _print_options_panel(
@@ -628,10 +624,7 @@ def rich_format_help(
         for command_name in obj.list_commands(ctx):
             command = obj.get_command(ctx, command_name)
             if command and not command.hidden:
-                panel_name = (
-                    getattr(command, _RICH_HELP_PANEL_NAME, None)
-                    or COMMANDS_PANEL_TITLE
-                )
+                panel_name = get_panel_name(command, COMMANDS_PANEL_TITLE)
                 panel_to_commands[panel_name].append(command)
 
         # Identify the longest command name in all panels
@@ -751,3 +744,9 @@ def get_traceback(
         width=MAX_WIDTH,
     )
     return rich_tb
+
+
+def get_panel_name(
+    obj: click.Command | click.Argument | click.Option, default_name: str
+) -> str:
+    return getattr(obj, _RICH_HELP_PANEL_NAME, None) or default_name
