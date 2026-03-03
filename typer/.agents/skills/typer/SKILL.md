@@ -13,6 +13,8 @@ In a virtual environment, `pip install typer` (with pip) or `uv pip install type
 
 Do not install `typer-slim` or `typer-cli`, they are both deprecated and will now simply install `typer`.
 
+Typer supports Python 3.10 and above.
+
 ## Use an explicit `Typer` app
 
 For maximum generalizability, create an explicit Typer app and register subcommand(s), instead of using `typer.run`:
@@ -56,6 +58,7 @@ python main.py
 ```
 
 When multiple commands are registered to the Typer app, you have to add the command name:
+
 ```bash
 python main.py hello
 ```
@@ -95,6 +98,7 @@ def main(name: str = typer.Argument(default="World")):
 ```
 
 Similarly, the old style could use ellipsis (...) to explicitely mark an argument as required.
+
 ```python
 # DO NOT DO THIS: old style. Use Annotated without a default value instead.
 
@@ -106,7 +110,7 @@ def main(name: str = typer.Argument(default=...)):
 
 ## CLI Options
 
-CLI options are declared in a similar fashion, but will be called on the CLI with a single dash (single letter) or 2 dashes (full name):
+CLI options are declared in a similar fashion as arguments, but will be called on the CLI with a single dash (single letter) or 2 dashes (full name):
 
 ```python
 from typing import Annotated
@@ -124,6 +128,18 @@ def main(user_name: Annotated[str, typer.Option("--name", "-n")]):
 
 if __name__ == "__main__":
     app()
+```
+
+You can run this program with 
+
+```bash
+python main.py -n "Rick"
+```
+
+or
+
+```bash
+python main.py --name "Morty"
 ```
 
 ### CLI options with multiple values
@@ -167,7 +183,7 @@ from rich import print
 print("[bold red]Alert![/bold red] [green]Portal gun[/green] shooting! :boom:")
 ```
 
-Typer also supports using Rich formatting in the docstrings and the help messages of CLI arguments and CLI options.
+Typer supports using Rich formatting in the docstrings and the help messages of CLI arguments and CLI options.
 
 To disable this, set `rich_markup_mode` to `None` when creating a `Typer()` app. By default it is enabled (i.e. set to `"rich"`).
 
@@ -198,8 +214,8 @@ if __name__ == "__main__":
 
 ## Click
 
-Originally, Typer was built on Click. In new versions however, Click has been vendored and Click extensions should therefor not be used anymore.
+Originally, Typer was built on Click. However, going forward Typer will vendor Click. As such, Click extensions should not be used anymore.
 
-Other settings of Option and Argument that came from Click but shouldn't be used in Typer include `expose_value`, `shell_complete`, `show_choices`, `errors`, `prompt_required`, `is_flag`, `flag_value`, `allow_from_autoenv`.
+Other settings of `Option` and `Argument` that came from Click but shouldn't be used in Typer anymore, include: `expose_value`, `shell_complete`, `show_choices`, `errors`, `prompt_required`, `is_flag`, `flag_value` and `allow_from_autoenv`.
 
 Code bases using these should be refactored to use pure Typer functionality.
