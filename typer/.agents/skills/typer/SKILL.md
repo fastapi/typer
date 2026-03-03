@@ -130,7 +130,7 @@ if __name__ == "__main__":
     app()
 ```
 
-You can run this program with 
+You can run this program with
 
 ```bash
 python main.py -n "Rick"
@@ -170,7 +170,7 @@ if __name__ == "__main__":
 This can be executed like so:
 
 ```bash
-python main.py --user Rick --user Morty --user Summer 
+python main.py --user Rick --user Morty --user Summer
 ```
 
 ## Rich
