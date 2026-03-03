@@ -63,6 +63,14 @@ When multiple commands are registered to the Typer app, you have to add the comm
 python main.py hello
 ```
 
+To see the automatically generated help documentation, run
+
+```bash
+python main.py --help
+```
+
+or set `no_args_is_help` to `True` when creating the `Typer()` add to automatically show the help when running a command without any arguments.
+
 ## Use `Annotated`
 
 Always prefer the `Annotated` style for declarations of CLI arguments and options.
@@ -85,6 +93,13 @@ def hello(name: Annotated[str, typer.Argument()] = "World"):
 
 if __name__ == "__main__":
     app()
+```
+
+This program can be run as-is, or can provide a specific name:
+
+```bash
+python main.py
+python main.py Rick
 ```
 
 An older way of setting a default value is this:
@@ -130,15 +145,10 @@ if __name__ == "__main__":
     app()
 ```
 
-You can run this program with
+You can run this program as such:
 
 ```bash
 python main.py -n "Rick"
-```
-
-or
-
-```bash
 python main.py --name "Morty"
 ```
 
@@ -185,7 +195,46 @@ print("[bold red]Alert![/bold red] [green]Portal gun[/green] shooting! :boom:")
 
 Typer supports using Rich formatting in the docstrings and the help messages of CLI arguments and CLI options.
 
-To disable this, set `rich_markup_mode` to `None` when creating a `Typer()` app. By default it is enabled (i.e. set to `"rich"`).
+
+```python
+from typing import Annotated
+
+import typer
+
+app = typer.Typer(rich_markup_mode="rich")
+
+
+@app.command()
+def create(
+    username: Annotated[
+        str, typer.Argument(help="The username to be [green]created[/green]")
+    ],
+):
+    """
+    [bold green]Create[/bold green] a new [italic]shiny[/italic] user. :sparkles:
+
+    This requires a [underline]username[/underline].
+    """
+    print(f"Creating user: {username}")
+
+
+@app.command(help="[bold red]Delete[/bold red] a user with [italic]USERNAME[/italic].")
+def delete(
+    username: Annotated[
+        str, typer.Argument(help="The username to be [red]deleted[/red]")
+    ],
+):
+    """
+    Some internal utility function to delete.
+    """
+    print(f"Deleting user: {username}")
+
+
+if __name__ == "__main__":
+    app()
+```
+
+To disable Rich formatting, set `rich_markup_mode` to `None` when creating a `Typer()` app. By default (when no value is given), Rich formatting is enabled.
 
 ### Rich markdown
 
@@ -200,13 +249,9 @@ app = typer.Typer(rich_markup_mode="markdown")
 
 @app.command(help="**Delete** a user with *USERNAME*.")
 def delete(
-    username: Annotated[str, typer.Argument(help="The username to be **deleted**")],
-    force: Annotated[bool, typer.Option(help="Force the **deletion** :boom:")] = False,
+    username: Annotated[str, typer.Argument(help="The username to be **deleted** :boom:")]
 ):
-    """
-    Some internal utility function to delete.
-    """
-    print(f"Deleting user: {username} (force={force})")
+    print(f"Deleting user: {username}")
 
 if __name__ == "__main__":
     app()
