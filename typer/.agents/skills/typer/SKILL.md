@@ -7,6 +7,12 @@ description: Typer best practices and conventions. Use when working with Typer C
 
 Official Typer skill to write code with best practices, keeping up to date with new versions and features.
 
+## Installing typer
+
+In a virtual environment, `pip install typer` (with pip) or `uv pip install typer` (with uv). For your library/project, add `typer` to the dependencies in `pyproject.toml`.
+
+Do not install `typer-slim` or `typer-cli`, they are both deprecated and will now simply install `typer`.
+
 ## Use an explicit `Typer` app
 
 For maximum generalizability, create an explicit Typer app and register subcommand(s), instead of using `typer.run`:
@@ -49,7 +55,7 @@ To execute the app in the terminal, run
 python main.py
 ```
 
-Or, when multiple commands are registered to the Typer app, add the command name:
+When multiple commands are registered to the Typer app, you have to add the command name:
 ```bash
 python main.py hello
 ```
@@ -115,6 +121,76 @@ def main(user_name: Annotated[str, typer.Option("--name", "-n")]):
     # On the CLI, the required user name can be specified with -n or --name
     print(f"Hello {user_name}")
 
+
+if __name__ == "__main__":
+    app()
+```
+
+### CLI options with multiple values
+
+By declaring a CLI option as a list, it can receive multiple values:
+
+```python
+from typing import Annotated
+
+import typer
+
+app = typer.Typer()
+
+
+@app.command()
+def main(user: Annotated[list[str] | None, typer.Option()] = None):
+    if not user:
+        print(f"No users provided!")
+        raise typer.Abort()
+    for u in user:
+        print(f"Processing user: {u}")
+
+
+if __name__ == "__main__":
+    app()
+```
+
+This can be executed like so:
+
+```bash
+python main.py --user Rick --user Morty --user Summer 
+```
+
+## Rich
+
+By default, Rich can be used with its custom markup syntax to set colors and styles, e.g.
+
+```python
+from rich import print
+
+print("[bold red]Alert![/bold red] [green]Portal gun[/green] shooting! :boom:")
+```
+
+Typer also supports using Rich formatting in the docstrings and the help messages of CLI arguments and CLI options.
+
+To disable this, set `rich_markup_mode` to `None` when creating a `Typer()` app. By default it is enabled (i.e. set to `"rich"`).
+
+### Rich markdown
+
+You can also set `rich_markup_mode` to `"markdown"` to use Markdown in the docstring:
+
+```python
+from typing import Annotated
+
+import typer
+
+app = typer.Typer(rich_markup_mode="markdown")
+
+@app.command(help="**Delete** a user with *USERNAME*.")
+def delete(
+    username: Annotated[str, typer.Argument(help="The username to be **deleted**")],
+    force: Annotated[bool, typer.Option(help="Force the **deletion** :boom:")] = False,
+):
+    """
+    Some internal utility function to delete.
+    """
+    print(f"Deleting user: {username} (force={force})")
 
 if __name__ == "__main__":
     app()
