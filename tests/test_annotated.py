@@ -1,11 +1,9 @@
 import sys
 from pathlib import Path
+from typing import Annotated
 
 import typer
 from typer.testing import CliRunner
-from typing_extensions import Annotated
-
-from .utils import needs_py310
 
 runner = CliRunner()
 
@@ -26,7 +24,6 @@ def test_annotated_argument_with_default():
     assert "hello 42" in result.output
 
 
-@needs_py310
 def test_annotated_argument_in_string_type_with_default():
     app = typer.Typer()
 

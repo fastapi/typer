@@ -8,7 +8,7 @@ In those cases you can use a *CLI parameter* callback function.
 
 For example, you could do some validation before the rest of the code is executed.
 
-{* docs_src/options/callback/tutorial001_an.py hl[7:10,13] *}
+{* docs_src/options/callback/tutorial001_an_py310.py hl[8:11,15] *}
 
 Here you pass a function to `typer.Option()` or `typer.Argument()` with the keyword argument `callback`.
 
@@ -94,7 +94,7 @@ But the main **important point** is that it is all based on values printed by yo
 
 Let's say that when the callback is running, we want to show a message saying that it's validating the name:
 
-{* docs_src/options/callback/tutorial002_an.py hl[8] *}
+{* docs_src/options/callback/tutorial002_an_py310.py hl[9] *}
 
 And because the callback will be called when the shell calls your program asking for completion, that message `"Validating name"` will be printed and it will break completion.
 
@@ -121,15 +121,13 @@ rutyper ./main.pyed Typer app.
 
 ### Fix completion - using the `Context`
 
-When you create a **Typer** application it uses Click underneath.
-
-And every Click application has a special object called a <a href="https://click.palletsprojects.com/en/7.x/commands/#nested-handling-and-contexts" class="external-link" target="_blank">"Context"</a> that is normally hidden.
+Every Typer application has a special object called a "Context" that is normally hidden.
 
 But you can access the context by declaring a function parameter of type `typer.Context`.
 
 The "context" has some additional data about the current execution of your program:
 
-{* docs_src/options/callback/tutorial003_an.py hl[7:9] *}
+{* docs_src/options/callback/tutorial003_an_py310.py hl[8:10] *}
 
 The `ctx.resilient_parsing` will be `True` when handling completion, so you can just return without printing anything else.
 
@@ -159,9 +157,9 @@ Hello Camila
 
 ## Using the `CallbackParam` object
 
-The same way you can access the `typer.Context` by declaring a function parameter with its value, you can declare another function parameter with type `typer.CallbackParam` to get the specific Click `Parameter` object.
+The same way you can access the `typer.Context` by declaring a function parameter with its value, you can declare another function parameter with type `typer.CallbackParam` to get the specific `Parameter` object.
 
-{* docs_src/options/callback/tutorial004_an.py hl[7,10] *}
+{* docs_src/options/callback/tutorial004_an_py310.py hl[8,11] *}
 
 It's probably not very common, but you could do it if you need it.
 
@@ -189,10 +187,6 @@ And **Typer** will make sure you get the function parameters you want.
 You don't have to worry about their names, their order, etc.
 
 As it's based on standard Python types, it "**just works**". ✨
-
-### Click's `Parameter`
-
-The `typer.CallbackParam` is actually just a sub-class of Click's <a href="https://click.palletsprojects.com/en/7.x/api/#click.Parameter" class="external-link" target="_blank">`Parameter`</a>, so you get all the right completion in your editor.
 
 ### Callback with type annotations
 

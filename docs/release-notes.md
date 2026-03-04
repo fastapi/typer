@@ -2,6 +2,269 @@
 
 ## Latest Changes
 
+### Docs
+
+* 📝 Remove link to Typer developer survey. PR [#1609](https://github.com/fastapi/typer/pull/1609) by [@svlandeg](https://github.com/svlandeg).
+* ✏️ Clean up documentation in `install.md` file. PR [#1606](https://github.com/fastapi/typer/pull/1606) by [@Johandielangman](https://github.com/Johandielangman).
+
+### Internal
+
+* ⬆ Bump mkdocs-material from 9.7.3 to 9.7.4. PR [#1621](https://github.com/fastapi/typer/pull/1621) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ty from 0.0.19 to 0.0.20. PR [#1618](https://github.com/fastapi/typer/pull/1618) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump prek from 0.3.3 to 0.3.4. PR [#1617](https://github.com/fastapi/typer/pull/1617) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.15.2 to 0.15.4. PR [#1616](https://github.com/fastapi/typer/pull/1616) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ty from 0.0.18 to 0.0.19. PR [#1615](https://github.com/fastapi/typer/pull/1615) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump actions/download-artifact from 7 to 8. PR [#1614](https://github.com/fastapi/typer/pull/1614) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump actions/upload-artifact from 6 to 7. PR [#1613](https://github.com/fastapi/typer/pull/1613) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mkdocs-material from 9.7.2 to 9.7.3. PR [#1611](https://github.com/fastapi/typer/pull/1611) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mkdocstrings-python from 2.0.1 to 2.0.3. PR [#1605](https://github.com/fastapi/typer/pull/1605) by [@svlandeg](https://github.com/svlandeg).
+* ⬆ Bump ty from 0.0.17 to 0.0.18. PR [#1602](https://github.com/fastapi/typer/pull/1602) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump griffe-warnings-deprecated from 1.1.0 to 1.1.1. PR [#1603](https://github.com/fastapi/typer/pull/1603) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump griffe-typingdoc from 0.3.0 to 0.3.1. PR [#1604](https://github.com/fastapi/typer/pull/1604) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 🔧 Upgrade pytest version and config. PR [#1570](https://github.com/fastapi/typer/pull/1570) by [@tiangolo](https://github.com/tiangolo).
+
+## 0.24.1
+
+### Internal
+
+* 👷 Fix CI, do not attempt to build `typer-slim`, nor `typer-cli`. PR [#1569](https://github.com/fastapi/typer/pull/1569) by [@tiangolo](https://github.com/tiangolo).
+* ➖ Drop support for `typer-slim` and `typer-cli`, no more versions will be released, use only `typer`. PR [#1568](https://github.com/fastapi/typer/pull/1568) by [@tiangolo](https://github.com/tiangolo).
+* ⬆ Bump rich from 14.3.2 to 14.3.3. PR [#1565](https://github.com/fastapi/typer/pull/1565) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pydantic-settings from 2.13.0 to 2.13.1. PR [#1566](https://github.com/fastapi/typer/pull/1566) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.15.1 to 0.15.2. PR [#1567](https://github.com/fastapi/typer/pull/1567) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mkdocs-material from 9.7.1 to 9.7.2. PR [#1561](https://github.com/fastapi/typer/pull/1561) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pillow from 11.3.0 to 12.1.1. PR [#1550](https://github.com/fastapi/typer/pull/1550) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pytest from 8.4.2 to 9.0.2. PR [#1551](https://github.com/fastapi/typer/pull/1551) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pydantic-settings from 2.12.0 to 2.13.0. PR [#1552](https://github.com/fastapi/typer/pull/1552) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 🎨 Upgrade types for Python 3.10. PR [#1549](https://github.com/fastapi/typer/pull/1549) by [@tiangolo](https://github.com/tiangolo).
+* 🔨 Add internal scripts to migrate docs from Python 3.9 to 3.10. PR [#1547](https://github.com/fastapi/typer/pull/1547) by [@tiangolo](https://github.com/tiangolo).
+* ⬆ Bump ty from 0.0.16 to 0.0.17. PR [#1544](https://github.com/fastapi/typer/pull/1544) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
+## 0.24.0
+
+### Breaking Changes
+
+* ➖ Drop support for Python 3.9. PR [#1546](https://github.com/fastapi/typer/pull/1546) by [@tiangolo](https://github.com/tiangolo).
+
+## 0.23.2
+
+### Features
+
+* ✅ Monkeypatch console width to allow running `pytest` directly. PR [#1542](https://github.com/fastapi/typer/pull/1542) by [@SwaatiR](https://github.com/SwaatiR).
+
+### Internal
+
+* 👷 Run tests with lower bound uv sync, update minimum dependencies. PR [#1526](https://github.com/fastapi/typer/pull/1526) by [@YuriiMotov](https://github.com/YuriiMotov).
+* ⬆ Bump prek from 0.3.2 to 0.3.3. PR [#1545](https://github.com/fastapi/typer/pull/1545) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.15.0 to 0.15.1. PR [#1541](https://github.com/fastapi/typer/pull/1541) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
+## 0.23.1
+
+### Fixes
+
+* 🐛 Fix `TYPER_USE_RICH` parsing to allow disabling Rich completely. PR [#1539](https://github.com/fastapi/typer/pull/1539) by [@bckohan](https://github.com/bckohan).
+
+### Docs
+
+* 📝 Remove documentation pages that reference using Click directly. PR [#1538](https://github.com/fastapi/typer/pull/1538) by [@svlandeg](https://github.com/svlandeg).
+
+### Internal
+
+* ⬆ Bump ty from 0.0.15 to 0.0.16. PR [#1533](https://github.com/fastapi/typer/pull/1533) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
+## 0.23.0
+
+### Breaking Changes
+
+* ♻️ When printing error tracebacks with Rich, default to not showing locals, which are sometimes verbose. PR [#1072](https://github.com/fastapi/typer/pull/1072) by [@tiangolo](https://github.com/tiangolo).
+
+### Docs
+
+* 📝 Add more explicit deprecation note in shell packages. PR [#1534](https://github.com/fastapi/typer/pull/1534) by [@tiangolo](https://github.com/tiangolo).
+
+### Internal
+
+* ⬆ Bump cryptography from 46.0.4 to 46.0.5. PR [#1532](https://github.com/fastapi/typer/pull/1532) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 🔨 Tweak PDM hook script, remove unnecessary default. PR [#1536](https://github.com/fastapi/typer/pull/1536) by [@tiangolo](https://github.com/tiangolo).
+* ♻️ Simplify build setup scripts and configs for deprecated wrapper packages. PR [#1535](https://github.com/fastapi/typer/pull/1535) by [@tiangolo](https://github.com/tiangolo).
+
+## 0.22.0
+
+### Breaking Changes
+
+* 💥 Make `typer-slim` a shallow wrapper around `typer`, always requiring `rich` and `shellingham`. PR [#1522](https://github.com/fastapi/typer/pull/1522) by [@svlandeg](https://github.com/svlandeg).
+
+## 0.21.2
+
+### Fixes
+
+* 🐛 Fix highlighting of optional variadic argument metavars. PR [#1508](https://github.com/fastapi/typer/pull/1508) by [@BenjyWiener](https://github.com/BenjyWiener).
+* 🐛 Fix `--help` text alignment when using `typer.style()` in option descriptions. PR [#1356](https://github.com/fastapi/typer/pull/1356) by [@mahimairaja](https://github.com/mahimairaja).
+
+### Refactors
+
+* 🎨 Update types and errors, comment ty for now. PR [#1531](https://github.com/fastapi/typer/pull/1531) by [@tiangolo](https://github.com/tiangolo).
+
+### Upgrades
+
+* ➖ Drop `typing-extensions` as external dependency. PR [#1467](https://github.com/fastapi/typer/pull/1467) by [@svlandeg](https://github.com/svlandeg).
+
+### Docs
+
+* 📝 Add reference (code API) docs. PR [#1504](https://github.com/fastapi/typer/pull/1504) by [@svlandeg](https://github.com/svlandeg).
+* 📝 Update the "Building a Package" tutorial to use `uv` instead of `poetry`. PR [#1474](https://github.com/fastapi/typer/pull/1474) by [@svlandeg](https://github.com/svlandeg).
+* 📝 Update `management-tasks.md` to be in line with `management-tasks.md` in FastAPI repo. PR [#1519](https://github.com/fastapi/typer/pull/1519) by [@YuriiMotov](https://github.com/YuriiMotov).
+* 📝 Add link to Typer developer survey. PR [#1514](https://github.com/fastapi/typer/pull/1514) by [@tiangolo](https://github.com/tiangolo).
+* 📝 Add contribution instructions about LLM generated code and comments and automated tools for PRs. PR [#1489](https://github.com/fastapi/typer/pull/1489) by [@alejsdev](https://github.com/alejsdev).
+* 🐛 Fix copy button in `custom.js`. PR [#1488](https://github.com/fastapi/typer/pull/1488) by [@alejsdev](https://github.com/alejsdev).
+
+### Internal
+
+* 🔧 Update config for labeler. PR [#1530](https://github.com/fastapi/typer/pull/1530) by [@tiangolo](https://github.com/tiangolo).
+* 🔧 Remove no longer used requirements.txt file. PR [#1528](https://github.com/fastapi/typer/pull/1528) by [@tiangolo](https://github.com/tiangolo).
+* 📌 Update internal dependency limits. PR [#1529](https://github.com/fastapi/typer/pull/1529) by [@tiangolo](https://github.com/tiangolo).
+* 🔧 Add ty to pre-commit. PR [#1527](https://github.com/fastapi/typer/pull/1527) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Add `ty` to the CI `lint` check. PR [#1477](https://github.com/fastapi/typer/pull/1477) by [@svlandeg](https://github.com/svlandeg).
+* ⬆ Bump prek from 0.3.1 to 0.3.2. PR [#1524](https://github.com/fastapi/typer/pull/1524) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.14.14 to 0.15.0. PR [#1516](https://github.com/fastapi/typer/pull/1516) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 🔧 Add generate-readme to pre-commit. PR [#1515](https://github.com/fastapi/typer/pull/1515) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Run mypy in pre-commit instead of `Lint` step in `test.yml` workflow. PR [#1511](https://github.com/fastapi/typer/pull/1511) by [@YuriiMotov](https://github.com/YuriiMotov).
+* ⬆ Bump prek from 0.3.0 to 0.3.1. PR [#1510](https://github.com/fastapi/typer/pull/1510) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump rich from 14.3.1 to 14.3.2. PR [#1509](https://github.com/fastapi/typer/pull/1509) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ✅ Update test to use `mod` fixture. PR [#1506](https://github.com/fastapi/typer/pull/1506) by [@svlandeg](https://github.com/svlandeg).
+* ⬆ Bump rich from 14.2.0 to 14.3.1. PR [#1502](https://github.com/fastapi/typer/pull/1502) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.14.13 to 0.14.14. PR [#1499](https://github.com/fastapi/typer/pull/1499) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 🔧 Ensure that an edit to `uv.lock` gets the `internal` label. PR [#1497](https://github.com/fastapi/typer/pull/1497) by [@svlandeg](https://github.com/svlandeg).
+* ⬆ Bump ruff from 0.14.10 to 0.14.13. PR [#1493](https://github.com/fastapi/typer/pull/1493) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump urllib3 from 2.6.2 to 2.6.3. PR [#1496](https://github.com/fastapi/typer/pull/1496) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump prek from 0.2.24 to 0.3.0. PR [#1495](https://github.com/fastapi/typer/pull/1495) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
+## 0.21.1
+
+### Fixes
+
+* 🐛 Fix escaping in help text when `rich` is installed but not used. PR [#1089](https://github.com/fastapi/typer/pull/1089) by [@svlandeg](https://github.com/svlandeg).
+
+### Internal
+
+* ⬆️  Migrate to uv. PR [#1472](https://github.com/fastapi/typer/pull/1472) by [@DoctorJohn](https://github.com/DoctorJohn).
+* ⬆ Bump mypy from 1.18.2 to 1.19.1. PR [#1469](https://github.com/fastapi/typer/pull/1469) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump actions/checkout from 5 to 6. PR [#1456](https://github.com/fastapi/typer/pull/1456) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump actions/download-artifact from 6 to 7. PR [#1444](https://github.com/fastapi/typer/pull/1444) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.14.8 to 0.14.10. PR [#1449](https://github.com/fastapi/typer/pull/1449) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mkdocs-material from 9.7.0 to 9.7.1. PR [#1446](https://github.com/fastapi/typer/pull/1446) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump actions/upload-artifact from 5 to 6. PR [#1443](https://github.com/fastapi/typer/pull/1443) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump actions/cache from 4 to 5. PR [#1441](https://github.com/fastapi/typer/pull/1441) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 👷 Update secrets check. PR [#1471](https://github.com/fastapi/typer/pull/1471) by [@YuriiMotov](https://github.com/YuriiMotov).
+* ✅ Add missing tests for code examples. PR [#1465](https://github.com/fastapi/typer/pull/1465) by [@YuriiMotov](https://github.com/YuriiMotov).
+* 🔧 Update pre-commit to use local Ruff instead of hook, unpin `prek`. PR [#1466](https://github.com/fastapi/typer/pull/1466) by [@YuriiMotov](https://github.com/YuriiMotov).
+* ⬆ Bump mypy from 1.14.1 to 1.18.2. PR [#1382](https://github.com/fastapi/typer/pull/1382) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
+## 0.21.0
+
+### Breaking Changes
+
+* ➖ Drop support for Python 3.8. PR [#1464](https://github.com/fastapi/typer/pull/1464) by [@tiangolo](https://github.com/tiangolo).
+* ➖ Drop support for Python 3.8 in CI. PR [#1463](https://github.com/fastapi/typer/pull/1463) by [@YuriiMotov](https://github.com/YuriiMotov) and [@tiangolo](https://github.com/tiangolo).
+
+### Docs
+
+* 📝 Update code examples to Python 3.9. PR [#1459](https://github.com/fastapi/typer/pull/1459) by [@YuriiMotov](https://github.com/YuriiMotov).
+
+### Internal
+
+* 💚 Move `ruff` dependency to shared `requirements-docs-tests.txt` to fix "Build docs" workflow in CI. PR [#1458](https://github.com/fastapi/typer/pull/1458) by [@YuriiMotov](https://github.com/YuriiMotov).
+* ⬆ Bump markdown-include-variants from 0.0.5 to 0.0.8. PR [#1442](https://github.com/fastapi/typer/pull/1442) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 👷 Add pre-commit workflow. PR [#1453](https://github.com/fastapi/typer/pull/1453) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Configure coverage, error on main tests, don't wait for Smokeshow. PR [#1448](https://github.com/fastapi/typer/pull/1448) by [@YuriiMotov](https://github.com/YuriiMotov).
+* 👷 Run Smokeshow always, even on test failures. PR [#1447](https://github.com/fastapi/typer/pull/1447) by [@YuriiMotov](https://github.com/YuriiMotov).
+* 🔨 Add Typer script to generate example variants for Python files. PR [#1452](https://github.com/fastapi/typer/pull/1452) by [@tiangolo](https://github.com/tiangolo).
+
+## 0.20.1
+
+### Features
+
+* ✨ Add support for standard tracebacks via the env `TYPER_STANDARD_TRACEBACK`. PR [#1299](https://github.com/fastapi/typer/pull/1299) by [@colin-nolan](https://github.com/colin-nolan).
+
+### Fixes
+
+* 🐛 Ensure that `options_metavar` is passed through correctly. PR [#816](https://github.com/fastapi/typer/pull/816) by [@gar1t](https://github.com/gar1t).
+* 🐛 Ensure an optional argument is shown in brackets, even when `metavar` is set. PR [#1409](https://github.com/fastapi/typer/pull/1409) by [@svlandeg](https://github.com/svlandeg).
+* 🐛 Ensure that the default `rich_markup_mode` is interpreted correctly. PR [#1304](https://github.com/fastapi/typer/pull/1304) by [@svlandeg](https://github.com/svlandeg).
+
+### Refactors
+
+* ♻️ Refactor the handling of `shellingham`. PR [#1347](https://github.com/fastapi/typer/pull/1347) by [@nathanjmcdougall](https://github.com/nathanjmcdougall).
+
+### Docs
+
+* 📝 Ensure that bold letters are rendered correctly in `printing.md`. PR [#1365](https://github.com/fastapi/typer/pull/1365) by [@svlandeg](https://github.com/svlandeg).
+* 🩺 Update test badge to only reflect pushes to `master`. PR [#1414](https://github.com/fastapi/typer/pull/1414) by [@svlandeg](https://github.com/svlandeg).
+* 📝 Update console output on the Rich help formatting page. PR [#1430](https://github.com/fastapi/typer/pull/1430) by [@svlandeg](https://github.com/svlandeg).
+* 📝 Update emoji used in Rich help formatting tutorial. PR [#1429](https://github.com/fastapi/typer/pull/1429) by [@svlandeg](https://github.com/svlandeg).
+* 📝 Remove duplicate explanation how the path is resolved. PR [#956](https://github.com/fastapi/typer/pull/956) by [@dennis-rall](https://github.com/dennis-rall).
+* 📝 Update docs to use `Typer()` more prominently. PR [#1418](https://github.com/fastapi/typer/pull/1418) by [@svlandeg](https://github.com/svlandeg).
+* 💄 Use font 'Fira Code' to fix display of Rich panels in docs in Windows. PR [#1419](https://github.com/fastapi/typer/pull/1419) by [@tiangolo](https://github.com/tiangolo).
+
+### Internal
+
+* 🔨  Add `--showlocals` to `test.sh`. PR [#1169](https://github.com/fastapi/typer/pull/1169) by [@rickwporter](https://github.com/rickwporter).
+* ⬆ Bump ruff from 0.14.6 to 0.14.8. PR [#1436](https://github.com/fastapi/typer/pull/1436) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1434](https://github.com/fastapi/typer/pull/1434) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ✅ Update tests to use `mod.app` . PR [#1427](https://github.com/fastapi/typer/pull/1427) by [@svlandeg](https://github.com/svlandeg).
+* ⬆ Bump actions/checkout from 5 to 6. PR [#1426](https://github.com/fastapi/typer/pull/1426) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1425](https://github.com/fastapi/typer/pull/1425) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump ruff from 0.14.5 to 0.14.6. PR [#1423](https://github.com/fastapi/typer/pull/1423) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump actions/checkout from 5 to 6. PR [#1417](https://github.com/fastapi/typer/pull/1417) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 👷 Upgrade `latest-changes` GitHub Action and pin `actions/checkout@v5`. PR [#1424](https://github.com/fastapi/typer/pull/1424) by [@tiangolo](https://github.com/tiangolo).
+* 🔧 Upgrade Material for MkDocs and remove insiders. PR [#1416](https://github.com/fastapi/typer/pull/1416) by [@tiangolo](https://github.com/tiangolo).
+* ⬆ Bump mkdocs-material from 9.6.23 to 9.7.0. PR [#1404](https://github.com/fastapi/typer/pull/1404) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mkdocs-macros-plugin from 1.4.1 to 1.5.0. PR [#1406](https://github.com/fastapi/typer/pull/1406) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.14.4 to 0.14.5. PR [#1407](https://github.com/fastapi/typer/pull/1407) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1413](https://github.com/fastapi/typer/pull/1413) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump ruff from 0.14.3 to 0.14.4. PR [#1402](https://github.com/fastapi/typer/pull/1402) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1403](https://github.com/fastapi/typer/pull/1403) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump ruff from 0.14.2 to 0.14.3. PR [#1396](https://github.com/fastapi/typer/pull/1396) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1399](https://github.com/fastapi/typer/pull/1399) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump mkdocs-material from 9.6.22 to 9.6.23. PR [#1398](https://github.com/fastapi/typer/pull/1398) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1394](https://github.com/fastapi/typer/pull/1394) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump ruff from 0.14.1 to 0.14.2. PR [#1383](https://github.com/fastapi/typer/pull/1383) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump actions/upload-artifact from 4 to 5. PR [#1388](https://github.com/fastapi/typer/pull/1388) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mkdocs-macros-plugin from 1.4.0 to 1.4.1. PR [#1389](https://github.com/fastapi/typer/pull/1389) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump actions/download-artifact from 5 to 6. PR [#1391](https://github.com/fastapi/typer/pull/1391) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 🔧 Add PEP-639 license metadata. PR [#1387](https://github.com/fastapi/typer/pull/1387) by [@svlandeg](https://github.com/svlandeg).
+* ⬆ Bump mypy from 1.11.2 to 1.14.1. PR [#1375](https://github.com/fastapi/typer/pull/1375) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1380](https://github.com/fastapi/typer/pull/1380) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump ruff from 0.14.0 to 0.14.1. PR [#1379](https://github.com/fastapi/typer/pull/1379) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
+## 0.20.0
+
+### Features
+
+* ✨ Enable command suggestions on typo by default. PR [#1371](https://github.com/fastapi/typer/pull/1371) by [@savannahostrowski](https://github.com/savannahostrowski).
+
+### Upgrades
+
+* ⬆️ Add support for Python 3.14. PR [#1372](https://github.com/fastapi/typer/pull/1372) by [@svlandeg](https://github.com/svlandeg).
+
+### Internal
+
+* 👷 Add nightly workflow to run tests against CPython main branch. PR [#1374](https://github.com/fastapi/typer/pull/1374) by [@savannahostrowski](https://github.com/savannahostrowski).
+* ⬆ Bump mkdocs-material from 9.6.21 to 9.6.22. PR [#1377](https://github.com/fastapi/typer/pull/1377) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 🔧 Configure reminder for `waiting` label in `issue-manager`. PR [#1378](https://github.com/fastapi/typer/pull/1378) by [@YuriiMotov](https://github.com/YuriiMotov).
+* ⬆ Bump ruff from 0.13.3 to 0.14.0. PR [#1368](https://github.com/fastapi/typer/pull/1368) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1376](https://github.com/fastapi/typer/pull/1376) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump mkdocs-macros-plugin from 1.3.9 to 1.4.0. PR [#1354](https://github.com/fastapi/typer/pull/1354) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mkdocs-material from 9.6.20 to 9.6.21. PR [#1360](https://github.com/fastapi/typer/pull/1360) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mypy from 1.4.1 to 1.11.2. PR [#957](https://github.com/fastapi/typer/pull/957) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump astral-sh/setup-uv from 6 to 7. PR [#1369](https://github.com/fastapi/typer/pull/1369) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.13.2 to 0.13.3. PR [#1366](https://github.com/fastapi/typer/pull/1366) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1367](https://github.com/fastapi/typer/pull/1367) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* ⬆ Bump tiangolo/issue-manager from 0.5.1 to 0.6.0. PR [#1361](https://github.com/fastapi/typer/pull/1361) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.13.1 to 0.13.2. PR [#1357](https://github.com/fastapi/typer/pull/1357) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1358](https://github.com/fastapi/typer/pull/1358) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
+* 👷 Update docs previews comment, single comment, add failure status. PR [#1359](https://github.com/fastapi/typer/pull/1359) by [@tiangolo](https://github.com/tiangolo).
+
 ## 0.19.2
 
 ### Fixes
