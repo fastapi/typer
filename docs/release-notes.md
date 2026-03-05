@@ -4,6 +4,7 @@
 
 ### Docs
 
+* 🔨 Handle external links `target=_blank` and CSS automatically in JS and CSS. PR [#1622](https://github.com/fastapi/typer/pull/1622) by [@tiangolo](https://github.com/tiangolo).
 * 📝 Remove link to Typer developer survey. PR [#1609](https://github.com/fastapi/typer/pull/1609) by [@svlandeg](https://github.com/svlandeg).
 * ✏️ Clean up documentation in `install.md` file. PR [#1606](https://github.com/fastapi/typer/pull/1606) by [@Johandielangman](https://github.com/Johandielangman).
 
