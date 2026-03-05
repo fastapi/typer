@@ -1,10 +1,10 @@
 # Development - Contributing
 
-First, you might want to see the basic ways to [help Typer and get help](help-typer.md){.internal-link target=_blank}.
+First, you might want to see the basic ways to [help Typer and get help](help-typer.md).
 
 ## Developing
 
-If you already cloned the <a href="https://github.com/fastapi/typer" class="external-link" target="_blank">typer repository</a> and you want to deep dive in the code, here are some guidelines to set up your environment.
+If you already cloned the [typer repository](https://github.com/fastapi/typer) and you want to deep dive in the code, here are some guidelines to set up your environment.
 
 ### Install Requirements Using `uv`
 
@@ -253,7 +253,7 @@ $ mkdocs serve --dev-addr 8008
 
 The instructions here show you how to use the script at `./scripts/docs.py` with the `python` program directly.
 
-But you can also use <a href="https://typer.tiangolo.com/typer-cli/" class="external-link" target="_blank">Typer CLI</a>, and you will get autocompletion in your terminal for the commands after installing completion.
+But you can also use [Typer CLI](https://typer.tiangolo.com/typer-cli/), and you will get autocompletion in your terminal for the commands after installing completion.
 
 If you install Typer CLI, you can install completion with:
 
@@ -270,7 +270,7 @@ Completion will take effect once you restart the terminal.
 
 ### Docs Structure
 
-The documentation uses <a href="https://www.mkdocs.org/" class="external-link" target="_blank">MkDocs</a>.
+The documentation uses [MkDocs](https://www.mkdocs.org/).
 
 And there are extra tools/scripts in place in `./scripts/docs.py`.
 
@@ -316,7 +316,7 @@ The same applies to comments and descriptions, please don't copy paste the conte
 
 ### Human Effort Denial of Service
 
-Using automated tools and AI to submit PRs or comments that we have to carefully review and handle would be the equivalent of a <a href="https://en.wikipedia.org/wiki/Denial-of-service_attack" class="external-link" target="_blank">Denial-of-service attack</a> on our human effort.
+Using automated tools and AI to submit PRs or comments that we have to carefully review and handle would be the equivalent of a [Denial-of-service attack](https://en.wikipedia.org/wiki/Denial-of-service_attack) on our human effort.
 
 It would be very little effort from the person submitting the PR (an LLM prompt) that generates a large amount of effort on our side (carefully reviewing code).
 

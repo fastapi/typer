@@ -22,7 +22,7 @@ A **virtual environment** is a directory with some files in it.
 
 This page will teach you how to use **virtual environments** and how they work.
 
-If you are ready to adopt a **tool that manages everything** for you (including installing Python), try <a href="https://github.com/astral-sh/uv" class="external-link" target="_blank">uv</a>.
+If you are ready to adopt a **tool that manages everything** for you (including installing Python), try [uv](https://github.com/astral-sh/uv).
 
 ///
 
@@ -86,7 +86,7 @@ $ python -m venv .venv
 
 //// tab | `uv`
 
-If you have <a href="https://github.com/astral-sh/uv" class="external-link" target="_blank">`uv`</a> installed, you can use it to create a virtual environment.
+If you have [`uv`](https://github.com/astral-sh/uv) installed, you can use it to create a virtual environment.
 
 <div class="termy">
 
@@ -150,7 +150,7 @@ $ .venv\Scripts\Activate.ps1
 
 //// tab | Windows Bash
 
-Or if you use Bash for Windows (e.g. <a href="https://gitforwindows.org/" class="external-link" target="_blank">Git Bash</a>):
+Or if you use Bash for Windows (e.g. [Git Bash](https://gitforwindows.org/)):
 
 <div class="termy">
 
@@ -216,7 +216,7 @@ If it shows the `python` binary at `.venv\Scripts\python`, inside of your projec
 
 /// tip
 
-If you use <a href="https://github.com/astral-sh/uv" class="external-link" target="_blank">`uv`</a> you would use it to install things instead of `pip`, so you don't need to upgrade `pip`. 😎
+If you use [`uv`](https://github.com/astral-sh/uv) you would use it to install things instead of `pip`, so you don't need to upgrade `pip`. 😎
 
 ///
 
@@ -248,7 +248,7 @@ If you are using **Git** (you should), add a `.gitignore` file to exclude everyt
 
 /// tip
 
-If you used <a href="https://github.com/astral-sh/uv" class="external-link" target="_blank">`uv`</a> to create the virtual environment, it already did this for you, you can skip this step. 😎
+If you used [`uv`](https://github.com/astral-sh/uv) to create the virtual environment, it already did this for you, you can skip this step. 😎
 
 ///
 
@@ -320,7 +320,7 @@ $ pip install typer
 
 //// tab | `uv`
 
-If you have <a href="https://github.com/astral-sh/uv" class="external-link" target="_blank">`uv`</a>:
+If you have [`uv`](https://github.com/astral-sh/uv):
 
 <div class="termy">
 
@@ -352,7 +352,7 @@ $ pip install -r requirements.txt
 
 //// tab | `uv`
 
-If you have <a href="https://github.com/astral-sh/uv" class="external-link" target="_blank">`uv`</a>:
+If you have [`uv`](https://github.com/astral-sh/uv):
 
 <div class="termy">
 
@@ -396,8 +396,8 @@ You would probably use an editor, make sure you configure it to use the same vir
 
 For example:
 
-* <a href="https://code.visualstudio.com/docs/python/environments#_select-and-activate-an-environment" class="external-link" target="_blank">VS Code</a>
-* <a href="https://www.jetbrains.com/help/pycharm/creating-virtual-environment.html" class="external-link" target="_blank">PyCharm</a>
+* [VS Code](https://code.visualstudio.com/docs/python/environments#_select-and-activate-an-environment)
+* [PyCharm](https://www.jetbrains.com/help/pycharm/creating-virtual-environment.html)
 
 /// tip
 
@@ -435,7 +435,7 @@ Continue reading. 👇🤓
 
 ## Why Virtual Environments
 
-To work with Typer you need to install <a href="https://www.python.org/" class="external-link" target="_blank">Python</a>.
+To work with Typer you need to install [Python](https://www.python.org/).
 
 After that, you would need to **install** Typer and any other **packages** you want to use.
 
@@ -544,7 +544,7 @@ $ pip install typer
 
 </div>
 
-That will download a compressed file with the Typer code, normally from <a href="https://pypi.org/project/typer/" class="external-link" target="_blank">PyPI</a>.
+That will download a compressed file with the Typer code, normally from [PyPI](https://pypi.org/project/typer/).
 
 It will also **download** files for other packages that Typer depends on.
 
@@ -607,7 +607,7 @@ $ .venv\Scripts\Activate.ps1
 
 //// tab | Windows Bash
 
-Or if you use Bash for Windows (e.g. <a href="https://gitforwindows.org/" class="external-link" target="_blank">Git Bash</a>):
+Or if you use Bash for Windows (e.g. [Git Bash](https://gitforwindows.org/)):
 
 <div class="termy">
 
@@ -619,13 +619,13 @@ $ source .venv/Scripts/activate
 
 ////
 
-That command will create or modify some [environment variables](environment-variables.md){.internal-link target=_blank} that will be available for the next commands.
+That command will create or modify some [environment variables](environment-variables.md) that will be available for the next commands.
 
 One of those variables is the `PATH` variable.
 
 /// tip
 
-You can learn more about the `PATH` environment variable in the [Environment Variables](environment-variables.md#path-environment-variable){.internal-link target=_blank} section.
+You can learn more about the `PATH` environment variable in the [Environment Variables](environment-variables.md#path-environment-variable) section.
 
 ///
 
@@ -826,7 +826,7 @@ This is a simple guide to get you started and teach you how everything works **u
 
 There are many **alternatives** to managing virtual environments, package dependencies (requirements), projects.
 
-Once you are ready and want to use a tool to **manage the entire project**, packages dependencies, virtual environments, etc. I would suggest you try <a href="https://github.com/astral-sh/uv" class="external-link" target="_blank">uv</a>.
+Once you are ready and want to use a tool to **manage the entire project**, packages dependencies, virtual environments, etc. I would suggest you try [uv](https://github.com/astral-sh/uv).
 
 `uv` can do a lot of things, it can:
 

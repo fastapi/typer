@@ -86,7 +86,7 @@ We don't have to check for `ctx.resilient_parsing` in the `name_callback()` for 
 
 /// info
 
-If you need a refresher about what is "standard output" and "standard error" check the section in [Printing and Colors: "Standard Output" and "Standard Error"](../printing.md#standard-output-and-standard-error){.internal-link target=_blank}.
+If you need a refresher about what is "standard output" and "standard error" check the section in [Printing and Colors: "Standard Output" and "Standard Error"](../printing.md#standard-output-and-standard-error).
 
 ///
 

@@ -29,7 +29,7 @@ You put it on top of a function. Like a pretty decorative hat (I guess that's wh
 A "decorator" takes the function below and does something with it.
 
 In our case, this decorator tells **Typer** that the function below is a "`command`".
-You will learn more about commands later in the section [commands](./commands/index.md){.internal-link target=_blank}.
+You will learn more about commands later in the section [commands](./commands/index.md).
 
 ///
 
@@ -113,6 +113,6 @@ Having a standalone program like that allows setting up shell/tab completion.
 
 The first step to be able to create an installable package like that is to use an explicit `typer.Typer()` app.
 
-Later you can learn all the process to create a standalone CLI application and [Build a Package](./package.md){.internal-link target=_blank}.
+Later you can learn all the process to create a standalone CLI application and [Build a Package](./package.md).
 
 But for now, it's just good to know that you are on that path. 😎

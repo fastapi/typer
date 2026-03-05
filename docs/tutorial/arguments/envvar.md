@@ -4,7 +4,7 @@ You can also configure a *CLI argument* to read a value from an environment vari
 
 /// tip
 
-You can learn more about environment variables in the [Environment Variables](../../environment-variables.md){.internal-link target=_blank} page.
+You can learn more about environment variables in the [Environment Variables](../../environment-variables.md) page.
 
 ///
 

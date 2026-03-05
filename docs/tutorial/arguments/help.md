@@ -185,7 +185,7 @@ Options:
 
 You might want to show the help information for *CLI arguments* in different panels when using the `--help` option.
 
-If you have installed Rich as described in the docs for [Printing and Colors](../printing.md){.internal-link target=_blank}, you can set the `rich_help_panel` parameter to the name of the panel where you want this *CLI argument* to be shown:
+If you have installed Rich as described in the docs for [Printing and Colors](../printing.md), you can set the `rich_help_panel` parameter to the name of the panel where you want this *CLI argument* to be shown:
 
 {* docs_src/arguments/help/tutorial007_an_py310.py hl[12,16] *}
 
@@ -220,7 +220,7 @@ In this example we have a custom *CLI arguments* panel named "`Secondary Argumen
 
 ## Help with style using Rich
 
-In a future section you will see how to use custom markup in the `help` for *CLI arguments* when reading about [Commands - Command Help](../commands/help.md#rich-markdown-and-markup){.internal-link target=_blank}.
+In a future section you will see how to use custom markup in the `help` for *CLI arguments* when reading about [Commands - Command Help](../commands/help.md#rich-markdown-and-markup).
 
 If you are in a hurry you can jump there, but otherwise, it would be better to continue reading here and following the tutorial in order.
 
