@@ -46,7 +46,7 @@
 
 * ➖ Drop support for Python 3.9. PR [#1546](https://github.com/fastapi/typer/pull/1546) by [@tiangolo](https://github.com/tiangolo).
 
-## 0.23.2
+## 0.23.2 (2026-02-16)
 
 ### Features
 
@@ -1329,6 +1329,6 @@ There are new options to group commands, *CLI arguments*, and *CLI options*, sup
 
 * Add initial version of code, docs, etc.
 
-## 0.0.1
+## 0.0.1 (2019-12-20)
 
 * First commit. Publish to PyPI to reserve package name.
