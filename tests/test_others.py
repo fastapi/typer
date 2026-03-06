@@ -1,3 +1,4 @@
+import json
 import os
 import subprocess
 import sys
@@ -13,7 +14,7 @@ import typer._completion_shared
 import typer.completion
 from typer.core import _split_opt
 from typer.main import solve_typer_info_defaults, solve_typer_info_help
-from typer.models import ParameterInfo, TyperInfo
+from typer.models import DictParamType, ParameterInfo, TyperInfo
 from typer.testing import CliRunner
 
 from .utils import requires_completion_permission
@@ -319,6 +320,22 @@ def test_split_opt():
     prefix, opt = _split_opt("verbose")
     assert prefix == ""
     assert opt == "verbose"
+
+
+def test_json_param_type_convert():
+    data = {"name": "Camila", "age": 15, "height_meters": 1.7, "female": True}
+    converted = DictParamType().convert(json.dumps(data), None, None)
+    assert data == converted
+
+
+def test_json_param_type_convert_dict_input():
+    data = {"name": "Camila", "age": 15, "height_meters": 1.7, "female": True}
+    converted = DictParamType().convert(data, None, None)
+    assert data == converted
+
+
+def test_dict_param_tyoe_name():
+    assert repr(DictParamType()) == "DICT"
 
 
 def test_options_metadata_typer_default():
