@@ -33,7 +33,7 @@ def test_completion_zsh(mod: ModuleType):
         env={
             **os.environ,
             f"_{file_name.upper()}_COMPLETE": "complete_zsh",
-            "_TYPER_COMPLETE_ARGS": f"{file_name} --name Seb",
+            "_TYPER_COMPLETE_ARGS": f"{file_name} --user Seb",
         },
     )
     assert "Camila" not in result.stdout
@@ -50,7 +50,7 @@ def test_completion_powershell(mod: ModuleType):
         env={
             **os.environ,
             f"_{file_name.upper()}_COMPLETE": "complete_powershell",
-            "_TYPER_COMPLETE_ARGS": f"{file_name} --name Seb",
+            "_TYPER_COMPLETE_ARGS": f"{file_name} --user Seb",
             "_TYPER_COMPLETE_WORD_TO_COMPLETE": "Seb",
         },
     )
@@ -60,7 +60,7 @@ def test_completion_powershell(mod: ModuleType):
 
 
 def test_1(mod: ModuleType):
-    result = runner.invoke(mod.app, ["--name", "Camila"])
+    result = runner.invoke(mod.app, ["--user", "Camila"])
     assert result.exit_code == 0
     assert "Hello Camila" in result.output
 
