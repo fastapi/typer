@@ -181,7 +181,7 @@ def get_params_from_function(func: Callable[..., Any]) -> dict[str, ParamMeta]:
             default = parameter_info
 
         params[param.name] = ParamMeta(
-            name=param.name, default=default, annotation=annotation
+            name=param.name, default=default, annotation=annotation, kind=param.kind
         )
     return params
 
