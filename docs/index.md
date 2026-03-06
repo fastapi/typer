@@ -59,7 +59,7 @@ Create and activate a <a href="https://typer.tiangolo.com/virtual-environments/"
 ```console
 $ pip install typer
 ---> 100%
-Successfully installed typer rich shellingham
+Successfully installed typer rich shellingham pydantic
 ```
 
 </div>
@@ -362,6 +362,7 @@ For a more complete example including more features, see the <a href="https://ty
 
 * <a href="https://click.palletsprojects.com/" class="external-link" target="_blank">Click</a>: a popular tool for building CLIs in Python. Typer is based on it.
 * <a href="https://rich.readthedocs.io/en/stable/index.html" class="external-link" target="_blank"><code>rich</code></a>: to show nicely formatted errors automatically.
+* <a href="https://docs.pydantic.dev/latest/" class="external-link" target="_blank"><code>pydantic</code></a>: to support the usage of Pydantic types.
 * <a href="https://github.com/sarugaku/shellingham" class="external-link" target="_blank"><code>shellingham</code></a>: to automatically detect the current shell when installing completion.
 
 ### `typer-slim`
