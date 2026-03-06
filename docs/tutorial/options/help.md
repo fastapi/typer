@@ -93,7 +93,7 @@ Here we have a custom *CLI options* panel named "`Customization and Utils`".
 
 ## Help with style using Rich
 
-In a future section you will see how to use custom markup in the `help` for *CLI options* when reading about [Commands - Command Help](../commands/help.md#rich-markdown-and-markup){.internal-link target=_blank}.
+In a future section you will see how to use custom markup in the `help` for *CLI options* when reading about [Commands - Command Help](../commands/help.md#rich-markdown-and-markup).
 
 If you are in a hurry you can jump there, but otherwise, it would be better to continue reading here and following the tutorial in order.
 

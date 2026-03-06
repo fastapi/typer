@@ -1,6 +1,6 @@
 # Path
 
-You can declare a *CLI parameter* to be a standard Python <a href="https://docs.python.org/3/library/pathlib.html#basic-use" class="external-link" target="_blank">`pathlib.Path`</a>.
+You can declare a *CLI parameter* to be a standard Python [`pathlib.Path`](https://docs.python.org/3/library/pathlib.html#basic-use).
 
 This is what you would do for directory paths, file paths, etc:
 

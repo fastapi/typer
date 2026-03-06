@@ -1,6 +1,6 @@
 # Testing
 
-Testing **Typer** applications is very easy with <a href="https://docs.pytest.org/en/latest/" class="external-link" target="_blank">pytest</a>.
+Testing **Typer** applications is very easy with [pytest](https://docs.pytest.org/en/latest/).
 
 Let's say you have an application `app/main.py` with:
 
@@ -77,7 +77,7 @@ You could also check the output sent to "standard error" (`stderr`) or "standard
 
 /// info
 
-If you need a refresher about what is "standard output" and "standard error" check the section in [Printing and Colors: "Standard Output" and "Standard Error"](printing.md#standard-output-and-standard-error){.internal-link target=_blank}.
+If you need a refresher about what is "standard output" and "standard error" check the section in [Printing and Colors: "Standard Output" and "Standard Error"](printing.md#standard-output-and-standard-error).
 
 ///
 
@@ -131,7 +131,7 @@ This is because what you type in the terminal goes to "**standard input**" and i
 
 /// info
 
-If you need a refresher about what is "standard output", "standard error", and "standard input" check the section in [Printing and Colors: "Standard Output" and "Standard Error"](printing.md#standard-output-and-standard-error){.internal-link target=_blank}.
+If you need a refresher about what is "standard output", "standard error", and "standard input" check the section in [Printing and Colors: "Standard Output" and "Standard Error"](printing.md#standard-output-and-standard-error).
 
 ///
 

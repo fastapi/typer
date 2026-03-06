@@ -33,7 +33,7 @@ __init__.py  test_tutorial
 
 ## An alternative *CLI argument* declaration
 
-In the [First Steps](../first-steps.md#add-a-cli-argument){.internal-link target=_blank} you saw how to add a *CLI argument*:
+In the [First Steps](../first-steps.md#add-a-cli-argument) you saw how to add a *CLI argument*:
 
 {* docs_src/first_steps/tutorial002_py310.py hl[4] *}
 
@@ -211,7 +211,7 @@ name: str = typer.Argument(default=...)
 
 /// info
 
-If you hadn't seen that `...` before: it is a special single value, it is <a href="https://docs.python.org/3/library/constants.html#Ellipsis" class="external-link" target="_blank">part of Python and is called "Ellipsis"</a>.
+If you hadn't seen that `...` before: it is a special single value, it is [part of Python and is called "Ellipsis"](https://docs.python.org/3/library/constants.html#Ellipsis).
 
 ///
 

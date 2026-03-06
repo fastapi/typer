@@ -213,11 +213,11 @@ Alternatively, you can disable it globally using an environmental variable `TYPE
 
 ### Rich Markup
 
-If you set `rich_markup_mode="rich"` when creating the `typer.Typer()` app (which is the default), you will be able to use <a href="https://rich.readthedocs.io/en/stable/markup.html" class="external-link" target="_blank">Rich Console Markup</a> in the docstring, and even in the help for the *CLI arguments* and options:
+If you set `rich_markup_mode="rich"` when creating the `typer.Typer()` app (which is the default), you will be able to use [Rich Console Markup](https://rich.readthedocs.io/en/stable/markup.html) in the docstring, and even in the help for the *CLI arguments* and options:
 
 {* docs_src/commands/help/tutorial004_an_py310.py hl[5,11,15:17,22,25,28] *}
 
-With that, you can use <a href="https://rich.readthedocs.io/en/stable/markup.html" class="external-link" target="_blank">Rich Console Markup</a> to format the text in the docstring for the command `create`, make the word "`create`" bold and green, and even use an <a href="https://rich.readthedocs.io/en/stable/markup.html#emoji" class="external-link" target="_blank">emoji</a>.
+With that, you can use [Rich Console Markup](https://rich.readthedocs.io/en/stable/markup.html) to format the text in the docstring for the command `create`, make the word "`create`" bold and green, and even use an [emoji](https://rich.readthedocs.io/en/stable/markup.html#emoji).
 
 You can also use markup in the help for the `username` CLI Argument.
 
@@ -280,7 +280,7 @@ If you set `rich_markup_mode="markdown"` when creating the `typer.Typer()` app, 
 
 {* docs_src/commands/help/tutorial005_an_py310.py hl[5,10,13:21,26,28:29] *}
 
-With that, you can use Markdown to format the text in the docstring for the command `create`, make the word "`create`" bold, show a list of items, and even use an <a href="https://rich.readthedocs.io/en/stable/markup.html#emoji" class="external-link" target="_blank">emoji</a>.
+With that, you can use Markdown to format the text in the docstring for the command `create`, make the word "`create`" bold, show a list of items, and even use an [emoji](https://rich.readthedocs.io/en/stable/markup.html#emoji).
 
 And the same as before, the help text overwritten for the command `delete` can also use Markdown.
 
@@ -348,7 +348,7 @@ Notice that in Markdown you cannot define colors. For colors you might prefer to
 
 If you have many commands or CLI parameters, you might want to show their documentation in different panels when using the `--help` option.
 
-If you installed <a href="https://rich.readthedocs.io/" class="external-link" target="_blank">Rich</a> as described in [Printing and Colors](../printing.md){.internal-link target=_blank}, you can configure the panel to use for each command or CLI parameter.
+If you installed [Rich](https://rich.readthedocs.io/) as described in [Printing and Colors](../printing.md), you can configure the panel to use for each command or CLI parameter.
 
 ### Help Panels for Commands
 
