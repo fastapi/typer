@@ -10,6 +10,7 @@
 
 ### Internal
 
+* ⬆ Bump ruff from 0.15.4 to 0.15.5. PR [#1625](https://github.com/fastapi/typer/pull/1625) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump mkdocs-material from 9.7.3 to 9.7.4. PR [#1621](https://github.com/fastapi/typer/pull/1621) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ty from 0.0.19 to 0.0.20. PR [#1618](https://github.com/fastapi/typer/pull/1618) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump prek from 0.3.3 to 0.3.4. PR [#1617](https://github.com/fastapi/typer/pull/1617) by [@dependabot[bot]](https://github.com/apps/dependabot).
