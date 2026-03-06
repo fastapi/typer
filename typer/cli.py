@@ -123,6 +123,8 @@ def get_typer_from_state() -> typer.Typer | None:
     if state.file:
         module_name = state.file.name
         spec = importlib.util.spec_from_file_location(module_name, str(state.file))
+        # the module may import other modules in the same directory
+        sys.path.append(str(state.file.parent))
     elif state.module:
         spec = importlib.util.find_spec(state.module)
     if spec is None:
