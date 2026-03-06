@@ -49,6 +49,7 @@ def Option(
     show_envvar: bool = True,
     # Choice
     case_sensitive: bool = True,
+    enum_by_name: bool = False,
     # Numbers
     min: int | float | None = None,
     max: int | float | None = None,
@@ -114,6 +115,7 @@ def Option(
     show_envvar: bool = True,
     # Choice
     case_sensitive: bool = True,
+    enum_by_name: bool = False,
     # Numbers
     min: int | float | None = None,
     max: int | float | None = None,
@@ -581,7 +583,8 @@ def Option(
 
             @app.command()
             def main(
-                network: Annotated[NeuralNetwork, typer.Option(case_sensitive=False)]):
+                network: Annotated[NeuralNetwork, typer.Option(case_sensitive=False)]
+            ):
                 print(f"Training neural network of type: {network.value}")
             ```
 
@@ -589,6 +592,32 @@ def Option(
             """
         ),
     ] = True,
+    enum_by_name: Annotated[
+        bool,
+        Doc(
+            """
+            For a CLI Option representing an [Enum (choice)](https://typer.tiangolo.com/tutorial/parameter-types/enum),
+            accept names from the command line instead of values.
+
+            **Example**
+
+            ```python
+            from enum import Enum
+
+            class Food(str, Enum):
+                f1 = "Eggs"
+                f2 = "Bacon"
+                f3 = "Cheese"
+
+            @app.command()
+            def main(
+                groceries: Annotated[list[Food], typer.Option(enum_by_name=True)] = ["f1", "f3"]
+            ):
+                print(f"Buying groceries: {', '.join([f.value for f in groceries])}")
+            ```
+            """
+        ),
+    ] = False,
     # Numbers
     min: Annotated[
         int | float | None,
@@ -974,6 +1003,7 @@ def Option(
         show_envvar=show_envvar,
         # Choice
         case_sensitive=case_sensitive,
+        enum_by_name=enum_by_name,
         # Numbers
         min=min,
         max=max,
@@ -1030,6 +1060,7 @@ def Argument(
     hidden: bool = False,
     # Choice
     case_sensitive: bool = True,
+    enum_by_name: bool = False,
     # Numbers
     min: int | float | None = None,
     max: int | float | None = None,
@@ -1086,6 +1117,7 @@ def Argument(
     hidden: bool = False,
     # Choice
     case_sensitive: bool = True,
+    enum_by_name: bool = False,
     # Numbers
     min: int | float | None = None,
     max: int | float | None = None,
@@ -1431,6 +1463,32 @@ def Argument(
             """
         ),
     ] = True,
+    enum_by_name: Annotated[
+        bool,
+        Doc(
+            """
+            For a CLI Argument representing an [Enum (choice)](https://typer.tiangolo.com/tutorial/parameter-types/enum),
+            accept names from the command line instead of values.
+
+            **Example**
+
+            ```python
+            from enum import Enum
+
+            class Food(str, Enum):
+                f1 = "Eggs"
+                f2 = "Bacon"
+                f3 = "Cheese"
+
+            @app.command()
+            def main(
+                groceries: Annotated[list[Food], typer.Argument(enum_by_name=True)] = ["f1", "f3"]
+            ):
+                print(f"Buying groceries: {', '.join([f.value for f in groceries])}")
+            ```
+            """
+        ),
+    ] = False,
     # Numbers
     min: Annotated[
         int | float | None,
@@ -1805,6 +1863,7 @@ def Argument(
         hidden=hidden,
         # Choice
         case_sensitive=case_sensitive,
+        enum_by_name=enum_by_name,
         # Numbers
         min=min,
         max=max,
