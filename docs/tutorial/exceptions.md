@@ -192,6 +192,134 @@ $ python main.py
 
 </div>
 
+## Disable Tracebacks From Certain Modules
+
+If you are developing with Python frameworks other than **Typer**, you might get
+long, verbose tracebacks through other people's code. This could make it
+annoying to find the line in your own code that triggered the exception. And
+seeing internal Python code from someone else's package is almost never helpful
+when you're trying to troubleshoot your own code.
+
+With pretty exceptions, you can use the parameter `pretty_exceptions_suppress`,
+which takes a list of Python modules, or `str` paths. This indicates the modules
+for which the **Rich** traceback formatter should suppress the traceback
+details. Only filename and line number will be shown for these modules, but no
+code or variables.
+
+For example, calling `urllib.request.urlopen()` with an unknown URL protocol will
+produce an exception with many internal stack frames from `urllib.request` that
+you probably don't care about. It could look like this:
+
+<div class="termy">
+
+```console
+$ python main.py
+
+<font color="#F92672">╭─</font><font color="#F92672">───────────────</font><font color="#F92672"> </font><font color="#F92672"><b>Traceback </b></font><font color="#F92672">(most recent call last)</font><font color="#F92672"> </font><font color="#F92672">───────────────</font><font color="#F92672">─╮</font>
+<font color="#F92672">│</font> <font color="#A37F4E">/home/user/code/superapp/</font><b>main.py</b>:10 in main                       <font color="#F92672">│</font>
+<font color="#F92672">│</font>                                                                   <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E"> 7 </font>                                                             <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E"> 8 </font><font color="#ff00ff"><b>@app</b></font>.command()                                               <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E"> 9 </font><font color="#66D9EF">def</font><font color="#A37F4E"> </font><font color="#A6E22E">main</font>():                                                  <font color="#F92672">│</font>
+<font color="#F92672">│</font> <font color="#F92672">❱ </font>10 <font color="#A37F4E">│   </font>urllib.request.urlopen(<font color="#F4BF75">"</font><font color="#F4BF75">unknown://example.com</font><font color="#F4BF75">"</font>)          <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E">11 </font>                                                             <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E">12 </font>                                                             <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E">13 </font><font color="#66D9EF">if</font> <font color="#F92672">__name__</font> == <font color="#F4BF75">"</font><font color="#F4BF75">__main__</font><font color="#F4BF75">"</font>:                                   <font color="#F92672">│</font>
+<font color="#F92672">│</font>                                                                   <font color="#F92672">│</font>
+<font color="#F92672">│</font> <font color="#A37F4E">.../python3.10/urllib/</font><b>request.py</b>:216 in urlopen                   <font color="#F92672">│</font>
+<font color="#F92672">│</font>                                                                   <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E"> 213 </font><font color="#A37F4E">│   │   </font>_opener = opener = build_opener()                  <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E"> 214 </font><font color="#A37F4E">│   </font><font color="#66D9EF">else</font>:                                                  <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E"> 215 </font><font color="#A37F4E">│   │   </font>opener = _opener                                   <font color="#F92672">│</font>
+<font color="#F92672">│</font> <font color="#F92672">❱ </font> 216 <font color="#A37F4E">│   </font><font color="#66D9EF">return</font> opener.open(url, data, timeout)                 <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E"> 217 </font>                                                           <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E"> 218 </font><font color="#66D9EF">def</font><font color="#A37F4E"> </font><font color="#A6E22E">install_opener</font>(opener):                                <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E"> 219 </font><font color="#A37F4E">│   </font><font color="#66D9EF">global</font> _opener                                         <font color="#F92672">│</font>
+<font color="#F92672">│</font>                                                                   <font color="#F92672">│</font>
+<font color="#F92672">│</font> <font color="#A37F4E">.../python3.10/urllib/</font><b>request.py</b>:519 in open                      <font color="#F92672">│</font>
+<font color="#F92672">│</font>                                                                   <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E"> 516 </font><font color="#A37F4E">│   │   │   </font>req = meth(req)                                <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E"> 517 </font><font color="#A37F4E">│   │   </font>                                                   <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E"> 518 </font><font color="#A37F4E">│   │   </font>sys.audit(<font color="#F4BF75">'</font><font color="#F4BF75">urllib.Request</font><font color="#F4BF75">'</font>, req.full_url, req.data <font color="#F92672">│</font>
+<font color="#F92672">│</font> <font color="#F92672">❱ </font> 519 <font color="#A37F4E">│   │   </font>response = <font color="#A1EFE4">self</font>._open(req, data)                   <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E"> 520 </font><font color="#A37F4E">│   │   </font>                                                   <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E"> 521 </font><font color="#A37F4E">│   │   </font><font color="#A37F4E"># post-process response</font>                            <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E"> 522 </font><font color="#A37F4E">│   │   </font>meth_name = protocol+<font color="#F4BF75">"</font><font color="#F4BF75">_response</font><font color="#F4BF75">"</font>                   <font color="#F92672">│</font>
+<font color="#F92672">│</font>                                                                   <font color="#F92672">│</font>
+<font color="#F92672">│</font> <font color="#A37F4E">.../python3.10/urllib/</font><b>request.py</b>:536 in _open                     <font color="#F92672">│</font>
+<font color="#F92672">│</font>                                                                   <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E"> 533 </font><font color="#A37F4E">│   │   │   </font><font color="#66D9EF">return</font> result                                  <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E"> 534 </font><font color="#A37F4E">│   │   </font>                                                   <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E"> 535 </font><font color="#A37F4E">│   │   </font>protocol = req.type                                <font color="#F92672">│</font>
+<font color="#F92672">│</font> <font color="#F92672">❱ </font> 536 <font color="#A37F4E">│   │   </font>result = <font color="#A1EFE4">self</font>._call_chain(<font color="#A1EFE4">self</font>.handle_open, protoc <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E"> 537 </font><font color="#A37F4E">│   │   │   │   │   │   │   │     </font><font color="#F4BF75">'</font><font color="#F4BF75">_open</font><font color="#F4BF75">'</font>, req)            <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E"> 538 </font><font color="#A37F4E">│   │   </font><font color="#66D9EF">if</font> result:                                         <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E"> 539 </font><font color="#A37F4E">│   │   │   </font><font color="#66D9EF">return</font> result                                  <font color="#F92672">│</font>
+<font color="#F92672">│</font>                                                                   <font color="#F92672">│</font>
+<font color="#F92672">│</font> <font color="#A37F4E">.../python3.10/urllib/</font><b>request.py</b>:496 in _call_chain               <font color="#F92672">│</font>
+<font color="#F92672">│</font>                                                                   <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E"> 493 </font><font color="#A37F4E">│   │   </font>handlers = chain.get(kind, ())                     <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E"> 494 </font><font color="#A37F4E">│   │   </font><font color="#66D9EF">for</font> handler <font color="#ff00ff">in</font> handlers:                           <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E"> 495 </font><font color="#A37F4E">│   │   │   </font>func = <font color="#A1EFE4">getattr</font>(handler, meth_name)             <font color="#F92672">│</font>
+<font color="#F92672">│</font> <font color="#F92672">❱ </font> 496 <font color="#A37F4E">│   │   │   </font>result = func(*args)                           <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E"> 497 </font><font color="#A37F4E">│   │   │   </font><font color="#66D9EF">if</font> result <font color="#ff00ff">is</font> <font color="#ff00ff">not</font> <font color="#66D9EF">None</font>:                         <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E"> 498 </font><font color="#A37F4E">│   │   │   │   </font><font color="#66D9EF">return</font> result                              <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E"> 499 </font>                                                           <font color="#F92672">│</font>
+<font color="#F92672">│</font>                                                                   <font color="#F92672">│</font>
+<font color="#F92672">│</font> <font color="#A37F4E">.../python3.10/urllib/</font><b>request.py</b>:1419 in unknown_open             <font color="#F92672">│</font>
+<font color="#F92672">│</font>                                                                   <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E">1416 </font><font color="#66D9EF">class</font><font color="#A37F4E"> </font><font color="#A6E22E">UnknownHandler</font>(BaseHandler):                         <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E">1417 </font><font color="#A37F4E">│   </font><font color="#66D9EF">def</font><font color="#A37F4E"> </font><font color="#A6E22E">unknown_open</font>(<font color="#A1EFE4">self</font>, req):                           <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E">1418 </font><font color="#A37F4E">│   │   </font><font color="#A1EFE4">type</font> = req.type                                    <font color="#F92672">│</font>
+<font color="#F92672">│</font> <font color="#F92672">❱ </font>1419 <font color="#A37F4E">│   │   </font><font color="#66D9EF">raise</font> URLError(<font color="#F4BF75">'</font><font color="#F4BF75">unknown url type: </font><font color="#F4BF75">%s</font><font color="#F4BF75">'</font> % <font color="#A1EFE4">type</font>)      <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E">1420 </font>                                                           <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E">1421 </font><font color="#66D9EF">def</font><font color="#A37F4E"> </font><font color="#A6E22E">parse_keqv_list</font>(l):                                    <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E">1422 </font><font color="#A37F4E">│   </font><font color="#F4BF75">"""Parse list of key=value strings where keys are not </font> <font color="#F92672">│</font>
+<font color="#F92672">╰───────────────────────────────────────────────────────────────────╯</font>
+<font color="#F92672"><b>URLError: </b></font><b>&lt;</b><font color="#ff00ff"><b>urlopen</b></font> error unknown url type: unknown<b>&gt;</b>
+```
+
+</div>
+
+That's a lot of clutter from `urllib.request` internals! You can suppress those
+parts of the traceback with `pretty_exceptions_suppress`:
+
+{* docs_src/exceptions/tutorial005_py310.py hl[5] *}
+
+And now the traceback only shows your own code with full detail, while the
+`urllib.request` frames are reduced to just a filename and line number:
+
+<div class="termy">
+
+```console
+$ python main.py
+
+<font color="#F92672">╭─</font><font color="#F92672">──────────────</font><font color="#F92672"> </font><font color="#F92672"><b>Traceback </b></font><font color="#F92672">(most recent call last)</font><font color="#F92672"> </font><font color="#F92672">────────────────</font><font color="#F92672">─╮</font>
+<font color="#F92672">│</font> <font color="#A37F4E">/home/user/code/superapp/</font><b>main.py</b>:10 in main                       <font color="#F92672">│</font>
+<font color="#F92672">│</font>                                                                   <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E"> 7 </font>                                                             <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E"> 8 </font><font color="#ff00ff"><b>@app</b></font>.command()                                               <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E"> 9 </font><font color="#66D9EF">def</font><font color="#A37F4E"> </font><font color="#A6E22E">main</font>():                                                  <font color="#F92672">│</font>
+<font color="#F92672">│</font> <font color="#F92672">❱ </font>10 <font color="#A37F4E">│   </font>urllib.request.urlopen(<font color="#F4BF75">"</font><font color="#F4BF75">unknown://example.com</font><font color="#F4BF75">"</font>)          <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E">11 </font>                                                             <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E">12 </font>                                                             <font color="#F92672">│</font>
+<font color="#F92672">│</font>   <font color="#A37F4E">13 </font><font color="#66D9EF">if</font> <font color="#F92672">__name__</font> == <font color="#F4BF75">"</font><font color="#F4BF75">__main__</font><font color="#F4BF75">"</font>:                                   <font color="#F92672">│</font>
+<font color="#F92672">│</font>                                                                   <font color="#F92672">│</font>
+<font color="#F92672">│</font> <font color="#A37F4E">.../python3.10/urllib/</font><b>request.py</b>:216 in urlopen                   <font color="#F92672">│</font>
+<font color="#F92672">│</font>                                                                   <font color="#F92672">│</font>
+<font color="#F92672">│</font> <font color="#A37F4E">.../python3.10/urllib/</font><b>request.py</b>:519 in open                      <font color="#F92672">│</font>
+<font color="#F92672">│</font>                                                                   <font color="#F92672">│</font>
+<font color="#F92672">│</font> <font color="#A37F4E">.../python3.10/urllib/</font><b>request.py</b>:536 in _open                     <font color="#F92672">│</font>
+<font color="#F92672">│</font>                                                                   <font color="#F92672">│</font>
+<font color="#F92672">│</font> <font color="#A37F4E">.../python3.10/urllib/</font><b>request.py</b>:496 in _call_chain               <font color="#F92672">│</font>
+<font color="#F92672">│</font>                                                                   <font color="#F92672">│</font>
+<font color="#F92672">│</font> <font color="#A37F4E">.../python3.10/urllib/</font><b>request.py</b>:1419 in unknown_open             <font color="#F92672">│</font>
+<font color="#F92672">╰───────────────────────────────────────────────────────────────────╯</font>
+<font color="#F92672"><b>URLError: </b></font><b>&lt;</b><font color="#ff00ff"><b>urlopen</b></font> error unknown url type: unknown<b>&gt;</b>
+```
+
+</div>
+
 ## Disable Pretty Exceptions
 
 You can also entirely disable pretty exceptions with the parameter `pretty_exceptions_enable=False`:
