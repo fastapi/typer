@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Refactors
+
+* 🎨 Ensure `ty` runs without errors. PR [#1628](https://github.com/fastapi/typer/pull/1628) by [@svlandeg](https://github.com/svlandeg).
+
 ### Docs
 
 * 🔨 Handle external links `target=_blank` and CSS automatically in JS and CSS. PR [#1622](https://github.com/fastapi/typer/pull/1622) by [@tiangolo](https://github.com/tiangolo).
