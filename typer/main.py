@@ -1217,7 +1217,7 @@ def get_command(typer_instance: Typer) -> click.Command:
                 return ctx.invoke(use_result_callback, result)
 
             update_wrapper(callback_wrapper, click_callback)
-            click_command.callback = callback_wrapper  # type: ignore
+            click_command.callback = callback_wrapper
 
         return click_command
     raise RuntimeError(
