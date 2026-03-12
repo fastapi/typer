@@ -2,13 +2,29 @@
 
 ## Latest Changes
 
+### Refactors
+
+* 🎨 Ensure `ty` runs without errors. PR [#1628](https://github.com/fastapi/typer/pull/1628) by [@svlandeg](https://github.com/svlandeg).
+
 ### Docs
 
+* 🔨 Handle external links `target=_blank` and CSS automatically in JS and CSS. PR [#1622](https://github.com/fastapi/typer/pull/1622) by [@tiangolo](https://github.com/tiangolo).
 * 📝 Remove link to Typer developer survey. PR [#1609](https://github.com/fastapi/typer/pull/1609) by [@svlandeg](https://github.com/svlandeg).
 * ✏️ Clean up documentation in `install.md` file. PR [#1606](https://github.com/fastapi/typer/pull/1606) by [@Johandielangman](https://github.com/Johandielangman).
 
 ### Internal
 
+* ⬆ Bump mkdocs-material from 9.7.4 to 9.7.5. PR [#1629](https://github.com/fastapi/typer/pull/1629) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump prek from 0.3.4 to 0.3.5. PR [#1627](https://github.com/fastapi/typer/pull/1627) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ty from 0.0.20 to 0.0.21. PR [#1624](https://github.com/fastapi/typer/pull/1624) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.15.4 to 0.15.5. PR [#1625](https://github.com/fastapi/typer/pull/1625) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mkdocs-material from 9.7.3 to 9.7.4. PR [#1621](https://github.com/fastapi/typer/pull/1621) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ty from 0.0.19 to 0.0.20. PR [#1618](https://github.com/fastapi/typer/pull/1618) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump prek from 0.3.3 to 0.3.4. PR [#1617](https://github.com/fastapi/typer/pull/1617) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.15.2 to 0.15.4. PR [#1616](https://github.com/fastapi/typer/pull/1616) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ty from 0.0.18 to 0.0.19. PR [#1615](https://github.com/fastapi/typer/pull/1615) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump actions/download-artifact from 7 to 8. PR [#1614](https://github.com/fastapi/typer/pull/1614) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump actions/upload-artifact from 6 to 7. PR [#1613](https://github.com/fastapi/typer/pull/1613) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump mkdocs-material from 9.7.2 to 9.7.3. PR [#1611](https://github.com/fastapi/typer/pull/1611) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump mkdocstrings-python from 2.0.1 to 2.0.3. PR [#1605](https://github.com/fastapi/typer/pull/1605) by [@svlandeg](https://github.com/svlandeg).
 * ⬆ Bump ty from 0.0.17 to 0.0.18. PR [#1602](https://github.com/fastapi/typer/pull/1602) by [@dependabot[bot]](https://github.com/apps/dependabot).
