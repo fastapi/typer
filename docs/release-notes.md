@@ -14,6 +14,7 @@
 
 ### Internal
 
+* ⬆ Bump ty from 0.0.21 to 0.0.22. PR [#1634](https://github.com/fastapi/typer/pull/1634) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump dorny/paths-filter from 3 to 4. PR [#1632](https://github.com/fastapi/typer/pull/1632) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump mkdocs-material from 9.7.4 to 9.7.5. PR [#1629](https://github.com/fastapi/typer/pull/1629) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump prek from 0.3.4 to 0.3.5. PR [#1627](https://github.com/fastapi/typer/pull/1627) by [@dependabot[bot]](https://github.com/apps/dependabot).
