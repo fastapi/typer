@@ -14,6 +14,7 @@
 
 ### Internal
 
+* ⬆ Bump pyjwt from 2.10.1 to 2.12.0. PR [#1636](https://github.com/fastapi/typer/pull/1636) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump cairosvg from 2.8.2 to 2.9.0. PR [#1635](https://github.com/fastapi/typer/pull/1635) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ruff from 0.15.5 to 0.15.6. PR [#1633](https://github.com/fastapi/typer/pull/1633) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ty from 0.0.21 to 0.0.22. PR [#1634](https://github.com/fastapi/typer/pull/1634) by [@dependabot[bot]](https://github.com/apps/dependabot).
