@@ -57,15 +57,9 @@ It will not expand a tilde-prefix (something with `~`, like `~/Documents/`), as 
 
 ///
 
-/// tip
-
-All these parameters come directly from <a href="https://click.palletsprojects.com/en/7.x/parameters/#parameter-types" class="external-link" target="_blank">Click</a>.
-
-///
-
 For example:
 
-{* docs_src/parameter_types/path/tutorial002_an_py39.py hl[14:19] *}
+{* docs_src/parameter_types/path/tutorial002_an_py310.py hl[14:19] *}
 
 Check it:
 
@@ -109,4 +103,4 @@ They are used for more advanced use cases.
 ///
 
 * `allow_dash`: If this is set to True, a single dash to indicate standard streams is permitted.
-* `path_type`: optionally a string type that should be used to represent the path. The default is None which means the return value will be either bytes or unicode depending on what makes most sense given the input data Click deals with.
+* `path_type`: optionally a string type that should be used to represent the path. The default is `None` which means the return value will be either bytes or unicode depending on what makes most sense given the input data.

@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 from typer.testing import CliRunner
 
-import docs_src.progressbar.tutorial004_py39 as mod
+import docs_src.progressbar.tutorial004_py310 as mod
 from tests.utils import normalize_rich_output
 
 app = mod.app
@@ -23,7 +23,7 @@ def test_cli():  # Checking only final state of progress bar
     with (
         patch("time.sleep") as mock_sleep,
         patch(
-            "docs_src.progressbar.tutorial004_py39.iterate_user_ids",
+            "docs_src.progressbar.tutorial004_py310.iterate_user_ids",
             side_effect=fake_iterate_user_ids,
         ),
     ):

@@ -43,8 +43,8 @@ def test_too_many_parsers():
         def convert(
             self,
             value: str,
-            param: typing.Optional[click.Parameter],
-            ctx: typing.Optional[click.Context],
+            param: click.Parameter | None,
+            ctx: click.Context | None,
         ) -> typing.Any:
             return int(value)  # pragma: no cover
 
@@ -67,8 +67,8 @@ def test_valid_parser_permutations():
         def convert(
             self,
             value: str,
-            param: typing.Optional[click.Parameter],
-            ctx: typing.Optional[click.Context],
+            param: click.Parameter | None,
+            ctx: click.Context | None,
         ) -> typing.Any:
             return int(value)  # pragma: no cover
 
@@ -148,16 +148,14 @@ def test_callback_3_untyped_parameters():
 def test_callback_4_list_none():
     app = typer.Typer()
 
-    def names_callback(ctx, param, values: typing.Optional[list[str]]):
+    def names_callback(ctx, param, values: list[str] | None):
         if values is None:
             return values
         return [value.upper() for value in values]
 
     @app.command()
     def main(
-        names: typing.Optional[list[str]] = typer.Option(
-            None, "--name", callback=names_callback
-        ),
+        names: list[str] | None = typer.Option(None, "--name", callback=names_callback),
     ):
         if names is None:
             print("Hello World")

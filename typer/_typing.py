@@ -3,29 +3,21 @@
 # Reduced drastically to only include Typer-specific 3.9+ functionality
 # mypy: ignore-errors
 
-import sys
+import types
+from collections.abc import Callable
 from typing import (
     Annotated,
     Any,
-    Callable,
     Literal,
-    Optional,
     Union,
     get_args,
     get_origin,
     get_type_hints,
 )
 
-if sys.version_info < (3, 10):
 
-    def is_union(tp: Optional[type[Any]]) -> bool:
-        return tp is Union
-
-else:
-    import types
-
-    def is_union(tp: Optional[type[Any]]) -> bool:
-        return tp is Union or tp is types.UnionType  # noqa: E721
+def is_union(tp: type[Any] | None) -> bool:
+    return tp is Union or tp is types.UnionType  # noqa: E721
 
 
 __all__ = (

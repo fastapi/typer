@@ -1,3 +1,7 @@
+import os
+import subprocess
+import sys
+
 import pytest
 import typer
 import typer.completion
@@ -40,6 +44,43 @@ def test_rich_markup_mode_rich():
 
     result = runner.invoke(app, ["--help"])
     assert any(c in result.stdout for c in rounded)
+
+
+@pytest.mark.parametrize(
+    "env_var_value, expected_result",
+    [
+        ("1", True),
+        ("True", True),
+        ("TRUE", True),
+        ("true", True),
+        ("0", False),
+        ("False", False),
+        ("FALSE", False),
+        ("false", False),
+        ("somerandomvalue", True),
+    ],
+)
+def test_rich_markup_mode_envvar(env_var_value: str, expected_result: bool):
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "coverage",
+            "run",
+            "-m",
+            "typer",
+            "tests/assets/cli/sample.py",
+            "--help",
+        ],
+        capture_output=True,
+        env={
+            **os.environ,
+            "TYPER_USE_RICH": env_var_value,
+            "PYTHONIOENCODING": "utf-8",
+        },
+        encoding="utf-8",
+    )
+    assert any(c in result.stdout for c in rounded) == expected_result
 
 
 @pytest.mark.parametrize(

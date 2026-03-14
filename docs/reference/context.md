@@ -1,11 +1,12 @@
 # Context
 
-When you create a Typer application it uses Click underneath.
-And every Click application has a special object called a [`Context`](https://click.palletsprojects.com/en/stable/api/#click.Context) that is normally hidden.
-But you can access the context by declaring a function parameter of type `typer.Context`.
+Every app has a special internal object that keeps track of state relevant to the script's execution.
+For some advanced use-cases, you may want to access it directly.
+This can be done by declaring a function parameter of type `typer.Context`.
 
-The same way you can access the context by declaring a function parameter with its value,
-you can declare another function parameter with type `typer.CallbackParam` to get the specific Click [`Parameter`](https://click.palletsprojects.com/en/stable/api/#click.Parameter) object.
+Similarly, you can also declare a function parameter with type `typer.CallbackParam` in case a callback could be used
+by several CLI parameters, and you need to figure out which one it was.
+
 
 ```python
 from typing import Annotated

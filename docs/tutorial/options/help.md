@@ -4,7 +4,7 @@ You already saw how to add a help text for *CLI arguments* with the `help` param
 
 Let's now do the same for *CLI options*:
 
-{* docs_src/options/help/tutorial001_an_py39.py hl[11:12] *}
+{* docs_src/options/help/tutorial001_an_py310.py hl[11:12] *}
 
 The same way as with `typer.Argument()`, we can put `typer.Option()` inside of `Annotated`.
 
@@ -54,9 +54,9 @@ Options:
 
 The same as with *CLI arguments*, you can put the help for some *CLI options* in different panels to be shown with the `--help` option.
 
-If you have installed Rich as described in the docs for [Printing and Colors](../printing.md){.internal-link target=_blank}, you can set the `rich_help_panel` parameter to the name of the panel you want for each *CLI option*:
+Using Rich, you can set the `rich_help_panel` parameter to the name of the panel you want for each *CLI option*:
 
-{* docs_src/options/help/tutorial002_an_py39.py hl[15,21] *}
+{* docs_src/options/help/tutorial002_an_py310.py hl[15,21] *}
 
 Now, when you check the `--help` option, you will see a default panel named "`Options`" for the *CLI options* that don't have a custom `rich_help_panel`.
 
@@ -102,7 +102,7 @@ If you are in a hurry you can jump there, but otherwise, it would be better to c
 
 You can tell Typer to not show the default value in the help text with `show_default=False`:
 
-{* docs_src/options/help/tutorial003_an_py39.py hl[9] *}
+{* docs_src/options/help/tutorial003_an_py310.py hl[9] *}
 
 And it will no longer show the default value in the help text:
 
@@ -127,19 +127,11 @@ Options:
 
 </div>
 
-/// note | Technical Details
-
-In Click applications the default values are hidden by default. 🙈
-
-In **Typer** these default values are shown by default. 👀
-
-///
-
 ## Custom default string
 
 You can use the same `show_default` to pass a custom string (instead of a `bool`) to customize the default value to be shown in the help text:
 
-{* docs_src/options/help/tutorial004_an_py39.py hl[11] *}
+{* docs_src/options/help/tutorial004_an_py310.py hl[11] *}
 
 And it will be used in the help text:
 

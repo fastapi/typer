@@ -12,7 +12,7 @@ app.add_typer(users.app, name="users")
 
 We can also set the `help` text while adding a Typer:
 
-{* docs_src/subcommands/name_help/tutorial001_py39.py hl[6] *}
+{* docs_src/subcommands/name_help/tutorial001_py310.py hl[6] *}
 
 And then we get that help text for that command in the *CLI program*:
 
@@ -87,7 +87,7 @@ The same way, if you define a callback in a `typer.Typer()`, the help text is ex
 
 Here's an example:
 
-{* docs_src/subcommands/name_help/tutorial002_py39.py hl[9,10,11,12,13] *}
+{* docs_src/subcommands/name_help/tutorial002_py310.py hl[9,10,11,12,13] *}
 
 The help text for that command will be the callback function's docstring: `Manage users in the app.`.
 
@@ -141,7 +141,7 @@ This has the lowest priority, we'll see later what has a higher priority and can
 
 Check the code:
 
-{* docs_src/subcommands/name_help/tutorial003_py39.py hl[6,7,8,9,12] *}
+{* docs_src/subcommands/name_help/tutorial003_py310.py hl[6,7,8,9,12] *}
 
 This achieves exactly the same as the previous example.
 
@@ -185,7 +185,7 @@ Commands:
 
 The same as with normal **Typer** apps, if you pass a `callback` to `typer.Typer(callback=some_function)` and then override it with `@app.callback()`, the help text will be inferred from the new callback:
 
-{* docs_src/subcommands/name_help/tutorial004_py39.py hl[16,17,18,19,20] *}
+{* docs_src/subcommands/name_help/tutorial004_py310.py hl[16,17,18,19,20] *}
 
 Now the help text will be `Manage users in the app.` instead of `Old callback help.`.
 
@@ -233,7 +233,7 @@ This takes precedence over inferring the help from a callback set in `@sub_app.c
 
 Check the code:
 
-{* docs_src/subcommands/name_help/tutorial005_py39.py hl[15,16,17,18,21] *}
+{* docs_src/subcommands/name_help/tutorial005_py310.py hl[15,16,17,18,21] *}
 
 The help text will be `I have the highland! Create some users.` instead of the previous ones.
 
@@ -303,7 +303,7 @@ If you set it explicitly, that takes precedence over inferring.
 
 You can set it when creating a new `typer.Typer()`:
 
-{* docs_src/subcommands/name_help/tutorial006_py39.py hl[12] *}
+{* docs_src/subcommands/name_help/tutorial006_py310.py hl[12] *}
 
 /// info
 
@@ -357,7 +357,7 @@ Many parameters that you use when creating a `typer.Typer()` app can be overridd
 
 Continuing with the previous example, we now override the `help` in `@user_app.callback()`:
 
-{* docs_src/subcommands/name_help/tutorial007_py39.py hl[24] *}
+{* docs_src/subcommands/name_help/tutorial007_py310.py hl[24] *}
 
 And now the help text will be `Help from callback for users.`.
 
@@ -401,7 +401,7 @@ Commands:
 
 And finally, with the highest priority, you can override all that by explicitly setting the `name` and `help` in `app.add_typer()`, just like we did on the first example above:
 
-{* docs_src/subcommands/name_help/tutorial008_py39.py hl[21] *}
+{* docs_src/subcommands/name_help/tutorial008_py310.py hl[21] *}
 
 And now, with the highest priorities of them all, the command name will now be `cake-sith-users` and the help text will be `Unlimited powder! Eh, users.`.
 

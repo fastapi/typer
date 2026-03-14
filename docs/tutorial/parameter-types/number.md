@@ -2,7 +2,7 @@
 
 You can define numeric validations with `max` and `min` values for `int` and `float` *CLI parameters*:
 
-{* docs_src/parameter_types/number/tutorial001_an_py39.py hl[10:12] *}
+{* docs_src/parameter_types/number/tutorial001_an_py310.py hl[10:12] *}
 
 *CLI arguments* and *CLI options* can both use these validations.
 
@@ -73,7 +73,7 @@ You might want to, instead of showing an error, use the closest minimum or maxim
 
 You can do it with the `clamp` parameter:
 
-{* docs_src/parameter_types/number/tutorial002_an_py39.py hl[10:12] *}
+{* docs_src/parameter_types/number/tutorial002_an_py310.py hl[10:12] *}
 
 And then, when you pass data that is out of the valid range, it will be "clamped", the closest valid value will be used:
 
@@ -102,7 +102,7 @@ ID is 5
 
 You can make a *CLI option* work as a counter with the `count` parameter:
 
-{* docs_src/parameter_types/number/tutorial003_an_py39.py hl[9] *}
+{* docs_src/parameter_types/number/tutorial003_an_py310.py hl[9] *}
 
 It means that the *CLI option* will be like a boolean flag, e.g. `--verbose`.
 

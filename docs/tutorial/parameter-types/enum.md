@@ -2,7 +2,7 @@
 
 To define a *CLI parameter* that can take a value from a predefined set of values you can use a standard Python <a href="https://docs.python.org/3/library/enum.html" class="external-link" target="_blank">`enum.Enum`</a>:
 
-{* docs_src/parameter_types/enum/tutorial001_py39.py hl[1,6:9,16:17] *}
+{* docs_src/parameter_types/enum/tutorial001_py310.py hl[1,6:9,16:17] *}
 
 /// tip
 
@@ -54,7 +54,7 @@ Error: Invalid value for '--network': 'CONV' is not one of 'simple', 'conv', 'ls
 
 You can make an `Enum` (choice) *CLI parameter* be case-insensitive with the `case_sensitive` parameter:
 
-{* docs_src/parameter_types/enum/tutorial002_an_py39.py hl[19] *}
+{* docs_src/parameter_types/enum/tutorial002_an_py310.py hl[19] *}
 
 And then the values of the `Enum` will be checked no matter if lower case, upper case, or a mix:
 
@@ -78,7 +78,7 @@ Training neural network of type: lstm
 
 A *CLI parameter* can also take a list of `Enum` values:
 
-{* docs_src/parameter_types/enum/tutorial003_an_py39.py hl[17] *}
+{* docs_src/parameter_types/enum/tutorial003_an_py310.py hl[17] *}
 
 This works just like any other parameter value taking a list of things:
 
