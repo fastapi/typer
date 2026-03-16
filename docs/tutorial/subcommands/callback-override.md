@@ -49,7 +49,7 @@ Creating user: Camila
 
 If a callback was added when creating the `typer.Typer()` app, it's possible to override it with a new one using `@app.callback()`.
 
-This is the same information you saw on the section about [Commands - Typer Callback](../commands/callback.md){.internal-link target=_blank}, and it applies the same for sub-Typer apps:
+This is the same information you saw on the section about [Commands - Typer Callback](../commands/callback.md), and it applies the same for sub-Typer apps:
 
 {* docs_src/subcommands/callback_override/tutorial003_py310.py hl[6,7,10,14,15,16] *}
 

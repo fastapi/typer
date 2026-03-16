@@ -2,7 +2,7 @@
 
 /// info
 
-A UUID is a <a href="https://en.wikipedia.org/wiki/Universally_unique_identifier" class="external-link" target="_blank">"Universally Unique Identifier"</a>.
+A UUID is a ["Universally Unique Identifier"](https://en.wikipedia.org/wiki/Universally_unique_identifier).
 
 It's a standard format for identifiers, like passport numbers, but for anything, not just people in countries.
 
@@ -24,7 +24,7 @@ You can declare a *CLI parameter* as a UUID:
 
 {* docs_src/parameter_types/uuid/tutorial001_py310.py hl[1,9:11] *}
 
-Your Python code will receive a standard Python <a href="https://docs.python.org/3.8/library/uuid.html" class="external-link" target="_blank">`UUID`</a> object with all its attributes and methods, and as you are annotating your function parameter with that type, you will have type checks, autocompletion in your editor, etc.
+Your Python code will receive a standard Python [`UUID`](https://docs.python.org/3.8/library/uuid.html) object with all its attributes and methods, and as you are annotating your function parameter with that type, you will have type checks, autocompletion in your editor, etc.
 
 Check it:
 
