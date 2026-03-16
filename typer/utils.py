@@ -144,7 +144,6 @@ def get_params_from_function(func: Callable[..., Any]) -> dict[str, ParamMeta]:
                 and isinstance(parameter_info.default, str)
             ):
                 parameter_info.param_decls = (
-                    str,
                     parameter_info.default,
                     *(parameter_info.param_decls or ()),
                 )
