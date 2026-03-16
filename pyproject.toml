@@ -77,10 +77,10 @@ github-actions = [
     "smokeshow >=0.5.0",
 ]
 tests = [
-    "coverage[toml] >=6.2",
+    "coverage[toml] >=7.13",
     "mypy >=1.19.1",
     "ty >=0.0.9",
-    "pytest >=7.4.0",
+    "pytest >=9.0.0",
     "pytest-cov >=4.0.0",
     "pytest-sugar >=0.9.5",
     "pytest-xdist >=1.32.0",
@@ -100,65 +100,13 @@ source-includes = [
     "scripts/",
 ]
 
-[tool.tiangolo._internal-slim-build.packages.typer-slim.project]
-name = "typer-slim"
-readme = "typer-slim/README.md"
-dependencies = [
-    "typer",
-]
-optional-dependencies = {}
-scripts = {}
-
-[tool.tiangolo._internal-slim-build.packages.typer-slim.tool.pdm.build]
-# excludes needs to explicitly exclude the top level python packages,
-# otherwise PDM includes them by default
-# A "*" glob pattern can't be used here because in PDM internals, the patterns are put
-# in a set (unordered, order varies) and each excluded file is assigned one of the
-# glob patterns that matches, as the set is unordered, the matched pattern could be "*"
-# independent of the order here. And then the internal code would give it a lower score
-# than the one for a default included file.
-# By not using "*" and explicitly excluding the top level packages, they get a higher
-# score than the default inclusion
-excludes = ["typer", "tests", "pdm_build.py"]
-# source-includes needs to explicitly define some value because PDM will check the
-# truthy value of the list, and if empty, will include some defaults, including "tests",
-# an empty string doesn't match anything, but makes the list truthy, so that PDM
-# doesn't override it during the build.
-source-includes = [""]
-
-[tool.tiangolo._internal-slim-build.packages.typer-cli.project]
-name = "typer-cli"
-readme = "typer-cli/README.md"
-dependencies = [
-    "typer",
-]
-optional-dependencies = {}
-scripts = {}
-
-[tool.tiangolo._internal-slim-build.packages.typer-cli.tool.pdm.build]
-# excludes needs to explicitly exclude the top level python packages,
-# otherwise PDM includes them by default
-# A "*" glob pattern can't be used here because in PDM internals, the patterns are put
-# in a set (unordered, order varies) and each excluded file is assigned one of the
-# glob patterns that matches, as the set is unordered, the matched pattern could be "*"
-# independent of the order here. And then the internal code would give it a lower score
-# than the one for a default included file.
-# By not using "*" and explicitly excluding the top level packages, they get a higher
-# score than the default inclusion
-excludes = ["typer", "tests", "pdm_build.py"]
-# source-includes needs to explicitly define some value because PDM will check the
-# truthy value of the list, and if empty, will include some defaults, including "tests",
-# an empty string doesn't match anything, but makes the list truthy, so that PDM
-# doesn't override it during the build.
-source-includes = [""]
-
-[tool.pytest.ini_options]
+[tool.pytest]
+minversion = "9.0"
 addopts = [
   "--strict-config",
   "--strict-markers",
 ]
-xfail_strict = true
-junit_family = "xunit2"
+strict_xfail = true
 filterwarnings = [
     "error",
     # For pytest-xdist
