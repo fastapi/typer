@@ -2,8 +2,53 @@
 
 ## Latest Changes
 
+### Refactors
+
+* 🎨 Ensure `ty` runs without errors. PR [#1628](https://github.com/fastapi/typer/pull/1628) by [@svlandeg](https://github.com/svlandeg).
+
+### Docs
+
+* 🔨 Handle external links `target=_blank` and CSS automatically in JS and CSS. PR [#1622](https://github.com/fastapi/typer/pull/1622) by [@tiangolo](https://github.com/tiangolo).
+* 📝 Remove link to Typer developer survey. PR [#1609](https://github.com/fastapi/typer/pull/1609) by [@svlandeg](https://github.com/svlandeg).
+* ✏️ Clean up documentation in `install.md` file. PR [#1606](https://github.com/fastapi/typer/pull/1606) by [@Johandielangman](https://github.com/Johandielangman).
+
 ### Internal
 
+* ⬆ Bump prek from 0.3.5 to 0.3.6. PR [#1638](https://github.com/fastapi/typer/pull/1638) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ty from 0.0.22 to 0.0.23. PR [#1639](https://github.com/fastapi/typer/pull/1639) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pyjwt from 2.10.1 to 2.12.0. PR [#1636](https://github.com/fastapi/typer/pull/1636) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump cairosvg from 2.8.2 to 2.9.0. PR [#1635](https://github.com/fastapi/typer/pull/1635) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.15.5 to 0.15.6. PR [#1633](https://github.com/fastapi/typer/pull/1633) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ty from 0.0.21 to 0.0.22. PR [#1634](https://github.com/fastapi/typer/pull/1634) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump dorny/paths-filter from 3 to 4. PR [#1632](https://github.com/fastapi/typer/pull/1632) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mkdocs-material from 9.7.4 to 9.7.5. PR [#1629](https://github.com/fastapi/typer/pull/1629) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump prek from 0.3.4 to 0.3.5. PR [#1627](https://github.com/fastapi/typer/pull/1627) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ty from 0.0.20 to 0.0.21. PR [#1624](https://github.com/fastapi/typer/pull/1624) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.15.4 to 0.15.5. PR [#1625](https://github.com/fastapi/typer/pull/1625) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mkdocs-material from 9.7.3 to 9.7.4. PR [#1621](https://github.com/fastapi/typer/pull/1621) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ty from 0.0.19 to 0.0.20. PR [#1618](https://github.com/fastapi/typer/pull/1618) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump prek from 0.3.3 to 0.3.4. PR [#1617](https://github.com/fastapi/typer/pull/1617) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.15.2 to 0.15.4. PR [#1616](https://github.com/fastapi/typer/pull/1616) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ty from 0.0.18 to 0.0.19. PR [#1615](https://github.com/fastapi/typer/pull/1615) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump actions/download-artifact from 7 to 8. PR [#1614](https://github.com/fastapi/typer/pull/1614) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump actions/upload-artifact from 6 to 7. PR [#1613](https://github.com/fastapi/typer/pull/1613) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mkdocs-material from 9.7.2 to 9.7.3. PR [#1611](https://github.com/fastapi/typer/pull/1611) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mkdocstrings-python from 2.0.1 to 2.0.3. PR [#1605](https://github.com/fastapi/typer/pull/1605) by [@svlandeg](https://github.com/svlandeg).
+* ⬆ Bump ty from 0.0.17 to 0.0.18. PR [#1602](https://github.com/fastapi/typer/pull/1602) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump griffe-warnings-deprecated from 1.1.0 to 1.1.1. PR [#1603](https://github.com/fastapi/typer/pull/1603) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump griffe-typingdoc from 0.3.0 to 0.3.1. PR [#1604](https://github.com/fastapi/typer/pull/1604) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 🔧 Upgrade pytest version and config. PR [#1570](https://github.com/fastapi/typer/pull/1570) by [@tiangolo](https://github.com/tiangolo).
+
+## 0.24.1
+
+### Internal
+
+* 👷 Fix CI, do not attempt to build `typer-slim`, nor `typer-cli`. PR [#1569](https://github.com/fastapi/typer/pull/1569) by [@tiangolo](https://github.com/tiangolo).
+* ➖ Drop support for `typer-slim` and `typer-cli`, no more versions will be released, use only `typer`. PR [#1568](https://github.com/fastapi/typer/pull/1568) by [@tiangolo](https://github.com/tiangolo).
+* ⬆ Bump rich from 14.3.2 to 14.3.3. PR [#1565](https://github.com/fastapi/typer/pull/1565) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pydantic-settings from 2.13.0 to 2.13.1. PR [#1566](https://github.com/fastapi/typer/pull/1566) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.15.1 to 0.15.2. PR [#1567](https://github.com/fastapi/typer/pull/1567) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mkdocs-material from 9.7.1 to 9.7.2. PR [#1561](https://github.com/fastapi/typer/pull/1561) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pillow from 11.3.0 to 12.1.1. PR [#1550](https://github.com/fastapi/typer/pull/1550) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pytest from 8.4.2 to 9.0.2. PR [#1551](https://github.com/fastapi/typer/pull/1551) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pydantic-settings from 2.12.0 to 2.13.0. PR [#1552](https://github.com/fastapi/typer/pull/1552) by [@dependabot[bot]](https://github.com/apps/dependabot).
