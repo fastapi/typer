@@ -18,11 +18,11 @@ Hello World
 
 ## Rich を使う
 
-<a href="https://rich.readthedocs.io/" class="external-link" target="_blank">Rich</a> を使うと、より美しく、より複雑な情報も表示できます。`typer` をインストールすると、デフォルトで利用できます。
+<a href="https://rich.readthedocs.io/" class="external-link" target="_blank">Rich</a> を使うと、CLIをより美しく表示し、より複雑な情報も表示できます。`typer` をインストールすると、デフォルトで利用できます。
 
 ### Rich の `print` を使う
 
-もっとも単純なケースでは、`rich` から `print` を import して、標準の `print` の代わりに使うだけです。
+もっとも単純なケースでは、`rich` から `print` をインポートして、標準の `print` の代わりに使うだけです。
 
 {* docs_src/printing/tutorial001_py310.py hl[2,18] *}
 
