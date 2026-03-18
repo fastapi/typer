@@ -37,7 +37,6 @@ def test_sanitize_help_text(
         assert _sanitize_help_text(help_text) == expected
     mock_find_spec.assert_called_once_with("rich")
 
-
 def test_sanitize_help_text_no_rich():
     with patch("typer._completion_classes.HAS_RICH", False):
         with patch("importlib.util.find_spec") as mock_find_spec:
