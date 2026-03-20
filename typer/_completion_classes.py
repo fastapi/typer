@@ -1,4 +1,3 @@
-import importlib.util
 import os
 import re
 import sys
@@ -21,7 +20,7 @@ from .core import HAS_RICH
 
 def _sanitize_help_text(text: str) -> str:
     """Sanitizes the help text by removing rich tags"""
-    if not HAS_RICH or not importlib.util.find_spec("rich"):
+    if not HAS_RICH:
         return text
     from . import rich_utils
 
