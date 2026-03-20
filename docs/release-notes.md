@@ -15,6 +15,7 @@
 
 ### Internal
 
+* ⬆ Bump ruff from 0.15.6 to 0.15.7. PR [#1644](https://github.com/fastapi/typer/pull/1644) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ty from 0.0.23 to 0.0.24. PR [#1646](https://github.com/fastapi/typer/pull/1646) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump prek from 0.3.5 to 0.3.6. PR [#1638](https://github.com/fastapi/typer/pull/1638) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ty from 0.0.22 to 0.0.23. PR [#1639](https://github.com/fastapi/typer/pull/1639) by [@dependabot[bot]](https://github.com/apps/dependabot).
