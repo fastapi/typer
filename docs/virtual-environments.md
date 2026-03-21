@@ -242,6 +242,14 @@ $ python -m pip install --upgrade pip
 
 </div>
 
+## Troubleshooting dependency upgrades
+
+If you see `ModuleNotFoundError: No module named 'typer'` after upgrading dependencies, recreate your virtual environment and reinstall your dependencies.
+
+This can happen when upgrading from older environments that used `typer-slim`, as both `typer` and `typer-slim` previously installed the same package files. In some upgrade paths, the installer may remove the shared files in an order that leaves the environment without the `typer` package.
+
+Creating the environment from scratch and reinstalling dependencies resolves the problem.
+
 ## Add `.gitignore`
 
 If you are using **Git** (you should), add a `.gitignore` file to exclude everything in your `.venv` from Git.
