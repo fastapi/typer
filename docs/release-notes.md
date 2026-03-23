@@ -15,6 +15,7 @@
 
 ### Internal
 
+* ⬆ Bump pytest-cov from 7.0.0 to 7.1.0. PR [#1649](https://github.com/fastapi/typer/pull/1649) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pygithub from 2.8.1 to 2.9.0. PR [#1650](https://github.com/fastapi/typer/pull/1650) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump mkdocs-material from 9.7.5 to 9.7.6. PR [#1645](https://github.com/fastapi/typer/pull/1645) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ruff from 0.15.6 to 0.15.7. PR [#1644](https://github.com/fastapi/typer/pull/1644) by [@dependabot[bot]](https://github.com/apps/dependabot).
