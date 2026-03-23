@@ -17,6 +17,9 @@
 <a href="https://pypi.org/project/typer" target="_blank">
     <img src="https://img.shields.io/pypi/v/typer?color=%2334D058&label=pypi%20package" alt="Package version">
 </a>
+    <a href="https://gitcgr.com/fastapi/typer">
+      <img src="https://gitcgr.com/badge/fastapi/typer.svg" alt="gitcgr" />
+    </a>
 </p>
 
 ---
