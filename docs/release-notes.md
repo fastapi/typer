@@ -8,6 +8,7 @@
 
 ### Docs
 
+* 💄 Fix code blocks in reference docs overflowing table width. PR [#1630](https://github.com/fastapi/typer/pull/1630) by [@YuriiMotov](https://github.com/YuriiMotov).
 * 📝 Fix broken link to FastAPI and Friends newsletter. PR [#1540](https://github.com/fastapi/typer/pull/1540) by [@Karlemami](https://github.com/Karlemami).
 * 🔨 Handle external links `target=_blank` and CSS automatically in JS and CSS. PR [#1622](https://github.com/fastapi/typer/pull/1622) by [@tiangolo](https://github.com/tiangolo).
 * 📝 Remove link to Typer developer survey. PR [#1609](https://github.com/fastapi/typer/pull/1609) by [@svlandeg](https://github.com/svlandeg).
