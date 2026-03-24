@@ -65,26 +65,6 @@ def _complete_visible_commands(
                 yield name, command
 
 
-def _check_nested_chain(
-    base_command: Group, cmd_name: str, cmd: Command, register: bool = False
-) -> None:
-    if not base_command.chain or not isinstance(cmd, Group):
-        return
-
-    if register:
-        message = (
-            f"It is not possible to add the group {cmd_name!r} to another"
-            f" group {base_command.name!r} that is in chain mode."
-        )
-    else:
-        message = (
-            f"Found the group {cmd_name!r} as subcommand to another group "
-            f" {base_command.name!r} that is in chain mode. This is not supported."
-        )
-
-    raise RuntimeError(message)
-
-
 def batch(iterable: cabc.Iterable[V], batch_size: int) -> list[tuple[V, ...]]:
     return list(zip(*repeat(iter(iterable), batch_size), strict=False))
 
@@ -446,27 +426,6 @@ class Context:
             stacklevel=2,
         )
         return self._protected_args
-
-    def to_info_dict(self) -> dict[str, t.Any]:
-        """Gather information that could be useful for a tool generating
-        user-facing documentation. This traverses the entire CLI
-        structure.
-
-        .. code-block:: python
-
-            with Context(cli) as ctx:
-                info = ctx.to_info_dict()
-
-        .. versionadded:: 8.0
-        """
-        return {
-            "command": self.command.to_info_dict(self),
-            "info_name": self.info_name,
-            "allow_extra_args": self.allow_extra_args,
-            "allow_interspersed_args": self.allow_interspersed_args,
-            "ignore_unknown_options": self.ignore_unknown_options,
-            "auto_envvar_prefix": self.auto_envvar_prefix,
-        }
 
     def __enter__(self) -> Context:
         self._depth += 1
@@ -893,11 +852,6 @@ class Command:
                         its deprecation in --help. The message can be customized
                         by using a string as the value.
 
-    .. versionchanged:: 8.2
-        This is the base class for all commands, not ``BaseCommand``.
-        ``deprecated`` can be set to a string as well to customize the
-        deprecation message.
-
     .. versionchanged:: 8.1
         ``help``, ``epilog``, and ``short_help`` are stored unprocessed,
         all formatting is done when outputting help text, not at init,
@@ -970,17 +924,6 @@ class Command:
         self.no_args_is_help = no_args_is_help
         self.hidden = hidden
         self.deprecated = deprecated
-
-    def to_info_dict(self, ctx: Context) -> dict[str, t.Any]:
-        return {
-            "name": self.name,
-            "params": [param.to_info_dict() for param in self.get_params(ctx)],
-            "help": self.help,
-            "epilog": self.epilog,
-            "short_help": self.short_help,
-            "hidden": self.hidden,
-            "deprecated": self.deprecated,
-        }
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} {self.name}>"
@@ -1480,21 +1423,6 @@ class Command:
         return self.main(*args, **kwargs)
 
 
-class _FakeSubclassCheck(type):
-    def __subclasscheck__(cls, subclass: type) -> bool:
-        return issubclass(subclass, cls.__bases__[0])
-
-    def __instancecheck__(cls, instance: t.Any) -> bool:
-        return isinstance(instance, cls.__bases__[0])
-
-
-class _BaseCommand(Command, metaclass=_FakeSubclassCheck):
-    """
-    .. deprecated:: 8.2
-        Will be removed in Click 9.0. Use ``Command`` instead.
-    """
-
-
 class Group(Command):
     """A group is a command that nests other commands (or more groups).
 
@@ -1520,9 +1448,6 @@ class Group(Command):
 
     .. versionchanged:: 8.0
         The ``commands`` argument can be a list of command objects.
-
-    .. versionchanged:: 8.2
-        Merged with and replaces the ``MultiCommand`` base class.
     """
 
     allow_extra_args = True
@@ -1596,24 +1521,6 @@ class Group(Command):
                         "A group in chain mode cannot have optional arguments."
                     )
 
-    def to_info_dict(self, ctx: Context) -> dict[str, t.Any]:
-        info_dict = super().to_info_dict(ctx)
-        commands = {}
-
-        for name in self.list_commands(ctx):
-            command = self.get_command(ctx, name)
-
-            if command is None:
-                continue
-
-            sub_ctx = ctx._make_sub_context(command)
-
-            with sub_ctx.scope(cleanup=False):
-                commands[name] = command.to_info_dict(sub_ctx)
-
-        info_dict.update(commands=commands, chain=self.chain)
-        return info_dict
-
     def add_command(self, cmd: Command, name: str | None = None) -> None:
         """Registers another :class:`Command` with this group.  If the name
         is not provided, the name of the command is used.
@@ -1621,7 +1528,6 @@ class Group(Command):
         name = name or cmd.name
         if name is None:
             raise TypeError("Command has no name.")
-        _check_nested_chain(self, name, cmd, register=True)
         self.commands[name] = cmd
 
     def result_callback(self, replace: bool = False) -> t.Callable[[F], F]:
@@ -1845,69 +1751,6 @@ class Group(Command):
         return results
 
 
-class _MultiCommand(Group, metaclass=_FakeSubclassCheck):
-    """
-    .. deprecated:: 8.2
-        Will be removed in Click 9.0. Use ``Group`` instead.
-    """
-
-
-class CommandCollection(Group):
-    """A :class:`Group` that looks up subcommands on other groups. If a command
-    is not found on this group, each registered source is checked in order.
-    Parameters on a source are not added to this group, and a source's callback
-    is not invoked when invoking its commands. In other words, this "flattens"
-    commands in many groups into this one group.
-
-    :param name: The name of the group command.
-    :param sources: A list of :class:`Group` objects to look up commands from.
-    :param kwargs: Other arguments passed to :class:`Group`.
-
-    .. versionchanged:: 8.2
-        This is a subclass of ``Group``. Commands are looked up first on this
-        group, then each of its sources.
-    """
-
-    def __init__(
-        self,
-        name: str | None = None,
-        sources: list[Group] | None = None,
-        **kwargs: t.Any,
-    ) -> None:
-        super().__init__(name, **kwargs)
-        #: The list of registered groups.
-        self.sources: list[Group] = sources or []
-
-    def add_source(self, group: Group) -> None:
-        """Add a group as a source of commands."""
-        self.sources.append(group)
-
-    def get_command(self, ctx: Context, cmd_name: str) -> Command | None:
-        rv = super().get_command(ctx, cmd_name)
-
-        if rv is not None:
-            return rv
-
-        for source in self.sources:
-            rv = source.get_command(ctx, cmd_name)
-
-            if rv is not None:
-                if self.chain:
-                    _check_nested_chain(self, cmd_name, rv)
-
-                return rv
-
-        return None
-
-    def list_commands(self, ctx: Context) -> list[str]:
-        rv: set[str] = set(super().list_commands(ctx))
-
-        for source in self.sources:
-            rv.update(source.list_commands(ctx))
-
-        return sorted(rv)
-
-
 def _check_iter(value: t.Any) -> cabc.Iterator[t.Any]:
     """Check if the value is iterable but not a string. Raises a type
     error, or return an iterator over the value.
@@ -2081,34 +1924,6 @@ class Parameter:
                     "is deprecated and still required. A deprecated "
                     f"{self.param_type_name} cannot be required."
                 )
-
-    def to_info_dict(self) -> dict[str, t.Any]:
-        """Gather information that could be useful for a tool generating
-        user-facing documentation.
-
-        Use :meth:`click.Context.to_info_dict` to traverse the entire
-        CLI structure.
-
-        .. versionchanged:: 8.3.0
-            Returns ``None`` for the :attr:`default` if it was not set.
-
-        .. versionadded:: 8.0
-        """
-        return {
-            "name": self.name,
-            "param_type_name": self.param_type_name,
-            "opts": self.opts,
-            "secondary_opts": self.secondary_opts,
-            "type": self.type.to_info_dict(),
-            "required": self.required,
-            "nargs": self.nargs,
-            "multiple": self.multiple,
-            # We explicitly hide the :attr:`UNSET` value to the user, as we choose to
-            # make it an implementation detail. And because ``to_info_dict`` has been
-            # designed for documentation purposes, we return ``None`` instead.
-            "default": self.default if self.default is not UNSET else None,
-            "envvar": self.envvar,
-        }
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} {self.name}>"
@@ -2757,25 +2572,6 @@ class Option(Parameter):
                 if self.is_flag:
                     raise TypeError("'count' is not valid with 'is_flag'.")
 
-    def to_info_dict(self) -> dict[str, t.Any]:
-        """
-        .. versionchanged:: 8.3.0
-            Returns ``None`` for the :attr:`flag_value` if it was not set.
-        """
-        info_dict = super().to_info_dict()
-        info_dict.update(
-            help=self.help,
-            prompt=self.prompt,
-            is_flag=self.is_flag,
-            # We explicitly hide the :attr:`UNSET` value to the user, as we choose to
-            # make it an implementation detail. And because ``to_info_dict`` has been
-            # designed for documentation purposes, we return ``None`` instead.
-            flag_value=self.flag_value if self.flag_value is not UNSET else None,
-            count=self.count,
-            hidden=self.hidden,
-        )
-        return info_dict
-
     def get_error_hint(self, ctx: Context) -> str:
         result = super().get_error_hint(ctx)
         if self.show_envvar and self.envvar is not None:
@@ -3283,27 +3079,3 @@ class Argument(Parameter):
 
     def add_to_parser(self, parser: _OptionParser, ctx: Context) -> None:
         parser.add_argument(dest=self.name, nargs=self.nargs, obj=self)
-
-
-def __getattr__(name: str) -> object:
-    import warnings
-
-    if name == "BaseCommand":
-        warnings.warn(
-            "'BaseCommand' is deprecated and will be removed in Click 9.0. Use"
-            " 'Command' instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        return _BaseCommand
-
-    if name == "MultiCommand":
-        warnings.warn(
-            "'MultiCommand' is deprecated and will be removed in Click 9.0. Use"
-            " 'Group' instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        return _MultiCommand
-
-    raise AttributeError(name)
