@@ -12,7 +12,7 @@ And there are several ways to get help too.
 
 ## Subscribe to the newsletter
 
-You can subscribe to the (infrequent) [**FastAPI and friends** newsletter](/newsletter/){.internal-link target=_blank} to stay updated about:
+You can subscribe to the (infrequent) [**FastAPI and friends** newsletter](https://fastapi.tiangolo.com/newsletter/){.internal-link target=_blank} to stay updated about:
 
 * News about FastAPI and friends, including Typer 🚀
 * Guides 📝
