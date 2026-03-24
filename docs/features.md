@@ -54,19 +54,12 @@ The resulting CLI apps created with **Typer** have the nice features of many "pr
 
 Auto completion works when you create a package (installable with `pip`). Or when using the `typer` command.
 
-**Typer** uses `shellingham` to auto-detect the current shell when installing completion. If you don't want to include `shellingham`, install `typer-slim`.
+**Typer** uses `shellingham` to auto-detect the current shell when installing completion.
 
 **Typer** will automatically create 2 *CLI options*:
 
 * `--install-completion`: Install completion for the current shell.
 * `--show-completion`: Show completion for the current shell, to copy it or customize the installation.
-
-If you didn't add `shellingham` (if you installed `pip install typer-slim`) those *CLI options* take a value with the name of the shell to install completion for, e.g.:
-
-* `--install-completion bash`.
-* `--show-completion powershell`.
-
-Then you can tell the user to install completion after installing your CLI program and the rest will just work.
 
 ///
 
@@ -77,14 +70,6 @@ Then you can tell the user to install completion after installing your CLI progr
 Then it extends those ideas with features and bug fixes. For example, **Typer** programs also support modern versions of PowerShell (e.g. in Windows 10) among all the other shells.
 
 ///
-
-## The power of Click
-
-<a href="https://click.palletsprojects.com" class="external-link" target="_blank">Click</a> is one of the most popular tools for building CLIs in Python.
-
-**Typer** is based on it, so you get all its benefits.
-
-But you can write simpler code with the benefits of modern Python.
 
 ## Tested
 
