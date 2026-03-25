@@ -43,6 +43,9 @@ whether or not it matches a known argument. (This is a widely used convention. S
 ```bash
 ./command.py input.txt --flag # flag = True
 ./command.py input.txt -- --flag # args = ("--flag",)
+
+./command.py input.txt arg1 --unknown option # args = ( "arg1" ); kwargs = { "unknown" : "option" }
+./command.py input.txt -- arg1 --unknown option # args = ( "arg1", "--unknown", "option" )
 ```
 
 This feature will not disrupt explicitly declared flags/options.
