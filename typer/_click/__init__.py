@@ -42,7 +42,6 @@ from .types import File as File
 from .types import FloatRange as FloatRange
 from .types import IntRange as IntRange
 from .types import ParamType as ParamType
-from .types import Path as Path
 from .types import Tuple as Tuple
 from .utils import echo as echo
 from .utils import format_filename as format_filename
