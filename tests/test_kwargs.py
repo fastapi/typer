@@ -68,6 +68,49 @@ def _args_kwargs_helper(
     )
 
 
+def _kitchen_sink_helper(
+    cli_input: Sequence[str],
+    *,
+    expected_mandatory: str,
+    expected_count: int = 1,
+    expected_flag: bool = False,
+    expected_args: list[str] | None = None,
+    expected_kwargs: dict[str, Any] | None = None,
+) -> None:
+    app = typer.Typer()
+
+    @app.command()
+    def cmd(
+        mandatory: str,
+        flag: bool = False,
+        count: int = 1,
+        *args: Any,
+        **kwargs: Any,
+    ) -> None:
+        typer.echo(
+            json.dumps(
+                {
+                    "mandatory": mandatory,
+                    "flag": flag,
+                    "count": count,
+                    "args": list(args),
+                    "kwargs": kwargs,
+                }
+            )
+        )
+
+    result = runner.invoke(app, cli_input)
+
+    assert result.exit_code == 0, "app exited with non-zero status"
+    assert json.loads(result.output.strip()) == {
+        "mandatory": expected_mandatory,
+        "flag": expected_flag,
+        "count": expected_count,
+        "args": expected_args or [],
+        "kwargs": expected_kwargs or {},
+    }
+
+
 def test_simple_kwarg() -> None:
     _kwargs_helper(["--flag", "val"], {"flag": "val"})
 
@@ -145,20 +188,6 @@ def test_kwargs_after_separator() -> None:
     )
 
 
-def test_kwargs_before_mandatory_positional() -> None:
-    app = typer.Typer()
-
-    @app.command()
-    def cmd(name: str, **kwargs: str) -> None:
-        typer.echo(f"name={name!r} kwargs={kwargs!r}")
-
-    result = runner.invoke(app, ["--flag", "val", "Bob"])
-    assert result.exit_code == 0
-    assert "name='Bob'" in result.output
-    assert "flag" in result.output
-    assert "val" in result.output
-
-
 def test_double_dash_no_args() -> None:
     _args_kwargs_helper(["--"], [], {})
 
@@ -167,45 +196,73 @@ def test_no_extra_args() -> None:
     _args_kwargs_helper([], [], {})
 
 
+def test_bool_flag_before_mandatory_arg() -> None:
+    _kitchen_sink_helper(
+        cli_input=["--unknown-flag", "Alice"],
+        expected_mandatory="Alice",
+        expected_kwargs={"unknown_flag": True},
+    )
+
+
 def test_known_options_still_work() -> None:
-    app = typer.Typer()
-
-    @app.command()
-    def cmd(name: str, count: int = 1, **kwargs: Any) -> None:
-        typer.echo(json.dumps({"name": name, "count": count, "kwargs": kwargs}))
-
-    result = runner.invoke(app, ["--count", "3", "--extra", "foo", "Alice"])
-    assert result.exit_code == 0
-    assert json.loads(result.output.strip()) == {
-        "name": "Alice",
-        "count": 3,
-        "kwargs": {"extra": "foo"},
-    }
+    _kitchen_sink_helper(
+        cli_input=["--count", "3", "--extra", "foo", "Alice"],
+        expected_mandatory="Alice",
+        expected_count=3,
+        expected_kwargs={"extra": "foo"},
+    )
 
 
-def test_all_together() -> None:
-    app = typer.Typer()
+def test_kwarg_after_known_option() -> None:
+    _kitchen_sink_helper(
+        cli_input=["--count", "3", "Alice", "--extra", "foo"],
+        expected_mandatory="Alice",
+        expected_count=3,
+        expected_kwargs={"extra": "foo"},
+    )
 
-    @app.command()
-    def cmd(mandatory: str, count: int = 1, *args: str, **kwargs: Any) -> None:
-        typer.echo(
-            json.dumps(
-                {
-                    "mandatory": mandatory,
-                    "count": count,
-                    "args": list(args),
-                    "kwargs": kwargs,
-                }
-            )
-        )
 
-    args = ["--flag1", "val", "--bool-flag", "--count", "5", "req1", "--", "opt1"]
-    result = runner.invoke(app, args)
+def test_kwarg_and_args_after_known_option() -> None:
+    _kitchen_sink_helper(
+        cli_input=["--count", "3", "Alice", "--extra", "foo", "other", "args"],
+        expected_mandatory="Alice",
+        expected_count=3,
+        expected_args=["other", "args"],
+        expected_kwargs={"extra": "foo"},
+    )
 
-    assert result.exit_code == 0
-    assert json.loads(result.output.strip()) == {
-        "mandatory": "req1",
-        "count": 5,
-        "args": ["opt1"],
-        "kwargs": {"flag1": "val", "bool_flag": True},
-    }
+
+def test_kitchen_sink_with_separator() -> None:
+    args = ["--flag", "--other-flag", "Alice", "--extra", "foo", "--", "other", "args"]
+
+    _kitchen_sink_helper(
+        cli_input=args,
+        expected_mandatory="Alice",
+        expected_flag=True,
+        expected_args=["other", "args"],
+        expected_kwargs={"extra": "foo", "other_flag": True},
+    )
+
+
+def test_kitchen_sink_without_separator() -> None:
+    args = [
+        "--flag1",
+        "val",
+        "--bool-flag",
+        "--count",
+        "5",
+        "--flag",
+        "req1",
+        "--",
+        "opt1",
+        "--not-a",
+        "kwarg",
+    ]
+    _kitchen_sink_helper(
+        cli_input=args,
+        expected_mandatory="req1",
+        expected_flag=True,
+        expected_count=5,
+        expected_args=["opt1", "--not-a", "kwarg"],
+        expected_kwargs={"flag1": "val", "bool_flag": True},
+    )
