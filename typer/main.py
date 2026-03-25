@@ -1543,7 +1543,7 @@ def get_callback(
         _kw_only_names: list[str] = []
         for _pname, _p in _cb_sig.parameters.items():
             if _p.kind == inspect.Parameter.VAR_POSITIONAL:
-                break
+                continue
             if _p.kind in (
                 inspect.Parameter.POSITIONAL_OR_KEYWORD,
                 inspect.Parameter.POSITIONAL_ONLY,

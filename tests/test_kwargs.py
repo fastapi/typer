@@ -171,3 +171,34 @@ def test_command2_kwargs() -> None:
         expected_filepath="input.txt",
         expected_kwargs={"key": "value"},
     )
+
+
+def test_unknown_option_without_value_errors() -> None:
+    """Unknown option with no value is left in remaining so Click emits an error.
+
+    Covers core.py _extract_unknown_options else-branch (lines 676-677).
+    """
+    app = typer.Typer()
+
+    @app.command()
+    def cmd(**kwargs: Any) -> None:
+        typer.echo(json.dumps(kwargs))
+
+    result = runner.invoke(app, ["--unknown-flag"])
+    assert result.exit_code != 0
+
+
+def test_keyword_only_param_after_args() -> None:
+    """Named option declared after *args (keyword-only) is passed correctly.
+
+    Covers main.py _kw_only_names branch (lines 1552-1553).
+    """
+    app = typer.Typer()
+
+    @app.command()
+    def cmd(*args: str, option: str = "default") -> None:
+        typer.echo(json.dumps({"args": list(args), "option": option}))
+
+    result = runner.invoke(app, ["--option", "custom", "a", "b"])
+    assert result.exit_code == 0, result.output
+    assert json.loads(result.output.strip()) == {"args": ["a", "b"], "option": "custom"}
