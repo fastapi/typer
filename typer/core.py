@@ -743,7 +743,9 @@ class TyperCommand(click.core.Command):
                 # Walk remaining args to find positional tokens beyond the
                 # required named Click Arguments and pull them into *args.
                 n = sum(
-                    1 for p in self.params if isinstance(p, click.Argument) and p.required
+                    1
+                    for p in self.params
+                    if isinstance(p, click.Argument) and p.required
                 )
                 pos_idx: list[int] = []
                 i = 0

@@ -1392,7 +1392,13 @@ def get_params_convertors_ctx_param_name_from_function(
             if convertor:
                 convertors[param_name] = convertor
             params.append(click_param)
-    return params, convertors, context_param_name, var_keyword_param_name, var_positional_param_name
+    return (
+        params,
+        convertors,
+        context_param_name,
+        var_keyword_param_name,
+        var_positional_param_name,
+    )
 
 
 def get_command_from_info(
@@ -1578,9 +1584,7 @@ def get_callback(
             else:
                 # Only **kwargs — safe to call with keyword args.
                 call_kwargs = {
-                    k: v
-                    for k, v in use_params.items()
-                    if k != var_keyword_param_name
+                    k: v for k, v in use_params.items() if k != var_keyword_param_name
                 }
                 return callback(**{**call_kwargs, **extra_kw_val})
         return callback(**use_params)
