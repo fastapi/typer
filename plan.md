@@ -54,7 +54,7 @@ This feature will not disrupt explicitly declared flags/options.
 # all of the following commands are parsed equivalently:
 # option = "val"; flag = True; args = ( "arg1", "arg2" ); kwargs = { "unknown", "val2" }
 
-./command.py --option val --flag --unknown val2 input.txt arg1 arg2 
+./command.py --option val --flag --unknown val2 input.txt arg1 arg2
 ./command.py --flag --unknown val2 input.txt --option val arg1 arg2
 ./command.py --flag input.txt --option val --unknown val2 arg1 arg2
 ./command.py --flag input.txt --option val --unknown val2 -- arg1 arg2
