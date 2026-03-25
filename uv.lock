@@ -1918,7 +1918,7 @@ dev = [
     { name = "rich", specifier = ">=12.3.0" },
     { name = "ruff", specifier = ">=0.15.0" },
     { name = "shellingham", specifier = ">=1.3.0" },
-    { name = "ty", specifier = ">=0.0.9" },
+    { name = "ty", specifier = ">=0.0.25" },
 ]
 docs = [
     { name = "cairosvg", specifier = ">=2.8.2" },
@@ -1950,7 +1950,7 @@ tests = [
     { name = "rich", specifier = ">=12.3.0" },
     { name = "ruff", specifier = ">=0.15.0" },
     { name = "shellingham", specifier = ">=1.3.0" },
-    { name = "ty", specifier = ">=0.0.9" },
+    { name = "ty", specifier = ">=0.0.25" },
 ]
 
 [[package]]
