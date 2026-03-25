@@ -66,9 +66,9 @@ try:
     def pydantic_convertor(type_: type) -> Callable[[str], Any]:
         """Create a convertor for a parameter annotated with a pydantic type."""
         T: TypeAlias = type_  # type: ignore[valid-type]
-        adapter: pydantic.TypeAdapter[T] = pydantic.TypeAdapter(type_)
+        adapter: pydantic.TypeAdapter[T] = pydantic.TypeAdapter(type_)  # ty: ignore[invalid-type-form]
 
-        def convertor(value: str) -> T:
+        def convertor(value: str) -> T:  # ty: ignore[invalid-type-form]
             try:
                 return adapter.validate_python(value)
             except pydantic.ValidationError as e:
