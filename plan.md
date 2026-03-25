@@ -58,15 +58,14 @@ This feature will not disrupt explicitly declared flags/options.
 ```
 
 Unknown options *must* have values.
-(Without declaring option as a boolean, we can't know a priori whether we
-should accept it without a value. To emulate a flag, pass `true` as the value.)
+(To emulate a boolean flag, simply pass a value so that `kwargs.get("unknown_flag")` is truthy.)
 
 ```bash
 ./command.py --unknown-flag input.txt arg1 arg2 # not okay
 ./command.py --unknown-flag true input.txt arg1 arg2 # okay
 ```
 
-Both `*args` and `**kwargs` can of course be declared independently.
+Both `*args` and `**kwargs` can of course be declared without the other.
 
 ```python
 # -- command2.py --
@@ -91,3 +90,7 @@ def kwargs(filepath: Path, **kwargs: Any) -> None:
 ```
 
 Closes #XX.
+
+## Potential TODO items
+
+- Allow `=` to declare kwargs, for example `./command --unknown=value input.txt`
