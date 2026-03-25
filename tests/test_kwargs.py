@@ -9,7 +9,7 @@ from typer.testing import CliRunner
 runner = CliRunner()
 
 
-def _command_helper(
+def _kitchen_sink_helper(
     cli_input: Sequence[str],
     *,
     expected_filepath: str,
@@ -18,10 +18,6 @@ def _command_helper(
     expected_args: list[str] | None = None,
     expected_kwargs: dict[str, Any] | None = None,
 ) -> None:
-    """Helper matching the command.py example app from the PR draft.
-
-    def cmd(filepath: Path, option: str = "", flag: bool = False, *args: str, **kwargs: Any)
-    """
     app = typer.Typer()
 
     @app.command()
@@ -55,28 +51,21 @@ def _command_helper(
     }
 
 
-def _command2_helper(
+def _separate_args_kwargs_helper(
     cli_input: Sequence[str],
     *,
     expected_filepath: str,
     expected_args: list[str] | None = None,
     expected_kwargs: dict[str, Any] | None = None,
 ) -> None:
-    """Helper matching the command2.py multi-command app from the PR draft.
-
-    @app.command(name="args")  def args_cmd(filepath: Path, *args: str)
-    @app.command(name="kwargs") def kwargs_cmd(filepath: Path, **kwargs: Any)
-
-    CLI input must start with the subcommand name.
-    """
     app = typer.Typer()
 
-    @app.command(name="args")
-    def args_cmd(filepath: Path, *args: str) -> None:
+    @app.command()
+    def args(filepath: Path, *args: str) -> None:
         typer.echo(json.dumps({"filepath": str(filepath), "args": list(args)}))
 
-    @app.command(name="kwargs")
-    def kwargs_cmd(filepath: Path, **kwargs: Any) -> None:
+    @app.command()
+    def kwargs(filepath: Path, **kwargs: Any) -> None:
         typer.echo(json.dumps({"filepath": str(filepath), "kwargs": kwargs}))
 
     result = runner.invoke(app, cli_input)
@@ -91,7 +80,7 @@ def _command2_helper(
 
 
 def test_unknown_kwarg_and_trailing_args() -> None:
-    _command_helper(
+    _kitchen_sink_helper(
         ["--unknown-key", "value", "input.txt", "arg1", "arg2"],
         expected_filepath="input.txt",
         expected_kwargs={"unknown_key": "value"},
@@ -100,7 +89,7 @@ def test_unknown_kwarg_and_trailing_args() -> None:
 
 
 def test_known_flag() -> None:
-    _command_helper(
+    _kitchen_sink_helper(
         ["input.txt", "--flag"],
         expected_filepath="input.txt",
         expected_flag=True,
@@ -108,7 +97,7 @@ def test_known_flag() -> None:
 
 
 def test_separator_absorbs_flag() -> None:
-    _command_helper(
+    _kitchen_sink_helper(
         ["input.txt", "--", "--flag"],
         expected_filepath="input.txt",
         expected_args=["--flag"],
@@ -116,7 +105,7 @@ def test_separator_absorbs_flag() -> None:
 
 
 def test_equivalent_form_1() -> None:
-    _command_helper(
+    _kitchen_sink_helper(
         ["--option", "val", "--flag", "input.txt", "arg1", "arg2", "--unknown", "val2"],
         expected_filepath="input.txt",
         expected_option="val",
@@ -127,7 +116,7 @@ def test_equivalent_form_1() -> None:
 
 
 def test_equivalent_form_2() -> None:
-    _command_helper(
+    _kitchen_sink_helper(
         ["input.txt", "--option", "val", "--flag", "arg1", "arg2", "--unknown", "val2"],
         expected_filepath="input.txt",
         expected_option="val",
@@ -138,7 +127,7 @@ def test_equivalent_form_2() -> None:
 
 
 def test_equivalent_form_3() -> None:
-    _command_helper(
+    _kitchen_sink_helper(
         ["--unknown", "val2", "input.txt", "--option", "val", "--flag", "arg1", "arg2"],
         expected_filepath="input.txt",
         expected_option="val",
@@ -149,7 +138,7 @@ def test_equivalent_form_3() -> None:
 
 
 def test_equivalent_form_4() -> None:
-    _command_helper(
+    _kitchen_sink_helper(
         ["--flag", "--option", "val", "--unknown", "val2", "input.txt", "arg1", "arg2"],
         expected_filepath="input.txt",
         expected_option="val",
@@ -160,7 +149,7 @@ def test_equivalent_form_4() -> None:
 
 
 def test_unknown_flag_requires_value() -> None:
-    _command_helper(
+    _kitchen_sink_helper(
         ["--unknown-flag", "true", "input.txt", "arg1", "arg2"],
         expected_filepath="input.txt",
         expected_kwargs={"unknown_flag": "true"},
@@ -169,7 +158,7 @@ def test_unknown_flag_requires_value() -> None:
 
 
 def test_command2_args() -> None:
-    _command2_helper(
+    _separate_args_kwargs_helper(
         ["args", "input.txt", "arg1", "arg2"],
         expected_filepath="input.txt",
         expected_args=["arg1", "arg2"],
@@ -177,7 +166,7 @@ def test_command2_args() -> None:
 
 
 def test_command2_kwargs() -> None:
-    _command2_helper(
+    _separate_args_kwargs_helper(
         ["kwargs", "input.txt", "--key", "value"],
         expected_filepath="input.txt",
         expected_kwargs={"key": "value"},
