@@ -695,7 +695,7 @@ class TyperPath(_click.ParamType):
         self,
         value: str | os.PathLike[str],
         param: _click.Parameter | None,
-        ctx: Context | None,
+        ctx: Context | None,  # type: ignore[override]
     ) -> str | bytes | os.PathLike[str]:
         rv = value
 
