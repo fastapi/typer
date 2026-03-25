@@ -16,6 +16,7 @@
 
 ### Internal
 
+* ⬆ Bump ty from 0.0.24 to 0.0.25. PR [#1652](https://github.com/fastapi/typer/pull/1652) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump prek from 0.3.6 to 0.3.8. PR [#1648](https://github.com/fastapi/typer/pull/1648) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pytest-cov from 7.0.0 to 7.1.0. PR [#1649](https://github.com/fastapi/typer/pull/1649) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pygithub from 2.8.1 to 2.9.0. PR [#1650](https://github.com/fastapi/typer/pull/1650) by [@dependabot[bot]](https://github.com/apps/dependabot).
