@@ -60,6 +60,14 @@ This feature will not disrupt explicitly declared flags/options.
 ./command.py --flag input.txt --option val --unknown val2 -- arg1 arg2
 ```
 
+Empty args are handled gracefully.
+
+```bash
+# both of the following produce args = ()
+./command.py input.txt
+./command.py input.txt --
+```
+
 Unknown options *must* have values.
 (To emulate a boolean flag, simply pass a value so that `kwargs.get("unknown_flag")` is truthy.)
 

@@ -202,3 +202,21 @@ def test_keyword_only_param_after_args() -> None:
     result = runner.invoke(app, ["--option", "custom", "a", "b"])
     assert result.exit_code == 0, result.output
     assert json.loads(result.output.strip()) == {"args": ["a", "b"], "option": "custom"}
+
+
+def test_empty_args_without_separator() -> None:
+    """./command.py input.txt  →  args = ()"""
+    _kitchen_sink_helper(
+        ["input.txt"],
+        expected_filepath="input.txt",
+        expected_args=[],
+    )
+
+
+def test_empty_args_with_separator() -> None:
+    """./command.py input.txt --  →  args = ()"""
+    _kitchen_sink_helper(
+        ["input.txt", "--"],
+        expected_filepath="input.txt",
+        expected_args=[],
+    )
