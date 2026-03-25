@@ -1,5 +1,6 @@
 import json
 from collections.abc import Sequence
+from pathlib import Path
 from typing import Any
 
 import typer
@@ -8,91 +9,35 @@ from typer.testing import CliRunner
 runner = CliRunner()
 
 
-def _args_helper(
-    cli_input: Sequence[str],
-    expected_args: list[str],
-) -> None:
-    app = typer.Typer()
-
-    @app.command()
-    def cmd(*args: Any) -> None:
-        typer.echo(json.dumps(args))
-
-    result = runner.invoke(app, cli_input)
-
-    assert result.exit_code == 0, "app exited with non-zero status"
-    assert expected_args == json.loads(result.output.strip()), (
-        "args do not match what is expected"
-    )
-
-
-def _kwargs_helper(
-    cli_input: Sequence[str],
-    expected_kwargs: dict[str, Any],
-) -> None:
-    app = typer.Typer()
-
-    @app.command()
-    def cmd(**kwargs: Any) -> None:
-        typer.echo(json.dumps(kwargs))
-
-    result = runner.invoke(app, cli_input)
-
-    assert result.exit_code == 0, "app exited with non-zero status"
-    assert expected_kwargs == json.loads(result.output.strip()), (
-        "kwargs do not match what is expected"
-    )
-
-
-def _args_kwargs_helper(
-    cli_input: Sequence[str],
-    expected_args: list[str],
-    expected_kwargs: dict[str, Any],
-) -> None:
-    app = typer.Typer()
-
-    @app.command()
-    def cmd(*args: Any, **kwargs: Any) -> None:
-        typer.echo(json.dumps(args))
-        typer.echo(json.dumps(kwargs))
-
-    result = runner.invoke(app, cli_input)
-
-    assert result.exit_code == 0, "app exited with non-zero status"
-
-    json_args, json_kwargs = result.output.splitlines()
-
-    assert expected_args == json.loads(json_args), "args do not match what is expected"
-    assert expected_kwargs == json.loads(json_kwargs), (
-        "kwargs do not match what is expected"
-    )
-
-
-def _kitchen_sink_helper(
+def _command_helper(
     cli_input: Sequence[str],
     *,
-    expected_mandatory: str,
-    expected_count: int = 1,
+    expected_filepath: str,
+    expected_option: str = "",
     expected_flag: bool = False,
     expected_args: list[str] | None = None,
     expected_kwargs: dict[str, Any] | None = None,
 ) -> None:
+    """Helper matching the command.py example app from the PR draft.
+
+    def cmd(filepath: Path, option: str = "", flag: bool = False, *args: str, **kwargs: Any)
+    """
     app = typer.Typer()
 
     @app.command()
     def cmd(
-        mandatory: str,
+        filepath: Path,
+        option: str = "",
         flag: bool = False,
-        count: int = 1,
-        *args: Any,
+        *args: str,
         **kwargs: Any,
     ) -> None:
         typer.echo(
             json.dumps(
                 {
-                    "mandatory": mandatory,
+                    "filepath": str(filepath),
+                    "option": option,
                     "flag": flag,
-                    "count": count,
                     "args": list(args),
                     "kwargs": kwargs,
                 }
@@ -100,169 +45,140 @@ def _kitchen_sink_helper(
         )
 
     result = runner.invoke(app, cli_input)
-
-    assert result.exit_code == 0, "app exited with non-zero status"
+    assert result.exit_code == 0, result.output
     assert json.loads(result.output.strip()) == {
-        "mandatory": expected_mandatory,
+        "filepath": expected_filepath,
+        "option": expected_option,
         "flag": expected_flag,
-        "count": expected_count,
         "args": expected_args or [],
         "kwargs": expected_kwargs or {},
     }
 
 
-def test_simple_kwarg() -> None:
-    _kwargs_helper(["--flag", "val"], {"flag": "val"})
+def _command2_helper(
+    cli_input: Sequence[str],
+    *,
+    expected_filepath: str,
+    expected_args: list[str] | None = None,
+    expected_kwargs: dict[str, Any] | None = None,
+) -> None:
+    """Helper matching the command2.py multi-command app from the PR draft.
+
+    @app.command(name="args")  def args_cmd(filepath: Path, *args: str)
+    @app.command(name="kwargs") def kwargs_cmd(filepath: Path, **kwargs: Any)
+
+    CLI input must start with the subcommand name.
+    """
+    app = typer.Typer()
+
+    @app.command(name="args")
+    def args_cmd(filepath: Path, *args: str) -> None:
+        typer.echo(json.dumps({"filepath": str(filepath), "args": list(args)}))
+
+    @app.command(name="kwargs")
+    def kwargs_cmd(filepath: Path, **kwargs: Any) -> None:
+        typer.echo(json.dumps({"filepath": str(filepath), "kwargs": kwargs}))
+
+    result = runner.invoke(app, cli_input)
+    assert result.exit_code == 0, result.output
+
+    data = json.loads(result.output.strip())
+    assert data["filepath"] == expected_filepath
+    if expected_args is not None:
+        assert data["args"] == expected_args
+    if expected_kwargs is not None:
+        assert data["kwargs"] == expected_kwargs
 
 
-def test_multiple_kwargs() -> None:
-    _kwargs_helper(
-        ["--flag", "val", "--flag2", "val2"],
-        {"flag": "val", "flag2": "val2"},
+def test_unknown_kwarg_and_trailing_args() -> None:
+    _command_helper(
+        ["--unknown-key", "value", "input.txt", "arg1", "arg2"],
+        expected_filepath="input.txt",
+        expected_kwargs={"unknown_key": "value"},
+        expected_args=["arg1", "arg2"],
     )
 
 
-def test_kwargs_bool_flag_alone() -> None:
-    _kwargs_helper(["--bool-flag"], {"bool_flag": True})
-
-
-def test_kwargs_two_bool_flags() -> None:
-    _kwargs_helper(
-        ["--flag1", "--flag2"],
-        {"flag1": True, "flag2": True},
-    )
-
-
-def test_kwargs_bool_flags_and_kwargs() -> None:
-    _kwargs_helper(
-        ["--option1", "value1", "--flag1", "--flag2", "--option2", "value2"],
-        {"option1": "value1", "flag1": True, "flag2": True, "option2": "value2"},
-    )
-
-
-def test_args_only_with_separator() -> None:
-    _args_helper(["--", "opt1", "opt2"], ["opt1", "opt2"])
-
-
-def test_args_only_without_separator() -> None:
-    _args_helper(["opt1", "opt2"], ["opt1", "opt2"])
-
-
-def test_no_args_with_separator() -> None:
-    _args_helper(["--"], [])
-
-
-def test_no_args_without_separator() -> None:
-    _args_helper([], [])
-
-
-def test_args_and_kwargs_with_separator() -> None:
-    _args_kwargs_helper(
-        ["--flag", "val", "--", "opt1", "opt2"],
-        ["opt1", "opt2"],
-        {"flag": "val"},
-    )
-
-
-def test_args_and_kwargs_without_separator() -> None:
-    _args_kwargs_helper(
-        ["--flag", "val", "opt1", "opt2"],
-        ["opt1", "opt2"],
-        {"flag": "val"},
-    )
-
-
-def test_args_kwargs_bool_flag() -> None:
-    _args_kwargs_helper(
-        ["--flag", "val", "--bool", "--", "opt1", "opt2"],
-        ["opt1", "opt2"],
-        {"flag": "val", "bool": True},
-    )
-
-
-def test_kwargs_after_separator() -> None:
-    _args_kwargs_helper(
-        ["--flag", "val", "--", "opt1", "opt2", "--not-a-kwarg", "value"],
-        ["opt1", "opt2", "--not-a-kwarg", "value"],
-        {"flag": "val"},
-    )
-
-
-def test_double_dash_no_args() -> None:
-    _args_kwargs_helper(["--"], [], {})
-
-
-def test_no_extra_args() -> None:
-    _args_kwargs_helper([], [], {})
-
-
-def test_bool_flag_before_mandatory_arg() -> None:
-    _kitchen_sink_helper(
-        cli_input=["--unknown-flag", "Alice"],
-        expected_mandatory="Alice",
-        expected_kwargs={"unknown_flag": True},
-    )
-
-
-def test_known_options_still_work() -> None:
-    _kitchen_sink_helper(
-        cli_input=["--count", "3", "--extra", "foo", "Alice"],
-        expected_mandatory="Alice",
-        expected_count=3,
-        expected_kwargs={"extra": "foo"},
-    )
-
-
-def test_kwarg_after_known_option() -> None:
-    _kitchen_sink_helper(
-        cli_input=["--count", "3", "Alice", "--extra", "foo"],
-        expected_mandatory="Alice",
-        expected_count=3,
-        expected_kwargs={"extra": "foo"},
-    )
-
-
-def test_kwarg_and_args_after_known_option() -> None:
-    _kitchen_sink_helper(
-        cli_input=["--count", "3", "Alice", "--extra", "foo", "other", "args"],
-        expected_mandatory="Alice",
-        expected_count=3,
-        expected_args=["other", "args"],
-        expected_kwargs={"extra": "foo"},
-    )
-
-
-def test_kitchen_sink_with_separator() -> None:
-    args = ["--flag", "--other-flag", "Alice", "--extra", "foo", "--", "other", "args"]
-
-    _kitchen_sink_helper(
-        cli_input=args,
-        expected_mandatory="Alice",
+def test_known_flag() -> None:
+    _command_helper(
+        ["input.txt", "--flag"],
+        expected_filepath="input.txt",
         expected_flag=True,
-        expected_args=["other", "args"],
-        expected_kwargs={"extra": "foo", "other_flag": True},
     )
 
 
-def test_kitchen_sink_without_separator() -> None:
-    args = [
-        "--flag1",
-        "val",
-        "--bool-flag",
-        "--count",
-        "5",
-        "--flag",
-        "req1",
-        "--",
-        "opt1",
-        "--not-a",
-        "kwarg",
-    ]
-    _kitchen_sink_helper(
-        cli_input=args,
-        expected_mandatory="req1",
+def test_separator_absorbs_flag() -> None:
+    _command_helper(
+        ["input.txt", "--", "--flag"],
+        expected_filepath="input.txt",
+        expected_args=["--flag"],
+    )
+
+
+def test_equivalent_form_1() -> None:
+    _command_helper(
+        ["--option", "val", "--flag", "input.txt", "arg1", "arg2", "--unknown", "val2"],
+        expected_filepath="input.txt",
+        expected_option="val",
         expected_flag=True,
-        expected_count=5,
-        expected_args=["opt1", "--not-a", "kwarg"],
-        expected_kwargs={"flag1": "val", "bool_flag": True},
+        expected_args=["arg1", "arg2"],
+        expected_kwargs={"unknown": "val2"},
+    )
+
+
+def test_equivalent_form_2() -> None:
+    _command_helper(
+        ["input.txt", "--option", "val", "--flag", "arg1", "arg2", "--unknown", "val2"],
+        expected_filepath="input.txt",
+        expected_option="val",
+        expected_flag=True,
+        expected_args=["arg1", "arg2"],
+        expected_kwargs={"unknown": "val2"},
+    )
+
+
+def test_equivalent_form_3() -> None:
+    _command_helper(
+        ["--unknown", "val2", "input.txt", "--option", "val", "--flag", "arg1", "arg2"],
+        expected_filepath="input.txt",
+        expected_option="val",
+        expected_flag=True,
+        expected_args=["arg1", "arg2"],
+        expected_kwargs={"unknown": "val2"},
+    )
+
+
+def test_equivalent_form_4() -> None:
+    _command_helper(
+        ["--flag", "--option", "val", "--unknown", "val2", "input.txt", "arg1", "arg2"],
+        expected_filepath="input.txt",
+        expected_option="val",
+        expected_flag=True,
+        expected_args=["arg1", "arg2"],
+        expected_kwargs={"unknown": "val2"},
+    )
+
+
+def test_unknown_flag_requires_value() -> None:
+    _command_helper(
+        ["--unknown-flag", "true", "input.txt", "arg1", "arg2"],
+        expected_filepath="input.txt",
+        expected_kwargs={"unknown_flag": "true"},
+        expected_args=["arg1", "arg2"],
+    )
+
+
+def test_command2_args() -> None:
+    _command2_helper(
+        ["args", "input.txt", "arg1", "arg2"],
+        expected_filepath="input.txt",
+        expected_args=["arg1", "arg2"],
+    )
+
+
+def test_command2_kwargs() -> None:
+    _command2_helper(
+        ["kwargs", "input.txt", "--key", "value"],
+        expected_filepath="input.txt",
+        expected_kwargs={"key": "value"},
     )

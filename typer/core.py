@@ -647,25 +647,16 @@ def _typer_main_shell_completion(
 def _extract_unknown_options(
     known_params: "list[click.Parameter]", args: "list[str]"
 ) -> "tuple[dict[str, Any], list[str]]":
-    """Pre-extract unknown --opt [value] pairs; return (extra_kwargs, remaining_args).
+    """Pre-extract unknown --opt value pairs; return (extra_kwargs, remaining_args).
 
-    Non-option tokens needed to satisfy known Click Arguments are reserved and
-    never consumed as option values, so positional arguments are handled correctly.
+    Unknown options must always have a value.  An unknown option with no
+    following value token is left in ``remaining`` so that Click can emit
+    an appropriate error.
     """
     known_opts: set[str] = set()
     for p in known_params:
         if isinstance(p, click.Option):
             known_opts.update(p.opts)
-
-    # Count how many non-option tokens must be reserved for known positional args.
-    n_positional = sum(
-        1 for p in known_params if isinstance(p, click.Argument) and p.required
-    )
-
-    # Indices (in args) of non-option tokens that are candidates for positional args.
-    non_opt_indices = [i for i, a in enumerate(args) if not a.startswith("-")]
-    # Reserve the last n_positional of those indices.
-    reserved: set[int] = set(non_opt_indices[-n_positional:]) if n_positional else set()
 
     extra: dict[str, Any] = {}
     remaining: list[str] = []
@@ -677,15 +668,11 @@ def _extract_unknown_options(
         if (is_long or is_short) and arg not in known_opts:
             key = arg.lstrip("-").replace("-", "_")
             next_i = i + 1
-            if (
-                next_i < len(args)
-                and not args[next_i].startswith("-")
-                and next_i not in reserved
-            ):
+            if next_i < len(args) and not args[next_i].startswith("-"):
                 extra[key] = args[next_i]
                 i += 2
             else:
-                extra[key] = True
+                remaining.append(arg)
                 i += 1
         else:
             remaining.append(arg)
@@ -735,22 +722,48 @@ class TyperCommand(click.core.Command):
         self.rich_help_panel = rich_help_panel
 
     def parse_args(self, ctx: click.Context, args: list[str]) -> list[str]:
-        if (
-            self._var_keyword_param_name is not None
-            or self._var_positional_param_name is not None
-        ):
-            if "--" in args:
+        var_keyword = self._var_keyword_param_name is not None
+        var_positional = self._var_positional_param_name is not None
+        if var_keyword or var_positional:
+            has_sep = "--" in args
+            if has_sep:
                 sep = args.index("--")
-                ctx.meta["_typer_var_positional"] = tuple(args[sep + 1 :])
+                positional_extra: list[str] = list(args[sep + 1 :])
                 args = args[:sep]
             else:
-                ctx.meta["_typer_var_positional"] = ()
+                positional_extra = []
 
-            if self._var_keyword_param_name is not None:
+            if var_keyword:
                 extra_kwargs, args = _extract_unknown_options(self.params, args)
                 ctx.meta["_typer_extra_kwargs"] = extra_kwargs
             else:
                 ctx.meta["_typer_extra_kwargs"] = {}
+
+            if var_positional and not has_sep:
+                # Walk remaining args to find positional tokens beyond the
+                # required named Click Arguments and pull them into *args.
+                n = sum(
+                    1 for p in self.params if isinstance(p, click.Argument) and p.required
+                )
+                pos_idx: list[int] = []
+                i = 0
+                while i < len(args):
+                    if args[i].startswith("-"):
+                        consumes = any(
+                            isinstance(p, click.Option)
+                            and args[i] in p.opts
+                            and not p.is_flag
+                            for p in self.params
+                        )
+                        i += 2 if consumes else 1
+                    else:
+                        pos_idx.append(i)
+                        i += 1
+                extra_idx = set(pos_idx[n:])
+                positional_extra = [args[j] for j in sorted(extra_idx)]
+                args = [a for j, a in enumerate(args) if j not in extra_idx]
+
+            ctx.meta["_typer_var_positional"] = tuple(positional_extra)
 
         return super().parse_args(ctx, args)
 
