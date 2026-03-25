@@ -644,6 +644,55 @@ def _typer_main_shell_completion(
     sys.exit(rv)
 
 
+def _extract_unknown_options(
+    known_params: "list[click.Parameter]", args: "list[str]"
+) -> "tuple[dict[str, Any], list[str]]":
+    """Pre-extract unknown --opt [value] pairs; return (extra_kwargs, remaining_args).
+
+    Non-option tokens needed to satisfy known Click Arguments are reserved and
+    never consumed as option values, so positional arguments are handled correctly.
+    """
+    known_opts: set[str] = set()
+    for p in known_params:
+        if isinstance(p, click.Option):
+            known_opts.update(p.opts)
+
+    # Count how many non-option tokens must be reserved for known positional args.
+    n_positional = sum(
+        1 for p in known_params if isinstance(p, click.Argument) and p.required
+    )
+
+    # Indices (in args) of non-option tokens that are candidates for positional args.
+    non_opt_indices = [i for i, a in enumerate(args) if not a.startswith("-")]
+    # Reserve the last n_positional of those indices.
+    reserved: set[int] = set(non_opt_indices[-n_positional:]) if n_positional else set()
+
+    extra: dict[str, Any] = {}
+    remaining: list[str] = []
+    i = 0
+    while i < len(args):
+        arg = args[i]
+        is_short = arg.startswith("-") and len(arg) == 2
+        is_long = arg.startswith("--")
+        if (is_long or is_short) and arg not in known_opts:
+            key = arg.lstrip("-").replace("-", "_")
+            next_i = i + 1
+            if (
+                next_i < len(args)
+                and not args[next_i].startswith("-")
+                and next_i not in reserved
+            ):
+                extra[key] = args[next_i]
+                i += 2
+            else:
+                extra[key] = True
+                i += 1
+        else:
+            remaining.append(arg)
+            i += 1
+    return extra, remaining
+
+
 class TyperCommand(click.core.Command):
     def __init__(
         self,
@@ -663,7 +712,11 @@ class TyperCommand(click.core.Command):
         # Rich settings
         rich_markup_mode: MarkupMode = DEFAULT_MARKUP_MODE,
         rich_help_panel: str | None = None,
+        var_keyword_param_name: str | None = None,
+        var_positional_param_name: str | None = None,
     ) -> None:
+        self._var_keyword_param_name = var_keyword_param_name
+        self._var_positional_param_name = var_positional_param_name
         super().__init__(
             name=name,
             context_settings=context_settings,
@@ -680,6 +733,26 @@ class TyperCommand(click.core.Command):
         )
         self.rich_markup_mode: MarkupMode = rich_markup_mode
         self.rich_help_panel = rich_help_panel
+
+    def parse_args(self, ctx: click.Context, args: list[str]) -> list[str]:
+        if (
+            self._var_keyword_param_name is not None
+            or self._var_positional_param_name is not None
+        ):
+            if "--" in args:
+                sep = args.index("--")
+                ctx.meta["_typer_var_positional"] = tuple(args[sep + 1 :])
+                args = args[:sep]
+            else:
+                ctx.meta["_typer_var_positional"] = ()
+
+            if self._var_keyword_param_name is not None:
+                extra_kwargs, args = _extract_unknown_options(self.params, args)
+                ctx.meta["_typer_extra_kwargs"] = extra_kwargs
+            else:
+                ctx.meta["_typer_extra_kwargs"] = {}
+
+        return super().parse_args(ctx, args)
 
     def format_options(
         self, ctx: click.Context, formatter: click.HelpFormatter
