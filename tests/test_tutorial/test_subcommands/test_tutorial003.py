@@ -5,8 +5,8 @@ import sys
 import pytest
 from typer.testing import CliRunner
 
-from docs_src.subcommands import tutorial003_py39
-from docs_src.subcommands.tutorial003_py39 import items, users
+from docs_src.subcommands import tutorial003_py310
+from docs_src.subcommands.tutorial003_py310 import items, users
 
 runner = CliRunner()
 
@@ -14,8 +14,8 @@ runner = CliRunner()
 @pytest.fixture()
 def mod(monkeypatch):
     with monkeypatch.context() as m:
-        m.syspath_prepend(list(tutorial003_py39.__path__)[0])
-        from docs_src.subcommands.tutorial003_py39 import main
+        m.syspath_prepend(list(tutorial003_py310.__path__)[0])
+        from docs_src.subcommands.tutorial003_py310 import main
 
         return main
 
@@ -157,10 +157,16 @@ def test_lands_towns_burn(app):
 
 
 def test_scripts(mod):
-    from docs_src.subcommands.tutorial003_py39 import items, lands, reigns, towns, users
+    from docs_src.subcommands.tutorial003_py310 import (
+        items,
+        lands,
+        reigns,
+        towns,
+        users,
+    )
 
     env = os.environ.copy()
-    env["PYTHONPATH"] = ":".join(list(tutorial003_py39.__path__))
+    env["PYTHONPATH"] = ":".join(list(tutorial003_py310.__path__))
 
     for module in [mod, items, lands, reigns, towns, users]:
         result = subprocess.run(

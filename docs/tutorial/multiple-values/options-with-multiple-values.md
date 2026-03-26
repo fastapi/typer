@@ -6,7 +6,7 @@ You can set the number of values and types to anything you want, but it has to b
 
 For this, use the standard Python `tuple`:
 
-{* docs_src/multiple_values/options_with_multiple_values/tutorial001_an_py39.py hl[9] *}
+{* docs_src/multiple_values/options_with_multiple_values/tutorial001_an_py310.py hl[9] *}
 
 Each of the internal types defines the type of each value in the tuple.
 
@@ -47,14 +47,6 @@ username = user[0]
 coins = user[1]
 is_wizard = user[2]
 ```
-
-/// tip
-
-Notice that the default is a tuple with `(None, None, None)`.
-
-You cannot simply use `None` here as the default because <a href="https://github.com/pallets/click/issues/472" class="external-link" target="_blank">Click doesn't support it</a>.
-
-///
 
 ## Check it
 

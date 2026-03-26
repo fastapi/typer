@@ -121,9 +121,7 @@ rutyper ./main.pyed Typer app.
 
 ### Fix completion - using the `Context`
 
-When you create a **Typer** application it uses Click underneath.
-
-And every Click application has a special object called a <a href="https://click.palletsprojects.com/en/7.x/commands/#nested-handling-and-contexts" class="external-link" target="_blank">"Context"</a> that is normally hidden.
+Every Typer application has a special object called a "Context" that is normally hidden.
 
 But you can access the context by declaring a function parameter of type `typer.Context`.
 
@@ -159,7 +157,7 @@ Hello Camila
 
 ## Using the `CallbackParam` object
 
-The same way you can access the `typer.Context` by declaring a function parameter with its value, you can declare another function parameter with type `typer.CallbackParam` to get the specific Click `Parameter` object.
+The same way you can access the `typer.Context` by declaring a function parameter with its value, you can declare another function parameter with type `typer.CallbackParam` to get the specific `Parameter` object.
 
 {* docs_src/options/callback/tutorial004_an_py310.py hl[8,11] *}
 
@@ -189,10 +187,6 @@ And **Typer** will make sure you get the function parameters you want.
 You don't have to worry about their names, their order, etc.
 
 As it's based on standard Python types, it "**just works**". ✨
-
-### Click's `Parameter`
-
-The `typer.CallbackParam` is actually just a sub-class of Click's <a href="https://click.palletsprojects.com/en/7.x/api/#click.Parameter" class="external-link" target="_blank">`Parameter`</a>, so you get all the right completion in your editor.
 
 ### Callback with type annotations
 

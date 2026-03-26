@@ -94,7 +94,7 @@ If you need a refresher about what is "standard output" and "standard error" che
 
 For those cases, we can mark a *CLI parameter* (a *CLI option* or *CLI argument*) with `is_eager=True`.
 
-That will tell **Typer** (actually Click) that it should process this *CLI parameter* before the others:
+That will tell **Typer** that it should process this *CLI parameter* before the others:
 
 {* docs_src/options/version/tutorial003_an_py310.py hl[25:28] *}
 

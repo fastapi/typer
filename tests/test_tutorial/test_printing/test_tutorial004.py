@@ -1,21 +1,15 @@
-import platform
 import subprocess
 import sys
 
-import pytest
 from typer.testing import CliRunner
 
-import docs_src.printing.tutorial004_py39 as mod
+import docs_src.printing.tutorial004_py310 as mod
 
 app = mod.app
 
 runner = CliRunner()
 
 
-@pytest.mark.xfail(
-    condition=((platform.system() == "Windows") and (sys.version_info < (3, 10))),
-    reason="On Windows with Python 3.9, output is in stdout instead of stderr",
-)
 def test_cli():
     result = runner.invoke(app)
     assert result.exit_code == 0

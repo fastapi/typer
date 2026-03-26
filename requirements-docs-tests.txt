@@ -1,2 +1,0 @@
-# For linting and generating docs versions
-ruff ==0.15.0

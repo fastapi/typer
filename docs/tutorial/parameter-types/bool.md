@@ -10,7 +10,7 @@ Let's say that we want a `--force` *CLI option* only, we want to discard `--no-f
 
 We can do that by specifying the exact name we want:
 
-{* docs_src/parameter_types/bool/tutorial001_an_py39.py hl[9] *}
+{* docs_src/parameter_types/bool/tutorial001_an_py310.py hl[9] *}
 
 Now there's only a `--force` *CLI option*:
 
@@ -99,7 +99,7 @@ The same way, you can declare short versions of the names for these *CLI options
 
 For example, let's say we want `-f` for `--force` and `-F` for `--no-force`:
 
-{* docs_src/parameter_types/bool/tutorial003_an_py39.py hl[9] *}
+{* docs_src/parameter_types/bool/tutorial003_an_py310.py hl[9] *}
 
 Check it:
 
@@ -135,7 +135,7 @@ If you want to (although it might not be a good idea), you can declare only *CLI
 
 To do that, use a space and a single `/` and pass the negative name after:
 
-{* docs_src/parameter_types/bool/tutorial004_an_py39.py hl[9] *}
+{* docs_src/parameter_types/bool/tutorial004_an_py310.py hl[9] *}
 
 /// tip
 

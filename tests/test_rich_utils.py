@@ -1,8 +1,11 @@
 import sys
 
+import pytest
 import typer
 import typer.completion
 from typer.testing import CliRunner
+
+from tests.utils import needs_rich
 
 runner = CliRunner()
 
@@ -99,3 +102,123 @@ def test_rich_markup_import_regression():
     result = runner.invoke(app, ["--help"])
     assert "Usage" in result.stdout
     assert "BAR" in result.stdout
+
+
+@needs_rich
+@pytest.mark.parametrize("input_text", ["[ARGS]", "[ARGS]..."])
+def test_metavar_highlighter(input_text: str):
+    """
+    Test that the MetavarHighlighter works correctly.
+    cf PR 1508
+    """
+    from typer.rich_utils import (
+        STYLE_METAVAR_SEPARATOR,
+        Text,
+        _get_rich_console,
+        metavar_highlighter,
+    )
+
+    console = _get_rich_console()
+
+    text = Text(input_text)
+    highlighted = metavar_highlighter(text)
+    console.print(highlighted)
+
+    # Get the style for each bracket
+    opening_bracket_style = highlighted.get_style_at_offset(console, 0)
+    closing_bracket_style = highlighted.get_style_at_offset(console, 5)
+
+    # The opening bracket should have metavar_sep style
+    assert str(opening_bracket_style) == STYLE_METAVAR_SEPARATOR
+
+    # The closing bracket should have metavar_sep style (fails before PR 1508 when there are 3 dots)
+    assert str(closing_bracket_style) == STYLE_METAVAR_SEPARATOR
+
+
+def test_make_rich_text_with_ansi_escape_sequences():
+    from typer.rich_utils import Text, _make_rich_text
+
+    ansi_text = "This is \x1b[4munderlined\x1b[0m text"
+    result = _make_rich_text(text=ansi_text, markup_mode="rich")
+
+    assert isinstance(result, Text)
+    assert "\x1b[" not in result.plain
+    assert "underlined" in result.plain
+
+    mixed_text = "Start \x1b[31mred\x1b[0m middle \x1b[32mgreen\x1b[0m end"
+    result = _make_rich_text(text=mixed_text, markup_mode="rich")
+    assert isinstance(result, Text)
+    assert "\x1b[" not in result.plain
+    assert "red" in result.plain
+    assert "green" in result.plain
+
+    fake_ansi = "This contains \x1b[ but not a complete sequence"
+    result = _make_rich_text(text=fake_ansi, markup_mode="rich")
+    assert isinstance(result, Text)
+    assert "\x1b[" not in result.plain
+    assert "This contains " in result.plain
+
+
+def test_make_rich_text_with_typer_style_in_help():
+    app = typer.Typer()
+
+    @app.command()
+    def example(
+        a: str = typer.Option(help="This is A"),
+        b: str = typer.Option(help=f"This is {typer.style('B', underline=True)}"),
+    ):
+        """Example command with styled help text."""
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["--help"])
+
+    assert result.exit_code == 0
+    assert "This is A" in result.stdout
+    assert "This is B" in result.stdout
+    assert "\x1b[" not in result.stdout
+
+
+def test_help_table_alignment_with_styled_text():
+    app = typer.Typer()
+
+    @app.command()
+    def example(
+        a: str = typer.Option(help="This is A"),
+        b: str = typer.Option(help=f"This is {typer.style('B', underline=True)}"),
+        c: str = typer.Option(help="This is C"),
+    ):
+        """Example command with styled help text."""
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["--help"])
+
+    assert result.exit_code == 0
+
+    lines = result.stdout.split("\n")
+
+    option_a_line = None
+    option_b_line = None
+    option_c_line = None
+
+    for line in lines:
+        if "--a" in line and "This is A" in line:
+            option_a_line = line
+        elif "--b" in line and "This is B" in line:
+            option_b_line = line
+        elif "--c" in line and "This is C" in line:
+            option_c_line = line
+
+    assert option_a_line is not None, "Option A line not found"
+    assert option_b_line is not None, "Option B line not found"
+    assert option_c_line is not None, "Option C line not found"
+
+    def find_right_boundary_pos(line):
+        return line.rfind("|")
+
+    pos_a = find_right_boundary_pos(option_a_line)
+    pos_b = find_right_boundary_pos(option_b_line)
+    pos_c = find_right_boundary_pos(option_c_line)
+
+    assert pos_a == pos_b == pos_c, (
+        f"Right boundaries not aligned: A={pos_a}, B={pos_b}, C={pos_c}"
+    )

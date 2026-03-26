@@ -4,14 +4,13 @@ from os import getenv
 
 import pytest
 from typer._completion_shared import _get_shell_name
-
-needs_py310 = pytest.mark.skipif(
-    sys.version_info < (3, 10), reason="requires python3.10+"
-)
+from typer.core import HAS_RICH
 
 needs_linux = pytest.mark.skipif(
     not sys.platform.startswith("linux"), reason="Test requires Linux"
 )
+
+needs_rich = pytest.mark.skipif(not HAS_RICH, reason="Test requires Rich")
 
 shell = _get_shell_name()
 needs_bash = pytest.mark.skipif(

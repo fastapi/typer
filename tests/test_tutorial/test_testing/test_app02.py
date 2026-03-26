@@ -9,8 +9,8 @@ import pytest
 @pytest.fixture(
     name="module_paths",
     params=[
-        "app02_py39",
-        "app02_an_py39",
+        "app02_py310",
+        "app02_an_py310",
     ],
 )
 def get_modules_path(request: pytest.FixtureRequest) -> str:
