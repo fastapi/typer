@@ -16,6 +16,10 @@
 
 ### Internal
 
+* ⬆ Bump ruff from 0.15.7 to 0.15.8. PR [#1659](https://github.com/fastapi/typer/pull/1659) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ty from 0.0.25 to 0.0.26. PR [#1660](https://github.com/fastapi/typer/pull/1660) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 👷 Configure `ty` to exit with error code on warnings. PR [#1657](https://github.com/fastapi/typer/pull/1657) by [@svlandeg](https://github.com/svlandeg).
+* ⬆ Bump requests from 2.32.5 to 2.33.0. PR [#1656](https://github.com/fastapi/typer/pull/1656) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ty from 0.0.24 to 0.0.25. PR [#1652](https://github.com/fastapi/typer/pull/1652) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump prek from 0.3.6 to 0.3.8. PR [#1648](https://github.com/fastapi/typer/pull/1648) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pytest-cov from 7.0.0 to 7.1.0. PR [#1649](https://github.com/fastapi/typer/pull/1649) by [@dependabot[bot]](https://github.com/apps/dependabot).
