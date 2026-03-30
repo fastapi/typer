@@ -1,6 +1,5 @@
 from typing import Annotated
 
-import pytest
 import typer
 from typer.testing import CliRunner
 
