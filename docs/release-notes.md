@@ -16,6 +16,7 @@
 
 ### Internal
 
+* ⬆ Bump cryptography from 46.0.5 to 46.0.6. PR [#1661](https://github.com/fastapi/typer/pull/1661) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ruff from 0.15.7 to 0.15.8. PR [#1659](https://github.com/fastapi/typer/pull/1659) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ty from 0.0.25 to 0.0.26. PR [#1660](https://github.com/fastapi/typer/pull/1660) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * 👷 Configure `ty` to exit with error code on warnings. PR [#1657](https://github.com/fastapi/typer/pull/1657) by [@svlandeg](https://github.com/svlandeg).
