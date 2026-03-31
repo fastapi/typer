@@ -8,12 +8,33 @@
 
 ### Docs
 
+* 💄 Fix code blocks in reference docs overflowing table width. PR [#1630](https://github.com/fastapi/typer/pull/1630) by [@YuriiMotov](https://github.com/YuriiMotov).
+* 📝 Fix broken link to FastAPI and Friends newsletter. PR [#1540](https://github.com/fastapi/typer/pull/1540) by [@Karlemami](https://github.com/Karlemami).
 * 🔨 Handle external links `target=_blank` and CSS automatically in JS and CSS. PR [#1622](https://github.com/fastapi/typer/pull/1622) by [@tiangolo](https://github.com/tiangolo).
 * 📝 Remove link to Typer developer survey. PR [#1609](https://github.com/fastapi/typer/pull/1609) by [@svlandeg](https://github.com/svlandeg).
 * ✏️ Clean up documentation in `install.md` file. PR [#1606](https://github.com/fastapi/typer/pull/1606) by [@Johandielangman](https://github.com/Johandielangman).
 
 ### Internal
 
+* ⬆ Bump cryptography from 46.0.5 to 46.0.6. PR [#1661](https://github.com/fastapi/typer/pull/1661) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.15.7 to 0.15.8. PR [#1659](https://github.com/fastapi/typer/pull/1659) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ty from 0.0.25 to 0.0.26. PR [#1660](https://github.com/fastapi/typer/pull/1660) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 👷 Configure `ty` to exit with error code on warnings. PR [#1657](https://github.com/fastapi/typer/pull/1657) by [@svlandeg](https://github.com/svlandeg).
+* ⬆ Bump requests from 2.32.5 to 2.33.0. PR [#1656](https://github.com/fastapi/typer/pull/1656) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ty from 0.0.24 to 0.0.25. PR [#1652](https://github.com/fastapi/typer/pull/1652) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump prek from 0.3.6 to 0.3.8. PR [#1648](https://github.com/fastapi/typer/pull/1648) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pytest-cov from 7.0.0 to 7.1.0. PR [#1649](https://github.com/fastapi/typer/pull/1649) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pygithub from 2.8.1 to 2.9.0. PR [#1650](https://github.com/fastapi/typer/pull/1650) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mkdocs-material from 9.7.5 to 9.7.6. PR [#1645](https://github.com/fastapi/typer/pull/1645) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.15.6 to 0.15.7. PR [#1644](https://github.com/fastapi/typer/pull/1644) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ty from 0.0.23 to 0.0.24. PR [#1646](https://github.com/fastapi/typer/pull/1646) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump prek from 0.3.5 to 0.3.6. PR [#1638](https://github.com/fastapi/typer/pull/1638) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ty from 0.0.22 to 0.0.23. PR [#1639](https://github.com/fastapi/typer/pull/1639) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pyjwt from 2.10.1 to 2.12.0. PR [#1636](https://github.com/fastapi/typer/pull/1636) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump cairosvg from 2.8.2 to 2.9.0. PR [#1635](https://github.com/fastapi/typer/pull/1635) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.15.5 to 0.15.6. PR [#1633](https://github.com/fastapi/typer/pull/1633) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ty from 0.0.21 to 0.0.22. PR [#1634](https://github.com/fastapi/typer/pull/1634) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump dorny/paths-filter from 3 to 4. PR [#1632](https://github.com/fastapi/typer/pull/1632) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump mkdocs-material from 9.7.4 to 9.7.5. PR [#1629](https://github.com/fastapi/typer/pull/1629) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump prek from 0.3.4 to 0.3.5. PR [#1627](https://github.com/fastapi/typer/pull/1627) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ty from 0.0.20 to 0.0.21. PR [#1624](https://github.com/fastapi/typer/pull/1624) by [@dependabot[bot]](https://github.com/apps/dependabot).
