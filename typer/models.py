@@ -193,6 +193,13 @@ def Default(value: DefaultType) -> DefaultType:
 
 
 class CommandInfo:
+    """Internal metadata collected for a single CLI command registered via
+    `@app.command()`.  Typer stores one `CommandInfo` per registered command
+    and uses it later to build the underlying Click `Command`.
+
+    You shouldn't need to instantiate this class directly.
+    """
+
     def __init__(
         self,
         name: str | None = None,
@@ -228,6 +235,14 @@ class CommandInfo:
 
 
 class TyperInfo:
+    """Internal metadata for a Typer sub-application registered via
+    `app.add_typer()` or `@app.callback()`.  Typer stores one `TyperInfo`
+    per registered group and uses it later to build the underlying Click
+    `Group`.
+
+    You shouldn't need to instantiate this class directly.
+    """
+
     def __init__(
         self,
         typer_instance: Optional["Typer"] = Default(None),
@@ -273,6 +288,15 @@ class TyperInfo:
 
 
 class ParameterInfo:
+    """Base class for CLI parameter metadata used by `Option()` and
+    `Argument()`.
+
+    Holds all the information Typer needs to convert a Python function
+    parameter into a Click parameter.  Users normally create instances via
+    the `typer.Option()` and `typer.Argument()` helpers rather than
+    instantiating this class directly.
+    """
+
     def __init__(
         self,
         *,
@@ -381,6 +405,12 @@ class ParameterInfo:
 
 
 class OptionInfo(ParameterInfo):
+    """Metadata for a CLI option, created by `typer.Option()`.
+
+    Extends `ParameterInfo` with option-specific settings such as prompting,
+    confirmation, and input hiding.
+    """
+
     def __init__(
         self,
         *,
@@ -509,6 +539,12 @@ class OptionInfo(ParameterInfo):
 
 
 class ArgumentInfo(ParameterInfo):
+    """Metadata for a CLI argument, created by `typer.Argument()`.
+
+    Uses the same parameters as `ParameterInfo` without additional
+    argument-specific settings.
+    """
+
     def __init__(
         self,
         *,
@@ -613,6 +649,12 @@ class ArgumentInfo(ParameterInfo):
 
 
 class ParamMeta:
+    """Internal representation of a single function parameter after Typer
+    has resolved its annotation, default value, and any `Annotated` metadata.
+
+    You shouldn't need to instantiate this class directly.
+    """
+
     empty = inspect.Parameter.empty
 
     def __init__(
@@ -628,6 +670,13 @@ class ParamMeta:
 
 
 class DeveloperExceptionConfig:
+    """Configuration for Typer's pretty-exception rendering.
+
+    Controls whether rich tracebacks are enabled, whether local variables
+    are shown, and whether the traceback is shortened to hide Typer/Click
+    internals.
+    """
+
     def __init__(
         self,
         *,
