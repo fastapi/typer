@@ -94,6 +94,18 @@ def test_install_invalid_shell():
     assert "Hello World" in result.stdout
 
 
+def test_option_envvar_accepts_sequence_tuple():
+    app = typer.Typer()
+
+    @app.command()
+    def main(name: str = typer.Option(..., envvar=("TEST_NAME", "ALT_TEST_NAME"))):
+        typer.echo(name)
+
+    result = runner.invoke(app, [], env={"ALT_TEST_NAME": "Camila"})
+    assert result.exit_code == 0
+    assert "Camila" in result.stdout
+
+
 def test_callback_too_many_parameters():
     app = typer.Typer()
 
