@@ -12,11 +12,10 @@ from typing import (
     cast,
 )
 
-from . import _click, format_filename
-from .context import Context as BaseContext
+from . import Context, _click, format_filename
 
 if TYPE_CHECKING:  # pragma: no cover
-    from .core import TyperCommand, TyperGroup
+    from .core import Parameter, TyperCommand, TyperGroup
     from .main import Typer
 
 
@@ -25,16 +24,6 @@ NoneType = type(None)
 AnyType = type[Any]
 
 Required = ...
-
-
-class Context(BaseContext):
-    """
-    The [`Context`](https://click.palletsprojects.com/en/stable/api/#click.Context) has some additional data about the current execution of your program.
-    When declaring it in a [callback](https://typer.tiangolo.com/tutorial/options/callback-and-context/) function,
-    you can access this additional information.
-    """
-
-    pass
 
 
 class FileText(io.TextIOWrapper):
@@ -157,7 +146,7 @@ class FileBinaryWrite(io.BufferedWriter):
     pass
 
 
-class CallbackParam(_click.Parameter):
+class CallbackParam(Parameter):
     """
     In a callback function, you can declare a function parameter with type `CallbackParam`
     to access the specific Click [`Parameter`](https://click.palletsprojects.com/en/stable/api/#click.Parameter) object.
@@ -290,7 +279,7 @@ class ParameterInfo:
         # Note that shell_complete is not fully supported and will be removed in future versions
         # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Callable[
-            [Context, _click.Parameter, str],
+            [Context, Parameter, str],
             list["_click.shell_completion.CompletionItem"] | list[str],
         ]
         | None = None,
@@ -399,7 +388,7 @@ class OptionInfo(ParameterInfo):
         # Note that shell_complete is not fully supported and will be removed in future versions
         # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Callable[
-            [Context, _click.Parameter, str],
+            [Context, Parameter, str],
             list["_click.shell_completion.CompletionItem"] | list[str],
         ]
         | None = None,
@@ -527,7 +516,7 @@ class ArgumentInfo(ParameterInfo):
         # Note that shell_complete is not fully supported and will be removed in future versions
         # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Callable[
-            [Context, _click.Parameter, str],
+            [Context, Parameter, str],
             list["_click.shell_completion.CompletionItem"] | list[str],
         ]
         | None = None,
@@ -695,8 +684,8 @@ class TyperPath(_click.ParamType):
     def convert(
         self,
         value: str | os.PathLike[str],
-        param: _click.Parameter | None,
-        ctx: Context | None,  # type: ignore[override]
+        param: Parameter | None,
+        ctx: Context | None,
     ) -> str | bytes | os.PathLike[str]:
         rv = value
 
@@ -737,7 +726,7 @@ class TyperPath(_click.ParamType):
         return self.coerce_path_result(rv)
 
     def shell_complete(
-        self, ctx: Context, param: _click.Parameter, incomplete: str
+        self, ctx: Context, param: Parameter, incomplete: str
     ) -> list[_click.shell_completion.CompletionItem]:
         """Return an empty list so that the autocompletion functionality
         will work properly from the commandline.

@@ -26,6 +26,7 @@ from .core import (
     DEFAULT_MARKUP_MODE,
     HAS_RICH,
     MarkupMode,
+    Parameter,
     TyperArgument,
     TyperCommand,
     TyperGroup,
@@ -108,7 +109,7 @@ def except_hook(
     return
 
 
-def get_install_completion_arguments() -> tuple[_click.Parameter, _click.Parameter]:
+def get_install_completion_arguments() -> tuple[Parameter, Parameter]:
     install_param, show_param = get_completion_inspect_parameters()
     click_install_param, _ = get_click_param(install_param)
     click_show_param, _ = get_click_param(show_param)
@@ -1363,7 +1364,7 @@ def get_command_name(name: str) -> str:
 
 def get_params_convertors_ctx_param_name_from_function(
     callback: Callable[..., Any] | None,
-) -> tuple[list[_click.Argument | _click.Option], dict[str, Any], str | None]:
+) -> tuple[list[TyperArgument | TyperOption], dict[str, Any], str | None]:
     params = []
     convertors = {}
     context_param_name = None
@@ -1487,7 +1488,7 @@ def generate_tuple_convertor(
 def get_callback(
     *,
     callback: Callable[..., Any] | None = None,
-    params: Sequence[_click.Parameter] = [],
+    params: Sequence[Parameter] = [],
     convertors: dict[str, Callable[[str], Any]] | None = None,
     context_param_name: str | None = None,
     pretty_exceptions_short: bool,
@@ -1627,7 +1628,7 @@ def lenient_issubclass(cls: Any, class_or_tuple: AnyType | tuple[AnyType, ...]) 
 
 def get_click_param(
     param: ParamMeta,
-) -> tuple[_click.Argument | _click.Option, Any]:
+) -> tuple[TyperArgument | TyperOption, Any]:
     # First, find out what will be:
     # * ParamInfo (ArgumentInfo or OptionInfo)
     # * default_value
@@ -1785,7 +1786,7 @@ def get_click_param(
             ),
             convertor,
         )
-    raise AssertionError("A _click.Parameter should be returned")  # pragma: no cover
+    raise AssertionError("A Parameter should be returned")  # pragma: no cover
 
 
 def get_param_callback(
@@ -1803,7 +1804,7 @@ def get_param_callback(
     for param_name, param_sig in parameters.items():
         if lenient_issubclass(param_sig.annotation, Context):
             ctx_name = param_name
-        elif lenient_issubclass(param_sig.annotation, _click.Parameter):
+        elif lenient_issubclass(param_sig.annotation, Parameter):
             click_param_name = param_name
         else:
             untyped_names.append(param_name)
@@ -1822,7 +1823,7 @@ def get_param_callback(
                 "Too many CLI parameter callback function parameters"
             )
 
-    def wrapper(ctx: Context, param: _click.Parameter, value: Any) -> Any:
+    def wrapper(ctx: Context, param: Parameter, value: Any) -> Any:
         use_params: dict[str, Any] = {}
         if ctx_name:
             use_params[ctx_name] = ctx

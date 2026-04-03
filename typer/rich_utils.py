@@ -22,12 +22,13 @@ from rich.table import Table
 from rich.text import Text
 from rich.theme import Theme
 from rich.traceback import Traceback
-from typer.models import Context, DeveloperExceptionConfig
+from typer import Context
+from typer.models import DeveloperExceptionConfig
 
 from . import _click
 
 # Default styles
-from .core import TyperCommand, TyperGroup
+from .core import Parameter, TyperArgument, TyperCommand, TyperGroup, TyperOption
 
 STYLE_OPTION = "bold cyan"
 STYLE_SWITCH = "bold green"
@@ -234,7 +235,7 @@ def _get_help_text(
 
 def _get_parameter_help(
     *,
-    param: _click.Option | _click.Argument | _click.Parameter,
+    param: TyperOption | TyperArgument | Parameter,
     ctx: Context,
     markup_mode: MarkupModeStrict,
 ) -> Columns:
@@ -351,7 +352,7 @@ def _make_command_help(
 def _print_options_panel(
     *,
     name: str,
-    params: list[_click.Option] | list[_click.Argument],
+    params: list[TyperOption] | list[TyperArgument],
     ctx: Context,
     markup_mode: MarkupModeStrict,
     console: Console,
@@ -380,7 +381,7 @@ def _print_options_panel(
         metavar_str = param.make_metavar(ctx=ctx)
         # Do it ourselves if this is a positional argument
         if (
-            isinstance(param, _click.Argument)
+            isinstance(param, TyperArgument)
             and param.name
             and metavar_str == param.name.upper()
         ):
@@ -395,7 +396,7 @@ def _print_options_panel(
         # skip count with default range type
         if (
             isinstance(param.type, _click.types._NumberRangeBase)
-            and isinstance(param, _click.Option)
+            and isinstance(param, TyperOption)
             and not (param.count and param.type.min == 0 and param.type.max is None)
         ):
             range_str = param.type._describe_range()
@@ -571,18 +572,18 @@ def rich_format_help(
                 (0, 1, 1, 1),
             )
         )
-    panel_to_arguments: defaultdict[str, list[_click.Argument]] = defaultdict(list)
-    panel_to_options: defaultdict[str, list[_click.Option]] = defaultdict(list)
+    panel_to_arguments: defaultdict[str, list[TyperArgument]] = defaultdict(list)
+    panel_to_options: defaultdict[str, list[TyperOption]] = defaultdict(list)
     for param in obj.get_params(ctx):
         # Skip if option is hidden
         if getattr(param, "hidden", False):
             continue
-        if isinstance(param, _click.Argument):
+        if isinstance(param, TyperArgument):
             panel_name = (
                 getattr(param, _RICH_HELP_PANEL_NAME, None) or ARGUMENTS_PANEL_TITLE
             )
             panel_to_arguments[panel_name].append(param)
-        elif isinstance(param, _click.Option):
+        elif isinstance(param, TyperOption):
             panel_name = (
                 getattr(param, _RICH_HELP_PANEL_NAME, None) or OPTIONS_PANEL_TITLE
             )

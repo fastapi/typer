@@ -15,81 +15,16 @@ from typing import (
 )
 
 from . import _click
-from .core import TyperCommand
+from .core import Parameter, TyperCommand
 
 V = TypeVar("V")
 
 
 class Context:
-    """The context is a special internal object that holds state relevant
-    for the script execution at every single level.  It's normally invisible
-    to commands unless they opt-in to getting access to it.
-
-    The context is useful as it can pass internal objects around and can
-    control special execution features such as reading data from
-    environment variables.
-
-    A context can be used as context manager in which case it will call
-    :meth:`close` on teardown.
-
-    :param command: the command class for this context.
-    :param parent: the parent context.
-    :param info_name: the info name for this invocation.  Generally this
-                      is the most descriptive name for the script or
-                      command.  For the toplevel script it is usually
-                      the name of the script, for commands below it it's
-                      the name of the script.
-    :param obj: an arbitrary object of user data.
-    :param auto_envvar_prefix: the prefix to use for automatic environment
-                               variables.  If this is `None` then reading
-                               from environment variables is disabled.  This
-                               does not affect manually set environment
-                               variables which are always read.
-    :param default_map: a dictionary (like object) with default values
-                        for parameters.
-    :param terminal_width: the width of the terminal.  The default is
-                           inherit from parent context.  If no context
-                           defines the terminal width then auto
-                           detection will be applied.
-    :param max_content_width: the maximum width for content rendered by
-                              Click (this currently only affects help
-                              pages).  This defaults to 80 characters if
-                              not overridden.  In other words: even if the
-                              terminal is larger than that, Click will not
-                              format things wider than 80 characters by
-                              default.  In addition to that, formatters might
-                              add some safety mapping on the right.
-    :param resilient_parsing: if this flag is enabled then Click will
-                              parse without any interactivity or callback
-                              invocation.  Default values will also be
-                              ignored.  This is useful for implementing
-                              things such as completion support.
-    :param allow_extra_args: if this is set to `True` then extra arguments
-                             at the end will not raise an error and will be
-                             kept on the context.  The default is to inherit
-                             from the command.
-    :param allow_interspersed_args: if this is set to `False` then options
-                                    and arguments cannot be mixed.  The
-                                    default is to inherit from the command.
-    :param ignore_unknown_options: instructs click to ignore options it does
-                                   not know and keeps them for later
-                                   processing.
-    :param help_option_names: optionally a list of strings that define how
-                              the default help parameter is named.  The
-                              default is ``['--help']``.
-    :param token_normalize_func: an optional function that is used to
-                                 normalize tokens (options, choices,
-                                 etc.).  This for instance can be used to
-                                 implement case insensitive behavior.
-    :param color: controls if the terminal supports ANSI colors or not.  The
-                  default is autodetection.  This is only needed if ANSI
-                  codes are used in texts that Click prints which is by
-                  default not the case.  This for instance would affect
-                  help output.
-    :param show_default: Show the default value for commands. If this
-        value is not set, it defaults to the value from the parent
-        context. ``Command.show_default`` overrides this default for the
-        specific command.
+    """
+    The [`Context`](https://click.palletsprojects.com/en/stable/api/#click.Context) has some additional data about the current execution of your program.
+    When declaring it in a [callback](https://typer.tiangolo.com/tutorial/options/callback-and-context/) function,
+    you can access this additional information.
     """
 
     formatter_class: type[_click.HelpFormatter] = _click.HelpFormatter
@@ -579,7 +514,7 @@ class Context:
 
 @contextmanager
 def augment_usage_errors(
-    ctx: Context, param: _click.Parameter | None = None
+    ctx: Context, param: Parameter | None = None
 ) -> Iterator[None]:
     """Context manager that attaches extra information to exceptions."""
     try:

@@ -17,9 +17,9 @@ from typing import (
     overload,
 )
 
-from . import Context, Option, _click
+from . import Option, _click
 from ._typing import Literal
-from .context import augment_usage_errors
+from .context import Context, augment_usage_errors
 from .utils import parse_boolean_env_var
 
 MarkupMode = Literal["markdown", "rich", None]
@@ -46,7 +46,7 @@ def _split_opt(opt: str) -> tuple[str, str]:
 
 
 def _typer_param_setup_autocompletion_compat(
-    self: _click.Parameter,
+    self: Parameter,
     *,
     autocompletion: Callable[[Context, list[str], str], list[tuple[str, str] | str]]
     | None = None,
@@ -64,7 +64,7 @@ def _typer_param_setup_autocompletion_compat(
     if autocompletion is not None:
 
         def compat_autocompletion(
-            ctx: Context, param: _click.core.Parameter, incomplete: str
+            ctx: Context, param: Parameter, incomplete: str
         ) -> list[_click.shell_completion.CompletionItem]:
             out = []
 
@@ -660,7 +660,7 @@ class TyperArgument(Parameter):
         # Note that shell_complete is not fully supported and will be removed in future versions
         # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Callable[
-            [Context, _click.Parameter, str],
+            [Context, Parameter, str],
             list[_click.shell_completion.CompletionItem] | list[str],
         ]
         | None = None,
@@ -695,7 +695,6 @@ class TyperArgument(Parameter):
             else:
                 required = False
         super().__init__(
-            param_decls,
             param_decls=param_decls,
             type=type,
             required=required,
@@ -802,7 +801,7 @@ class TyperArgument(Parameter):
         var = (self.name or "").upper()
         if not self.required:
             var = f"[{var}]"
-        type_var = self.type.get_metavar(self, ctx=ctx)  # type: ignore[arg-type]
+        type_var = self.type.get_metavar(self, ctx=ctx)
         if type_var:
             var += f":{type_var}"
         if self.nargs != 1:
@@ -859,7 +858,7 @@ class TyperOption(Parameter):
         # Note that shell_complete is not fully supported and will be removed in future versions
         # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Callable[
-            [Context, _click.Parameter, str],
+            [Context, Parameter, str],
             list[_click.shell_completion.CompletionItem] | list[str],
         ]
         | None = None,
@@ -1371,7 +1370,7 @@ class TyperOption(Parameter):
         return _value_is_missing(self, value)
 
 
-def _value_is_missing(param: _click.Parameter, value: Any) -> bool:
+def _value_is_missing(param: Parameter, value: Any) -> bool:
     if value is None:
         return True
 
@@ -1407,7 +1406,7 @@ def _typer_format_options(
 
 
 def _typer_main_shell_completion(
-    self: _click.core.Command,
+    self: TyperCommand,
     *,
     ctx_args: MutableMapping[str, Any],
     prog_name: str,
@@ -1478,9 +1477,9 @@ def make_default_short_help(help: str, max_length: int = 45) -> str:
 
 
 def iter_params_for_processing(
-    invocation_order: Sequence[_click.Parameter],
-    declaration_order: Sequence[_click.Parameter],
-) -> list[_click.Parameter]:
+    invocation_order: Sequence[Parameter],
+    declaration_order: Sequence[Parameter],
+) -> list[Parameter]:
     """Returns all declared parameters in the order they should be processed.
 
     The declared parameters are re-shuffled depending on the order in which
@@ -1495,7 +1494,7 @@ def iter_params_for_processing(
     Original code from Click.
     """
 
-    def sort_key(item: _click.Parameter) -> tuple[bool, float]:
+    def sort_key(item: Parameter) -> tuple[bool, float]:
         try:
             idx: float = invocation_order.index(item)
         except ValueError:
@@ -1506,7 +1505,7 @@ def iter_params_for_processing(
     return sorted(declaration_order, key=sort_key)
 
 
-class TyperCommand(_click.core.Command):
+class TyperCommand:
     context_class: type[Context] = Context
 
     #: the default for the :attr:`Context.allow_extra_args` flag.
@@ -1524,7 +1523,7 @@ class TyperCommand(_click.core.Command):
         *,
         context_settings: dict[str, Any] | None = None,
         callback: Callable[..., Any] | None = None,
-        params: list[_click.Parameter] | None = None,
+        params: list[Parameter] | None = None,
         help: str | None = None,
         epilog: str | None = None,
         short_help: str | None = None,
@@ -1540,7 +1539,7 @@ class TyperCommand(_click.core.Command):
         self.name = name
         self.context_settings: MutableMapping[str, Any] = context_settings or {}
         self.callback = callback
-        self.params: list[_click.Parameter] = params or []
+        self.params: list[Parameter] = params or []
         self.help = help
         self.epilog = epilog
         self.options_metavar = options_metavar
@@ -1562,7 +1561,7 @@ class TyperCommand(_click.core.Command):
         self.format_usage(ctx, formatter)
         return formatter.getvalue().rstrip("\n")
 
-    def get_params(self, ctx: Context) -> list[_click.Parameter]:
+    def get_params(self, ctx: Context) -> list[Parameter]:
         params = self.params
         help_option = self.get_help_option(ctx)
 
@@ -1590,7 +1589,7 @@ class TyperCommand(_click.core.Command):
             all_names.difference_update(param.secondary_opts)
         return list(all_names)
 
-    def get_help_option(self, ctx: Context) -> Option | None:
+    def get_help_option(self, ctx: Context) -> TyperOption | None:
         help_option_names = self.get_help_option_names(ctx)
 
         if not help_option_names or not self.add_help_option:
@@ -1825,16 +1824,6 @@ class TyperCommand(_click.core.Command):
                     if name.startswith(incomplete)
                 )
 
-        while ctx.parent is not None:
-            ctx = ctx.parent
-
-            if isinstance(ctx.command, TyperGroup) and ctx.command.chain:
-                results.extend(
-                    _click.CompletionItem(name, help=command.get_short_help_str())
-                    for name, command in _complete_visible_commands(ctx, incomplete)
-                    if name not in ctx._protected_args
-                )
-
         return results
 
 
@@ -1947,7 +1936,7 @@ class TyperGroup(TyperCommand):
         rest = super().parse_args(ctx, args)
 
         if rest:
-            ctx._protected_args, ctx.args = rest[:1], rest[1:]
+            ctx.args = rest
 
         return ctx.args
 
@@ -1957,20 +1946,17 @@ class TyperGroup(TyperCommand):
                 value = ctx.invoke(self._result_callback, value, **ctx.params)
             return value
 
-        if not ctx._protected_args:
-            if self.invoke_without_command:
-                # No subcommand was invoked, so the result callback is
-                # invoked with the group return value for regular
-                # groups, or an empty list for chained groups.
-                with ctx:
-                    rv = super().invoke(ctx)
-                    return _process_result([] if self.chain else rv)
-            ctx.fail(_("Missing command."))
+        if self.invoke_without_command:
+            # No subcommand was invoked, so the result callback is
+            # invoked with the group return value
+            with ctx:
+                rv = super().invoke(ctx)
+                return _process_result(rv)
+        ctx.fail(_("Missing command."))
 
         # Fetch args back out
-        args = [*ctx._protected_args, *ctx.args]
+        args = [*ctx.args]
         ctx.args = []
-        ctx._protected_args = []
 
         # Make sure the context is entered so we do not clean up
         # resources until the result processor has worked.

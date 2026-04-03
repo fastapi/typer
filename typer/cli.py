@@ -8,7 +8,6 @@ import typer
 import typer.core
 
 from . import Context, __version__
-from ._click import Option
 from .core import HAS_RICH, MARKUP_MODE_KEY
 
 default_app_names = ("app", "cli", "main")
@@ -56,7 +55,7 @@ class TyperCLIGroup(typer.core.TyperGroup):
         self.maybe_add_run(ctx)
         return super().list_commands(ctx)
 
-    def get_command(self, ctx: Context, name: str) -> typer.TyperCommand | None:  # ty: ignore[invalid-method-override]
+    def get_command(self, ctx: Context, name: str) -> typer.core.TyperCommand | None:  # ty: ignore[invalid-method-override]
         self.maybe_add_run(ctx)
         return super().get_command(ctx, name)
 
@@ -137,7 +136,7 @@ def get_typer_from_state() -> typer.Typer | None:
     return obj
 
 
-def maybe_add_run_to_cli(cli: typer.TyperGroup) -> None:
+def maybe_add_run_to_cli(cli: typer.core.TyperGroup) -> None:
     if "run" not in cli.commands:
         if state.file or state.module:
             obj = get_typer_from_state()
@@ -150,7 +149,7 @@ def maybe_add_run_to_cli(cli: typer.TyperGroup) -> None:
                 cli.add_command(click_obj)
 
 
-def print_version(ctx: Context, param: Option, value: bool) -> None:
+def print_version(ctx: Context, param: typer.core.TyperOption, value: bool) -> None:
     if not value or ctx.resilient_parsing:
         return
     typer.echo(f"Typer version: {__version__}")
@@ -185,7 +184,7 @@ def callback(
 
 def get_docs_for_click(
     *,
-    obj: typer.TyperCommand,
+    obj: typer.core.TyperCommand,
     ctx: typer.Context,
     indent: int = 0,
     name: str = "",
@@ -241,7 +240,7 @@ def get_docs_for_click(
         docs += "\n"
     if obj.epilog:
         docs += f"{obj.epilog}\n\n"
-    if isinstance(obj, typer.TyperGroup):
+    if isinstance(obj, typer.core.TyperGroup):
         group = obj
         commands = group.list_commands(ctx)
         if commands:

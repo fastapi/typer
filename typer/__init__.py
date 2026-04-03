@@ -19,11 +19,11 @@ from ._click.utils import format_filename as format_filename
 from ._click.utils import get_app_dir as get_app_dir
 from ._click.utils import get_binary_stream as get_binary_stream
 from ._click.utils import get_text_stream as get_text_stream
+from .context import Context as Context
 from .main import Typer as Typer
 from .main import launch as launch
 from .main import run as run
 from .models import CallbackParam as CallbackParam
-from .models import Context as Context
 from .models import FileBinaryRead as FileBinaryRead
 from .models import FileBinaryWrite as FileBinaryWrite
 from .models import FileText as FileText
