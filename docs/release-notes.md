@@ -17,6 +17,7 @@
 
 ### Internal
 
+* ⬆ Bump ruff from 0.15.8 to 0.15.9. PR [#1674](https://github.com/fastapi/typer/pull/1674) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ty from 0.0.27 to 0.0.28. PR [#1675](https://github.com/fastapi/typer/pull/1675) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pillow from 12.1.1 to 12.2.0. PR [#1672](https://github.com/fastapi/typer/pull/1672) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump mypy from 1.19.1 to 1.20.0. PR [#1670](https://github.com/fastapi/typer/pull/1670) by [@dependabot[bot]](https://github.com/apps/dependabot).
