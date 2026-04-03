@@ -13,7 +13,7 @@ import typer.completion
 from typer import _click
 from typer.core import _split_opt
 from typer.main import solve_typer_info_defaults, solve_typer_info_help
-from typer.models import ParameterInfo, TyperInfo
+from typer.models import Context, ParameterInfo, TyperInfo
 from typer.testing import CliRunner
 
 from .utils import requires_completion_permission
@@ -44,7 +44,7 @@ def test_too_many_parsers():
             self,
             value: str,
             param: _click.Parameter | None,
-            ctx: _click.Context | None,
+            ctx: Context | None,
         ) -> typing.Any:
             return int(value)  # pragma: no cover
 
@@ -68,7 +68,7 @@ def test_valid_parser_permutations():
             self,
             value: str,
             param: _click.Parameter | None,
-            ctx: _click.Context | None,
+            ctx: Context | None,
         ) -> typing.Any:
             return int(value)  # pragma: no cover
 

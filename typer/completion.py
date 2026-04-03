@@ -6,7 +6,8 @@ from typing import Any
 from . import _click
 from ._completion_classes import completion_init
 from ._completion_shared import Shells, _get_shell_name, get_completion_script, install
-from .models import ParamMeta
+from .core import TyperCommand
+from .models import Context, ParamMeta
 from .params import Option
 from .utils import get_params_from_function
 
@@ -26,7 +27,7 @@ def get_completion_inspect_parameters() -> tuple[ParamMeta, ParamMeta]:
     return install_param, show_param
 
 
-def install_callback(ctx: _click.Context, param: _click.Parameter, value: Any) -> Any:
+def install_callback(ctx: Context, param: _click.Parameter, value: Any) -> Any:
     if not value or ctx.resilient_parsing:
         return value  # pragma: no cover
     if isinstance(value, str):
@@ -38,7 +39,7 @@ def install_callback(ctx: _click.Context, param: _click.Parameter, value: Any) -
     sys.exit(0)
 
 
-def show_callback(ctx: _click.Context, param: _click.Parameter, value: Any) -> Any:
+def show_callback(ctx: Context, param: _click.Parameter, value: Any) -> Any:
     if not value or ctx.resilient_parsing:
         return value  # pragma: no cover
     prog_name = ctx.find_root().info_name
@@ -102,7 +103,7 @@ def _install_completion_no_auto_placeholder_function(
 # And to add extra error messages, for compatibility with Typer in previous versions
 # This is only called in new Command method, only used by Click 8.x+
 def shell_complete(
-    cli: _click.Command,
+    cli: TyperCommand,
     ctx_args: MutableMapping[str, Any],
     prog_name: str,
     complete_var: str,

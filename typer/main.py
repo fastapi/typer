@@ -21,6 +21,7 @@ from typer._types import TyperChoice
 from . import _click
 from ._typing import get_args, get_origin, is_literal_type, is_union, literal_values
 from .completion import get_completion_inspect_parameters
+from .context import Context
 from .core import (
     DEFAULT_MARKUP_MODE,
     HAS_RICH,
@@ -1168,7 +1169,7 @@ def get_group(typer_instance: Typer) -> TyperGroup:
     return group
 
 
-def get_command(typer_instance: Typer) -> _click.Command:
+def get_command(typer_instance: Typer) -> TyperCommand:
     if typer_instance._add_completion:
         click_install_param, click_show_param = get_install_completion_arguments()
     if (
@@ -1178,7 +1179,7 @@ def get_command(typer_instance: Typer) -> _click.Command:
         or len(typer_instance.registered_commands) > 1
     ):
         # Create a Group
-        click_command: _click.Command = get_group(typer_instance)
+        click_command: TyperCommand = get_group(typer_instance)
         if typer_instance._add_completion:
             click_command.params.append(click_install_param)
             click_command.params.append(click_show_param)
@@ -1288,7 +1289,7 @@ def get_group_from_info(
     assert group_info.typer_instance, (
         "A Typer instance is needed to generate a Click Group"
     )
-    commands: dict[str, _click.Command] = {}
+    commands: dict[str, TyperCommand] = {}
     for command_info in group_info.typer_instance.registered_commands:
         command = get_command_from_info(
             command_info=command_info,
@@ -1369,7 +1370,7 @@ def get_params_convertors_ctx_param_name_from_function(
     if callback:
         parameters = get_params_from_function(callback)
         for param_name, param in parameters.items():
-            if lenient_issubclass(param.annotation, _click.Context):
+            if lenient_issubclass(param.annotation, Context):
                 context_param_name = param_name
                 continue
             click_param, convertor = get_click_param(param)
@@ -1384,7 +1385,7 @@ def get_command_from_info(
     *,
     pretty_exceptions_short: bool,
     rich_markup_mode: MarkupMode,
-) -> _click.Command:
+) -> TyperCommand:
     assert command_info.callback, "A command must have a callback function"
     name = command_info.name or get_command_name(command_info.callback.__name__)  # ty: ignore
     use_help = command_info.help
@@ -1800,7 +1801,7 @@ def get_param_callback(
     value_name = None
     untyped_names: list[str] = []
     for param_name, param_sig in parameters.items():
-        if lenient_issubclass(param_sig.annotation, _click.Context):
+        if lenient_issubclass(param_sig.annotation, Context):
             ctx_name = param_name
         elif lenient_issubclass(param_sig.annotation, _click.Parameter):
             click_param_name = param_name
@@ -1821,7 +1822,7 @@ def get_param_callback(
                 "Too many CLI parameter callback function parameters"
             )
 
-    def wrapper(ctx: _click.Context, param: _click.Parameter, value: Any) -> Any:
+    def wrapper(ctx: Context, param: _click.Parameter, value: Any) -> Any:
         use_params: dict[str, Any] = {}
         if ctx_name:
             use_params[ctx_name] = ctx
@@ -1851,7 +1852,7 @@ def get_param_completion(
     unassigned_params = list(parameters.values())
     for param_sig in unassigned_params[:]:
         origin = get_origin(param_sig.annotation)
-        if lenient_issubclass(param_sig.annotation, _click.Context):
+        if lenient_issubclass(param_sig.annotation, Context):
             ctx_name = param_sig.name
             unassigned_params.remove(param_sig)
         elif lenient_issubclass(origin, list):
@@ -1878,7 +1879,7 @@ def get_param_completion(
             f"Invalid autocompletion callback parameters: {show_params}"
         )
 
-    def wrapper(ctx: _click.Context, args: list[str], incomplete: str | None) -> Any:
+    def wrapper(ctx: Context, args: list[str], incomplete: str | None) -> Any:
         use_params: dict[str, Any] = {}
         if ctx_name:
             use_params[ctx_name] = ctx

@@ -13,6 +13,7 @@ from typing import (
 )
 
 from . import _click, format_filename
+from .context import Context as BaseContext
 
 if TYPE_CHECKING:  # pragma: no cover
     from .core import TyperCommand, TyperGroup
@@ -26,7 +27,7 @@ AnyType = type[Any]
 Required = ...
 
 
-class Context(_click.Context):
+class Context(BaseContext):
     """
     The [`Context`](https://click.palletsprojects.com/en/stable/api/#click.Context) has some additional data about the current execution of your program.
     When declaring it in a [callback](https://typer.tiangolo.com/tutorial/options/callback-and-context/) function,
@@ -289,7 +290,7 @@ class ParameterInfo:
         # Note that shell_complete is not fully supported and will be removed in future versions
         # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Callable[
-            [_click.Context, _click.Parameter, str],
+            [Context, _click.Parameter, str],
             list["_click.shell_completion.CompletionItem"] | list[str],
         ]
         | None = None,
@@ -398,7 +399,7 @@ class OptionInfo(ParameterInfo):
         # Note that shell_complete is not fully supported and will be removed in future versions
         # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Callable[
-            [_click.Context, _click.Parameter, str],
+            [Context, _click.Parameter, str],
             list["_click.shell_completion.CompletionItem"] | list[str],
         ]
         | None = None,
@@ -526,7 +527,7 @@ class ArgumentInfo(ParameterInfo):
         # Note that shell_complete is not fully supported and will be removed in future versions
         # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Callable[
-            [_click.Context, _click.Parameter, str],
+            [Context, _click.Parameter, str],
             list["_click.shell_completion.CompletionItem"] | list[str],
         ]
         | None = None,
@@ -736,7 +737,7 @@ class TyperPath(_click.ParamType):
         return self.coerce_path_result(rv)
 
     def shell_complete(
-        self, ctx: _click.Context, param: _click.Parameter, incomplete: str
+        self, ctx: Context, param: _click.Parameter, incomplete: str
     ) -> list[_click.shell_completion.CompletionItem]:
         """Return an empty list so that the autocompletion functionality
         will work properly from the commandline.

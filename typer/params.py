@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Annotated, Any, overload
 from annotated_doc import Doc
 
 from . import _click
-from .models import ArgumentInfo, OptionInfo
+from .models import ArgumentInfo, Context, OptionInfo
 
 if TYPE_CHECKING:  # pragma: no cover
     pass
@@ -24,7 +24,7 @@ def Option(
     # Note that shell_complete is not fully supported and will be removed in future versions
     # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Callable[
-        [_click.Context, _click.Parameter, str],
+        [Context, _click.Parameter, str],
         list["_click.shell_completion.CompletionItem"] | list[str],
     ]
     | None = None,
@@ -89,7 +89,7 @@ def Option(
     # Note that shell_complete is not fully supported and will be removed in future versions
     # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Callable[
-        [_click.Context, _click.Parameter, str],
+        [Context, _click.Parameter, str],
         list["_click.shell_completion.CompletionItem"] | list[str],
     ]
     | None = None,
@@ -265,7 +265,7 @@ def Option(
     # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Annotated[
         Callable[
-            [_click.Context, _click.Parameter, str],
+            [Context, _click.Parameter, str],
             list["_click.shell_completion.CompletionItem"] | list[str],
         ]
         | None,
@@ -1014,7 +1014,7 @@ def Argument(
     # Note that shell_complete is not fully supported and will be removed in future versions
     # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Callable[
-        [_click.Context, _click.Parameter, str],
+        [Context, _click.Parameter, str],
         list["_click.shell_completion.CompletionItem"] | list[str],
     ]
     | None = None,
@@ -1070,7 +1070,7 @@ def Argument(
     # Note that shell_complete is not fully supported and will be removed in future versions
     # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Callable[
-        [_click.Context, _click.Parameter, str],
+        [Context, _click.Parameter, str],
         list["_click.shell_completion.CompletionItem"] | list[str],
     ]
     | None = None,
@@ -1219,7 +1219,7 @@ def Argument(
     # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Annotated[
         Callable[
-            [_click.Context, _click.Parameter, str],
+            [Context, _click.Parameter, str],
             list["_click.shell_completion.CompletionItem"] | list[str],
         ]
         | None,

@@ -22,11 +22,13 @@ from rich.table import Table
 from rich.text import Text
 from rich.theme import Theme
 from rich.traceback import Traceback
-from typer.models import DeveloperExceptionConfig
+from typer.models import Context, DeveloperExceptionConfig
 
 from . import _click
 
 # Default styles
+from .core import TyperCommand, TyperGroup
+
 STYLE_OPTION = "bold cyan"
 STYLE_SWITCH = "bold green"
 STYLE_NEGATIVE_OPTION = "bold magenta"
@@ -185,7 +187,7 @@ def _make_rich_text(
 @group()
 def _get_help_text(
     *,
-    obj: _click.Command | _click.Group,
+    obj: TyperCommand | TyperGroup,
     markup_mode: MarkupModeStrict,
 ) -> Iterable[Markdown | Text]:
     """Build primary help text for a click command or group.
@@ -233,7 +235,7 @@ def _get_help_text(
 def _get_parameter_help(
     *,
     param: _click.Option | _click.Argument | _click.Parameter,
-    ctx: _click.Context,
+    ctx: Context,
     markup_mode: MarkupModeStrict,
 ) -> Columns:
     """Build primary help text for a click option or argument.
@@ -350,7 +352,7 @@ def _print_options_panel(
     *,
     name: str,
     params: list[_click.Option] | list[_click.Argument],
-    ctx: _click.Context,
+    ctx: Context,
     markup_mode: MarkupModeStrict,
     console: Console,
 ) -> None:
@@ -460,7 +462,7 @@ def _print_options_panel(
 def _print_commands_panel(
     *,
     name: str,
-    commands: list[_click.Command],
+    commands: list[TyperCommand],
     markup_mode: MarkupModeStrict,
     console: Console,
     cmd_len: int,
@@ -535,8 +537,8 @@ def _print_commands_panel(
 
 def rich_format_help(
     *,
-    obj: _click.Command | _click.Group,
-    ctx: _click.Context,
+    obj: TyperCommand | TyperGroup,
+    ctx: Context,
     markup_mode: MarkupModeStrict,
 ) -> None:
     """Print nicely formatted help text using rich.
@@ -624,8 +626,8 @@ def rich_format_help(
             console=console,
         )
 
-    if isinstance(obj, _click.Group):
-        panel_to_commands: defaultdict[str, list[_click.Command]] = defaultdict(list)
+    if isinstance(obj, TyperGroup):
+        panel_to_commands: defaultdict[str, list[TyperCommand]] = defaultdict(list)
         for command_name in obj.list_commands(ctx):
             command = obj.get_command(ctx, command_name)
             if command and not command.hidden:
@@ -686,7 +688,7 @@ def rich_format_error(self: _click.ClickException) -> None:
         return
 
     console = _get_rich_console(stderr=True)
-    ctx: _click.Context | None = getattr(self, "ctx", None)
+    ctx: Context | None = getattr(self, "ctx", None)
     if ctx is not None:
         console.print(ctx.get_usage())
 

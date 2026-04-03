@@ -4,7 +4,7 @@ from typing import Any
 
 import pytest
 import typer
-from typer import _click
+from typer import Context, _click
 from typer.testing import CliRunner
 
 runner = CliRunner()
@@ -154,7 +154,7 @@ def test_custom_click_type():
             self,
             value: Any,
             param: _click.Parameter | None,
-            ctx: _click.Context | None,
+            ctx: Context | None,
         ) -> Any:
             return int(value, 0)
 
