@@ -28,7 +28,9 @@ class ClickException(Exception):
         super().__init__(message)
         # The context will be removed by the time we print the message, so cache
         # the color settings here to be used later on (in `show`)
-        self.show_color: bool | None = None  # Note: this used to look up the context's color setting as default
+        self.show_color: bool | None = (
+            None  # Note: this used to look up the context's color setting as default
+        )
         self.message = message
 
     def format_message(self) -> str:

@@ -233,7 +233,9 @@ def echo(
     # ANSI style code support. For no message or bytes, nothing happens.
     # When outputting to a file instead of a terminal, strip codes.
     else:
-        color = color or None # Note: this used to look up the context's color as default
+        color = (
+            color or None
+        )  # Note: this used to look up the context's color as default
 
         if should_strip_ansi(file, color):
             out = strip_ansi(out)

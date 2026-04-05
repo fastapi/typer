@@ -25,10 +25,8 @@ Copyright 2002-2006 Python Software Foundation. All rights reserved.
 from __future__ import annotations
 
 from collections import deque
-from collections.abc import Sequence
 from gettext import gettext as _
 from gettext import ngettext
-from typing import Any, TypeVar
 
 from .. import Context
 from ..core import Parameter, TyperArgument, TyperOption
@@ -273,7 +271,9 @@ class _OptionParser:
         for opt in option._long_opts:
             self._long_opt[opt] = option
 
-    def add_argument(self, obj: TyperArgument, dest: str | None, nargs: int = 1) -> None:
+    def add_argument(
+        self, obj: TyperArgument, dest: str | None, nargs: int = 1
+    ) -> None:
         """Adds a positional argument named `dest` to the parser.
 
         The `obj` can be used to identify the option in the order list

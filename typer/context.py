@@ -265,8 +265,7 @@ class Context:
         return self._exit_stack.callback(f)
 
     def close(self) -> None:
-        """Invoke all close callbacks
-        """
+        """Invoke all close callbacks"""
         self._close_with_exception_info(None, None, None)
 
     def _close_with_exception_info(
@@ -341,8 +340,7 @@ class Context:
     ) -> Any | Callable[[], Any] | None: ...
 
     def lookup_default(self, name: str, call: bool = True) -> Any | None:
-        """Get the default for a parameter from :attr:`default_map`.
-        """
+        """Get the default for a parameter from :attr:`default_map`."""
         if self.default_map is not None:
             value = self.default_map.get(name, _click.UNSET)
 
@@ -496,7 +494,9 @@ def augment_usage_errors(
             e.ctx = ctx
         raise
 
+
 _local = local()
+
 
 @overload
 def get_current_context(silent: Literal[False] = False) -> Context: ...

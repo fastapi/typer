@@ -1604,7 +1604,14 @@ class TyperCommand:
                     echo(ctx.get_help(), color=ctx.color)
                     ctx.exit()
 
-            self._help_option = TyperOption(param_decls=help_option_names, is_flag=True, expose_value=False, is_eager=True, help="Show this message and exit.", callback=show_help)
+            self._help_option = TyperOption(
+                param_decls=help_option_names,
+                is_flag=True,
+                expose_value=False,
+                is_eager=True,
+                help="Show this message and exit.",
+                callback=show_help,
+            )
 
         return self._help_option
 
@@ -1807,7 +1814,8 @@ class TyperCommand:
             for param in self.get_params(ctx):
                 if (
                     not isinstance(param, TyperOption)
-                    or isinstance(param, TyperArgument) and param.hidden
+                    or isinstance(param, TyperArgument)
+                    and param.hidden
                     or (
                         not param.multiple
                         and ctx.get_parameter_source(param.name)  # type: ignore
@@ -2000,7 +2008,9 @@ class TyperGroup(TyperCommand):
             self, ctx_args=ctx_args, prog_name=prog_name, complete_var=complete_var
         )
 
-    def click_resolve_command(self, ctx: Context, args: list[str]) -> tuple[str | None, TyperCommand | None, list[str]]:
+    def click_resolve_command(
+        self, ctx: Context, args: list[str]
+    ) -> tuple[str | None, TyperCommand | None, list[str]]:
         cmd_name = make_str(args[0])
         original_cmd_name = cmd_name
 
