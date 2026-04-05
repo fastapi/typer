@@ -7,7 +7,6 @@ from contextlib import AbstractContextManager
 from gettext import gettext as _
 
 from .exceptions import Abort, UsageError
-from .globals import resolve_color_default
 from .types import Choice, ParamType, convert_type
 from .utils import LazyFile, echo
 
@@ -428,7 +427,7 @@ def progressbar(
     """
     from ._termui_impl import ProgressBar
 
-    color = resolve_color_default(color)
+    color = color or None  # Note: this used to look up the context's color as default
     return ProgressBar(
         iterable=iterable,
         length=length,

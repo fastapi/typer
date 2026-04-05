@@ -20,7 +20,6 @@ from ._compat import (
     strip_ansi,
     text_streams,
 )
-from .globals import resolve_color_default
 
 if t.TYPE_CHECKING:
     import typing_extensions as te
@@ -234,7 +233,7 @@ def echo(
     # ANSI style code support. For no message or bytes, nothing happens.
     # When outputting to a file instead of a terminal, strip codes.
     else:
-        color = resolve_color_default(color)
+        color = color or None # Note: this used to look up the context's color as default
 
         if should_strip_ansi(file, color):
             out = strip_ansi(out)

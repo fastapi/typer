@@ -17,7 +17,8 @@ from typing import (
     overload,
 )
 
-from . import Option, _click
+from . import _click, echo
+from ._click import make_str
 from ._typing import Literal
 from .context import Context, augment_usage_errors
 from .utils import parse_boolean_env_var
@@ -68,6 +69,7 @@ def _typer_param_setup_autocompletion_compat(
         ) -> list[_click.shell_completion.CompletionItem]:
             out = []
 
+            assert autocompletion is not None
             for c in autocompletion(ctx, [], incomplete):
                 if isinstance(c, tuple):
                     use_completion = _click.CompletionItem(c[0], help=c[1])
@@ -801,7 +803,7 @@ class TyperArgument(Parameter):
         var = (self.name or "").upper()
         if not self.required:
             var = f"[{var}]"
-        type_var = self.type.get_metavar(self, ctx=ctx)
+        type_var = self.type.get_metavar(self, ctx=ctx) if ctx else None
         if type_var:
             var += f":{type_var}"
         if self.nargs != 1:
@@ -1009,7 +1011,7 @@ class TyperOption(Parameter):
                     opts=self.opts,
                     dest=self.name,
                     action=action,
-                    const=self.flag_value,
+                    # const=self.flag_value,
                 )
         else:
             parser.add_option(
@@ -1507,15 +1509,10 @@ def iter_params_for_processing(
 
 class TyperCommand:
     context_class: type[Context] = Context
-
-    #: the default for the :attr:`Context.allow_extra_args` flag.
     allow_extra_args = False
-
-    #: the default for the :attr:`Context.allow_interspersed_args` flag.
     allow_interspersed_args = True
-
-    #: the default for the :attr:`Context.ignore_unknown_options` flag.
     ignore_unknown_options = False
+    _help_option: TyperOption | None = None
 
     def __init__(
         self,
@@ -1595,18 +1592,19 @@ class TyperCommand:
         if not help_option_names or not self.add_help_option:
             return None
 
-        # Click functionality:
         # Cache the help option object in private _help_option attribute to
         # avoid creating it multiple times. Not doing this will break the
         # callback ordering by iter_params_for_processing(), which relies on
         # object comparison.
         if self._help_option is None:
-            # Avoid circular import.
-            from _click.decorators import help_option
 
-            # Apply help_option decorator and pop resulting option
-            help_option(*help_option_names)(self)
-            self._help_option = self.params.pop()  # type: ignore[assignment]
+            def show_help(ctx: Context, param: Parameter, value: bool) -> None:
+                """Callback that print the help page on ``<stdout>`` and exits."""
+                if value and not ctx.resilient_parsing:
+                    echo(ctx.get_help(), color=ctx.color)
+                    ctx.exit()
+
+            self._help_option = TyperOption(param_decls=help_option_names, is_flag=True, expose_value=False, is_eager=True, help="Show this message and exit.", callback=show_help)
 
         return self._help_option
 
@@ -1808,8 +1806,8 @@ class TyperCommand:
         if incomplete and not incomplete[0].isalnum():
             for param in self.get_params(ctx):
                 if (
-                    not isinstance(param, Option)
-                    or param.hidden
+                    not isinstance(param, TyperOption)
+                    or isinstance(param, TyperArgument) and param.hidden
                     or (
                         not param.multiple
                         and ctx.get_parameter_source(param.name)  # type: ignore
@@ -1922,6 +1920,7 @@ class TyperGroup(TyperCommand):
 
             rows = []
             for subcommand, cmd in commands:
+                assert cmd is not None
                 help = cmd.get_short_help_str(limit)
                 rows.append((subcommand, help))
 
@@ -2001,11 +2000,36 @@ class TyperGroup(TyperCommand):
             self, ctx_args=ctx_args, prog_name=prog_name, complete_var=complete_var
         )
 
+    def click_resolve_command(self, ctx: Context, args: list[str]) -> tuple[str | None, TyperCommand | None, list[str]]:
+        cmd_name = make_str(args[0])
+        original_cmd_name = cmd_name
+
+        # Get the command
+        cmd = self.get_command(ctx, cmd_name)
+
+        # If we can't find the command but there is a normalization
+        # function available, we try with that one.
+        if cmd is None and ctx.token_normalize_func is not None:
+            cmd_name = ctx.token_normalize_func(cmd_name)
+            cmd = self.get_command(ctx, cmd_name)
+
+        # If we don't find the command we want to show an error message
+        # to the user that it was not provided.  However, there is
+        # something else we should do: if the first argument looks like
+        # an option we want to kick off parsing again for arguments to
+        # resolve things like --help which now should go to the main
+        # place.
+        if cmd is None and not ctx.resilient_parsing:
+            if _split_opt(cmd_name)[0]:
+                self.parse_args(ctx, args)
+            ctx.fail(_("No such command {name!r}.").format(name=original_cmd_name))
+        return cmd_name if cmd else None, cmd, args[1:]
+
     def resolve_command(
         self, ctx: Context, args: list[str]
     ) -> tuple[str | None, TyperCommand | None, list[str]]:
         try:
-            return super().resolve_command(ctx, args)
+            return self.click_resolve_command(ctx, args)
         except _click.UsageError as e:
             if self.suggest_commands:
                 available_commands = list(self.commands.keys())

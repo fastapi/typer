@@ -7,6 +7,7 @@ from pathlib import Path
 import shellingham
 
 from . import _click
+from .context import get_current_context
 
 
 class Shells(str, Enum):
@@ -204,7 +205,7 @@ def install(
     prog_name: str | None = None,
     complete_var: str | None = None,
 ) -> tuple[str, Path]:
-    prog_name = prog_name or _click.get_current_context().find_root().info_name
+    prog_name = prog_name or get_current_context().find_root().info_name
     assert prog_name
     if complete_var is None:
         complete_var = "_{}_COMPLETE".format(prog_name.replace("-", "_").upper())

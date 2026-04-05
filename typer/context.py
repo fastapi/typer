@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Callable, Iterator, MutableMapping
 from contextlib import ExitStack, contextmanager
+from threading import local
 from types import TracebackType
 from typing import (
     Any,
@@ -132,13 +133,13 @@ class Context:
         if token_normalize_func is None and parent is not None:
             token_normalize_func = parent.token_normalize_func
 
-        #: An optional normalization function for tokens.  This is
-        #: options, choices, commands etc.
+        # An optional normalization function for tokens.  This is
+        # options, choices, commands etc.
         self.token_normalize_func: Callable[[str], str] | None = token_normalize_func
 
-        #: Indicates if resilient parsing is enabled.  In that case Click
-        #: will do its best to not cause any failures and default values
-        #: will be ignored. Useful for completion.
+        # Indicates if resilient parsing is enabled.  In that case Click
+        # will do its best to not cause any failures and default values
+        # will be ignored. Useful for completion.
         self.resilient_parsing: bool = resilient_parsing
 
         # If there is no envvar prefix yet, but the parent has one and
@@ -164,13 +165,13 @@ class Context:
         if color is None and parent is not None:
             color = parent.color
 
-        #: Controls if styling output is wanted or not.
+        # Controls if styling output is wanted or not.
         self.color: bool | None = color
 
         if show_default is None and parent is not None:
             show_default = parent.show_default
 
-        #: Show option default values when formatting help text.
+        # Show option default values when formatting help text.
         self.show_default: bool | None = show_default
 
         self._close_callbacks: list[Callable[[], Any]] = []
@@ -180,7 +181,7 @@ class Context:
 
     def __enter__(self) -> Context:
         self._depth += 1
-        _click.globals.push_context(self)
+        push_context(self)
         return self
 
     def __exit__(
@@ -193,7 +194,7 @@ class Context:
         exit_result: bool | None = None
         if self._depth == 0:
             exit_result = self._close_with_exception_info(exc_type, exc_value, tb)
-        _click.globals.pop_context()
+        pop_context()
 
         return exit_result
 
@@ -217,12 +218,6 @@ class Context:
 
             with ctx:
                 assert get_current_context() is ctx
-
-        :param cleanup: controls if the cleanup functions should be run or
-                        not.  The default is to run these functions.  In
-                        some situations the context only wants to be
-                        temporarily pushed in which case this can be disabled.
-                        Nested pushes automatically defer the cleanup.
         """
         if not cleanup:
             self._depth += 1
@@ -245,17 +240,6 @@ class Context:
         irrelevant for the operation of click.  However what is important is
         that code that places data here adheres to the general semantics of
         the system.
-
-        Example usage::
-
-            LANG_KEY = f'{__name__}.lang'
-
-            def set_language(value):
-                ctx = get_current_context()
-                ctx.meta[LANG_KEY] = value
-
-            def get_language():
-                return get_current_context().meta.get(LANG_KEY, 'en_US')
         """
         return self._meta
 
@@ -277,15 +261,11 @@ class Context:
         execution. Resources that support Python's context manager
         protocol which would be used in a ``with`` statement should be
         registered with :meth:`with_resource` instead.
-
-        :param f: The function to execute on teardown.
         """
         return self._exit_stack.callback(f)
 
     def close(self) -> None:
-        """Invoke all close callbacks registered with
-        :meth:`call_on_close`, and exit all context managers entered
-        with :meth:`with_resource`.
+        """Invoke all close callbacks
         """
         self._close_with_exception_info(None, None, None)
 
@@ -298,8 +278,6 @@ class Context:
         """Unwind the exit stack by calling its :meth:`__exit__` providing the exception
         information to allow for exception handling by the various resources registered
         using :meth;`with_resource`
-
-        :return: Whatever ``exit_stack.__exit__()`` returns.
         """
         exit_result = self._exit_stack.__exit__(exc_type, exc_value, tb)
         # In case the context is reused, create a new exit stack.
@@ -364,10 +342,6 @@ class Context:
 
     def lookup_default(self, name: str, call: bool = True) -> Any | None:
         """Get the default for a parameter from :attr:`default_map`.
-
-        :param name: Name of the parameter.
-        :param call: If the default is a callable, call it. Disable to
-            return the callable instead.
         """
         if self.default_map is not None:
             value = self.default_map.get(name, _click.UNSET)
@@ -382,8 +356,6 @@ class Context:
     def fail(self, message: str) -> NoReturn:
         """Aborts the execution of the program with a specific error
         message.
-
-        :param message: the error message to fail with.
         """
         raise _click.UsageError(message, self)
 
@@ -491,9 +463,6 @@ class Context:
     def set_parameter_source(self, name: str, source: _click.ParameterSource) -> None:
         """Set the source of a parameter. This indicates the location
         from which the value of the parameter was obtained.
-
-        :param name: The name of the parameter.
-        :param source: A member of :class:`~click.core.ParameterSource`.
         """
         self._parameter_source[name] = source
 
@@ -505,9 +474,6 @@ class Context:
         on the command line that is the same as the default value. It
         will be :attr:`~click.core.ParameterSource.DEFAULT` only if the
         value was actually taken from the default.
-
-        :param name: The name of the parameter.
-        :rtype: ParameterSource
         """
         return self._parameter_source.get(name)
 
@@ -529,3 +495,33 @@ def augment_usage_errors(
         if e.ctx is None:
             e.ctx = ctx
         raise
+
+_local = local()
+
+@overload
+def get_current_context(silent: Literal[False] = False) -> Context: ...
+
+
+@overload
+def get_current_context(silent: bool = ...) -> Context | None: ...
+
+
+def get_current_context(silent: bool = False) -> Context | None:
+    """Returns the current click context."""
+    try:
+        return cast("Context", _local.stack[-1])
+    except (AttributeError, IndexError) as e:
+        if not silent:
+            raise RuntimeError("There is no active click context.") from e
+
+    return None
+
+
+def push_context(ctx: Context) -> None:
+    """Pushes a new context to the current stack."""
+    _local.__dict__.setdefault("stack", []).append(ctx)
+
+
+def pop_context() -> None:
+    """Removes the top level from the stack."""
+    _local.stack.pop()

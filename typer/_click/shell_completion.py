@@ -6,12 +6,14 @@ import re
 import typing as t
 from gettext import gettext as _
 
-from .core import Argument, Command, Context, Group, Option, Parameter, ParameterSource
+from ..context import Context
+from ..core import Parameter, TyperArgument, TyperCommand, TyperGroup, TyperOption
+from . import ParameterSource
 from .utils import echo
 
 
 def shell_complete(
-    cli: Command,
+    cli: TyperCommand,
     ctx_args: cabc.MutableMapping[str, t.Any],
     prog_name: str,
     complete_var: str,
@@ -217,7 +219,7 @@ class ShellComplete:
 
     def __init__(
         self,
-        cli: Command,
+        cli: TyperCommand,
         ctx_args: cabc.MutableMapping[str, t.Any],
         prog_name: str,
         complete_var: str,
@@ -496,13 +498,8 @@ def split_arg_string(string: str) -> list[str]:
 
 def _is_incomplete_argument(ctx: Context, param: Parameter) -> bool:
     """Determine if the given parameter is an argument that can still
-    accept values.
-
-    :param ctx: Invocation context for the command represented by the
-        parsed complete args.
-    :param param: Argument object being checked.
-    """
-    if not isinstance(param, Argument):
+    accept values."""
+    if not isinstance(param, TyperArgument):
         return False
 
     assert param.name is not None
@@ -529,12 +526,8 @@ def _start_of_option(ctx: Context, value: str) -> bool:
 
 
 def _is_incomplete_option(ctx: Context, args: list[str], param: Parameter) -> bool:
-    """Determine if the given parameter is an option that needs a value.
-
-    :param args: List of complete args before the incomplete value.
-    :param param: Option object being checked.
-    """
-    if not isinstance(param, Option):
+    """Determine if the given parameter is an option that needs a value."""
+    if not isinstance(param, TyperOption):
         return False
 
     if param.is_flag or param.count:
@@ -554,7 +547,7 @@ def _is_incomplete_option(ctx: Context, args: list[str], param: Parameter) -> bo
 
 
 def _resolve_context(
-    cli: Command,
+    cli: TyperCommand,
     ctx_args: cabc.MutableMapping[str, t.Any],
     prog_name: str,
     args: list[str],
@@ -574,40 +567,17 @@ def _resolve_context(
         while args:
             command = ctx.command
 
-            if isinstance(command, Group):
-                if not command.chain:
-                    name, cmd, args = command.resolve_command(ctx, args)
+            if isinstance(command, TyperGroup):
+                name, cmd, args = command.resolve_command(ctx, args)
 
-                    if cmd is None:
-                        return ctx
+                if cmd is None:
+                    return ctx
 
-                    with cmd.make_context(
-                        name, args, parent=ctx, resilient_parsing=True
-                    ) as sub_ctx:
-                        ctx = sub_ctx
-                        args = ctx.args
-                else:
-                    sub_ctx = ctx
-
-                    while args:
-                        name, cmd, args = command.resolve_command(ctx, args)
-
-                        if cmd is None:
-                            return ctx
-
-                        with cmd.make_context(
-                            name,
-                            args,
-                            parent=ctx,
-                            allow_extra_args=True,
-                            allow_interspersed_args=False,
-                            resilient_parsing=True,
-                        ) as sub_sub_ctx:
-                            sub_ctx = sub_sub_ctx
-                            args = sub_ctx.args
-
+                with cmd.make_context(
+                    name, args, parent=ctx, resilient_parsing=True
+                ) as sub_ctx:
                     ctx = sub_ctx
-                    args = [*sub_ctx.args]
+                    args = ctx.args
             else:
                 break
 
@@ -616,7 +586,7 @@ def _resolve_context(
 
 def _resolve_incomplete(
     ctx: Context, args: list[str], incomplete: str
-) -> tuple[Command | Parameter, str]:
+) -> tuple[TyperCommand | Parameter, str]:
     """Find the Click object that will handle the completion of the
     incomplete value. Return the object and the incomplete value.
 

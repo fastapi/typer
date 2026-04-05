@@ -24,21 +24,16 @@ Copyright 2002-2006 Python Software Foundation. All rights reserved.
 # Copyright 2002-2006 Python Software Foundation
 from __future__ import annotations
 
-import collections.abc as cabc
-import typing as t
 from collections import deque
+from collections.abc import Sequence
 from gettext import gettext as _
 from gettext import ngettext
+from typing import Any, TypeVar
 
-from ._utils import FLAG_NEEDS_VALUE, UNSET
+from .. import Context
+from ..core import Parameter, TyperArgument, TyperOption
+from ._utils import FLAG_NEEDS_VALUE, T_FLAG_NEEDS_VALUE, T_UNSET, UNSET
 from .exceptions import BadArgumentUsage, BadOptionUsage, NoSuchOption, UsageError
-
-if t.TYPE_CHECKING:
-    from ._utils import T_FLAG_NEEDS_VALUE, T_UNSET
-    from .core import Argument as CoreArgument
-    from .core import Context
-    from .core import Option as CoreOption
-    from .core import Parameter as CoreParameter
 
 V = t.TypeVar("V")
 
@@ -122,7 +117,7 @@ def _normalize_opt(opt: str, ctx: Context | None) -> str:
 class _Option:
     def __init__(
         self,
-        obj: CoreOption,
+        obj: TyperOption,
         opts: cabc.Sequence[str],
         dest: str | None,
         action: str | None = None,
@@ -174,7 +169,7 @@ class _Option:
 
 
 class _Argument:
-    def __init__(self, obj: CoreArgument, dest: str | None, nargs: int = 1):
+    def __init__(self, obj: TyperArgument, dest: str | None, nargs: int = 1):
         self.dest = dest
         self.nargs = nargs
         self.obj = obj
@@ -209,7 +204,7 @@ class _ParsingState:
         self.opts: dict[str, t.Any] = {}
         self.largs: list[str] = []
         self.rargs = rargs
-        self.order: list[CoreParameter] = []
+        self.order: list[Parameter] = []
 
 
 class _OptionParser:
@@ -255,7 +250,7 @@ class _OptionParser:
 
     def add_option(
         self,
-        obj: CoreOption,
+        obj: TyperOption,
         opts: cabc.Sequence[str],
         dest: str | None,
         action: str | None = None,
@@ -278,7 +273,7 @@ class _OptionParser:
         for opt in option._long_opts:
             self._long_opt[opt] = option
 
-    def add_argument(self, obj: CoreArgument, dest: str | None, nargs: int = 1) -> None:
+    def add_argument(self, obj: TyperArgument, dest: str | None, nargs: int = 1) -> None:
         """Adds a positional argument named `dest` to the parser.
 
         The `obj` can be used to identify the option in the order list
@@ -288,7 +283,7 @@ class _OptionParser:
 
     def parse_args(
         self, args: list[str]
-    ) -> tuple[dict[str, t.Any], list[str], list[CoreParameter]]:
+    ) -> tuple[dict[str, t.Any], list[str], list[Parameter]]:
         """Parses positional arguments and returns ``(values, args, order)``
         for the parsed options and arguments as well as the leftover
         arguments if there are any.  The order is a list of objects as they

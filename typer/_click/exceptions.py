@@ -5,12 +5,10 @@ import typing as t
 from gettext import gettext as _
 from gettext import ngettext
 
+from .. import Context
+from ..core import Parameter, TyperCommand
 from ._compat import get_text_stderr
-from .globals import resolve_color_default
 from .utils import echo, format_filename
-
-if t.TYPE_CHECKING:
-    from .core import Command, Context, Parameter
 
 
 def _join_param_hints(param_hint: cabc.Sequence[str] | str | None) -> str | None:
@@ -30,7 +28,7 @@ class ClickException(Exception):
         super().__init__(message)
         # The context will be removed by the time we print the message, so cache
         # the color settings here to be used later on (in `show`)
-        self.show_color: bool | None = resolve_color_default()
+        self.show_color: bool | None = None  # Note: this used to look up the context's color setting as default
         self.message = message
 
     def format_message(self) -> str:
@@ -64,7 +62,7 @@ class UsageError(ClickException):
     def __init__(self, message: str, ctx: Context | None = None) -> None:
         super().__init__(message)
         self.ctx = ctx
-        self.cmd: Command | None = self.ctx.command if self.ctx else None
+        self.cmd: TyperCommand | None = self.ctx.command if self.ctx else None
 
     def show(self, file: t.IO[t.Any] | None = None) -> None:
         if file is None:
@@ -121,8 +119,8 @@ class BadParameter(UsageError):
     def format_message(self) -> str:
         if self.param_hint is not None:
             param_hint = self.param_hint
-        elif self.param is not None:
-            param_hint = self.param.get_error_hint(self.ctx)  # type: ignore
+        elif self.param is not None and self.ctx is not None:
+            param_hint = self.param.get_error_hint(self.ctx)
         else:
             return _("Invalid value: {message}").format(message=self.message)
 
@@ -157,8 +155,8 @@ class MissingParameter(BadParameter):
     def format_message(self) -> str:
         if self.param_hint is not None:
             param_hint: cabc.Sequence[str] | str | None = self.param_hint
-        elif self.param is not None:
-            param_hint = self.param.get_error_hint(self.ctx)  # type: ignore
+        elif self.param is not None and self.ctx is not None:
+            param_hint = self.param.get_error_hint(self.ctx)
         else:
             param_hint = None
 

@@ -7,8 +7,6 @@ from __future__ import annotations
 from ._utils import FLAG_NEEDS_VALUE as FLAG_NEEDS_VALUE
 from ._utils import UNSET as UNSET
 from .core import ParameterSource as ParameterSource
-from .decorators import help_option as help_option
-from .decorators import option as option
 from .exceptions import Abort as Abort
 from .exceptions import BadArgumentUsage as BadArgumentUsage
 from .exceptions import BadOptionUsage as BadOptionUsage
@@ -23,7 +21,6 @@ from .exceptions import UsageError as UsageError
 from .formatting import HelpFormatter as HelpFormatter
 from .formatting import join_options as join_options
 from .formatting import wrap_text as wrap_text
-from .globals import get_current_context as get_current_context
 from .parser import _OptionParser as _OptionParser
 from .shell_completion import CompletionItem as CompletionItem
 from .termui import confirm as confirm

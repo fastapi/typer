@@ -10,13 +10,12 @@ import tempfile
 import typing as t
 from types import TracebackType
 
+from ..core import TyperCommand
 from . import _compat, formatting, termui, utils
 from ._compat import _find_binary_reader
 
 if t.TYPE_CHECKING:
     from _typeshed import ReadableBuffer
-
-    from .core import Command
 
 
 class EchoingStdin:
@@ -257,7 +256,7 @@ class CliRunner:
         self.echo_stdin = echo_stdin
         self.catch_exceptions = catch_exceptions
 
-    def get_default_prog_name(self, cli: Command) -> str:
+    def get_default_prog_name(self, cli: TyperCommand) -> str:
         """Given a command object it will return the default program name
         for it.  The default is the `name` attribute or ``"root"`` if not
         set.
@@ -429,7 +428,7 @@ class CliRunner:
 
     def invoke(
         self,
-        cli: Command,
+        cli: TyperCommand,
         args: str | cabc.Sequence[str] | None = None,
         input: str | bytes | t.IO[t.Any] | None = None,
         env: cabc.Mapping[str, str | None] | None = None,

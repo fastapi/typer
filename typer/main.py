@@ -21,7 +21,7 @@ from typer._types import TyperChoice
 from . import _click
 from ._typing import get_args, get_origin, is_literal_type, is_union, literal_values
 from .completion import get_completion_inspect_parameters
-from .context import Context
+from .context import Context, get_current_context
 from .core import (
     DEFAULT_MARKUP_MODE,
     HAS_RICH,
@@ -1512,7 +1512,7 @@ def get_callback(
             else:
                 use_params[k] = v
         if context_param_name:
-            use_params[context_param_name] = _click.get_current_context()
+            use_params[context_param_name] = get_current_context()
         return callback(**use_params)
 
     update_wrapper(wrapper, callback)
