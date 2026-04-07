@@ -27,7 +27,6 @@ from typer.models import DeveloperExceptionConfig
 
 from . import _click
 from ._click import exceptions
-
 from ._click_core import Parameter
 from .core import TyperArgument, TyperCommand, TyperGroup, TyperOption
 

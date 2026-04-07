@@ -4,24 +4,17 @@ from collections.abc import Callable, Iterator, MutableMapping
 from contextlib import ExitStack, contextmanager
 from threading import local
 from types import TracebackType
-from typing import (
-    Any,
-    Literal,
-    NoReturn,
-    TypeVar,
-    cast,
-    overload,
-    TYPE_CHECKING
-)
+from typing import TYPE_CHECKING, Any, Literal, NoReturn, TypeVar, cast, overload
 
 from ._click._utils import UNSET
 from ._click.core import ParameterSource
 from ._click.formatting import HelpFormatter
 
 if TYPE_CHECKING:
-    from . import Abort, BadParameter, Exit, UsageError
-    from typer.core import TyperCommand
     from typer._click_core import Parameter
+    from typer.core import TyperCommand
+
+    from . import Abort, BadParameter, Exit, UsageError
 
 V = TypeVar("V")
 
@@ -317,7 +310,7 @@ class Context:
 
     def find_object(self, object_type: type[V]) -> V | None:
         """Finds the closest object of a given type."""
-        node: "Context" | None = self
+        node: Context | None = self
 
         while node is not None:
             if isinstance(node.obj, object_type):

@@ -12,9 +12,9 @@ import typer._completion_shared
 import typer.completion
 from typer._click import exceptions
 from typer._click.types import ParamType
+from typer._click_core import Parameter
 from typer.context import Context
 from typer.core import _split_opt
-from typer._click_core import Parameter
 from typer.main import solve_typer_info_defaults, solve_typer_info_help
 from typer.models import ParameterInfo, TyperInfo
 from typer.testing import CliRunner

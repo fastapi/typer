@@ -1,6 +1,6 @@
 import typer
-from typer.context import Context
 from typer._click_core import Parameter
+from typer.context import Context
 
 app = typer.Typer()
 

@@ -4,8 +4,8 @@ from typing import TYPE_CHECKING, Annotated, Any, overload
 from annotated_doc import Doc
 
 from . import _click
-from .context import Context
 from ._click_core import Parameter
+from .context import Context
 from .models import ArgumentInfo, OptionInfo
 
 if TYPE_CHECKING:  # pragma: no cover

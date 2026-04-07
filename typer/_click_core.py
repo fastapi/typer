@@ -1,20 +1,16 @@
 # Code adapted from Click 8.3.1
 
-from abc import ABC, abstractmethod
-
 import os
-
+from abc import ABC, abstractmethod
 from collections.abc import Callable, Iterator, Mapping, Sequence
 from typing import (
+    TYPE_CHECKING,
     Any,
     cast,
     overload,
-    TYPE_CHECKING,
 )
 
 from . import BadParameter, MissingParameter
-
-
 from ._click._utils import UNSET
 from ._click.core import ParameterSource
 from ._click.parser import _OptionParser
@@ -28,6 +24,7 @@ from .context import Context, augment_usage_errors
 if TYPE_CHECKING:
     from ._click.shell_completion import CompletionItem
 
+
 def _check_iter(value: Any) -> Iterator[Any]:
     """Check if the value is iterable but not a string. Raises a type
     error, or return an iterator over the value.
@@ -36,6 +33,7 @@ def _check_iter(value: Any) -> Iterator[Any]:
         raise TypeError
 
     return iter(value)
+
 
 class Parameter(ABC):
     """A parameter is either an option or an argument.
@@ -195,7 +193,9 @@ class Parameter(ABC):
                 # This should only happen when passing in args manually,
                 # the parser should construct an iterable when parsing
                 # the command line.
-                raise BadParameter("Value must be an iterable.", ctx=ctx, param=self) from None
+                raise BadParameter(
+                    "Value must be an iterable.", ctx=ctx, param=self
+                ) from None
 
         # Define the conversion function based on nargs and type.
 

@@ -2,7 +2,6 @@ import errno
 import inspect
 import os
 import sys
-
 from collections.abc import Callable, Iterator, Mapping, MutableMapping, Sequence
 from difflib import get_close_matches
 from enum import Enum
@@ -12,8 +11,8 @@ from typing import (
     Any,
     TextIO,
     TypeVar,
-    cast,
     Union,
+    cast,
 )
 
 from . import (

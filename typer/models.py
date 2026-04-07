@@ -14,8 +14,8 @@ from typing import (
 
 from . import _click, format_filename
 from ._click.types import ParamType
-from .context import Context
 from ._click_core import Parameter
+from .context import Context
 
 if TYPE_CHECKING:  # pragma: no cover
     from .core import TyperCommand, TyperGroup

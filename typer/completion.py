@@ -4,11 +4,11 @@ from collections.abc import MutableMapping
 from typing import Any
 
 from . import echo, secho
+from ._click_core import Parameter
 from ._completion_classes import completion_init
 from ._completion_shared import Shells, _get_shell_name, get_completion_script, install
 from .context import Context
 from .core import TyperCommand
-from ._click_core import Parameter
 from .models import ParamMeta
 from .params import Option
 from .utils import get_params_from_function

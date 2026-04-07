@@ -5,8 +5,8 @@ from typing import Any
 import pytest
 import typer
 from typer._click.types import ParamType
-from typer.context import Context
 from typer._click_core import Parameter
+from typer.context import Context
 from typer.testing import CliRunner
 
 runner = CliRunner()

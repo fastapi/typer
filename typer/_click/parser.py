@@ -41,9 +41,9 @@ V = TypeVar("V")
 
 if TYPE_CHECKING:
     from typer._click._utils import FLAG_NEEDS_VALUE, T_FLAG_NEEDS_VALUE, T_UNSET, UNSET
+    from typer._click_core import Parameter
     from typer.context import Context
     from typer.core import TyperArgument, TyperOption
-    from typer._click_core import Parameter
 
 
 def _unpack_args(

@@ -28,8 +28,8 @@ from typing_extensions import TypedDict
 from .utils import LazyFile, format_filename, safecall
 
 if TYPE_CHECKING:
-    from ..context import Context
     from .._click_core import Parameter
+    from ..context import Context
     from .shell_completion import CompletionItem
 
 

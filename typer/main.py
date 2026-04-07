@@ -33,6 +33,7 @@ from ._click.types import (
     ParamType,
 )
 from ._click.types import UUID as click_UUID
+from ._click_core import Parameter
 from ._typing import get_args, get_origin, is_literal_type, is_union, literal_values
 from .completion import get_completion_inspect_parameters
 from .context import Context, get_current_context
@@ -45,7 +46,6 @@ from .core import (
     TyperGroup,
     TyperOption,
 )
-from ._click_core import Parameter
 from .models import (
     AnyType,
     ArgumentInfo,

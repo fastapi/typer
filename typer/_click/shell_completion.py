@@ -6,10 +6,10 @@ import re
 import typing as t
 from gettext import gettext as _
 
-from .core import ParameterSource
+from .._click_core import Parameter
 from ..context import Context
 from ..core import TyperArgument, TyperCommand, TyperGroup, TyperOption
-from .._click_core import Parameter
+from .core import ParameterSource
 from .utils import echo
 
 

@@ -9,8 +9,8 @@ from typer._click.compat import get_text_stderr
 from typer._click.utils import echo, format_filename
 
 if TYPE_CHECKING:
-    from typer.context import Context
     from typer._click_core import Parameter
+    from typer.context import Context
     from typer.core import TyperCommand
 
 
