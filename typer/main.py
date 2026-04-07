@@ -19,6 +19,20 @@ from annotated_doc import Doc
 from typer._types import TyperChoice
 
 from . import _click
+from ._click import exceptions
+from ._click.types import (
+    BOOL,
+    FLOAT,
+    INT,
+    STRING,
+    Choice,
+    DateTime,
+    File,
+    FloatRange,
+    IntRange,
+    ParamType,
+)
+from ._click.types import UUID as click_UUID
 from ._typing import get_args, get_origin, is_literal_type, is_union, literal_values
 from .completion import get_completion_inspect_parameters
 from .context import Context, get_current_context
@@ -26,12 +40,12 @@ from .core import (
     DEFAULT_MARKUP_MODE,
     HAS_RICH,
     MarkupMode,
-    Parameter,
     TyperArgument,
     TyperCommand,
     TyperGroup,
     TyperOption,
 )
+from ._click_core import Parameter
 from .models import (
     AnyType,
     ArgumentInfo,
@@ -1519,9 +1533,7 @@ def get_callback(
     return wrapper
 
 
-def get_click_type(
-    *, annotation: Any, parameter_info: ParameterInfo
-) -> _click.ParamType:
+def get_click_type(*, annotation: Any, parameter_info: ParameterInfo) -> ParamType:
     if parameter_info.click_type is not None:
         return parameter_info.click_type
 
@@ -1529,7 +1541,7 @@ def get_click_type(
         return _click.types.FuncParamType(parameter_info.parser)
 
     elif annotation is str:
-        return _click.STRING
+        return STRING
     elif annotation is int:
         if parameter_info.min is not None or parameter_info.max is not None:
             min_ = None
@@ -1538,24 +1550,24 @@ def get_click_type(
                 min_ = int(parameter_info.min)
             if parameter_info.max is not None:
                 max_ = int(parameter_info.max)
-            return _click.IntRange(min=min_, max=max_, clamp=parameter_info.clamp)
+            return IntRange(min=min_, max=max_, clamp=parameter_info.clamp)
         else:
-            return _click.INT
+            return INT
     elif annotation is float:
         if parameter_info.min is not None or parameter_info.max is not None:
-            return _click.FloatRange(
+            return FloatRange(
                 min=parameter_info.min,
                 max=parameter_info.max,
                 clamp=parameter_info.clamp,
             )
         else:
-            return _click.FLOAT
+            return FLOAT
     elif annotation is bool:
-        return _click.BOOL
+        return BOOL
     elif annotation == UUID:
-        return _click.UUID
+        return click_UUID
     elif annotation == datetime:
-        return _click.DateTime(formats=parameter_info.formats)
+        return DateTime(formats=parameter_info.formats)
     elif (
         annotation == Path
         or parameter_info.allow_dash
@@ -1573,7 +1585,7 @@ def get_click_type(
             path_type=parameter_info.path_type,
         )
     elif lenient_issubclass(annotation, FileTextWrite):
-        return _click.File(
+        return File(
             mode=parameter_info.mode or "w",
             encoding=parameter_info.encoding,
             errors=parameter_info.errors,
@@ -1581,7 +1593,7 @@ def get_click_type(
             atomic=parameter_info.atomic,
         )
     elif lenient_issubclass(annotation, FileText):
-        return _click.File(
+        return File(
             mode=parameter_info.mode or "r",
             encoding=parameter_info.encoding,
             errors=parameter_info.errors,
@@ -1589,7 +1601,7 @@ def get_click_type(
             atomic=parameter_info.atomic,
         )
     elif lenient_issubclass(annotation, FileBinaryRead):
-        return _click.File(
+        return File(
             mode=parameter_info.mode or "rb",
             encoding=parameter_info.encoding,
             errors=parameter_info.errors,
@@ -1597,7 +1609,7 @@ def get_click_type(
             atomic=parameter_info.atomic,
         )
     elif lenient_issubclass(annotation, FileBinaryWrite):
-        return _click.File(
+        return File(
             mode=parameter_info.mode or "wb",
             encoding=parameter_info.encoding,
             errors=parameter_info.errors,
@@ -1615,7 +1627,7 @@ def get_click_type(
             case_sensitive=parameter_info.case_sensitive,
         )
     elif is_literal_type(annotation):
-        return _click.Choice(
+        return Choice(
             literal_values(annotation),
             case_sensitive=parameter_info.case_sensitive,
         )
@@ -1819,7 +1831,7 @@ def get_param_callback(
             if untyped_names:
                 click_param_name = untyped_names.pop(0)
         if untyped_names:
-            raise _click.ClickException(
+            raise exceptions.ClickException(
                 "Too many CLI parameter callback function parameters"
             )
 
@@ -1876,7 +1888,7 @@ def get_param_completion(
     # Extract value param name first
     if unassigned_params:
         show_params = " ".join([param.name for param in unassigned_params])
-        raise _click.ClickException(
+        raise exceptions.ClickException(
             f"Invalid autocompletion callback parameters: {show_params}"
         )
 
@@ -2012,4 +2024,4 @@ def launch(
         return 0
 
     else:
-        return _click.launch(url)
+        return launch(url)

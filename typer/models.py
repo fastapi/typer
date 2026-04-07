@@ -12,12 +12,14 @@ from typing import (
     cast,
 )
 
-from . import Context, _click, format_filename
+from . import _click, format_filename
+from ._click.types import ParamType
+from .context import Context
+from ._click_core import Parameter
 
 if TYPE_CHECKING:  # pragma: no cover
-    from .core import Parameter, TyperCommand, TyperGroup
+    from .core import TyperCommand, TyperGroup
     from .main import Typer
-
 
 NoneType = type(None)
 
@@ -287,7 +289,7 @@ class ParameterInfo:
         default_factory: Callable[[], Any] | None = None,
         # Custom type
         parser: Callable[[str], Any] | None = None,
-        click_type: _click.ParamType | None = None,
+        click_type: ParamType | None = None,
         # TyperArgument
         show_default: bool | str = True,
         show_choices: bool = True,
@@ -396,7 +398,7 @@ class OptionInfo(ParameterInfo):
         default_factory: Callable[[], Any] | None = None,
         # Custom type
         parser: Callable[[str], Any] | None = None,
-        click_type: _click.ParamType | None = None,
+        click_type: ParamType | None = None,
         # Option
         show_default: bool | str = True,
         prompt: bool | str = False,
@@ -524,7 +526,7 @@ class ArgumentInfo(ParameterInfo):
         default_factory: Callable[[], Any] | None = None,
         # Custom type
         parser: Callable[[str], Any] | None = None,
-        click_type: _click.ParamType | None = None,
+        click_type: ParamType | None = None,
         # TyperArgument
         show_default: bool | str = True,
         show_choices: bool = True,
@@ -633,7 +635,7 @@ class DeveloperExceptionConfig:
         self.pretty_exceptions_short = pretty_exceptions_short
 
 
-class TyperPath(_click.ParamType):
+class TyperPath(ParamType):
     # Based originally on code from Click
     # Partly rewritten and added an override for shell_complete
 

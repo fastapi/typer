@@ -4,8 +4,9 @@ from typing import Any
 
 import pytest
 import typer
-from typer import Context, _click
-from typer.core import Parameter
+from typer._click.types import ParamType
+from typer.context import Context
+from typer._click_core import Parameter
 from typer.testing import CliRunner
 
 runner = CliRunner()
@@ -148,7 +149,7 @@ def test_custom_parse():
 
 
 def test_custom_click_type():
-    class BaseNumberParamType(_click.ParamType):
+    class BaseNumberParamType(ParamType):
         name = "base_integer"
 
         def convert(

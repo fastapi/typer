@@ -6,7 +6,8 @@ import typing as t
 from contextlib import AbstractContextManager
 from gettext import gettext as _
 
-from .exceptions import Abort, UsageError
+from typer._click.exceptions import Abort, UsageError
+
 from .types import Choice, ParamType, convert_type
 from .utils import LazyFile, echo
 
@@ -108,22 +109,6 @@ def prompt(
                          For example if type is a Choice of either day or week,
                          show_choices is true and text is "Group by" then the
                          prompt will be "Group by (day, week): ".
-
-    .. versionchanged:: 8.3.1
-        A space is no longer appended to the prompt.
-
-    .. versionadded:: 8.0
-        ``confirmation_prompt`` can be a custom string.
-
-    .. versionadded:: 7.0
-        Added the ``show_choices`` parameter.
-
-    .. versionadded:: 6.0
-        Added unicode support for cmd.exe on Windows.
-
-    .. versionadded:: 4.0
-        Added the `err` parameter.
-
     """
 
     def prompt_func(text: str) -> str:
@@ -196,25 +181,6 @@ def confirm(
 
     If the user aborts the input by sending a interrupt signal this
     function will catch it and raise a :exc:`Abort` exception.
-
-    :param text: the question to ask.
-    :param default: The default value to use when no input is given. If
-        ``None``, repeat until input is given.
-    :param abort: if this is set to `True` a negative answer aborts the
-                  exception by raising :exc:`Abort`.
-    :param prompt_suffix: a suffix that should be added to the prompt.
-    :param show_default: shows or hides the default value in the prompt.
-    :param err: if set to true the file defaults to ``stderr`` instead of
-                ``stdout``, the same as with echo.
-
-    .. versionchanged:: 8.3.1
-        A space is no longer appended to the prompt.
-
-    .. versionchanged:: 8.0
-        Repeat until input is given if ``default`` is ``None``.
-
-    .. versionadded:: 4.0
-        Added the ``err`` parameter.
     """
     prompt = _build_prompt(
         text,
@@ -359,71 +325,6 @@ def progressbar(
             for archive in zip_file:
                 archive.extract()
                 bar.update(archive.size, archive)
-
-    :param iterable: an iterable to iterate over.  If not provided the length
-                     is required.
-    :param length: the number of items to iterate over.  By default the
-                   progressbar will attempt to ask the iterator about its
-                   length, which might or might not work.  If an iterable is
-                   also provided this parameter can be used to override the
-                   length.  If an iterable is not provided the progress bar
-                   will iterate over a range of that length.
-    :param label: the label to show next to the progress bar.
-    :param hidden: hide the progressbar. Defaults to ``False``. When no tty is
-        detected, it will only print the progressbar label. Setting this to
-        ``False`` also disables that.
-    :param show_eta: enables or disables the estimated time display.  This is
-                     automatically disabled if the length cannot be
-                     determined.
-    :param show_percent: enables or disables the percentage display.  The
-                         default is `True` if the iterable has a length or
-                         `False` if not.
-    :param show_pos: enables or disables the absolute position display.  The
-                     default is `False`.
-    :param item_show_func: A function called with the current item which
-        can return a string to show next to the progress bar. If the
-        function returns ``None`` nothing is shown. The current item can
-        be ``None``, such as when entering and exiting the bar.
-    :param fill_char: the character to use to show the filled part of the
-                      progress bar.
-    :param empty_char: the character to use to show the non-filled part of
-                       the progress bar.
-    :param bar_template: the format string to use as template for the bar.
-                         The parameters in it are ``label`` for the label,
-                         ``bar`` for the progress bar and ``info`` for the
-                         info section.
-    :param info_sep: the separator between multiple info items (eta etc.)
-    :param width: the width of the progress bar in characters, 0 means full
-                  terminal width
-    :param file: The file to write to. If this is not a terminal then
-        only the label is printed.
-    :param color: controls if the terminal supports ANSI colors or not.  The
-                  default is autodetection.  This is only needed if ANSI
-                  codes are included anywhere in the progress bar output
-                  which is not the case by default.
-    :param update_min_steps: Render only when this many updates have
-        completed. This allows tuning for very fast iterators.
-
-    .. versionadded:: 8.2
-        The ``hidden`` argument.
-
-    .. versionchanged:: 8.0
-        Output is shown even if execution time is less than 0.5 seconds.
-
-    .. versionchanged:: 8.0
-        ``item_show_func`` shows the current item, not the previous one.
-
-    .. versionchanged:: 8.0
-        Labels are echoed if the output is not a TTY. Reverts a change
-        in 7.0 that removed all output.
-
-    .. versionadded:: 8.0
-       The ``update_min_steps`` parameter.
-
-    .. versionadded:: 4.0
-        The ``color`` parameter and ``update`` method.
-
-    .. versionadded:: 2.0
     """
     from ._termui_impl import ProgressBar
 
@@ -533,21 +434,6 @@ def style(
     :param reset: by default a reset-all code is added at the end of the
                   string which means that styles do not carry over.  This
                   can be disabled to compose styles.
-
-    .. versionchanged:: 8.0
-        A non-string ``message`` is converted to a string.
-
-    .. versionchanged:: 8.0
-       Added support for 256 and RGB color codes.
-
-    .. versionchanged:: 8.0
-        Added the ``strikethrough``, ``italic``, and ``overline``
-        parameters.
-
-    .. versionchanged:: 7.0
-        Added support for bright colors.
-
-    .. versionadded:: 2.0
     """
     if not isinstance(text, str):
         text = str(text)
@@ -609,12 +495,6 @@ def secho(
     :class:`bytes` are passed directly to :meth:`echo` without applying
     style. If you want to style bytes that represent text, call
     :meth:`bytes.decode` first.
-
-    .. versionchanged:: 8.0
-        A non-string ``message`` is converted to a string. Bytes are
-        passed through without style applied.
-
-    .. versionadded:: 2.0
     """
     if message is not None and not isinstance(message, (bytes, bytearray)):
         message = style(message, **styles)
@@ -628,23 +508,6 @@ def launch(url: str, wait: bool = False, locate: bool = False) -> int:
     might launch the executable in a new session.  The return value is
     the exit code of the launched application.  Usually, ``0`` indicates
     success.
-
-    Examples::
-
-        click.launch('https://click.palletsprojects.com/')
-        click.launch('/my/downloaded/file', locate=True)
-
-    .. versionadded:: 2.0
-
-    :param url: URL or filename of the thing to launch.
-    :param wait: Wait for the program to exit before returning. This
-        only works if the launched program blocks. In particular,
-        ``xdg-open`` on Linux does not block.
-    :param locate: if this is set to `True` then instead of launching the
-                   application associated with the URL it will attempt to
-                   launch a file manager with the file located.  This
-                   might have weird effects if the URL does not point to
-                   the filesystem.
     """
     from ._termui_impl import open_url
 
@@ -670,11 +533,6 @@ def getchar(echo: bool = False) -> str:
     Note for Windows: in rare cases when typing non-ASCII characters, this
     function might wait for a second character and then return both at once.
     This is because certain Unicode characters look like special-key markers.
-
-    .. versionadded:: 2.0
-
-    :param echo: if set to `True`, the character read will also show up on
-                 the terminal.  The default is to not show it.
     """
     global _getchar
 

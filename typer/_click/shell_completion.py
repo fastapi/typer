@@ -6,9 +6,10 @@ import re
 import typing as t
 from gettext import gettext as _
 
+from .core import ParameterSource
 from ..context import Context
-from ..core import Parameter, TyperArgument, TyperCommand, TyperGroup, TyperOption
-from . import ParameterSource
+from ..core import TyperArgument, TyperCommand, TyperGroup, TyperOption
+from .._click_core import Parameter
 from .utils import echo
 
 
@@ -19,18 +20,7 @@ def shell_complete(
     complete_var: str,
     instruction: str,
 ) -> int:
-    """Perform shell completion for the given CLI program.
-
-    :param cli: Command being called.
-    :param ctx_args: Extra arguments to pass to
-        ``cli.make_context``.
-    :param prog_name: Name of the executable in the shell.
-    :param complete_var: Name of the environment variable that holds
-        the completion instruction.
-    :param instruction: Value of ``complete_var`` with the completion
-        instruction and shell, in the form ``instruction_shell``.
-    :return: Status code to exit with.
-    """
+    """Perform shell completion for the given CLI program."""
     shell, _, instruction = instruction.partition("_")
     comp_cls = get_completion_class(shell)
 
@@ -59,14 +49,6 @@ class CompletionItem:
     Arbitrary parameters can be passed when creating the object, and
     accessed using ``item.attr``. If an attribute wasn't passed,
     accessing it returns ``None``.
-
-    :param value: The completion suggestion.
-    :param type: Tells the shell script to provide special completion
-        support for the type. Click uses ``"dir"`` and ``"file"``.
-    :param help: String shown next to the value if supported.
-    :param kwargs: Arbitrary metadata. The built-in implementations
-        don't use this, but custom type completions paired with custom
-        shell support could use it.
     """
 
     __slots__ = ("value", "type", "help", "_info")
@@ -202,8 +184,6 @@ class ShellComplete:
     :param prog_name: Name of the executable in the shell.
     :param complete_var: Name of the environment variable that holds
         the completion instruction.
-
-    .. versionadded:: 8.0
     """
 
     name: t.ClassVar[str]
@@ -435,11 +415,6 @@ def add_completion_class(
     """Register a :class:`ShellComplete` subclass under the given name.
     The name will be provided by the completion instruction environment
     variable during completion.
-
-    :param cls: The completion class that will handle completion for the
-        shell.
-    :param name: Name to register the class under. Defaults to the
-        class's ``name`` attribute.
     """
     if name is None:
         name = cls.name
@@ -453,8 +428,6 @@ def get_completion_class(shell: str) -> type[ShellComplete] | None:
     """Look up a registered :class:`ShellComplete` subclass by the name
     provided by the completion instruction environment variable. If the
     name isn't registered, returns ``None``.
-
-    :param shell: Name the class is registered under.
     """
     return _available_shells.get(shell)
 
@@ -463,19 +436,6 @@ def split_arg_string(string: str) -> list[str]:
     """Split an argument string as with :func:`shlex.split`, but don't
     fail if the string is incomplete. Ignores a missing closing quote or
     incomplete escape sequence and uses the partial token as-is.
-
-    .. code-block:: python
-
-        split_arg_string("example 'my file")
-        ["example", "my file"]
-
-        split_arg_string("example my\\")
-        ["example", "my"]
-
-    :param string: String to split.
-
-    .. versionchanged:: 8.2
-        Moved to ``shell_completion`` from ``parser``.
     """
     import shlex
 
@@ -555,10 +515,6 @@ def _resolve_context(
     """Produce the context hierarchy starting with the command and
     traversing the complete arguments. This only follows the commands,
     it doesn't trigger input prompts or callbacks.
-
-    :param cli: Command being called.
-    :param prog_name: Name of the executable in the shell.
-    :param args: List of complete args before the incomplete value.
     """
     ctx_args["resilient_parsing"] = True
     with cli.make_context(prog_name, args.copy(), **ctx_args) as ctx:
@@ -589,11 +545,6 @@ def _resolve_incomplete(
 ) -> tuple[TyperCommand | Parameter, str]:
     """Find the Click object that will handle the completion of the
     incomplete value. Return the object and the incomplete value.
-
-    :param ctx: Invocation context for the command represented by
-        the parsed complete args.
-    :param args: List of complete args before the incomplete value.
-    :param incomplete: Value being completed. May be empty.
     """
     # Different shells treat an "=" between a long option name and
     # value differently. Might keep the value joined, return the "="

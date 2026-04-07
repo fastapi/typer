@@ -16,7 +16,7 @@ import typing as t
 from io import StringIO
 from types import TracebackType
 
-from ._compat import (
+from typer._click.compat import (
     CYGWIN,
     WIN,
     _default_text_stdout,
@@ -24,6 +24,7 @@ from ._compat import (
     isatty,
     term_len,
 )
+
 from .utils import echo
 
 V = t.TypeVar("V")
@@ -305,13 +306,6 @@ class ProgressBar(t.Generic[V]):
         :param n_steps: Number of steps to advance.
         :param current_item: Optional item to set as ``current_item``
             for the updated position.
-
-        .. versionchanged:: 8.0
-            Added the ``current_item`` optional parameter.
-
-        .. versionchanged:: 8.0
-            Only render when the number of steps meets the
-            ``update_min_steps`` threshold.
         """
         if current_item is not None:
             self.current_item = current_item

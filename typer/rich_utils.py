@@ -22,14 +22,16 @@ from rich.table import Table
 from rich.text import Text
 from rich.theme import Theme
 from rich.traceback import Traceback
-from typer import Context
+from typer.context import Context
 from typer.models import DeveloperExceptionConfig
 
 from . import _click
+from ._click import exceptions
+
+from ._click_core import Parameter
+from .core import TyperArgument, TyperCommand, TyperGroup, TyperOption
 
 # Default styles
-from .core import Parameter, TyperArgument, TyperCommand, TyperGroup, TyperOption
-
 STYLE_OPTION = "bold cyan"
 STYLE_SWITCH = "bold green"
 STYLE_NEGATIVE_OPTION = "bold magenta"
@@ -678,11 +680,11 @@ def rich_format_help(
         console.print(Padding(Align(epilogue_text, pad=False), 1))
 
 
-def rich_format_error(self: _click.ClickException) -> None:
+def rich_format_error(self: exceptions.ClickException) -> None:
     """Print richly formatted click errors.
 
     Called by custom exception handler to print richly formatted click errors.
-    Mimics original _click.ClickException.echo() function but with rich formatting.
+    Mimics original ClickException.echo() function but with rich formatting.
     """
     # Don't do anything when it's a NoArgsIsHelpError (without importing it, cf. #1278)
     if self.__class__.__name__ == "NoArgsIsHelpError":

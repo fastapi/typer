@@ -28,7 +28,7 @@ from ctypes import (
 )
 from ctypes.wintypes import DWORD, HANDLE, LPCWSTR, LPWSTR
 
-from ._compat import _NonClosingTextIOWrapper
+from typer._click.compat import _NonClosingTextIOWrapper
 
 assert sys.platform == "win32"
 import msvcrt  # noqa: E402

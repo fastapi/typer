@@ -1,7 +1,5 @@
 # Code adapted from Click 8.3.1
 
-from __future__ import annotations
-
 from collections.abc import Callable, Iterator, MutableMapping
 from contextlib import ExitStack, contextmanager
 from threading import local
@@ -13,10 +11,17 @@ from typing import (
     TypeVar,
     cast,
     overload,
+    TYPE_CHECKING
 )
 
-from . import _click
-from .core import Parameter, TyperCommand
+from ._click._utils import UNSET
+from ._click.core import ParameterSource
+from ._click.formatting import HelpFormatter
+
+if TYPE_CHECKING:
+    from . import Abort, BadParameter, Exit, UsageError
+    from typer.core import TyperCommand
+    from typer._click_core import Parameter
 
 V = TypeVar("V")
 
@@ -28,12 +33,12 @@ class Context:
     you can access this additional information.
     """
 
-    formatter_class: type[_click.HelpFormatter] = _click.HelpFormatter
+    formatter_class: type[HelpFormatter] = HelpFormatter
 
     def __init__(
         self,
         command: TyperCommand,
-        parent: Context | None = None,
+        parent: "Context" | None = None,
         info_name: str | None = None,
         obj: Any | None = None,
         auto_envvar_prefix: str | None = None,
@@ -176,10 +181,10 @@ class Context:
 
         self._close_callbacks: list[Callable[[], Any]] = []
         self._depth = 0
-        self._parameter_source: dict[str, _click.ParameterSource] = {}
+        self._parameter_source: dict[str, ParameterSource] = {}
         self._exit_stack = ExitStack()
 
-    def __enter__(self) -> Context:
+    def __enter__(self) -> "Context":
         self._depth += 1
         push_context(self)
         return self
@@ -199,7 +204,7 @@ class Context:
         return exit_result
 
     @contextmanager
-    def scope(self, cleanup: bool = True) -> Iterator[Context]:
+    def scope(self, cleanup: bool = True) -> Iterator["Context"]:
         """This helper method can be used with the context object to promote
         it to the current thread local (see :func:`get_current_context`).
         The default behavior of this is to invoke the cleanup functions which
@@ -243,7 +248,7 @@ class Context:
         """
         return self._meta
 
-    def make_formatter(self) -> _click.HelpFormatter:
+    def make_formatter(self) -> HelpFormatter:
         """Creates the :class:`~click.HelpFormatter` for the help and
         usage output.
 
@@ -303,7 +308,7 @@ class Context:
             rv = f"{' '.join(parent_command_path)} {rv}"
         return rv.lstrip()
 
-    def find_root(self) -> Context:
+    def find_root(self) -> "Context":
         """Finds the outermost context."""
         node = self
         while node.parent is not None:
@@ -312,7 +317,7 @@ class Context:
 
     def find_object(self, object_type: type[V]) -> V | None:
         """Finds the closest object of a given type."""
-        node: Context | None = self
+        node: "Context" | None = self
 
         while node is not None:
             if isinstance(node.obj, object_type):
@@ -342,29 +347,29 @@ class Context:
     def lookup_default(self, name: str, call: bool = True) -> Any | None:
         """Get the default for a parameter from :attr:`default_map`."""
         if self.default_map is not None:
-            value = self.default_map.get(name, _click.UNSET)
+            value = self.default_map.get(name, UNSET)
 
             if call and callable(value):
                 return value()
 
             return value
 
-        return _click.UNSET
+        return UNSET
 
     def fail(self, message: str) -> NoReturn:
         """Aborts the execution of the program with a specific error
         message.
         """
-        raise _click.UsageError(message, self)
+        raise UsageError(message, self)
 
     def abort(self) -> NoReturn:
         """Aborts the script."""
-        raise _click.Abort()
+        raise Abort()
 
     def exit(self, code: int = 0) -> NoReturn:
         """Exits the application with a given exit code."""
         self.close()
-        raise _click.Exit(code)
+        raise Exit(code)
 
     def get_usage(self) -> str:
         """Helper method to get formatted usage string for the current
@@ -378,7 +383,7 @@ class Context:
         """
         return self.command.get_help(self)
 
-    def _make_sub_context(self, command: TyperCommand) -> Context:
+    def _make_sub_context(self, command: TyperCommand) -> "Context":
         """Create a new context of the same type as this context, but
         for a new command.
 
@@ -427,7 +432,7 @@ class Context:
                     # https://github.com/pallets/click/issues/3066
                     # https://github.com/pallets/click/issues/3065
                     # https://github.com/pallets/click/pull/3068
-                    if default_value is _click.UNSET:
+                    if default_value is UNSET:
                         default_value = None
                     kwargs[param.name] = param.type_cast_value(  # type: ignore
                         ctx, default_value
@@ -458,13 +463,13 @@ class Context:
 
         return self.invoke(cmd, *args, **kwargs)
 
-    def set_parameter_source(self, name: str, source: _click.ParameterSource) -> None:
+    def set_parameter_source(self, name: str, source: ParameterSource) -> None:
         """Set the source of a parameter. This indicates the location
         from which the value of the parameter was obtained.
         """
         self._parameter_source[name] = source
 
-    def get_parameter_source(self, name: str) -> _click.ParameterSource | None:
+    def get_parameter_source(self, name: str) -> ParameterSource | None:
         """Get the source of a parameter. This indicates the location
         from which the value of the parameter was obtained.
 
@@ -483,13 +488,13 @@ def augment_usage_errors(
     """Context manager that attaches extra information to exceptions."""
     try:
         yield
-    except _click.BadParameter as e:
+    except BadParameter as e:
         if e.ctx is None:
             e.ctx = ctx
         if param is not None and e.param is None:
             e.param = param
         raise
-    except _click.UsageError as e:
+    except UsageError as e:
         if e.ctx is None:
             e.ctx = ctx
         raise
@@ -509,7 +514,7 @@ def get_current_context(silent: bool = ...) -> Context | None: ...
 def get_current_context(silent: bool = False) -> Context | None:
     """Returns the current click context."""
     try:
-        return cast("Context", _local.stack[-1])
+        return cast(Context, _local.stack[-1])
     except (AttributeError, IndexError) as e:
         if not silent:
             raise RuntimeError("There is no active click context.") from e

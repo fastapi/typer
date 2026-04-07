@@ -18,12 +18,6 @@ class ParameterSource(enum.Enum):
 
     Use :meth:`click.Context.get_parameter_source` to get the
     source for a parameter by name.
-
-    .. versionchanged:: 8.0
-        Use :class:`~enum.Enum` and drop the ``validate`` method.
-
-    .. versionchanged:: 8.0
-        Added the ``PROMPT`` value.
     """
 
     COMMANDLINE = enum.auto()

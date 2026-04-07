@@ -3,11 +3,12 @@ import sys
 from collections.abc import MutableMapping
 from typing import Any
 
-from . import _click
+from . import echo, secho
 from ._completion_classes import completion_init
 from ._completion_shared import Shells, _get_shell_name, get_completion_script, install
 from .context import Context
-from .core import Parameter, TyperCommand
+from .core import TyperCommand
+from ._click_core import Parameter
 from .models import ParamMeta
 from .params import Option
 from .utils import get_params_from_function
@@ -35,8 +36,8 @@ def install_callback(ctx: Context, param: Parameter, value: Any) -> Any:
         shell, path = install(shell=value)
     else:
         shell, path = install()
-    _click.secho(f"{shell} completion installed in {path}", fg="green")
-    _click.echo("Completion will take effect once you restart the terminal")
+    secho(f"{shell} completion installed in {path}", fg="green")
+    echo("Completion will take effect once you restart the terminal")
     sys.exit(0)
 
 
@@ -57,7 +58,7 @@ def show_callback(ctx: Context, param: Parameter, value: Any) -> Any:
     script_content = get_completion_script(
         prog_name=prog_name, complete_var=complete_var, shell=shell
     )
-    _click.echo(script_content)
+    echo(script_content)
     sys.exit(0)
 
 
@@ -113,7 +114,7 @@ def shell_complete(
     from . import _click
 
     if "_" not in instruction:
-        _click.echo("Invalid completion instruction.", err=True)
+        echo("Invalid completion instruction.", err=True)
         return 1
 
     # Click 8 changed the order/style of shell instructions from e.g.
@@ -127,20 +128,20 @@ def shell_complete(
     comp_cls = _click.shell_completion.get_completion_class(shell)
 
     if comp_cls is None:
-        _click.echo(f"Shell {shell} not supported.", err=True)
+        echo(f"Shell {shell} not supported.", err=True)
         return 1
 
     comp = comp_cls(cli, ctx_args, prog_name, complete_var)
 
     if instruction == "source":
-        _click.echo(comp.source())
+        echo(comp.source())
         return 0
 
     # Typer override to print the completion help msg with Rich
     if instruction == "complete":
-        _click.echo(comp.complete())
+        echo(comp.complete())
         return 0
     # Typer override end
 
-    _click.echo(f'Completion instruction "{instruction}" not supported.', err=True)
+    echo(f'Completion instruction "{instruction}" not supported.', err=True)
     return 1

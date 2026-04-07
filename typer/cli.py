@@ -7,7 +7,8 @@ from typing import Any
 import typer
 import typer.core
 
-from . import Context, __version__
+from . import __version__
+from .context import Context
 from .core import HAS_RICH, MARKUP_MODE_KEY
 
 default_app_names = ("app", "cli", "main")
@@ -158,7 +159,7 @@ def print_version(ctx: Context, param: typer.core.TyperOption, value: bool) -> N
 
 @app.callback(cls=TyperCLIGroup, no_args_is_help=True)
 def callback(
-    ctx: typer.Context,
+    ctx: Context,
     *,
     path_or_module: str = typer.Argument(None),
     app: str = typer.Option(None, help="The typer app object/variable to use."),
@@ -185,7 +186,7 @@ def callback(
 def get_docs_for_click(
     *,
     obj: typer.core.TyperCommand,
-    ctx: typer.Context,
+    ctx: Context,
     indent: int = 0,
     name: str = "",
     call_prefix: str = "",
@@ -276,7 +277,7 @@ def _parse_html(to_parse: bool, input_text: str) -> str:
 
 @utils_app.command()
 def docs(
-    ctx: typer.Context,
+    ctx: Context,
     name: str = typer.Option("", help="The name of the CLI program to use in docs."),
     output: Path | None = typer.Option(
         None,

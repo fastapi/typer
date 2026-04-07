@@ -1,12 +1,13 @@
 from enum import Enum
 from typing import TypeVar
 
-from . import Context, _click
+from ._click.types import Choice
+from .context import Context
 
 ParamTypeValue = TypeVar("ParamTypeValue")
 
 
-class TyperChoice(_click.Choice[ParamTypeValue]):
+class TyperChoice(Choice[ParamTypeValue]):
     def normalize_choice(self, choice: ParamTypeValue, ctx: Context | None) -> str:
         # Click 8.2.0 added a new method `normalize_choice` to the `Choice` class
         # to support enums, but it uses the enum names, while Typer has always used the

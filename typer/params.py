@@ -5,11 +5,11 @@ from annotated_doc import Doc
 
 from . import _click
 from .context import Context
-from .core import Parameter
+from ._click_core import Parameter
 from .models import ArgumentInfo, OptionInfo
 
 if TYPE_CHECKING:  # pragma: no cover
-    pass
+    from ._click.types import ParamType
 
 
 # Overload for Option created with custom type 'parser'
@@ -98,7 +98,7 @@ def Option(
     autocompletion: Callable[..., Any] | None = None,
     default_factory: Callable[[], Any] | None = None,
     # Custom type
-    click_type: _click.ParamType | None = None,
+    click_type: ParamType | None = None,
     # Option
     show_default: bool | str = True,
     prompt: bool | str = False,
@@ -345,7 +345,7 @@ def Option(
         ),
     ] = None,
     click_type: Annotated[
-        _click.ParamType | None,
+        ParamType | None,
         Doc(
             """
             Define this parameter to use a [custom Click type](https://click.palletsprojects.com/en/stable/parameters/#implementing-custom-types) in your Typer applications.
@@ -360,7 +360,7 @@ def Option(
                 def __str__(self):
                     return f"<MyClass: value={self.value}>"
 
-            class MyParser(click.ParamType):
+            class MyParser(ParamType):
                 name = "MyClass"
 
                 def convert(self, value, param, ctx):
@@ -1079,7 +1079,7 @@ def Argument(
     autocompletion: Callable[..., Any] | None = None,
     default_factory: Callable[[], Any] | None = None,
     # Custom type
-    click_type: _click.ParamType | None = None,
+    click_type: ParamType | None = None,
     # TyperArgument
     show_default: bool | str = True,
     show_choices: bool = True,
@@ -1299,7 +1299,7 @@ def Argument(
         ),
     ] = None,
     click_type: Annotated[
-        _click.ParamType | None,
+        ParamType | None,
         Doc(
             """
             Define this parameter to use a [custom Click type](https://click.palletsprojects.com/en/stable/parameters/#implementing-custom-types) in your Typer applications.
@@ -1314,7 +1314,7 @@ def Argument(
                 def __str__(self):
                     return f"<MyClass: value={self.value}>"
 
-            class MyParser(click.ParamType):
+            class MyParser(ParamType):
                 name = "MyClass"
 
                 def convert(self, value, param, ctx):

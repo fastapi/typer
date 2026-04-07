@@ -4,8 +4,8 @@ import collections.abc as cabc
 from contextlib import contextmanager
 from gettext import gettext as _
 
-from ._compat import term_len
-from .parser import _split_opt
+from typer._click.compat import term_len
+from typer._click.parser import _split_opt
 
 # Can force a width.  This is used by the test system
 FORCED_WIDTH: int | None = None
@@ -43,15 +43,6 @@ def wrap_text(
     If paragraphs are handled, a paragraph can be prefixed with an empty
     line containing the ``\\b`` character (``\\x08``) to indicate that
     no rewrapping should happen in that block.
-
-    :param text: the text that should be rewrapped.
-    :param width: the maximum width for the text.
-    :param initial_indent: the initial indent that should be placed on the
-                           first line as a string.
-    :param subsequent_indent: the indent string that should be placed on
-                              each consecutive line.
-    :param preserve_paragraphs: if this flag is set then the wrapping will
-                                intelligently handle paragraphs.
     """
     from ._textwrap import TextWrapper
 
@@ -107,10 +98,6 @@ class HelpFormatter:
     exposed so that developers can write their own fancy outputs.
 
     At present, it always writes into memory.
-
-    :param indent_increment: the additional increment for each level.
-    :param width: the width for the text.  This defaults to the terminal
-                  width clamped to a maximum of 78.
     """
 
     def __init__(
@@ -145,13 +132,7 @@ class HelpFormatter:
         self.current_indent -= self.indent_increment
 
     def write_usage(self, prog: str, args: str = "", prefix: str | None = None) -> None:
-        """Writes a usage line into the buffer.
-
-        :param prog: the program name.
-        :param args: whitespace separated list of arguments.
-        :param prefix: The prefix for the first line. Defaults to
-            ``"Usage: "``.
-        """
+        """Writes a usage line into the buffer."""
         if prefix is None:
             prefix = f"{_('Usage:')} "
 
@@ -215,11 +196,6 @@ class HelpFormatter:
     ) -> None:
         """Writes a definition list into the buffer.  This is how options
         and commands are usually formatted.
-
-        :param rows: a list of two item tuples for the terms and values.
-        :param col_max: the maximum width of the first column.
-        :param col_spacing: the number of spaces between the first and
-                            second column.
         """
         rows = list(rows)
         widths = measure_table(rows)
@@ -255,8 +231,6 @@ class HelpFormatter:
     def section(self, name: str) -> cabc.Iterator[None]:
         """Helpful context manager that writes a paragraph, a heading,
         and the indents.
-
-        :param name: the section name that is written as heading.
         """
         self.write_paragraph()
         self.write_heading(name)

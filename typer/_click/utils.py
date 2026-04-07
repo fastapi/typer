@@ -8,7 +8,7 @@ import typing as t
 from functools import update_wrapper
 from types import ModuleType, TracebackType
 
-from ._compat import (
+from typer._click.compat import (
     WIN,
     _default_text_stderr,
     _default_text_stdout,
@@ -110,7 +110,7 @@ class LazyFile:
                 self.name, self.mode, self.encoding, self.errors, atomic=self.atomic
             )
         except OSError as e:
-            from .exceptions import FileError
+            from typer._click.exceptions import FileError
 
             raise FileError(self.name, hint=e.strerror) from e
         self._f = rv
@@ -165,29 +165,6 @@ def echo(
     -   Removes ANSI color and style codes if the output does not look
         like an interactive terminal.
     -   Always flushes the output.
-
-    :param message: The string or bytes to output. Other objects are
-        converted to strings.
-    :param file: The file to write to. Defaults to ``stdout``.
-    :param err: Write to ``stderr`` instead of ``stdout``.
-    :param nl: Print a newline after the message. Enabled by default.
-    :param color: Force showing or hiding colors and other styles. By
-        default Click will remove color if the output does not look like
-        an interactive terminal.
-
-    .. versionchanged:: 6.0
-        Support Unicode output on the Windows console. Click does not
-        modify ``sys.stdout``, so ``sys.stdout.write()`` and ``print()``
-        will still not support Unicode.
-
-    .. versionchanged:: 4.0
-        Added the ``color`` parameter.
-
-    .. versionadded:: 3.0
-        Added the ``err`` parameter.
-
-    .. versionchanged:: 2.0
-        Support colors on Windows if colorama is installed.
     """
     if file is None:
         if err:
@@ -343,17 +320,6 @@ def get_app_dir(app_name: str, roaming: bool = True, force_posix: bool = False) 
       ``C:\Users\<user>\AppData\Roaming\Foo Bar``
     Windows (not roaming):
       ``C:\Users\<user>\AppData\Local\Foo Bar``
-
-    .. versionadded:: 2.0
-
-    :param app_name: the application name.  This should be properly capitalized
-                     and can contain whitespace.
-    :param roaming: controls if the folder should be roaming or not on Windows.
-                    Has no effect otherwise.
-    :param force_posix: if this is set to `True` then on any POSIX system the
-                        folder will be stored in the home folder with a leading
-                        dot instead of the XDG config home or darwin's
-                        application support folder.
     """
     if WIN:
         key = "APPDATA" if roaming else "LOCALAPPDATA"
@@ -410,16 +376,6 @@ def _detect_program_name(
     name for help text. Files are only shown as their name without the
     path. ``python`` is only shown for modules, and the full path to
     ``sys.executable`` is not shown.
-
-    :param path: The Python file being executed. Python puts this in
-        ``sys.argv[0]``, which is used by default.
-    :param _main: The ``__main__`` module. This should only be passed
-        during internal testing.
-
-    .. versionadded:: 8.0
-        Based on command args detection in the Werkzeug reloader.
-
-    :meta private:
     """
     if _main is None:
         _main = sys.modules["__main__"]
@@ -467,19 +423,6 @@ def _expand_args(
 
     This is intended for use on Windows, where the shell does not do any
     expansion. It may not exactly match what a Unix shell would do.
-
-    :param args: List of command line arguments to expand.
-    :param user: Expand user home directory.
-    :param env: Expand environment variables.
-    :param glob_recursive: ``**`` matches directories recursively.
-
-    .. versionchanged:: 8.1
-        Invalid glob patterns are treated as empty expansions rather
-        than raising an error.
-
-    .. versionadded:: 8.0
-
-    :meta private:
     """
     from glob import glob
 

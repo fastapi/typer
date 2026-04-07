@@ -10,8 +10,11 @@ import pytest
 import typer
 import typer._completion_shared
 import typer.completion
-from typer import Context, _click
-from typer.core import Parameter, _split_opt
+from typer._click import exceptions
+from typer._click.types import ParamType
+from typer.context import Context
+from typer.core import _split_opt
+from typer._click_core import Parameter
 from typer.main import solve_typer_info_defaults, solve_typer_info_help
 from typer.models import ParameterInfo, TyperInfo
 from typer.testing import CliRunner
@@ -37,7 +40,7 @@ def test_too_many_parsers():
     def custom_parser(value: str) -> int:
         return int(value)  # pragma: no cover
 
-    class CustomClickParser(_click.ParamType):
+    class CustomClickParser(ParamType):
         name = "custom_parser"
 
         def convert(
@@ -61,7 +64,7 @@ def test_valid_parser_permutations():
     def custom_parser(value: str) -> int:
         return int(value)  # pragma: no cover
 
-    class CustomClickParser(_click.ParamType):
+    class CustomClickParser(ParamType):
         name = "custom_parser"
 
         def convert(
@@ -104,7 +107,7 @@ def test_callback_too_many_parameters():
     def main(name: str = typer.Option(..., callback=name_callback)):
         pass  # pragma: no cover
 
-    with pytest.raises(_click.ClickException) as exc_info:
+    with pytest.raises(exceptions.ClickException) as exc_info:
         runner.invoke(app, ["--name", "Camila"])
     assert (
         exc_info.value.message == "Too many CLI parameter callback function parameters"
@@ -266,7 +269,7 @@ def test_autocompletion_too_many_parameters():
     def main(name: str = typer.Option(..., autocompletion=name_callback)):
         pass  # pragma: no cover
 
-    with pytest.raises(_click.ClickException) as exc_info:
+    with pytest.raises(exceptions.ClickException) as exc_info:
         runner.invoke(app, ["--name", "Camila"])
     assert exc_info.value.message == "Invalid autocompletion callback parameters: val2"
 

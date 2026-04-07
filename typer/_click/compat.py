@@ -510,7 +510,7 @@ def should_strip_ansi(
 # color codes.
 # NOTE: double check is needed so mypy does not analyze this on Linux
 if sys.platform.startswith("win") and WIN:
-    from ._winconsole import _get_windows_console_stream
+    from typer._click._winconsole import _get_windows_console_stream
 
     def _get_argv_encoding() -> str:
         import locale

@@ -25,20 +25,30 @@ Copyright 2002-2006 Python Software Foundation. All rights reserved.
 from __future__ import annotations
 
 from collections import deque
+from collections.abc import Sequence
 from gettext import gettext as _
 from gettext import ngettext
+from typing import TYPE_CHECKING, Any, TypeVar
 
-from .. import Context
-from ..core import Parameter, TyperArgument, TyperOption
-from ._utils import FLAG_NEEDS_VALUE, T_FLAG_NEEDS_VALUE, T_UNSET, UNSET
-from .exceptions import BadArgumentUsage, BadOptionUsage, NoSuchOption, UsageError
+from typer._click.exceptions import (
+    BadArgumentUsage,
+    BadOptionUsage,
+    NoSuchOption,
+    UsageError,
+)
 
-V = t.TypeVar("V")
+V = TypeVar("V")
+
+if TYPE_CHECKING:
+    from typer._click._utils import FLAG_NEEDS_VALUE, T_FLAG_NEEDS_VALUE, T_UNSET, UNSET
+    from typer.context import Context
+    from typer.core import TyperArgument, TyperOption
+    from typer._click_core import Parameter
 
 
 def _unpack_args(
-    args: cabc.Sequence[str], nargs_spec: cabc.Sequence[int]
-) -> tuple[cabc.Sequence[str | cabc.Sequence[str | None] | None], list[str]]:
+    args: Sequence[str], nargs_spec: Sequence[int]
+) -> tuple[Sequence[str | Sequence[str | None] | None], list[str]]:
     """Given an iterable of arguments and an iterable of nargs specifications,
     it returns a tuple with all the unpacked arguments at the first index
     and all remaining arguments as the second.
@@ -116,11 +126,11 @@ class _Option:
     def __init__(
         self,
         obj: TyperOption,
-        opts: cabc.Sequence[str],
+        opts: Sequence[str],
         dest: str | None,
         action: str | None = None,
         nargs: int = 1,
-        const: t.Any | None = None,
+        const: Any | None = None,
     ):
         self._short_opts = []
         self._long_opts = []
@@ -150,7 +160,7 @@ class _Option:
     def takes_value(self) -> bool:
         return self.action in ("store", "append")
 
-    def process(self, value: t.Any, state: _ParsingState) -> None:
+    def process(self, value: Any, state: _ParsingState) -> None:
         if self.action == "store":
             state.opts[self.dest] = value  # type: ignore
         elif self.action == "store_const":
@@ -174,11 +184,11 @@ class _Argument:
 
     def process(
         self,
-        value: str | cabc.Sequence[str | None] | None | T_UNSET,
+        value: str | Sequence[str | None] | None | T_UNSET,
         state: _ParsingState,
     ) -> None:
         if self.nargs > 1:
-            assert isinstance(value, cabc.Sequence)
+            assert isinstance(value, Sequence)
             holes = sum(1 for x in value if x is UNSET)
             if holes == len(value):
                 value = UNSET
@@ -199,7 +209,7 @@ class _Argument:
 
 class _ParsingState:
     def __init__(self, rargs: list[str]) -> None:
-        self.opts: dict[str, t.Any] = {}
+        self.opts: dict[str, Any] = {}
         self.largs: list[str] = []
         self.rargs = rargs
         self.order: list[Parameter] = []
@@ -214,27 +224,11 @@ class _OptionParser:
     It's not nearly as extensible as optparse or argparse as it does not
     implement features that are implemented on a higher level (such as
     types or defaults).
-
-    :param ctx: optionally the :class:`~click.Context` where this parser
-                should go with.
-
-    .. deprecated:: 8.2
-        Will be removed in Click 9.0.
     """
 
     def __init__(self, ctx: Context | None = None) -> None:
-        #: The :class:`~click.Context` for this parser.  This might be
-        #: `None` for some advanced use cases.
         self.ctx = ctx
-        #: This controls how the parser deals with interspersed arguments.
-        #: If this is set to `False`, the parser will stop on the first
-        #: non-option.  Click uses this to implement nested subcommands
-        #: safely.
         self.allow_interspersed_args: bool = True
-        #: This tells the parser how to deal with unknown options.  By
-        #: default it will error out (which is sensible), but there is a
-        #: second mode where it will ignore it and continue processing
-        #: after shifting all the unknown options into the resulting args.
         self.ignore_unknown_options: bool = False
 
         if ctx is not None:
@@ -249,11 +243,11 @@ class _OptionParser:
     def add_option(
         self,
         obj: TyperOption,
-        opts: cabc.Sequence[str],
+        opts: Sequence[str],
         dest: str | None,
         action: str | None = None,
         nargs: int = 1,
-        const: t.Any | None = None,
+        const: Any | None = None,
     ) -> None:
         """Adds a new option named `dest` to the parser.  The destination
         is not inferred (unlike with optparse) and needs to be explicitly
@@ -283,7 +277,7 @@ class _OptionParser:
 
     def parse_args(
         self, args: list[str]
-    ) -> tuple[dict[str, t.Any], list[str], list[Parameter]]:
+    ) -> tuple[dict[str, Any], list[str], list[Parameter]]:
         """Parses positional arguments and returns ``(values, args, order)``
         for the parsed options and arguments as well as the leftover
         arguments if there are any.  The order is a list of objects as they
@@ -418,10 +412,10 @@ class _OptionParser:
 
     def _get_value_from_state(
         self, option_name: str, option: _Option, state: _ParsingState
-    ) -> str | cabc.Sequence[str] | T_FLAG_NEEDS_VALUE:
+    ) -> str | Sequence[str] | T_FLAG_NEEDS_VALUE:
         nargs = option.nargs
 
-        value: str | cabc.Sequence[str] | T_FLAG_NEEDS_VALUE
+        value: str | Sequence[str] | T_FLAG_NEEDS_VALUE
 
         if len(state.rargs) < nargs:
             if option.obj._flag_needs_value:
@@ -487,36 +481,3 @@ class _OptionParser:
                 raise
 
             state.largs.append(arg)
-
-
-def __getattr__(name: str) -> object:
-    import warnings
-
-    if name in {
-        "OptionParser",
-        "Argument",
-        "Option",
-        "split_opt",
-        "normalize_opt",
-        "ParsingState",
-    }:
-        warnings.warn(
-            f"'parser.{name}' is deprecated and will be removed in Click 9.0."
-            " The old parser is available in 'optparse'.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        return globals()[f"_{name}"]
-
-    if name == "split_arg_string":
-        from .shell_completion import split_arg_string
-
-        warnings.warn(
-            "Importing 'parser.split_arg_string' is deprecated, it will only be"
-            " available in 'shell_completion' in Click 9.0.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        return split_arg_string
-
-    raise AttributeError(name)
