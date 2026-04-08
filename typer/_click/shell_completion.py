@@ -1,10 +1,8 @@
 from __future__ import annotations
 
 import collections.abc as cabc
-import os
 import re
 import typing as t
-from gettext import gettext as _
 
 from .core import Command, Context, Parameter, ParameterSource
 from .utils import echo
@@ -83,112 +81,6 @@ class CompletionItem:
 
     def __getattr__(self, name: str) -> t.Any:
         return self._info.get(name)
-
-
-# Only Bash >= 4.4 has the nosort option.
-_SOURCE_BASH = """\
-%(complete_func)s() {
-    local IFS=$'\\n'
-    local response
-
-    response=$(env COMP_WORDS="${COMP_WORDS[*]}" COMP_CWORD=$COMP_CWORD \
-%(complete_var)s=bash_complete $1)
-
-    for completion in $response; do
-        IFS=',' read type value <<< "$completion"
-
-        if [[ $type == 'dir' ]]; then
-            COMPREPLY=()
-            compopt -o dirnames
-        elif [[ $type == 'file' ]]; then
-            COMPREPLY=()
-            compopt -o default
-        elif [[ $type == 'plain' ]]; then
-            COMPREPLY+=($value)
-        fi
-    done
-
-    return 0
-}
-
-%(complete_func)s_setup() {
-    complete -o nosort -F %(complete_func)s %(prog_name)s
-}
-
-%(complete_func)s_setup;
-"""
-
-# See ZshComplete.format_completion below, and issue #2703, before
-# changing this script.
-#
-# (TL;DR: _describe is picky about the format, but this Zsh script snippet
-# is already widely deployed.  So freeze this script, and use clever-ish
-# handling of colons in ZshComplet.format_completion.)
-_SOURCE_ZSH = """\
-#compdef %(prog_name)s
-
-%(complete_func)s() {
-    local -a completions
-    local -a completions_with_descriptions
-    local -a response
-    (( ! $+commands[%(prog_name)s] )) && return 1
-
-    response=("${(@f)$(env COMP_WORDS="${words[*]}" COMP_CWORD=$((CURRENT-1)) \
-%(complete_var)s=zsh_complete %(prog_name)s)}")
-
-    for type key descr in ${response}; do
-        if [[ "$type" == "plain" ]]; then
-            if [[ "$descr" == "_" ]]; then
-                completions+=("$key")
-            else
-                completions_with_descriptions+=("$key":"$descr")
-            fi
-        elif [[ "$type" == "dir" ]]; then
-            _path_files -/
-        elif [[ "$type" == "file" ]]; then
-            _path_files -f
-        fi
-    done
-
-    if [ -n "$completions_with_descriptions" ]; then
-        _describe -V unsorted completions_with_descriptions -U
-    fi
-
-    if [ -n "$completions" ]; then
-        compadd -U -V unsorted -a completions
-    fi
-}
-
-if [[ $zsh_eval_context[-1] == loadautofunc ]]; then
-    # autoload from fpath, call function directly
-    %(complete_func)s "$@"
-else
-    # eval/source/. command, register function for later
-    compdef %(complete_func)s %(prog_name)s
-fi
-"""
-
-_SOURCE_FISH = """\
-function %(complete_func)s;
-    set -l response (env %(complete_var)s=fish_complete COMP_WORDS=(commandline -cp) \
-COMP_CWORD=(commandline -t) %(prog_name)s);
-
-    for completion in $response;
-        set -l metadata (string split "," $completion);
-
-        if test $metadata[1] = "dir";
-            __fish_complete_directories $metadata[2];
-        else if test $metadata[1] = "file";
-            __fish_complete_path $metadata[2];
-        else if test $metadata[1] = "plain";
-            echo $metadata[2];
-        end;
-    end;
-end;
-
-complete --no-files --command %(prog_name)s --arguments \
-"(%(complete_func)s)";
-"""
 
 
 class ShellComplete:
@@ -295,136 +187,10 @@ class ShellComplete:
         return "\n".join(out)
 
 
-class BashComplete(ShellComplete):
-    """Shell completion for Bash."""
-
-    name = "bash"
-    source_template = _SOURCE_BASH
-
-    @staticmethod
-    def _check_version() -> None:
-        import shutil
-        import subprocess
-
-        bash_exe = shutil.which("bash")
-
-        if bash_exe is None:
-            match = None
-        else:
-            output = subprocess.run(
-                [bash_exe, "--norc", "-c", 'echo "${BASH_VERSION}"'],
-                stdout=subprocess.PIPE,
-            )
-            match = re.search(r"^(\d+)\.(\d+)\.\d+", output.stdout.decode())
-
-        if match is not None:
-            major, minor = match.groups()
-
-            if major < "4" or major == "4" and minor < "4":
-                echo(
-                    _(
-                        "Shell completion is not supported for Bash"
-                        " versions older than 4.4."
-                    ),
-                    err=True,
-                )
-        else:
-            echo(
-                _("Couldn't detect Bash version, shell completion is not supported."),
-                err=True,
-            )
-
-    def source(self) -> str:
-        self._check_version()
-        return super().source()
-
-    def get_completion_args(self) -> tuple[list[str], str]:
-        cwords = split_arg_string(os.environ["COMP_WORDS"])
-        cword = int(os.environ["COMP_CWORD"])
-        args = cwords[1:cword]
-
-        try:
-            incomplete = cwords[cword]
-        except IndexError:
-            incomplete = ""
-
-        return args, incomplete
-
-    def format_completion(self, item: CompletionItem) -> str:
-        return f"{item.type},{item.value}"
-
-
-class ZshComplete(ShellComplete):
-    """Shell completion for Zsh."""
-
-    name = "zsh"
-    source_template = _SOURCE_ZSH
-
-    def get_completion_args(self) -> tuple[list[str], str]:
-        cwords = split_arg_string(os.environ["COMP_WORDS"])
-        cword = int(os.environ["COMP_CWORD"])
-        args = cwords[1:cword]
-
-        try:
-            incomplete = cwords[cword]
-        except IndexError:
-            incomplete = ""
-
-        return args, incomplete
-
-    def format_completion(self, item: CompletionItem) -> str:
-        help_ = item.help or "_"
-        # The zsh completion script uses `_describe` on items with help
-        # texts (which splits the item help from the item value at the
-        # first unescaped colon) and `compadd` on items without help
-        # text (which uses the item value as-is and does not support
-        # colon escaping).  So escape colons in the item value if and
-        # only if the item help is not the sentinel "_" value, as used
-        # by the completion script.
-        #
-        # (The zsh completion script is potentially widely deployed, and
-        # thus harder to fix than this method.)
-        #
-        # See issue #1812 and issue #2703 for further context.
-        value = item.value.replace(":", r"\:") if help_ != "_" else item.value
-        return f"{item.type}\n{value}\n{help_}"
-
-
-class FishComplete(ShellComplete):
-    """Shell completion for Fish."""
-
-    name = "fish"
-    source_template = _SOURCE_FISH
-
-    def get_completion_args(self) -> tuple[list[str], str]:
-        cwords = split_arg_string(os.environ["COMP_WORDS"])
-        incomplete = os.environ["COMP_CWORD"]
-        if incomplete:
-            incomplete = split_arg_string(incomplete)[0]
-        args = cwords[1:]
-
-        # Fish stores the partial word in both COMP_WORDS and
-        # COMP_CWORD, remove it from complete args.
-        if incomplete and args and args[-1] == incomplete:
-            args.pop()
-
-        return args, incomplete
-
-    def format_completion(self, item: CompletionItem) -> str:
-        if item.help:
-            return f"{item.type},{item.value}\t{item.help}"
-
-        return f"{item.type},{item.value}"
-
-
 ShellCompleteType = t.TypeVar("ShellCompleteType", bound="type[ShellComplete]")
 
 
-_available_shells: dict[str, type[ShellComplete]] = {
-    "bash": BashComplete,
-    "fish": FishComplete,
-    "zsh": ZshComplete,
-}
+_available_shells: dict[str, type[ShellComplete]] = {}
 
 
 def add_completion_class(

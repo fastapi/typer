@@ -5,6 +5,7 @@ import sys
 from typing import Any
 
 from . import _click
+from ._click.shell_completion import ShellComplete, add_completion_class
 from ._click.shell_completion import split_arg_string as click_split_arg_string
 from ._completion_shared import (
     COMPLETION_SCRIPT_BASH,
@@ -24,7 +25,7 @@ def _sanitize_help_text(text: str) -> str:
     return rich_utils.rich_render_text(text)
 
 
-class BashComplete(_click.shell_completion.BashComplete):
+class BashComplete(ShellComplete):
     name = Shells.bash.value
     source_template = COMPLETION_SCRIPT_BASH
 
@@ -59,8 +60,42 @@ class BashComplete(_click.shell_completion.BashComplete):
         out = [self.format_completion(item) for item in completions]
         return "\n".join(out)
 
+    @staticmethod
+    def _check_version() -> None:
+        import shutil
+        import subprocess
 
-class ZshComplete(_click.shell_completion.ZshComplete):
+        bash_exe = shutil.which("bash")
+
+        if bash_exe is None:
+            match = None
+        else:
+            output = subprocess.run(
+                [bash_exe, "--norc", "-c", 'echo "${BASH_VERSION}"'],
+                stdout=subprocess.PIPE,
+            )
+            match = re.search(r"^(\d+)\.(\d+)\.\d+", output.stdout.decode())
+
+        if match is not None:
+            major, minor = match.groups()
+
+            if major < "4" or major == "4" and minor < "4":
+                _click.utils.echo(
+                    "Shell completion is not supported for Bash versions older than 4.4.",
+                    err=True,
+                )
+        else:
+            _click.utils.echo(
+                "Couldn't detect Bash version, shell completion is not supported.",
+                err=True,
+            )
+
+    def source(self) -> str:
+        self._check_version()
+        return super().source()
+
+
+class ZshComplete(ShellComplete):
     name = Shells.zsh.value
     source_template = COMPLETION_SCRIPT_ZSH
 
@@ -111,7 +146,7 @@ class ZshComplete(_click.shell_completion.ZshComplete):
             return "_files"
 
 
-class FishComplete(_click.shell_completion.FishComplete):
+class FishComplete(ShellComplete):
     name = Shells.fish.value
     source_template = COMPLETION_SCRIPT_FISH
 
@@ -164,7 +199,7 @@ class FishComplete(_click.shell_completion.FishComplete):
         return ""  # pragma: no cover
 
 
-class PowerShellComplete(_click.shell_completion.ShellComplete):
+class PowerShellComplete(ShellComplete):
     name = Shells.powershell.value
     source_template = COMPLETION_SCRIPT_POWER_SHELL
 
@@ -187,10 +222,8 @@ class PowerShellComplete(_click.shell_completion.ShellComplete):
 
 
 def completion_init() -> None:
-    _click.shell_completion.add_completion_class(BashComplete, Shells.bash.value)
-    _click.shell_completion.add_completion_class(ZshComplete, Shells.zsh.value)
-    _click.shell_completion.add_completion_class(FishComplete, Shells.fish.value)
-    _click.shell_completion.add_completion_class(
-        PowerShellComplete, Shells.powershell.value
-    )
-    _click.shell_completion.add_completion_class(PowerShellComplete, Shells.pwsh.value)
+    add_completion_class(BashComplete, Shells.bash.value)
+    add_completion_class(ZshComplete, Shells.zsh.value)
+    add_completion_class(FishComplete, Shells.fish.value)
+    add_completion_class(PowerShellComplete, Shells.powershell.value)
+    add_completion_class(PowerShellComplete, Shells.pwsh.value)
