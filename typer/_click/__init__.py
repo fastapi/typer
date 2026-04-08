@@ -33,7 +33,6 @@ from .types import FLOAT as FLOAT
 from .types import INT as INT
 from .types import STRING as STRING
 from .types import UUID as UUID
-from .types import Choice as Choice
 from .types import DateTime as DateTime
 from .types import File as File
 from .types import FloatRange as FloatRange
