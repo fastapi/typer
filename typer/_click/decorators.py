@@ -3,7 +3,7 @@ from __future__ import annotations
 import typing as t
 from gettext import gettext as _
 
-from .core import Command, Context, Group, Parameter
+from .core import Command, Context, Parameter
 from .utils import echo
 
 if t.TYPE_CHECKING:
@@ -21,7 +21,11 @@ FC = t.TypeVar("FC", bound="_AnyCallable | Command")
 
 CmdType = t.TypeVar("CmdType", bound=Command)
 
-GrpType = t.TypeVar("GrpType", bound=Group)
+
+if t.TYPE_CHECKING:
+    from ..core import TyperGroup
+
+    GrpType = t.TypeVar("GrpType", bound=TyperGroup)
 
 
 def _param_memo(f: t.Callable[..., t.Any], param: Parameter) -> None:

@@ -7,9 +7,8 @@ import inspect
 import os
 import sys
 import typing as t
-from collections import Counter, abc
+from collections import Counter
 from contextlib import AbstractContextManager, ExitStack, contextmanager
-from functools import update_wrapper
 from gettext import gettext as _
 from gettext import ngettext
 from itertools import repeat
@@ -28,7 +27,7 @@ from .exceptions import (
 )
 from .formatting import HelpFormatter
 from .globals import pop_context, push_context
-from .parser import _OptionParser, _split_opt
+from .parser import _OptionParser
 from .termui import style
 from .utils import (
     PacifyFlushWrapper,
@@ -36,7 +35,6 @@ from .utils import (
     _expand_args,
     echo,
     make_default_short_help,
-    make_str,
 )
 
 if t.TYPE_CHECKING:
@@ -56,7 +54,10 @@ def _complete_visible_commands(
     :param ctx: Invocation context for the group.
     :param incomplete: Value being completed. May be empty.
     """
-    multi = t.cast(Group, ctx.command)
+    # avoid circular imports
+    from ..core import TyperGroup
+
+    multi = t.cast(TyperGroup, ctx.command)
 
     for name in multi.list_commands(ctx):
         if name.startswith(incomplete):
@@ -1219,6 +1220,7 @@ class Command:
 
         .. versionadded:: 8.0
         """
+        # avoid circular imports
         from .shell_completion import CompletionItem
 
         results: list[CompletionItem] = []
@@ -1243,16 +1245,6 @@ class Command:
                     CompletionItem(name, help=param.help)
                     for name in [*param.opts, *param.secondary_opts]
                     if name.startswith(incomplete)
-                )
-
-        while ctx.parent is not None:
-            ctx = ctx.parent
-
-            if isinstance(ctx.command, Group) and ctx.command.chain:
-                results.extend(
-                    CompletionItem(name, help=command.get_short_help_str())
-                    for name, command in _complete_visible_commands(ctx, incomplete)
-                    if name not in ctx._protected_args
                 )
 
         return results
@@ -1425,337 +1417,6 @@ class Command:
     def __call__(self, *args: t.Any, **kwargs: t.Any) -> t.Any:
         """Alias for :meth:`main`."""
         return self.main(*args, **kwargs)
-
-
-class Group(Command):
-    """A group is a command that nests other commands (or more groups).
-
-    :param name: The name of the group command.
-    :param commands: Map names to :class:`Command` objects. Can be a list, which
-        will use :attr:`Command.name` as the keys.
-    :param invoke_without_command: Invoke the group's callback even if a
-        subcommand is not given.
-    :param no_args_is_help: If no arguments are given, show the group's help and
-        exit. Defaults to the opposite of ``invoke_without_command``.
-    :param subcommand_metavar: How to represent the subcommand argument in help.
-        The default will represent whether ``chain`` is set or not.
-    :param chain: Allow passing more than one subcommand argument. After parsing
-        a command's arguments, if any arguments remain another command will be
-        matched, and so on.
-    :param result_callback: A function to call after the group's and
-        subcommand's callbacks. The value returned by the subcommand is passed.
-        If ``chain`` is enabled, the value will be a list of values returned by
-        all the commands. If ``invoke_without_command`` is enabled, the value
-        will be the value returned by the group's callback, or an empty list if
-        ``chain`` is enabled.
-    :param kwargs: Other arguments passed to :class:`Command`.
-
-    .. versionchanged:: 8.0
-        The ``commands`` argument can be a list of command objects.
-    """
-
-    allow_extra_args = True
-    allow_interspersed_args = False
-
-    #: If set, this is used by the group's :meth:`command` decorator
-    #: as the default :class:`Command` class. This is useful to make all
-    #: subcommands use a custom command class.
-    #:
-    #: .. versionadded:: 8.0
-    command_class: type[Command] | None = None
-
-    #: If set, this is used by the group's :meth:`group` decorator
-    #: as the default :class:`Group` class. This is useful to make all
-    #: subgroups use a custom group class.
-    #:
-    #: If set to the special value :class:`type` (literally
-    #: ``group_class = type``), this group's class will be used as the
-    #: default class. This makes a custom group class continue to make
-    #: custom groups.
-    #:
-    #: .. versionadded:: 8.0
-    group_class: type[Group] | type[type] | None = None
-    # Literal[type] isn't valid, so use Type[type]
-
-    def __init__(
-        self,
-        name: str | None = None,
-        commands: cabc.MutableMapping[str, Command]
-        | cabc.Sequence[Command]
-        | None = None,
-        invoke_without_command: bool = False,
-        no_args_is_help: bool | None = None,
-        subcommand_metavar: str | None = None,
-        chain: bool = False,
-        result_callback: t.Callable[..., t.Any] | None = None,
-        **kwargs: t.Any,
-    ) -> None:
-        super().__init__(name, **kwargs)
-
-        if commands is None:
-            commands = {}
-        elif isinstance(commands, abc.Sequence):
-            commands = {c.name: c for c in commands if c.name is not None}
-
-        #: The registered subcommands by their exported names.
-        self.commands: cabc.MutableMapping[str, Command] = commands
-
-        if no_args_is_help is None:
-            no_args_is_help = not invoke_without_command
-
-        self.no_args_is_help = no_args_is_help
-        self.invoke_without_command = invoke_without_command
-
-        if subcommand_metavar is None:
-            if chain:
-                subcommand_metavar = "COMMAND1 [ARGS]... [COMMAND2 [ARGS]...]..."
-            else:
-                subcommand_metavar = "COMMAND [ARGS]..."
-
-        self.subcommand_metavar = subcommand_metavar
-        self.chain = chain
-        # The result callback that is stored. This can be set or
-        # overridden with the :func:`result_callback` decorator.
-        self._result_callback = result_callback
-
-        if self.chain:
-            # avoid circular imports
-            from ..core import TyperArgument
-
-            for param in self.params:
-                if isinstance(param, TyperArgument) and not param.required:
-                    raise RuntimeError(
-                        "A group in chain mode cannot have optional arguments."
-                    )
-
-    def add_command(self, cmd: Command, name: str | None = None) -> None:
-        """Registers another :class:`Command` with this group.  If the name
-        is not provided, the name of the command is used.
-        """
-        name = name or cmd.name
-        if name is None:
-            raise TypeError("Command has no name.")
-        self.commands[name] = cmd
-
-    def result_callback(self, replace: bool = False) -> t.Callable[[F], F]:
-        """Adds a result callback to the command.  By default if a
-        result callback is already registered this will chain them but
-        this can be disabled with the `replace` parameter.  The result
-        callback is invoked with the return value of the subcommand
-        (or the list of return values from all subcommands if chaining
-        is enabled) as well as the parameters as they would be passed
-        to the main callback.
-
-        Example::
-
-            @click.group()
-            @click.option('-i', '--input', default=23)
-            def cli(input):
-                return 42
-
-            @cli.result_callback()
-            def process_result(result, input):
-                return result + input
-
-        :param replace: if set to `True` an already existing result
-                        callback will be removed.
-
-        .. versionchanged:: 8.0
-            Renamed from ``resultcallback``.
-
-        .. versionadded:: 3.0
-        """
-
-        def decorator(f: F) -> F:
-            old_callback = self._result_callback
-
-            if old_callback is None or replace:
-                self._result_callback = f
-                return f
-
-            def function(value: t.Any, /, *args: t.Any, **kwargs: t.Any) -> t.Any:
-                inner = old_callback(value, *args, **kwargs)
-                return f(inner, *args, **kwargs)
-
-            self._result_callback = rv = update_wrapper(t.cast(F, function), f)
-            return rv  # type: ignore[return-value]
-
-        return decorator
-
-    def get_command(self, ctx: Context, cmd_name: str) -> Command | None:
-        """Given a context and a command name, this returns a :class:`Command`
-        object if it exists or returns ``None``.
-        """
-        return self.commands.get(cmd_name)
-
-    def list_commands(self, ctx: Context) -> list[str]:
-        """Returns a list of subcommand names in the order they should appear."""
-        return sorted(self.commands)
-
-    def collect_usage_pieces(self, ctx: Context) -> list[str]:
-        rv = super().collect_usage_pieces(ctx)
-        rv.append(self.subcommand_metavar)
-        return rv
-
-    def format_options(self, ctx: Context, formatter: HelpFormatter) -> None:
-        super().format_options(ctx, formatter)
-        self.format_commands(ctx, formatter)
-
-    def format_commands(self, ctx: Context, formatter: HelpFormatter) -> None:
-        """Extra format methods for multi methods that adds all the commands
-        after the options.
-        """
-        commands = []
-        for subcommand in self.list_commands(ctx):
-            cmd = self.get_command(ctx, subcommand)
-            # What is this, the tool lied about a command.  Ignore it
-            if cmd is None:
-                continue
-            if cmd.hidden:
-                continue
-
-            commands.append((subcommand, cmd))
-
-        # allow for 3 times the default spacing
-        if len(commands):
-            limit = formatter.width - 6 - max(len(cmd[0]) for cmd in commands)
-
-            rows = []
-            for subcommand, cmd in commands:
-                help = cmd.get_short_help_str(limit)
-                rows.append((subcommand, help))
-
-            if rows:
-                with formatter.section(_("Commands")):
-                    formatter.write_dl(rows)
-
-    def parse_args(self, ctx: Context, args: list[str]) -> list[str]:
-        if not args and self.no_args_is_help and not ctx.resilient_parsing:
-            raise NoArgsIsHelpError(ctx)
-
-        rest = super().parse_args(ctx, args)
-
-        if self.chain:
-            ctx._protected_args = rest
-            ctx.args = []
-        elif rest:
-            ctx._protected_args, ctx.args = rest[:1], rest[1:]
-
-        return ctx.args
-
-    def invoke(self, ctx: Context) -> t.Any:
-        def _process_result(value: t.Any) -> t.Any:
-            if self._result_callback is not None:
-                value = ctx.invoke(self._result_callback, value, **ctx.params)
-            return value
-
-        if not ctx._protected_args:
-            if self.invoke_without_command:
-                # No subcommand was invoked, so the result callback is
-                # invoked with the group return value for regular
-                # groups, or an empty list for chained groups.
-                with ctx:
-                    rv = super().invoke(ctx)
-                    return _process_result([] if self.chain else rv)
-            ctx.fail(_("Missing command."))
-
-        # Fetch args back out
-        args = [*ctx._protected_args, *ctx.args]
-        ctx.args = []
-        ctx._protected_args = []
-
-        # If we're not in chain mode, we only allow the invocation of a
-        # single command but we also inform the current context about the
-        # name of the command to invoke.
-        if not self.chain:
-            # Make sure the context is entered so we do not clean up
-            # resources until the result processor has worked.
-            with ctx:
-                cmd_name, cmd, args = self.resolve_command(ctx, args)
-                assert cmd is not None
-                ctx.invoked_subcommand = cmd_name
-                super().invoke(ctx)
-                sub_ctx = cmd.make_context(cmd_name, args, parent=ctx)
-                with sub_ctx:
-                    return _process_result(sub_ctx.command.invoke(sub_ctx))
-
-        # In chain mode we create the contexts step by step, but after the
-        # base command has been invoked.  Because at that point we do not
-        # know the subcommands yet, the invoked subcommand attribute is
-        # set to ``*`` to inform the command that subcommands are executed
-        # but nothing else.
-        with ctx:
-            ctx.invoked_subcommand = "*" if args else None
-            super().invoke(ctx)
-
-            # Otherwise we make every single context and invoke them in a
-            # chain.  In that case the return value to the result processor
-            # is the list of all invoked subcommand's results.
-            contexts = []
-            while args:
-                cmd_name, cmd, args = self.resolve_command(ctx, args)
-                assert cmd is not None
-                sub_ctx = cmd.make_context(
-                    cmd_name,
-                    args,
-                    parent=ctx,
-                    allow_extra_args=True,
-                    allow_interspersed_args=False,
-                )
-                contexts.append(sub_ctx)
-                args, sub_ctx.args = sub_ctx.args, []
-
-            rv = []
-            for sub_ctx in contexts:
-                with sub_ctx:
-                    rv.append(sub_ctx.command.invoke(sub_ctx))
-            return _process_result(rv)
-
-    def resolve_command(
-        self, ctx: Context, args: list[str]
-    ) -> tuple[str | None, Command | None, list[str]]:
-        cmd_name = make_str(args[0])
-        original_cmd_name = cmd_name
-
-        # Get the command
-        cmd = self.get_command(ctx, cmd_name)
-
-        # If we can't find the command but there is a normalization
-        # function available, we try with that one.
-        if cmd is None and ctx.token_normalize_func is not None:
-            cmd_name = ctx.token_normalize_func(cmd_name)
-            cmd = self.get_command(ctx, cmd_name)
-
-        # If we don't find the command we want to show an error message
-        # to the user that it was not provided.  However, there is
-        # something else we should do: if the first argument looks like
-        # an option we want to kick off parsing again for arguments to
-        # resolve things like --help which now should go to the main
-        # place.
-        if cmd is None and not ctx.resilient_parsing:
-            if _split_opt(cmd_name)[0]:
-                self.parse_args(ctx, args)
-            ctx.fail(_("No such command {name!r}.").format(name=original_cmd_name))
-        return cmd_name if cmd else None, cmd, args[1:]
-
-    def shell_complete(self, ctx: Context, incomplete: str) -> list[CompletionItem]:
-        """Return a list of completions for the incomplete value. Looks
-        at the names of options, subcommands, and chained
-        multi-commands.
-
-        :param ctx: Invocation context for this command.
-        :param incomplete: Value being completed. May be empty.
-
-        .. versionadded:: 8.0
-        """
-        from .shell_completion import CompletionItem
-
-        results = [
-            CompletionItem(name, help=command.get_short_help_str())
-            for name, command in _complete_visible_commands(ctx, incomplete)
-        ]
-        results.extend(super().shell_complete(ctx, incomplete))
-        return results
 
 
 def _check_iter(value: t.Any) -> cabc.Iterator[t.Any]:

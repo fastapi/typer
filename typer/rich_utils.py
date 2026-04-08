@@ -25,7 +25,7 @@ from rich.traceback import Traceback
 from typer.models import DeveloperExceptionConfig
 
 from . import _click
-from .core import TyperArgument, TyperOption
+from .core import TyperArgument, TyperGroup, TyperOption
 
 # Default styles
 STYLE_OPTION = "bold cyan"
@@ -186,7 +186,7 @@ def _make_rich_text(
 @group()
 def _get_help_text(
     *,
-    obj: _click.Command | _click.Group,
+    obj: _click.Command | TyperGroup,
     markup_mode: MarkupModeStrict,
 ) -> Iterable[Markdown | Text]:
     """Build primary help text for a click command or group.
@@ -536,7 +536,7 @@ def _print_commands_panel(
 
 def rich_format_help(
     *,
-    obj: _click.Command | _click.Group,
+    obj: _click.Command | TyperGroup,
     ctx: _click.Context,
     markup_mode: MarkupModeStrict,
 ) -> None:
@@ -625,7 +625,7 @@ def rich_format_help(
             console=console,
         )
 
-    if isinstance(obj, _click.Group):
+    if isinstance(obj, TyperGroup):
         panel_to_commands: defaultdict[str, list[_click.Command]] = defaultdict(list)
         for command_name in obj.list_commands(ctx):
             command = obj.get_command(ctx, command_name)

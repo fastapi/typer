@@ -7,7 +7,6 @@ from __future__ import annotations
 from ._utils import UNSET as UNSET
 from .core import Command as Command
 from .core import Context as Context
-from .core import Group as Group
 from .core import Parameter as Parameter
 from .core import ParameterSource as ParameterSource
 from .exceptions import Abort as Abort

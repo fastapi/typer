@@ -1330,7 +1330,6 @@ def get_group_from_info(
         invoke_without_command=solved_info.invoke_without_command,
         no_args_is_help=solved_info.no_args_is_help,
         subcommand_metavar=solved_info.subcommand_metavar,
-        chain=solved_info.chain,
         result_callback=solved_info.result_callback,
         context_settings=solved_info.context_settings,
         callback=get_callback(

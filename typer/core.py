@@ -1175,7 +1175,12 @@ class TyperCommand(_click.core.Command):
         )
 
 
-class TyperGroup(_click.core.Group):
+class TyperGroup(_click.Command):
+    allow_extra_args = True
+    allow_interspersed_args = False
+    command_class: type[_click.Command] | None = None
+    group_class: type["TyperGroup"] | type[type] | None = None
+
     def __init__(
         self,
         *,
@@ -1185,12 +1190,131 @@ class TyperGroup(_click.core.Group):
         rich_markup_mode: MarkupMode = DEFAULT_MARKUP_MODE,
         rich_help_panel: str | None = None,
         suggest_commands: bool = True,
+        # Click settings
+        invoke_without_command: bool = False,
+        no_args_is_help: bool = False,
+        subcommand_metavar: str | None = None,
+        result_callback: Callable[..., Any] | None = None,
         **attrs: Any,
     ) -> None:
-        super().__init__(name=name, commands=commands, **attrs)
+        super().__init__(name=name, **attrs)
         self.rich_markup_mode: MarkupMode = rich_markup_mode
         self.rich_help_panel = rich_help_panel
         self.suggest_commands = suggest_commands
+
+        # copied from Click's init
+        if commands is None:
+            commands = {}
+        elif isinstance(commands, Sequence):
+            commands = {c.name: c for c in commands if c.name is not None}
+
+        self.commands: MutableMapping[str, _click.Command] = commands
+        self.no_args_is_help = no_args_is_help
+        self.invoke_without_command = invoke_without_command
+
+        if subcommand_metavar is None:
+            subcommand_metavar = "COMMAND [ARGS]..."
+
+        self.subcommand_metavar = subcommand_metavar
+        self._result_callback = result_callback
+
+    def add_command(self, cmd: _click.Command, name: str | None = None) -> None:
+        name = name or cmd.name
+        if name is None:
+            raise TypeError("Command has no name.")
+        self.commands[name] = cmd
+
+    def get_command(self, ctx: _click.Context, cmd_name: str) -> _click.Command | None:
+        return self.commands.get(cmd_name)
+
+    def collect_usage_pieces(self, ctx: _click.Context) -> list[str]:
+        rv = super().collect_usage_pieces(ctx)
+        rv.append(self.subcommand_metavar)
+        return rv
+
+    def format_commands(
+        self, ctx: _click.Context, formatter: _click.HelpFormatter
+    ) -> None:
+        commands = []
+        for subcommand in self.list_commands(ctx):
+            cmd = self.get_command(ctx, subcommand)
+
+            commands.append((subcommand, cmd))
+
+        # allow for 3 times the default spacing
+        if len(commands):
+            limit = formatter.width - 6 - max(len(cmd[0]) for cmd in commands)
+
+            rows = []
+            for subcommand, cmd in commands:
+                assert cmd is not None
+                help = cmd.get_short_help_str(limit)
+                rows.append((subcommand, help))
+
+            if rows:
+                with formatter.section(_("Commands")):
+                    formatter.write_dl(rows)
+
+    def parse_args(self, ctx: _click.Context, args: list[str]) -> list[str]:
+        if not args and self.no_args_is_help and not ctx.resilient_parsing:
+            raise _click.exceptions.NoArgsIsHelpError(ctx)
+
+        rest = super().parse_args(ctx, args)
+
+        if rest:
+            ctx._protected_args, ctx.args = rest[:1], rest[1:]
+
+        return ctx.args
+
+    def invoke(self, ctx: _click.Context) -> Any:
+        def _process_result(value: Any) -> Any:
+            if self._result_callback is not None:
+                value = ctx.invoke(self._result_callback, value, **ctx.params)
+            return value
+
+        if not ctx._protected_args:
+            if self.invoke_without_command:
+                # No subcommand was invoked, so the result callback is
+                # invoked with the group return value for regular
+                # groups, or an empty list for chained groups.
+                with ctx:
+                    rv = super().invoke(ctx)
+                    # return _process_result([] if self.chain else rv)
+                    return _process_result(rv)
+            ctx.fail(_("Missing command."))
+
+        # Fetch args back out
+        args = [*ctx._protected_args, *ctx.args]
+        ctx.args = []
+        ctx._protected_args = []
+
+        # Make sure the context is entered so we do not clean up
+        # resources until the result processor has worked.
+        with ctx:
+            cmd_name, cmd, args = self.resolve_command(ctx, args)
+            assert cmd is not None
+            ctx.invoked_subcommand = cmd_name
+            super().invoke(ctx)
+            sub_ctx = cmd.make_context(cmd_name, args, parent=ctx)
+            with sub_ctx:
+                return _process_result(sub_ctx.command.invoke(sub_ctx))
+
+    def shell_complete(
+        self, ctx: _click.Context, incomplete: str
+    ) -> list[_click.shell_completion.CompletionItem]:
+        """Return a list of completions for the incomplete value. Looks
+        at the names of options, subcommands, and chained
+        multi-commands.
+        """
+
+        results = [
+            _click.shell_completion.CompletionItem(
+                name, help=command.get_short_help_str()
+            )
+            for name, command in _click.core._complete_visible_commands(ctx, incomplete)
+        ]
+        results.extend(super().shell_complete(ctx, incomplete))
+        return results
 
     def format_options(
         self, ctx: _click.Context, formatter: _click.HelpFormatter
@@ -1208,11 +1332,30 @@ class TyperGroup(_click.core.Group):
             self, ctx_args=ctx_args, prog_name=prog_name, complete_var=complete_var
         )
 
+    def _click_resolve_command(
+        self, ctx: _click.Context, args: list[str]
+    ) -> tuple[str | None, _click.Command | None, list[str]]:
+        cmd_name = _click.utils.make_str(args[0])
+        original_cmd_name = cmd_name
+
+        # Get the command
+        cmd = self.get_command(ctx, cmd_name)
+
+        if cmd is None and ctx.token_normalize_func is not None:
+            cmd_name = ctx.token_normalize_func(cmd_name)
+            cmd = self.get_command(ctx, cmd_name)
+
+        if cmd is None and not ctx.resilient_parsing:
+            if _split_opt(cmd_name)[0]:
+                self.parse_args(ctx, args)
+            ctx.fail(_("No such command {name!r}.").format(name=original_cmd_name))
+        return cmd_name if cmd else None, cmd, args[1:]
+
     def resolve_command(
         self, ctx: _click.Context, args: list[str]
     ) -> tuple[str | None, _click.Command | None, list[str]]:
         try:
-            return super().resolve_command(ctx, args)
+            return self._click_resolve_command(ctx, args)
         except _click.UsageError as e:
             if self.suggest_commands:
                 available_commands = list(self.commands.keys())
@@ -1257,7 +1400,5 @@ class TyperGroup(_click.core.Group):
         )
 
     def list_commands(self, ctx: _click.Context) -> list[str]:
-        """Returns a list of subcommand names.
-        Note that in Click's Group class, these are sorted.
-        In Typer, we wish to maintain the original order of creation (cf Issue #933)"""
+        """Returns a list of subcommand names, maintaining the original order of creation (cf Issue #933)"""
         return [n for n, c in self.commands.items()]

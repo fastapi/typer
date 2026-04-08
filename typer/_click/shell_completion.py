@@ -6,7 +6,7 @@ import re
 import typing as t
 from gettext import gettext as _
 
-from .core import Command, Context, Group, Parameter, ParameterSource
+from .core import Command, Context, Parameter, ParameterSource
 from .utils import echo
 
 
@@ -573,6 +573,9 @@ def _resolve_context(
     :param prog_name: Name of the executable in the shell.
     :param args: List of complete args before the incomplete value.
     """
+    # avoid circular imports
+    from ..core import TyperGroup
+
     ctx_args["resilient_parsing"] = True
     with cli.make_context(prog_name, args.copy(), **ctx_args) as ctx:
         args = ctx._protected_args + ctx.args
@@ -580,40 +583,18 @@ def _resolve_context(
         while args:
             command = ctx.command
 
-            if isinstance(command, Group):
-                if not command.chain:
-                    name, cmd, args = command.resolve_command(ctx, args)
+            if isinstance(command, TyperGroup):
+                # if not command.chain:
+                name, cmd, args = command.resolve_command(ctx, args)
 
-                    if cmd is None:
-                        return ctx
+                if cmd is None:
+                    return ctx
 
-                    with cmd.make_context(
-                        name, args, parent=ctx, resilient_parsing=True
-                    ) as sub_ctx:
-                        ctx = sub_ctx
-                        args = ctx._protected_args + ctx.args
-                else:
-                    sub_ctx = ctx
-
-                    while args:
-                        name, cmd, args = command.resolve_command(ctx, args)
-
-                        if cmd is None:
-                            return ctx
-
-                        with cmd.make_context(
-                            name,
-                            args,
-                            parent=ctx,
-                            allow_extra_args=True,
-                            allow_interspersed_args=False,
-                            resilient_parsing=True,
-                        ) as sub_sub_ctx:
-                            sub_ctx = sub_sub_ctx
-                            args = sub_ctx.args
-
+                with cmd.make_context(
+                    name, args, parent=ctx, resilient_parsing=True
+                ) as sub_ctx:
                     ctx = sub_ctx
-                    args = [*sub_ctx._protected_args, *sub_ctx.args]
+                    args = ctx._protected_args + ctx.args
             else:
                 break
 
