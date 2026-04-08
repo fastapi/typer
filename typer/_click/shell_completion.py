@@ -6,7 +6,7 @@ import re
 import typing as t
 from gettext import gettext as _
 
-from .core import Argument, Command, Context, Group, Option, Parameter, ParameterSource
+from .core import Command, Context, Group, Parameter, ParameterSource
 from .utils import echo
 
 
@@ -502,7 +502,10 @@ def _is_incomplete_argument(ctx: Context, param: Parameter) -> bool:
         parsed complete args.
     :param param: Argument object being checked.
     """
-    if not isinstance(param, Argument):
+    # avoid circular imports
+    from ..core import TyperArgument
+
+    if not isinstance(param, TyperArgument):
         return False
 
     assert param.name is not None
@@ -534,7 +537,10 @@ def _is_incomplete_option(ctx: Context, args: list[str], param: Parameter) -> bo
     :param args: List of complete args before the incomplete value.
     :param param: Option object being checked.
     """
-    if not isinstance(param, Option):
+    # avoid circular imports
+    from ..core import TyperOption
+
+    if not isinstance(param, TyperOption):
         return False
 
     if param.is_flag or param.count:

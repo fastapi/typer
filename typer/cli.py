@@ -8,8 +8,8 @@ import typer
 import typer.core
 
 from . import __version__, _click
-from ._click import Command, Group, Option
-from .core import HAS_RICH, MARKUP_MODE_KEY
+from ._click import Command, Group
+from .core import HAS_RICH, MARKUP_MODE_KEY, TyperOption
 
 default_app_names = ("app", "cli", "main")
 default_func_names = ("main", "cli", "app")
@@ -150,7 +150,7 @@ def maybe_add_run_to_cli(cli: _click.Group) -> None:
                 cli.add_command(click_obj)
 
 
-def print_version(ctx: _click.Context, param: Option, value: bool) -> None:
+def print_version(ctx: _click.Context, param: TyperOption, value: bool) -> None:
     if not value or ctx.resilient_parsing:
         return
     typer.echo(f"Typer version: {__version__}")

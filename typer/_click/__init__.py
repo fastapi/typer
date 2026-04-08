@@ -4,14 +4,12 @@ Vendored Click: https://github.com/pallets/click/releases/tag/8.3.1
 
 from __future__ import annotations
 
-from .core import Argument as Argument
+from ._utils import UNSET as UNSET
 from .core import Command as Command
 from .core import Context as Context
 from .core import Group as Group
-from .core import Option as Option
 from .core import Parameter as Parameter
-from .decorators import help_option as help_option
-from .decorators import option as option
+from .core import ParameterSource as ParameterSource
 from .exceptions import Abort as Abort
 from .exceptions import BadArgumentUsage as BadArgumentUsage
 from .exceptions import BadOptionUsage as BadOptionUsage

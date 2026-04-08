@@ -1362,7 +1362,7 @@ def get_command_name(name: str) -> str:
 
 def get_params_convertors_ctx_param_name_from_function(
     callback: Callable[..., Any] | None,
-) -> tuple[list[_click.Argument | _click.Option], dict[str, Any], str | None]:
+) -> tuple[list[TyperArgument | TyperOption], dict[str, Any], str | None]:
     params = []
     convertors = {}
     context_param_name = None
@@ -1626,7 +1626,7 @@ def lenient_issubclass(cls: Any, class_or_tuple: AnyType | tuple[AnyType, ...]) 
 
 def get_click_param(
     param: ParamMeta,
-) -> tuple[_click.Argument | _click.Option, Any]:
+) -> tuple[TyperArgument | TyperOption, Any]:
     # First, find out what will be:
     # * ParamInfo (ArgumentInfo or OptionInfo)
     # * default_value

@@ -3,11 +3,13 @@ from __future__ import annotations
 import typing as t
 from gettext import gettext as _
 
-from .core import Command, Context, Group, Option, Parameter
+from .core import Command, Context, Group, Parameter
 from .utils import echo
 
 if t.TYPE_CHECKING:
     import typing_extensions as te
+
+    from ..core import TyperOption
 
     P = te.ParamSpec("P")
 
@@ -33,7 +35,7 @@ def _param_memo(f: t.Callable[..., t.Any], param: Parameter) -> None:
 
 
 def option(
-    *param_decls: str, cls: type[Option] | None = None, **attrs: t.Any
+    *param_decls: str, cls: type[TyperOption] | None = None, **attrs: t.Any
 ) -> t.Callable[[FC], FC]:
     """Attaches an option to the command.  All positional arguments are
     passed as parameter declarations to :class:`Option`; all keyword
@@ -51,10 +53,13 @@ def option(
     :param attrs: Passed as keyword arguments to the constructor of ``cls``.
     """
     if cls is None:
-        cls = Option
+        # avoid circular imports
+        from ..core import TyperOption
+
+        cls = TyperOption
 
     def decorator(f: FC) -> FC:
-        _param_memo(f, cls(param_decls, **attrs))
+        _param_memo(f, cls(param_decls=list(param_decls), **attrs))
         return f
 
     return decorator
@@ -83,5 +88,6 @@ def help_option(*param_decls: str, **kwargs: t.Any) -> t.Callable[[FC], FC]:
     kwargs.setdefault("is_eager", True)
     kwargs.setdefault("help", _("Show this message and exit."))
     kwargs.setdefault("callback", show_help)
+    kwargs.setdefault("required", False)
 
     return option(*param_decls, **kwargs)
