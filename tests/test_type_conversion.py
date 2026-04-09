@@ -146,6 +146,50 @@ def test_custom_parse():
     assert result.exit_code == 0
 
 
+def test_custom_parse_with_union_type():
+    """parser= should bypass the 'no Union types' assertion."""
+    app = typer.Typer()
+
+    @app.command()
+    def cmd(
+        value: int | str = typer.Argument(
+            None, parser=lambda x: int(x) if x.isdigit() else x
+        ),
+    ):
+        print(repr(value))
+
+    result = runner.invoke(app, ["42"])
+    assert result.exit_code == 0
+    assert "42" in result.output
+
+
+def test_custom_click_type_with_union_type():
+    """click_type= should bypass the 'no Union types' assertion."""
+
+    class FlexType(click.ParamType):
+        name = "flex"
+
+        def convert(
+            self, value: Any, param: click.Parameter | None, ctx: click.Context | None
+        ) -> Any:
+            try:
+                return int(value)
+            except ValueError:
+                return value
+
+    app = typer.Typer()
+
+    @app.command()
+    def cmd(
+        value: int | str = typer.Argument(None, click_type=FlexType()),
+    ):
+        print(repr(value))
+
+    result = runner.invoke(app, ["hello"])
+    assert result.exit_code == 0
+    assert "hello" in result.output
+
+
 def test_custom_click_type():
     class BaseNumberParamType(click.ParamType):
         name = "base_integer"
