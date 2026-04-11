@@ -187,7 +187,7 @@ class PowerShellComplete(click.shell_completion.ShellComplete):
         # their respective word splitting. Without this, the prog name leaks
         # into args and Click can't resolve the command context, causing
         # completions to silently return nothing (issue #266).
-        
+
         args = cwords[2:-1] if incomplete else cwords[2:]
         return args, incomplete
 
