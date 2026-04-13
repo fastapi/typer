@@ -1,14 +1,18 @@
 import inspect
 import io
+import os
+import stat
 from collections.abc import Callable, Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
+    ClassVar,
     Optional,
     TypeVar,
+    cast,
 )
 
-from . import _click
+from . import _click, format_filename
 
 if TYPE_CHECKING:  # pragma: no cover
     from .core import TyperCommand, TyperGroup
@@ -639,8 +643,98 @@ class DeveloperExceptionConfig:
         self.pretty_exceptions_short = pretty_exceptions_short
 
 
-class TyperPath(_click.Path):
-    # Overwrite Click's behaviour to be compatible with Typer's autocompletion system
+class TyperPath(_click.ParamType):
+    # Based originally on code from Click 8.3.1
+    # Partly rewritten and added an override for shell_complete
+
+    envvar_list_splitter: ClassVar[str] = os.path.pathsep
+
+    def __init__(
+        self,
+        exists: bool = False,
+        file_okay: bool = True,
+        dir_okay: bool = True,
+        writable: bool = False,
+        readable: bool = True,
+        resolve_path: bool = False,
+        allow_dash: bool = False,
+        path_type: type[Any] | None = None,
+        executable: bool = False,
+    ):
+        self.exists = exists
+        self.file_okay = file_okay
+        self.dir_okay = dir_okay
+        self.readable = readable
+        self.writable = writable
+        self.executable = executable
+        self.resolve_path = resolve_path
+        self.allow_dash = allow_dash
+        self.type = path_type
+
+        if self.file_okay and not self.dir_okay:
+            self.name = "file"
+        elif self.dir_okay and not self.file_okay:
+            self.name = "directory"
+        else:
+            self.name = "path"
+
+    def coerce_path_result(
+        self, value: str | os.PathLike[str]
+    ) -> str | bytes | os.PathLike[str]:
+        if self.type is not None and not isinstance(value, self.type):
+            if self.type is str:
+                return os.fsdecode(value)
+            elif self.type is bytes:
+                return os.fsencode(value)
+            else:
+                return cast("os.PathLike[str]", self.type(value))
+
+        return value
+
+    def convert(
+        self,
+        value: str | os.PathLike[str],
+        param: _click.Parameter | None,
+        ctx: Context | None,  # type: ignore[override]
+    ) -> str | bytes | os.PathLike[str]:
+        rv = value
+
+        is_dash = self.file_okay and self.allow_dash and rv in (b"-", "-")
+
+        if not is_dash:
+            if self.resolve_path:
+                rv = os.path.realpath(rv)
+
+            try:
+                st = os.stat(rv)
+            except OSError:
+                if not self.exists:
+                    return self.coerce_path_result(rv)
+                self.fail(
+                    f"{self.name.title()} {format_filename(value)!r} does not exist.",
+                    param,
+                    ctx,
+                )
+
+            name = self.name.title()
+            loc = repr(format_filename(value))
+            if not self.file_okay and stat.S_ISREG(st.st_mode):
+                self.fail(f"{name} {loc} is a file.", param, ctx)
+
+            if not self.dir_okay and stat.S_ISDIR(st.st_mode):
+                self.fail(f"{name} {loc} is a directory.", param, ctx)
+
+            if self.readable and not os.access(rv, os.R_OK):
+                self.fail(f"{name} {loc} is not readable.", param, ctx)
+
+            if self.writable and not os.access(rv, os.W_OK):
+                self.fail(f"{name} {loc} is not writable.", param, ctx)
+
+            if self.executable and not os.access(value, os.X_OK):
+                self.fail(f"{name} {loc} is not executable.", param, ctx)
+
+        return self.coerce_path_result(rv)
+
     def shell_complete(
         self, ctx: _click.Context, param: _click.Parameter, incomplete: str
     ) -> list[_click.shell_completion.CompletionItem]:
