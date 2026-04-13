@@ -4,7 +4,6 @@ Vendored Click: https://github.com/pallets/click/releases/tag/8.3.1
 
 from __future__ import annotations
 
-from ._utils import UNSET as UNSET
 from .core import Command as Command
 from .core import Context as Context
 from .core import Parameter as Parameter

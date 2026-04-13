@@ -30,14 +30,14 @@ from collections import deque
 from gettext import gettext as _
 from gettext import ngettext
 
-from ._utils import FLAG_NEEDS_VALUE, UNSET
+from ._utils import FLAG_NEEDS_VALUE
 from .exceptions import BadArgumentUsage, BadOptionUsage, NoSuchOption, UsageError
 
 if t.TYPE_CHECKING:
     from typer.core import TyperArgument as CoreArgument
     from typer.core import TyperOption as CoreOption
 
-    from ._utils import T_FLAG_NEEDS_VALUE, T_UNSET
+    from ._utils import T_FLAG_NEEDS_VALUE
     from .core import Context
     from .core import Parameter as CoreParameter
 
@@ -53,22 +53,20 @@ def _unpack_args(
 
     The nargs specification is the number of arguments that should be consumed
     or `-1` to indicate that this position should eat up all the remainders.
-
-    Missing items are filled with ``UNSET``.
     """
     args = deque(args)
     nargs_spec = deque(nargs_spec)
-    rv: list[str | tuple[str | T_UNSET, ...] | T_UNSET] = []
+    rv: list[str | tuple[str | None, ...] | None] = []
     spos: int | None = None
 
-    def _fetch(c: deque[V]) -> V | T_UNSET:
+    def _fetch(c: deque[V]) -> V | None:
         try:
             if spos is None:
                 return c.popleft()
             else:
                 return c.pop()
         except IndexError:
-            return UNSET
+            return None
 
     while nargs_spec:
         nargs = _fetch(nargs_spec)
@@ -77,7 +75,7 @@ def _unpack_args(
             continue
 
         if nargs == 1:
-            rv.append(_fetch(args))  # type: ignore[arg-type]
+            rv.append(_fetch(args))
         elif nargs > 1:
             x = [_fetch(args) for _ in range(nargs)]
 
@@ -92,7 +90,7 @@ def _unpack_args(
                 raise TypeError("Cannot have two nargs < 0")
 
             spos = len(rv)
-            rv.append(UNSET)
+            rv.append(None)
 
     # spos is the position of the wildcard (star).  If it's not `None`,
     # we fill it with the remainder.
@@ -182,14 +180,14 @@ class _Argument:
 
     def process(
         self,
-        value: str | cabc.Sequence[str | None] | None | T_UNSET,
+        value: str | cabc.Sequence[str | None] | None,
         state: _ParsingState,
     ) -> None:
         if self.nargs > 1:
-            assert isinstance(value, cabc.Sequence)
-            holes = sum(1 for x in value if x is UNSET)
+            assert value is not None
+            holes = sum(1 for x in value if x is None)
             if holes == len(value):
-                value = UNSET
+                value = None
             elif holes != 0:
                 raise BadArgumentUsage(
                     _("Argument {name!r} takes {nargs} values.").format(
@@ -197,9 +195,10 @@ class _Argument:
                     )
                 )
 
-        # We failed to collect any argument value so we consider the argument as unset.
-        if value == ():
-            value = UNSET
+        if self.nargs == -1 and self.obj.envvar is not None and value == ():
+            # Replace empty tuple with None so that a value from the
+            # environment may be tried.
+            value = None
 
         state.opts[self.dest] = value  # type: ignore
         state.order.append(self.obj)
@@ -378,7 +377,7 @@ class _OptionParser:
             )
 
         else:
-            value = UNSET
+            value = None
 
         option.process(value, state)
 
@@ -408,7 +407,7 @@ class _OptionParser:
                 value = self._get_value_from_state(opt, option, state)
 
             else:
-                value = UNSET
+                value = None
 
             option.process(value, state)
 

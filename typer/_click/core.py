@@ -15,7 +15,6 @@ from itertools import repeat
 from types import TracebackType
 
 from . import types
-from ._utils import UNSET
 from .exceptions import (
     Abort,
     BadParameter,
@@ -662,14 +661,14 @@ class Context:
             Added the ``call`` parameter.
         """
         if self.default_map is not None:
-            value = self.default_map.get(name, UNSET)
+            value = self.default_map.get(name)
 
             if call and callable(value):
                 return value()
 
             return value
 
-        return UNSET
+        return None
 
     def fail(self, message: str) -> t.NoReturn:
         """Aborts the execution of the program with a specific error
@@ -756,15 +755,6 @@ class Context:
             for param in other_cmd.params:
                 if param.name not in kwargs and param.expose_value:
                     default_value = param.get_default(ctx)
-                    # We explicitly hide the :attr:`UNSET` value to the user, as we
-                    # choose to make it an implementation detail. And because ``invoke``
-                    # has been designed as part of Click public API, we return ``None``
-                    # instead. Refs:
-                    # https://github.com/pallets/click/issues/3066
-                    # https://github.com/pallets/click/issues/3065
-                    # https://github.com/pallets/click/pull/3068
-                    if default_value is UNSET:
-                        default_value = None
                     kwargs[param.name] = param.type_cast_value(  # type: ignore
                         ctx, default_value
                     )
@@ -1166,19 +1156,6 @@ class Command:
         for param in iter_params_for_processing(param_order, self.get_params(ctx)):
             _, args = param.handle_parse_result(ctx, opts, args)
 
-        # We now have all parameters' values into `ctx.params`, but the data may contain
-        # the `UNSET` sentinel.
-        # Convert `UNSET` to `None` to ensure that the user doesn't see `UNSET`.
-        #
-        # Waiting until after the initial parse to convert allows us to treat `UNSET`
-        # more like a missing value when multiple params use the same name.
-        # Refs:
-        # https://github.com/pallets/click/issues/3071
-        # https://github.com/pallets/click/pull/3079
-        for name, value in ctx.params.items():
-            if value is UNSET:
-                ctx.params[name] = None
-
         if args and not ctx.allow_extra_args and not ctx.resilient_parsing:
             ctx.fail(
                 ngettext(
@@ -1527,17 +1504,7 @@ class Parameter:
         param_decls: cabc.Sequence[str] | None = None,
         type: types.ParamType | t.Any | None = None,
         required: bool = False,
-        # XXX The default historically embed two concepts:
-        # - the declaration of a Parameter object carrying the default (handy to
-        #   arbitrage the default value of coupled Parameters sharing the same
-        #   self.name, like flag options),
-        # - and the actual value of the default.
-        # It is confusing and is the source of many issues discussed in:
-        # https://github.com/pallets/click/pull/3030
-        # In the future, we might think of splitting it in two, not unlike
-        # Option.is_flag and Option.flag_value: we could have something like
-        # Parameter.is_default and Parameter.default_value.
-        default: t.Any | t.Callable[[], t.Any] | None = UNSET,
+        default: t.Any | t.Callable[[], t.Any] | None = None,
         callback: t.Callable[[Context, Parameter, t.Any], t.Any] | None = None,
         nargs: int | None = None,
         multiple: bool = False,
@@ -1657,7 +1624,7 @@ class Parameter:
         """
         value = ctx.lookup_default(self.name, call=False)  # type: ignore
 
-        if value is UNSET:
+        if value is None:
             value = self.default
 
         if call and callable(value):
@@ -1671,43 +1638,20 @@ class Parameter:
     def consume_value(
         self, ctx: Context, opts: cabc.Mapping[str, t.Any]
     ) -> tuple[t.Any, ParameterSource]:
-        """Returns the parameter value produced by the parser.
+        value = opts.get(self.name)  # type: ignore
+        source = ParameterSource.COMMANDLINE
 
-        If the parser did not produce a value from user input, the value is either
-        sourced from the environment variable, the default map, or the parameter's
-        default value. In that order of precedence.
+        if value is None:
+            value = self.value_from_envvar(ctx)
+            source = ParameterSource.ENVIRONMENT
 
-        If no value is found, an internal sentinel value is returned.
+        if value is None:
+            value = ctx.lookup_default(self.name)  # type: ignore
+            source = ParameterSource.DEFAULT_MAP
 
-        :meta private:
-        """
-        # Collect from the parse the value passed by the user to the CLI.
-        value = opts.get(self.name, UNSET)  # type: ignore
-        # If the value is set, it means it was sourced from the command line by the
-        # parser, otherwise it left unset by default.
-        source = (
-            ParameterSource.COMMANDLINE
-            if value is not UNSET
-            else ParameterSource.DEFAULT
-        )
-
-        if value is UNSET:
-            envvar_value = self.value_from_envvar(ctx)
-            if envvar_value is not None:
-                value = envvar_value
-                source = ParameterSource.ENVIRONMENT
-
-        if value is UNSET:
-            default_map_value = ctx.lookup_default(self.name)  # type: ignore
-            if default_map_value is not UNSET:
-                value = default_map_value
-                source = ParameterSource.DEFAULT_MAP
-
-        if value is UNSET:
-            default_value = self.get_default(ctx)
-            if default_value is not UNSET:
-                value = default_value
-                source = ParameterSource.DEFAULT
+        if value is None:
+            value = self.get_default(ctx)
+            source = ParameterSource.DEFAULT
 
         return value, source
 
@@ -1716,10 +1660,7 @@ class Parameter:
         :attr:`type`, :attr:`multiple`, and :attr:`nargs`.
         """
         if value is None:
-            if self.multiple or self.nargs == -1:
-                return ()
-            else:
-                return value
+            return () if self.multiple or self.nargs == -1 else None
 
         def check_iter(value: t.Any) -> cabc.Iterator[t.Any]:
             try:
@@ -1768,22 +1709,8 @@ class Parameter:
         return convert(value)
 
     def value_is_missing(self, value: t.Any) -> bool:
-        """A value is considered missing if:
-
-        - it is :attr:`UNSET`,
-        - or if it is an empty sequence while the parameter is suppose to have
-          non-single value (i.e. :attr:`nargs` is not ``1`` or :attr:`multiple` is
-          set).
-
-        :meta private:
-        """
-        if value is UNSET:
-            return True
-
-        if (self.nargs != 1 or self.multiple) and value == ():
-            return True
-
-        return False
+        # Note: not used, Typer's classes overwrite this
+        return True
 
     def process_value(self, ctx: Context, value: t.Any) -> t.Any:
         """Process the value of this parameter:
@@ -1793,61 +1720,17 @@ class Parameter:
            :exc:`MissingParameter` if it is required.
         3. If a :attr:`callback` is set, call it to have the value replaced by the
            result of the callback. If the value was not set, the callback receive
-           ``None``. This keep the legacy behavior as it was before the introduction of
-           the :attr:`UNSET` sentinel.
+           ``None``.
 
         :meta private:
         """
-        # shelter `type_cast_value` from ever seeing an `UNSET` value by handling the
-        # cases in which `UNSET` gets special treatment explicitly at this layer
-        #
-        # Refs:
-        # https://github.com/pallets/click/issues/3069
-        if value is UNSET:
-            if self.multiple or self.nargs == -1:
-                value = ()
-        else:
-            value = self.type_cast_value(ctx, value)
+        value = self.type_cast_value(ctx, value)
 
         if self.required and self.value_is_missing(value):
             raise MissingParameter(ctx=ctx, param=self)
 
         if self.callback is not None:
-            # Legacy case: UNSET is not exposed directly to the callback, but converted
-            # to None.
-            if value is UNSET:
-                value = None
-
-            # Search for parameters with UNSET values in the context.
-            unset_keys = {k: None for k, v in ctx.params.items() if v is UNSET}
-            # No UNSET values, call the callback as usual.
-            if not unset_keys:
-                value = self.callback(ctx, self, value)
-
-            # Legacy case: provide a temporarily manipulated context to the callback
-            # to hide UNSET values as None.
-            #
-            # Refs:
-            # https://github.com/pallets/click/issues/3136
-            # https://github.com/pallets/click/pull/3137
-            else:
-                # Add another layer to the context stack to clearly hint that the
-                # context is temporarily modified.
-                with ctx:
-                    # Update the context parameters to replace UNSET with None.
-                    ctx.params.update(unset_keys)
-                    # Feed these fake context parameters to the callback.
-                    value = self.callback(ctx, self, value)
-                    # Restore the UNSET values in the context parameters.
-                    ctx.params.update(
-                        {
-                            k: UNSET
-                            for k in unset_keys
-                            # Only restore keys that are present and still None, in case
-                            # the callback modified other parameters.
-                            if k in ctx.params and ctx.params[k] is None
-                        }
-                    )
+            value = self.callback(ctx, self, value)
 
         return value
 
@@ -1876,7 +1759,7 @@ class Parameter:
 
         :meta private:
         """
-        if not self.envvar:
+        if self.envvar is None:
             return None
 
         if isinstance(self.envvar, str):
@@ -1905,10 +1788,10 @@ class Parameter:
 
         :meta private:
         """
-        rv = self.resolve_envvar_value(ctx)
+        rv: t.Any | None = self.resolve_envvar_value(ctx)
 
         if rv is not None and self.nargs != 1:
-            return self.type.split_envvar_value(rv)
+            rv = self.type.split_envvar_value(rv)
 
         return rv
 
@@ -1931,50 +1814,16 @@ class Parameter:
 
             ctx.set_parameter_source(self.name, source)  # type: ignore
 
-            # Display a deprecation warning if necessary.
-            if (
-                self.deprecated
-                and value is not UNSET
-                and source not in (ParameterSource.DEFAULT, ParameterSource.DEFAULT_MAP)
-            ):
-                extra_message = (
-                    f" {self.deprecated}" if isinstance(self.deprecated, str) else ""
-                )
-                message = _(
-                    "DeprecationWarning: The {param_type} {name!r} is deprecated."
-                    "{extra_message}"
-                ).format(
-                    param_type=self.param_type_name,
-                    name=self.human_readable_name,
-                    extra_message=extra_message,
-                )
-                echo(style(message, fg="red"), err=True)
-
             # Process the value through the parameter's type.
             try:
                 value = self.process_value(ctx, value)
             except Exception:
                 if not ctx.resilient_parsing:
                     raise
-                # In resilient parsing mode, we do not want to fail the command if the
-                # value is incompatible with the parameter type, so we reset the value
-                # to UNSET, which will be interpreted as a missing value.
-                value = UNSET
+                value = None
 
-        # Add parameter's value to the context.
-        if (
-            self.expose_value
-            # We skip adding the value if it was previously set by another parameter
-            # targeting the same variable name. This prevents parameters competing for
-            # the same name to override each other.
-            and (self.name not in ctx.params or ctx.params[self.name] is UNSET)
-        ):
-            # Click is logically enforcing that the name is None if the parameter is
-            # not to be exposed. We still assert it here to please the type checker.
-            assert self.name is not None, (
-                f"{self!r} parameter's name should not be None when exposing value."
-            )
-            ctx.params[self.name] = value
+        if self.expose_value:
+            ctx.params[self.name] = value  # type: ignore
 
         return value, args
 
