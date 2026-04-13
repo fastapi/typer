@@ -34,10 +34,11 @@ from ._utils import FLAG_NEEDS_VALUE, UNSET
 from .exceptions import BadArgumentUsage, BadOptionUsage, NoSuchOption, UsageError
 
 if t.TYPE_CHECKING:
+    from typer.core import TyperArgument as CoreArgument
+    from typer.core import TyperOption as CoreOption
+
     from ._utils import T_FLAG_NEEDS_VALUE, T_UNSET
-    from .core import Argument as CoreArgument
     from .core import Context
-    from .core import Option as CoreOption
     from .core import Parameter as CoreParameter
 
 V = t.TypeVar("V")
@@ -429,7 +430,7 @@ class _OptionParser:
         value: str | cabc.Sequence[str] | T_FLAG_NEEDS_VALUE
 
         if len(state.rargs) < nargs:
-            if option.obj._flag_needs_value:
+            if option.obj._depr_flag_needs_value:
                 # Option allows omitting the value.
                 value = FLAG_NEEDS_VALUE
             else:
@@ -445,7 +446,7 @@ class _OptionParser:
             next_rarg = state.rargs[0]
 
             if (
-                option.obj._flag_needs_value
+                option.obj._depr_flag_needs_value
                 and isinstance(next_rarg, str)
                 and next_rarg[:1] in self._opt_prefixes
                 and len(next_rarg) > 1

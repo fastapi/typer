@@ -4,14 +4,11 @@ Vendored Click: https://github.com/pallets/click/releases/tag/8.3.1
 
 from __future__ import annotations
 
-from .core import Argument as Argument
+from ._utils import UNSET as UNSET
 from .core import Command as Command
 from .core import Context as Context
-from .core import Group as Group
-from .core import Option as Option
 from .core import Parameter as Parameter
-from .decorators import help_option as help_option
-from .decorators import option as option
+from .core import ParameterSource as ParameterSource
 from .exceptions import Abort as Abort
 from .exceptions import BadArgumentUsage as BadArgumentUsage
 from .exceptions import BadOptionUsage as BadOptionUsage
@@ -36,13 +33,11 @@ from .types import FLOAT as FLOAT
 from .types import INT as INT
 from .types import STRING as STRING
 from .types import UUID as UUID
-from .types import Choice as Choice
 from .types import DateTime as DateTime
 from .types import File as File
 from .types import FloatRange as FloatRange
 from .types import IntRange as IntRange
 from .types import ParamType as ParamType
-from .types import Path as Path
 from .types import Tuple as Tuple
 from .utils import echo as echo
 from .utils import format_filename as format_filename

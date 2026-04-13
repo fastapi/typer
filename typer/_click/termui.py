@@ -8,7 +8,7 @@ from gettext import gettext as _
 
 from .exceptions import Abort, UsageError
 from .globals import resolve_color_default
-from .types import Choice, ParamType, convert_type
+from .types import ParamType, convert_type
 from .utils import LazyFile, echo
 
 if t.TYPE_CHECKING:
@@ -56,8 +56,11 @@ def _build_prompt(
     show_choices: bool = True,
     type: ParamType | None = None,
 ) -> str:
+    # prevent circular imports
+    from .._types import TyperChoice
+
     prompt = text
-    if type is not None and show_choices and isinstance(type, Choice):
+    if type is not None and show_choices and isinstance(type, TyperChoice):
         prompt += f" ({', '.join(map(str, type.choices))})"
     if default is not None and show_default:
         prompt = f"{prompt} [{_format_default(default)}]"

@@ -1330,7 +1330,6 @@ def get_group_from_info(
         invoke_without_command=solved_info.invoke_without_command,
         no_args_is_help=solved_info.no_args_is_help,
         subcommand_metavar=solved_info.subcommand_metavar,
-        chain=solved_info.chain,
         result_callback=solved_info.result_callback,
         context_settings=solved_info.context_settings,
         callback=get_callback(
@@ -1362,7 +1361,7 @@ def get_command_name(name: str) -> str:
 
 def get_params_convertors_ctx_param_name_from_function(
     callback: Callable[..., Any] | None,
-) -> tuple[list[_click.Argument | _click.Option], dict[str, Any], str | None]:
+) -> tuple[list[TyperArgument | TyperOption], dict[str, Any], str | None]:
     params = []
     convertors = {}
     context_param_name = None
@@ -1603,17 +1602,12 @@ def get_click_type(
             atomic=parameter_info.atomic,
         )
     elif lenient_issubclass(annotation, Enum):
-        # The custom TyperChoice is only needed for Click < 8.2.0, to parse the
-        # command line values matching them to the enum values. Click 8.2.0 added
-        # support for enum values but reading enum names.
-        # Passing here the list of enum values (instead of just the enum) accounts for
-        # Click < 8.2.0.
         return TyperChoice(
             [item.value for item in annotation],
             case_sensitive=parameter_info.case_sensitive,
         )
     elif is_literal_type(annotation):
-        return _click.Choice(
+        return TyperChoice(
             literal_values(annotation),
             case_sensitive=parameter_info.case_sensitive,
         )
@@ -1626,7 +1620,7 @@ def lenient_issubclass(cls: Any, class_or_tuple: AnyType | tuple[AnyType, ...]) 
 
 def get_click_param(
     param: ParamMeta,
-) -> tuple[_click.Argument | _click.Option, Any]:
+) -> tuple[TyperArgument | TyperOption, Any]:
     # First, find out what will be:
     # * ParamInfo (ArgumentInfo or OptionInfo)
     # * default_value

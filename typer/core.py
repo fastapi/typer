@@ -2,7 +2,7 @@ import errno
 import inspect
 import os
 import sys
-from collections.abc import Callable, MutableMapping, Sequence
+from collections.abc import Callable, Mapping, MutableMapping, Sequence
 from difflib import get_close_matches
 from enum import Enum
 from gettext import gettext as _
@@ -14,6 +14,8 @@ from typing import (
 )
 
 from . import _click
+from ._click import UNSET, types
+from ._click.parser import _OptionParser
 from ._typing import Literal
 from .utils import parse_boolean_env_var
 
@@ -241,7 +243,9 @@ def _main(
         sys.exit(1)
 
 
-class TyperArgument(_click.core.Argument):
+class TyperArgument(_click.core.Parameter):
+    param_type_name = "argument"
+
     def __init__(
         self,
         *,
@@ -280,6 +284,20 @@ class TyperArgument(_click.core.Argument):
         self.hidden = hidden
         self.rich_help_panel = rich_help_panel
 
+        # Auto-detect the requirement status of the argument if not explicitly set.
+        # TODO: Doesn't hit coverage -> investigate, maybe remove
+        if required is None:
+            # The argument gets automatically required if it has no explicit default
+            # value set and is setup to match at least one value.
+            if default is _click.UNSET:
+                if nargs is not None:
+                    required = nargs > 0
+                else:
+                    required = True
+            # If the argument has a default value, it is not required.
+            else:
+                required = False
+
         super().__init__(
             param_decls=param_decls,
             type=type,
@@ -294,6 +312,12 @@ class TyperArgument(_click.core.Argument):
             shell_complete=shell_complete,
         )
         _typer_param_setup_autocompletion_compat(self, autocompletion=autocompletion)
+
+    @property
+    def human_readable_name(self) -> str:
+        if self.metavar is not None:
+            return self.metavar
+        return self.name.upper()  # type: ignore
 
     def _get_default_string(
         self,
@@ -391,8 +415,38 @@ class TyperArgument(_click.core.Argument):
     def value_is_missing(self, value: Any) -> bool:
         return _value_is_missing(self, value)
 
+    def _parse_decls(
+        self, decls: Sequence[str], expose_value: bool
+    ) -> tuple[str | None, list[str], list[str]]:
+        if not decls:
+            if not expose_value:
+                return None, [], []
+            raise TypeError("Argument is marked as exposed, but does not have a name.")
+        if len(decls) == 1:
+            name = arg = decls[0]
+            name = name.replace("-", "_").lower()
+        else:
+            raise TypeError(
+                "Arguments take exactly one parameter declaration, got"
+                f" {len(decls)}: {decls}."
+            )
+        return name, [arg], []
 
-class TyperOption(_click.core.Option):
+    def get_usage_pieces(self, ctx: _click.Context) -> list[str]:
+        return [self.make_metavar(ctx)]
+
+    def get_error_hint(self, ctx: _click.Context) -> str:
+        return f"'{self.make_metavar(ctx)}'"
+
+    def add_to_parser(self, parser: _OptionParser, ctx: _click.Context) -> None:
+        parser.add_argument(dest=self.name, nargs=self.nargs, obj=self)
+
+
+class TyperOption(_click.Parameter):
+    param_type_name = "option"
+
+    _depr_flag_value: bool | None
+
     def __init__(
         self,
         *,
@@ -432,9 +486,16 @@ class TyperOption(_click.core.Option):
         # Rich settings
         rich_help_panel: str | None = None,
     ):
+        if help:
+            help = inspect.cleandoc(help)
+
+        # TODO: this was added for mypy: type mismatch between TyperOption and Parameter
+        assert required is not None
+
         super().__init__(
-            param_decls=param_decls,
+            param_decls,
             type=type,
+            multiple=multiple,
             required=required,
             default=default,
             callback=callback,
@@ -443,23 +504,411 @@ class TyperOption(_click.core.Option):
             expose_value=expose_value,
             is_eager=is_eager,
             envvar=envvar,
-            show_default=show_default,
-            prompt=prompt,
-            confirmation_prompt=confirmation_prompt,
-            hide_input=hide_input,
-            is_flag=is_flag,
-            multiple=multiple,
-            count=count,
-            allow_from_autoenv=allow_from_autoenv,
-            help=help,
-            hidden=hidden,
-            show_choices=show_choices,
-            show_envvar=show_envvar,
-            prompt_required=prompt_required,
             shell_complete=shell_complete,
         )
+
+        if prompt is True:
+            if self.name is None:
+                raise TypeError("'name' is required with 'prompt=True'.")
+
+            prompt_text: str | None = self.name.replace("_", " ").capitalize()
+        elif prompt is False:
+            prompt_text = None
+        else:
+            prompt_text = prompt
+
+        self.prompt = prompt_text
+        self.confirmation_prompt = confirmation_prompt
+        self.prompt_required = prompt_required
+        self.hide_input = hide_input
+        self.hidden = hidden
+
+        # TODO: revisit all of this flag stuff
+        self._depr_flag_needs_value = (
+            self.prompt is not None and not self.prompt_required
+        )
+
+        if is_flag is None:
+            # if flag_value is not UNSET:
+            #     is_flag = True
+            # elif
+            if self._depr_flag_needs_value:
+                is_flag = False
+            elif self.secondary_opts:
+                is_flag = True
+        elif is_flag is False and not self._depr_flag_needs_value:
+            self._depr_flag_needs_value = self.default is UNSET
+
+        if is_flag:
+            # if self.default is UNSET and not self.required and not self.prompt:
+            #     if multiple:
+            #         self.default = ()
+
+            if type is None:
+                # if flag_value is UNSET:
+                self.type: types.ParamType = types.BoolParamType()
+                # elif isinstance(flag_value, bool):
+                #     self.type = types.BoolParamType()
+                # else:
+                # self.type = types.convert_type(None, flag_value)
+
+        self.is_flag: bool = bool(is_flag)
+        self.is_bool_flag: bool = bool(
+            is_flag and isinstance(self.type, types.BoolParamType)
+        )
+        # self._depr_flag_value: Any = UNSET
+
+        # Set boolean flag default to False if unset and not required.
+        if self.is_bool_flag:
+            if self.default is UNSET and not self.required:
+                self.default = False
+
+        # if self.default is True and self.flag_value is not UNSET:
+        #     self.default = self.flag_value
+
+        # if self._depr_flag_value is UNSET:
+        if self.is_flag:
+            self._depr_flag_value = True
+        else:
+            self._depr_flag_value = None
+
+        # Counting. TODO: test or remove? Not currently in coverage.
+        self.count = count
+        if count:
+            if type is None:
+                self.type = _click.IntRange(min=0)
+            if self.default is _click.UNSET:
+                self.default = 0
+
+        self.allow_from_autoenv = allow_from_autoenv
+        self.help = help
+        self.show_default = show_default
+        self.show_choices = show_choices
+        self.show_envvar = show_envvar
+
         _typer_param_setup_autocompletion_compat(self, autocompletion=autocompletion)
         self.rich_help_panel = rich_help_panel
+
+    def get_error_hint(self, ctx: _click.Context) -> str:
+        result = super().get_error_hint(ctx)
+        if self.show_envvar and self.envvar is not None:
+            result += f" (env var: '{self.envvar}')"
+        return result
+
+    def _parse_decls(
+        self, decls: Sequence[str], expose_value: bool
+    ) -> tuple[str | None, list[str], list[str]]:
+        opts = []
+        secondary_opts = []
+        name = None
+        possible_names = []
+
+        for decl in decls:
+            if decl.isidentifier():
+                if name is not None:
+                    raise TypeError(f"Name '{name}' defined twice")
+                name = decl
+            else:
+                split_char = ";" if decl[:1] == "/" else "/"
+                if split_char in decl:
+                    first, second = decl.split(split_char, 1)
+                    first = first.rstrip()
+                    if first:
+                        possible_names.append(_split_opt(first))
+                        opts.append(first)
+                    second = second.lstrip()
+                    if second:
+                        secondary_opts.append(second.lstrip())
+                    if first == second:
+                        raise ValueError(
+                            f"Boolean option {decl!r} cannot use the"
+                            " same flag for true/false."
+                        )
+                else:
+                    possible_names.append(_split_opt(decl))
+                    opts.append(decl)
+
+        if name is None and possible_names:
+            possible_names.sort(key=lambda x: -len(x[0]))  # group long options first
+            name = possible_names[0][1].replace("-", "_").lower()
+            if not name.isidentifier():
+                name = None
+
+        return name, opts, secondary_opts
+
+    def add_to_parser(self, parser: _OptionParser, ctx: _click.Context) -> None:
+        if self.multiple:
+            action = "append"
+        elif self.count:
+            action = "count"
+        else:
+            action = "store"
+
+        if self.is_flag:
+            action = f"{action}_const"
+
+            if self.is_bool_flag and self.secondary_opts:
+                parser.add_option(
+                    obj=self, opts=self.opts, dest=self.name, action=action, const=True
+                )
+                parser.add_option(
+                    obj=self,
+                    opts=self.secondary_opts,
+                    dest=self.name,
+                    action=action,
+                    const=False,
+                )
+            else:
+                parser.add_option(
+                    obj=self,
+                    opts=self.opts,
+                    dest=self.name,
+                    action=action,
+                    const=self._depr_flag_value,
+                )
+        else:
+            parser.add_option(
+                obj=self,
+                opts=self.opts,
+                dest=self.name,
+                action=action,
+                nargs=self.nargs,
+            )
+
+    def get_help_extra(self, ctx: _click.Context) -> _click.types.OptionHelpExtra:
+        extra: _click.types.OptionHelpExtra = {}
+
+        # TODO: no coverage. Test or remove?
+        if self.show_envvar:
+            envvar = self.envvar
+
+            if envvar is None:
+                if (
+                    self.allow_from_autoenv
+                    and ctx.auto_envvar_prefix is not None
+                    and self.name is not None
+                ):
+                    envvar = f"{ctx.auto_envvar_prefix}_{self.name.upper()}"
+
+            if envvar is not None:
+                if isinstance(envvar, str):
+                    extra["envvars"] = (envvar,)
+                else:
+                    extra["envvars"] = tuple(str(d) for d in envvar)
+
+        # Temporarily enable resilient parsing to avoid type casting
+        # failing for the default. Might be possible to extend this to
+        # help formatting in general.
+        resilient = ctx.resilient_parsing
+        ctx.resilient_parsing = True
+
+        try:
+            default_value = self.get_default(ctx, call=False)
+        finally:
+            ctx.resilient_parsing = resilient
+
+        show_default = False
+        show_default_is_str = False
+
+        # TODO: no coverage. Test or remove?
+        if self.show_default is not None:
+            if isinstance(self.show_default, str):
+                show_default_is_str = show_default = True
+            else:
+                show_default = self.show_default
+        elif ctx.show_default is not None:
+            show_default = ctx.show_default
+
+        if show_default_is_str or (
+            show_default and (default_value not in (None, _click.UNSET))
+        ):
+            if show_default_is_str:
+                default_string = f"({self.show_default})"
+            elif isinstance(default_value, (list, tuple)):
+                default_string = ", ".join(str(d) for d in default_value)
+            elif isinstance(default_value, Enum):
+                default_string = default_value.name
+            elif inspect.isfunction(default_value):
+                default_string = _("(dynamic)")
+            elif self.is_bool_flag and self.secondary_opts:
+                # For boolean flags that have distinct True/False opts,
+                # use the opt without prefix instead of the value.
+                default_string = _split_opt(
+                    (self.opts if default_value else self.secondary_opts)[0]
+                )[1]
+            elif self.is_bool_flag and not self.secondary_opts and not default_value:
+                default_string = ""
+            elif default_value == "":
+                default_string = '""'
+            else:
+                default_string = str(default_value)
+
+            if default_string:
+                extra["default"] = default_string
+
+        # TODO: no coverage. Test or remove?
+        if (
+            isinstance(self.type, _click.types._NumberRangeBase)
+            # skip count with default range type
+            and not (self.count and self.type.min == 0 and self.type.max is None)
+        ):
+            range_str = self.type._describe_range()
+
+            if range_str:
+                extra["range"] = range_str
+
+        if self.required:
+            extra["required"] = "required"
+
+        return extra
+
+    def prompt_for_value(self, ctx: _click.Context) -> Any:
+        """This is an alternative flow that can be activated in the full
+        value processing if a value does not exist.  It will prompt the
+        user until a valid value exists and then returns the processed
+        value as result.
+        """
+        assert self.prompt is not None
+
+        # Calculate the default before prompting anything to lock in the value before
+        # attempting any user interaction.
+        default = self.get_default(ctx)
+
+        # A boolean flag can use a simplified [y/n] confirmation prompt.
+        if self.is_bool_flag:
+            # If we have no boolean default, we force the user to explicitly provide
+            # one.
+            if default in (_click.UNSET, None):
+                default = None
+            # Nothing prevent you to declare an option that is simultaneously:
+            # 1) auto-detected as a boolean flag,
+            # 2) allowed to prompt, and
+            # 3) still declare a non-boolean default.
+            # This forced casting into a boolean is necessary to align any non-boolean
+            # default to the prompt, which is going to be a [y/n]-style confirmation
+            # because the option is still a boolean flag. That way, instead of [y/n],
+            # we get [Y/n] or [y/N] depending on the truthy value of the default.
+            # Refs: https://github.com/pallets/click/pull/3030#discussion_r2289180249
+            else:
+                default = bool(default)
+            return _click.confirm(self.prompt, default)
+
+        # If show_default is set to True/False, provide this to `prompt` as well. For
+        # non-bool values of `show_default`, we use `prompt`'s default behavior
+        prompt_kwargs: Any = {}
+        if isinstance(self.show_default, bool):
+            prompt_kwargs["show_default"] = self.show_default
+
+        return _click.prompt(
+            self.prompt,
+            # Use ``None`` to inform the prompt() function to reiterate until a valid
+            # value is provided by the user if we have no default.
+            default=None if default is _click.UNSET else default,
+            type=self.type,
+            hide_input=self.hide_input,
+            show_choices=self.show_choices,
+            confirmation_prompt=self.confirmation_prompt,
+            value_proc=lambda x: self.process_value(ctx, x),
+            **prompt_kwargs,
+        )
+
+    def value_from_envvar(self, ctx: _click.Context) -> Any:
+        rv = self.resolve_envvar_value(ctx)
+
+        # Absent environment variable or an empty string is interpreted as unset.
+        if rv is None:
+            return None
+
+    def resolve_envvar_value(self, ctx: _click.Context) -> str | None:
+        rv = super().resolve_envvar_value(ctx)
+
+        if rv is not None:
+            return rv
+
+        if (
+            self.allow_from_autoenv
+            and ctx.auto_envvar_prefix is not None
+            and self.name is not None
+        ):
+            envvar = f"{ctx.auto_envvar_prefix}_{self.name.upper()}"
+            rv = os.environ.get(envvar)
+
+            if rv:
+                return rv
+
+        return None
+
+    def consume_value(
+        self, ctx: _click.Context, opts: Mapping[str, _click.Parameter]
+    ) -> tuple[Any, _click.core.ParameterSource]:
+        """For :class:`Option`, the value can be collected from an interactive prompt
+        if the option is a flag that needs a value (and the :attr:`prompt` property is
+        set).
+
+        Additionally, this method handles flag option that are activated without a
+        value, in which case the :attr:`flag_value` is returned.
+        """
+        value, source = super().consume_value(ctx, opts)
+
+        # TODO: evaluate this code. Needed for Typer?
+
+        # Re-interpret a multiple option which has been sent as-is by the parser.
+        # Here we replace each occurrence of value-less flags (marked by the
+        # FLAG_NEEDS_VALUE sentinel) with the flag_value.
+        if (
+            self.multiple
+            and value is not _click.UNSET
+            and source
+            not in (
+                _click.core.ParameterSource.DEFAULT,
+                _click.core.ParameterSource.DEFAULT_MAP,
+            )
+            and any(v is _click._utils.FLAG_NEEDS_VALUE for v in value)
+        ):
+            value = list(value)
+            source = _click.core.ParameterSource.COMMANDLINE
+
+        # The value wasn't set, or used the param's default, prompt for one to the user
+        # if prompting is enabled.
+        elif (
+            (
+                value is _click.UNSET
+                or source
+                in (
+                    _click.core.ParameterSource.DEFAULT,
+                    _click.core.ParameterSource.DEFAULT_MAP,
+                )
+            )
+            and self.prompt is not None
+            and (self.required or self.prompt_required)
+            and not ctx.resilient_parsing
+        ):
+            value = self.prompt_for_value(ctx)
+            source = _click.core.ParameterSource.PROMPT
+
+        return value, source
+
+    def process_value(self, ctx: _click.Context, value: Any) -> Any:
+        # process_value has to be overridden on Options in order to capture
+        # `value == UNSET` cases before `type_cast_value()` gets called.
+        #
+        # Refs:
+        # https://github.com/pallets/click/issues/3069
+        if (
+            self.is_flag
+            and not self.required
+            and self.is_bool_flag
+            and value is _click.UNSET
+        ):
+            value = False
+
+            if self.callback is not None:
+                value = self.callback(ctx, self, value)
+
+            return value
+
+        # in the normal case, rely on Parameter.process_value
+        return super().process_value(ctx, value)
 
     def _get_default_string(
         self,
@@ -726,7 +1175,12 @@ class TyperCommand(_click.core.Command):
         )
 
 
-class TyperGroup(_click.core.Group):
+class TyperGroup(_click.Command):
+    allow_extra_args = True
+    allow_interspersed_args = False
+    command_class: type[_click.Command] | None = None
+    group_class: type["TyperGroup"] | type[type] | None = None
+
     def __init__(
         self,
         *,
@@ -736,12 +1190,131 @@ class TyperGroup(_click.core.Group):
         rich_markup_mode: MarkupMode = DEFAULT_MARKUP_MODE,
         rich_help_panel: str | None = None,
         suggest_commands: bool = True,
+        # Click settings
+        invoke_without_command: bool = False,
+        no_args_is_help: bool = False,
+        subcommand_metavar: str | None = None,
+        result_callback: Callable[..., Any] | None = None,
         **attrs: Any,
     ) -> None:
-        super().__init__(name=name, commands=commands, **attrs)
+        super().__init__(name=name, **attrs)
         self.rich_markup_mode: MarkupMode = rich_markup_mode
         self.rich_help_panel = rich_help_panel
         self.suggest_commands = suggest_commands
+
+        # copied from Click's init
+        if commands is None:
+            commands = {}
+        elif isinstance(commands, Sequence):
+            commands = {c.name: c for c in commands if c.name is not None}
+
+        self.commands: MutableMapping[str, _click.Command] = commands
+        self.no_args_is_help = no_args_is_help
+        self.invoke_without_command = invoke_without_command
+
+        if subcommand_metavar is None:
+            subcommand_metavar = "COMMAND [ARGS]..."
+
+        self.subcommand_metavar = subcommand_metavar
+        self._result_callback = result_callback
+
+    def add_command(self, cmd: _click.Command, name: str | None = None) -> None:
+        name = name or cmd.name
+        if name is None:
+            raise TypeError("Command has no name.")
+        self.commands[name] = cmd
+
+    def get_command(self, ctx: _click.Context, cmd_name: str) -> _click.Command | None:
+        return self.commands.get(cmd_name)
+
+    def collect_usage_pieces(self, ctx: _click.Context) -> list[str]:
+        rv = super().collect_usage_pieces(ctx)
+        rv.append(self.subcommand_metavar)
+        return rv
+
+    def format_commands(
+        self, ctx: _click.Context, formatter: _click.HelpFormatter
+    ) -> None:
+        commands = []
+        for subcommand in self.list_commands(ctx):
+            cmd = self.get_command(ctx, subcommand)
+
+            commands.append((subcommand, cmd))
+
+        # allow for 3 times the default spacing
+        if len(commands):
+            limit = formatter.width - 6 - max(len(cmd[0]) for cmd in commands)
+
+            rows = []
+            for subcommand, cmd in commands:
+                assert cmd is not None
+                help = cmd.get_short_help_str(limit)
+                rows.append((subcommand, help))
+
+            if rows:
+                with formatter.section(_("Commands")):
+                    formatter.write_dl(rows)
+
+    def parse_args(self, ctx: _click.Context, args: list[str]) -> list[str]:
+        if not args and self.no_args_is_help and not ctx.resilient_parsing:
+            raise _click.exceptions.NoArgsIsHelpError(ctx)
+
+        rest = super().parse_args(ctx, args)
+
+        if rest:
+            ctx._protected_args, ctx.args = rest[:1], rest[1:]
+
+        return ctx.args
+
+    def invoke(self, ctx: _click.Context) -> Any:
+        def _process_result(value: Any) -> Any:
+            if self._result_callback is not None:
+                value = ctx.invoke(self._result_callback, value, **ctx.params)
+            return value
+
+        if not ctx._protected_args:
+            if self.invoke_without_command:
+                # No subcommand was invoked, so the result callback is
+                # invoked with the group return value for regular
+                # groups, or an empty list for chained groups.
+                with ctx:
+                    rv = super().invoke(ctx)
+                    # return _process_result([] if self.chain else rv)
+                    return _process_result(rv)
+            ctx.fail(_("Missing command."))
+
+        # Fetch args back out
+        args = [*ctx._protected_args, *ctx.args]
+        ctx.args = []
+        ctx._protected_args = []
+
+        # Make sure the context is entered so we do not clean up
+        # resources until the result processor has worked.
+        with ctx:
+            cmd_name, cmd, args = self.resolve_command(ctx, args)
+            assert cmd is not None
+            ctx.invoked_subcommand = cmd_name
+            super().invoke(ctx)
+            sub_ctx = cmd.make_context(cmd_name, args, parent=ctx)
+            with sub_ctx:
+                return _process_result(sub_ctx.command.invoke(sub_ctx))
+
+    def shell_complete(
+        self, ctx: _click.Context, incomplete: str
+    ) -> list[_click.shell_completion.CompletionItem]:
+        """Return a list of completions for the incomplete value. Looks
+        at the names of options, subcommands, and chained
+        multi-commands.
+        """
+
+        results = [
+            _click.shell_completion.CompletionItem(
+                name, help=command.get_short_help_str()
+            )
+            for name, command in _click.core._complete_visible_commands(ctx, incomplete)
+        ]
+        results.extend(super().shell_complete(ctx, incomplete))
+        return results
 
     def format_options(
         self, ctx: _click.Context, formatter: _click.HelpFormatter
@@ -759,11 +1332,30 @@ class TyperGroup(_click.core.Group):
             self, ctx_args=ctx_args, prog_name=prog_name, complete_var=complete_var
         )
 
+    def _click_resolve_command(
+        self, ctx: _click.Context, args: list[str]
+    ) -> tuple[str | None, _click.Command | None, list[str]]:
+        cmd_name = _click.utils.make_str(args[0])
+        original_cmd_name = cmd_name
+
+        # Get the command
+        cmd = self.get_command(ctx, cmd_name)
+
+        if cmd is None and ctx.token_normalize_func is not None:
+            cmd_name = ctx.token_normalize_func(cmd_name)
+            cmd = self.get_command(ctx, cmd_name)
+
+        if cmd is None and not ctx.resilient_parsing:
+            if _split_opt(cmd_name)[0]:
+                self.parse_args(ctx, args)
+            ctx.fail(_("No such command {name!r}.").format(name=original_cmd_name))
+        return cmd_name if cmd else None, cmd, args[1:]
+
     def resolve_command(
         self, ctx: _click.Context, args: list[str]
     ) -> tuple[str | None, _click.Command | None, list[str]]:
         try:
-            return super().resolve_command(ctx, args)
+            return self._click_resolve_command(ctx, args)
         except _click.UsageError as e:
             if self.suggest_commands:
                 available_commands = list(self.commands.keys())
@@ -808,7 +1400,5 @@ class TyperGroup(_click.core.Group):
         )
 
     def list_commands(self, ctx: _click.Context) -> list[str]:
-        """Returns a list of subcommand names.
-        Note that in Click's Group class, these are sorted.
-        In Typer, we wish to maintain the original order of creation (cf Issue #933)"""
+        """Returns a list of subcommand names, maintaining the original order of creation (cf Issue #933)"""
         return [n for n, c in self.commands.items()]
