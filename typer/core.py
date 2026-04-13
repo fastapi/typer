@@ -796,22 +796,9 @@ class TyperOption(_click.Parameter):
         """
         value, source = super().consume_value(ctx, opts)
 
-        # TODO: evaluate this code. Needed for Typer?
-
-        # Re-interpret a multiple option which has been sent as-is by the parser.
-        # Here we replace each occurrence of value-less flags (marked by the
-        # FLAG_NEEDS_VALUE sentinel) with the flag_value.
-        if (
-            self.multiple
-            and value is not None
-            and any(v is _click._utils.FLAG_NEEDS_VALUE for v in value)
-        ):
-            value = list(value)
-            source = _click.core.ParameterSource.COMMANDLINE
-
         # The value wasn't set, or used the param's default, prompt for one to the user
         # if prompting is enabled.
-        elif (
+        if (
             source in {None, _click.ParameterSource.DEFAULT}
             and self.prompt is not None
             and (self.required or self.prompt_required)

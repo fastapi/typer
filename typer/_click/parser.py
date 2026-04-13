@@ -30,14 +30,12 @@ from collections import deque
 from gettext import gettext as _
 from gettext import ngettext
 
-from ._utils import FLAG_NEEDS_VALUE
 from .exceptions import BadArgumentUsage, BadOptionUsage, NoSuchOption, UsageError
 
 if t.TYPE_CHECKING:
     from typer.core import TyperArgument as CoreArgument
     from typer.core import TyperOption as CoreOption
 
-    from ._utils import T_FLAG_NEEDS_VALUE
     from .core import Context
     from .core import Parameter as CoreParameter
 
@@ -423,38 +421,22 @@ class _OptionParser:
 
     def _get_value_from_state(
         self, option_name: str, option: _Option, state: _ParsingState
-    ) -> str | cabc.Sequence[str] | T_FLAG_NEEDS_VALUE:
+    ) -> str | cabc.Sequence[str]:
         nargs = option.nargs
 
-        value: str | cabc.Sequence[str] | T_FLAG_NEEDS_VALUE
+        value: str | cabc.Sequence[str]
 
         if len(state.rargs) < nargs:
-            if option.obj._depr_flag_needs_value:
-                # Option allows omitting the value.
-                value = FLAG_NEEDS_VALUE
-            else:
-                raise BadOptionUsage(
-                    option_name,
-                    ngettext(
-                        "Option {name!r} requires an argument.",
-                        "Option {name!r} requires {nargs} arguments.",
-                        nargs,
-                    ).format(name=option_name, nargs=nargs),
-                )
+            raise BadOptionUsage(
+                option_name,
+                ngettext(
+                    "Option {name!r} requires an argument.",
+                    "Option {name!r} requires {nargs} arguments.",
+                    nargs,
+                ).format(name=option_name, nargs=nargs),
+            )
         elif nargs == 1:
-            next_rarg = state.rargs[0]
-
-            if (
-                option.obj._depr_flag_needs_value
-                and isinstance(next_rarg, str)
-                and next_rarg[:1] in self._opt_prefixes
-                and len(next_rarg) > 1
-            ):
-                # The next arg looks like the start of an option, don't
-                # use it as the value if omitting the value is allowed.
-                value = FLAG_NEEDS_VALUE
-            else:
-                value = state.rargs.pop(0)
+            value = state.rargs.pop(0)
         else:
             value = tuple(state.rargs[:nargs])
             del state.rargs[:nargs]
