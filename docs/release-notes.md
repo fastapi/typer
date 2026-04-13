@@ -17,6 +17,7 @@
 
 ### Internal
 
+* ⬆ Bump mypy from 1.20.0 to 1.20.1. PR [#1689](https://github.com/fastapi/typer/pull/1689) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump cryptography from 46.0.6 to 46.0.7. PR [#1682](https://github.com/fastapi/typer/pull/1682) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ruff from 0.15.9 to 0.15.10. PR [#1684](https://github.com/fastapi/typer/pull/1684) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pytest from 9.0.2 to 9.0.3. PR [#1681](https://github.com/fastapi/typer/pull/1681) by [@dependabot[bot]](https://github.com/apps/dependabot).
