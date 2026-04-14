@@ -48,7 +48,7 @@ def test_user_2(mod: ModuleType):
 def test_invalid_user(mod: ModuleType):
     result = runner.invoke(mod.app, ["--user", "Camila", "50"])
     assert result.exit_code != 0
-    assert "Option '--user' requires 3 arguments" in result.output
+    assert "Option '--user' requires 3 argument(s)" in result.output
 
 
 def test_script(mod: ModuleType):
