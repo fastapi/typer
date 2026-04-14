@@ -4,17 +4,15 @@ import time of Click down, some infrequently used functionality is
 placed in this module and only imported as needed.
 """
 
-from __future__ import annotations
-
 import contextlib
 import math
 import os
 import sys
 import time
-import typing as t
-from collections.abc import Iterable, Iterator
+from collections.abc import Callable, Iterable, Iterator
 from io import StringIO
 from types import TracebackType
+from typing import Generic, TextIO, TypeVar, cast
 
 from ._compat import (
     CYGWIN,
@@ -26,7 +24,7 @@ from ._compat import (
 )
 from .utils import echo
 
-V = t.TypeVar("V")
+V = TypeVar("V")
 
 if os.name == "nt":
     BEFORE_BAR = "\r"
@@ -36,7 +34,7 @@ else:
     AFTER_BAR = "\033[?25h\n"
 
 
-class ProgressBar(t.Generic[V]):
+class ProgressBar(Generic[V]):
     def __init__(
         self,
         iterable: Iterable[V] | None,
@@ -49,9 +47,9 @@ class ProgressBar(t.Generic[V]):
         show_eta: bool = True,
         show_percent: bool | None = None,
         show_pos: bool = False,
-        item_show_func: t.Callable[[V | None], str | None] | None = None,
+        item_show_func: Callable[[V | None], str | None] | None = None,
         label: str | None = None,
-        file: t.TextIO | None = None,
+        file: TextIO | None = None,
         color: bool | None = None,
         update_min_steps: int = 1,
         width: int = 30,
@@ -92,7 +90,7 @@ class ProgressBar(t.Generic[V]):
         if iterable is None:
             if length is None:
                 raise TypeError("iterable or length is required")
-            iterable = t.cast("Iterable[V]", range(length))
+            iterable = cast("Iterable[V]", range(length))
         self.iter: Iterable[V] = iter(iterable)
         self.length = length
         self.pos: int = 0
@@ -108,7 +106,7 @@ class ProgressBar(t.Generic[V]):
         self._is_atty = isatty(self.file)
         self._last_line: str | None = None
 
-    def __enter__(self) -> ProgressBar[V]:
+    def __enter__(self) -> "ProgressBar[V]":
         self.entered = True
         self.render_progress()
         return self
@@ -301,17 +299,6 @@ class ProgressBar(t.Generic[V]):
         """Update the progress bar by advancing a specified number of
         steps, and optionally set the ``current_item`` for this new
         position.
-
-        :param n_steps: Number of steps to advance.
-        :param current_item: Optional item to set as ``current_item``
-            for the updated position.
-
-        .. versionchanged:: 8.0
-            Added the ``current_item`` optional parameter.
-
-        .. versionchanged:: 8.0
-            Only render when the number of steps meets the
-            ``update_min_steps`` threshold.
         """
         if current_item is not None:
             self.current_item = current_item
@@ -485,9 +472,9 @@ if sys.platform == "win32":
         # is doing the right thing in more situations than with `getch`.
 
         if echo:
-            func = t.cast(t.Callable[[], str], msvcrt.getwche)
+            func = cast(Callable[[], str], msvcrt.getwche)
         else:
-            func = t.cast(t.Callable[[], str], msvcrt.getwch)
+            func = cast(Callable[[], str], msvcrt.getwch)
 
         rv = func()
 
@@ -505,7 +492,7 @@ else:
 
     @contextlib.contextmanager
     def raw_terminal() -> Iterator[int]:
-        f: t.TextIO | None
+        f: TextIO | None
         fd: int
 
         if not isatty(sys.stdin):
