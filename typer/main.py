@@ -1509,7 +1509,7 @@ def get_callback(
             else:
                 use_params[k] = v
         if context_param_name:
-            use_params[context_param_name] = _click.get_current_context()
+            use_params[context_param_name] = _click.globals.get_current_context()
         return callback(**use_params)
 
     update_wrapper(wrapper, callback)

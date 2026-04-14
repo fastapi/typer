@@ -16,6 +16,5 @@ from .exceptions import NoSuchOption as NoSuchOption
 from .exceptions import UsageError as UsageError
 from .formatting import HelpFormatter as HelpFormatter
 from .formatting import wrap_text as wrap_text
-from .globals import get_current_context as get_current_context
 from .termui import launch as launch
 from .utils import echo as echo
