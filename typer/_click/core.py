@@ -970,7 +970,7 @@ class Command(ABC):
 
     @abstractmethod
     def format_options(self, ctx: Context, formatter: HelpFormatter) -> None:
-        pass
+        pass  # pragma: no cover
 
     def format_epilog(self, ctx: Context, formatter: HelpFormatter) -> None:
         """Writes the epilog into the formatter if it exists."""
@@ -1090,7 +1090,7 @@ class Command(ABC):
         windows_expand_args: bool = True,
         **extra: t.Any,
     ) -> t.Any:
-        pass
+        pass  # pragma: no cover
 
     @abstractmethod
     def _main_shell_completion(
@@ -1099,7 +1099,7 @@ class Command(ABC):
         prog_name: str,
         complete_var: str | None = None,
     ) -> None:
-        pass
+        pass  # pragma: no cover
 
     def __call__(self, *args: t.Any, **kwargs: t.Any) -> t.Any:
         """Alias for self.main"""
@@ -1116,90 +1116,13 @@ def _check_iter(value: t.Any) -> cabc.Iterator[t.Any]:
     return iter(value)
 
 
-class Parameter:
+class Parameter(ABC):
     r"""A parameter to a command comes in two versions: they are either
     :class:`Option`\s or :class:`Argument`\s.  Other subclasses are currently
     not supported by design as some of the internals for parsing are
     intentionally not finalized.
 
     Some settings are supported by both options and arguments.
-
-    :param param_decls: the parameter declarations for this option or
-                        argument.  This is a list of flags or argument
-                        names.
-    :param type: the type that should be used.  Either a :class:`ParamType`
-                 or a Python type.  The latter is converted into the former
-                 automatically if supported.
-    :param required: controls if this is optional or not.
-    :param default: the default value if omitted.  This can also be a callable,
-                    in which case it's invoked when the default is needed
-                    without any arguments.
-    :param callback: A function to further process or validate the value
-        after type conversion. It is called as ``f(ctx, param, value)``
-        and must return the value. It is called for all sources,
-        including prompts.
-    :param nargs: the number of arguments to match.  If not ``1`` the return
-                  value is a tuple instead of single value.  The default for
-                  nargs is ``1`` (except if the type is a tuple, then it's
-                  the arity of the tuple). If ``nargs=-1``, all remaining
-                  parameters are collected.
-    :param metavar: how the value is represented in the help page.
-    :param expose_value: if this is `True` then the value is passed onwards
-                         to the command callback and stored on the context,
-                         otherwise it's skipped.
-    :param is_eager: eager values are processed before non eager ones.  This
-                     should not be set for arguments or it will inverse the
-                     order of processing.
-    :param envvar: environment variable(s) that are used to provide a default value for
-        this parameter. This can be a string or a sequence of strings. If a sequence is
-        given, only the first non-empty environment variable is used for the parameter.
-    :param shell_complete: A function that returns custom shell
-        completions. Used instead of the param's type completion if
-        given. Takes ``ctx, param, incomplete`` and must return a list
-        of :class:`~click.shell_completion.CompletionItem` or a list of
-        strings.
-
-    .. versionchanged:: 8.2.0
-        Introduction of ``deprecated``.
-
-    .. versionchanged:: 8.2
-        Adding duplicate parameter names to a :class:`~click.core.Command` will
-        result in a ``UserWarning`` being shown.
-
-    .. versionchanged:: 8.2
-        Adding duplicate parameter names to a :class:`~click.core.Command` will
-        result in a ``UserWarning`` being shown.
-
-    .. versionchanged:: 8.0
-        ``process_value`` validates required parameters and bounded
-        ``nargs``, and invokes the parameter callback before returning
-        the value. This allows the callback to validate prompts.
-        ``full_process_value`` is removed.
-
-    .. versionchanged:: 8.0
-        ``autocompletion`` is renamed to ``shell_complete`` and has new
-        semantics described above. The old name is deprecated and will
-        be removed in 8.1, until then it will be wrapped to match the
-        new requirements.
-
-    .. versionchanged:: 8.0
-        For ``multiple=True, nargs>1``, the default must be a list of
-        tuples.
-
-    .. versionchanged:: 8.0
-        Setting a default is no longer required for ``nargs>1``, it will
-        default to ``None``. ``multiple=True`` or ``nargs=-1`` will
-        default to ``()``.
-
-    .. versionchanged:: 7.1
-        Empty environment variables are ignored rather than taking the
-        empty string value. This makes it possible for scripts to clear
-        variables if they can't unset them.
-
-    .. versionchanged:: 2.0
-        Changed signature for parameter callback to also be passed the
-        parameter. The old callback format will still work, but it will
-        raise a warning to give you a chance to migrate the code easier.
     """
 
     param_type_name = "parameter"
@@ -1252,10 +1175,11 @@ class Parameter:
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} {self.name}>"
 
+    @abstractmethod
     def _parse_decls(
         self, decls: cabc.Sequence[str], expose_value: bool
     ) -> tuple[str | None, list[str], list[str]]:
-        raise NotImplementedError()
+        pass  # pragma: no cover
 
     @property
     def human_readable_name(self) -> str:
@@ -1291,26 +1215,7 @@ class Parameter:
     def get_default(
         self, ctx: Context, call: bool = True
     ) -> t.Any | t.Callable[[], t.Any] | None:
-        """Get the default for the parameter. Tries
-        :meth:`Context.lookup_default` first, then the local default.
-
-        :param ctx: Current context.
-        :param call: If the default is a callable, call it. Disable to
-            return the callable instead.
-
-        .. versionchanged:: 8.0.2
-            Type casting is no longer performed when getting a default.
-
-        .. versionchanged:: 8.0.1
-            Type casting can fail in resilient parsing mode. Invalid
-            defaults will not prevent showing help text.
-
-        .. versionchanged:: 8.0
-            Looks at ``ctx.default_map`` first.
-
-        .. versionchanged:: 8.0
-            Added the ``call`` parameter.
-        """
+        """Get the default for the parameter"""
         value = ctx.lookup_default(self.name, call=False)  # type: ignore
 
         if value is None:
@@ -1359,7 +1264,7 @@ class Parameter:
                 # the parser should construct an iterable when parsing
                 # the command line.
                 raise BadParameter(
-                    _("Value must be an iterable."), ctx=ctx, param=self
+                    "Value must be an iterable.", ctx=ctx, param=self
                 ) from None
 
         # Define the conversion function based on nargs and type.
@@ -1381,11 +1286,7 @@ class Parameter:
 
                 if len(value) != self.nargs:
                     raise BadParameter(
-                        ngettext(
-                            "Takes {nargs} values but 1 was given.",
-                            "Takes {nargs} values but {len} were given.",
-                            len(value),
-                        ).format(nargs=self.nargs, len=len(value)),
+                        f"Takes {self.nargs} values but {len(value)} given.",
                         ctx=ctx,
                         param=self,
                     )
@@ -1397,22 +1298,12 @@ class Parameter:
 
         return convert(value)
 
+    @abstractmethod
     def value_is_missing(self, value: t.Any) -> bool:
-        # Note: not used, Typer's classes overwrite this
-        return True
+        pass  # pragma: no cover
 
     def process_value(self, ctx: Context, value: t.Any) -> t.Any:
-        """Process the value of this parameter:
-
-        1. Type cast the value using :meth:`type_cast_value`.
-        2. Check if the value is missing (see: :meth:`value_is_missing`), and raise
-           :exc:`MissingParameter` if it is required.
-        3. If a :attr:`callback` is set, call it to have the value replaced by the
-           result of the callback. If the value was not set, the callback receive
-           ``None``.
-
-        :meta private:
-        """
+        """Process the value of this parameter"""
         value = self.type_cast_value(ctx, value)
 
         if self.required and self.value_is_missing(value):
@@ -1516,8 +1407,9 @@ class Parameter:
 
         return value, args
 
+    @abstractmethod
     def get_help_record(self, ctx: Context) -> tuple[str, str] | None:
-        pass
+        pass  # pragma: no cover
 
     def get_usage_pieces(self, ctx: Context) -> list[str]:
         return []
