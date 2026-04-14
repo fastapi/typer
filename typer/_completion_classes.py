@@ -68,7 +68,7 @@ class BashComplete(ShellComplete):
         bash_exe = shutil.which("bash")
 
         if bash_exe is None:
-            match = None
+            match = None  # pragma: no cover
         else:
             output = subprocess.run(
                 [bash_exe, "--norc", "-c", 'echo "${BASH_VERSION}"'],
@@ -88,7 +88,7 @@ class BashComplete(ShellComplete):
             _click.utils.echo(
                 "Couldn't detect Bash version, shell completion is not supported.",
                 err=True,
-            )
+            )  # pragma: no cover
 
     def source(self) -> str:
         self._check_version()

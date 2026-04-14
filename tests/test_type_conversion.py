@@ -147,7 +147,7 @@ def test_custom_parse():
 
 
 def test_custom_click_type():
-    class BaseNumberParamType(_click.ParamType):
+    class BaseNumberParamType(_click.types.ParamType):
         name = "base_integer"
 
         def convert(

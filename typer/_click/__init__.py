@@ -24,15 +24,4 @@ from .termui import progressbar as progressbar
 from .termui import prompt as prompt
 from .termui import secho as secho
 from .termui import style as style
-from .types import BOOL as BOOL
-from .types import FLOAT as FLOAT
-from .types import INT as INT
-from .types import STRING as STRING
-from .types import UUID as UUID
-from .types import DateTime as DateTime
-from .types import File as File
-from .types import FloatRange as FloatRange
-from .types import IntRange as IntRange
-from .types import ParamType as ParamType
-from .types import Tuple as Tuple
 from .utils import echo as echo

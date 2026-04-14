@@ -297,7 +297,7 @@ class ParameterInfo:
         default_factory: Callable[[], Any] | None = None,
         # Custom type
         parser: Callable[[str], Any] | None = None,
-        click_type: _click.ParamType | None = None,
+        click_type: _click.types.ParamType | None = None,
         # TyperArgument
         show_default: bool | str = True,
         show_choices: bool = True,
@@ -406,7 +406,7 @@ class OptionInfo(ParameterInfo):
         default_factory: Callable[[], Any] | None = None,
         # Custom type
         parser: Callable[[str], Any] | None = None,
-        click_type: _click.ParamType | None = None,
+        click_type: _click.types.ParamType | None = None,
         # Option
         show_default: bool | str = True,
         prompt: bool | str = False,
@@ -534,7 +534,7 @@ class ArgumentInfo(ParameterInfo):
         default_factory: Callable[[], Any] | None = None,
         # Custom type
         parser: Callable[[str], Any] | None = None,
-        click_type: _click.ParamType | None = None,
+        click_type: _click.types.ParamType | None = None,
         # TyperArgument
         show_default: bool | str = True,
         show_choices: bool = True,
@@ -643,7 +643,7 @@ class DeveloperExceptionConfig:
         self.pretty_exceptions_short = pretty_exceptions_short
 
 
-class TyperPath(_click.ParamType):
+class TyperPath(_click.types.ParamType):
     # Based originally on code from Click 8.3.1
     # Partly rewritten and added an override for shell_complete
 

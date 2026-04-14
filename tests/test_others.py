@@ -37,7 +37,7 @@ def test_too_many_parsers():
     def custom_parser(value: str) -> int:
         return int(value)  # pragma: no cover
 
-    class CustomClickParser(_click.ParamType):
+    class CustomClickParser(_click.types.ParamType):
         name = "custom_parser"
 
         def convert(
@@ -61,7 +61,7 @@ def test_valid_parser_permutations():
     def custom_parser(value: str) -> int:
         return int(value)  # pragma: no cover
 
-    class CustomClickParser(_click.ParamType):
+    class CustomClickParser(_click.types.ParamType):
         name = "custom_parser"
 
         def convert(

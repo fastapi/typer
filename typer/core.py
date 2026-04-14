@@ -530,7 +530,7 @@ class TyperOption(_click.Parameter):
         # Counting. TODO: test or remove? Not currently in coverage.
         self.count = count
         if count and type is None:
-            self.type = _click.IntRange(min=0)
+            self.type = _click.types.IntRange(min=0)
 
         self.allow_from_autoenv = allow_from_autoenv
         self.help = help
