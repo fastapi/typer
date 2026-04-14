@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import collections.abc as cabc
 import contextlib
 import io
@@ -7,25 +5,24 @@ import os
 import shlex
 import sys
 import tempfile
-import typing as t
 from types import TracebackType
+from typing import IO, TYPE_CHECKING, Any, BinaryIO, cast
 
 from . import _compat, formatting, termui, utils
 from ._compat import _find_binary_reader
+from .core import Command
 
-if t.TYPE_CHECKING:
+if TYPE_CHECKING:
     from _typeshed import ReadableBuffer
-
-    from .core import Command
 
 
 class EchoingStdin:
-    def __init__(self, input: t.BinaryIO, output: t.BinaryIO) -> None:
+    def __init__(self, input: BinaryIO, output: BinaryIO) -> None:
         self._input = input
         self._output = output
         self._paused = False
 
-    def __getattr__(self, x: str) -> t.Any:
+    def __getattr__(self, x: str) -> Any:
         return getattr(self._input, x)
 
     def _echo(self, rv: bytes) -> bytes:
@@ -64,10 +61,7 @@ def _pause_echo(stream: EchoingStdin | None) -> cabc.Iterator[None]:
 
 
 class BytesIOCopy(io.BytesIO):
-    """Patch ``io.BytesIO`` to let the written stream be copied to another.
-
-    .. versionadded:: 8.2
-    """
+    """Patch ``io.BytesIO`` to let the written stream be copied to another."""
 
     def __init__(self, copy_to: io.BytesIO) -> None:
         super().__init__()
@@ -77,7 +71,7 @@ class BytesIOCopy(io.BytesIO):
         super().flush()
         self.copy_to.flush()
 
-    def write(self, b: ReadableBuffer) -> int:
+    def write(self, b: "ReadableBuffer") -> int:
         self.copy_to.write(b)
         return super().write(b)
 
@@ -86,8 +80,6 @@ class StreamMixer:
     """Mixes `<stdout>` and `<stderr>` streams.
 
     The result is available in the ``output`` attribute.
-
-    .. versionadded:: 8.2
     """
 
     def __init__(self) -> None:
@@ -100,8 +92,6 @@ class StreamMixer:
         Guarantee that embedded file-like objects are closed in a
         predictable order, protecting against races between
         self.output being closed and other streams being flushed on close
-
-        .. versionadded:: 8.2.2
         """
         self.stderr.close()
         self.stdout.close()
@@ -109,9 +99,7 @@ class StreamMixer:
 
 
 class _NamedTextIOWrapper(io.TextIOWrapper):
-    def __init__(
-        self, buffer: t.BinaryIO, name: str, mode: str, **kwargs: t.Any
-    ) -> None:
+    def __init__(self, buffer: BinaryIO, name: str, mode: str, **kwargs: Any) -> None:
         super().__init__(buffer, **kwargs)
         self._name = name
         self._mode = mode
@@ -125,12 +113,10 @@ class _NamedTextIOWrapper(io.TextIOWrapper):
         return self._mode
 
 
-def make_input_stream(
-    input: str | bytes | t.IO[t.Any] | None, charset: str
-) -> t.BinaryIO:
+def make_input_stream(input: str | bytes | IO[Any] | None, charset: str) -> BinaryIO:
     # Is already an input stream.
     if hasattr(input, "read"):
-        rv = _find_binary_reader(t.cast("t.IO[t.Any]", input))
+        rv = _find_binary_reader(cast("IO[Any]", input))
 
         if rv is not None:
             return rv
@@ -146,34 +132,15 @@ def make_input_stream(
 
 
 class Result:
-    """Holds the captured result of an invoked CLI script.
-
-    :param runner: The runner that created the result
-    :param stdout_bytes: The standard output as bytes.
-    :param stderr_bytes: The standard error as bytes.
-    :param output_bytes: A mix of ``stdout_bytes`` and ``stderr_bytes``, as the
-        user would see  it in its terminal.
-    :param return_value: The value returned from the invoked command.
-    :param exit_code: The exit code as integer.
-    :param exception: The exception that happened if one did.
-    :param exc_info: Exception information (exception type, exception instance,
-        traceback type).
-
-    .. versionchanged:: 8.2
-        ``stderr_bytes`` no longer optional, ``output_bytes`` introduced and
-        ``mix_stderr`` has been removed.
-
-    .. versionadded:: 8.0
-        Added ``return_value``.
-    """
+    """Holds the captured result of an invoked CLI script."""
 
     def __init__(
         self,
-        runner: CliRunner,
+        runner: "CliRunner",
         stdout_bytes: bytes,
         stderr_bytes: bytes,
         output_bytes: bytes,
-        return_value: t.Any,
+        return_value: Any,
         exit_code: int,
         exception: BaseException | None,
         exc_info: tuple[type[BaseException], BaseException, TracebackType]
@@ -190,12 +157,7 @@ class Result:
 
     @property
     def output(self) -> str:
-        """The terminal output as unicode string, as the user would see it.
-
-        .. versionchanged:: 8.2
-            No longer a proxy for ``self.stdout``. Now has its own independent stream
-            that is mixing `<stdout>` and `<stderr>`, in the order they were written.
-        """
+        """The terminal output as unicode string, as the user would see it."""
         return self.output_bytes.decode(self.runner.charset, "replace").replace(
             "\r\n", "\n"
         )
@@ -209,11 +171,7 @@ class Result:
 
     @property
     def stderr(self) -> str:
-        """The standard error as unicode string.
-
-        .. versionchanged:: 8.2
-            No longer raise an exception, always returns the `<stderr>` string.
-        """
+        """The standard error as unicode string."""
         return self.stderr_bytes.decode(self.runner.charset, "replace").replace(
             "\r\n", "\n"
         )
@@ -228,21 +186,6 @@ class CliRunner:
     script for unittesting purposes in a isolated environment.  This only
     works in single-threaded systems without any concurrency as it changes the
     global interpreter state.
-
-    :param charset: the character set for the input and output data.
-    :param env: a dictionary with environment variables for overriding.
-    :param echo_stdin: if this is set to `True`, then reading from `<stdin>` writes
-                       to `<stdout>`.  This is useful for showing examples in
-                       some circumstances.  Note that regular prompts
-                       will automatically echo the input.
-    :param catch_exceptions: Whether to catch any exceptions other than
-                             ``SystemExit`` when running :meth:`~CliRunner.invoke`.
-
-    .. versionchanged:: 8.2
-        Added the ``catch_exceptions`` parameter.
-
-    .. versionchanged:: 8.2
-        ``mix_stderr`` parameter has been removed.
     """
 
     def __init__(
@@ -276,7 +219,7 @@ class CliRunner:
     @contextlib.contextmanager
     def isolation(
         self,
-        input: str | bytes | t.IO[t.Any] | None = None,
+        input: str | bytes | IO[Any] | None = None,
         env: cabc.Mapping[str, str | None] | None = None,
         color: bool = False,
     ) -> cabc.Iterator[tuple[io.BytesIO, io.BytesIO, io.BytesIO]]:
@@ -285,27 +228,6 @@ class CliRunner:
         and `os.environ` with the overrides from the given dictionary.
         This also rebinds some internals in Click to be mocked (like the
         prompt functionality).
-
-        This is automatically done in the :meth:`invoke` method.
-
-        :param input: the input stream to put into `sys.stdin`.
-        :param env: the environment overrides as dictionary.
-        :param color: whether the output should contain color codes. The
-                      application can still override this explicitly.
-
-        .. versionadded:: 8.2
-            An additional output stream is returned, which is a mix of
-            `<stdout>` and `<stderr>` streams.
-
-        .. versionchanged:: 8.2
-            Always returns the `<stderr>` stream.
-
-        .. versionchanged:: 8.0
-            `<stderr>` is opened with ``errors="backslashreplace"``
-            instead of the default ``"strict"``.
-
-        .. versionchanged:: 4.0
-            Added the ``color`` parameter.
         """
         bytes_input = make_input_stream(input, self.charset)
         echo_input = None
@@ -321,8 +243,8 @@ class CliRunner:
         stream_mixer = StreamMixer()
 
         if self.echo_stdin:
-            bytes_input = echo_input = t.cast(
-                t.BinaryIO, EchoingStdin(bytes_input, stream_mixer.stdout)
+            bytes_input = echo_input = cast(
+                BinaryIO, EchoingStdin(bytes_input, stream_mixer.stdout)
             )
 
         sys.stdin = text_input = _NamedTextIOWrapper(
@@ -379,7 +301,7 @@ class CliRunner:
         default_color = color
 
         def should_strip_ansi(
-            stream: t.IO[t.Any] | None = None, color: bool | None = None
+            stream: IO[Any] | None = None, color: bool | None = None
         ) -> bool:
             if color is None:
                 return not default_color
@@ -431,54 +353,16 @@ class CliRunner:
         self,
         cli: Command,
         args: str | cabc.Sequence[str] | None = None,
-        input: str | bytes | t.IO[t.Any] | None = None,
+        input: str | bytes | IO[Any] | None = None,
         env: cabc.Mapping[str, str | None] | None = None,
         catch_exceptions: bool | None = None,
         color: bool = False,
-        **extra: t.Any,
+        **extra: Any,
     ) -> Result:
         """Invokes a command in an isolated environment.  The arguments are
         forwarded directly to the command line script, the `extra` keyword
-        arguments are passed to the :meth:`~clickpkg.Command.main` function of
+        arguments are passed to the `Command.main` function of
         the command.
-
-        This returns a :class:`Result` object.
-
-        :param cli: the command to invoke
-        :param args: the arguments to invoke. It may be given as an iterable
-                     or a string. When given as string it will be interpreted
-                     as a Unix shell command. More details at
-                     :func:`shlex.split`.
-        :param input: the input data for `sys.stdin`.
-        :param env: the environment overrides.
-        :param catch_exceptions: Whether to catch any other exceptions than
-                                 ``SystemExit``. If :data:`None`, the value
-                                 from :class:`CliRunner` is used.
-        :param extra: the keyword arguments to pass to :meth:`main`.
-        :param color: whether the output should contain color codes. The
-                      application can still override this explicitly.
-
-        .. versionadded:: 8.2
-            The result object has the ``output_bytes`` attribute with
-            the mix of ``stdout_bytes`` and ``stderr_bytes``, as the user would
-            see it in its terminal.
-
-        .. versionchanged:: 8.2
-            The result object always returns the ``stderr_bytes`` stream.
-
-        .. versionchanged:: 8.0
-            The result object has the ``return_value`` attribute with
-            the value returned from the invoked command.
-
-        .. versionchanged:: 4.0
-            Added the ``color`` parameter.
-
-        .. versionchanged:: 3.0
-            Added the ``catch_exceptions`` parameter.
-
-        .. versionchanged:: 3.0
-            The result object has the ``exc_info`` attribute with the
-            traceback if available.
         """
         exc_info = None
         if catch_exceptions is None:
@@ -501,7 +385,7 @@ class CliRunner:
                 return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
             except SystemExit as e:
                 exc_info = sys.exc_info()
-                e_code = t.cast("int | t.Any | None", e.code)
+                e_code = cast("int | Any | None", e.code)
 
                 if e_code is None:
                     e_code = 0
@@ -548,13 +432,6 @@ class CliRunner:
         changes the current working directory to it. This isolates tests
         that affect the contents of the CWD to prevent them from
         interfering with each other.
-
-        :param temp_dir: Create the temporary directory under this
-            directory. If given, the created directory is not removed
-            when exiting.
-
-        .. versionchanged:: 8.0
-            Added the ``temp_dir`` parameter.
         """
         cwd = os.getcwd()
         dt = tempfile.mkdtemp(dir=temp_dir)
