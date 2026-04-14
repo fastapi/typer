@@ -10,7 +10,6 @@ import typing as t
 from contextlib import AbstractContextManager, ExitStack, contextmanager
 from gettext import gettext as _
 from gettext import ngettext
-from itertools import repeat
 from types import TracebackType
 
 from . import types
@@ -63,10 +62,6 @@ def _complete_visible_commands(
 
             if command is not None and not command.hidden:
                 yield name, command
-
-
-def batch(iterable: cabc.Iterable[V], batch_size: int) -> list[tuple[V, ...]]:
-    return list(zip(*repeat(iter(iterable), batch_size), strict=False))
 
 
 @contextmanager
@@ -414,18 +409,6 @@ class Context:
         self._depth = 0
         self._parameter_source: dict[str, ParameterSource] = {}
         self._exit_stack = ExitStack()
-
-    @property
-    def protected_args(self) -> list[str]:
-        import warnings
-
-        warnings.warn(
-            "'protected_args' is deprecated and will be removed in Click 9.0."
-            " 'args' will contain remaining unparsed tokens.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        return self._protected_args
 
     def __enter__(self) -> Context:
         self._depth += 1
@@ -1431,11 +1414,6 @@ class Parameter:
         given. Takes ``ctx, param, incomplete`` and must return a list
         of :class:`~click.shell_completion.CompletionItem` or a list of
         strings.
-    :param deprecated: If ``True`` or non-empty string, issues a message
-                        indicating that the argument is deprecated and highlights
-                        its deprecation in --help. The message can be customized
-                        by using a string as the value. A deprecated parameter
-                        cannot be required, a ValueError will be raised otherwise.
 
     .. versionchanged:: 8.2.0
         Introduction of ``deprecated``.
@@ -1499,7 +1477,6 @@ class Parameter:
             [Context, Parameter, str], list[CompletionItem] | list[str]
         ]
         | None = None,
-        deprecated: bool | str = False,
     ) -> None:
         self.name: str | None
         self.opts: list[str]
@@ -1527,7 +1504,6 @@ class Parameter:
         self.metavar = metavar
         self.envvar = envvar
         self._custom_shell_complete = shell_complete
-        self.deprecated = deprecated
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} {self.name}>"
