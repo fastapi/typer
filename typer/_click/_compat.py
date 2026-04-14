@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 import codecs
-import collections.abc as cabc
 import io
 import os
 import re
 import sys
 import typing as t
+from collections.abc import Mapping, MutableMapping
 from types import TracebackType
 from weakref import WeakKeyDictionary
 
@@ -517,7 +517,7 @@ if sys.platform.startswith("win") and WIN:
 
         return locale.getpreferredencoding()
 
-    _ansi_stream_wrappers: cabc.MutableMapping[t.TextIO, t.TextIO] = WeakKeyDictionary()
+    _ansi_stream_wrappers: MutableMapping[t.TextIO, t.TextIO] = WeakKeyDictionary()
 
     def auto_wrap_for_ansi(stream: t.TextIO, color: bool | None = None) -> t.TextIO:
         """Support ANSI color and style codes on Windows by wrapping a
@@ -580,7 +580,7 @@ def _make_cached_stream_func(
     src_func: t.Callable[[], t.TextIO | None],
     wrapper_func: t.Callable[[], t.TextIO],
 ) -> t.Callable[[], t.TextIO | None]:
-    cache: cabc.MutableMapping[t.TextIO, t.TextIO] = WeakKeyDictionary()
+    cache: MutableMapping[t.TextIO, t.TextIO] = WeakKeyDictionary()
 
     def func() -> t.TextIO | None:
         stream = src_func()
@@ -609,13 +609,13 @@ _default_text_stdout = _make_cached_stream_func(lambda: sys.stdout, get_text_std
 _default_text_stderr = _make_cached_stream_func(lambda: sys.stderr, get_text_stderr)
 
 
-binary_streams: cabc.Mapping[str, t.Callable[[], t.BinaryIO]] = {
+binary_streams: Mapping[str, t.Callable[[], t.BinaryIO]] = {
     "stdin": get_binary_stdin,
     "stdout": get_binary_stdout,
     "stderr": get_binary_stderr,
 }
 
-text_streams: cabc.Mapping[str, t.Callable[[str | None, str | None], t.TextIO]] = {
+text_streams: Mapping[str, t.Callable[[str | None, str | None], t.TextIO]] = {
     "stdin": get_text_stdin,
     "stdout": get_text_stdout,
     "stderr": get_text_stderr,

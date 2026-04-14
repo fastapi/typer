@@ -1,9 +1,8 @@
-import collections.abc as cabc
 import enum
 import inspect
 import os
 from abc import ABC, abstractmethod
-from collections.abc import Callable
+from collections.abc import Callable, Iterator, Mapping, MutableMapping, Sequence
 from contextlib import AbstractContextManager, ExitStack, contextmanager
 from types import TracebackType
 from typing import (
@@ -45,7 +44,7 @@ V = TypeVar("V")
 
 def _complete_visible_commands(
     ctx: "Context", incomplete: str
-) -> cabc.Iterator[tuple[str, "Command"]]:
+) -> Iterator[tuple[str, "Command"]]:
     """List all the subcommands of a group that start with the
     incomplete value and aren't hidden.
     """
@@ -65,7 +64,7 @@ def _complete_visible_commands(
 @contextmanager
 def augment_usage_errors(
     ctx: "Context", param: Union["Parameter", None] = None
-) -> cabc.Iterator[None]:
+) -> Iterator[None]:
     """Context manager that attaches extra information to exceptions."""
     try:
         yield
@@ -82,8 +81,8 @@ def augment_usage_errors(
 
 
 def iter_params_for_processing(
-    invocation_order: cabc.Sequence["Parameter"],
-    declaration_order: cabc.Sequence["Parameter"],
+    invocation_order: Sequence["Parameter"],
+    declaration_order: Sequence["Parameter"],
 ) -> list["Parameter"]:
     """Returns all declared parameters in the order they should be processed.
 
@@ -147,7 +146,7 @@ class Context:
         info_name: str | None = None,
         obj: Any | None = None,
         auto_envvar_prefix: str | None = None,
-        default_map: cabc.MutableMapping[str, Any] | None = None,
+        default_map: MutableMapping[str, Any] | None = None,
         terminal_width: int | None = None,
         max_content_width: int | None = None,
         resilient_parsing: bool = False,
@@ -186,7 +185,7 @@ class Context:
         ):
             default_map = parent.default_map.get(info_name)
 
-        self.default_map: cabc.MutableMapping[str, Any] | None = default_map
+        self.default_map: MutableMapping[str, Any] | None = default_map
 
         # This flag indicates if a subcommand is going to be executed.
         self.invoked_subcommand: str | None = None
@@ -291,7 +290,7 @@ class Context:
         return exit_result
 
     @contextmanager
-    def scope(self, cleanup: bool = True) -> cabc.Iterator["Context"]:
+    def scope(self, cleanup: bool = True) -> Iterator["Context"]:
         """This helper method can be used with the context object to promote
         it to the current thread local (see `get_current_context`).
         The default behavior of this is to invoke the cleanup functions which
@@ -524,7 +523,7 @@ class Command(ABC):
     def __init__(
         self,
         name: str | None,
-        context_settings: cabc.MutableMapping[str, Any] | None = None,
+        context_settings: MutableMapping[str, Any] | None = None,
         callback: Callable[..., Any] | None = None,
         params: list["Parameter"] | None = None,
         help: str | None = None,
@@ -541,7 +540,7 @@ class Command(ABC):
         if context_settings is None:
             context_settings = {}
 
-        self.context_settings: cabc.MutableMapping[str, Any] = context_settings
+        self.context_settings: MutableMapping[str, Any] = context_settings
 
         self.callback = callback
         self.params: list[Parameter] = params or []
@@ -788,7 +787,7 @@ class Command(ABC):
     @abstractmethod
     def main(
         self,
-        args: cabc.Sequence[str] | None = None,
+        args: Sequence[str] | None = None,
         prog_name: str | None = None,
         complete_var: str | None = None,
         standalone_mode: bool = True,
@@ -800,7 +799,7 @@ class Command(ABC):
     @abstractmethod
     def _main_shell_completion(
         self,
-        ctx_args: cabc.MutableMapping[str, Any],
+        ctx_args: MutableMapping[str, Any],
         prog_name: str,
         complete_var: str | None = None,
     ) -> None:
@@ -824,7 +823,7 @@ class Parameter(ABC):
 
     def __init__(
         self,
-        param_decls: cabc.Sequence[str] | None = None,
+        param_decls: Sequence[str] | None = None,
         type: types.ParamType | Any | None = None,
         required: bool = False,
         default: Any | Callable[[], Any] | None = None,
@@ -834,7 +833,7 @@ class Parameter(ABC):
         metavar: str | None = None,
         expose_value: bool = True,
         is_eager: bool = False,
-        envvar: str | cabc.Sequence[str] | None = None,
+        envvar: str | Sequence[str] | None = None,
         shell_complete: Callable[
             [Context, "Parameter", str], list["CompletionItem"] | list[str]
         ]
@@ -872,7 +871,7 @@ class Parameter(ABC):
 
     @abstractmethod
     def _parse_decls(
-        self, decls: cabc.Sequence[str], expose_value: bool
+        self, decls: Sequence[str], expose_value: bool
     ) -> tuple[str | None, list[str], list[str]]:
         pass  # pragma: no cover
 
@@ -924,7 +923,7 @@ class Parameter(ABC):
         pass  # pragma: no cover
 
     def consume_value(
-        self, ctx: Context, opts: cabc.Mapping[str, Any]
+        self, ctx: Context, opts: Mapping[str, Any]
     ) -> tuple[Any, ParameterSource]:
         value = opts.get(self.name)  # type: ignore
         source = ParameterSource.COMMANDLINE
@@ -950,7 +949,7 @@ class Parameter(ABC):
         if value is None:
             return () if self.multiple or self.nargs == -1 else None
 
-        def check_iter(value: Any) -> cabc.Iterator[Any]:
+        def check_iter(value: Any) -> Iterator[Any]:
             assert not isinstance(value, str)
             return iter(value)
 
@@ -1037,7 +1036,7 @@ class Parameter(ABC):
 
         return None
 
-    def value_from_envvar(self, ctx: Context) -> str | cabc.Sequence[str] | None:
+    def value_from_envvar(self, ctx: Context) -> str | Sequence[str] | None:
         """Process the raw environment variable string for this parameter.
 
         Returns the string as-is or splits it into a sequence of strings if the
@@ -1052,7 +1051,7 @@ class Parameter(ABC):
         return rv
 
     def handle_parse_result(
-        self, ctx: Context, opts: cabc.Mapping[str, Any], args: list[str]
+        self, ctx: Context, opts: Mapping[str, Any], args: list[str]
     ) -> tuple[Any, list[str]]:
         """Process the value produced by the parser from user input.
 

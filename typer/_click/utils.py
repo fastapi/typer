@@ -1,8 +1,7 @@
-import collections.abc as cabc
 import os
 import re
 import sys
-from collections.abc import Callable
+from collections.abc import Callable, Iterable, Iterator
 from functools import update_wrapper
 from types import ModuleType, TracebackType
 from typing import (
@@ -195,7 +194,7 @@ class LazyFile:
     ) -> None:
         self.close_intelligently()
 
-    def __iter__(self) -> cabc.Iterator[AnyStr]:
+    def __iter__(self) -> Iterator[AnyStr]:
         self.open()
         return iter(self._f)  # type: ignore
 
@@ -450,7 +449,7 @@ def _detect_program_name(
 
 
 def _expand_args(
-    args: cabc.Iterable[str],
+    args: Iterable[str],
     *,
     user: bool = True,
     env: bool = True,

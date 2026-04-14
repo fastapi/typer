@@ -1,6 +1,5 @@
-import collections.abc as cabc
 import io
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from contextlib import AbstractContextManager
 from typing import IO, TYPE_CHECKING, Any, AnyStr, TextIO, TypeVar, overload
 
@@ -216,7 +215,7 @@ def progressbar(
 
 @overload
 def progressbar(
-    iterable: cabc.Iterable[V] | None = None,
+    iterable: Iterable[V] | None = None,
     length: int | None = None,
     label: str | None = None,
     hidden: bool = False,
@@ -236,7 +235,7 @@ def progressbar(
 
 
 def progressbar(
-    iterable: cabc.Iterable[V] | None = None,
+    iterable: Iterable[V] | None = None,
     length: int | None = None,
     label: str | None = None,
     hidden: bool = False,

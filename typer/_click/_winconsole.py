@@ -8,7 +8,6 @@
 # echo and prompt.
 from __future__ import annotations
 
-import collections.abc as cabc
 import io
 import sys
 import time
@@ -207,7 +206,7 @@ class ConsoleStream:
             pass
         return self.buffer.write(x)
 
-    def writelines(self, lines: cabc.Iterable[t.AnyStr]) -> None:
+    def writelines(self, lines: t.Iterable[t.AnyStr]) -> None:
         for line in lines:
             self.write(line)
 
@@ -251,7 +250,7 @@ def _get_text_stderr(buffer_stream: t.BinaryIO) -> t.TextIO:
     return t.cast(t.TextIO, ConsoleStream(text_stream, buffer_stream))
 
 
-_stream_factories: cabc.Mapping[int, t.Callable[[t.BinaryIO], t.TextIO]] = {
+_stream_factories: t.Mapping[int, t.Callable[[t.BinaryIO], t.TextIO]] = {
     0: _get_text_stdin,
     1: _get_text_stdout,
     2: _get_text_stderr,

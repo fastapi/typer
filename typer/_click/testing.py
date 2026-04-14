@@ -1,10 +1,10 @@
-import collections.abc as cabc
 import contextlib
 import io
 import os
 import shlex
 import sys
 import tempfile
+from collections.abc import Iterator, Mapping, Sequence
 from types import TracebackType
 from typing import IO, TYPE_CHECKING, Any, BinaryIO, cast
 
@@ -43,7 +43,7 @@ class EchoingStdin:
     def readlines(self) -> list[bytes]:
         return [self._echo(x) for x in self._input.readlines()]
 
-    def __iter__(self) -> cabc.Iterator[bytes]:
+    def __iter__(self) -> Iterator[bytes]:
         return iter(self._echo(x) for x in self._input)
 
     def __repr__(self) -> str:
@@ -51,7 +51,7 @@ class EchoingStdin:
 
 
 @contextlib.contextmanager
-def _pause_echo(stream: EchoingStdin | None) -> cabc.Iterator[None]:
+def _pause_echo(stream: EchoingStdin | None) -> Iterator[None]:
     if stream is None:
         yield
     else:
@@ -191,12 +191,12 @@ class CliRunner:
     def __init__(
         self,
         charset: str = "utf-8",
-        env: cabc.Mapping[str, str | None] | None = None,
+        env: Mapping[str, str | None] | None = None,
         echo_stdin: bool = False,
         catch_exceptions: bool = True,
     ) -> None:
         self.charset = charset
-        self.env: cabc.Mapping[str, str | None] = env or {}
+        self.env: Mapping[str, str | None] = env or {}
         self.echo_stdin = echo_stdin
         self.catch_exceptions = catch_exceptions
 
@@ -208,8 +208,8 @@ class CliRunner:
         return cli.name or "root"
 
     def make_env(
-        self, overrides: cabc.Mapping[str, str | None] | None = None
-    ) -> cabc.Mapping[str, str | None]:
+        self, overrides: Mapping[str, str | None] | None = None
+    ) -> Mapping[str, str | None]:
         """Returns the environment overrides for invoking a script."""
         rv = dict(self.env)
         if overrides:
@@ -220,9 +220,9 @@ class CliRunner:
     def isolation(
         self,
         input: str | bytes | IO[Any] | None = None,
-        env: cabc.Mapping[str, str | None] | None = None,
+        env: Mapping[str, str | None] | None = None,
         color: bool = False,
-    ) -> cabc.Iterator[tuple[io.BytesIO, io.BytesIO, io.BytesIO]]:
+    ) -> Iterator[tuple[io.BytesIO, io.BytesIO, io.BytesIO]]:
         """A context manager that sets up the isolation for invoking of a
         command line tool.  This sets up `<stdin>` with the given input data
         and `os.environ` with the overrides from the given dictionary.
@@ -352,9 +352,9 @@ class CliRunner:
     def invoke(
         self,
         cli: Command,
-        args: str | cabc.Sequence[str] | None = None,
+        args: str | Sequence[str] | None = None,
         input: str | bytes | IO[Any] | None = None,
-        env: cabc.Mapping[str, str | None] | None = None,
+        env: Mapping[str, str | None] | None = None,
         catch_exceptions: bool | None = None,
         color: bool = False,
         **extra: Any,
@@ -427,7 +427,7 @@ class CliRunner:
     @contextlib.contextmanager
     def isolated_filesystem(
         self, temp_dir: str | os.PathLike[str] | None = None
-    ) -> cabc.Iterator[str]:
+    ) -> Iterator[str]:
         """A context manager that creates a temporary directory and
         changes the current working directory to it. This isolates tests
         that affect the contents of the CWD to prevent them from

@@ -1,7 +1,6 @@
-import collections.abc as cabc
 import os
 import sys
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from datetime import datetime
 from typing import (
     IO,
@@ -84,7 +83,7 @@ class ParamType:
     ) -> Any:
         pass  # pragma: no cover
 
-    def split_envvar_value(self, rv: str) -> cabc.Sequence[str]:
+    def split_envvar_value(self, rv: str) -> Sequence[str]:
         """Given a value from an environment variable this splits it up
         into small chunks depending on the defined envvar list splitter.
 
@@ -185,8 +184,8 @@ class DateTime(ParamType):
 
     name = "datetime"
 
-    def __init__(self, formats: cabc.Sequence[str] | None = None):
-        self.formats: cabc.Sequence[str] = formats or [
+    def __init__(self, formats: Sequence[str] | None = None):
+        self.formats: Sequence[str] = formats or [
             "%Y-%m-%d",
             "%Y-%m-%dT%H:%M:%S",
             "%Y-%m-%d %H:%M:%S",
@@ -587,8 +586,8 @@ class Tuple(CompositeParamType):
     This can be selected by using a Python tuple literal as a type.
     """
 
-    def __init__(self, types: cabc.Sequence[type[Any] | ParamType]) -> None:
-        self.types: cabc.Sequence[ParamType] = [convert_type(ty) for ty in types]
+    def __init__(self, types: Sequence[type[Any] | ParamType]) -> None:
+        self.types: Sequence[ParamType] = [convert_type(ty) for ty in types]
 
     @property
     def name(self) -> str:  # type: ignore

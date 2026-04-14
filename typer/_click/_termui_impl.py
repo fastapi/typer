@@ -6,13 +6,13 @@ placed in this module and only imported as needed.
 
 from __future__ import annotations
 
-import collections.abc as cabc
 import contextlib
 import math
 import os
 import sys
 import time
 import typing as t
+from collections.abc import Iterable, Iterator
 from io import StringIO
 from types import TracebackType
 
@@ -39,7 +39,7 @@ else:
 class ProgressBar(t.Generic[V]):
     def __init__(
         self,
-        iterable: cabc.Iterable[V] | None,
+        iterable: Iterable[V] | None,
         length: int | None = None,
         fill_char: str = "#",
         empty_char: str = " ",
@@ -92,8 +92,8 @@ class ProgressBar(t.Generic[V]):
         if iterable is None:
             if length is None:
                 raise TypeError("iterable or length is required")
-            iterable = t.cast("cabc.Iterable[V]", range(length))
-        self.iter: cabc.Iterable[V] = iter(iterable)
+            iterable = t.cast("Iterable[V]", range(length))
+        self.iter: Iterable[V] = iter(iterable)
         self.length = length
         self.pos: int = 0
         self.avg: list[float] = []
@@ -121,7 +121,7 @@ class ProgressBar(t.Generic[V]):
     ) -> None:
         self.render_finish()
 
-    def __iter__(self) -> cabc.Iterator[V]:
+    def __iter__(self) -> Iterator[V]:
         if not self.entered:
             raise RuntimeError("You need to use progress bars in a with block.")
         self.render_progress()
@@ -328,7 +328,7 @@ class ProgressBar(t.Generic[V]):
         self.current_item = None
         self.finished = True
 
-    def generator(self) -> cabc.Iterator[V]:
+    def generator(self) -> Iterator[V]:
         """Return a generator which yields the items added to the bar
         during construction, and updates the progress bar *after* the
         yielded block returns.
@@ -450,7 +450,7 @@ if sys.platform == "win32":
     import msvcrt
 
     @contextlib.contextmanager
-    def raw_terminal() -> cabc.Iterator[int]:
+    def raw_terminal() -> Iterator[int]:
         yield -1
 
     def getchar(echo: bool) -> str:
@@ -504,7 +504,7 @@ else:
     import tty
 
     @contextlib.contextmanager
-    def raw_terminal() -> cabc.Iterator[int]:
+    def raw_terminal() -> Iterator[int]:
         f: t.TextIO | None
         fd: int
 
