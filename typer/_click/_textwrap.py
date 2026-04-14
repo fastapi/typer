@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import textwrap
 from collections.abc import Iterator
 from contextlib import contextmanager

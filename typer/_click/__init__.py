@@ -1,5 +1,5 @@
 """
-Vendored Click: https://github.com/pallets/click/releases/tag/8.3.1
+Code taken and adapted from Click: https://github.com/pallets/click/releases/tag/8.3.1
 """
 
 from .core import Command as Command
