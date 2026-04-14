@@ -17,6 +17,7 @@
 
 ### Internal
 
+* ⬆ Bump rich from 14.3.3 to 15.0.0. PR [#1688](https://github.com/fastapi/typer/pull/1688) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pydantic from 2.12.5 to 2.13.0. PR [#1687](https://github.com/fastapi/typer/pull/1687) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump mypy from 1.20.0 to 1.20.1. PR [#1689](https://github.com/fastapi/typer/pull/1689) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump cryptography from 46.0.6 to 46.0.7. PR [#1682](https://github.com/fastapi/typer/pull/1682) by [@dependabot[bot]](https://github.com/apps/dependabot).
