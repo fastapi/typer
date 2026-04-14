@@ -12,7 +12,7 @@ from typing import (
     cast,
 )
 
-from . import _click, format_filename
+from . import _click
 
 if TYPE_CHECKING:  # pragma: no cover
     from .core import TyperCommand, TyperGroup
@@ -711,13 +711,13 @@ class TyperPath(_click.ParamType):
                 if not self.exists:
                     return self.coerce_path_result(rv)
                 self.fail(
-                    f"{self.name.title()} {format_filename(value)!r} does not exist.",
+                    f"{self.name.title()} {_click.utils.format_filename(value)!r} does not exist.",
                     param,
                     ctx,
                 )
 
             name = self.name.title()
-            loc = repr(format_filename(value))
+            loc = repr(_click.utils.format_filename(value))
             if not self.file_okay and stat.S_ISREG(st.st_mode):
                 self.fail(f"{name} {loc} is a file.", param, ctx)
 

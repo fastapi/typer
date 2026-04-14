@@ -799,7 +799,7 @@ class TyperOption(_click.Parameter):
         # The value wasn't set, or used the param's default, prompt for one to the user
         # if prompting is enabled.
         if (
-            source in {None, _click.ParameterSource.DEFAULT}
+            source in {None, _click.core.ParameterSource.DEFAULT}
             and self.prompt is not None
             and (self.required or self.prompt_required)
             and not ctx.resilient_parsing

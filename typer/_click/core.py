@@ -120,7 +120,7 @@ class ParameterSource(enum.Enum):
     DEFAULT = enum.auto()
     """Used the default specified by the parameter."""
     DEFAULT_MAP = enum.auto()
-    """Used a default provided by :attr:`Context.default_map`."""
+    """Used a default provided by `Context.default_map`."""
     PROMPT = enum.auto()
     """Used a prompt to confirm a default or provide a value."""
 
@@ -293,7 +293,7 @@ class Context:
     @contextmanager
     def scope(self, cleanup: bool = True) -> cabc.Iterator["Context"]:
         """This helper method can be used with the context object to promote
-        it to the current thread local (see :func:`get_current_context`).
+        it to the current thread local (see `get_current_context`).
         The default behavior of this is to invoke the cleanup functions which
         can be disabled by setting `cleanup` to `False`.  The cleanup
         functions are typically used for things such as closing file handles.
@@ -702,11 +702,11 @@ class Command(ABC):
         **extra: Any,
     ) -> Context:
         """This function when given an info name and arguments will kick
-        off the parsing and create a new :class:`Context`.  It does not
+        off the parsing and create a new `Context`.  It does not
         invoke the actual command callback though.
 
         To quickly customize the context class used without overriding
-        this method, set the :attr:`context_class` attribute.
+        this method, set the `context_class` attribute.
         """
         for key, value in self.context_settings.items():
             if key not in extra:
@@ -945,7 +945,7 @@ class Parameter(ABC):
 
     def type_cast_value(self, ctx: Context, value: Any) -> Any:
         """Convert and validate a value against the parameter's
-        :attr:`type`, :attr:`multiple`, and :attr:`nargs`.
+        `type`, `multiple`, and `nargs`.
         """
         if value is None:
             return () if self.multiple or self.nargs == -1 else None
@@ -1009,12 +1009,12 @@ class Parameter(ABC):
 
         This method returns ``None`` if:
 
-        - the :attr:`envvar` property is not set on the :class:`Parameter`,
+        - the `envvar` property is not set on `Parameter`,
         - the environment variable is not found in the environment,
         - the variable is found in the environment but its value is empty (i.e. the
           environment variable is present but has an empty string).
 
-        If :attr:`envvar` is setup with multiple environment variables,
+        If `envvar` is setup with multiple environment variables,
         then only the first non-empty value is returned.
         """
         if self.envvar is None:
@@ -1041,7 +1041,7 @@ class Parameter(ABC):
         """Process the raw environment variable string for this parameter.
 
         Returns the string as-is or splits it into a sequence of strings if the
-        parameter is expecting multiple values (i.e. its :attr:`nargs` property is set
+        parameter is expecting multiple values (i.e. its `nargs` property is set
         to a value other than ``1``).
         """
         rv: Any | None = self.resolve_envvar_value(ctx)
@@ -1056,7 +1056,7 @@ class Parameter(ABC):
     ) -> tuple[Any, list[str]]:
         """Process the value produced by the parser from user input.
 
-        Always process the value through the Parameter's :attr:`type`, wherever it
+        Always process the value through the Parameter's `type`, wherever it
         comes from.
 
         If the parameter is deprecated, this method warn the user about it. But only if

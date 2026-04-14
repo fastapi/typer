@@ -2,12 +2,9 @@
 Vendored Click: https://github.com/pallets/click/releases/tag/8.3.1
 """
 
-from __future__ import annotations
-
 from .core import Command as Command
 from .core import Context as Context
 from .core import Parameter as Parameter
-from .core import ParameterSource as ParameterSource
 from .exceptions import Abort as Abort
 from .exceptions import BadArgumentUsage as BadArgumentUsage
 from .exceptions import BadOptionUsage as BadOptionUsage
@@ -39,7 +36,3 @@ from .types import IntRange as IntRange
 from .types import ParamType as ParamType
 from .types import Tuple as Tuple
 from .utils import echo as echo
-from .utils import format_filename as format_filename
-from .utils import get_app_dir as get_app_dir
-from .utils import get_binary_stream as get_binary_stream
-from .utils import get_text_stream as get_text_stream
