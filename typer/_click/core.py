@@ -7,7 +7,6 @@ import inspect
 import os
 import sys
 import typing as t
-from collections import Counter
 from contextlib import AbstractContextManager, ExitStack, contextmanager
 from gettext import gettext as _
 from gettext import ngettext
