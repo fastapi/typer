@@ -1,15 +1,21 @@
-from __future__ import annotations
-
 import collections.abc as cabc
 import enum
 import inspect
 import os
-import typing as t
 from abc import ABC, abstractmethod
+from collections.abc import Callable
 from contextlib import AbstractContextManager, ExitStack, contextmanager
-from gettext import gettext as _
-from gettext import ngettext
 from types import TracebackType
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Literal,
+    NoReturn,
+    TypeVar,
+    Union,
+    cast,
+    overload,
+)
 
 from . import types
 from .exceptions import (
@@ -29,27 +35,24 @@ from .utils import (
     make_default_short_help,
 )
 
-if t.TYPE_CHECKING:
+if TYPE_CHECKING:
     from ..core import TyperOption
     from .shell_completion import CompletionItem
 
-F = t.TypeVar("F", bound="t.Callable[..., t.Any]")
-V = t.TypeVar("V")
+F = TypeVar("F", bound="Callable[..., Any]")
+V = TypeVar("V")
 
 
 def _complete_visible_commands(
-    ctx: Context, incomplete: str
-) -> cabc.Iterator[tuple[str, Command]]:
+    ctx: "Context", incomplete: str
+) -> cabc.Iterator[tuple[str, "Command"]]:
     """List all the subcommands of a group that start with the
     incomplete value and aren't hidden.
-
-    :param ctx: Invocation context for the group.
-    :param incomplete: Value being completed. May be empty.
     """
     # avoid circular imports
     from ..core import TyperGroup
 
-    multi = t.cast(TyperGroup, ctx.command)
+    multi = cast(TyperGroup, ctx.command)
 
     for name in multi.list_commands(ctx):
         if name.startswith(incomplete):
@@ -61,7 +64,7 @@ def _complete_visible_commands(
 
 @contextmanager
 def augment_usage_errors(
-    ctx: Context, param: Parameter | None = None
+    ctx: "Context", param: Union["Parameter", None] = None
 ) -> cabc.Iterator[None]:
     """Context manager that attaches extra information to exceptions."""
     try:
@@ -79,9 +82,9 @@ def augment_usage_errors(
 
 
 def iter_params_for_processing(
-    invocation_order: cabc.Sequence[Parameter],
-    declaration_order: cabc.Sequence[Parameter],
-) -> list[Parameter]:
+    invocation_order: cabc.Sequence["Parameter"],
+    declaration_order: cabc.Sequence["Parameter"],
+) -> list["Parameter"]:
     """Returns all declared parameters in the order they should be processed.
 
     The declared parameters are re-shuffled depending on the order in which
@@ -106,17 +109,8 @@ def iter_params_for_processing(
 
 
 class ParameterSource(enum.Enum):
-    """This is an :class:`~enum.Enum` that indicates the source of a
+    """This is an `Enum` that indicates the source of a
     parameter's value.
-
-    Use :meth:`click.Context.get_parameter_source` to get the
-    source for a parameter by name.
-
-    .. versionchanged:: 8.0
-        Use :class:`~enum.Enum` and drop the ``validate`` method.
-
-    .. versionchanged:: 8.0
-        Added the ``PROMPT`` value.
     """
 
     COMMANDLINE = enum.auto()
@@ -141,108 +135,19 @@ class Context:
     environment variables.
 
     A context can be used as context manager in which case it will call
-    :meth:`close` on teardown.
-
-    :param command: the command class for this context.
-    :param parent: the parent context.
-    :param info_name: the info name for this invocation.  Generally this
-                      is the most descriptive name for the script or
-                      command.  For the toplevel script it is usually
-                      the name of the script, for commands below it it's
-                      the name of the script.
-    :param obj: an arbitrary object of user data.
-    :param auto_envvar_prefix: the prefix to use for automatic environment
-                               variables.  If this is `None` then reading
-                               from environment variables is disabled.  This
-                               does not affect manually set environment
-                               variables which are always read.
-    :param default_map: a dictionary (like object) with default values
-                        for parameters.
-    :param terminal_width: the width of the terminal.  The default is
-                           inherit from parent context.  If no context
-                           defines the terminal width then auto
-                           detection will be applied.
-    :param max_content_width: the maximum width for content rendered by
-                              Click (this currently only affects help
-                              pages).  This defaults to 80 characters if
-                              not overridden.  In other words: even if the
-                              terminal is larger than that, Click will not
-                              format things wider than 80 characters by
-                              default.  In addition to that, formatters might
-                              add some safety mapping on the right.
-    :param resilient_parsing: if this flag is enabled then Click will
-                              parse without any interactivity or callback
-                              invocation.  Default values will also be
-                              ignored.  This is useful for implementing
-                              things such as completion support.
-    :param allow_extra_args: if this is set to `True` then extra arguments
-                             at the end will not raise an error and will be
-                             kept on the context.  The default is to inherit
-                             from the command.
-    :param allow_interspersed_args: if this is set to `False` then options
-                                    and arguments cannot be mixed.  The
-                                    default is to inherit from the command.
-    :param ignore_unknown_options: instructs click to ignore options it does
-                                   not know and keeps them for later
-                                   processing.
-    :param help_option_names: optionally a list of strings that define how
-                              the default help parameter is named.  The
-                              default is ``['--help']``.
-    :param token_normalize_func: an optional function that is used to
-                                 normalize tokens (options, choices,
-                                 etc.).  This for instance can be used to
-                                 implement case insensitive behavior.
-    :param color: controls if the terminal supports ANSI colors or not.  The
-                  default is autodetection.  This is only needed if ANSI
-                  codes are used in texts that Click prints which is by
-                  default not the case.  This for instance would affect
-                  help output.
-    :param show_default: Show the default value for commands. If this
-        value is not set, it defaults to the value from the parent
-        context. ``Command.show_default`` overrides this default for the
-        specific command.
-
-    .. versionchanged:: 8.2
-        The ``protected_args`` attribute is deprecated and will be removed in
-        Click 9.0. ``args`` will contain remaining unparsed tokens.
-
-    .. versionchanged:: 8.1
-        The ``show_default`` parameter is overridden by
-        ``Command.show_default``, instead of the other way around.
-
-    .. versionchanged:: 8.0
-        The ``show_default`` parameter defaults to the value from the
-        parent context.
-
-    .. versionchanged:: 7.1
-       Added the ``show_default`` parameter.
-
-    .. versionchanged:: 4.0
-        Added the ``color``, ``ignore_unknown_options``, and
-        ``max_content_width`` parameters.
-
-    .. versionchanged:: 3.0
-        Added the ``allow_extra_args`` and ``allow_interspersed_args``
-        parameters.
-
-    .. versionchanged:: 2.0
-        Added the ``resilient_parsing``, ``help_option_names``, and
-        ``token_normalize_func`` parameters.
+    `close` on teardown.
     """
 
-    #: The formatter class to create with :meth:`make_formatter`.
-    #:
-    #: .. versionadded:: 8.0
     formatter_class: type[HelpFormatter] = HelpFormatter
 
     def __init__(
         self,
-        command: Command,
-        parent: Context | None = None,
+        command: "Command",
+        parent: Union["Context", None] = None,
         info_name: str | None = None,
-        obj: t.Any | None = None,
+        obj: Any | None = None,
         auto_envvar_prefix: str | None = None,
-        default_map: cabc.MutableMapping[str, t.Any] | None = None,
+        default_map: cabc.MutableMapping[str, Any] | None = None,
         terminal_width: int | None = None,
         max_content_width: int | None = None,
         resilient_parsing: bool = False,
@@ -250,37 +155,29 @@ class Context:
         allow_interspersed_args: bool | None = None,
         ignore_unknown_options: bool | None = None,
         help_option_names: list[str] | None = None,
-        token_normalize_func: t.Callable[[str], str] | None = None,
+        token_normalize_func: Callable[[str], str] | None = None,
         color: bool | None = None,
         show_default: bool | None = None,
     ) -> None:
-        #: the parent context or `None` if none exists.
         self.parent = parent
-        #: the :class:`Command` for this context.
         self.command = command
-        #: the descriptive information name
         self.info_name = info_name
-        #: Map of parameter names to their parsed values. Parameters
-        #: with ``expose_value=False`` are not stored.
-        self.params: dict[str, t.Any] = {}
-        #: the leftover arguments.
+        # Map of parameter names to their parsed values.
+        self.params: dict[str, Any] = {}
+        # the leftover arguments.
         self.args: list[str] = []
-        #: protected arguments.  These are arguments that are prepended
-        #: to `args` when certain parsing scenarios are encountered but
-        #: must be never propagated to another arguments.  This is used
-        #: to implement nested parsing.
+        # protected arguments. used to implement nested parsing.
         self._protected_args: list[str] = []
-        #: the collected prefixes of the command's options.
+        # the collected prefixes of the command's options.
         self._opt_prefixes: set[str] = set(parent._opt_prefixes) if parent else set()
 
         if obj is None and parent is not None:
             obj = parent.obj
 
-        #: the user object stored.
-        self.obj: t.Any = obj
-        self._meta: dict[str, t.Any] = getattr(parent, "meta", {})
+        self.obj: Any = obj
+        self._meta: dict[str, Any] = getattr(parent, "meta", {})
 
-        #: A dictionary (-like object) with defaults for parameters.
+        # A dictionary (-like object) with defaults for parameters.
         if (
             default_map is None
             and info_name is not None
@@ -289,62 +186,35 @@ class Context:
         ):
             default_map = parent.default_map.get(info_name)
 
-        self.default_map: cabc.MutableMapping[str, t.Any] | None = default_map
+        self.default_map: cabc.MutableMapping[str, Any] | None = default_map
 
-        #: This flag indicates if a subcommand is going to be executed. A
-        #: group callback can use this information to figure out if it's
-        #: being executed directly or because the execution flow passes
-        #: onwards to a subcommand. By default it's None, but it can be
-        #: the name of the subcommand to execute.
-        #:
-        #: If chaining is enabled this will be set to ``'*'`` in case
-        #: any commands are executed.  It is however not possible to
-        #: figure out which ones.  If you require this knowledge you
-        #: should use a :func:`result_callback`.
+        # This flag indicates if a subcommand is going to be executed.
         self.invoked_subcommand: str | None = None
 
         if terminal_width is None and parent is not None:
             terminal_width = parent.terminal_width
 
-        #: The width of the terminal (None is autodetection).
+        # The width of the terminal (None is autodetection).
         self.terminal_width: int | None = terminal_width
 
         if max_content_width is None and parent is not None:
             max_content_width = parent.max_content_width
 
-        #: The maximum width of formatted content (None implies a sensible
-        #: default which is 80 for most things).
         self.max_content_width: int | None = max_content_width
 
         if allow_extra_args is None:
             allow_extra_args = command.allow_extra_args
 
-        #: Indicates if the context allows extra args or if it should
-        #: fail on parsing.
-        #:
-        #: .. versionadded:: 3.0
         self.allow_extra_args = allow_extra_args
 
         if allow_interspersed_args is None:
             allow_interspersed_args = command.allow_interspersed_args
 
-        #: Indicates if the context allows mixing of arguments and
-        #: options or not.
-        #:
-        #: .. versionadded:: 3.0
         self.allow_interspersed_args: bool = allow_interspersed_args
 
         if ignore_unknown_options is None:
             ignore_unknown_options = command.ignore_unknown_options
 
-        #: Instructs click to ignore options that a command does not
-        #: understand and will store it on the context for later
-        #: processing.  This is primarily useful for situations where you
-        #: want to call into external programs.  Generally this pattern is
-        #: strongly discouraged because it's not possibly to losslessly
-        #: forward all arguments.
-        #:
-        #: .. versionadded:: 4.0
         self.ignore_unknown_options: bool = ignore_unknown_options
 
         if help_option_names is None:
@@ -353,19 +223,15 @@ class Context:
             else:
                 help_option_names = ["--help"]
 
-        #: The names for the help options.
         self.help_option_names: list[str] = help_option_names
 
         if token_normalize_func is None and parent is not None:
             token_normalize_func = parent.token_normalize_func
 
-        #: An optional normalization function for tokens.  This is
-        #: options, choices, commands etc.
-        self.token_normalize_func: t.Callable[[str], str] | None = token_normalize_func
+        # An optional normalization function for tokens. (options, choices, commands etc.)
+        self.token_normalize_func: Callable[[str], str] | None = token_normalize_func
 
-        #: Indicates if resilient parsing is enabled.  In that case Click
-        #: will do its best to not cause any failures and default values
-        #: will be ignored. Useful for completion.
+        # Indicates if resilient parsing is enabled.
         self.resilient_parsing: bool = resilient_parsing
 
         # If there is no envvar prefix yet, but the parent has one and
@@ -391,21 +257,21 @@ class Context:
         if color is None and parent is not None:
             color = parent.color
 
-        #: Controls if styling output is wanted or not.
+        # Controls if styling output is wanted or not.
         self.color: bool | None = color
 
         if show_default is None and parent is not None:
             show_default = parent.show_default
 
-        #: Show option default values when formatting help text.
+        # Show option default values when formatting help text.
         self.show_default: bool | None = show_default
 
-        self._close_callbacks: list[t.Callable[[], t.Any]] = []
+        self._close_callbacks: list[Callable[[], Any]] = []
         self._depth = 0
         self._parameter_source: dict[str, ParameterSource] = {}
         self._exit_stack = ExitStack()
 
-    def __enter__(self) -> Context:
+    def __enter__(self) -> "Context":
         self._depth += 1
         push_context(self)
         return self
@@ -425,7 +291,7 @@ class Context:
         return exit_result
 
     @contextmanager
-    def scope(self, cleanup: bool = True) -> cabc.Iterator[Context]:
+    def scope(self, cleanup: bool = True) -> cabc.Iterator["Context"]:
         """This helper method can be used with the context object to promote
         it to the current thread local (see :func:`get_current_context`).
         The default behavior of this is to invoke the cleanup functions which
@@ -434,24 +300,6 @@ class Context:
 
         If the cleanup is intended the context object can also be directly
         used as a context manager.
-
-        Example usage::
-
-            with ctx.scope():
-                assert get_current_context() is ctx
-
-        This is equivalent::
-
-            with ctx:
-                assert get_current_context() is ctx
-
-        .. versionadded:: 5.0
-
-        :param cleanup: controls if the cleanup functions should be run or
-                        not.  The default is to run these functions.  In
-                        some situations the context only wants to be
-                        temporarily pushed in which case this can be disabled.
-                        Nested pushes automatically defer the cleanup.
         """
         if not cleanup:
             self._depth += 1
@@ -463,7 +311,7 @@ class Context:
                 self._depth -= 1
 
     @property
-    def meta(self) -> dict[str, t.Any]:
+    def meta(self) -> dict[str, Any]:
         """This is a dictionary which is shared with all the contexts
         that are nested.  It exists so that click utilities can store some
         state here if they need to.  It is however the responsibility of
@@ -474,31 +322,12 @@ class Context:
         irrelevant for the operation of click.  However what is important is
         that code that places data here adheres to the general semantics of
         the system.
-
-        Example usage::
-
-            LANG_KEY = f'{__name__}.lang'
-
-            def set_language(value):
-                ctx = get_current_context()
-                ctx.meta[LANG_KEY] = value
-
-            def get_language():
-                return get_current_context().meta.get(LANG_KEY, 'en_US')
-
-        .. versionadded:: 5.0
         """
         return self._meta
 
     def make_formatter(self) -> HelpFormatter:
-        """Creates the :class:`~click.HelpFormatter` for the help and
+        """Creates the HelpFormatter for the help and
         usage output.
-
-        To quickly customize the formatter class used without overriding
-        this method, set the :attr:`formatter_class` attribute.
-
-        .. versionchanged:: 8.0
-            Added the :attr:`formatter_class` attribute.
         """
         return self.formatter_class(
             width=self.terminal_width, max_width=self.max_content_width
@@ -509,46 +338,30 @@ class Context:
         statement. The resource will be cleaned up when the context is
         popped.
 
-        Uses :meth:`contextlib.ExitStack.enter_context`. It calls the
+        Uses `contextlib.ExitStack.enter_context`. It calls the
         resource's ``__enter__()`` method and returns the result. When
         the context is popped, it closes the stack, which calls the
         resource's ``__exit__()`` method.
 
         To register a cleanup function for something that isn't a
-        context manager, use :meth:`call_on_close`. Or use something
-        from :mod:`contextlib` to turn it into a context manager first.
-
-        .. code-block:: python
-
-            @click.group()
-            @click.option("--name")
-            @click.pass_context
-            def cli(ctx):
-                ctx.obj = ctx.with_resource(connect_db(name))
-
-        :param context_manager: The context manager to enter.
-        :return: Whatever ``context_manager.__enter__()`` returns.
-
-        .. versionadded:: 8.0
+        context manager, use `call_on_close`. Or use something
+        from `contextlib` to turn it into a context manager first.
         """
         return self._exit_stack.enter_context(context_manager)
 
-    def call_on_close(self, f: t.Callable[..., t.Any]) -> t.Callable[..., t.Any]:
+    def call_on_close(self, f: Callable[..., Any]) -> Callable[..., Any]:
         """Register a function to be called when the context tears down.
 
         This can be used to close resources opened during the script
         execution. Resources that support Python's context manager
         protocol which would be used in a ``with`` statement should be
-        registered with :meth:`with_resource` instead.
-
-        :param f: The function to execute on teardown.
+        registered with `with_resource` instead.
         """
         return self._exit_stack.callback(f)
 
     def close(self) -> None:
-        """Invoke all close callbacks registered with
-        :meth:`call_on_close`, and exit all context managers entered
-        with :meth:`with_resource`.
+        """Invoke all close callbacks registered with `call_on_close`,
+        and exit all context managers entered with `with_resource`.
         """
         self._close_with_exception_info(None, None, None)
 
@@ -558,11 +371,9 @@ class Context:
         exc_value: BaseException | None,
         tb: TracebackType | None,
     ) -> bool | None:
-        """Unwind the exit stack by calling its :meth:`__exit__` providing the exception
+        """Unwind the exit stack by calling its `__exit__` providing the exception
         information to allow for exception handling by the various resources registered
-        using :meth;`with_resource`
-
-        :return: Whatever ``exit_stack.__exit__()`` returns.
+        using `with_resource`
         """
         exit_result = self._exit_stack.__exit__(exc_type, exc_value, tb)
         # In case the context is reused, create a new exit stack.
@@ -589,7 +400,7 @@ class Context:
             rv = f"{' '.join(parent_command_path)} {rv}"
         return rv.lstrip()
 
-    def find_root(self) -> Context:
+    def find_root(self) -> "Context":
         """Finds the outermost context."""
         node = self
         while node.parent is not None:
@@ -609,7 +420,7 @@ class Context:
         return None
 
     def ensure_object(self, object_type: type[V]) -> V:
-        """Like :meth:`find_object` but sets the innermost object to a
+        """Like `find_object` but sets the innermost object to a
         new instance of `object_type` if it does not exist.
         """
         rv = self.find_object(object_type)
@@ -617,26 +428,16 @@ class Context:
             self.obj = rv = object_type()
         return rv
 
-    @t.overload
+    @overload
+    def lookup_default(self, name: str, call: Literal[True] = True) -> Any | None: ...
+
+    @overload
     def lookup_default(
-        self, name: str, call: t.Literal[True] = True
-    ) -> t.Any | None: ...
+        self, name: str, call: Literal[False] = ...
+    ) -> Any | Callable[[], Any] | None: ...
 
-    @t.overload
-    def lookup_default(
-        self, name: str, call: t.Literal[False] = ...
-    ) -> t.Any | t.Callable[[], t.Any] | None: ...
-
-    def lookup_default(self, name: str, call: bool = True) -> t.Any | None:
-        """Get the default for a parameter from :attr:`default_map`.
-
-        :param name: Name of the parameter.
-        :param call: If the default is a callable, call it. Disable to
-            return the callable instead.
-
-        .. versionchanged:: 8.0
-            Added the ``call`` parameter.
-        """
+    def lookup_default(self, name: str, call: bool = True) -> Any | None:
+        """Get the default for a parameter from `default_map`."""
         if self.default_map is not None:
             value = self.default_map.get(name)
 
@@ -647,25 +448,18 @@ class Context:
 
         return None
 
-    def fail(self, message: str) -> t.NoReturn:
+    def fail(self, message: str) -> NoReturn:
         """Aborts the execution of the program with a specific error
         message.
-
-        :param message: the error message to fail with.
         """
         raise UsageError(message, self)
 
-    def abort(self) -> t.NoReturn:
+    def abort(self) -> NoReturn:
         """Aborts the script."""
         raise Abort()
 
-    def exit(self, code: int = 0) -> t.NoReturn:
-        """Exits the application with a given exit code.
-
-        .. versionchanged:: 8.2
-            Callbacks and context managers registered with :meth:`call_on_close`
-            and :meth:`with_resource` are closed before exiting.
-        """
+    def exit(self, code: int = 0) -> NoReturn:
+        """Exits the application with a given exit code."""
         self.close()
         raise Exit(code)
 
@@ -681,25 +475,7 @@ class Context:
         """
         return self.command.get_help(self)
 
-    def _make_sub_context(self, command: Command) -> Context:
-        """Create a new context of the same type as this context, but
-        for a new command.
-
-        :meta private:
-        """
-        return type(self)(command, info_name=command.name, parent=self)
-
-    @t.overload
-    def invoke(
-        self, callback: t.Callable[..., V], /, *args: t.Any, **kwargs: t.Any
-    ) -> V: ...
-
-    @t.overload
-    def invoke(self, callback: Command, /, *args: t.Any, **kwargs: t.Any) -> t.Any: ...
-
-    def invoke(
-        self, callback: Command | t.Callable[..., V], /, *args: t.Any, **kwargs: t.Any
-    ) -> t.Any | V:
+    def invoke(self, callback: Callable[..., V], /, *args: Any, **kwargs: Any) -> V:
         """Invokes a command callback in exactly the way it expects.  There
         are two ways to invoke this method:
 
@@ -709,68 +485,16 @@ class Context:
             arguments are forwarded as well but proper click parameters
             (options and click arguments) must be keyword arguments and Click
             will fill in defaults.
-
-        .. versionchanged:: 8.0
-            All ``kwargs`` are tracked in :attr:`params` so they will be
-            passed if :meth:`forward` is called at multiple levels.
-
-        .. versionchanged:: 3.2
-            A new context is created, and missing arguments use default values.
         """
-        if isinstance(callback, Command):
-            other_cmd = callback
-
-            if other_cmd.callback is None:
-                raise TypeError(
-                    "The given command does not have a callback that can be invoked."
-                )
-            else:
-                callback = t.cast("t.Callable[..., V]", other_cmd.callback)
-
-            ctx = self._make_sub_context(other_cmd)
-
-            for param in other_cmd.params:
-                if param.name not in kwargs and param.expose_value:
-                    default_value = param.get_default(ctx)
-                    kwargs[param.name] = param.type_cast_value(  # type: ignore
-                        ctx, default_value
-                    )
-
-            # Track all kwargs as params, so that forward() will pass
-            # them on in subsequent calls.
-            ctx.params.update(kwargs)
-        else:
-            ctx = self
+        ctx = self
 
         with augment_usage_errors(self):
             with ctx:
                 return callback(*args, **kwargs)
 
-    def forward(self, cmd: Command, /, *args: t.Any, **kwargs: t.Any) -> t.Any:
-        """Similar to :meth:`invoke` but fills in default keyword
-        arguments from the current context if the other command expects
-        it.  This cannot invoke callbacks directly, only other commands.
-
-        .. versionchanged:: 8.0
-            All ``kwargs`` are tracked in :attr:`params` so they will be
-            passed if ``forward`` is called at multiple levels.
-        """
-        # Can only forward to other commands, not direct callbacks.
-        if not isinstance(cmd, Command):
-            raise TypeError("Callback is not a command.")
-
-        for param in self.params:
-            if param not in kwargs:
-                kwargs[param] = self.params[param]
-
-        return self.invoke(cmd, *args, **kwargs)
-
     def set_parameter_source(self, name: str, source: ParameterSource) -> None:
         """Set the source of a parameter. This indicates the location
         from which the value of the parameter was obtained.
-
-        :param name: The name of the parameter.
-        :param source: A member of :class:`~click.core.ParameterSource`.
         """
         self._parameter_source[name] = source
 
@@ -780,15 +504,8 @@ class Context:
 
         This can be useful for determining when a user specified a value
         on the command line that is the same as the default value. It
-        will be :attr:`~click.core.ParameterSource.DEFAULT` only if the
+        will be `ParameterSource.DEFAULT` only if the
         value was actually taken from the default.
-
-        :param name: The name of the parameter.
-        :rtype: ParameterSource
-
-        .. versionchanged:: 8.0
-            Returns ``None`` if the parameter was not provided from any
-            source.
         """
         return self._parameter_source.get(name)
 
@@ -807,9 +524,9 @@ class Command(ABC):
     def __init__(
         self,
         name: str | None,
-        context_settings: cabc.MutableMapping[str, t.Any] | None = None,
-        callback: t.Callable[..., t.Any] | None = None,
-        params: list[Parameter] | None = None,
+        context_settings: cabc.MutableMapping[str, Any] | None = None,
+        callback: Callable[..., Any] | None = None,
+        params: list["Parameter"] | None = None,
         help: str | None = None,
         epilog: str | None = None,
         short_help: str | None = None,
@@ -824,7 +541,7 @@ class Command(ABC):
         if context_settings is None:
             context_settings = {}
 
-        self.context_settings: cabc.MutableMapping[str, t.Any] = context_settings
+        self.context_settings: cabc.MutableMapping[str, Any] = context_settings
 
         self.callback = callback
         self.params: list[Parameter] = params or []
@@ -847,7 +564,7 @@ class Command(ABC):
         self.format_usage(ctx, formatter)
         return formatter.getvalue().rstrip("\n")
 
-    def get_params(self, ctx: Context) -> list[Parameter]:
+    def get_params(self, ctx: Context) -> list["Parameter"]:
         params = self.params
         help_option = self.get_help_option(ctx)
 
@@ -880,7 +597,7 @@ class Command(ABC):
             all_names.difference_update(param.secondary_opts)
         return list(all_names)
 
-    def get_help_option(self, ctx: Context) -> TyperOption | None:
+    def get_help_option(self, ctx: Context) -> Union["TyperOption", None]:
         """Returns the help option object."""
         help_option_names = self.get_help_option_names(ctx)
 
@@ -931,9 +648,7 @@ class Command(ABC):
                 if isinstance(self.deprecated, str)
                 else "(DEPRECATED)"
             )
-            text = _("{text} {deprecated_message}").format(
-                text=text, deprecated_message=deprecated_message
-            )
+            text = f"{text} {deprecated_message}"
 
         return text.strip()
 
@@ -958,9 +673,7 @@ class Command(ABC):
                 if isinstance(self.deprecated, str)
                 else "(DEPRECATED)"
             )
-            text = _("{text} {deprecated_message}").format(
-                text=text, deprecated_message=deprecated_message
-            )
+            text = f"{text} {deprecated_message}"
 
         if text:
             formatter.write_paragraph()
@@ -986,7 +699,7 @@ class Command(ABC):
         info_name: str | None,
         args: list[str],
         parent: Context | None = None,
-        **extra: t.Any,
+        **extra: Any,
     ) -> Context:
         """This function when given an info name and arguments will kick
         off the parsing and create a new :class:`Context`.  It does not
@@ -1016,19 +729,13 @@ class Command(ABC):
             _, args = param.handle_parse_result(ctx, opts, args)
 
         if args and not ctx.allow_extra_args and not ctx.resilient_parsing:
-            ctx.fail(
-                ngettext(
-                    "Got unexpected extra argument ({args})",
-                    "Got unexpected extra arguments ({args})",
-                    len(args),
-                ).format(args=" ".join(map(str, args)))
-            )
+            ctx.fail(f"Got unexpected extra argument(s) ({' '.join(map(str, args))})")
 
         ctx.args = args
         ctx._opt_prefixes.update(parser._opt_prefixes)
         return args
 
-    def invoke(self, ctx: Context) -> t.Any:
+    def invoke(self, ctx: Context) -> Any:
         """Given a context, this invokes the attached callback (if it exists)
         in the right way.
         """
@@ -1036,15 +743,13 @@ class Command(ABC):
             extra_message = (
                 f" {self.deprecated}" if isinstance(self.deprecated, str) else ""
             )
-            message = _(
-                "DeprecationWarning: The command {name!r} is deprecated.{extra_message}"
-            ).format(name=self.name, extra_message=extra_message)
+            message = f"DeprecationWarning: The command {self.name!r} is deprecated.{extra_message}"
             echo(style(message, fg="red"), err=True)
 
         if self.callback is not None:
             return ctx.invoke(self.callback, **ctx.params)
 
-    def shell_complete(self, ctx: Context, incomplete: str) -> list[CompletionItem]:
+    def shell_complete(self, ctx: Context, incomplete: str) -> list["CompletionItem"]:
         """Return a list of completions for the incomplete value. Looks
         at the names of options and chained multi-commands.
 
@@ -1088,37 +793,27 @@ class Command(ABC):
         complete_var: str | None = None,
         standalone_mode: bool = True,
         windows_expand_args: bool = True,
-        **extra: t.Any,
-    ) -> t.Any:
+        **extra: Any,
+    ) -> Any:
         pass  # pragma: no cover
 
     @abstractmethod
     def _main_shell_completion(
         self,
-        ctx_args: cabc.MutableMapping[str, t.Any],
+        ctx_args: cabc.MutableMapping[str, Any],
         prog_name: str,
         complete_var: str | None = None,
     ) -> None:
         pass  # pragma: no cover
 
-    def __call__(self, *args: t.Any, **kwargs: t.Any) -> t.Any:
+    def __call__(self, *args: Any, **kwargs: Any) -> Any:
         """Alias for self.main"""
         return self.main(*args, **kwargs)
 
 
-def _check_iter(value: t.Any) -> cabc.Iterator[t.Any]:
-    """Check if the value is iterable but not a string. Raises a type
-    error, or return an iterator over the value.
-    """
-    if isinstance(value, str):
-        raise TypeError
-
-    return iter(value)
-
-
 class Parameter(ABC):
     r"""A parameter to a command comes in two versions: they are either
-    :class:`Option`\s or :class:`Argument`\s.  Other subclasses are currently
+    `Option`\s or `Argument`\s.  Other subclasses are currently
     not supported by design as some of the internals for parsing are
     intentionally not finalized.
 
@@ -1130,18 +825,18 @@ class Parameter(ABC):
     def __init__(
         self,
         param_decls: cabc.Sequence[str] | None = None,
-        type: types.ParamType | t.Any | None = None,
+        type: types.ParamType | Any | None = None,
         required: bool = False,
-        default: t.Any | t.Callable[[], t.Any] | None = None,
-        callback: t.Callable[[Context, Parameter, t.Any], t.Any] | None = None,
+        default: Any | Callable[[], Any] | None = None,
+        callback: Callable[[Context, "Parameter", Any], Any] | None = None,
         nargs: int | None = None,
         multiple: bool = False,
         metavar: str | None = None,
         expose_value: bool = True,
         is_eager: bool = False,
         envvar: str | cabc.Sequence[str] | None = None,
-        shell_complete: t.Callable[
-            [Context, Parameter, str], list[CompletionItem] | list[str]
+        shell_complete: Callable[
+            [Context, "Parameter", str], list["CompletionItem"] | list[str]
         ]
         | None = None,
     ) -> None:
@@ -1166,7 +861,7 @@ class Parameter(ABC):
         self.nargs = nargs
         self.multiple = multiple
         self.expose_value = expose_value
-        self.default: t.Any | t.Callable[[], t.Any] | None = default
+        self.default: Any | Callable[[], Any] | None = default
         self.is_eager = is_eager
         self.metavar = metavar
         self.envvar = envvar
@@ -1202,19 +897,17 @@ class Parameter(ABC):
 
         return metavar
 
-    @t.overload
-    def get_default(
-        self, ctx: Context, call: t.Literal[True] = True
-    ) -> t.Any | None: ...
+    @overload
+    def get_default(self, ctx: Context, call: Literal[True] = True) -> Any | None: ...
 
-    @t.overload
+    @overload
     def get_default(
         self, ctx: Context, call: bool = ...
-    ) -> t.Any | t.Callable[[], t.Any] | None: ...
+    ) -> Any | Callable[[], Any] | None: ...
 
     def get_default(
         self, ctx: Context, call: bool = True
-    ) -> t.Any | t.Callable[[], t.Any] | None:
+    ) -> Any | Callable[[], Any] | None:
         """Get the default for the parameter"""
         value = ctx.lookup_default(self.name, call=False)  # type: ignore
 
@@ -1226,12 +919,13 @@ class Parameter(ABC):
 
         return value
 
+    @abstractmethod
     def add_to_parser(self, parser: _OptionParser, ctx: Context) -> None:
-        raise NotImplementedError()
+        pass  # pragma: no cover
 
     def consume_value(
-        self, ctx: Context, opts: cabc.Mapping[str, t.Any]
-    ) -> tuple[t.Any, ParameterSource]:
+        self, ctx: Context, opts: cabc.Mapping[str, Any]
+    ) -> tuple[Any, ParameterSource]:
         value = opts.get(self.name)  # type: ignore
         source = ParameterSource.COMMANDLINE
 
@@ -1249,39 +943,31 @@ class Parameter(ABC):
 
         return value, source
 
-    def type_cast_value(self, ctx: Context, value: t.Any) -> t.Any:
+    def type_cast_value(self, ctx: Context, value: Any) -> Any:
         """Convert and validate a value against the parameter's
         :attr:`type`, :attr:`multiple`, and :attr:`nargs`.
         """
         if value is None:
             return () if self.multiple or self.nargs == -1 else None
 
-        def check_iter(value: t.Any) -> cabc.Iterator[t.Any]:
-            try:
-                return _check_iter(value)
-            except TypeError:
-                # This should only happen when passing in args manually,
-                # the parser should construct an iterable when parsing
-                # the command line.
-                raise BadParameter(
-                    "Value must be an iterable.", ctx=ctx, param=self
-                ) from None
+        def check_iter(value: Any) -> cabc.Iterator[Any]:
+            assert not isinstance(value, str)
+            return iter(value)
 
         # Define the conversion function based on nargs and type.
-
         if self.nargs == 1 or self.type.is_composite:
 
-            def convert(value: t.Any) -> t.Any:
+            def convert(value: Any) -> Any:
                 return self.type(value, param=self, ctx=ctx)
 
         elif self.nargs == -1:
 
-            def convert(value: t.Any) -> t.Any:  # tuple[t.Any, ...]
+            def convert(value: Any) -> Any:  # tuple[t.Any, ...]
                 return tuple(self.type(x, self, ctx) for x in check_iter(value))
 
         else:  # nargs > 1
 
-            def convert(value: t.Any) -> t.Any:  # tuple[t.Any, ...]
+            def convert(value: Any) -> Any:  # tuple[t.Any, ...]
                 value = tuple(check_iter(value))
 
                 if len(value) != self.nargs:
@@ -1299,10 +985,10 @@ class Parameter(ABC):
         return convert(value)
 
     @abstractmethod
-    def value_is_missing(self, value: t.Any) -> bool:
+    def value_is_missing(self, value: Any) -> bool:
         pass  # pragma: no cover
 
-    def process_value(self, ctx: Context, value: t.Any) -> t.Any:
+    def process_value(self, ctx: Context, value: Any) -> Any:
         """Process the value of this parameter"""
         value = self.type_cast_value(ctx, value)
 
@@ -1330,14 +1016,6 @@ class Parameter(ABC):
 
         If :attr:`envvar` is setup with multiple environment variables,
         then only the first non-empty value is returned.
-
-        .. caution::
-
-            The raw value extracted from the environment is not normalized and is
-            returned as-is. Any normalization or reconciliation is performed later by
-            the :class:`Parameter`'s :attr:`type`.
-
-        :meta private:
         """
         if self.envvar is None:
             return None
@@ -1365,10 +1043,8 @@ class Parameter(ABC):
         Returns the string as-is or splits it into a sequence of strings if the
         parameter is expecting multiple values (i.e. its :attr:`nargs` property is set
         to a value other than ``1``).
-
-        :meta private:
         """
-        rv: t.Any | None = self.resolve_envvar_value(ctx)
+        rv: Any | None = self.resolve_envvar_value(ctx)
 
         if rv is not None and self.nargs != 1:
             rv = self.type.split_envvar_value(rv)
@@ -1376,8 +1052,8 @@ class Parameter(ABC):
         return rv
 
     def handle_parse_result(
-        self, ctx: Context, opts: cabc.Mapping[str, t.Any], args: list[str]
-    ) -> tuple[t.Any, list[str]]:
+        self, ctx: Context, opts: cabc.Mapping[str, Any], args: list[str]
+    ) -> tuple[Any, list[str]]:
         """Process the value produced by the parser from user input.
 
         Always process the value through the Parameter's :attr:`type`, wherever it
@@ -1386,8 +1062,6 @@ class Parameter(ABC):
         If the parameter is deprecated, this method warn the user about it. But only if
         the value has been explicitly set by the user (and as such, is not coming from
         a default).
-
-        :meta private:
         """
         with augment_usage_errors(ctx, param=self):
             value, source = self.consume_value(ctx, opts)
@@ -1421,16 +1095,10 @@ class Parameter(ABC):
         hint_list = self.opts or [self.human_readable_name]
         return " / ".join(f"'{x}'" for x in hint_list)
 
-    def shell_complete(self, ctx: Context, incomplete: str) -> list[CompletionItem]:
+    def shell_complete(self, ctx: Context, incomplete: str) -> list["CompletionItem"]:
         """Return a list of completions for the incomplete value. If a
         ``shell_complete`` function was given during init, it is used.
-        Otherwise, the :attr:`type`
-        :meth:`~click.types.ParamType.shell_complete` function is used.
-
-        :param ctx: Invocation context for this command.
-        :param incomplete: Value being completed. May be empty.
-
-        .. versionadded:: 8.0
+        Otherwise, the `type` `ParamType.shell_complete` function is used.
         """
         if self._custom_shell_complete is not None:
             results = self._custom_shell_complete(ctx, self, incomplete)
@@ -1440,6 +1108,6 @@ class Parameter(ABC):
 
                 results = [CompletionItem(c) for c in results]
 
-            return t.cast("list[CompletionItem]", results)
+            return cast("list[CompletionItem]", results)
 
         return self.type.shell_complete(ctx, self, incomplete)
