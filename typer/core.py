@@ -194,10 +194,10 @@ def _main(
                 ctx.exit()
         except EOFError as e:
             _click.echo(file=sys.stderr)
-            raise _click.Abort() from e
+            raise _click.exceptions.Abort() from e
         except KeyboardInterrupt as e:
             raise _click.exceptions.Exit(130) from e
-        except _click.ClickException as e:
+        except _click.exceptions.ClickException as e:
             if not standalone_mode:
                 raise
             # Typer override
@@ -229,7 +229,7 @@ def _main(
             # `ctx.exit(1)` and to `return 1`, the caller won't be able to
             # tell the difference between the two
             return e.exit_code
-    except _click.Abort:
+    except _click.exceptions.Abort:
         if not standalone_mode:
             raise
         # Typer override
@@ -1251,7 +1251,7 @@ class TyperGroup(_click.Command):
     ) -> tuple[str | None, _click.Command | None, list[str]]:
         try:
             return self._click_resolve_command(ctx, args)
-        except _click.UsageError as e:
+        except _click.exceptions.UsageError as e:
             if self.suggest_commands:
                 available_commands = list(self.commands.keys())
                 if available_commands and args:
