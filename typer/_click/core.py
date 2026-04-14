@@ -936,22 +936,6 @@ class Command:
         if help_option is not None:
             params = [*params, help_option]
 
-        if __debug__:
-            import warnings
-
-            opts = [opt for param in params for opt in param.opts]
-            opts_counter = Counter(opts)
-            duplicate_opts = (opt for opt, count in opts_counter.items() if count > 1)
-
-            for duplicate_opt in duplicate_opts:
-                warnings.warn(
-                    (
-                        f"The parameter {duplicate_opt} is used more than once. "
-                        "Remove its duplicate as parameters should be unique."
-                    ),
-                    stacklevel=3,
-                )
-
         return params
 
     def format_usage(self, ctx: Context, formatter: HelpFormatter) -> None:
@@ -1545,20 +1529,6 @@ class Parameter:
         self.envvar = envvar
         self._custom_shell_complete = shell_complete
         self.deprecated = deprecated
-
-        if __debug__:
-            if self.type.is_composite and nargs != self.type.arity:
-                raise ValueError(
-                    f"'nargs' must be {self.type.arity} (or None) for"
-                    f" type {self.type!r}, but it was {nargs}."
-                )
-
-            if required and deprecated:
-                raise ValueError(
-                    f"The {self.param_type_name} '{self.human_readable_name}' "
-                    "is deprecated and still required. A deprecated "
-                    f"{self.param_type_name} cannot be required."
-                )
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} {self.name}>"

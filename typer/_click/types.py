@@ -737,16 +737,6 @@ def convert_type(ty: t.Any | None, default: t.Any | None = None) -> ParamType:
     if guessed_type:
         return STRING
 
-    if __debug__:
-        try:
-            if issubclass(ty, ParamType):
-                raise AssertionError(
-                    f"Attempted to use an uninstantiated parameter type ({ty})."
-                )
-        except TypeError:
-            # ty is an instance (correct), so issubclass fails.
-            pass
-
     return FuncParamType(ty)
 
 
