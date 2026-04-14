@@ -24,13 +24,13 @@ def option(
     *param_decls: str, cls: type["TyperOption"] | None = None, **attrs: Any
 ) -> Callable[[Command], Command]:
     """Attaches an option to the command.  All positional arguments are
-    passed as parameter declarations to :class:`Option`; all keyword
+    passed as parameter declarations to `Option`; all keyword
     arguments are forwarded unchanged (except ``cls``).
-    This is equivalent to creating an :class:`Option` instance manually
-    and attaching it to the :attr:`Command.params` list.
+    This is equivalent to creating an `Option` instance manually
+    and attaching it to the `Command.params` list.
 
-    For the default option class, refer to :class:`Option` and
-    :class:`Parameter` for descriptions of parameters.
+    For the default option class, refer to `Option` and
+    `Parameter` for descriptions of parameters.
     """
     if cls is None:
         # avoid circular imports

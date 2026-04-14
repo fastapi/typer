@@ -787,12 +787,12 @@ class TyperOption(_click.Parameter):
     def consume_value(
         self, ctx: _click.Context, opts: Mapping[str, _click.Parameter]
     ) -> tuple[Any, _click.core.ParameterSource]:
-        """For :class:`Option`, the value can be collected from an interactive prompt
-        if the option is a flag that needs a value (and the :attr:`prompt` property is
+        """For `Option`, the value can be collected from an interactive prompt
+        if the option is a flag that needs a value (and the `prompt` property is
         set).
 
         Additionally, this method handles flag option that are activated without a
-        value, in which case the :attr:`flag_value` is returned.
+        value, in which case the `flag_value` is returned.
         """
         value, source = super().consume_value(ctx, opts)
 

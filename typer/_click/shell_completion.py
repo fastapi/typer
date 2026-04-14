@@ -203,11 +203,7 @@ def _start_of_option(ctx: Context, value: str) -> bool:
 
 
 def _is_incomplete_option(ctx: Context, args: list[str], param: Parameter) -> bool:
-    """Determine if the given parameter is an option that needs a value.
-
-    :param args: List of complete args before the incomplete value.
-    :param param: Option object being checked.
-    """
+    """Determine if the given parameter is an option that needs a value."""
     # avoid circular imports
     from ..core import TyperOption
 

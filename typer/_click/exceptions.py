@@ -19,7 +19,6 @@ def _join_param_hints(param_hint: Sequence[str] | str | None) -> str | None:
 class ClickException(Exception):
     """An exception that Click can handle and show to the user."""
 
-    #: The exit code for this exception.
     exit_code = 1
 
     def __init__(self, message: str) -> None:
