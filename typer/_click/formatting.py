@@ -1,9 +1,8 @@
+from collections.abc import Iterable, Iterator, Sequence
 from contextlib import contextmanager
 
 from ._compat import term_len
 from .parser import _split_opt
-
-from collections.abc import Iterator, Iterable, Sequence
 
 # Can force a width.  This is used by the test system
 FORCED_WIDTH: int | None = None
@@ -130,8 +129,7 @@ class HelpFormatter:
         self.current_indent -= self.indent_increment
 
     def write_usage(self, prog: str, args: str = "", prefix: str | None = None) -> None:
-        """Writes a usage line into the buffer.
-        """
+        """Writes a usage line into the buffer."""
         if prefix is None:
             prefix = "Usage: "
 
