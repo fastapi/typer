@@ -737,7 +737,7 @@ class TyperOption(_click.Parameter):
             # Refs: https://github.com/pallets/click/pull/3030#discussion_r2289180249
             if default is not None:
                 default = bool(default)
-            return _click.confirm(self.prompt, default)
+            return _click.termui.confirm(self.prompt, default)
 
         # If show_default is set to True/False, provide this to `prompt` as well. For
         # non-bool values of `show_default`, we use `prompt`'s default behavior
@@ -745,7 +745,7 @@ class TyperOption(_click.Parameter):
         if isinstance(self.show_default, bool):
             prompt_kwargs["show_default"] = self.show_default
 
-        return _click.prompt(
+        return _click.termui.prompt(
             self.prompt,
             # Use ``None`` to inform the prompt() function to reiterate until a valid
             # value is provided by the user if we have no default.

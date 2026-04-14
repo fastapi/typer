@@ -17,11 +17,5 @@ from .exceptions import UsageError as UsageError
 from .formatting import HelpFormatter as HelpFormatter
 from .formatting import wrap_text as wrap_text
 from .globals import get_current_context as get_current_context
-from .termui import confirm as confirm
-from .termui import getchar as getchar
 from .termui import launch as launch
-from .termui import progressbar as progressbar
-from .termui import prompt as prompt
-from .termui import secho as secho
-from .termui import style as style
 from .utils import echo as echo
