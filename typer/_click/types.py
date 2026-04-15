@@ -556,7 +556,7 @@ class File(ParamType):
                     ctx.call_on_close(safecall(f.flush))
 
             return f
-        except OSError as e:
+        except OSError as e:  # pragma: no cover
             self.fail(f"'{format_filename(value)}': {e.strerror}", param, ctx)
 
     def shell_complete(
