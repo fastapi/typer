@@ -118,7 +118,7 @@ class CompositeParamType(ParamType):
 
     @property
     def arity(self) -> int:  # type: ignore
-        raise NotImplementedError()
+        raise NotImplementedError()  # pragma: no cover
 
 
 class FuncParamType(ParamType):
@@ -134,7 +134,7 @@ class FuncParamType(ParamType):
         except ValueError:
             try:
                 value = str(value)
-            except UnicodeError:
+            except UnicodeError:  # pragma: no cover
                 value = value.decode("utf-8", "replace")
 
             self.fail(value, param, ctx)
@@ -383,7 +383,7 @@ class FloatRange(_NumberRangeBase, FloatParamType):
         # Could use math.nextafter here, but clamping an
         # open float range doesn't seem to be particularly useful. It's
         # left up to the user to write a callback to do it if needed.
-        raise RuntimeError("Clamping is not supported for open bounds.")
+        raise RuntimeError("Clamping is not supported for open bounds.")  # pragma: no cover
 
 
 class BoolParamType(ParamType):
