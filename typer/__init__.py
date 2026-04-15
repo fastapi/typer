@@ -34,6 +34,7 @@ from .models import Context as Context
 from .models import FileBinaryRead as FileBinaryRead
 from .models import FileBinaryWrite as FileBinaryWrite
 from .models import FileText as FileText
+from .models import FileTextRead as FileTextRead
 from .models import FileTextWrite as FileTextWrite
 from .params import Argument as Argument
 from .params import Option as Option
