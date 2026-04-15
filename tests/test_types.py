@@ -14,8 +14,20 @@ class User(str, Enum):
 
 
 @app.command()
-def hello(name: User = User.rick) -> None:
+def hello_option(name: User = User.rick) -> None:
     print(f"Hello {name.value}!")
+
+
+@app.command()
+def hello_argument(name: User) -> None:
+    print(f"Hello {name.value}!")
+
+
+@app.command()
+def hello_no_choices(
+    name: User = typer.Option(..., "--name", show_choices=False),
+):
+    print(name.value)
 
 
 @app.command()
@@ -28,18 +40,50 @@ runner = CliRunner()
 
 
 def test_enum_choice() -> None:
-    # This test is only for coverage of the new custom TyperChoice class
-    result = runner.invoke(app, ["hello", "--name", "morty"], catch_exceptions=False)
+    result = runner.invoke(
+        app, ["hello-option", "--name", "morty"], catch_exceptions=False
+    )
     assert result.exit_code == 0
     assert "Hello Morty!" in result.output
 
-    result = runner.invoke(app, ["hello", "--name", "Rick"])
+    result = runner.invoke(app, ["hello-option", "--name", "Rick"])
     assert result.exit_code == 0
     assert "Hello Rick!" in result.output
 
-    result = runner.invoke(app, ["hello", "--name", "RICK"])
+    result = runner.invoke(app, ["hello-option", "--name", "RICK"])
     assert result.exit_code == 0
     assert "Hello Rick!" in result.output
+
+
+def test_enum_choice_repr() -> None:
+    root_command = typer.main.get_command(app)
+    command = root_command.commands["hello-option"]
+    name_param = next(param for param in command.params if param.name == "name")
+    assert repr(name_param.type).startswith("Choice([")
+
+
+def test_enum_choice_help() -> None:
+    result = runner.invoke(app, ["hello-argument", "--help"])
+    assert result.exit_code == 0
+    assert "{rick|morty}" in result.output
+
+    result = runner.invoke(app, ["hello-option", "--help"])
+    assert result.exit_code == 0
+    assert "[rick|morty]" in result.output
+
+    result = runner.invoke(app, ["hello-no-choices", "--help"])
+    assert result.exit_code == 0
+    assert "--name" in result.output
+    assert "rick|morty" not in result.output
+
+
+def test_enum_choice_missing_message() -> None:
+    result = runner.invoke(app, ["hello-argument"])
+    assert result.exit_code != 0
+    assert "Missing argument" in result.output
+    assert "Choose from:" in result.output
+    assert "rick" in result.output
+    assert "morty" in result.output
 
 
 def test_split_envvar_value(monkeypatch) -> None:
