@@ -7,7 +7,15 @@ from . import file_example as mod
 
 def test_script() -> None:
     result = subprocess.run(
-        [sys.executable, "-m", "coverage", "run", mod.__file__, "--config", mod.__file__],
+        [
+            sys.executable,
+            "-m",
+            "coverage",
+            "run",
+            mod.__file__,
+            "--config",
+            mod.__file__,
+        ],
         capture_output=True,
         encoding="utf-8",
     )

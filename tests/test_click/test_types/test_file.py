@@ -1,5 +1,5 @@
-from pathlib import Path
 from io import StringIO
+from pathlib import Path
 
 import typer
 from typer.testing import CliRunner
@@ -36,7 +36,7 @@ def test_lazy_file() -> None:
         assert "This is a single line" not in result.output
         assert "Config line written" in result.output
         # test that the file is created
-        file_path = Path("example.txt")     
+        file_path = Path("example.txt")
         assert file_path.exists()
         with file_path.open("r") as f:
             assert f.read() == "This is a single line\n"
