@@ -138,7 +138,7 @@ def test_tuple_wrong_arity():
 
     @app.command()
     def tuple_arity(value: tuple[str, str] = typer.Option(...)):
-        print(value)
+        print(value)  # pragma: no cover
 
     result = runner.invoke(app, [], default_map={"value": ("only-one",)})
     assert result.exit_code == 2
@@ -165,7 +165,7 @@ def test_custom_parse_value_error():
     def custom_parser(
         hex_value: int = typer.Argument(None, parser=lambda x: int(x, 0)),
     ):
-        print(hex_value)
+        print(hex_value)  # pragma: no cover
 
     result = runner.invoke(app, ["not-a-hex"])
     assert result.exit_code == 2
@@ -218,7 +218,7 @@ def test_bool_convert_invalid():
 
     @app.command()
     def main(value: bool):
-        print(value)
+        print(value)  # pragma: no cover
 
     result = runner.invoke(app, ["maybe"])
     assert result.exit_code == 2

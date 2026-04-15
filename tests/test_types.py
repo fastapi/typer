@@ -27,7 +27,7 @@ def hello_argument(name: User) -> None:
 def hello_no_choices(
     name: User = typer.Option(..., "--name", show_choices=False),
 ):
-    print(name.value)
+    print(f"Hello {name.value}!")
 
 
 @app.command()
@@ -51,6 +51,14 @@ def test_enum_choice() -> None:
     assert "Hello Rick!" in result.output
 
     result = runner.invoke(app, ["hello-option", "--name", "RICK"])
+    assert result.exit_code == 0
+    assert "Hello Rick!" in result.output
+
+    result = runner.invoke(app, ["hello-no-choices", "--name", "RICK"])
+    assert result.exit_code == 0
+    assert "Hello Rick!" in result.output
+
+    result = runner.invoke(app, ["hello-argument", "RICK"])
     assert result.exit_code == 0
     assert "Hello Rick!" in result.output
 
