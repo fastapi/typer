@@ -31,7 +31,9 @@ def test_main():
 
 
 def test_main_datetime_object():
-    result = runner.invoke(app, [], default_map={"birth": datetime(1956, 1, 31, 10, 0, 0)})
+    result = runner.invoke(
+        app, [], default_map={"birth": datetime(1956, 1, 31, 10, 0, 0)}
+    )
     assert result.exit_code == 0
     assert "Interesting day to be born: 1956-01-31 10:00:00" in result.output
     assert "Birth hour: 10" in result.output

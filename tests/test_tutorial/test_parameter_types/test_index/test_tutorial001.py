@@ -9,6 +9,7 @@ from docs_src.parameter_types.index import tutorial001_py310 as mod
 runner = CliRunner()
 app = mod.app
 
+
 def test_type_repr():
     command = typer.main.get_command(app)
     age_param = next(param for param in command.params if param.name == "age")

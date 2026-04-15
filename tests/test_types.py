@@ -1,7 +1,6 @@
 from enum import Enum
 
 import pytest
-
 import typer
 from typer import _click
 from typer.testing import CliRunner

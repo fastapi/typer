@@ -383,7 +383,9 @@ class FloatRange(_NumberRangeBase, FloatParamType):
         # Could use math.nextafter here, but clamping an
         # open float range doesn't seem to be particularly useful. It's
         # left up to the user to write a callback to do it if needed.
-        raise RuntimeError("Clamping is not supported for open bounds.")  # pragma: no cover
+        raise RuntimeError(
+            "Clamping is not supported for open bounds."
+        )  # pragma: no cover
 
 
 class BoolParamType(ParamType):
