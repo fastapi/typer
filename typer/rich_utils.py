@@ -749,5 +749,6 @@ def get_traceback(
         show_locals=exception_config.pretty_exceptions_show_locals,
         suppress=internal_dir_names,
         width=MAX_WIDTH,
+        code_width=MAX_WIDTH,
     )
     return rich_tb
