@@ -17,6 +17,7 @@
 
 ### Internal
 
+* ⬆ Bump ty from 0.0.29 to 0.0.30. PR [#1693](https://github.com/fastapi/typer/pull/1693) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump prek from 0.3.8 to 0.3.9. PR [#1691](https://github.com/fastapi/typer/pull/1691) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pygithub from 2.9.0 to 2.9.1. PR [#1692](https://github.com/fastapi/typer/pull/1692) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump rich from 14.3.3 to 15.0.0. PR [#1688](https://github.com/fastapi/typer/pull/1688) by [@dependabot[bot]](https://github.com/apps/dependabot).
