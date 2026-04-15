@@ -418,9 +418,10 @@ class _OptionParser:
         value: str | Sequence[str]
 
         if len(state.rargs) < nargs:
+            msg = "an argument." if nargs == 1 else f"{nargs} arguments."
             raise BadOptionUsage(
                 option_name,
-                f"Option {option_name!r} requires {nargs} argument(s).",
+                f"Option {option_name!r} requires {msg}",
             )
         elif nargs == 1:
             value = state.rargs.pop(0)

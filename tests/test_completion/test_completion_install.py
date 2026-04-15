@@ -26,7 +26,7 @@ def test_completion_install_no_shell():
             "_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION": "True",
         },
     )
-    assert "Option '--install-completion' requires 1 argument(s)" in result.stderr
+    assert "Option '--install-completion' requires an argument" in result.stderr
 
 
 @requires_completion_permission

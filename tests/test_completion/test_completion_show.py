@@ -23,7 +23,7 @@ def test_completion_show_no_shell():
             "_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION": "True",
         },
     )
-    assert "Option '--show-completion' requires 1 argument(s)" in result.stderr
+    assert "Option '--show-completion' requires an argument" in result.stderr
 
 
 def test_completion_show_bash():

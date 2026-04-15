@@ -39,7 +39,7 @@ def test_call(mod: ModuleType):
 def test_call_no_args(mod: ModuleType):
     result = runner.invoke(mod.app, ["--name"])
     assert result.exit_code != 0
-    assert "Option '--name' requires 1 argument(s)" in result.output
+    assert "Option '--name' requires an argument" in result.output
 
 
 def test_script(mod: ModuleType):
