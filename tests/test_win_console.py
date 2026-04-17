@@ -142,8 +142,8 @@ def test_winconsole_stderr(monkeypatch):
 @pytest.mark.parametrize(
     ("writable", "source", "expected_flags"),
     [
-        (True, bytearray(b"python"), _winconsole.PyBUF_WRITABLE),
-        (False, b"python", _winconsole.PyBUF_SIMPLE),
+        (True, bytearray(b"python"), 1),  # PyBUF_WRITABLE
+        (False, b"python", 0),  # PyBUF_SIMPLE
     ],
 )
 def test_get_buffer(monkeypatch, writable, source, expected_flags):
@@ -212,8 +212,8 @@ def test_console_stream():
 @pytest.mark.parametrize(
     ("error", "msg"),
     [
-        (_winconsole.ERROR_SUCCESS, "ERROR_SUCCESS"),
-        (_winconsole.ERROR_NOT_ENOUGH_MEMORY, "ERROR_NOT_ENOUGH_MEMORY"),
+        (0, "ERROR_SUCCESS"),  # ERROR_SUCCESS
+        (8, "ERROR_NOT_ENOUGH_MEMORY"),  # ERROR_NOT_ENOUGH_MEMORY
         (342, "Windows error 342"),
     ],
 )
