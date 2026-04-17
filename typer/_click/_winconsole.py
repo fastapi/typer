@@ -82,7 +82,7 @@ if TYPE_CHECKING:
 
 try:
     from ctypes import pythonapi
-except ImportError:
+except ImportError:  # pragma: no cover
     # On PyPy we cannot get buffers so our ability to operate here is
     # severely limited.
     get_buffer = None
@@ -191,7 +191,7 @@ class _WindowsConsoleWriter(_WindowsConsoleRawIOBase):
         bytes_written = 2 * code_units_written.value
 
         if bytes_written == 0 and bytes_to_be_written > 0:
-            raise OSError(self._get_error_message(GetLastError()))
+            raise OSError(self._get_error_message(GetLastError()))  # pragma: no cover
         return bytes_written
 
 
@@ -209,7 +209,7 @@ class ConsoleStream:
             return self._text_stream.write(x)
         try:
             self.flush()
-        except Exception:
+        except Exception:  # pragma: no cover
             pass
         return self.buffer.write(x)
 
