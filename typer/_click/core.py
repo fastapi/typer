@@ -612,7 +612,7 @@ class Command(ABC):
             from .decorators import help_option
 
             # Apply help_option decorator and pop resulting option
-            help_option(*help_option_names)(self)
+            help_option(help_option_names)(self)
             self._help_option = self.params.pop()  # type: ignore[assignment]
 
         return self._help_option
