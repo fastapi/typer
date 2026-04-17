@@ -89,7 +89,10 @@ def test_prompt():
 
     result = runner.invoke(app, [], input="\nAda\na\n\ncustom.ini\nsecret\nsecret\n")
     assert result.exit_code == 0, result.output
-    assert "accept=True;name=Ada;flavor=a;city=London;config=custom.ini;pass_len=6" in result.stdout
+    assert (
+        "accept=True;name=Ada;flavor=a;city=London;config=custom.ini;pass_len=6"
+        in result.stdout
+    )
     assert "(a, b): " in result.stdout
     assert "[demo.txt]: " in result.stdout
 
