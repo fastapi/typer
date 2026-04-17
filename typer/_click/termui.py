@@ -99,7 +99,7 @@ def prompt(
             # Echo the last character to stdout to work around an issue where
             # readline causes backspace to clear the whole line.
             return f(text[-1:])
-        except (KeyboardInterrupt, EOFError):
+        except (KeyboardInterrupt, EOFError):  # pragma: no cover
             # getpass doesn't print a newline if the user aborts input with ^C.
             # Allegedly this behavior is inherited from getpass(3).
             # A doc bug has been filed at https://bugs.python.org/issue24711
@@ -130,7 +130,7 @@ def prompt(
                 break
         try:
             result = value_proc(value)
-        except UsageError as e:
+        except UsageError as e:  # pragma: no cover
             if hide_input:
                 echo("Error: The value you entered was invalid.", err=err)
             else:
@@ -176,7 +176,7 @@ def confirm(
             # Echo the last character to stdout to work around an issue where
             # readline causes backspace to clear the whole line.
             value = visible_prompt_func(prompt[-1:]).lower().strip()
-        except (KeyboardInterrupt, EOFError):
+        except (KeyboardInterrupt, EOFError):  # pragma: no cover
             raise Abort() from None
         if value in ("y", "yes"):
             rv = True
@@ -185,7 +185,7 @@ def confirm(
         elif default is not None and value == "":
             rv = default
         else:
-            echo("Error: invalid input", err=err)
+            echo("Error: invalid input", err=err)  # pragma: no cover
             continue
         break
     if abort and not rv:
