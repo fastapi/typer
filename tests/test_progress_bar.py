@@ -177,7 +177,9 @@ def test_progressbar_autowidth(monkeypatch):
     assert result.exit_code == 0, result.output
     assert state["autowidth"] is True
     assert state["call_count"] >= 2
-    assert _termui_impl.BEFORE_BAR in str(state["out"])
+    out = str(state["out"])
+    assert "\r" in out and "AW" in out
+    assert "0%" in out and "50%" in out and "100%" in out
 
 
 def test_progress_bar_iter():
