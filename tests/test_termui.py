@@ -1,3 +1,8 @@
+"""
+Tests for the termui functionality.
+Created after vendoring Click to ensure test coverage is back up to 100%.
+"""
+
 import io
 from contextlib import contextmanager
 from typing import Literal
@@ -6,6 +11,8 @@ import pytest
 import typer
 from typer._click import _termui_impl, termui
 from typer.testing import CliRunner
+
+from tests.utils import needs_windows, skip_if_windows
 
 
 def test_raw_terminal(monkeypatch):
@@ -61,6 +68,78 @@ def test_getchar(monkeypatch):
     assert termui._getchar is lazy_getchar
     assert termui.getchar(echo=True) == "z"
     assert lazy_state["calls"] == 2
+
+
+@needs_windows
+def test_termui_impl_windows_raw_terminal():
+    with _termui_impl.raw_terminal() as fd:
+        assert fd == -1
+    with termui.raw_terminal() as fd:
+        assert fd == -1
+
+
+@needs_windows
+def test_termui_impl_windows_getchar(monkeypatch):
+    monkeypatch.setattr(_termui_impl.msvcrt, "getwch", lambda: "a")
+    monkeypatch.setattr(_termui_impl.msvcrt, "getwche", lambda: "b")
+    assert _termui_impl.getchar(echo=False) == "a"
+    assert _termui_impl.getchar(echo=True) == "b"
+
+    seq_null = iter(["\x00", "K"])
+    monkeypatch.setattr(_termui_impl.msvcrt, "getwch", lambda: next(seq_null))
+    assert _termui_impl.getchar(echo=False) == "\x00K"
+
+    seq_e0 = iter(["\xe0", "H"])
+    monkeypatch.setattr(_termui_impl.msvcrt, "getwch", lambda: next(seq_e0))
+    assert _termui_impl.getchar(echo=False) == "\xe0H"
+
+    seq_echo = iter(["\x00", "M"])
+    monkeypatch.setattr(_termui_impl.msvcrt, "getwche", lambda: next(seq_echo))
+    assert _termui_impl.getchar(echo=True) == "\x00M"
+
+    seq_e0_echo = iter(["\xe0", "Z"])
+    monkeypatch.setattr(_termui_impl.msvcrt, "getwche", lambda: next(seq_e0_echo))
+    assert _termui_impl.getchar(echo=True) == "\xe0Z"
+
+    monkeypatch.setattr(_termui_impl.msvcrt, "getwch", lambda: "\x03")
+    with pytest.raises(KeyboardInterrupt):
+        _termui_impl.getchar(echo=False)
+
+    monkeypatch.setattr(_termui_impl.msvcrt, "getwch", lambda: "\x1a")
+    with pytest.raises(EOFError):
+        _termui_impl.getchar(echo=False)
+
+
+@skip_if_windows
+def test_termui_impl_posix_getchar(monkeypatch):
+    @contextmanager
+    def fake_raw():
+        yield 7
+
+    monkeypatch.setattr(_termui_impl, "raw_terminal", fake_raw)
+    monkeypatch.setattr(_termui_impl.os, "read", lambda fd, n: b"q")
+    monkeypatch.setattr(_termui_impl, "get_best_encoding", lambda stdin: "utf-8")
+    monkeypatch.setattr(_termui_impl, "isatty", lambda f: f is _termui_impl.sys.stdout)
+    written: list[str] = []
+    monkeypatch.setattr(_termui_impl.sys.stdout, "write", lambda s: written.append(s))
+
+    assert _termui_impl.getchar(echo=True) == "q"
+    assert written == ["q"]
+
+
+@skip_if_windows
+def test_termui_impl_posix_getchar_eof(monkeypatch):
+    @contextmanager
+    def fake_raw():
+        yield 5
+
+    monkeypatch.setattr(_termui_impl, "raw_terminal", fake_raw)
+    monkeypatch.setattr(_termui_impl.os, "read", lambda fd, n: b"\x04")
+    monkeypatch.setattr(_termui_impl, "get_best_encoding", lambda stdin: "utf-8")
+    monkeypatch.setattr(_termui_impl, "isatty", lambda f: False)
+
+    with pytest.raises(EOFError):
+        _termui_impl.getchar(echo=False)
 
 
 def test_prompt():

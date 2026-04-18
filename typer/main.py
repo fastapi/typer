@@ -2004,4 +2004,4 @@ def launch(
         return 0
 
     else:
-        return _click.launch(url)
+        return _click.launch(url, wait=wait, locate=locate)

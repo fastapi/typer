@@ -1,7 +1,6 @@
 """
-This module contains implementations for the termui module. To keep the
-import time of Click down, some infrequently used functionality is
-placed in this module and only imported as needed.
+To keep the import times down, some infrequently used termui functionality
+is placed here and only imported as needed.
 """
 
 import contextlib
@@ -70,7 +69,7 @@ class ProgressBar(Generic[V]):
 
             # There are no standard streams attached to write to. For example,
             # pythonw on Windows.
-            if file is None:
+            if file is None:  # pragma: no cover
                 file = StringIO()
 
         self.file = file
@@ -85,10 +84,10 @@ class ProgressBar(Generic[V]):
 
             length = length_hint(iterable, -1)
 
-            if length == -1:
+            if length == -1:  # pragma: no cover
                 length = None
         if iterable is None:
-            if length is None:
+            if length is None:  # pragma: no cover
                 raise TypeError("iterable or length is required")
             iterable = cast("Iterable[V]", range(length))
         self.iter: Iterable[V] = iter(iterable)
@@ -295,14 +294,8 @@ class ProgressBar(Generic[V]):
 
         self.eta_known = self.length is not None
 
-    def update(self, n_steps: int, current_item: V | None = None) -> None:
-        """Update the progress bar by advancing a specified number of
-        steps, and optionally set the ``current_item`` for this new
-        position.
-        """
-        if current_item is not None:
-            self.current_item = current_item
-
+    def update(self, n_steps: int) -> None:
+        """Update the progress bar by advancing a specified number of steps."""
         self._completed_intervals += n_steps
 
         if self._completed_intervals >= self.update_min_steps:
@@ -327,7 +320,7 @@ class ProgressBar(Generic[V]):
         # `iter(bar)` and `next(bar)`. `next()` in particular may call
         # `self.generator()` repeatedly, and this must remain safe in
         # order for that interface to work.
-        if not self.entered:
+        if not self.entered:  # pragma: no cover
             raise RuntimeError("You need to use progress bars in a with block.")
 
         if not self._is_atty:
@@ -387,7 +380,7 @@ def open_url(url: str, wait: bool = False, locate: bool = False) -> int:
         except OSError:
             # Command not found
             return 127
-    elif CYGWIN:
+    elif CYGWIN:  # pragma: no cover
         if locate:
             url = _unquote_file(url)
             args = ["cygstart", os.path.dirname(url)]
@@ -411,7 +404,8 @@ def open_url(url: str, wait: bool = False, locate: bool = False) -> int:
         if wait:
             return c.wait()
         return 0
-    except OSError:
+    except OSError:  # pragma: no cover
+        # TODO: remove this part, doesn't get hit by Typer code paths?
         if url.startswith(("http://", "https://")) and not locate and not wait:
             import webbrowser
 
@@ -495,7 +489,7 @@ else:
         f: TextIO | None
         fd: int
 
-        if not isatty(sys.stdin):
+        if not isatty(sys.stdin):  # pragma: no cover
             f = open("/dev/tty")
             fd = f.fileno()
         else:
@@ -512,16 +506,16 @@ else:
                 termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
                 sys.stdout.flush()
 
-                if f is not None:
+                if f is not None:  # pragma: no cover
                     f.close()
-        except termios.error:
+        except termios.error:  # pragma: no cover
             pass
 
     def getchar(echo: bool) -> str:
         with raw_terminal() as fd:
             ch = os.read(fd, 32).decode(get_best_encoding(sys.stdin), "replace")
 
-            if echo and isatty(sys.stdout):
+            if echo and isatty(sys.stdout):  # pragma: no cover
                 sys.stdout.write(ch)
 
             _translate_ch_to_exc(ch)

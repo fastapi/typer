@@ -184,8 +184,8 @@ def confirm(
             rv = False
         elif default is not None and value == "":
             rv = default
-        else:
-            echo("Error: invalid input", err=err)  # pragma: no cover
+        else:  # pragma: no cover
+            echo("Error: invalid input", err=err)
             continue
         break
     if abort and not rv:
