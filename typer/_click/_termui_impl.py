@@ -489,7 +489,7 @@ else:
         f: TextIO | None
         fd: int
 
-        if not isatty(sys.stdin):  # pragma: no cover
+        if not isatty(sys.stdin):
             f = open("/dev/tty")
             fd = f.fileno()
         else:
@@ -506,7 +506,7 @@ else:
                 termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
                 sys.stdout.flush()
 
-                if f is not None:  # pragma: no cover
+                if f is not None:
                     f.close()
         except termios.error:  # pragma: no cover
             pass

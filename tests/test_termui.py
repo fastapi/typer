@@ -111,6 +111,81 @@ def test_termui_impl_windows_getchar(monkeypatch):
 
 
 @skip_if_windows
+@pytest.mark.parametrize("use_stdin_tty", [True, False])
+def test_termui_impl_posix_raw_terminal(monkeypatch, use_stdin_tty: bool):
+    state: dict[str, object] = {}
+    flushed: list[None] = []
+    fake_tty = None
+
+    if use_stdin_tty:
+        expected_fd = 14
+        old_termios = "old_settings"
+        monkeypatch.setattr(
+            _termui_impl, "isatty", lambda s: s is _termui_impl.sys.stdin
+        )
+        monkeypatch.setattr(_termui_impl.sys.stdin, "fileno", lambda: expected_fd)
+    else:
+        expected_fd = 27
+        old_termios = "old"
+        monkeypatch.setattr(
+            _termui_impl,
+            "isatty",
+            lambda s: s is not _termui_impl.sys.stdin,
+        )
+
+        class FakeTTY:
+            def __init__(self) -> None:
+                self.closed = False
+
+            def fileno(self) -> int:
+                return expected_fd
+
+            def close(self) -> None:
+                self.closed = True
+
+        fake_tty = FakeTTY()
+        real_open = open
+
+        def fake_open(path, *args, **kwargs):
+            if path == "/dev/tty":
+                return fake_tty
+            return real_open(path, *args, **kwargs)
+
+        monkeypatch.setattr("builtins.open", fake_open)
+
+    def tcgetattr(fd: int) -> str:
+        state["tcgetattr_fd"] = fd
+        return old_termios
+
+    def setraw(fd: int) -> None:
+        state["setraw_fd"] = fd
+
+    def tcsetattr(fd: int, when: int, old: str) -> None:
+        state["tcsetattr"] = (fd, when, old)
+
+    monkeypatch.setattr(_termui_impl.termios, "tcgetattr", tcgetattr)
+    monkeypatch.setattr(_termui_impl.tty, "setraw", setraw)
+    monkeypatch.setattr(_termui_impl.termios, "tcsetattr", tcsetattr)
+    monkeypatch.setattr(
+        _termui_impl.sys.stdout, "flush", lambda *a, **k: flushed.append(None)
+    )
+
+    with _termui_impl.raw_terminal() as fd:
+        assert fd == expected_fd
+
+    assert state["tcgetattr_fd"] == expected_fd
+    assert state["setraw_fd"] == expected_fd
+    assert state["tcsetattr"] == (
+        expected_fd,
+        _termui_impl.termios.TCSADRAIN,
+        old_termios,
+    )
+    assert flushed == [None]
+    if fake_tty is not None:
+        assert fake_tty.closed is True
+
+
+@skip_if_windows
 def test_termui_impl_posix_getchar(monkeypatch):
     @contextmanager
     def fake_raw():
