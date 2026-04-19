@@ -5,6 +5,7 @@ from pathlib import Path
 from unittest import mock
 
 import shellingham
+from typer._completion_shared import install_zsh
 from typer.testing import CliRunner
 
 from docs_src.typer_app import tutorial001_py310 as mod
@@ -171,3 +172,35 @@ def test_completion_install_powershell():
     assert install_script in new_text
     assert "completion installed in" in result.stdout
     assert "Completion will take effect once you restart the terminal" in result.stdout
+
+
+def test_install_zsh_respects_zdotdir(tmp_path, monkeypatch):
+    home = tmp_path / "home"
+    home.mkdir()
+    zdotdir = tmp_path / "custom"
+    zdotdir.mkdir()
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("ZDOTDIR", str(zdotdir))
+    install_zsh(prog_name="demo", complete_var="_DEMO_COMPLETE", shell="zsh")
+    assert (zdotdir / ".zshrc").is_file()
+    assert not (home / ".zshrc").exists()
+    assert "fpath+=~/.zfunc" in (zdotdir / ".zshrc").read_text()
+
+
+def test_install_zsh_without_zdotdir_uses_home(tmp_path, monkeypatch):
+    home = tmp_path / "home"
+    home.mkdir()
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.delenv("ZDOTDIR", raising=False)
+    install_zsh(prog_name="demo", complete_var="_DEMO_COMPLETE", shell="zsh")
+    assert (home / ".zshrc").is_file()
+    assert "fpath+=~/.zfunc" in (home / ".zshrc").read_text()
+
+
+def test_install_zsh_empty_zdotdir_uses_home(tmp_path, monkeypatch):
+    home = tmp_path / "home"
+    home.mkdir()
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("ZDOTDIR", "")
+    install_zsh(prog_name="demo", complete_var="_DEMO_COMPLETE", shell="zsh")
+    assert (home / ".zshrc").is_file()
