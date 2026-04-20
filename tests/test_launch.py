@@ -51,6 +51,13 @@ def test_launch_url_no_xdg_open():
     mock_webbrowser_open.assert_called_once_with(url)
 
 
+def test_calls_original_launch_when_not_passing_urls():
+    with patch("typer.main.click.launch", return_value=0) as launch_mock:
+        typer.launch("not a url")
+
+    launch_mock.assert_called_once_with("not a url", wait=False, locate=False)
+
+
 @needs_windows
 def test_launch_file():
     with (
