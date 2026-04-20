@@ -217,7 +217,7 @@ def _get_help_text(
 
     # Get remaining lines, remove single line breaks and format as dim
     if remaining_paragraphs:
-        # Add a newline inbetween the header and the remaining paragraphs
+        # Add a newline in between the header and the remaining paragraphs
         yield Text("")
         # Join with double linebreaks for markdown and Rich markup
         remaining_lines = "\n\n".join(remaining_paragraphs)
