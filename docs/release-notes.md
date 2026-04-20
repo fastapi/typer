@@ -17,6 +17,12 @@
 
 ### Internal
 
+* ⬆ Bump actions/cache from 5.0.4 to 5.0.5. PR [#1700](https://github.com/fastapi/typer/pull/1700) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pydantic from 2.13.1 to 2.13.2. PR [#1703](https://github.com/fastapi/typer/pull/1703) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump actions/upload-artifact from 7.0.0 to 7.0.1. PR [#1701](https://github.com/fastapi/typer/pull/1701) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.15.10 to 0.15.11. PR [#1704](https://github.com/fastapi/typer/pull/1704) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump cloudflare/wrangler-action from 3.14.1 to 3.15.0. PR [#1702](https://github.com/fastapi/typer/pull/1702) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump astral-sh/setup-uv from 7.6.0 to 8.1.0. PR [#1699](https://github.com/fastapi/typer/pull/1699) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ty from 0.0.30 to 0.0.31. PR [#1696](https://github.com/fastapi/typer/pull/1696) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pydantic from 2.13.0 to 2.13.1. PR [#1697](https://github.com/fastapi/typer/pull/1697) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * 🔒 Pin GitHub actions by commit SHA. PR [#1666](https://github.com/fastapi/typer/pull/1666) by [@YuriiMotov](https://github.com/YuriiMotov).
