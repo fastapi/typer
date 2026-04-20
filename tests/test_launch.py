@@ -59,7 +59,7 @@ def allow_dev_null(monkeypatch):
     def fake_open(path, *args, **kwargs):
         if path == "/dev/null":
             return io.StringIO()
-        return real_open(path, *args, **kwargs)
+        return real_open(path, *args, **kwargs)  # pragma: no cover
 
     monkeypatch.setattr("builtins.open", fake_open)
 
@@ -122,7 +122,7 @@ def test_open_url_linux_locate(monkeypatch):
 
     class Proc:
         def wait(self) -> int:
-            return 0
+            return 0  # pragma: no cover
 
     def fake_popen(args, **kwargs):
         recorded.append(list(args))
