@@ -149,7 +149,7 @@ def test_termui_impl_posix_raw_terminal(monkeypatch, use_stdin_tty: bool):
         def fake_open(path, *args, **kwargs):
             if path == "/dev/tty":
                 return fake_tty
-            return real_open(path, *args, **kwargs)
+            return real_open(path, *args, **kwargs)   # pragma: no cover
 
         monkeypatch.setattr("builtins.open", fake_open)
 
