@@ -3,6 +3,7 @@ from unittest.mock import patch
 
 import pytest
 import typer
+
 from tests.utils import needs_windows
 
 url = "http://example.com"
