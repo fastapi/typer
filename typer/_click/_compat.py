@@ -155,7 +155,7 @@ class _FixupStream:
 def _is_binary_reader(stream: IO[Any], default: bool = False) -> bool:
     try:
         return isinstance(stream.read(0), bytes)
-    except Exception:
+    except Exception:  # pragma: no cover
         return default
         # This happens in some cases where the stream was already
         # closed.  In this case, we assume the default.
@@ -164,7 +164,7 @@ def _is_binary_reader(stream: IO[Any], default: bool = False) -> bool:
 def _is_binary_writer(stream: IO[Any], default: bool = False) -> bool:
     try:
         stream.write(b"")
-    except Exception:
+    except Exception:  # pragma: no cover
         try:
             stream.write("")
             return False
@@ -382,8 +382,7 @@ def open_stream(
     binary = "b" in mode
     filename = os.fspath(filename)
 
-    # Standard streams first. These are simple because they ignore the
-    # atomic flag. Use fsdecode to handle Path("-").
+    # Standard streams first, ignoring the atomic flag.
     if os.fsdecode(filename) == "-":
         if any(m in mode for m in ["w", "a", "x"]):
             if binary:

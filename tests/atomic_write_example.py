@@ -42,21 +42,21 @@ def api_atomic(
 def invalid_atomic_append(
     config: typer.FileText = typer.Option(..., mode="a", atomic=True, lazy=False),
 ) -> None:
-    typer.echo(config.name)
+    typer.echo(config.name)  # pragma: no cover
 
 
 @app.command()
 def invalid_atomic_exclusive(
     config: typer.FileText = typer.Option(..., mode="x", atomic=True, lazy=False),
 ) -> None:
-    typer.echo(config.name)
+    typer.echo(config.name)  # pragma: no cover
 
 
 @app.command()
 def invalid_atomic_read(
     config: typer.FileText = typer.Option(..., mode="r", atomic=True, lazy=False),
 ) -> None:
-    typer.echo(config.name)
+    typer.echo(config.name)  # pragma: no cover
 
 
 if __name__ == "__main__":
