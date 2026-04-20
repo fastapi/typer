@@ -319,21 +319,21 @@ def _force_correct_text_writer(
 
 def get_binary_stdin() -> BinaryIO:
     reader = _find_binary_reader(sys.stdin)
-    if reader is None:
+    if reader is None:  # pragma: no cover
         raise RuntimeError("Was not able to determine binary stream for sys.stdin.")
     return reader
 
 
 def get_binary_stdout() -> BinaryIO:
     writer = _find_binary_writer(sys.stdout)
-    if writer is None:
+    if writer is None:  # pragma: no cover
         raise RuntimeError("Was not able to determine binary stream for sys.stdout.")
     return writer
 
 
 def get_binary_stderr() -> BinaryIO:
     writer = _find_binary_writer(sys.stderr)
-    if writer is None:
+    if writer is None:  # pragma: no cover
         raise RuntimeError("Was not able to determine binary stream for sys.stderr.")
     return writer
 
@@ -419,7 +419,7 @@ def open_stream(
 
     try:
         perm: int | None = os.stat(filename).st_mode
-    except OSError:
+    except OSError:  # pragma: no cover
         perm = None
 
     flags = os.O_RDWR | os.O_CREAT | os.O_EXCL
@@ -435,7 +435,7 @@ def open_stream(
         try:
             fd = os.open(tmp_filename, flags, 0o666 if perm is None else perm)
             break
-        except OSError as e:
+        except OSError as e:  # pragma: no cover
             if e.errno == errno.EEXIST or (
                 os.name == "nt"
                 and e.errno == errno.EACCES
@@ -466,7 +466,7 @@ class _AtomicFile:
 
     def close(self, delete: bool = False) -> None:
         if self.closed:
-            return
+            return  # pragma: no cover
         self._f.close()
         os.replace(self._tmp_filename, self._real_filename)
         self.closed = True
@@ -527,7 +527,7 @@ if sys.platform.startswith("win") and WIN:
         """
         try:
             cached = _ansi_stream_wrappers.get(stream)
-        except Exception:
+        except Exception:  # pragma: no cover
             cached = None
 
         if cached is not None:
@@ -543,7 +543,7 @@ if sys.platform.startswith("win") and WIN:
         def _safe_write(s: str) -> int:
             try:
                 return _write(s)
-            except BaseException:
+            except BaseException:  # pragma: no cover
                 ansi_wrapper.reset_all()
                 raise
 
@@ -551,7 +551,7 @@ if sys.platform.startswith("win") and WIN:
 
         try:
             _ansi_stream_wrappers[stream] = rv
-        except Exception:
+        except Exception:  # pragma: no cover
             pass
 
         return rv
@@ -574,7 +574,7 @@ def term_len(x: str) -> int:
 def isatty(stream: IO[Any]) -> bool:
     try:
         return stream.isatty()
-    except Exception:
+    except Exception:  # pragma: no cover
         return False
 
 
@@ -592,14 +592,14 @@ def _make_cached_stream_func(
 
         try:
             rv = cache.get(stream)
-        except Exception:
+        except Exception:  # pragma: no cover
             rv = None
         if rv is not None:
             return rv
         rv = wrapper_func()
         try:
             cache[stream] = rv
-        except Exception:
+        except Exception:  # pragma: no cover
             pass
         return rv
 
