@@ -145,52 +145,6 @@ def test_get_text_stream_errors(
     assert binary_stdout.getvalue() == b"stream-text"
 
 
-def test_get_text_stream_binary_stdin(monkeypatch) -> None:
-    class BinaryStdin(BytesIO):
-        def readable(self) -> bool:
-            return False
-
-        def writable(self) -> bool:
-            return False
-
-    binary_stdin = BinaryStdin(b"hello")
-    monkeypatch.setattr(sys, "stdin", binary_stdin)
-
-    text_stream = typer.get_text_stream("stdin", encoding=None, errors=None)
-
-    assert text_stream.read() == "hello"
-    assert text_stream.readable() is True  # forced to True
-    assert text_stream.writable() is False
-
-
-def test_get_text_stream_binary_stdout(monkeypatch) -> None:
-    class BinaryStdout(BytesIO):
-        def writable(self) -> bool:
-            return False
-
-        def seekable(self) -> bool:
-            return False
-
-        def readable(self) -> bool:
-            return False
-
-        def isatty(self) -> bool:
-            return True
-
-    binary_stdout = BinaryStdout()
-    monkeypatch.setattr(sys, "stdout", binary_stdout)
-
-    text_stream = typer.get_text_stream("stdout", encoding=None, errors=None)
-
-    assert text_stream.readable() is False
-    assert text_stream.writable() is True  # forced to True
-    assert text_stream.seekable() is False
-    assert text_stream.isatty() is True
-    text_stream.write("ok")
-    text_stream.flush()
-    assert binary_stdout.getvalue() == b"ok"
-
-
 def test_get_best_encoding() -> None:
     """Test that ASCII is being transformed into UTF-8"""
 

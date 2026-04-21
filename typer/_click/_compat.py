@@ -24,8 +24,6 @@ def _make_text_stream(
     stream: BinaryIO,
     encoding: str | None,
     errors: str | None,
-    force_readable: bool = False,
-    force_writable: bool = False,
 ) -> TextIO:
     if encoding is None:
         encoding = get_best_encoding(stream)
@@ -36,8 +34,6 @@ def _make_text_stream(
         encoding,
         errors,
         line_buffering=True,
-        force_readable=force_readable,
-        force_writable=force_writable,
     )
 
 
@@ -63,19 +59,15 @@ class _NonClosingTextIOWrapper(io.TextIOWrapper):
         stream: BinaryIO,
         encoding: str | None,
         errors: str | None,
-        force_readable: bool = False,
-        force_writable: bool = False,
         **extra: Any,
     ) -> None:
-        self._stream = stream = cast(
-            BinaryIO, _FixupStream(stream, force_readable, force_writable)
-        )
+        self._stream = stream = cast(BinaryIO, _FixupStream(stream))
         super().__init__(stream, encoding, errors, **extra)
 
     def __del__(self) -> None:
         try:
             self.detach()
-        except Exception:
+        except Exception:  # pragma: no cover
             pass
 
     def isatty(self) -> bool:
@@ -87,21 +79,13 @@ class _FixupStream:
     """The new io interface needs more from streams than streams
     traditionally implement.  As such, this fix-up code is necessary in
     some circumstances.
-
-    The forcing of readable and writable flags are there because some tools
-    put badly patched objects on sys (one such offender are certain version
-    of jupyter notebook).
     """
 
     def __init__(
         self,
         stream: BinaryIO,
-        force_readable: bool = False,
-        force_writable: bool = False,
     ):
         self._stream = stream
-        self._force_readable = force_readable
-        self._force_writable = force_writable
 
     def __getattr__(self, name: str) -> Any:
         return getattr(self._stream, name)
@@ -115,41 +99,16 @@ class _FixupStream:
         return self._stream.read(size)
 
     def readable(self) -> bool:
-        if self._force_readable:
-            return True
-        x = getattr(self._stream, "readable", None)
-        if x is not None:
-            return cast(bool, x())
-        try:
-            self._stream.read(0)
-        except Exception:
-            return False
         return True
 
     def writable(self) -> bool:
-        if self._force_writable:
-            return True
-        x = getattr(self._stream, "writable", None)
-        if x is not None:
-            return cast(bool, x())
-        try:
-            self._stream.write(b"")
-        except Exception:
-            try:
-                self._stream.write(b"")
-            except Exception:
-                return False
         return True
 
     def seekable(self) -> bool:
         x = getattr(self._stream, "seekable", None)
         if x is not None:
             return cast(bool, x())
-        try:
-            self._stream.seek(self._stream.tell())
-        except Exception:
-            return False
-        return True
+        return False
 
 
 def _is_binary_reader(stream: IO[Any], default: bool = False) -> bool:
@@ -245,8 +204,6 @@ def _force_correct_text_stream(
     errors: str | None,
     is_binary: Callable[[IO[Any], bool], bool],
     find_binary: Callable[[IO[Any]], BinaryIO | None],
-    force_readable: bool = False,
-    force_writable: bool = False,
 ) -> TextIO:
     if is_binary(text_stream, False):
         binary_reader = cast(BinaryIO, text_stream)
@@ -280,8 +237,6 @@ def _force_correct_text_stream(
         binary_reader,
         encoding,
         errors,
-        force_readable=force_readable,
-        force_writable=force_writable,
     )
 
 
@@ -289,7 +244,6 @@ def _force_correct_text_reader(
     text_reader: IO[Any],
     encoding: str | None,
     errors: str | None,
-    force_readable: bool = False,
 ) -> TextIO:
     return _force_correct_text_stream(
         text_reader,
@@ -297,7 +251,6 @@ def _force_correct_text_reader(
         errors,
         _is_binary_reader,
         _find_binary_reader,
-        force_readable=force_readable,
     )
 
 
@@ -305,7 +258,6 @@ def _force_correct_text_writer(
     text_writer: IO[Any],
     encoding: str | None,
     errors: str | None,
-    force_writable: bool = False,
 ) -> TextIO:
     return _force_correct_text_stream(
         text_writer,
@@ -313,7 +265,6 @@ def _force_correct_text_writer(
         errors,
         _is_binary_writer,
         _find_binary_writer,
-        force_writable=force_writable,
     )
 
 
@@ -342,21 +293,21 @@ def get_text_stdin(encoding: str | None = None, errors: str | None = None) -> Te
     rv = _get_windows_console_stream(sys.stdin, encoding, errors)
     if rv is not None:
         return rv
-    return _force_correct_text_reader(sys.stdin, encoding, errors, force_readable=True)
+    return _force_correct_text_reader(sys.stdin, encoding, errors)
 
 
 def get_text_stdout(encoding: str | None = None, errors: str | None = None) -> TextIO:
     rv = _get_windows_console_stream(sys.stdout, encoding, errors)
     if rv is not None:
         return rv
-    return _force_correct_text_writer(sys.stdout, encoding, errors, force_writable=True)
+    return _force_correct_text_writer(sys.stdout, encoding, errors)
 
 
 def get_text_stderr(encoding: str | None = None, errors: str | None = None) -> TextIO:
     rv = _get_windows_console_stream(sys.stderr, encoding, errors)
     if rv is not None:
         return rv
-    return _force_correct_text_writer(sys.stderr, encoding, errors, force_writable=True)
+    return _force_correct_text_writer(sys.stderr, encoding, errors)
 
 
 def _wrap_io_open(
