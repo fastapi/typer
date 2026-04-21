@@ -282,7 +282,6 @@ def test_argv_encoding(
         import locale
 
         monkeypatch.setattr(locale, "getpreferredencoding", lambda: "latin-1")
-        monkeypatch.setattr(sys, "getfilesystemencoding", lambda: "utf-8")
     else:
 
         class FakeStdin:
@@ -292,15 +291,8 @@ def test_argv_encoding(
         monkeypatch.setattr(sys, "stdin", FakeStdin(stdin_encoding))
         monkeypatch.setattr(sys, "getfilesystemencoding", lambda: filesystem_encoding)
 
-    app = typer.Typer()
-
-    @app.command()
-    def show(name: str = typer.Option(...)):
-        print(name)
-
-    result = runner.invoke(app, [], default_map={"name": b"\xff"})
-    assert result.exit_code == 0
-    assert "ÿ" in result.output
+    converted = _click.types.STRING.convert(b"\xff", None, None)
+    assert converted == "ÿ"
 
 
 def test_convert_type():
