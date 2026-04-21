@@ -17,6 +17,7 @@
 
 ### Internal
 
+* ⬆ Bump ty from 0.0.31 to 0.0.32. PR [#1711](https://github.com/fastapi/typer/pull/1711) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pydantic from 2.13.2 to 2.13.3. PR [#1712](https://github.com/fastapi/typer/pull/1712) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pygments from 2.19.2 to 2.20.0. PR [#1667](https://github.com/fastapi/typer/pull/1667) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pymdown-extensions from 10.20 to 10.21.2. PR [#1710](https://github.com/fastapi/typer/pull/1710) by [@YuriiMotov](https://github.com/YuriiMotov).
