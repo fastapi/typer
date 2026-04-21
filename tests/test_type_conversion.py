@@ -7,6 +7,8 @@ import typer
 from typer import _click
 from typer.testing import CliRunner
 
+from tests.utils import needs_linux, needs_windows
+
 runner = CliRunner()
 
 
@@ -259,6 +261,47 @@ def test_string_param_type_converts_bytes(
     result = runner.invoke(app, [], default_map={"name": raw_value})
     assert result.exit_code == 0
     assert expected_output in result.output
+
+
+@pytest.mark.parametrize(
+    ("platform_case", "stdin_encoding", "filesystem_encoding"),
+    [
+        pytest.param("windows", None, "utf-8", marks=needs_windows),
+        pytest.param("linux", "latin-1", "utf-8", marks=needs_linux),
+        pytest.param("linux", None, "latin-1", marks=needs_linux),
+    ],
+)
+def test_argv_encoding(
+    monkeypatch: pytest.MonkeyPatch,
+    platform_case: str,
+    stdin_encoding: str | None,
+    filesystem_encoding: str,
+) -> None:
+    if platform_case == "windows":
+        import locale
+
+        monkeypatch.setattr(locale, "getpreferredencoding", lambda: "latin-1")
+        monkeypatch.setattr(_click.types.sys, "getfilesystemencoding", lambda: "utf-8")
+    else:
+
+        class FakeStdin:
+            def __init__(self, encoding: str | None) -> None:
+                self.encoding = encoding
+
+        monkeypatch.setattr(_click.types.sys, "stdin", FakeStdin(stdin_encoding))
+        monkeypatch.setattr(
+            _click.types.sys, "getfilesystemencoding", lambda: filesystem_encoding
+        )
+
+    app = typer.Typer()
+
+    @app.command()
+    def show(name: str = typer.Option(...)):
+        print(name)
+
+    result = runner.invoke(app, [], default_map={"name": b"\xff"})
+    assert result.exit_code == 0
+    assert "ÿ" in result.output
 
 
 def test_convert_type():

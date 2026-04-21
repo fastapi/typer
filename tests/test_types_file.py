@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 import typer
-from typer._click._compat import get_best_encoding
+from typer._click._compat import get_best_encoding, should_strip_ansi
 from typer.testing import CliRunner
 
 app = typer.Typer()
@@ -160,3 +160,137 @@ def test_get_best_encoding() -> None:
     assert get_best_encoding(AsciiStream()) == "utf-8"
     assert get_best_encoding(Utf8Stream()) == "utf-8"
     assert get_best_encoding(UnknownStream()) == "unknown"
+
+
+def test_text_stream_isatty(monkeypatch) -> None:
+    class BinaryStdout(BytesIO):
+        def isatty(self) -> bool:
+            return True
+
+    binary_stdout = BinaryStdout()
+    monkeypatch.setattr(sys, "stdout", binary_stdout)
+    text_stream = typer.get_text_stream("stdout", encoding="utf-8", errors=None)
+    assert text_stream.isatty() is True
+
+
+def test_text_stream_buffer_read1(monkeypatch) -> None:
+    class BinaryStdinNoRead1:
+        def __init__(self, data: bytes) -> None:
+            self._data = data
+            self._pos = 0
+
+        def read(self, size: int = -1) -> bytes:
+            if size < 0:
+                size = len(self._data) - self._pos
+            chunk = self._data[self._pos : self._pos + size]
+            self._pos += len(chunk)
+            return chunk
+
+    binary_stdin = BinaryStdinNoRead1(b"hello")
+    monkeypatch.setattr(sys, "stdin", binary_stdin)
+    text_stream = typer.get_text_stream("stdin", encoding="utf-8", errors=None)
+    assert text_stream._stream.read1(4) == b"hell"
+
+
+def test_binary_stream(monkeypatch) -> None:
+    binary_stdin = BytesIO(b"hello")
+    binary_stdout = BytesIO()
+    monkeypatch.setattr(sys, "stdin", binary_stdin)
+    monkeypatch.setattr(sys, "stdout", binary_stdout)
+
+    assert typer.get_binary_stream("stdin") is binary_stdin
+    assert typer.get_binary_stream("stdout") is binary_stdout
+
+
+def test_binary_stream_raises(monkeypatch) -> None:
+    class TextOnlyStdin:
+        def read(self, n: int = -1) -> str:
+            return "hello"
+
+    monkeypatch.setattr(sys, "stdin", TextOnlyStdin())
+    with pytest.raises(RuntimeError, match="Was not able to determine binary stream"):
+        typer.get_binary_stream("stdin")
+
+
+def test_text_stream_binary_buffer(monkeypatch) -> None:
+    class TextStdinWithBinaryBuffer:
+        def __init__(self, data: bytes) -> None:
+            self.buffer = BytesIO(data)
+            self.encoding = "latin-1"
+
+        def read(self, n: int = -1) -> str:
+            raise OSError("text stream is not readable directly")
+
+    class TextStdoutWithBinaryBuffer:
+        def __init__(self) -> None:
+            self.buffer = BytesIO()
+            self.encoding = "latin-1"
+
+        def write(self, s: str) -> int:
+            raise OSError("text stream is not writable directly")
+
+    stdin = TextStdinWithBinaryBuffer(b"hello")
+    stdout = TextStdoutWithBinaryBuffer()
+
+    monkeypatch.setattr(sys, "stdin", stdin)
+    monkeypatch.setattr(sys, "stdout", stdout)
+
+    text_stdin = typer.get_text_stream("stdin", encoding="utf-8", errors=None)
+    text_stdout = typer.get_text_stream("stdout", encoding="utf-8", errors=None)
+
+    assert text_stdin.read() == "hello"
+    text_stdout.write("ok")
+    text_stdout.flush()
+    assert stdout.buffer.getvalue() == b"ok"
+
+
+def test_text_stream_binary_stream(monkeypatch) -> None:
+    binary_stdout = BytesIO()
+    monkeypatch.setattr(sys, "stdout", binary_stdout)
+    text_stream = typer.get_text_stream("stdout", encoding="utf-8", errors=None)
+    text_stream.write("ok")
+    text_stream.flush()
+    assert binary_stdout.getvalue() == b"ok"
+
+
+def test_text_stream_stdout_no_binary(
+    monkeypatch,
+) -> None:
+    class TextStdoutNoBinaryFallback:
+        encoding = "utf-8"
+        errors = "strict"
+
+        def write(self, s: str) -> int:
+            if isinstance(s, bytes):
+                raise TypeError("bytes not supported")
+            return len(s)
+
+    stdout = TextStdoutNoBinaryFallback()
+    monkeypatch.setattr(sys, "stdout", stdout)
+    text_stream = typer.get_text_stream("stdout", encoding="utf-8", errors="replace")
+    assert text_stream is stdout
+
+
+def test_jupyter_wrapped_stream(monkeypatch) -> None:
+    class JupyterLikeStdout(BytesIO):
+        __module__ = "ipykernel.iostream"
+
+        def isatty(self) -> bool:
+            return False
+
+    binary_stdout = JupyterLikeStdout()
+    monkeypatch.setattr(sys, "stdout", binary_stdout)
+    text_stream = typer.get_text_stream("stdout", encoding="utf-8", errors=None)
+    assert should_strip_ansi(text_stream, color=None) is False
+
+
+def test_should_strip_ansi(monkeypatch) -> None:
+    class NonTtyStdin(BytesIO):
+        def isatty(self) -> bool:
+            return False
+
+    stdin = NonTtyStdin()
+    monkeypatch.setattr(sys, "stdin", stdin)
+    assert should_strip_ansi(stream=None, color=None) is True
+    assert should_strip_ansi(stream=None, color=True) is False
+    assert should_strip_ansi(stream=None, color=False) is True

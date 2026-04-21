@@ -23,12 +23,10 @@ _ansi_re = re.compile(r"\033\[[;?0-9]*[a-zA-Z]")
 def _make_text_stream(
     stream: BinaryIO,
     encoding: str | None,
-    errors: str | None,
+    errors: str,
 ) -> TextIO:
     if encoding is None:
         encoding = get_best_encoding(stream)
-    if errors is None:
-        errors = "replace"
     return _NonClosingTextIOWrapper(
         stream,
         encoding,
@@ -529,16 +527,13 @@ def isatty(stream: IO[Any]) -> bool:
 
 
 def _make_cached_stream_func(
-    src_func: Callable[[], TextIO | None],
+    src_func: Callable[[], TextIO],
     wrapper_func: Callable[[], TextIO],
-) -> Callable[[], TextIO | None]:
+) -> Callable[[], TextIO]:
     cache: MutableMapping[TextIO, TextIO] = WeakKeyDictionary()
 
-    def func() -> TextIO | None:
+    def func() -> TextIO:
         stream = src_func()
-
-        if stream is None:
-            return None
 
         try:
             rv = cache.get(stream)
