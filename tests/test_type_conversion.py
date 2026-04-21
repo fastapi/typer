@@ -277,21 +277,20 @@ def test_argv_encoding(
     stdin_encoding: str | None,
     filesystem_encoding: str,
 ) -> None:
+    sys = _click._compat.sys
     if platform_case == "windows":
         import locale
 
         monkeypatch.setattr(locale, "getpreferredencoding", lambda: "latin-1")
-        monkeypatch.setattr(_click.types.sys, "getfilesystemencoding", lambda: "utf-8")
+        monkeypatch.setattr(sys, "getfilesystemencoding", lambda: "utf-8")
     else:
 
         class FakeStdin:
             def __init__(self, encoding: str | None) -> None:
                 self.encoding = encoding
 
-        monkeypatch.setattr(_click.types.sys, "stdin", FakeStdin(stdin_encoding))
-        monkeypatch.setattr(
-            _click.types.sys, "getfilesystemencoding", lambda: filesystem_encoding
-        )
+        monkeypatch.setattr(sys, "stdin", FakeStdin(stdin_encoding))
+        monkeypatch.setattr(sys, "getfilesystemencoding", lambda: filesystem_encoding)
 
     app = typer.Typer()
 
