@@ -659,14 +659,12 @@ class TyperPath(_click.types.ParamType):
         resolve_path: bool = False,
         allow_dash: bool = False,
         path_type: type[Any] | None = None,
-        executable: bool = False,
     ):
         self.exists = exists
         self.file_okay = file_okay
         self.dir_okay = dir_okay
         self.readable = readable
         self.writable = writable
-        self.executable = executable
         self.resolve_path = resolve_path
         self.allow_dash = allow_dash
         self.type = path_type
@@ -682,7 +680,9 @@ class TyperPath(_click.types.ParamType):
         self, value: str | os.PathLike[str]
     ) -> str | bytes | os.PathLike[str]:
         if self.type is not None and not isinstance(value, self.type):
-            if self.type is str:
+            if (
+                self.type is str
+            ):  # pragma: no cover  # TODO: perhaps this branch can't be hit and should be removed
                 return os.fsdecode(value)
             elif self.type is bytes:
                 return os.fsencode(value)
@@ -729,9 +729,6 @@ class TyperPath(_click.types.ParamType):
 
             if self.writable and not os.access(rv, os.W_OK):
                 self.fail(f"{name} {loc} is not writable.", param, ctx)
-
-            if self.executable and not os.access(value, os.X_OK):
-                self.fail(f"{name} {loc} is not executable.", param, ctx)
 
         return self.coerce_path_result(rv)
 

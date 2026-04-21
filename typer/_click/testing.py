@@ -3,7 +3,6 @@ import io
 import os
 import shlex
 import sys
-import tempfile
 from collections.abc import Iterator, Mapping, Sequence
 from types import TracebackType
 from typing import IO, TYPE_CHECKING, Any, BinaryIO, cast
@@ -423,29 +422,3 @@ class CliRunner:
             exception=exception,
             exc_info=exc_info,  # type: ignore
         )
-
-    @contextlib.contextmanager
-    def isolated_filesystem(
-        self, temp_dir: str | os.PathLike[str] | None = None
-    ) -> Iterator[str]:
-        """A context manager that creates a temporary directory and
-        changes the current working directory to it. This isolates tests
-        that affect the contents of the CWD to prevent them from
-        interfering with each other.
-        """
-        cwd = os.getcwd()
-        dt = tempfile.mkdtemp(dir=temp_dir)
-        os.chdir(dt)
-
-        try:
-            yield dt
-        finally:
-            os.chdir(cwd)
-
-            if temp_dir is None:
-                import shutil
-
-                try:
-                    shutil.rmtree(dt)
-                except OSError:
-                    pass

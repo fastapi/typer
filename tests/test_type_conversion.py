@@ -1,10 +1,11 @@
+import os
 from enum import Enum
 from pathlib import Path
 from typing import Any
 
 import pytest
 import typer
-from typer import _click
+from typer import _click, models
 from typer.testing import CliRunner
 
 from tests.utils import needs_linux, needs_windows
@@ -263,36 +264,62 @@ def test_string_param_type_converts_bytes(
     assert expected_output in result.output
 
 
+@pytest.mark.parametrize("path_type", [str, bytes, Path])
+def test_path_coerced(path_type) -> None:
+    # Ensure coerce_path_result works correctly
+    app = typer.Typer()
+
+    @app.command()
+    def show(path: Any = typer.Option(..., path_type=path_type)):
+        print(path)
+
+    result = runner.invoke(app, ["--path", "dir/my_awesome_file.txt"])
+    assert result.exit_code == 0
+    assert "my_awesome_file" in result.output
+
+
 @pytest.mark.parametrize(
-    ("platform_case", "stdin_encoding", "filesystem_encoding"),
+    ("create_file", "option_kwargs", "deny_mode", "expected_error"),
     [
-        pytest.param("windows", None, "utf-8", marks=needs_windows),
-        pytest.param("linux", "latin-1", "utf-8", marks=needs_linux),
-        pytest.param("linux", None, "latin-1", marks=needs_linux),
+        (True, {"file_okay": False, "dir_okay": True}, None, "is a file"),
+        (False, {"file_okay": True, "dir_okay": False}, None, "is a directory"),
+        (True, {"readable": True}, os.R_OK, "is not readable"),
+        (True, {"readable": False, "writable": True}, os.W_OK, "is not writable"),
     ],
 )
-def test_argv_encoding(
+def test_path_convert_failures(
     monkeypatch: pytest.MonkeyPatch,
-    platform_case: str,
-    stdin_encoding: str | None,
-    filesystem_encoding: str,
+    tmp_path: Path,
+    create_file: bool,
+    option_kwargs: dict[str, bool],
+    deny_mode: int | None,
+    expected_error: str,
 ) -> None:
-    sys = _click._compat.sys
-    if platform_case == "windows":
-        import locale
+    app = typer.Typer()
 
-        monkeypatch.setattr(locale, "getpreferredencoding", lambda: "latin-1")
+    @app.command()
+    def show(path: Path = typer.Option(..., **option_kwargs)):
+        print(path)  # pragma: no cover
+
+    if deny_mode is not None:
+        original_access = os.access
+
+        def fake_access(path: str, mode: int) -> bool:
+            if mode == deny_mode:
+                return False
+            return original_access(path, mode)  # pragma: no cover
+
+        monkeypatch.setattr(models.os, "access", fake_access)
+
+    path = tmp_path / "some_path"
+    if create_file:
+        path.write_text("hello")
     else:
+        path.mkdir()
+    result = runner.invoke(app, ["--path", str(path)])
 
-        class FakeStdin:
-            def __init__(self, encoding: str | None) -> None:
-                self.encoding = encoding
-
-        monkeypatch.setattr(sys, "stdin", FakeStdin(stdin_encoding))
-        monkeypatch.setattr(sys, "getfilesystemencoding", lambda: filesystem_encoding)
-
-    converted = _click.types.STRING.convert(b"\xff", None, None)
-    assert converted == "ÿ"
+    assert result.exit_code != 0
+    assert expected_error in result.output
 
 
 def test_convert_type():
@@ -339,3 +366,35 @@ def test_convert_type():
     func_type = convert_type(CustomType)
     assert isinstance(func_type, _click.types.FuncParamType)
     assert func_type.name == "CustomType"
+
+
+@pytest.mark.parametrize(
+    ("platform_case", "stdin_encoding", "filesystem_encoding"),
+    [
+        pytest.param("windows", None, "utf-8", marks=needs_windows),
+        pytest.param("linux", "latin-1", "utf-8", marks=needs_linux),
+        pytest.param("linux", None, "latin-1", marks=needs_linux),
+    ],
+)
+def test_argv_encoding(
+    monkeypatch: pytest.MonkeyPatch,
+    platform_case: str,
+    stdin_encoding: str | None,
+    filesystem_encoding: str,
+) -> None:
+    sys = _click._compat.sys
+    if platform_case == "windows":
+        import locale
+
+        monkeypatch.setattr(locale, "getpreferredencoding", lambda: "latin-1")
+    else:
+
+        class FakeStdin:
+            def __init__(self, encoding: str | None) -> None:
+                self.encoding = encoding
+
+        monkeypatch.setattr(sys, "stdin", FakeStdin(stdin_encoding))
+        monkeypatch.setattr(sys, "getfilesystemencoding", lambda: filesystem_encoding)
+
+    converted = _click.types.STRING.convert(b"\xff", None, None)
+    assert converted == "ÿ"

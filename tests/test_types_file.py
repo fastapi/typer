@@ -56,7 +56,7 @@ def test_text_stdin_dash() -> None:
     assert "text-len=6" in result.output
 
 
-def test_lazy_file() -> None:
+def test_lazy_file(tmp_path: Path) -> None:
     # dash: written to stdout
     result = runner.invoke(app, ["write-text", "--file-out=-"])
     assert result.exit_code == 0
@@ -64,16 +64,13 @@ def test_lazy_file() -> None:
     assert "1 line written" in result.output
 
     # lazy + file
-    with runner.isolated_filesystem():
-        result = runner.invoke(app, ["write-lazy", "--file-out=example.txt"])
-        assert result.exit_code == 0
-        assert "This is a single line" not in result.output
-        assert "1 line written" in result.output
-        # test that the file is created
-        file_path = Path("example.txt")
-        assert file_path.exists()
-        with file_path.open("r") as f:
-            assert f.read() == "This is a single line\n"
+    file_path = tmp_path / "example.txt"
+    result = runner.invoke(app, ["write-lazy", f"--file-out={file_path}"])
+    assert result.exit_code == 0
+    assert "This is a single line" not in result.output
+    assert "1 line written" in result.output
+    assert file_path.exists()
+    assert file_path.read_text() == "This is a single line\n"
 
     # lazy + dash: written to stdout (lazy setting is pretty much ignored)
     result = runner.invoke(app, ["write-lazy", "--file-out=-"])
@@ -181,7 +178,7 @@ def test_text_stream_buffer_read1(monkeypatch) -> None:
 
         def read(self, size: int = -1) -> bytes:
             if size < 0:
-                size = len(self._data) - self._pos
+                size = len(self._data) - self._pos  # pragma: no cover
             chunk = self._data[self._pos : self._pos + size]
             self._pos += len(chunk)
             return chunk
