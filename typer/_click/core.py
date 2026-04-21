@@ -812,9 +812,7 @@ class Command(ABC):
 
 class Parameter(ABC):
     r"""A parameter to a command comes in two versions: they are either
-    `Option`\s or `Argument`\s.  Other subclasses are currently
-    not supported by design as some of the internals for parsing are
-    intentionally not finalized.
+    `Option`\s or `Argument`\s.
 
     Some settings are supported by both options and arguments.
     """
@@ -880,7 +878,8 @@ class Parameter(ABC):
         """Returns the human readable name of this parameter.  This is the
         same as the name for options, but the metavar for arguments.
         """
-        return self.name  # type: ignore
+        assert self.name is not None, "self.name should be set"
+        return self.name
 
     def make_metavar(self, ctx: Context) -> str:
         if self.metavar is not None:

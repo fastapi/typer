@@ -11,7 +11,6 @@ import typer
 import typer._completion_shared
 import typer.completion
 from typer import _click
-from typer.core import _split_opt
 from typer.main import solve_typer_info_defaults, solve_typer_info_help
 from typer.models import ParameterInfo, TyperInfo
 from typer.testing import CliRunner
@@ -301,24 +300,6 @@ def test_context_settings_inheritance_single_command():
 
     result = runner.invoke(app, ["main", "-h"])
     assert "Show this message and exit." in result.stdout
-
-
-def test_split_opt():
-    prefix, opt = _split_opt("--verbose")
-    assert prefix == "--"
-    assert opt == "verbose"
-
-    prefix, opt = _split_opt("//verbose")
-    assert prefix == "//"
-    assert opt == "verbose"
-
-    prefix, opt = _split_opt("-verbose")
-    assert prefix == "-"
-    assert opt == "verbose"
-
-    prefix, opt = _split_opt("verbose")
-    assert prefix == ""
-    assert opt == "verbose"
 
 
 def test_options_metadata_typer_default():
