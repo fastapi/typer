@@ -17,6 +17,7 @@
 
 ### Internal
 
+* ⬆ Bump pymdown-extensions from 10.20 to 10.21.2. PR [#1710](https://github.com/fastapi/typer/pull/1710) by [@YuriiMotov](https://github.com/YuriiMotov).
 * ⬆ Bump actions/cache from 5.0.4 to 5.0.5. PR [#1700](https://github.com/fastapi/typer/pull/1700) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pydantic from 2.13.1 to 2.13.2. PR [#1703](https://github.com/fastapi/typer/pull/1703) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump actions/upload-artifact from 7.0.0 to 7.0.1. PR [#1701](https://github.com/fastapi/typer/pull/1701) by [@dependabot[bot]](https://github.com/apps/dependabot).
