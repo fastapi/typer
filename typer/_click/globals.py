@@ -28,7 +28,9 @@ def get_current_context(silent: bool = False) -> Union["Context", None]:
         return cast("Context", _local.stack[-1])
     except (AttributeError, IndexError) as e:
         if not silent:
-            raise RuntimeError("There is no active click context.") from e
+            raise RuntimeError(
+                "There is no active click context."
+            ) from e  # pragma: no cover
 
     return None
 

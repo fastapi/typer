@@ -74,7 +74,7 @@ def augment_usage_errors(
         if param is not None and e.param is None:
             e.param = param
         raise
-    except UsageError as e:
+    except UsageError as e:  # pragma: no cover
         if e.ctx is None:
             e.ctx = ctx
         raise
@@ -719,7 +719,7 @@ class Command(ABC):
 
     def parse_args(self, ctx: Context, args: list[str]) -> list[str]:
         if not args and self.no_args_is_help and not ctx.resilient_parsing:
-            raise NoArgsIsHelpError(ctx)
+            raise NoArgsIsHelpError(ctx)  # pragma: no cover
 
         parser = self.make_parser(ctx)
         opts, args, param_order = parser.parse_args(args=args)
@@ -963,6 +963,7 @@ class Parameter(ABC):
             def convert(value: Any) -> Any:  # tuple[t.Any, ...]
                 return tuple(self.type(x, self, ctx) for x in check_iter(value))
 
+        # TODO: evaluate whether we need to keep this in Typer
         else:  # nargs > 1
 
             def convert(value: Any) -> Any:  # tuple[t.Any, ...]

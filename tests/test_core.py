@@ -11,21 +11,47 @@ from typer.testing import CliRunner
 runner = CliRunner()
 
 
-def test_argument_name() -> None:
+def test_human_readable_name() -> None:
     app = typer.Typer()
 
     @app.command()
     def main(
-        name: str,
-        target: Annotated[str, typer.Argument(metavar="META_TARGET")],
+        my_arg_1: Annotated[str, typer.Argument()],
+        my_arg_2: Annotated[str, typer.Argument(metavar="META_ARG")],
+        my_opt: Annotated[str, typer.Option()],
     ):
         pass  # pragma: no cover
 
     command = typer.main.get_command(app)
     params = {param.name: param for param in command.params}
 
-    assert params["name"].human_readable_name == "NAME"
-    assert params["target"].human_readable_name == "META_TARGET"
+    assert params["my_arg_1"].human_readable_name == "MY_ARG_1"
+    assert params["my_arg_2"].human_readable_name == "META_ARG"
+    assert params["my_opt"].human_readable_name == "my_opt"
+
+
+def test_parameter_metavar() -> None:
+    app = typer.Typer(rich_markup_mode=None)
+
+    @app.command()
+    def cmd(name: Annotated[str, typer.Option(metavar="CUSTOM")]) -> None:
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "--name CUSTOM" in result.output
+
+
+def test_parameter_nargs_gt_1() -> None:
+    param = TyperArgument(param_decls=["value"], type=str, nargs=2)
+    ctx = _click.Context(TyperCommand(name="cmd"))
+
+    assert param.type_cast_value(ctx, ("one", "two")) == ("one", "two")
+
+    with pytest.raises(
+        _click.exceptions.BadParameter, match="Takes 2 values but 1 given."
+    ):
+        param.type_cast_value(ctx, ("one",))
 
 
 def test_parameter_constructor() -> None:
@@ -141,26 +167,189 @@ def test_group_click_resolve_command() -> None:
 
 
 @pytest.mark.parametrize(
-    ("envvar", "auto_prefix"),
+    ("envvar", "auto_prefix", "set_env", "expected"),
     [
-        ("APP_NAME", None),
-        (None, "APP"),
+        ("APP_NAME", None, True, "my-precious"),
+        (None, "APP", True, "my-precious"),
+        (None, None, False, None),
     ],
 )
 def test_option_resolve_envvar(
     monkeypatch: pytest.MonkeyPatch,
     envvar: str | None,
     auto_prefix: str | None,
+    set_env: bool,
+    expected: str | None,
 ) -> None:
     option = TyperOption(
         param_decls=["name", "--name"],
         required=False,
         envvar=envvar,
     )
-    monkeypatch.setenv("APP_NAME", "my-precious")
+    if set_env:
+        monkeypatch.setenv("APP_NAME", "my-precious")
 
     ctx = _click.Context(TyperCommand(name="cmd"), auto_envvar_prefix=auto_prefix)
-    assert option.resolve_envvar_value(ctx) == "my-precious"
+    assert option.resolve_envvar_value(ctx) == expected
+
+
+def test_option_resolve_envvar_list(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    option = TyperOption(
+        param_decls=["name", "--name"],
+        required=False,
+        envvar=["APP_NAME_1", "APP_NAME_2"],
+    )
+    monkeypatch.delenv("APP_NAME_1", raising=False)
+    monkeypatch.delenv("APP_NAME_2", raising=False)
+    ctx = _click.Context(TyperCommand(name="cmd"))
+
+    assert option.resolve_envvar_value(ctx) is None
+
+
+def test_context_auto_envvar() -> None:
+    app = typer.Typer(context_settings={"auto_envvar_prefix": "APP"})
+    sub_app = typer.Typer()
+
+    @sub_app.command()
+    def clone(ctx: typer.Context) -> None:
+        print(ctx.auto_envvar_prefix)
+
+    app.add_typer(sub_app, name="beth")
+
+    result = runner.invoke(app, ["beth", "clone"])
+    assert result.exit_code == 0
+    assert "APP_BETH_CLONE" in result.stdout
+
+
+def test_context_with_resource() -> None:
+    events: list[str] = []
+
+    class DemoResource:
+        def __enter__(self) -> str:
+            events.append("enter")
+            return "pickle-rick"
+
+        def __exit__(self, *args: object) -> None:
+            events.append("exit")
+
+    app = typer.Typer()
+
+    @app.command()
+    def cmd(ctx: typer.Context) -> None:
+        value = ctx.with_resource(DemoResource())
+        assert value == "pickle-rick"
+        assert events == ["enter"]
+        print("I'm a pickle")
+
+    result = runner.invoke(app)
+
+    assert result.exit_code == 0
+    assert "I'm a pickle" in result.stdout
+    assert events == ["enter", "exit"]
+
+
+def test_context_find_root() -> None:
+    app = typer.Typer()
+    sub_app = typer.Typer()
+
+    @sub_app.command()
+    def child(ctx: typer.Context) -> None:
+        root = ctx.find_root()
+        assert root.parent is None
+        assert root is ctx.parent.parent
+        print("ok")
+
+    app.add_typer(sub_app, name="sub")
+
+    result = runner.invoke(app, ["sub", "child"])
+    assert result.exit_code == 0
+    assert "ok" in result.stdout
+
+
+def test_context_find_object() -> None:
+    class Marker:
+        pass
+
+    marker = Marker()
+    app = typer.Typer()
+
+    @app.callback()
+    def callback(ctx: typer.Context) -> None:
+        ctx.obj = marker
+
+    @app.command()
+    def child(ctx: typer.Context) -> None:
+        assert ctx.find_object(Marker) is marker
+        assert ctx.find_object(str) is None
+        print("ok")
+
+    result = runner.invoke(app, ["child"])
+    assert result.exit_code == 0
+    assert "ok" in result.stdout
+
+
+def test_context_lookup_default_callable() -> None:
+    app = typer.Typer()
+
+    @app.command()
+    def child(ctx: typer.Context) -> None:
+        ctx.default_map = {"planet": lambda: "Earth"}
+        assert ctx.lookup_default("planet") == "Earth"
+        value = ctx.lookup_default("planet", call=False)
+        assert callable(value)
+        print("ok")
+
+    result = runner.invoke(app)
+    assert result.exit_code == 0
+    assert "ok" in result.stdout
+
+
+def test_context_abort() -> None:
+    app = typer.Typer()
+
+    @app.command()
+    def cmd(ctx: typer.Context) -> None:
+        ctx.abort()
+
+    result = runner.invoke(app, standalone_mode=False)
+    assert result.exit_code == 1
+    assert isinstance(result.exception, _click.core.Abort)
+
+
+def test_command_help_disabled() -> None:
+    app = typer.Typer()
+
+    @app.command(add_help_option=False)
+    def cmd() -> None:
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["--help"], standalone_mode=False)
+    assert result.exit_code == 1
+    assert isinstance(result.exception, _click.exceptions.NoSuchOption)
+    assert result.exception.option_name == "--help"
+
+
+def test_command_help_deprecated() -> None:
+    app = typer.Typer(rich_markup_mode=None, epilog="Built with love")
+
+    @app.command(short_help="Shorty", help="Regular help text.", deprecated=True)
+    def one() -> None:
+        pass  # pragma: no cover
+
+    @app.command()
+    def two() -> None:
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["one", "--help"])
+    assert result.exit_code == 0
+    assert "Regular help text. (DEPRECATED)" in result.output
+
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "Built with love" in result.output
+    assert "oneShorty(DEPRECATED)" in result.output.replace(" ", "")
 
 
 @pytest.mark.parametrize(
