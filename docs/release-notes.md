@@ -17,6 +17,7 @@
 
 ### Internal
 
+* ⬆ Bump mypy from 1.20.1 to 1.20.2. PR [#1715](https://github.com/fastapi/typer/pull/1715) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump prek from 0.3.9 to 0.3.10. PR [#1716](https://github.com/fastapi/typer/pull/1716) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pydantic-settings from 2.13.1 to 2.14.0. PR [#1713](https://github.com/fastapi/typer/pull/1713) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ty from 0.0.31 to 0.0.32. PR [#1711](https://github.com/fastapi/typer/pull/1711) by [@dependabot[bot]](https://github.com/apps/dependabot).
