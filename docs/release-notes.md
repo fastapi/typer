@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.24.2 (2026-04-22)
+
 ### Fixes
 
 * 🐛 Ensure that `typer.launch` forwards correctly when launching a file. PR [#1708](https://github.com/fastapi/typer/pull/1708) by [@svlandeg](https://github.com/svlandeg).
