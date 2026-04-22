@@ -118,7 +118,10 @@ def install_bash(*, prog_name: str, complete_var: str, shell: str) -> Path:
 
 def install_zsh(*, prog_name: str, complete_var: str, shell: str) -> Path:
     # Setup Zsh and load ~/.zfunc
-    zshrc_path = Path.home() / ".zshrc"
+    # Respect ZDOTDIR: when set, zsh reads $ZDOTDIR/.zshrc instead of $HOME/.zshrc
+    _zdotdir = os.environ.get("ZDOTDIR")
+    _zsh_home = Path(_zdotdir) if _zdotdir else Path.home()
+    zshrc_path = _zsh_home / ".zshrc"
     zshrc_path.parent.mkdir(parents=True, exist_ok=True)
     zshrc_content = ""
     if zshrc_path.is_file():
