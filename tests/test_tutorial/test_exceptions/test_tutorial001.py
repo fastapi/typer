@@ -30,10 +30,6 @@ def test_traceback_rich():
     assert 'TypeError: can only concatenate str (not "int") to str' in result.stderr
     assert "name = 'morty'" not in result.stderr
 
-    # Code lines are not truncated to 88 characters if terminal width is large enough
-    CODE_LINE = "    # The line below will cause TypeError because you cannot concatenate string and integer."
-    assert CODE_LINE.lstrip() in result.stderr
-
 
 @pytest.mark.parametrize(
     "env_var", ["TYPER_STANDARD_TRACEBACK", "_TYPER_STANDARD_TRACEBACK"]

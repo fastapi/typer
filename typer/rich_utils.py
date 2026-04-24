@@ -750,6 +750,6 @@ def get_traceback(
         suppress=internal_dir_names,
         width=MAX_WIDTH,
         code_width=MAX_WIDTH,
-        word_wrap=exception_config.pretty_exceptions_word_wrap,
+        word_wrap=True,
     )
     return rich_tb

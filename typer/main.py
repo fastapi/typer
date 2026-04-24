@@ -514,23 +514,6 @@ class Typer:
                 """
             ),
         ] = True,
-        pretty_exceptions_word_wrap: Annotated[
-            bool,
-            Doc(
-                """
-                By default, [pretty exceptions formatted with Rich](https://typer.tiangolo.com/tutorial/exceptions/#exceptions-with-rich) truncate long lines.
-                If you want to disable this behavior and enable word wrapping instead, you can set the parameter `pretty_exceptions_word_wrap` to `True`:
-
-                **Example**
-
-                ```python
-                import typer
-
-                app = typer.Typer(pretty_exceptions_word_wrap=True)
-                ```
-                """
-            ),
-        ] = False,
     ):
         self._add_completion = add_completion
         self.rich_markup_mode: MarkupMode = rich_markup_mode
@@ -539,7 +522,6 @@ class Typer:
         self.pretty_exceptions_enable = pretty_exceptions_enable
         self.pretty_exceptions_show_locals = pretty_exceptions_show_locals
         self.pretty_exceptions_short = pretty_exceptions_short
-        self.pretty_exceptions_word_wrap = pretty_exceptions_word_wrap
         self.info = TyperInfo(
             name=name,
             cls=cls,
@@ -1165,7 +1147,6 @@ class Typer:
                     pretty_exceptions_enable=self.pretty_exceptions_enable,
                     pretty_exceptions_show_locals=self.pretty_exceptions_show_locals,
                     pretty_exceptions_short=self.pretty_exceptions_short,
-                    pretty_exceptions_word_wrap=self.pretty_exceptions_word_wrap,
                 ),
             )
             raise e

@@ -26,15 +26,15 @@ So, the error you see will be **much clearer** and simpler, to help you detect t
 $ python main.py
 
 <font color="#F92672">╭──────────────── </font><font color="#F92672"><b>Traceback (most recent call last)</b></font><font color="#F92672"> ────────────────╮</font>
-<font color="#F92672">│</font> <font color="#A37F4E">/home/user/code/superapp/</font><font color="#F4BF75"><b>main.py</b></font>:<font color="#66D9EF">9</font> in <font color="#A6E22E">main</font>                        <font color="#F92672">│</font>
+<font color="#F92672">│</font> <font color="#A37F4E">/home/user/code/superapp/</font><font color="#F4BF75"><b>main.py</b></font>:<font color="#66D9EF">8</font> in <font color="#A6E22E">main</font>                        <font color="#F92672">│</font>
 <font color="#F92672">│</font>                                                                   <font color="#F92672">│</font>
+<font color="#F92672">│</font>    5                                                              <font color="#F92672">│</font>
 <font color="#F92672">│</font>    6 <font color="#FF00FF">@app</font>.command()                                               <font color="#F92672">│</font>
 <font color="#F92672">│</font>    7 <font color="#66D9EF">def</font> <font color="#A6E22E">main</font>(name: <font color="#A1EFE4">str</font> = <font color="#F4BF75">&quot;morty&quot;</font>):                               <font color="#F92672">│</font>
-<font color="#F92672">│</font>    8 │   # The line below will cause TypeError because you cannot <font color="#F92672">│</font>
-<font color="#F92672">│</font> <font color="#F92672">❱ </font> 9 │   <font color="#A1EFE4">print</font>(name + <font color="#66D9EF">3</font>)                                          <font color="#F92672">│</font>
-<font color="#F92672">│</font>   10                                                              <font color="#F92672">│</font>
-<font color="#F92672">│</font>   11                                                              <font color="#F92672">│</font>
-<font color="#F92672">│</font>   12 <font color="#66D9EF">if</font> <font color="#F92672">__name__</font> == <font color="#F4BF75">&quot;__main__&quot;</font>:                                   <font color="#F92672">│</font>
+<font color="#F92672">│</font> <font color="#F92672">❱ </font> 8 │   <font color="#A1EFE4">print</font>(name + <font color="#66D9EF">3</font>)                                          <font color="#F92672">│</font>
+<font color="#F92672">│</font>    9                                                              <font color="#F92672">│</font>
+<font color="#F92672">│</font>    10                                                             <font color="#F92672">│</font>
+<font color="#F92672">│</font>    11 <font color="#66D9EF">if</font> <font color="#F92672">__name__</font> == <font color="#F4BF75">&quot;__main__&quot;</font>:                                  <font color="#F92672">│</font>
 <font color="#F92672">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#F92672"><b>TypeError: </b></font>can only concatenate str <b>(</b>not <font color="#A6E22E">&quot;int&quot;</font><b>)</b> to str
 ```
@@ -191,64 +191,6 @@ $ python main.py
 ```
 
 </div>
-
-
-## Enable word wrapping for code lines to avoid truncation
-
-By default, Typer will truncate the code lines in the error message if they are too long.
-
-<div class="termy">
-
-```console
-$ python main.py
-
-<font color="#F92672">╭──────────────── </font><font color="#F92672"><b>Traceback (most recent call last)</b></font><font color="#F92672"> ────────────────╮</font>
-<font color="#F92672">│</font> <font color="#A37F4E">/home/user/code/superapp/</font><font color="#F4BF75"><b>main.py</b></font>:<font color="#66D9EF">9</font> in <font color="#A6E22E">main</font>                        <font color="#F92672">│</font>
-<font color="#F92672">│</font>                                                                   <font color="#F92672">│</font>
-<font color="#F92672">│</font>    6 <font color="#FF00FF">@app</font>.command()                                               <font color="#F92672">│</font>
-<font color="#F92672">│</font>    7 <font color="#66D9EF">def</font> <font color="#A6E22E">main</font>(name: <font color="#A1EFE4">str</font> = <font color="#F4BF75">&quot;morty&quot;</font>):                               <font color="#F92672">│</font>
-<font color="#F92672">│</font>    8 │   # The line below will cause TypeError because you cannot <font color="#F92672">│</font>
-<font color="#F92672">│</font> <font color="#F92672">❱ </font> 9 │   <font color="#A1EFE4">print</font>(name + <font color="#66D9EF">3</font>)                                          <font color="#F92672">│</font>
-<font color="#F92672">│</font>   10                                                              <font color="#F92672">│</font>
-<font color="#F92672">│</font>   11                                                              <font color="#F92672">│</font>
-<font color="#F92672">│</font>   12 <font color="#66D9EF">if</font> <font color="#F92672">__name__</font> == <font color="#F4BF75">&quot;__main__&quot;</font>:                                   <font color="#F92672">│</font>
-<font color="#F92672">╰───────────────────────────────────────────────────────────────────╯</font>
-<font color="#F92672"><b>TypeError: </b></font>can only concatenate str <b>(</b>not <font color="#A6E22E">&quot;int&quot;</font><b>)</b> to str
-```
-
-</div>
-
-Note the comment line is truncated with `# The line below will cause TypeError because you cannot ` and the rest of the line is not shown.
-
-You can configure it to wrap the code lines instead of truncating them with the parameter `pretty_exceptions_wrap_code=True`:
-
-{* docs_src/exceptions/tutorial005_py310.py hl[3] *}
-
-Now when you run it, you will see the full lines:
-
-
-<div class="termy">
-
-```console
-$ python main.py
-
-<font color="#F92672">╭──────────────── </font><font color="#F92672"><b>Traceback (most recent call last)</b></font><font color="#F92672"> ────────────────╮</font>
-<font color="#F92672">│</font> <font color="#A37F4E">/home/user/code/superapp/</font><font color="#F4BF75"><b>main.py</b></font>:<font color="#66D9EF">9</font> in <font color="#A6E22E">main</font>                        <font color="#F92672">│</font>
-<font color="#F92672">│</font>                                                                   <font color="#F92672">│</font>
-<font color="#F92672">│</font>    6 <font color="#FF00FF">@app</font>.command()                                               <font color="#F92672">│</font>
-<font color="#F92672">│</font>    7 <font color="#66D9EF">def</font> <font color="#A6E22E">main</font>(name: <font color="#A1EFE4">str</font> = <font color="#F4BF75">&quot;morty&quot;</font>):                               <font color="#F92672">│</font>
-<font color="#F92672">│</font>    8 │   # The line below will cause TypeError because you cannot <font color="#F92672">│</font>
-<font color="#F92672">│</font>      concatenate string and integer.                              <font color="#F92672">│</font>
-<font color="#F92672">│</font> <font color="#F92672">❱ </font> 9 │   <font color="#A1EFE4">print</font>(name + <font color="#66D9EF">3</font>)                                          <font color="#F92672">│</font>
-<font color="#F92672">│</font>   10                                                              <font color="#F92672">│</font>
-<font color="#F92672">│</font>   11                                                              <font color="#F92672">│</font>
-<font color="#F92672">│</font>   12 <font color="#66D9EF">if</font> <font color="#F92672">__name__</font> == <font color="#F4BF75">&quot;__main__&quot;</font>:                                   <font color="#F92672">│</font>
-<font color="#F92672">╰───────────────────────────────────────────────────────────────────╯</font>
-<font color="#F92672"><b>TypeError: </b></font>can only concatenate str <b>(</b>not <font color="#A6E22E">&quot;int&quot;</font><b>)</b> to str
-```
-
-</div>
-
 
 ## Disable Pretty Exceptions
 

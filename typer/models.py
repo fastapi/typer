@@ -634,12 +634,10 @@ class DeveloperExceptionConfig:
         pretty_exceptions_enable: bool = True,
         pretty_exceptions_show_locals: bool = True,
         pretty_exceptions_short: bool = True,
-        pretty_exceptions_word_wrap: bool = False,
     ) -> None:
         self.pretty_exceptions_enable = pretty_exceptions_enable
         self.pretty_exceptions_show_locals = pretty_exceptions_show_locals
         self.pretty_exceptions_short = pretty_exceptions_short
-        self.pretty_exceptions_word_wrap = pretty_exceptions_word_wrap
 
 
 class TyperPath(click.Path):
