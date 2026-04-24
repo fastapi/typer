@@ -4,6 +4,8 @@ from unittest.mock import patch
 import pytest
 import typer
 
+from tests.utils import needs_windows
+
 url = "http://example.com"
 
 
@@ -53,4 +55,18 @@ def test_calls_original_launch_when_not_passing_urls():
     with patch("typer.main.click.launch", return_value=0) as launch_mock:
         typer.launch("not a url")
 
-    launch_mock.assert_called_once_with("not a url")
+    launch_mock.assert_called_once_with("not a url", wait=False, locate=False)
+
+
+@needs_windows
+def test_launch_file():
+    with (
+        patch("click._termui_impl.sys.platform", "win32"),
+        patch("click._termui_impl.WIN", True),
+        patch("click._termui_impl.CYGWIN", False),
+        patch("subprocess.call", return_value=0) as call_mock,
+    ):
+        result = typer.launch("C:/tmp/file.txt", locate=True)
+
+    assert result == 0
+    call_mock.assert_called_once_with(["explorer", "/select,C:/tmp/file.txt"])
