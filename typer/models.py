@@ -1,13 +1,11 @@
 import inspect
 import io
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
     Optional,
     TypeVar,
-    Union,
 )
 
 import click
@@ -197,21 +195,21 @@ def Default(value: DefaultType) -> DefaultType:
 class CommandInfo:
     def __init__(
         self,
-        name: Optional[str] = None,
+        name: str | None = None,
         *,
-        cls: Optional[type["TyperCommand"]] = None,
-        context_settings: Optional[dict[Any, Any]] = None,
-        callback: Optional[Callable[..., Any]] = None,
-        help: Optional[str] = None,
-        epilog: Optional[str] = None,
-        short_help: Optional[str] = None,
+        cls: type["TyperCommand"] | None = None,
+        context_settings: dict[Any, Any] | None = None,
+        callback: Callable[..., Any] | None = None,
+        help: str | None = None,
+        epilog: str | None = None,
+        short_help: str | None = None,
         options_metavar: str = "[OPTIONS]",
         add_help_option: bool = True,
         no_args_is_help: bool = False,
         hidden: bool = False,
         deprecated: bool = False,
         # Rich settings
-        rich_help_panel: Union[str, None] = None,
+        rich_help_panel: str | None = None,
     ):
         self.name = name
         self.cls = cls
@@ -234,25 +232,25 @@ class TyperInfo:
         self,
         typer_instance: Optional["Typer"] = Default(None),
         *,
-        name: Optional[str] = Default(None),
-        cls: Optional[type["TyperGroup"]] = Default(None),
+        name: str | None = Default(None),
+        cls: type["TyperGroup"] | None = Default(None),
         invoke_without_command: bool = Default(False),
         no_args_is_help: bool = Default(False),
-        subcommand_metavar: Optional[str] = Default(None),
+        subcommand_metavar: str | None = Default(None),
         chain: bool = Default(False),
-        result_callback: Optional[Callable[..., Any]] = Default(None),
+        result_callback: Callable[..., Any] | None = Default(None),
         # Command
-        context_settings: Optional[dict[Any, Any]] = Default(None),
-        callback: Optional[Callable[..., Any]] = Default(None),
-        help: Optional[str] = Default(None),
-        epilog: Optional[str] = Default(None),
-        short_help: Optional[str] = Default(None),
+        context_settings: dict[Any, Any] | None = Default(None),
+        callback: Callable[..., Any] | None = Default(None),
+        help: str | None = Default(None),
+        epilog: str | None = Default(None),
+        short_help: str | None = Default(None),
         options_metavar: str = Default("[OPTIONS]"),
         add_help_option: bool = Default(True),
         hidden: bool = Default(False),
         deprecated: bool = Default(False),
         # Rich settings
-        rich_help_panel: Union[str, None] = Default(None),
+        rich_help_panel: str | None = Default(None),
     ):
         self.typer_instance = typer_instance
         self.name = name
@@ -278,45 +276,44 @@ class ParameterInfo:
     def __init__(
         self,
         *,
-        default: Optional[Any] = None,
-        param_decls: Optional[Sequence[str]] = None,
-        callback: Optional[Callable[..., Any]] = None,
-        metavar: Optional[str] = None,
+        default: Any | None = None,
+        param_decls: Sequence[str] | None = None,
+        callback: Callable[..., Any] | None = None,
+        metavar: str | None = None,
         expose_value: bool = True,
         is_eager: bool = False,
-        envvar: Optional[Union[str, list[str]]] = None,
+        envvar: str | list[str] | None = None,
         # Note that shell_complete is not fully supported and will be removed in future versions
         # TODO: Remove shell_complete in a future version (after 0.16.0)
-        shell_complete: Optional[
-            Callable[
-                [click.Context, click.Parameter, str],
-                Union[list["click.shell_completion.CompletionItem"], list[str]],
-            ]
-        ] = None,
-        autocompletion: Optional[Callable[..., Any]] = None,
-        default_factory: Optional[Callable[[], Any]] = None,
+        shell_complete: Callable[
+            [click.Context, click.Parameter, str],
+            list["click.shell_completion.CompletionItem"] | list[str],
+        ]
+        | None = None,
+        autocompletion: Callable[..., Any] | None = None,
+        default_factory: Callable[[], Any] | None = None,
         # Custom type
-        parser: Optional[Callable[[str], Any]] = None,
-        click_type: Optional[click.ParamType] = None,
+        parser: Callable[[str], Any] | None = None,
+        click_type: click.ParamType | None = None,
         # TyperArgument
-        show_default: Union[bool, str] = True,
+        show_default: bool | str = True,
         show_choices: bool = True,
         show_envvar: bool = True,
-        help: Optional[str] = None,
+        help: str | None = None,
         hidden: bool = False,
         # Choice
         case_sensitive: bool = True,
         # Numbers
-        min: Optional[Union[int, float]] = None,
-        max: Optional[Union[int, float]] = None,
+        min: int | float | None = None,
+        max: int | float | None = None,
         clamp: bool = False,
         # DateTime
-        formats: Optional[list[str]] = None,
+        formats: list[str] | None = None,
         # File
-        mode: Optional[str] = None,
-        encoding: Optional[str] = None,
-        errors: Optional[str] = "strict",
-        lazy: Optional[bool] = None,
+        mode: str | None = None,
+        encoding: str | None = None,
+        errors: str | None = "strict",
+        lazy: bool | None = None,
         atomic: bool = False,
         # Path
         exists: bool = False,
@@ -326,9 +323,9 @@ class ParameterInfo:
         readable: bool = True,
         resolve_path: bool = False,
         allow_dash: bool = False,
-        path_type: Union[None, type[str], type[bytes]] = None,
+        path_type: None | type[str] | type[bytes] = None,
         # Rich settings
-        rich_help_panel: Union[str, None] = None,
+        rich_help_panel: str | None = None,
     ):
         # Check if user has provided multiple custom parsers
         if parser and click_type:
@@ -388,54 +385,53 @@ class OptionInfo(ParameterInfo):
         self,
         *,
         # ParameterInfo
-        default: Optional[Any] = None,
-        param_decls: Optional[Sequence[str]] = None,
-        callback: Optional[Callable[..., Any]] = None,
-        metavar: Optional[str] = None,
+        default: Any | None = None,
+        param_decls: Sequence[str] | None = None,
+        callback: Callable[..., Any] | None = None,
+        metavar: str | None = None,
         expose_value: bool = True,
         is_eager: bool = False,
-        envvar: Optional[Union[str, list[str]]] = None,
+        envvar: str | list[str] | None = None,
         # Note that shell_complete is not fully supported and will be removed in future versions
         # TODO: Remove shell_complete in a future version (after 0.16.0)
-        shell_complete: Optional[
-            Callable[
-                [click.Context, click.Parameter, str],
-                Union[list["click.shell_completion.CompletionItem"], list[str]],
-            ]
-        ] = None,
-        autocompletion: Optional[Callable[..., Any]] = None,
-        default_factory: Optional[Callable[[], Any]] = None,
+        shell_complete: Callable[
+            [click.Context, click.Parameter, str],
+            list["click.shell_completion.CompletionItem"] | list[str],
+        ]
+        | None = None,
+        autocompletion: Callable[..., Any] | None = None,
+        default_factory: Callable[[], Any] | None = None,
         # Custom type
-        parser: Optional[Callable[[str], Any]] = None,
-        click_type: Optional[click.ParamType] = None,
+        parser: Callable[[str], Any] | None = None,
+        click_type: click.ParamType | None = None,
         # Option
-        show_default: Union[bool, str] = True,
-        prompt: Union[bool, str] = False,
+        show_default: bool | str = True,
+        prompt: bool | str = False,
         confirmation_prompt: bool = False,
         prompt_required: bool = True,
         hide_input: bool = False,
         # TODO: remove is_flag and flag_value in a future release
-        is_flag: Optional[bool] = None,
-        flag_value: Optional[Any] = None,
+        is_flag: bool | None = None,
+        flag_value: Any | None = None,
         count: bool = False,
         allow_from_autoenv: bool = True,
-        help: Optional[str] = None,
+        help: str | None = None,
         hidden: bool = False,
         show_choices: bool = True,
         show_envvar: bool = True,
         # Choice
         case_sensitive: bool = True,
         # Numbers
-        min: Optional[Union[int, float]] = None,
-        max: Optional[Union[int, float]] = None,
+        min: int | float | None = None,
+        max: int | float | None = None,
         clamp: bool = False,
         # DateTime
-        formats: Optional[list[str]] = None,
+        formats: list[str] | None = None,
         # File
-        mode: Optional[str] = None,
-        encoding: Optional[str] = None,
-        errors: Optional[str] = "strict",
-        lazy: Optional[bool] = None,
+        mode: str | None = None,
+        encoding: str | None = None,
+        errors: str | None = "strict",
+        lazy: bool | None = None,
         atomic: bool = False,
         # Path
         exists: bool = False,
@@ -445,9 +441,9 @@ class OptionInfo(ParameterInfo):
         readable: bool = True,
         resolve_path: bool = False,
         allow_dash: bool = False,
-        path_type: Union[None, type[str], type[bytes]] = None,
+        path_type: None | type[str] | type[bytes] = None,
         # Rich settings
-        rich_help_panel: Union[str, None] = None,
+        rich_help_panel: str | None = None,
     ):
         super().__init__(
             default=default,
@@ -517,45 +513,44 @@ class ArgumentInfo(ParameterInfo):
         self,
         *,
         # ParameterInfo
-        default: Optional[Any] = None,
-        param_decls: Optional[Sequence[str]] = None,
-        callback: Optional[Callable[..., Any]] = None,
-        metavar: Optional[str] = None,
+        default: Any | None = None,
+        param_decls: Sequence[str] | None = None,
+        callback: Callable[..., Any] | None = None,
+        metavar: str | None = None,
         expose_value: bool = True,
         is_eager: bool = False,
-        envvar: Optional[Union[str, list[str]]] = None,
+        envvar: str | list[str] | None = None,
         # Note that shell_complete is not fully supported and will be removed in future versions
         # TODO: Remove shell_complete in a future version (after 0.16.0)
-        shell_complete: Optional[
-            Callable[
-                [click.Context, click.Parameter, str],
-                Union[list["click.shell_completion.CompletionItem"], list[str]],
-            ]
-        ] = None,
-        autocompletion: Optional[Callable[..., Any]] = None,
-        default_factory: Optional[Callable[[], Any]] = None,
+        shell_complete: Callable[
+            [click.Context, click.Parameter, str],
+            list["click.shell_completion.CompletionItem"] | list[str],
+        ]
+        | None = None,
+        autocompletion: Callable[..., Any] | None = None,
+        default_factory: Callable[[], Any] | None = None,
         # Custom type
-        parser: Optional[Callable[[str], Any]] = None,
-        click_type: Optional[click.ParamType] = None,
+        parser: Callable[[str], Any] | None = None,
+        click_type: click.ParamType | None = None,
         # TyperArgument
-        show_default: Union[bool, str] = True,
+        show_default: bool | str = True,
         show_choices: bool = True,
         show_envvar: bool = True,
-        help: Optional[str] = None,
+        help: str | None = None,
         hidden: bool = False,
         # Choice
         case_sensitive: bool = True,
         # Numbers
-        min: Optional[Union[int, float]] = None,
-        max: Optional[Union[int, float]] = None,
+        min: int | float | None = None,
+        max: int | float | None = None,
         clamp: bool = False,
         # DateTime
-        formats: Optional[list[str]] = None,
+        formats: list[str] | None = None,
         # File
-        mode: Optional[str] = None,
-        encoding: Optional[str] = None,
-        errors: Optional[str] = "strict",
-        lazy: Optional[bool] = None,
+        mode: str | None = None,
+        encoding: str | None = None,
+        errors: str | None = "strict",
+        lazy: bool | None = None,
         atomic: bool = False,
         # Path
         exists: bool = False,
@@ -565,9 +560,9 @@ class ArgumentInfo(ParameterInfo):
         readable: bool = True,
         resolve_path: bool = False,
         allow_dash: bool = False,
-        path_type: Union[None, type[str], type[bytes]] = None,
+        path_type: None | type[str] | type[bytes] = None,
         # Rich settings
-        rich_help_panel: Union[str, None] = None,
+        rich_help_panel: str | None = None,
     ):
         super().__init__(
             default=default,

@@ -195,6 +195,7 @@ markdown_extensions:
   pymdownx.caret:
   pymdownx.highlight:
     line_spans: __span
+    linenums_style: pymdownx-inline
   pymdownx.inlinehilite:
   pymdownx.keys:
   pymdownx.mark:
