@@ -56,7 +56,7 @@ def test_union(value, expected):
     app = typer.Typer()
 
     @app.command()
-    def opt(id_or_name: Union[int, str]):
+    def opt(id_or_name: int | str):
         if isinstance(id_or_name, int):
             if id_or_name == 0:
                 print("ROOTED!")
@@ -69,11 +69,12 @@ def test_union(value, expected):
     assert result.exit_code == 0
     assert expected in result.output
 
+
 def test_union_optional():
     app = typer.Typer()
 
     @app.command()
-    def cmd(x: Union[int, str, None] = None):
+    def cmd(x: int | str | None = None):
         print(f"x={x!r} ({type(x).__name__})")
 
     result = runner.invoke(app)
@@ -93,7 +94,7 @@ def test_union_rejects_invalid():
     app = typer.Typer()
 
     @app.command()
-    def cmd(x: Union[int, float]):
+    def cmd(x: int | float):
         print(x)
 
     result = runner.invoke(app, ["not-a-number"])
@@ -155,7 +156,7 @@ def test_union_pipe_and_typing_equivalent(args):
 
     typing_out = runner.invoke(make_app(Union[int, str, None]), args).output
     pipe_out = runner.invoke(make_app(int | str | None), args).output
-    optional_out = runner.invoke(make_app(Optional[Union[int, str]]), args).output
+    optional_out = runner.invoke(make_app(Optional[int | str]), args).output
 
     assert typing_out == pipe_out == optional_out
 
