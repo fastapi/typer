@@ -29,10 +29,7 @@ from .formatting import HelpFormatter
 from .globals import pop_context, push_context
 from .parser import _OptionParser
 from .termui import style
-from .utils import (
-    echo,
-    make_default_short_help,
-)
+from .utils import echo, make_default_short_help
 
 if TYPE_CHECKING:
     from ..core import TyperOption

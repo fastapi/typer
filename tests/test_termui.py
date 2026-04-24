@@ -1,5 +1,5 @@
 """
-Tests for the termui functionality.
+Tests for the termui & echo functionality.
 Created after vendoring Click to ensure test coverage is back up to 100%.
 """
 
@@ -254,6 +254,56 @@ def test_prompt():
 def test_hidden_prompt_func(monkeypatch):
     monkeypatch.setattr("getpass.getpass", lambda prompt: "secret")
     assert termui.hidden_prompt_func("Password: ") == "secret"
+
+
+def test_echo_stdout_missing(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr("sys.stdout", None)
+    typer.echo("ignored")
+
+
+def test_echo_stringifies() -> None:
+    stream = io.StringIO()
+    typer.echo(123, file=stream, nl=False)
+    assert stream.getvalue() == "123"
+
+
+def test_echo_bytes() -> None:
+    buffer = io.BytesIO()
+    stream = io.TextIOWrapper(buffer, encoding="utf-8")
+    typer.echo(b"abc", file=stream, nl=True)
+    assert buffer.getvalue() == b"abc\n"
+
+
+def test_echo_empty_output() -> None:
+    class FlushTrackingTextStream(io.StringIO):
+        def __init__(self) -> None:
+            super().__init__()
+            self.flush_count = 0
+
+        def flush(self) -> None:
+            self.flush_count += 1
+            super().flush()
+
+        def write(self, s: str) -> int:
+            raise AssertionError("write should not be called for empty output")
+
+    stream = FlushTrackingTextStream()
+    typer.echo("", file=stream, nl=False)
+    assert stream.flush_count == 1
+
+
+@needs_windows
+def test_echo_windows_color_none(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class TtyStream(io.StringIO):
+        def isatty(self) -> bool:
+            return True
+
+    stream = TtyStream()
+    monkeypatch.setattr("typer._click.utils.auto_wrap_for_ansi", None)
+    typer.echo("\x1b[31mred\x1b[0m", file=stream, nl=False, color=None)
+    assert stream.getvalue() == "red"
 
 
 @pytest.mark.parametrize(

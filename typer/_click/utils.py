@@ -44,21 +44,11 @@ def safecall(func: Callable[P, R]) -> Callable[P, R | None]:
     def wrapper(*args: P.args, **kwargs: P.kwargs) -> R | None:
         try:
             return func(*args, **kwargs)
-        except Exception:
+        except Exception:  # pragma: no cover
             pass
-        return None
+        return None  # pragma: no cover
 
     return update_wrapper(wrapper, func)
-
-
-def make_str(value: Any) -> str:
-    """Converts a value into a valid string."""
-    if isinstance(value, bytes):
-        try:
-            return value.decode(sys.getfilesystemencoding())
-        except UnicodeError:
-            return value.decode("utf-8", "replace")
-    return str(value)
 
 
 def make_default_short_help(help: str, max_length: int = 45) -> str:
@@ -164,7 +154,7 @@ class LazyFile:
             rv, self.should_close = open_stream(
                 self.name, self.mode, self.encoding, self.errors, atomic=self.atomic
             )
-        except OSError as e:
+        except OSError as e:  # pragma: no cover
             from .exceptions import FileError
 
             raise FileError(self.name, hint=e.strerror) from e
@@ -393,7 +383,7 @@ class PacifyFlushWrapper:
     def flush(self) -> None:
         try:
             self.wrapped.flush()
-        except OSError as e:
+        except OSError as e:  # pragma: no cover
             import errno
 
             if e.errno != errno.EPIPE:
@@ -469,7 +459,7 @@ def _expand_args(
 
         try:
             matches = glob(arg, recursive=glob_recursive)
-        except re.error:
+        except re.error:  # pragma: no cover
             matches = []
 
         if not matches:

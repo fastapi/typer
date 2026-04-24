@@ -1143,7 +1143,7 @@ class TyperGroup(_click.Command):
     def _click_resolve_command(
         self, ctx: _click.Context, args: list[str]
     ) -> tuple[str | None, _click.Command | None, list[str]]:
-        cmd_name = _click.utils.make_str(args[0])
+        cmd_name = args[0]
         original_cmd_name = cmd_name
 
         # Get the command

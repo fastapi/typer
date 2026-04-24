@@ -6,13 +6,16 @@ from pathlib import Path
 import pytest
 import typer
 from typer._click._compat import get_best_encoding, should_strip_ansi
+from typer._click.utils import PacifyFlushWrapper
 from typer.testing import CliRunner
+
+from tests.utils import needs_linux, needs_windows
 
 app = typer.Typer()
 
 
 @app.command()
-def read_text(file_in: typer.FileText = typer.Option(...)):
+def read_text(file_in: typer.FileText = typer.Option(..., lazy=True)):
     data = file_in.read()
     typer.echo(f"text-len={len(data)}")
 
@@ -20,13 +23,28 @@ def read_text(file_in: typer.FileText = typer.Option(...)):
 @app.command()
 def write_text(file_out: typer.FileTextWrite = typer.Option(..., lazy=None)):
     file_out.write("This is a single line\n")
-    print("1 line written")
+    typer.echo("1 line written")
 
 
 @app.command()
 def write_lazy(file_out: typer.FileTextWrite = typer.Option(..., lazy=True)):
-    file_out.write("This is a single line\n")
-    print("1 line written")
+    file_out.write("This is a single lazy line\n")
+    typer.echo("1 line written")
+
+
+@app.command()
+def probe_lazy_file_behaviors(
+    file_in: typer.FileText = typer.Option(..., lazy=True),
+    file_out: typer.FileTextWrite = typer.Option(..., lazy=True),
+):
+    typer.echo(f"repr-before={repr(file_out)}")
+    file_out.write("repr-opened\n")
+    typer.echo(f"repr-after={repr(file_out)}")
+    with file_in as stream:
+        typer.echo(f"context-len={len(stream.read())}")
+        stream.seek(0)
+        first_line = next(iter(stream), "")
+        typer.echo(f"first-line={first_line.rstrip()}")
 
 
 @app.command()
@@ -67,15 +85,31 @@ def test_lazy_file(tmp_path: Path) -> None:
     file_path = tmp_path / "example.txt"
     result = runner.invoke(app, ["write-lazy", f"--file-out={file_path}"])
     assert result.exit_code == 0
-    assert "This is a single line" not in result.output
+    assert "This is a single lazy line" not in result.output
     assert "1 line written" in result.output
     assert file_path.exists()
-    assert file_path.read_text() == "This is a single line\n"
+    assert file_path.read_text() == "This is a single lazy line\n"
+
+    # lazy probe: unopened/opened repr, context manager, and iteration.
+    result = runner.invoke(
+        app,
+        [
+            "probe-lazy-file-behaviors",
+            f"--file-in={file_path}",
+            f"--file-out={tmp_path / 'repr-opened.txt'}",
+        ],
+    )
+    assert result.exit_code == 0
+    assert "repr-before=<unopened file" in result.output
+    assert "repr-after=<unopened file" not in result.output
+    assert "repr-opened.txt" in result.output
+    assert "context-len=27" in result.output
+    assert "first-line=This is a single lazy line" in result.output
 
     # lazy + dash: written to stdout (lazy setting is pretty much ignored)
     result = runner.invoke(app, ["write-lazy", "--file-out=-"])
     assert result.exit_code == 0
-    assert "This is a single line" in result.output
+    assert "This is a single lazy line" in result.output
     assert "1 line written" in result.output
 
 
@@ -159,6 +193,18 @@ def test_get_best_encoding() -> None:
     assert get_best_encoding(UnknownStream()) == "unknown"
 
 
+def test_pacify_flush_wrapper() -> None:
+    class Wrapped:
+        def __init__(self) -> None:
+            self.name = "wrapped-stream"
+
+        def flush(self) -> None:
+            return None
+
+    wrapped = PacifyFlushWrapper(Wrapped())
+    assert wrapped.name == "wrapped-stream"
+
+
 def test_text_stream_isatty(monkeypatch) -> None:
     class BinaryStdout(BytesIO):
         def isatty(self) -> bool:
@@ -207,6 +253,36 @@ def test_binary_stream_raises(monkeypatch) -> None:
     monkeypatch.setattr(sys, "stdin", TextOnlyStdin())
     with pytest.raises(RuntimeError, match="Was not able to determine binary stream"):
         typer.get_binary_stream("stdin")
+
+
+def test_stream_unknown() -> None:
+    with pytest.raises(TypeError, match="Unknown standard stream 'Plumbus'"):
+        typer.get_binary_stream("Plumbus")  # type: ignore[arg-type]
+
+    with pytest.raises(TypeError, match="Unknown standard stream 'Fleeb'"):
+        typer.get_text_stream("Fleeb")  # type: ignore[arg-type]
+
+
+def test_format_filename() -> None:
+    filename = b"folder/subdir/demo.txt"
+    assert typer.format_filename(filename, shorten=True) == "demo.txt"
+
+
+@needs_windows
+def test_app_dir_windows_fallback(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv("APPDATA", raising=False)
+    monkeypatch.setattr("os.path.expanduser", lambda _path: r"C:\Users\Tester")
+
+    assert typer.get_app_dir("My App", roaming=True) == r"C:\Users\Tester\My App"
+
+
+@needs_linux
+def test_app_dir_force_posix(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr("os.path.expanduser", lambda _path: "/home/tester/.my-app")
+
+    assert typer.get_app_dir("My App", force_posix=True) == "/home/tester/.my-app"
 
 
 def test_text_stream_binary_buffer(monkeypatch) -> None:
