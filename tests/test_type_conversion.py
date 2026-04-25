@@ -97,8 +97,24 @@ def test_union_rejects_invalid():
     def cmd(x: int | float):
         print(x)
 
+    result = runner.invoke(app, ["1"])
+    assert result.exit_code == 0
+    assert "1" in result.output
+
     result = runner.invoke(app, ["not-a-number"])
     assert result.exit_code != 0
+
+
+def test_union_metavar_in_help():
+    app = typer.Typer()
+
+    @app.command()
+    def cmd(x: int | str):
+        """Cmd."""
+
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "INTEGER | TEXT" in result.output
 
 
 @pytest.mark.parametrize(
