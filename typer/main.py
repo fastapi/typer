@@ -1519,7 +1519,7 @@ def get_callback(
 
 class UnionParamType(click.ParamType):
     @property
-    def name(self) -> str:  # type: ignore
+    def name(self) -> str:  # type: ignore[override]
         return " | ".join(_type.name for _type in self._types)
 
     def __init__(self, types: list[click.ParamType]):

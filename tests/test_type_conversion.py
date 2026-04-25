@@ -154,9 +154,9 @@ def test_union_pipe_and_typing_equivalent(args):
 
         return app
 
-    typing_out = runner.invoke(make_app(Union[int, str, None]), args).output
+    typing_out = runner.invoke(make_app(Union[int, str, None]), args).output  # noqa: UP007
     pipe_out = runner.invoke(make_app(int | str | None), args).output
-    optional_out = runner.invoke(make_app(Optional[int | str]), args).output
+    optional_out = runner.invoke(make_app(Optional[int | str]), args).output  # noqa: UP045
 
     assert typing_out == pipe_out == optional_out
 
