@@ -123,13 +123,6 @@ def _get_default_string(
         else:
             default_string = _split_opt(obj.secondary_opts[0])[1]
         # Typer override end
-    elif (
-        isinstance(obj, TyperOption)
-        and obj.is_bool_flag
-        and not obj.secondary_opts
-        and not default_value
-    ):
-        default_string = ""
     else:
         default_string = str(default_value)
     return default_string
