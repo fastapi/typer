@@ -182,7 +182,13 @@ class PowerShellComplete(click.shell_completion.ShellComplete):
         completion_args = os.getenv("_TYPER_COMPLETE_ARGS", "")
         incomplete = os.getenv("_TYPER_COMPLETE_WORD_TO_COMPLETE", "")
         cwords = click_split_arg_string(completion_args)
-        args = cwords[1:-1] if incomplete else cwords[1:]
+        # cwords[0] is the interpreter (e.g. "python"), cwords[1] is the
+        # prog name (e.g. "main.py") — skip both, same as bash/zsh do with
+        # their respective word splitting. Without this, the prog name leaks
+        # into args and Click can't resolve the command context, causing
+        # completions to silently return nothing (issue #266).
+
+        args = cwords[2:-1] if incomplete else cwords[2:]
         return args, incomplete
 
     def format_completion(self, item: click.shell_completion.CompletionItem) -> str:
