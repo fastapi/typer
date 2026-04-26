@@ -1,30 +1,36 @@
 name: Smokeshow
 
 on:
-  workflow_run:
+  workflow_run: # zizmor: ignore[dangerous-triggers]
     workflows:
       - Test
     types:
       - completed
 
-permissions:
-  statuses: write
+permissions: {}
 
 jobs:
   smokeshow:
     runs-on: ubuntu-latest
+    permissions:
+      statuses: write
     steps:
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
       - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
           python-version-file: ".python-version"
       - name: Setup uv
         uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
         with:
+          # Before upgrading uv version, make sure astral-sh/setup-uv knows its checksum.
+          # See: https://github.com/astral-sh/setup-uv/issues/851#issuecomment-4282017837
+          version: "0.11.4"
           cache-dependency-glob: |
             pyproject.toml
             uv.lock
@@ -42,4 +48,4 @@ jobs:
           SMOKESHOW_GITHUB_CONTEXT: coverage
           SMOKESHOW_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SMOKESHOW_GITHUB_PR_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
-          SMOKESHOW_AUTH_KEY: ${{ secrets.SMOKESHOW_AUTH_KEY }}
+          SMOKESHOW_AUTH_KEY: ${{ secrets.SMOKESHOW_AUTH_KEY }} # zizmor: ignore[secrets-outside-env]
