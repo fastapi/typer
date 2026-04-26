@@ -644,6 +644,42 @@ def _typer_main_shell_completion(
     sys.exit(rv)
 
 
+def _extract_unknown_options(
+    known_params: "list[click.Parameter]", args: "list[str]"
+) -> "tuple[dict[str, Any], list[str]]":
+    """Pre-extract unknown --opt value pairs; return (extra_kwargs, remaining_args).
+
+    Unknown options must always have a value.  An unknown option with no
+    following value token is left in ``remaining`` so that Click can emit
+    an appropriate error.
+    """
+    known_opts: set[str] = set()
+    for p in known_params:
+        if isinstance(p, click.Option):
+            known_opts.update(p.opts)
+
+    extra: dict[str, Any] = {}
+    remaining: list[str] = []
+    i = 0
+    while i < len(args):
+        arg = args[i]
+        is_short = arg.startswith("-") and len(arg) == 2
+        is_long = arg.startswith("--")
+        if (is_long or is_short) and arg not in known_opts:
+            key = arg.lstrip("-").replace("-", "_")
+            next_i = i + 1
+            if next_i < len(args) and not args[next_i].startswith("-"):
+                extra[key] = args[next_i]
+                i += 2
+            else:
+                remaining.append(arg)
+                i += 1
+        else:
+            remaining.append(arg)
+            i += 1
+    return extra, remaining
+
+
 class TyperCommand(click.core.Command):
     def __init__(
         self,
@@ -663,7 +699,11 @@ class TyperCommand(click.core.Command):
         # Rich settings
         rich_markup_mode: MarkupMode = DEFAULT_MARKUP_MODE,
         rich_help_panel: str | None = None,
+        var_keyword_param_name: str | None = None,
+        var_positional_param_name: str | None = None,
     ) -> None:
+        self._var_keyword_param_name = var_keyword_param_name
+        self._var_positional_param_name = var_positional_param_name
         super().__init__(
             name=name,
             context_settings=context_settings,
@@ -680,6 +720,54 @@ class TyperCommand(click.core.Command):
         )
         self.rich_markup_mode: MarkupMode = rich_markup_mode
         self.rich_help_panel = rich_help_panel
+
+    def parse_args(self, ctx: click.Context, args: list[str]) -> list[str]:
+        var_keyword = self._var_keyword_param_name is not None
+        var_positional = self._var_positional_param_name is not None
+        if var_keyword or var_positional:
+            has_sep = "--" in args
+            if has_sep:
+                sep = args.index("--")
+                positional_extra: list[str] = list(args[sep + 1 :])
+                args = args[:sep]
+            else:
+                positional_extra = []
+
+            if var_keyword:
+                extra_kwargs, args = _extract_unknown_options(self.params, args)
+                ctx.meta["_typer_extra_kwargs"] = extra_kwargs
+            else:
+                ctx.meta["_typer_extra_kwargs"] = {}
+
+            if var_positional and not has_sep:
+                # Walk remaining args to find positional tokens beyond the
+                # required named Click Arguments and pull them into *args.
+                n = sum(
+                    1
+                    for p in self.params
+                    if isinstance(p, click.Argument) and p.required
+                )
+                pos_idx: list[int] = []
+                i = 0
+                while i < len(args):
+                    if args[i].startswith("-"):
+                        consumes = any(
+                            isinstance(p, click.Option)
+                            and args[i] in p.opts
+                            and not p.is_flag
+                            for p in self.params
+                        )
+                        i += 2 if consumes else 1
+                    else:
+                        pos_idx.append(i)
+                        i += 1
+                extra_idx = set(pos_idx[n:])
+                positional_extra = [args[j] for j in sorted(extra_idx)]
+                args = [a for j, a in enumerate(args) if j not in extra_idx]
+
+            ctx.meta["_typer_var_positional"] = tuple(positional_extra)
+
+        return super().parse_args(ctx, args)
 
     def format_options(
         self, ctx: click.Context, formatter: click.HelpFormatter
