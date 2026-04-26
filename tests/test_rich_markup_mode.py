@@ -330,3 +330,50 @@ def test_markup_mode_default():
     # We're assuming the test suite is run with rich installed
     app = typer.Typer()
     assert app.rich_markup_mode == "rich"
+
+
+@pytest.mark.parametrize(
+    "mode",
+    ["markdown", "rich", None],
+)
+def test_markup_mode_epilog(mode):
+    app = typer.Typer(rich_markup_mode=mode)
+
+    help_string = "Here is a help string"
+
+    epilog_string = """
+    Just wrapping up:
+
+    This is the first conclusion
+    Here is conclusion two
+
+    That's all folks!
+    """
+
+    @app.command(help=help_string, epilog=epilog_string)
+    def main():
+        print("Hello World")
+
+    assert app.rich_markup_mode == mode
+
+    result = runner.invoke(app)
+    assert "Hello World" in result.stdout
+
+    result = runner.invoke(app, ["--help"])
+    result_lines = [line.strip() for line in result.stdout.split("\n")]
+    first_index = result_lines.index("Just wrapping up:")
+    assert first_index > 0
+    assert result_lines[first_index + 1] == ""
+
+    if mode == "rich":
+        assert result_lines[first_index + 2] == "This is the first conclusion"
+        assert result_lines[first_index + 3] == "Here is conclusion two"
+        assert result_lines[first_index + 4] == ""
+        assert result_lines[first_index + 5] == "That's all folks!"
+    else:
+        assert (
+            result_lines[first_index + 2]
+            == "This is the first conclusion Here is conclusion two"
+        )
+        assert result_lines[first_index + 3] == ""
+        assert result_lines[first_index + 4] == "That's all folks!"
