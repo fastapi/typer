@@ -1,4 +1,15 @@
-# Variable names to colors, just for completion
+"""Color constants for terminal output styling.
+
+This module provides string constants for standard and bright terminal colors
+that can be used with typer's styling functions like `typer.style()` and
+`typer.secho()` for the `fg` (foreground) and `bg` (background) parameters.
+
+Example:
+    >>> import typer
+    >>> typer.secho("Hello", fg=typer.colors.GREEN)
+    >>> styled = typer.style("Error", fg=typer.colors.RED, bold=True)
+"""
+
 BLACK = "black"
 RED = "red"
 GREEN = "green"
