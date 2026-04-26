@@ -1,4 +1,4 @@
-# Awesome CLI
+# `multiapp`
 
 Demo App
 
@@ -50,13 +50,7 @@ $ multiapp sub [OPTIONS] COMMAND [ARGS]...
 **Commands**:
 
 * `hello`: Say Hello
-
-**Greet**:
-
 * `hi`: Say Hi
-
-**Farewell**:
-
 * `bye`: Say bye
 
 ### `multiapp sub hello`
