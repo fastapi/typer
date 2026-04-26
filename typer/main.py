@@ -1376,6 +1376,16 @@ def get_params_convertors_ctx_param_name_from_function(
             if convertor:
                 convertors[param_name] = convertor
             params.append(click_param)
+    variadic_args = [
+        p.name for p in params if isinstance(p, click.Argument) and p.nargs < 0
+    ]
+    if len(variadic_args) > 1:
+        names = ", ".join(f"'{n}'" for n in variadic_args)
+        raise click.UsageError(
+            f"Only one argument can take multiple values (nargs=-1), but "
+            f"{len(variadic_args)} were found: {names}. "
+            f"Use List[...] (or Sequence[...]) for at most one argument."
+        )
     return params, convertors, context_param_name
 
 
