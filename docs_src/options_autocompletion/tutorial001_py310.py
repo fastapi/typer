@@ -4,8 +4,8 @@ app = typer.Typer()
 
 
 @app.command()
-def main(name: str = typer.Option("World", help="The name to say hi to.")):
-    print(f"Hello {name}")
+def main(user: str = typer.Option("World", help="The user to say hi to.")):
+    print(f"Hello {user}")
 
 
 if __name__ == "__main__":
