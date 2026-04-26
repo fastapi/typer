@@ -90,9 +90,11 @@ RANGE_STRING = " [{}]"
 ARGUMENTS_PANEL_TITLE = _("Arguments")
 OPTIONS_PANEL_TITLE = _("Options")
 COMMANDS_PANEL_TITLE = _("Commands")
+SUBCOMMANDS_PANEL_TITLE = _("Sub-Commands")
 ERRORS_PANEL_TITLE = _("Error")
 ABORTED_TEXT = _("Aborted.")
 RICH_HELP = _("Try [blue]'{command_path} {help_option}'[/] for help.")
+SUBCOMMAND_NOTE = _("[{style}]*[/] denotes commands without subcommands")
 
 MARKUP_MODE_MARKDOWN = "markdown"
 MARKUP_MODE_RICH = "rich"
@@ -672,6 +674,43 @@ def rich_format_help(
         epilogue = "\n".join([x.replace("\n", " ").strip() for x in lines])
         epilogue_text = _make_rich_text(text=epilogue, markup_mode=markup_mode)
         console.print(Padding(Align(epilogue_text, pad=False), 1))
+
+
+def rich_format_subcommands(
+    ctx: click.Context,
+    subcommands: list[tuple[str, str]],
+) -> None:
+    console = _get_rich_console()
+    t_styles: dict[str, Any] = {
+        "show_lines": STYLE_OPTIONS_TABLE_SHOW_LINES,
+        "leading": STYLE_OPTIONS_TABLE_LEADING,
+        "box": STYLE_OPTIONS_TABLE_BOX,
+        "border_style": STYLE_OPTIONS_TABLE_BORDER_STYLE,
+        "row_styles": STYLE_OPTIONS_TABLE_ROW_STYLES,
+        "pad_edge": STYLE_OPTIONS_TABLE_PAD_EDGE,
+        "padding": STYLE_OPTIONS_TABLE_PADDING,
+    }
+    box_style = getattr(box, t_styles.pop("box"), None)
+
+    subcmd_table = Table(
+        highlight=True,
+        show_header=False,
+        expand=True,
+        box=box_style,
+        **t_styles,
+    )
+    subcmd_table.add_column(style=STYLE_COMMANDS_TABLE_FIRST_COLUMN)
+    for row in subcommands:
+        subcmd_table.add_row(*row)
+    console.print(
+        Panel(
+            subcmd_table,
+            border_style=STYLE_OPTIONS_PANEL_BORDER,
+            title=SUBCOMMANDS_PANEL_TITLE,
+            title_align=ALIGN_OPTIONS_PANEL,
+        )
+    )
+    console.print(SUBCOMMAND_NOTE.format(style=STYLE_COMMANDS_TABLE_FIRST_COLUMN))
 
 
 def rich_format_error(self: click.ClickException) -> None:
