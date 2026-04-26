@@ -758,7 +758,7 @@ class Typer:
                 """
             ),
         ] = None,
-        *,
+        *positional_aliases: str,
         cls: Annotated[
             type[TyperCommand] | None,
             Doc(
@@ -850,6 +850,8 @@ class Typer:
                 """
             ),
         ] = False,
+        aliases: Sequence[str] | None = None,
+        hidden_aliases: Sequence[str] | None = None,
         # Rich settings
         rich_help_panel: Annotated[
             str | None,
@@ -885,6 +887,12 @@ class Typer:
         if cls is None:
             cls = TyperCommand
 
+        all_aliases_list: list[str] = []
+        if positional_aliases:
+            all_aliases_list.extend(positional_aliases)
+        if aliases:
+            all_aliases_list.extend(aliases)
+
         def decorator(f: CommandFunctionType) -> CommandFunctionType:
             self.registered_commands.append(
                 CommandInfo(
@@ -902,6 +910,8 @@ class Typer:
                     no_args_is_help=no_args_is_help,
                     hidden=hidden,
                     deprecated=deprecated,
+                    aliases=all_aliases_list if all_aliases_list else None,
+                    hidden_aliases=hidden_aliases,
                     # Rich settings
                     rich_help_panel=rich_help_panel,
                 )
@@ -1297,6 +1307,10 @@ def get_group_from_info(
         )
         if command.name:
             commands[command.name] = command
+            cmd_aliases = getattr(command, "_typer_aliases", [])
+            cmd_hidden_aliases = getattr(command, "_typer_hidden_aliases", [])
+            for alias in cmd_aliases + cmd_hidden_aliases:
+                commands[alias] = command
     for sub_group_info in group_info.typer_instance.registered_groups:
         sub_group = get_group_from_info(
             sub_group_info,
@@ -1421,6 +1435,8 @@ def get_command_from_info(
         # Rich settings
         rich_help_panel=command_info.rich_help_panel,
     )
+    command._typer_aliases = command_info.aliases or []  # type: ignore
+    command._typer_hidden_aliases = command_info.hidden_aliases or []  # type: ignore
     return command
 
 
