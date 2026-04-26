@@ -146,6 +146,7 @@ nav:
           - tutorial/multiple-values/index.md
           - tutorial/multiple-values/multiple-options.md
           - tutorial/multiple-values/options-with-multiple-values.md
+          - tutorial/multiple-values/multiple-options-with-multiple-values.md
           - tutorial/multiple-values/arguments-with-multiple-values.md
       - tutorial/prompt.md
       - tutorial/progressbar.md
