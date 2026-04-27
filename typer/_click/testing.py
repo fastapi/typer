@@ -15,50 +15,6 @@ if TYPE_CHECKING:
     from _typeshed import ReadableBuffer
 
 
-class EchoingStdin:
-    def __init__(self, input: BinaryIO, output: BinaryIO) -> None:
-        self._input = input
-        self._output = output
-        self._paused = False
-
-    def __getattr__(self, x: str) -> Any:
-        return getattr(self._input, x)
-
-    def _echo(self, rv: bytes) -> bytes:
-        if not self._paused:
-            self._output.write(rv)
-
-        return rv
-
-    def read(self, n: int = -1) -> bytes:
-        return self._echo(self._input.read(n))
-
-    def read1(self, n: int = -1) -> bytes:
-        return self._echo(self._input.read1(n))  # type: ignore
-
-    def readline(self, n: int = -1) -> bytes:
-        return self._echo(self._input.readline(n))
-
-    def readlines(self) -> list[bytes]:
-        return [self._echo(x) for x in self._input.readlines()]
-
-    def __iter__(self) -> Iterator[bytes]:
-        return iter(self._echo(x) for x in self._input)
-
-    def __repr__(self) -> str:
-        return repr(self._input)
-
-
-@contextlib.contextmanager
-def _pause_echo(stream: EchoingStdin | None) -> Iterator[None]:
-    if stream is None:
-        yield
-    else:
-        stream._paused = True
-        yield
-        stream._paused = False
-
-
 class BytesIOCopy(io.BytesIO):
     """Patch ``io.BytesIO`` to let the written stream be copied to another."""
 
@@ -105,11 +61,11 @@ class _NamedTextIOWrapper(io.TextIOWrapper):
 
     @property
     def name(self) -> str:
-        return self._name
+        return self._name  # pragma: no cover
 
     @property
     def mode(self) -> str:
-        return self._mode
+        return self._mode  # pragma: no cover
 
 
 def make_input_stream(input: str | bytes | IO[Any] | None, charset: str) -> BinaryIO:
@@ -120,7 +76,9 @@ def make_input_stream(input: str | bytes | IO[Any] | None, charset: str) -> Bina
         if rv is not None:
             return rv
 
-        raise TypeError("Could not find binary reader for input stream.")
+        raise TypeError(
+            "Could not find binary reader for input stream."
+        )  # pragma: no cover
 
     if input is None:
         input = b""
@@ -191,12 +149,10 @@ class CliRunner:
         self,
         charset: str = "utf-8",
         env: Mapping[str, str | None] | None = None,
-        echo_stdin: bool = False,
         catch_exceptions: bool = True,
     ) -> None:
         self.charset = charset
         self.env: Mapping[str, str | None] = env or {}
-        self.echo_stdin = echo_stdin
         self.catch_exceptions = catch_exceptions
 
     def get_default_prog_name(self, cli: Command) -> str:
@@ -229,7 +185,6 @@ class CliRunner:
         prompt functionality).
         """
         bytes_input = make_input_stream(input, self.charset)
-        echo_input = None
 
         old_stdin = sys.stdin
         old_stdout = sys.stdout
@@ -241,19 +196,9 @@ class CliRunner:
 
         stream_mixer = StreamMixer()
 
-        if self.echo_stdin:
-            bytes_input = echo_input = cast(
-                BinaryIO, EchoingStdin(bytes_input, stream_mixer.stdout)
-            )
-
         sys.stdin = text_input = _NamedTextIOWrapper(
             bytes_input, encoding=self.charset, name="<stdin>", mode="r"
         )
-
-        if self.echo_stdin:
-            # Force unbuffered reads, otherwise TextIOWrapper reads a
-            # large chunk which is echoed early.
-            text_input._CHUNK_SIZE = 1  # type: ignore
 
         sys.stdout = _NamedTextIOWrapper(
             stream_mixer.stdout, encoding=self.charset, name="<stdout>", mode="w"
@@ -267,27 +212,24 @@ class CliRunner:
             errors="backslashreplace",
         )
 
-        @_pause_echo(echo_input)  # type: ignore
         def visible_input(prompt: str | None = None) -> str:
             sys.stdout.write(prompt or "")
             try:
                 val = next(text_input).rstrip("\r\n")
-            except StopIteration as e:
+            except StopIteration as e:  # pragma: no cover
                 raise EOFError() from e
             sys.stdout.write(f"{val}\n")
             sys.stdout.flush()
             return val
 
-        @_pause_echo(echo_input)  # type: ignore
         def hidden_input(prompt: str | None = None) -> str:
             sys.stdout.write(f"{prompt or ''}\n")
             sys.stdout.flush()
             try:
                 return next(text_input).rstrip("\r\n")
-            except StopIteration as e:
+            except StopIteration as e:  # pragma: no cover
                 raise EOFError() from e
 
-        @_pause_echo(echo_input)  # type: ignore
         def _getchar(echo: bool) -> str:
             char = sys.stdin.read(1)
 
@@ -324,7 +266,7 @@ class CliRunner:
                 if value is None:
                     try:
                         del os.environ[key]
-                    except Exception:
+                    except Exception:  # pragma: no cover
                         pass
                 else:
                     os.environ[key] = value
@@ -334,7 +276,7 @@ class CliRunner:
                 if value is None:
                     try:
                         del os.environ[key]
-                    except Exception:
+                    except Exception:  # pragma: no cover
                         pass
                 else:
                     os.environ[key] = value

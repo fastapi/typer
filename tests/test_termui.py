@@ -1,9 +1,10 @@
 """
-Tests for the termui & echo functionality.
+Tests for the termui, echo, and CliRunner isolation functionality.
 Created after vendoring Click to ensure test coverage is back up to 100%.
 """
 
 import io
+import os
 from contextlib import contextmanager
 from typing import Literal
 
@@ -68,6 +69,87 @@ def test_getchar(monkeypatch):
     assert termui._getchar is lazy_getchar
     assert termui.getchar(echo=True) == "z"
     assert lazy_state["calls"] == 2
+
+
+def test_clirunner_getchar(monkeypatch) -> None:
+    runner = CliRunner()
+    app = typer.Typer()
+
+    @app.command()
+    def main() -> None:
+        first = termui.getchar(echo=False)
+        second = termui.getchar(echo=True)
+        typer.echo(f"\nfirst={first};second={second}")
+
+    monkeypatch.setattr(termui, "_getchar", None)
+    result = runner.invoke(app, [], input="ab")
+    assert result.exit_code == 0, result.output
+    assert result.stdout.splitlines() == ["b", "first=a;second=b"]
+
+
+def test_clirunner_env_none(monkeypatch) -> None:
+    runner = CliRunner()
+    app = typer.Typer()
+    env_key = "TYPER_TEST_ENV_REMOVE"
+    monkeypatch.setenv(env_key, "present")
+
+    @app.command()
+    def main() -> None:
+        typer.echo(f"inside={os.environ.get(env_key)}")
+
+    result = runner.invoke(app, [], env={env_key: None})
+    assert result.exit_code == 0, result.output
+    assert "inside=None" in result.stdout
+    assert os.environ.get(env_key) == "present"
+
+
+@pytest.mark.parametrize(
+    ("runner_exc", "invoke_exc"),
+    [
+        (False, None),
+        (True, False),
+    ],
+)
+def test_clirunner_invoke_catch_exceptions(
+    runner_exc: bool, invoke_exc: bool | None
+) -> None:
+    runner = CliRunner(catch_exceptions=runner_exc)
+    app = typer.Typer()
+
+    @app.command()
+    def main() -> None:
+        raise RuntimeError("boom")
+
+    with pytest.raises(RuntimeError, match="boom"):
+        runner.invoke(app, [], catch_exceptions=invoke_exc)
+
+
+@pytest.mark.parametrize(
+    ("exit_value", "expected_exit_code", "expected_stdout"),
+    [
+        (None, 0, ""),
+        ("bad-exit", 1, "bad-exit\n"),
+    ],
+)
+def test_clirunner_invoke_system_exit_branches(
+    exit_value: object,
+    expected_exit_code: int,
+    expected_stdout: str,
+) -> None:
+    runner = CliRunner()
+    app = typer.Typer()
+
+    @app.command()
+    def main() -> None:
+        raise SystemExit(exit_value)
+
+    result = runner.invoke(app, [])
+    assert result.exit_code == expected_exit_code
+    assert result.stdout == expected_stdout
+    if expected_exit_code:
+        assert isinstance(result.exception, SystemExit)
+    else:
+        assert result.exception is None
 
 
 @needs_windows
