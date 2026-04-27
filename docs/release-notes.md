@@ -2,12 +2,25 @@
 
 ## Latest Changes
 
+## 0.25.0 (2026-04-26)
+
+### Features
+
+* 🚸 Don't truncate code lines in traceback when formatted with Rich. PR [#1695](https://github.com/fastapi/typer/pull/1695) by [@YuriiMotov](https://github.com/YuriiMotov).
+
+## 0.24.2 (2026-04-22)
+
+### Fixes
+
+* 🐛 Ensure that `typer.launch` forwards correctly when launching a file. PR [#1708](https://github.com/fastapi/typer/pull/1708) by [@svlandeg](https://github.com/svlandeg).
+
 ### Refactors
 
 * 🎨 Ensure `ty` runs without errors. PR [#1628](https://github.com/fastapi/typer/pull/1628) by [@svlandeg](https://github.com/svlandeg).
 
 ### Docs
 
+* 📝 Add dates to release notes. PR [#1612](https://github.com/fastapi/typer/pull/1612) by [@YuriiMotov](https://github.com/YuriiMotov).
 * 💄 Fix code blocks in reference docs overflowing table width. PR [#1630](https://github.com/fastapi/typer/pull/1630) by [@YuriiMotov](https://github.com/YuriiMotov).
 * 📝 Fix broken link to FastAPI and Friends newsletter. PR [#1540](https://github.com/fastapi/typer/pull/1540) by [@Karlemami](https://github.com/Karlemami).
 * 🔨 Handle external links `target=_blank` and CSS automatically in JS and CSS. PR [#1622](https://github.com/fastapi/typer/pull/1622) by [@tiangolo](https://github.com/tiangolo).
@@ -16,6 +29,42 @@
 
 ### Internal
 
+* ⬆ Bump mypy from 1.20.1 to 1.20.2. PR [#1715](https://github.com/fastapi/typer/pull/1715) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump prek from 0.3.9 to 0.3.10. PR [#1716](https://github.com/fastapi/typer/pull/1716) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pydantic-settings from 2.13.1 to 2.14.0. PR [#1713](https://github.com/fastapi/typer/pull/1713) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ty from 0.0.31 to 0.0.32. PR [#1711](https://github.com/fastapi/typer/pull/1711) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pydantic from 2.13.2 to 2.13.3. PR [#1712](https://github.com/fastapi/typer/pull/1712) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pygments from 2.19.2 to 2.20.0. PR [#1667](https://github.com/fastapi/typer/pull/1667) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pymdown-extensions from 10.20 to 10.21.2. PR [#1710](https://github.com/fastapi/typer/pull/1710) by [@YuriiMotov](https://github.com/YuriiMotov).
+* ⬆ Bump actions/cache from 5.0.4 to 5.0.5. PR [#1700](https://github.com/fastapi/typer/pull/1700) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pydantic from 2.13.1 to 2.13.2. PR [#1703](https://github.com/fastapi/typer/pull/1703) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump actions/upload-artifact from 7.0.0 to 7.0.1. PR [#1701](https://github.com/fastapi/typer/pull/1701) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.15.10 to 0.15.11. PR [#1704](https://github.com/fastapi/typer/pull/1704) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump cloudflare/wrangler-action from 3.14.1 to 3.15.0. PR [#1702](https://github.com/fastapi/typer/pull/1702) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump astral-sh/setup-uv from 7.6.0 to 8.1.0. PR [#1699](https://github.com/fastapi/typer/pull/1699) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ty from 0.0.30 to 0.0.31. PR [#1696](https://github.com/fastapi/typer/pull/1696) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pydantic from 2.13.0 to 2.13.1. PR [#1697](https://github.com/fastapi/typer/pull/1697) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 🔒 Pin GitHub actions by commit SHA. PR [#1666](https://github.com/fastapi/typer/pull/1666) by [@YuriiMotov](https://github.com/YuriiMotov).
+* ⬆ Bump ty from 0.0.29 to 0.0.30. PR [#1693](https://github.com/fastapi/typer/pull/1693) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump prek from 0.3.8 to 0.3.9. PR [#1691](https://github.com/fastapi/typer/pull/1691) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pygithub from 2.9.0 to 2.9.1. PR [#1692](https://github.com/fastapi/typer/pull/1692) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump rich from 14.3.3 to 15.0.0. PR [#1688](https://github.com/fastapi/typer/pull/1688) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pydantic from 2.12.5 to 2.13.0. PR [#1687](https://github.com/fastapi/typer/pull/1687) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mypy from 1.20.0 to 1.20.1. PR [#1689](https://github.com/fastapi/typer/pull/1689) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump cryptography from 46.0.6 to 46.0.7. PR [#1682](https://github.com/fastapi/typer/pull/1682) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.15.9 to 0.15.10. PR [#1684](https://github.com/fastapi/typer/pull/1684) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pytest from 9.0.2 to 9.0.3. PR [#1681](https://github.com/fastapi/typer/pull/1681) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ty from 0.0.28 to 0.0.29. PR [#1678](https://github.com/fastapi/typer/pull/1678) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.15.8 to 0.15.9. PR [#1674](https://github.com/fastapi/typer/pull/1674) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ty from 0.0.27 to 0.0.28. PR [#1675](https://github.com/fastapi/typer/pull/1675) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pillow from 12.1.1 to 12.2.0. PR [#1672](https://github.com/fastapi/typer/pull/1672) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mypy from 1.19.1 to 1.20.0. PR [#1670](https://github.com/fastapi/typer/pull/1670) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ty from 0.0.26 to 0.0.27. PR [#1669](https://github.com/fastapi/typer/pull/1669) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump cryptography from 46.0.5 to 46.0.6. PR [#1661](https://github.com/fastapi/typer/pull/1661) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.15.7 to 0.15.8. PR [#1659](https://github.com/fastapi/typer/pull/1659) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ty from 0.0.25 to 0.0.26. PR [#1660](https://github.com/fastapi/typer/pull/1660) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 👷 Configure `ty` to exit with error code on warnings. PR [#1657](https://github.com/fastapi/typer/pull/1657) by [@svlandeg](https://github.com/svlandeg).
+* ⬆ Bump requests from 2.32.5 to 2.33.0. PR [#1656](https://github.com/fastapi/typer/pull/1656) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ty from 0.0.24 to 0.0.25. PR [#1652](https://github.com/fastapi/typer/pull/1652) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump prek from 0.3.6 to 0.3.8. PR [#1648](https://github.com/fastapi/typer/pull/1648) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pytest-cov from 7.0.0 to 7.1.0. PR [#1649](https://github.com/fastapi/typer/pull/1649) by [@dependabot[bot]](https://github.com/apps/dependabot).
@@ -48,7 +97,7 @@
 * ⬆ Bump griffe-typingdoc from 0.3.0 to 0.3.1. PR [#1604](https://github.com/fastapi/typer/pull/1604) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * 🔧 Upgrade pytest version and config. PR [#1570](https://github.com/fastapi/typer/pull/1570) by [@tiangolo](https://github.com/tiangolo).
 
-## 0.24.1
+## 0.24.1 (2026-02-21)
 
 ### Internal
 
@@ -65,13 +114,13 @@
 * 🔨 Add internal scripts to migrate docs from Python 3.9 to 3.10. PR [#1547](https://github.com/fastapi/typer/pull/1547) by [@tiangolo](https://github.com/tiangolo).
 * ⬆ Bump ty from 0.0.16 to 0.0.17. PR [#1544](https://github.com/fastapi/typer/pull/1544) by [@dependabot[bot]](https://github.com/apps/dependabot).
 
-## 0.24.0
+## 0.24.0 (2026-02-16)
 
 ### Breaking Changes
 
 * ➖ Drop support for Python 3.9. PR [#1546](https://github.com/fastapi/typer/pull/1546) by [@tiangolo](https://github.com/tiangolo).
 
-## 0.23.2
+## 0.23.2 (2026-02-16)
 
 ### Features
 
@@ -83,7 +132,7 @@
 * ⬆ Bump prek from 0.3.2 to 0.3.3. PR [#1545](https://github.com/fastapi/typer/pull/1545) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ruff from 0.15.0 to 0.15.1. PR [#1541](https://github.com/fastapi/typer/pull/1541) by [@dependabot[bot]](https://github.com/apps/dependabot).
 
-## 0.23.1
+## 0.23.1 (2026-02-13)
 
 ### Fixes
 
@@ -97,7 +146,7 @@
 
 * ⬆ Bump ty from 0.0.15 to 0.0.16. PR [#1533](https://github.com/fastapi/typer/pull/1533) by [@dependabot[bot]](https://github.com/apps/dependabot).
 
-## 0.23.0
+## 0.23.0 (2026-02-11)
 
 ### Breaking Changes
 
@@ -113,13 +162,13 @@
 * 🔨 Tweak PDM hook script, remove unnecessary default. PR [#1536](https://github.com/fastapi/typer/pull/1536) by [@tiangolo](https://github.com/tiangolo).
 * ♻️ Simplify build setup scripts and configs for deprecated wrapper packages. PR [#1535](https://github.com/fastapi/typer/pull/1535) by [@tiangolo](https://github.com/tiangolo).
 
-## 0.22.0
+## 0.22.0 (2026-02-11)
 
 ### Breaking Changes
 
 * 💥 Make `typer-slim` a shallow wrapper around `typer`, always requiring `rich` and `shellingham`. PR [#1522](https://github.com/fastapi/typer/pull/1522) by [@svlandeg](https://github.com/svlandeg).
 
-## 0.21.2
+## 0.21.2 (2026-02-10)
 
 ### Fixes
 
@@ -164,7 +213,7 @@
 * ⬆ Bump urllib3 from 2.6.2 to 2.6.3. PR [#1496](https://github.com/fastapi/typer/pull/1496) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump prek from 0.2.24 to 0.3.0. PR [#1495](https://github.com/fastapi/typer/pull/1495) by [@dependabot[bot]](https://github.com/apps/dependabot).
 
-## 0.21.1
+## 0.21.1 (2026-01-06)
 
 ### Fixes
 
@@ -185,7 +234,7 @@
 * 🔧 Update pre-commit to use local Ruff instead of hook, unpin `prek`. PR [#1466](https://github.com/fastapi/typer/pull/1466) by [@YuriiMotov](https://github.com/YuriiMotov).
 * ⬆ Bump mypy from 1.14.1 to 1.18.2. PR [#1382](https://github.com/fastapi/typer/pull/1382) by [@dependabot[bot]](https://github.com/apps/dependabot).
 
-## 0.21.0
+## 0.21.0 (2025-12-25)
 
 ### Breaking Changes
 
@@ -205,7 +254,7 @@
 * 👷 Run Smokeshow always, even on test failures. PR [#1447](https://github.com/fastapi/typer/pull/1447) by [@YuriiMotov](https://github.com/YuriiMotov).
 * 🔨 Add Typer script to generate example variants for Python files. PR [#1452](https://github.com/fastapi/typer/pull/1452) by [@tiangolo](https://github.com/tiangolo).
 
-## 0.20.1
+## 0.20.1 (2025-12-19)
 
 ### Features
 
@@ -262,7 +311,7 @@
 * ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1380](https://github.com/fastapi/typer/pull/1380) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * ⬆ Bump ruff from 0.14.0 to 0.14.1. PR [#1379](https://github.com/fastapi/typer/pull/1379) by [@dependabot[bot]](https://github.com/apps/dependabot).
 
-## 0.20.0
+## 0.20.0 (2025-10-20)
 
 ### Features
 
@@ -290,7 +339,7 @@
 * ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1358](https://github.com/fastapi/typer/pull/1358) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * 👷 Update docs previews comment, single comment, add failure status. PR [#1359](https://github.com/fastapi/typer/pull/1359) by [@tiangolo](https://github.com/tiangolo).
 
-## 0.19.2
+## 0.19.2 (2025-09-23)
 
 ### Fixes
 
@@ -306,7 +355,7 @@
 * ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1351](https://github.com/fastapi/typer/pull/1351) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * ⬆ Bump markdown-include-variants from 0.0.4 to 0.0.5. PR [#1348](https://github.com/fastapi/typer/pull/1348) by [@dependabot[bot]](https://github.com/apps/dependabot).
 
-## 0.19.1
+## 0.19.1 (2025-09-20)
 
 **Note**: this is the last version to support Python 3.7, going forward Typer will require Python 3.8+. And soon Python 3.8 will also be dropped as [Python 3.8 reached it's end of life](https://devguide.python.org/versions/) almost a year ago.
 
@@ -314,7 +363,7 @@
 
 * 🐛 Ensure that `Optional[list]` values work correctly with callbacks. PR [#1018](https://github.com/fastapi/typer/pull/1018) by [@solesensei](https://github.com/solesensei).
 
-## 0.19.0
+## 0.19.0 (2025-09-20)
 
 ### Features
 
@@ -330,7 +379,7 @@
 
 * 📝 Clarify single-command vs multi-command behaviour in README. PR [#1268](https://github.com/fastapi/typer/pull/1268) by [@MorgenPronk](https://github.com/MorgenPronk).
 
-## 0.18.0
+## 0.18.0 (2025-09-19)
 
 ### Fixes
 
@@ -340,7 +389,7 @@
 
 * 📌 Remove pin for Click < 8.3.0 now that there's a fix for the changes. PR [#1346](https://github.com/fastapi/typer/pull/1346) by [@tiangolo](https://github.com/tiangolo).
 
-## 0.17.5
+## 0.17.5 (2025-09-19)
 
 ### Fixes
 
@@ -359,7 +408,7 @@
 * ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1300](https://github.com/fastapi/typer/pull/1300) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * ⬆ Bump actions/labeler from 5 to 6. PR [#1296](https://github.com/fastapi/typer/pull/1296) by [@dependabot[bot]](https://github.com/apps/dependabot).
 
-## 0.17.4
+## 0.17.4 (2025-09-05)
 
 ### Fixes
 
@@ -373,25 +422,25 @@
 * 👷 Set permissions for conflict detector workflow. PR [#1287](https://github.com/fastapi/typer/pull/1287) by [@svlandeg](https://github.com/svlandeg).
 * 👷 Detect and label merge conflicts on PRs automatically. PR [#1286](https://github.com/fastapi/typer/pull/1286) by [@svlandeg](https://github.com/svlandeg).
 
-## 0.17.3
+## 0.17.3 (2025-08-30)
 
 ### Features
 
 * ✨ Allow annotated parsing with a subclass of `Path`. PR [#1183](https://github.com/fastapi/typer/pull/1183) by [@emfdavid](https://github.com/emfdavid).
 
-## 0.17.2
+## 0.17.2 (2025-08-30)
 
 ### Fixes
 
 * 🐛 Avoid printing `default: None` in the help section when using Rich. PR [#1120](https://github.com/fastapi/typer/pull/1120) by [@mattmess1221](https://github.com/mattmess1221).
 
-## 0.17.1
+## 0.17.1 (2025-08-30)
 
 ### Fixes
 
 * 🐛 Fix markdown formatting in `--help` output. PR [#815](https://github.com/fastapi/typer/pull/815) by [@gar1t](https://github.com/gar1t).
 
-## 0.17.0
+## 0.17.0 (2025-08-30)
 
 ### Features
 
@@ -403,7 +452,7 @@
 * ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1281](https://github.com/fastapi/typer/pull/1281) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * ⬆ Update pytest-sugar requirement from <1.1.0,>=0.9.4 to >=0.9.4,<1.2.0. PR [#1279](https://github.com/fastapi/typer/pull/1279) by [@dependabot[bot]](https://github.com/apps/dependabot).
 
-## 0.16.1
+## 0.16.1 (2025-08-18)
 
 ### Fixes
 
@@ -427,7 +476,7 @@
 * ⬆ Bump cairosvg from 2.7.1 to 2.8.2. PR [#1226](https://github.com/fastapi/typer/pull/1226) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ruff from 0.11.6 to 0.11.13. PR [#1241](https://github.com/fastapi/typer/pull/1241) by [@dependabot[bot]](https://github.com/apps/dependabot).
 
-## 0.16.0
+## 0.16.0 (2025-05-26)
 
 ### Upgrades
 
@@ -443,13 +492,13 @@ When using the `CliRunner` with Click < 8.2, to be able to access the `stderr` o
 
 * 🔧 Remove Google Analytics. PR [#1229](https://github.com/fastapi/typer/pull/1229) by [@tiangolo](https://github.com/tiangolo).
 
-## 0.15.4
+## 0.15.4 (2025-05-14)
 
 ### Upgrades
 
 * 📌 Pin Click to < 8.2, compatibility for Click >= 8.2 will be added in a future version. PR [#1225](https://github.com/fastapi/typer/pull/1225) by [@tiangolo](https://github.com/tiangolo).
 
-## 0.15.3
+## 0.15.3 (2025-04-28)
 
 ### Fixes
 
@@ -472,7 +521,7 @@ When using the `CliRunner` with Click < 8.2, to be able to access the `stderr` o
 * ⬆ Bump ruff from 0.9.7 to 0.9.9. PR [#1166](https://github.com/fastapi/typer/pull/1166) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ✏️ Fix typo in test name. PR [#1165](https://github.com/fastapi/typer/pull/1165) by [@svlandeg](https://github.com/svlandeg).
 
-## 0.15.2
+## 0.15.2 (2025-02-27)
 
 ### Features
 
@@ -525,7 +574,7 @@ When using the `CliRunner` with Click < 8.2, to be able to access the `stderr` o
 * ⬆ Bump ruff from 0.8.1 to 0.8.2. PR [#1084](https://github.com/fastapi/typer/pull/1084) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump mkdocs-material from 9.5.47 to 9.5.48. PR [#1086](https://github.com/fastapi/typer/pull/1086) by [@dependabot[bot]](https://github.com/apps/dependabot).
 
-## 0.15.1
+## 0.15.1 (2024-12-04)
 
 ### Features
 
@@ -545,7 +594,7 @@ When using the `CliRunner` with Click < 8.2, to be able to access the `stderr` o
 * ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1071](https://github.com/fastapi/typer/pull/1071) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 * ⬆ Update httpx requirement from <0.28.0,>=0.27.0 to >=0.27.0,<0.29.0. PR [#1065](https://github.com/fastapi/typer/pull/1065) by [@dependabot[bot]](https://github.com/apps/dependabot).
 
-## 0.15.0
+## 0.15.0 (2024-12-03)
 
 ### Features
 
@@ -557,7 +606,7 @@ When using the `CliRunner` with Click < 8.2, to be able to access the `stderr` o
 * ⬆ Bump mkdocs-material from 9.5.46 to 9.5.47. PR [#1070](https://github.com/fastapi/typer/pull/1070) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ruff from 0.8.0 to 0.8.1. PR [#1066](https://github.com/fastapi/typer/pull/1066) by [@dependabot[bot]](https://github.com/apps/dependabot).
 
-## 0.14.0
+## 0.14.0 (2024-11-28)
 
 ### Breaking Changes
 
@@ -623,7 +672,7 @@ Updated docs [SubCommand Name and Help](https://typer.tiangolo.com/tutorial/subc
 * ⬆ Bump astral-sh/setup-uv from 3 to 4. PR [#1061](https://github.com/fastapi/typer/pull/1061) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#1053](https://github.com/fastapi/typer/pull/1053) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 
-## 0.13.1
+## 0.13.1 (2024-11-18)
 
 ### Features
 
@@ -648,7 +697,7 @@ Updated docs [SubCommand Name and Help](https://typer.tiangolo.com/tutorial/subc
 * ⬆ Bump tiangolo/latest-changes from 0.3.1 to 0.3.2. PR [#1044](https://github.com/fastapi/typer/pull/1044) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Update pytest-cov requirement from <6.0.0,>=2.10.0 to >=2.10.0,<7.0.0. PR [#1033](https://github.com/fastapi/typer/pull/1033) by [@dependabot[bot]](https://github.com/apps/dependabot).
 
-## 0.13.0
+## 0.13.0 (2024-11-07)
 
 ### Features
 
@@ -707,7 +756,7 @@ Updated docs [SubCommand Name and Help](https://typer.tiangolo.com/tutorial/subc
 * ⬆ Bump ruff from 0.2.0 to 0.6.1. PR [#938](https://github.com/fastapi/typer/pull/938) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * 👷 Update `latest-changes` GitHub Action. PR [#955](https://github.com/fastapi/typer/pull/955) by [@tiangolo](https://github.com/tiangolo).
 
-## 0.12.5
+## 0.12.5 (2024-08-24)
 
 ### Features
 
@@ -750,7 +799,7 @@ Updated docs [SubCommand Name and Help](https://typer.tiangolo.com/tutorial/subc
 * ⬆ Update pytest requirement from <8.0.0,>=4.4.0 to >=4.4.0,<9.0.0. PR [#915](https://github.com/fastapi/typer/pull/915) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Update pytest-sugar requirement from <0.10.0,>=0.9.4 to >=0.9.4,<1.1.0. PR [#841](https://github.com/fastapi/typer/pull/841) by [@dependabot[bot]](https://github.com/apps/dependabot).
 
-## 0.12.4
+## 0.12.4 (2024-08-17)
 
 ### Features
 
@@ -808,13 +857,13 @@ Updated docs [SubCommand Name and Help](https://typer.tiangolo.com/tutorial/subc
 * 🔧 Update MkDocs Material, enable plugins. PR [#813](https://github.com/tiangolo/typer/pull/813) by [@tiangolo](https://github.com/tiangolo).
 * 🔧 Tweak development scripts and configs after migration to PDM, Ruff, etc.. PR [#797](https://github.com/tiangolo/typer/pull/797) by [@tiangolo](https://github.com/tiangolo).
 
-## 0.12.3
+## 0.12.3 (2024-04-09)
 
 ### Fixes
 
 * 🐛 Fix Rich formatting with no commands. PR [#796](https://github.com/tiangolo/typer/pull/796) by [@svlandeg](https://github.com/svlandeg).
 
-## 0.12.2
+## 0.12.2 (2024-04-08)
 
 ### Features
 
@@ -831,7 +880,7 @@ Updated docs [SubCommand Name and Help](https://typer.tiangolo.com/tutorial/subc
 * 📝 Update console output with Click 8 messages. PR [#789](https://github.com/tiangolo/typer/pull/789) by [@svlandeg](https://github.com/svlandeg).
 * 📝 Remove references to a .rst README generated by poetry new. PR [#632](https://github.com/tiangolo/typer/pull/632) by [@jonasmmiguel](https://github.com/jonasmmiguel).
 
-## 0.12.1
+## 0.12.1 (2024-04-05)
 
 Now you don't need to install `typer[all]`. When you install `typer` it comes with the default optional dependencies and the `typer` command.
 
@@ -857,7 +906,7 @@ By installing the latest version (`0.12.1`) it fixes it, for any previous versio
 
 * 👷 Add cron to run test once a week on monday. PR [#783](https://github.com/tiangolo/typer/pull/783) by [@estebanx64](https://github.com/estebanx64).
 
-## 0.12.0
+## 0.12.0 (2024-03-30)
 
 In version `0.12.0`, the `typer` package depends on `typer-slim[standard]` which includes the default dependencies (instead of `typer[all]`) and `typer-cli` (that provides the `typer` command).
 
@@ -878,7 +927,7 @@ This approach of having `typer` depend on `typer-slim[standard]` instead of incl
 * 🔧 Temporarily disable social plugin while a MkDocs issue is handled. PR [#779](https://github.com/tiangolo/typer/pull/779) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Fix install MkDocs Insiders only when available. PR [#778](https://github.com/tiangolo/typer/pull/778) by [@tiangolo](https://github.com/tiangolo).
 
-## 0.11.1
+## 0.11.1 (2024-03-28)
 
 ### Fixes
 
@@ -888,7 +937,7 @@ This approach of having `typer` depend on `typer-slim[standard]` instead of incl
 
 * 👷 Do not use the cache for dependencies when publishing to PyPI. PR [#774](https://github.com/tiangolo/typer/pull/774) by [@tiangolo](https://github.com/tiangolo).
 
-## 0.11.0
+## 0.11.0 (2024-03-26)
 
 ### Breaking Changes
 
@@ -909,25 +958,25 @@ This approach of having `typer` depend on `typer-slim[standard]` instead of incl
 * 👷 Upgrade issue-manager GitHub Action. PR [#765](https://github.com/tiangolo/typer/pull/765) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Add alls-green to CI. PR [#759](https://github.com/tiangolo/typer/pull/759) by [@tiangolo](https://github.com/tiangolo).
 
-## 0.10.0
+## 0.10.0 (2024-03-23)
 
 ### Fixes
 
 * 🐛 Fix default value of `None` for CLI Parameters when the type is `list | None` and the default value is `None`. PR [#664](https://github.com/tiangolo/typer/pull/664) by [@theowisear](https://github.com/theowisear).
 
-## 0.9.4
+## 0.9.4 (2024-03-23)
 
 ### Features
 
 * ✨ Improve support for CLI translations using gettext. PR [#417](https://github.com/tiangolo/typer/pull/417) by [@mjodmj](https://github.com/mjodmj).
 
-## 0.9.3
+## 0.9.3 (2024-03-23)
 
 ### Fixes
 
 * 🐛 Fix evaluating stringified annotations in Python 3.10 (also `from __future__ import annotations`). PR [#721](https://github.com/tiangolo/typer/pull/721) by [@heckad](https://github.com/heckad).
 
-## 0.9.2
+## 0.9.2 (2024-03-23)
 
 ### Fixes
 
@@ -938,7 +987,7 @@ This approach of having `typer` depend on `typer-slim[standard]` instead of incl
 
 * 📝 Add docs and test for `no_args_is_help` feature. PR [#751](https://github.com/tiangolo/typer/pull/751) by [@svlandeg](https://github.com/svlandeg).
 
-## 0.9.1
+## 0.9.1 (2024-03-23)
 
 ### Fixes
 
@@ -973,7 +1022,7 @@ This approach of having `typer` depend on `typer-slim[standard]` instead of incl
 * 👷 Update build docs CI cache paths. PR [#707](https://github.com/tiangolo/typer/pull/707) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Upgrade latest-changes GitHub Action. PR [#691](https://github.com/tiangolo/typer/pull/691) by [@tiangolo](https://github.com/tiangolo).
 
-## 0.9.0
+## 0.9.0 (2023-05-02)
 
 ### Features
 
@@ -991,7 +1040,7 @@ This approach of having `typer` depend on `typer-slim[standard]` instead of incl
 
 * ⬆ [pre-commit.ci] pre-commit autoupdate. PR [#592](https://github.com/tiangolo/typer/pull/592) by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci).
 
-## 0.8.0
+## 0.8.0 (2023-05-01)
 
 ### Features
 
@@ -1030,7 +1079,7 @@ This approach of having `typer` depend on `typer-slim[standard]` instead of incl
 * 👷‍♂️ Consistently use `sys.executable` to run subprocesses, needed by OpenSUSE. PR [#408](https://github.com/tiangolo/typer/pull/408) by [@theMarix](https://github.com/theMarix).
 * 👷‍♂️ Ensure the `PYTHONPATH` is set properly when testing the tutorial scripts. PR [#407](https://github.com/tiangolo/typer/pull/407) by [@theMarix](https://github.com/theMarix).
 
-## 0.7.0
+## 0.7.0 (2022-11-05)
 
 ### Features
 
@@ -1065,14 +1114,14 @@ This approach of having `typer` depend on `typer-slim[standard]` instead of incl
 * ➕ Add extra Material for MkDocs deps for docs. PR [#482](https://github.com/tiangolo/typer/pull/482) by [@tiangolo](https://github.com/tiangolo).
 * 🔧 Update Dependabot config. PR [#476](https://github.com/tiangolo/typer/pull/476) by [@tiangolo](https://github.com/tiangolo).
 
-## 0.6.1
+## 0.6.1 (2022-07-12)
 
 ### Fixes
 
 * 🐛 Fix setting `FORCE_TERMINAL` with colors 2. PR [#424](https://github.com/tiangolo/typer/pull/424) by [@tiangolo](https://github.com/tiangolo).
 * 🐛 Fix setting `FORCE_TERMINAL` with colors. PR [#423](https://github.com/tiangolo/typer/pull/423) by [@tiangolo](https://github.com/tiangolo).
 
-## 0.6.0
+## 0.6.0 (2022-07-12)
 
 This release adds deep integrations with [Rich](https://rich.readthedocs.io/en/stable/). ✨
 
@@ -1112,7 +1161,7 @@ There are new options to group commands, *CLI arguments*, and *CLI options*, sup
 
 * ⬆️ Upgrade codecov GitHub Action. PR [#420](https://github.com/tiangolo/typer/pull/420) by [@tiangolo](https://github.com/tiangolo).
 
-## 0.5.0
+## 0.5.0 (2022-07-06)
 
 ### Features
 
@@ -1122,7 +1171,7 @@ There are new options to group commands, *CLI arguments*, and *CLI options*, sup
 
 * ✏ Fix typo, "ASCII codes" to "ANSI escape sequences". PR [#308](https://github.com/tiangolo/typer/pull/308) by [@septatrix](https://github.com/septatrix).
 
-## 0.4.2
+## 0.4.2 (2022-07-02)
 
 ### Fixes
 
@@ -1151,7 +1200,7 @@ There are new options to group commands, *CLI arguments*, and *CLI options*, sup
 * 👷 Disable installing MkDocs Insiders in forks. PR [#391](https://github.com/tiangolo/typer/pull/391) by [@tiangolo](https://github.com/tiangolo).
 * ⬆️ Upgrade Codecov GitHub Action. PR [#383](https://github.com/tiangolo/typer/pull/383) by [@tiangolo](https://github.com/tiangolo).
 
-## 0.4.1
+## 0.4.1 (2022-03-30)
 
 ### Fixes
 
@@ -1165,7 +1214,7 @@ There are new options to group commands, *CLI arguments*, and *CLI options*, sup
 * ⬆️ Upgrade MkDocs Material, MDX-Include, and MkDocs structure. PR [#356](https://github.com/tiangolo/typer/pull/356) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Update publish GitHub action. PR [#325](https://github.com/tiangolo/typer/pull/325) by [@tiangolo](https://github.com/tiangolo).
 
-## 0.4.0
+## 0.4.0 (2021-08-30)
 
 ### Features
 
@@ -1180,7 +1229,7 @@ There are new options to group commands, *CLI arguments*, and *CLI options*, sup
 * 👷 Update docs CI name. PR [#320](https://github.com/tiangolo/typer/pull/320) by [@tiangolo](https://github.com/tiangolo).
 * 🔧 Add sponsors docs and badge. PR [#319](https://github.com/tiangolo/typer/pull/319) by [@tiangolo](https://github.com/tiangolo).
 
-## 0.3.2
+## 0.3.2 (2020-08-16)
 
 ### Features
 
@@ -1197,14 +1246,14 @@ There are new options to group commands, *CLI arguments*, and *CLI options*, sup
 * Report coverage in XML to support GitHub Actions. PR [#146](https://github.com/tiangolo/typer/pull/146).
 * Update badges and remove Travis, now that GitHub Actions is the main CI. PR [#145](https://github.com/tiangolo/typer/pull/145).
 
-## 0.3.1
+## 0.3.1 (2020-07-19)
 
 * Add GitHub Actions, move from Travis. PR [#144](https://github.com/tiangolo/typer/pull/144).
 * Pin dependencies. PR [#138](https://github.com/tiangolo/typer/pull/138).
 * Add Dependabot. PR [#136](https://github.com/tiangolo/typer/pull/136).
 * Upgrade Isort to version 5.x.x. PR [#137](https://github.com/tiangolo/typer/pull/137).
 
-## 0.3.0
+## 0.3.0 (2020-06-24)
 
 * Add support for `help` parameter in *CLI arguments*:
     * As `help` in *CLI arguments* is not supported by Click, there are two new internal classes (Click sub-classes) to support it:
@@ -1232,11 +1281,11 @@ There are new options to group commands, *CLI arguments*, and *CLI options*, sup
 * Fix typos and rewording in docs. PR [#97](https://github.com/tiangolo/typer/pull/97) by [@mrcartoonster](https://github.com/mrcartoonster).
 * Update GitHub Action issue-manager. PR [#114](https://github.com/tiangolo/typer/pull/114).
 
-## 0.2.1
+## 0.2.1 (2020-04-26)
 
 * Add support for forward references (types declared inside of strings). PR [#93](https://github.com/tiangolo/typer/pull/93).
 
-## 0.2.0
+## 0.2.0 (2020-04-26)
 
 * Add support for completion for commands/programs not available on startup.
     * This allows installing a Typer program/script in a virtual environment and still have completion globally installed.
@@ -1244,14 +1293,14 @@ There are new options to group commands, *CLI arguments*, and *CLI options*, sup
 * Add note about `typer.echo()` and `print()` for colors in Windows. PR [#89](https://github.com/tiangolo/typer/pull/89).
 * Upgrade Mkdocs-Material version, update contributing guide style. PR [#90](https://github.com/tiangolo/typer/pull/90).
 
-## 0.1.1
+## 0.1.1 (2020-03-29)
 
 * Fix completion evaluation for Bash and Zsh when the program is not installed/found. PR [#83](https://github.com/tiangolo/typer/pull/83).
 * Fix completion script for Fish. PR [#82](https://github.com/tiangolo/typer/pull/82).
 * Fix shell installation for Bash to `~/.bashrc` and update Windows development docs. PR [#81](https://github.com/tiangolo/typer/pull/81).
 * Update coverage badge. PR [#78](https://github.com/tiangolo/typer/pull/78).
 
-## 0.1.0
+## 0.1.0 (2020-03-19)
 
 * Fix coverage instructions. PR [#72](https://github.com/tiangolo/typer/pull/72).
 * Add docs for [Building a Package](https://typer.tiangolo.com/tutorial/package/). PR [#71](https://github.com/tiangolo/typer/pull/71).
@@ -1269,7 +1318,7 @@ There are new options to group commands, *CLI arguments*, and *CLI options*, sup
 * Fix Zsh completion install script. PR [#69](https://github.com/tiangolo/typer/pull/69).
 * Fix typo in progressbar example. PR [#63](https://github.com/tiangolo/typer/pull/63) by [@ValentinCalomme](https://github.com/ValentinCalomme).
 
-## 0.0.11
+## 0.0.11 (2020-03-16)
 
 * Re-implement completion system:
     * Remove optional dependency `click-completion` (with its sub-dependencies, like Jinja).
@@ -1290,11 +1339,11 @@ There are new options to group commands, *CLI arguments*, and *CLI options*, sup
 * Add docs about [Alternatives, Inspiration and Comparisons](https://typer.tiangolo.com/alternatives/). PR [#62](https://github.com/tiangolo/typer/pull/62).
 * Add [Development - Contributing Guide](https://typer.tiangolo.com/contributing/). PR [#61](https://github.com/tiangolo/typer/pull/61).
 
-## 0.0.10
+## 0.0.10 (2020-03-10)
 
 * Add support for Click version 7.1.1. PR [#60](https://github.com/tiangolo/typer/pull/60).
 
-## 0.0.9
+## 0.0.9 (2020-03-08)
 
 * Add support for PEP 561, to allow `mypy` to type check applications built with **Typer**. PR [#58](https://github.com/tiangolo/typer/pull/58).
 * Upgrade deploy docs to Netlify GitHub action. PR [#57](https://github.com/tiangolo/typer/pull/57).
@@ -1303,7 +1352,7 @@ There are new options to group commands, *CLI arguments*, and *CLI options*, sup
 * Update format for internal links. PR [#38](https://github.com/tiangolo/typer/pull/38).
 * Tweak external links' format. PR [#36](https://github.com/tiangolo/typer/pull/36).
 
-## 0.0.8
+## 0.0.8 (2020-01-05)
 
 * Update docs and add latest changes to MkDocs/website. PR [#33](https://github.com/tiangolo/typer/pull/33).
 * Add extra tests for edge cases that don't belong in docs' examples. PR [#32](https://github.com/tiangolo/typer/pull/32).
@@ -1320,18 +1369,18 @@ There are new options to group commands, *CLI arguments*, and *CLI options*, sup
 * Add colors module and docs for [Printing and Colors](https://typer.tiangolo.com/tutorial/printing/) and for [Terminating](https://typer.tiangolo.com/tutorial/terminating/), including tests. PR [#20](https://github.com/tiangolo/typer/pull/20).
 * Refactor docs to make each individual page/section "bite-sized" / small. Add docs for [CLI option names](https://typer.tiangolo.com/tutorial/options/name/). Update `typer.Argument()` to remove invalid positional `param_decls`. PR [#19](https://github.com/tiangolo/typer/pull/19).
 
-## 0.0.7
+## 0.0.7 (2019-12-31)
 
 * Add docs for [*CLI parameter* types](https://typer.tiangolo.com/tutorial/parameter-types/). Includes tests and file classes refactor. PR [#17](https://github.com/tiangolo/typer/pull/17).
 * Add tests for completion. PR [#15](https://github.com/tiangolo/typer/pull/15) and [#16](https://github.com/tiangolo/typer/pull/16).
 
-## 0.0.6
+## 0.0.6 (2019-12-30)
 
 * Add docs for [Commands](https://typer.tiangolo.com/tutorial/commands/). Includes a bug fix for handling default values set in `typer.Typer()` parameters. PR [#14](https://github.com/tiangolo/typer/pull/14).
 * Add docs for [CLI Arguments](https://typer.tiangolo.com/tutorial/arguments/). PR [#13](https://github.com/tiangolo/typer/pull/13).
 * Add docs for [CLI Options](https://typer.tiangolo.com/tutorial/options/). PR [#12](https://github.com/tiangolo/typer/pull/12).
 
-## 0.0.5
+## 0.0.5 (2019-12-28)
 
 * Clean exports from Typer. Remove unneeded components from Click and add needed `Exit` exception. PR [#11](https://github.com/tiangolo/typer/pull/11).
 * Fix and document extracting help from a function's docstring [First Steps: Document your CLI app](https://typer.tiangolo.com/tutorial/first-steps/#document-your-cli-app). PR [#10](https://github.com/tiangolo/typer/pull/10).
@@ -1341,19 +1390,19 @@ There are new options to group commands, *CLI arguments*, and *CLI options*, sup
 * Update Termynal to have fixed sizes, add "fast" button, and use it in [First Steps](https://typer.tiangolo.com/tutorial/first-steps/). PR [#6](https://github.com/tiangolo/typer/pull/6).
 * Add custom automatic [Termynal](https://github.com/tiangolo/termynal) for docs. PR [#5](https://github.com/tiangolo/typer/pull/5).
 
-## 0.0.4
+## 0.0.4 (2019-12-24)
 
 * Update short descriptions and assets.
 * Docs rewording and fix typos. PR [#1](https://github.com/tiangolo/typer/pull/1) by [@mariacamilagl](https://github.com/mariacamilagl).
 
-## 0.0.3
+## 0.0.3 (2019-12-24)
 
 * Fix group creation without name.
 
-## 0.0.2
+## 0.0.2 (2019-12-24)
 
 * Add initial version of code, docs, etc.
 
-## 0.0.1
+## 0.0.1 (2019-12-20)
 
 * First commit. Publish to PyPI to reserve package name.
