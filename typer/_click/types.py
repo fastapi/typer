@@ -1,24 +1,30 @@
-from __future__ import annotations
-
-import collections.abc as cabc
 import os
 import sys
-import typing as t
+from collections.abc import Callable, Sequence
 from datetime import datetime
-from gettext import gettext as _
-from gettext import ngettext
+from typing import (
+    IO,
+    TYPE_CHECKING,
+    Any,
+    ClassVar,
+    Literal,
+    NoReturn,
+    TypedDict,
+    TypeGuard,
+    TypeVar,
+    Union,
+    cast,
+)
 
 from ._compat import _get_argv_encoding, open_stream
 from .exceptions import BadParameter
 from .utils import LazyFile, format_filename, safecall
 
-if t.TYPE_CHECKING:
-    import typing_extensions as te
-
+if TYPE_CHECKING:
     from .core import Context, Parameter
     from .shell_completion import CompletionItem
 
-ParamTypeValue = t.TypeVar("ParamTypeValue")
+ParamTypeValue = TypeVar("ParamTypeValue")
 
 
 class ParamType:
@@ -28,75 +34,56 @@ class ParamType:
     To implement a custom type, subclass and implement at least the
     following:
 
-    -   The :attr:`name` class attribute must be set.
+    -   The `name` class attribute must be set.
     -   Calling an instance of the type with ``None`` must return
         ``None``. This is already implemented by default.
-    -   :meth:`convert` must convert string values to the correct type.
-    -   :meth:`convert` must accept values that are already the correct
+    -   `convert` must convert string values to the correct type.
+    -   `convert` must accept values that are already the correct
         type.
     -   It must be able to convert a value if the ``ctx`` and ``param``
         arguments are ``None``. This can occur when converting prompt
         input.
     """
 
-    is_composite: t.ClassVar[bool] = False
-    arity: t.ClassVar[int] = 1
-
-    #: the descriptive name of this type
+    is_composite: ClassVar[bool] = False
+    arity: ClassVar[int] = 1
     name: str
 
-    #: if a list of this type is expected and the value is pulled from a
-    #: string environment variable, this is what splits it up.  `None`
-    #: means any whitespace.  For all parameters the general rule is that
-    #: whitespace splits them up.  The exception are paths and files which
-    #: are split by ``os.path.pathsep`` by default (":" on Unix and ";" on
-    #: Windows).
-    envvar_list_splitter: t.ClassVar[str | None] = None
+    # if a list of this type is expected and the value is pulled from a
+    # string environment variable, this is what splits it up.  `None`
+    # means any whitespace.  For all parameters the general rule is that
+    # whitespace splits them up.  The exception are paths and files which
+    # are split by ``os.path.pathsep`` by default (":" on Unix and ";" on
+    # Windows).
+    envvar_list_splitter: ClassVar[str | None] = None
 
     def __call__(
         self,
-        value: t.Any,
-        param: Parameter | None = None,
-        ctx: Context | None = None,
-    ) -> t.Any:
+        value: Any,
+        param: Union["Parameter", None] = None,
+        ctx: Union["Context", None] = None,
+    ) -> Any:
         if value is not None:
             return self.convert(value, param, ctx)
 
-    def get_metavar(self, param: Parameter, ctx: Context) -> str | None:
+    def get_metavar(self, param: "Parameter", ctx: "Context") -> str | None:
         """Returns the metavar default for this param if it provides one."""
+        pass  # pragma: no cover
 
-    def get_missing_message(self, param: Parameter, ctx: Context | None) -> str | None:
+    def get_missing_message(
+        self, param: "Parameter", ctx: Union["Context", None]
+    ) -> str | None:
         """Optionally might return extra information about a missing
         parameter.
-
-        .. versionadded:: 2.0
         """
+        pass  # pragma: no cover
 
     def convert(
-        self, value: t.Any, param: Parameter | None, ctx: Context | None
-    ) -> t.Any:
-        """Convert the value to the correct type. This is not called if
-        the value is ``None`` (the missing value).
+        self, value: Any, param: Union["Parameter", None], ctx: Union["Context", None]
+    ) -> Any:
+        pass  # pragma: no cover
 
-        This must accept string values from the command line, as well as
-        values that are already the correct type. It may also convert
-        other compatible types.
-
-        The ``param`` and ``ctx`` arguments may be ``None`` in certain
-        situations, such as when converting prompt input.
-
-        If the value cannot be converted, call :meth:`fail` with a
-        descriptive message.
-
-        :param value: The value to convert.
-        :param param: The parameter that is using this type to convert
-            its value. May be ``None``.
-        :param ctx: The current context that arrived at this value. May
-            be ``None``.
-        """
-        return value
-
-    def split_envvar_value(self, rv: str) -> cabc.Sequence[str]:
+    def split_envvar_value(self, rv: str) -> Sequence[str]:
         """Given a value from an environment variable this splits it up
         into small chunks depending on the defined envvar list splitter.
 
@@ -109,26 +96,19 @@ class ParamType:
     def fail(
         self,
         message: str,
-        param: Parameter | None = None,
-        ctx: Context | None = None,
-    ) -> t.NoReturn:
+        param: Union["Parameter", None] = None,
+        ctx: Union["Context", None] = None,
+    ) -> NoReturn:
         """Helper method to fail with an invalid value message."""
         raise BadParameter(message, ctx=ctx, param=param)
 
     def shell_complete(
-        self, ctx: Context, param: Parameter, incomplete: str
-    ) -> list[CompletionItem]:
-        """Return a list of
-        :class:`~click.shell_completion.CompletionItem` objects for the
+        self, ctx: "Context", param: "Parameter", incomplete: str
+    ) -> list["CompletionItem"]:
+        """Return a list of `CompletionItem` objects for the
         incomplete value. Most types do not provide completions, but
         some do, and this allows custom types to provide custom
         completions as well.
-
-        :param ctx: Invocation context for this command.
-        :param param: The parameter that is requesting completion.
-        :param incomplete: Value being completed. May be empty.
-
-        .. versionadded:: 8.0
         """
         return []
 
@@ -138,23 +118,23 @@ class CompositeParamType(ParamType):
 
     @property
     def arity(self) -> int:  # type: ignore
-        raise NotImplementedError()
+        raise NotImplementedError()  # pragma: no cover
 
 
 class FuncParamType(ParamType):
-    def __init__(self, func: t.Callable[[t.Any], t.Any]) -> None:
+    def __init__(self, func: Callable[[Any], Any]) -> None:
         self.name: str = func.__name__
         self.func = func
 
     def convert(
-        self, value: t.Any, param: Parameter | None, ctx: Context | None
-    ) -> t.Any:
+        self, value: Any, param: Union["Parameter", None], ctx: Union["Context", None]
+    ) -> Any:
         try:
             return self.func(value)
         except ValueError:
             try:
                 value = str(value)
-            except UnicodeError:
+            except UnicodeError:  # pragma: no cover
                 value = value.decode("utf-8", "replace")
 
             self.fail(value, param, ctx)
@@ -164,8 +144,8 @@ class StringParamType(ParamType):
     name = "text"
 
     def convert(
-        self, value: t.Any, param: Parameter | None, ctx: Context | None
-    ) -> t.Any:
+        self, value: Any, param: Union["Parameter", None], ctx: Union["Context", None]
+    ) -> Any:
         if isinstance(value, bytes):
             enc = _get_argv_encoding()
             try:
@@ -200,34 +180,29 @@ class DateTime(ParamType):
 
     Parsing is tried using each format, in order, and the first format which
     parses successfully is used.
-
-    :param formats: A list or tuple of date format strings, in the order in
-                    which they should be tried. Defaults to
-                    ``'%Y-%m-%d'``, ``'%Y-%m-%dT%H:%M:%S'``,
-                    ``'%Y-%m-%d %H:%M:%S'``.
     """
 
     name = "datetime"
 
-    def __init__(self, formats: cabc.Sequence[str] | None = None):
-        self.formats: cabc.Sequence[str] = formats or [
+    def __init__(self, formats: Sequence[str] | None = None):
+        self.formats: Sequence[str] = formats or [
             "%Y-%m-%d",
             "%Y-%m-%dT%H:%M:%S",
             "%Y-%m-%d %H:%M:%S",
         ]
 
-    def get_metavar(self, param: Parameter, ctx: Context) -> str | None:
+    def get_metavar(self, param: "Parameter", ctx: "Context") -> str | None:
         return f"[{'|'.join(self.formats)}]"
 
-    def _try_to_convert_date(self, value: t.Any, format: str) -> datetime | None:
+    def _try_to_convert_date(self, value: Any, format: str) -> datetime | None:
         try:
             return datetime.strptime(value, format)
         except ValueError:
             return None
 
     def convert(
-        self, value: t.Any, param: Parameter | None, ctx: Context | None
-    ) -> t.Any:
+        self, value: Any, param: Union["Parameter", None], ctx: Union["Context", None]
+    ) -> Any:
         if isinstance(value, datetime):
             return value
 
@@ -239,11 +214,7 @@ class DateTime(ParamType):
 
         formats_str = ", ".join(map(repr, self.formats))
         self.fail(
-            ngettext(
-                "{value!r} does not match the format {format}.",
-                "{value!r} does not match the formats {formats}.",
-                len(self.formats),
-            ).format(value=value, format=formats_str, formats=formats_str),
+            f"{value!r} does not match the formats {formats_str}.",
             param,
             ctx,
         )
@@ -253,18 +224,16 @@ class DateTime(ParamType):
 
 
 class _NumberParamTypeBase(ParamType):
-    _number_class: t.ClassVar[type[t.Any]]
+    _number_class: ClassVar[type[Any]]
 
     def convert(
-        self, value: t.Any, param: Parameter | None, ctx: Context | None
-    ) -> t.Any:
+        self, value: Any, param: Union["Parameter", None], ctx: Union["Context", None]
+    ) -> Any:
         try:
             return self._number_class(value)
         except ValueError:
             self.fail(
-                _("{value!r} is not a valid {number_type}.").format(
-                    value=value, number_type=self.name
-                ),
+                f"{value!r} is not a valid {self.name}.",
                 param,
                 ctx,
             )
@@ -286,8 +255,8 @@ class _NumberRangeBase(_NumberParamTypeBase):
         self.clamp = clamp
 
     def convert(
-        self, value: t.Any, param: Parameter | None, ctx: Context | None
-    ) -> t.Any:
+        self, value: Any, param: Union["Parameter", None], ctx: Union["Context", None]
+    ) -> Any:
         import operator
 
         rv = super().convert(value, param, ctx)
@@ -307,24 +276,18 @@ class _NumberRangeBase(_NumberParamTypeBase):
 
         if lt_min or gt_max:
             self.fail(
-                _("{value} is not in the range {range}.").format(
-                    value=rv, range=self._describe_range()
-                ),
+                f"{rv} is not in the range {self._describe_range()}.",
                 param,
                 ctx,
             )
 
         return rv
 
-    def _clamp(self, bound: float, dir: t.Literal[1, -1], open: bool) -> float:
+    def _clamp(self, bound: float, dir: Literal[1, -1], open: bool) -> float:
         """Find the valid value to clamp to bound in the given
         direction.
-
-        :param bound: The boundary value.
-        :param dir: 1 or -1 indicating the direction to move.
-        :param open: If true, the range does not include the bound.
         """
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     def _describe_range(self) -> str:
         """Describe the range for use in help text."""
@@ -354,8 +317,7 @@ class IntParamType(_NumberParamTypeBase):
 
 
 class IntRange(_NumberRangeBase, IntParamType):
-    """Restrict an :data:`click.INT` value to a range of accepted
-    values. See :ref:`ranges`.
+    """Restrict an `INT` value to a range of accepted values. See
 
     If ``min`` or ``max`` are not passed, any value is accepted in that
     direction. If ``min_open`` or ``max_open`` are enabled, the
@@ -363,15 +325,12 @@ class IntRange(_NumberRangeBase, IntParamType):
 
     If ``clamp`` is enabled, a value outside the range is clamped to the
     boundary instead of failing.
-
-    .. versionchanged:: 8.0
-        Added the ``min_open`` and ``max_open`` parameters.
     """
 
     name = "integer range"
 
     def _clamp(  # type: ignore
-        self, bound: int, dir: t.Literal[1, -1], open: bool
+        self, bound: int, dir: Literal[1, -1], open: bool
     ) -> int:
         if not open:
             return bound
@@ -388,8 +347,8 @@ class FloatParamType(_NumberParamTypeBase):
 
 
 class FloatRange(_NumberRangeBase, FloatParamType):
-    """Restrict a :data:`click.FLOAT` value to a range of accepted
-    values. See :ref:`ranges`.
+    """Restrict a `FLOAT` value to a range of accepted
+    values. See `ranges`.
 
     If ``min`` or ``max`` are not passed, any value is accepted in that
     direction. If ``min_open`` or ``max_open`` are enabled, the
@@ -398,9 +357,6 @@ class FloatRange(_NumberRangeBase, FloatParamType):
     If ``clamp`` is enabled, a value outside the range is clamped to the
     boundary instead of failing. This is not supported if either
     boundary is marked ``open``.
-
-    .. versionchanged:: 8.0
-        Added the ``min_open`` and ``max_open`` parameters.
     """
 
     name = "float range"
@@ -420,14 +376,16 @@ class FloatRange(_NumberRangeBase, FloatParamType):
         if (min_open or max_open) and clamp:
             raise TypeError("Clamping is not supported for open bounds.")
 
-    def _clamp(self, bound: float, dir: t.Literal[1, -1], open: bool) -> float:
+    def _clamp(self, bound: float, dir: Literal[1, -1], open: bool) -> float:
         if not open:
             return bound
 
         # Could use math.nextafter here, but clamping an
         # open float range doesn't seem to be particularly useful. It's
         # left up to the user to write a callback to do it if needed.
-        raise RuntimeError("Clamping is not supported for open bounds.")
+        raise RuntimeError(
+            "Clamping is not supported for open bounds."
+        )  # pragma: no cover
 
 
 class BoolParamType(ParamType):
@@ -451,19 +409,8 @@ class BoolParamType(ParamType):
     }
     """A mapping of string values to boolean states.
 
-    Mapping is inspired by :py:attr:`configparser.ConfigParser.BOOLEAN_STATES`
+    Mapping is inspired by `configparser.ConfigParser.BOOLEAN_STATES`
     and extends it.
-
-    .. caution::
-        String values are lower-cased, as the ``str_to_bool`` comparison function
-        below is case-insensitive.
-
-    .. warning::
-        The mapping is not exhaustive, and does not cover all possible boolean strings
-        representations. It will remains as it is to avoid endless bikeshedding.
-
-        Future work my be considered to make this mapping user-configurable from public
-        API.
     """
 
     @staticmethod
@@ -482,14 +429,13 @@ class BoolParamType(ParamType):
         return BoolParamType.bool_states.get(value.strip().lower())
 
     def convert(
-        self, value: t.Any, param: Parameter | None, ctx: Context | None
+        self, value: Any, param: Union["Parameter", None], ctx: Union["Context", None]
     ) -> bool:
         normalized = self.str_to_bool(value)
         if normalized is None:
+            states = ", ".join(sorted(self.bool_states))
             self.fail(
-                _(
-                    "{value!r} is not a valid boolean. Recognized values: {states}"
-                ).format(value=value, states=", ".join(sorted(self.bool_states))),
+                f"{value!r} is not a valid boolean. Recognized values: {states}",
                 param,
                 ctx,
             )
@@ -503,8 +449,8 @@ class UUIDParameterType(ParamType):
     name = "uuid"
 
     def convert(
-        self, value: t.Any, param: Parameter | None, ctx: Context | None
-    ) -> t.Any:
+        self, value: Any, param: Union["Parameter", None], ctx: Union["Context", None]
+    ) -> Any:
         import uuid
 
         if isinstance(value, uuid.UUID):
@@ -515,9 +461,7 @@ class UUIDParameterType(ParamType):
         try:
             return uuid.UUID(value)
         except ValueError:
-            self.fail(
-                _("{value!r} is not a valid UUID.").format(value=value), param, ctx
-            )
+            self.fail(f"{value!r} is not a valid UUID.", param, ctx)
 
     def __repr__(self) -> str:
         return "UUID"
@@ -546,15 +490,10 @@ class File(ParamType):
     separate file in the same folder and upon completion the file will
     be moved over to the original location.  This is useful if a file
     regularly read by other users is modified.
-
-    See :ref:`file-args` for more information.
-
-    .. versionchanged:: 2.0
-        Added the ``atomic`` parameter.
     """
 
     name = "filename"
-    envvar_list_splitter: t.ClassVar[str] = os.path.pathsep
+    envvar_list_splitter: ClassVar[str] = os.path.pathsep
 
     def __init__(
         self,
@@ -581,14 +520,14 @@ class File(ParamType):
 
     def convert(
         self,
-        value: str | os.PathLike[str] | t.IO[t.Any],
-        param: Parameter | None,
-        ctx: Context | None,
-    ) -> t.IO[t.Any]:
+        value: str | os.PathLike[str] | IO[Any],
+        param: Union["Parameter", None],
+        ctx: Union["Context", None],
+    ) -> IO[Any]:
         if _is_file_like(value):
             return value
 
-        value = t.cast("str | os.PathLike[str]", value)
+        value = cast("str | os.PathLike[str]", value)
 
         try:
             lazy = self.resolve_lazy_flag(value)
@@ -601,7 +540,7 @@ class File(ParamType):
                 if ctx is not None:
                     ctx.call_on_close(lf.close_intelligently)
 
-                return t.cast("t.IO[t.Any]", lf)
+                return cast("IO[Any]", lf)
 
             f, should_close = open_stream(
                 value, self.mode, self.encoding, self.errors, atomic=self.atomic
@@ -619,27 +558,21 @@ class File(ParamType):
                     ctx.call_on_close(safecall(f.flush))
 
             return f
-        except OSError as e:
+        except OSError as e:  # pragma: no cover
             self.fail(f"'{format_filename(value)}': {e.strerror}", param, ctx)
 
     def shell_complete(
-        self, ctx: Context, param: Parameter, incomplete: str
-    ) -> list[CompletionItem]:
+        self, ctx: "Context", param: "Parameter", incomplete: str
+    ) -> list["CompletionItem"]:
         """Return a special completion marker that tells the completion
         system to use the shell to provide file path completions.
-
-        :param ctx: Invocation context for this command.
-        :param param: The parameter that is requesting completion.
-        :param incomplete: Value being completed. May be empty.
-
-        .. versionadded:: 8.0
         """
         from .shell_completion import CompletionItem
 
         return [CompletionItem(incomplete, type="file")]
 
 
-def _is_file_like(value: t.Any) -> te.TypeGuard[t.IO[t.Any]]:
+def _is_file_like(value: Any) -> TypeGuard[IO[Any]]:
     return hasattr(value, "read") or hasattr(value, "write")
 
 
@@ -647,18 +580,16 @@ class Tuple(CompositeParamType):
     """The default behavior of Click is to apply a type on a value directly.
     This works well in most cases, except for when `nargs` is set to a fixed
     count and different types should be used for different items.  In this
-    case the :class:`Tuple` type can be used.  This type can only be used
+    case the `Tuple` type can be used.  This type can only be used
     if `nargs` is set to a fixed number.
 
-    For more information see :ref:`tuple-type`.
+    For more information see `tuple-type`.
 
     This can be selected by using a Python tuple literal as a type.
-
-    :param types: a list of types that should be used for the tuple items.
     """
 
-    def __init__(self, types: cabc.Sequence[type[t.Any] | ParamType]) -> None:
-        self.types: cabc.Sequence[ParamType] = [convert_type(ty) for ty in types]
+    def __init__(self, types: Sequence[type[Any] | ParamType]) -> None:
+        self.types: Sequence[ParamType] = [convert_type(ty) for ty in types]
 
     @property
     def name(self) -> str:  # type: ignore
@@ -669,18 +600,14 @@ class Tuple(CompositeParamType):
         return len(self.types)
 
     def convert(
-        self, value: t.Any, param: Parameter | None, ctx: Context | None
-    ) -> t.Any:
+        self, value: Any, param: Union["Parameter", None], ctx: Union["Context", None]
+    ) -> Any:
         len_type = len(self.types)
         len_value = len(value)
 
         if len_value != len_type:
             self.fail(
-                ngettext(
-                    "{len_type} values are required, but {len_value} was given.",
-                    "{len_type} values are required, but {len_value} were given.",
-                    len_value,
-                ).format(len_type=len_type, len_value=len_value),
+                f"{len_type} values are required, but {len_value} given.",
                 param=param,
                 ctx=ctx,
             )
@@ -690,8 +617,8 @@ class Tuple(CompositeParamType):
         )
 
 
-def convert_type(ty: t.Any | None, default: t.Any | None = None) -> ParamType:
-    """Find the most appropriate :class:`ParamType` for the given Python
+def convert_type(ty: Any | None, default: Any | None = None) -> ParamType:
+    """Find the most appropriate `ParamType` for the given Python
     type. If the type isn't provided, it can be inferred from a default
     value.
     """
@@ -737,40 +664,30 @@ def convert_type(ty: t.Any | None, default: t.Any | None = None) -> ParamType:
     if guessed_type:
         return STRING
 
-    if __debug__:
-        try:
-            if issubclass(ty, ParamType):
-                raise AssertionError(
-                    f"Attempted to use an uninstantiated parameter type ({ty})."
-                )
-        except TypeError:
-            # ty is an instance (correct), so issubclass fails.
-            pass
-
     return FuncParamType(ty)
 
 
-#: A unicode string parameter type which is the implicit default.  This
-#: can also be selected by using ``str`` as type.
+# A unicode string parameter type which is the implicit default.  This
+# can also be selected by using ``str`` as type.
 STRING = StringParamType()
 
-#: An integer parameter.  This can also be selected by using ``int`` as
-#: type.
+# An integer parameter.  This can also be selected by using ``int`` as
+# type.
 INT = IntParamType()
 
-#: A floating point value parameter.  This can also be selected by using
-#: ``float`` as type.
+# A floating point value parameter.  This can also be selected by using
+# ``float`` as type.
 FLOAT = FloatParamType()
 
-#: A boolean parameter.  This is the default for boolean flags.  This can
-#: also be selected by using ``bool`` as a type.
+# A boolean parameter.  This is the default for boolean flags.  This can
+# also be selected by using ``bool`` as a type.
 BOOL = BoolParamType()
 
-#: A UUID parameter.
+# A UUID parameter.
 UUID = UUIDParameterType()
 
 
-class OptionHelpExtra(t.TypedDict, total=False):
+class OptionHelpExtra(TypedDict, total=False):
     envvars: tuple[str, ...]
     default: str
     range: str

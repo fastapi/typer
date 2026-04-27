@@ -1848,6 +1848,7 @@ name = "typer"
 source = { editable = "." }
 dependencies = [
     { name = "annotated-doc" },
+    { name = "colorama", marker = "sys_platform == 'win32'" },
     { name = "rich" },
     { name = "shellingham" },
 ]
@@ -1913,6 +1914,7 @@ tests = [
 [package.metadata]
 requires-dist = [
     { name = "annotated-doc", specifier = ">=0.0.2" },
+    { name = "colorama", marker = "sys_platform == 'win32'" },
     { name = "rich", specifier = ">=12.3.0" },
     { name = "shellingham", specifier = ">=1.3.0" },
 ]

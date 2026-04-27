@@ -1,7 +1,5 @@
-from __future__ import annotations
-
-import collections.abc as cabc
 import textwrap
+from collections.abc import Iterator
 from contextlib import contextmanager
 
 
@@ -25,7 +23,7 @@ class TextWrapper(textwrap.TextWrapper):
             cur_line.append(reversed_chunks.pop())
 
     @contextmanager
-    def extra_indent(self, indent: str) -> cabc.Iterator[None]:
+    def extra_indent(self, indent: str) -> Iterator[None]:
         old_initial_indent = self.initial_indent
         old_subsequent_indent = self.subsequent_indent
         self.initial_indent += indent

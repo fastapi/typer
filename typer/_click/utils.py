@@ -1,12 +1,20 @@
-from __future__ import annotations
-
-import collections.abc as cabc
 import os
 import re
 import sys
-import typing as t
+from collections.abc import Callable, Iterable, Iterator
 from functools import update_wrapper
 from types import ModuleType, TracebackType
+from typing import (
+    IO,
+    Any,
+    AnyStr,
+    BinaryIO,
+    Literal,
+    ParamSpec,
+    TextIO,
+    TypeVar,
+    cast,
+)
 
 from ._compat import (
     WIN,
@@ -22,39 +30,25 @@ from ._compat import (
 )
 from .globals import resolve_color_default
 
-if t.TYPE_CHECKING:
-    import typing_extensions as te
-
-    P = te.ParamSpec("P")
-
-R = t.TypeVar("R")
+P = ParamSpec("P")
+R = TypeVar("R")
 
 
 def _posixify(name: str) -> str:
     return "-".join(name.split()).lower()
 
 
-def safecall(func: t.Callable[P, R]) -> t.Callable[P, R | None]:
+def safecall(func: Callable[P, R]) -> Callable[P, R | None]:
     """Wraps a function so that it swallows exceptions."""
 
     def wrapper(*args: P.args, **kwargs: P.kwargs) -> R | None:
         try:
             return func(*args, **kwargs)
-        except Exception:
+        except Exception:  # pragma: no cover
             pass
-        return None
+        return None  # pragma: no cover
 
     return update_wrapper(wrapper, func)
-
-
-def make_str(value: t.Any) -> str:
-    """Converts a value into a valid string."""
-    if isinstance(value, bytes):
-        try:
-            return value.decode(sys.getfilesystemencoding())
-        except UnicodeError:
-            return value.decode("utf-8", "replace")
-    return str(value)
 
 
 def make_default_short_help(help: str, max_length: int = 45) -> str:
@@ -127,7 +121,7 @@ class LazyFile:
         self.encoding = encoding
         self.errors = errors
         self.atomic = atomic
-        self._f: t.IO[t.Any] | None
+        self._f: IO[Any] | None
         self.should_close: bool
 
         if self.name == "-":
@@ -141,7 +135,7 @@ class LazyFile:
             self._f = None
             self.should_close = True
 
-    def __getattr__(self, name: str) -> t.Any:
+    def __getattr__(self, name: str) -> Any:
         return getattr(self.open(), name)
 
     def __repr__(self) -> str:
@@ -149,9 +143,9 @@ class LazyFile:
             return repr(self._f)
         return f"<unopened file '{format_filename(self.name)}' {self.mode}>"
 
-    def open(self) -> t.IO[t.Any]:
+    def open(self) -> IO[Any]:
         """Opens the file if it's not yet open.  This call might fail with
-        a :exc:`FileError`.  Not handling this error will produce an error
+        a `FileError`.  Not handling this error will produce an error
         that Click shows.
         """
         if self._f is not None:
@@ -160,7 +154,7 @@ class LazyFile:
             rv, self.should_close = open_stream(
                 self.name, self.mode, self.encoding, self.errors, atomic=self.atomic
             )
-        except OSError as e:
+        except OSError as e:  # pragma: no cover
             from .exceptions import FileError
 
             raise FileError(self.name, hint=e.strerror) from e
@@ -179,7 +173,7 @@ class LazyFile:
         if self.should_close:
             self.close()
 
-    def __enter__(self) -> LazyFile:
+    def __enter__(self) -> "LazyFile":
         return self
 
     def __exit__(
@@ -190,23 +184,23 @@ class LazyFile:
     ) -> None:
         self.close_intelligently()
 
-    def __iter__(self) -> cabc.Iterator[t.AnyStr]:
+    def __iter__(self) -> Iterator[AnyStr]:
         self.open()
         return iter(self._f)  # type: ignore
 
 
 def echo(
-    message: t.Any | None = None,
-    file: t.IO[t.Any] | None = None,
+    message: Any | None = None,
+    file: IO[Any] | None = None,
     nl: bool = True,
     err: bool = False,
     color: bool | None = None,
 ) -> None:
     """Print a message and newline to stdout or a file. This should be
-    used instead of :func:`print` because it provides better support
+    used instead of `print` because it provides better support
     for different data, files, and environments.
 
-    Compared to :func:`print`, this does the following:
+    Compared to `print`, this does the following:
 
     -   Ensures that the output encoding is not misconfigured on Linux.
     -   Supports Unicode in the Windows console.
@@ -216,29 +210,6 @@ def echo(
     -   Removes ANSI color and style codes if the output does not look
         like an interactive terminal.
     -   Always flushes the output.
-
-    :param message: The string or bytes to output. Other objects are
-        converted to strings.
-    :param file: The file to write to. Defaults to ``stdout``.
-    :param err: Write to ``stderr`` instead of ``stdout``.
-    :param nl: Print a newline after the message. Enabled by default.
-    :param color: Force showing or hiding colors and other styles. By
-        default Click will remove color if the output does not look like
-        an interactive terminal.
-
-    .. versionchanged:: 6.0
-        Support Unicode output on the Windows console. Click does not
-        modify ``sys.stdout``, so ``sys.stdout.write()`` and ``print()``
-        will still not support Unicode.
-
-    .. versionchanged:: 4.0
-        Added the ``color`` parameter.
-
-    .. versionadded:: 3.0
-        Added the ``err`` parameter.
-
-    .. versionchanged:: 2.0
-        Support colors on Windows if colorama is installed.
     """
     if file is None:
         if err:
@@ -298,12 +269,8 @@ def echo(
     file.flush()
 
 
-def get_binary_stream(name: t.Literal["stdin", "stdout", "stderr"]) -> t.BinaryIO:
-    """Returns a system stream for byte processing.
-
-    :param name: the name of the stream to open.  Valid names are ``'stdin'``,
-                 ``'stdout'`` and ``'stderr'``
-    """
+def get_binary_stream(name: Literal["stdin", "stdout", "stderr"]) -> BinaryIO:
+    """Returns a system stream for byte processing."""
     opener = binary_streams.get(name)
     if opener is None:
         raise TypeError(f"Unknown standard stream '{name}'")
@@ -311,19 +278,14 @@ def get_binary_stream(name: t.Literal["stdin", "stdout", "stderr"]) -> t.BinaryI
 
 
 def get_text_stream(
-    name: t.Literal["stdin", "stdout", "stderr"],
+    name: Literal["stdin", "stdout", "stderr"],
     encoding: str | None = None,
     errors: str | None = "strict",
-) -> t.TextIO:
+) -> TextIO:
     """Returns a system stream for text processing.  This usually returns
     a wrapped stream around a binary stream returned from
-    :func:`get_binary_stream` but it also can take shortcuts for already
+    `get_binary_stream` but it also can take shortcuts for already
     correctly configured streams.
-
-    :param name: the name of the stream to open.  Valid names are ``'stdin'``,
-                 ``'stdout'`` and ``'stderr'``
-    :param encoding: overrides the detected default encoding.
-    :param errors: overrides the default error mode.
     """
     opener = text_streams.get(name)
     if opener is None:
@@ -352,11 +314,6 @@ def format_filename(
     -   None of ``LANG/LC_*`` are set. Python assumes ``LANG=C.UTF-8``.
     -   Python is started in UTF-8 mode  with  ``PYTHONUTF8=1`` or ``-X utf8``.
         Python opens stdout and stderr with ``errors="surrogateescape"``.
-
-    :param filename: formats a filename for UI display.  This will also convert
-                     the filename into unicode without failing.
-    :param shorten: this optionally shortens the filename to strip of the
-                    path that leads up to it.
     """
     if shorten:
         filename = os.path.basename(filename)
@@ -392,17 +349,6 @@ def get_app_dir(app_name: str, roaming: bool = True, force_posix: bool = False) 
       ``C:\Users\<user>\AppData\Roaming\Foo Bar``
     Windows (not roaming):
       ``C:\Users\<user>\AppData\Local\Foo Bar``
-
-    .. versionadded:: 2.0
-
-    :param app_name: the application name.  This should be properly capitalized
-                     and can contain whitespace.
-    :param roaming: controls if the folder should be roaming or not on Windows.
-                    Has no effect otherwise.
-    :param force_posix: if this is set to `True` then on any POSIX system the
-                        folder will be stored in the home folder with a leading
-                        dot instead of the XDG config home or darwin's
-                        application support folder.
     """
     if WIN:
         key = "APPDATA" if roaming else "LOCALAPPDATA"
@@ -431,19 +377,19 @@ class PacifyFlushWrapper:
     pipe, all calls and attributes are proxied.
     """
 
-    def __init__(self, wrapped: t.IO[t.Any]) -> None:
+    def __init__(self, wrapped: IO[Any]) -> None:
         self.wrapped = wrapped
 
     def flush(self) -> None:
         try:
             self.wrapped.flush()
-        except OSError as e:
+        except OSError as e:  # pragma: no cover
             import errno
 
             if e.errno != errno.EPIPE:
                 raise
 
-    def __getattr__(self, attr: str) -> t.Any:
+    def __getattr__(self, attr: str) -> Any:
         return getattr(self.wrapped, attr)
 
 
@@ -459,16 +405,6 @@ def _detect_program_name(
     name for help text. Files are only shown as their name without the
     path. ``python`` is only shown for modules, and the full path to
     ``sys.executable`` is not shown.
-
-    :param path: The Python file being executed. Python puts this in
-        ``sys.argv[0]``, which is used by default.
-    :param _main: The ``__main__`` module. This should only be passed
-        during internal testing.
-
-    .. versionadded:: 8.0
-        Based on command args detection in the Werkzeug reloader.
-
-    :meta private:
     """
     if _main is None:
         _main = sys.modules["__main__"]
@@ -492,7 +428,7 @@ def _detect_program_name(
     # Executed a module, like "python -m example".
     # Rewritten by Python from "-m script" to "/path/to/script.py".
     # Need to look at main module to determine how it was executed.
-    py_module = t.cast(str, _main.__package__)
+    py_module = cast(str, _main.__package__)
     name = os.path.splitext(os.path.basename(path))[0]
 
     # A submodule like "example.cli".
@@ -503,33 +439,13 @@ def _detect_program_name(
 
 
 def _expand_args(
-    args: cabc.Iterable[str],
+    args: Iterable[str],
     *,
     user: bool = True,
     env: bool = True,
     glob_recursive: bool = True,
 ) -> list[str]:
-    """Simulate Unix shell expansion with Python functions.
-
-    See :func:`glob.glob`, :func:`os.path.expanduser`, and
-    :func:`os.path.expandvars`.
-
-    This is intended for use on Windows, where the shell does not do any
-    expansion. It may not exactly match what a Unix shell would do.
-
-    :param args: List of command line arguments to expand.
-    :param user: Expand user home directory.
-    :param env: Expand environment variables.
-    :param glob_recursive: ``**`` matches directories recursively.
-
-    .. versionchanged:: 8.1
-        Invalid glob patterns are treated as empty expansions rather
-        than raising an error.
-
-    .. versionadded:: 8.0
-
-    :meta private:
-    """
+    """Simulate Unix shell expansion with Python functions."""
     from glob import glob
 
     out = []
@@ -543,7 +459,7 @@ def _expand_args(
 
         try:
             matches = glob(arg, recursive=glob_recursive)
-        except re.error:
+        except re.error:  # pragma: no cover
             matches = []
 
         if not matches:
