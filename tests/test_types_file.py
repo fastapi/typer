@@ -1,3 +1,4 @@
+import builtins
 import subprocess
 import sys
 from io import BytesIO, StringIO, TextIOWrapper
@@ -210,7 +211,7 @@ def test_pacify_flush_wrapper() -> None:
             self.name = "wrapped-stream"
 
         def flush(self) -> None:
-            return None
+            return None  # pragma: no cover
 
     wrapped = PacifyFlushWrapper(Wrapped())
     assert wrapped.name == "wrapped-stream"
@@ -277,6 +278,23 @@ def test_stream_unknown() -> None:
 def test_format_filename() -> None:
     filename = b"folder/subdir/demo.txt"
     assert typer.format_filename(filename, shorten=True) == "demo.txt"
+
+
+def test_file_error(monkeypatch, tmp_path: Path) -> None:
+    file_path = tmp_path / "cannot-open.txt"
+    real_open = builtins.open
+
+    def fake_open(path, *args, **kwargs):
+        if Path(path) == file_path:
+            raise OSError()
+        return real_open(path, *args, **kwargs)
+
+    monkeypatch.setattr("builtins.open", fake_open)
+    result = runner.invoke(app, ["write-text", f"--file-out={file_path}"])
+    assert result.exit_code == 1
+    assert "Could not open file" in result.output
+    assert "cannot-open.txt" in result.output
+    assert "unknown error" in result.output
 
 
 @needs_windows

@@ -154,7 +154,7 @@ class LazyFile:
             rv, self.should_close = open_stream(
                 self.name, self.mode, self.encoding, self.errors, atomic=self.atomic
             )
-        except OSError as e:  # pragma: no cover
+        except OSError as e:
             from .exceptions import FileError
 
             raise FileError(self.name, hint=e.strerror) from e

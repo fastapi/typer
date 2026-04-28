@@ -126,6 +126,45 @@ def test_callback_2_untyped_parameters():
     assert "value is: Camila" in result.stdout
 
 
+def test_bad_parameter_callback() -> None:
+    app = typer.Typer()
+
+    def name_callback(value: str) -> str:
+        raise typer.BadParameter("custom validation failed", param_hint="--name")
+
+    @app.command()
+    def main(name: str = typer.Option(..., callback=name_callback)) -> None:
+        typer.echo(name)
+
+    result = runner.invoke(app, ["--name", "Camila"])
+    assert result.exit_code == 2
+    assert "Invalid value for --name: custom validation failed" in result.stderr
+
+
+def test_bad_parameter_main() -> None:
+    app = typer.Typer()
+
+    @app.command()
+    def main() -> None:
+        raise typer.BadParameter("custom validation failed")
+
+    result = runner.invoke(app, [])
+    assert result.exit_code == 2
+    assert "Invalid value: custom validation failed" in result.stderr
+
+
+def test_click_exception_show_default_file() -> None:
+    app = typer.Typer()
+
+    @app.command()
+    def main() -> None:
+        raise typer.ClickException("custom click failure")
+
+    result = runner.invoke(app, [])
+    assert result.exit_code == 1
+    assert "Error: custom click failure" in result.stderr
+
+
 def test_callback_3_untyped_parameters():
     app = typer.Typer()
 

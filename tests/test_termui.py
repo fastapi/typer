@@ -367,7 +367,7 @@ def test_echo_empty_output() -> None:
             super().flush()
 
         def write(self, s: str) -> int:
-            raise AssertionError("write should not be called for empty output")
+            raise AssertionError("Empty output")  # pragma: no cover
 
     stream = FlushTrackingTextStream()
     typer.echo("", file=stream, nl=False)
