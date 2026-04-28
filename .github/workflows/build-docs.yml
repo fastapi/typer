@@ -16,6 +16,7 @@ jobs:
     # Required permissions
     permissions:
       pull-requests: read
+    timeout-minutes: 5
     # Set job outputs to values from filter step
     outputs:
       docs: ${{ steps.filter.outputs.docs }}
@@ -45,6 +46,7 @@ jobs:
       - changes
     if: ${{ needs.changes.outputs.docs == 'true' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Dump GitHub context
         env:
@@ -87,6 +89,7 @@ jobs:
     needs:
       - build-docs
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Decide whether the needed jobs succeeded or failed
         uses: re-actors/alls-green@05ac9388f0aebcb5727afa17fcccfecd6f8ec5fe # v1.2.2
