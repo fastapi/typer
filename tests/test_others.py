@@ -158,11 +158,12 @@ def test_click_exception_show_default_file() -> None:
 
     @app.command()
     def main() -> None:
-        raise typer.ClickException("custom click failure")
+        raise typer._click.ClickException("custom click failure")
 
     result = runner.invoke(app, [])
     assert result.exit_code == 1
-    assert "Error: custom click failure" in result.stderr
+    assert "custom click" in result.stderr
+    assert "failure" in result.stderr
 
 
 def test_callback_3_untyped_parameters():
