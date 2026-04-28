@@ -1,4 +1,3 @@
-import builtins
 import subprocess
 import sys
 from io import BytesIO, StringIO, TextIOWrapper
@@ -282,12 +281,10 @@ def test_format_filename() -> None:
 
 def test_file_error(monkeypatch, tmp_path: Path) -> None:
     file_path = tmp_path / "cannot-open.txt"
-    real_open = builtins.open
 
     def fake_open(path, *args, **kwargs):
         if Path(path) == file_path:
             raise OSError()
-        return real_open(path, *args, **kwargs)
 
     monkeypatch.setattr("builtins.open", fake_open)
     result = runner.invoke(app, ["write-text", f"--file-out={file_path}"])

@@ -126,19 +126,30 @@ def test_callback_2_untyped_parameters():
     assert "value is: Camila" in result.stdout
 
 
-def test_bad_parameter_callback() -> None:
+@pytest.mark.parametrize(
+    ("param_hint", "option_decls", "expected_message"),
+    [
+        ("--name", (), "Invalid value for --name"),
+        (None, ("--name", "-n"), "Invalid value for '--name' / '-n'"),
+    ],
+)
+def test_bad_parameter_callback(
+    param_hint: str | None, option_decls: tuple[str, ...], expected_message: str
+) -> None:
     app = typer.Typer()
 
-    def name_callback(value: str) -> str:
-        raise typer.BadParameter("custom validation failed", param_hint="--name")
+    def my_bad(value: str) -> str:
+        kwargs = {"param_hint": param_hint} if param_hint is not None else {}
+        raise typer.BadParameter("custom validation failed", **kwargs)
 
     @app.command()
-    def main(name: str = typer.Option(..., callback=name_callback)) -> None:
-        typer.echo(name)
+    def main(name: str = typer.Option(..., *option_decls, callback=my_bad)) -> None:
+        typer.echo(name)  # pragma: no cover
 
     result = runner.invoke(app, ["--name", "Camila"])
     assert result.exit_code == 2
-    assert "Invalid value for --name: custom validation failed" in result.stderr
+    assert expected_message in result.stderr
+    assert "custom validation failed" in result.stderr
 
 
 def test_bad_parameter_main() -> None:
@@ -153,8 +164,73 @@ def test_bad_parameter_main() -> None:
     assert "Invalid value: custom validation failed" in result.stderr
 
 
-def test_click_exception_show_default_file() -> None:
+@pytest.mark.parametrize(
+    ("kw", "msg"),
+    [
+        (
+            {"param_hint": ["--name", "-n"], "param_type": "parameter"},
+            "Missing parameter '--name' / '-n'.",
+        ),
+        ({"param_type": "value"}, "Missing value."),
+    ],
+)
+def test_missing_parameter_msg(kw: dict[str, object], msg: str) -> None:
+    app = typer.Typer(rich_markup_mode=None)
+
+    @app.command()
+    def main() -> None:
+        raise typer._click.exceptions.MissingParameter(**kw)
+
+    result = runner.invoke(app, [])
+    assert result.exit_code == 2
+    assert msg in result.stderr
+
+
+def test_missing_parameter_callback_msg() -> None:
+    def my_cb(ctx: typer.Context, param: typer.CallbackParam, value: str) -> str:
+        raise typer._click.exceptions.MissingParameter(
+            message="My bad", ctx=ctx, param=param, param_type="parameter"
+        )
+
+    app = typer.Typer(rich_markup_mode=None)
+
+    @app.command()
+    def main(
+        mode: Annotated[
+            typing.Literal["alpha", "beta"],
+            typer.Option(..., "--mode", callback=my_cb),
+        ],
+    ) -> None:
+        typer.echo(mode)  # pragma: no cover
+
+    result = runner.invoke(app, ["--mode", "alpha"])
+    assert result.exit_code == 2
+    assert "Missing parameter '--mode'." in result.stderr
+    assert "My bad. Choose from:" in result.stderr
+    assert "alpha" in result.stderr
+    assert "beta" in result.stderr
+    result_msg = runner.invoke(app, ["--mode", "alpha"], standalone_mode=False)
+    assert isinstance(result_msg.exception, typer._click.exceptions.MissingParameter)
+    assert str(result_msg.exception) == "My bad"
+
+
+def test_missing_parameter_str() -> None:
+    def my_cb(ctx: typer.Context, param: typer.CallbackParam, value: str) -> str:
+        raise typer._click.exceptions.MissingParameter(ctx=ctx, param=param)
+
     app = typer.Typer()
+
+    @app.command()
+    def main(mode: str = typer.Option(..., "--mode", callback=my_cb)) -> None:
+        typer.echo(mode)  # pragma: no cover
+
+    result2 = runner.invoke(app, ["--mode", "alpha"], standalone_mode=False)
+    assert isinstance(result2.exception, typer._click.exceptions.MissingParameter)
+    assert str(result2.exception) == "Missing parameter: mode"
+
+
+def test_click_exception_show_default_file() -> None:
+    app = typer.Typer(rich_markup_mode=None)
 
     @app.command()
     def main() -> None:
@@ -164,6 +240,19 @@ def test_click_exception_show_default_file() -> None:
     assert result.exit_code == 1
     assert "custom click" in result.stderr
     assert "failure" in result.stderr
+
+
+def test_no_args_is_help_show() -> None:
+    app = typer.Typer(rich_markup_mode=None)
+
+    @app.callback(invoke_without_command=True, no_args_is_help=True)
+    def main() -> None:
+        return None  # pragma: no cover
+
+    result = runner.invoke(app, [])
+    assert result.exit_code == 2
+    assert "Usage:" in result.stderr
+    assert "Show this message and exit." in result.stderr
 
 
 def test_callback_3_untyped_parameters():
