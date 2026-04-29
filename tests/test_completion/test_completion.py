@@ -3,9 +3,12 @@ import subprocess
 import sys
 from pathlib import Path
 
+from typer._click.shell_completion import CompletionItem
+
 from docs_src.typer_app import tutorial001_py310 as mod
 
 from ..utils import needs_bash, needs_linux, requires_completion_permission
+from . import completion_option_then_argument as mod_option_arg
 
 
 @needs_bash
@@ -164,3 +167,27 @@ def test_completion_source_pwsh():
         "Register-ArgumentCompleter -Native -CommandName tutorial001_py310.py -ScriptBlock $scriptblock"
         in result.stdout
     )
+
+
+def test_completion_option_argument() -> None:
+    file_name = Path(mod_option_arg.__file__).name
+    result = subprocess.run(
+        [sys.executable, "-m", "coverage", "run", mod_option_arg.__file__, " "],
+        capture_output=True,
+        encoding="utf-8",
+        env={
+            **os.environ,
+            f"_{file_name.upper()}_COMPLETE": "complete_bash",
+            "COMP_WORDS": f"{file_name} --name chosen ",
+            "COMP_CWORD": "3",
+        },
+    )
+    assert "arg-choice" in result.stdout
+    assert "opt-choice" not in result.stdout
+
+
+def test_completion_item_getattr() -> None:
+    item = CompletionItem("demo", source="envvar")
+
+    assert item.source == "envvar"
+    assert item.missing is None

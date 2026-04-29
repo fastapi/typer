@@ -160,7 +160,7 @@ def split_arg_string(string: str) -> list[str]:
     try:
         for token in lex:
             out.append(token)
-    except ValueError:
+    except ValueError:  # pragma: no cover
         # Raised when end-of-string is reached in an invalid state. Use
         # the partial token as-is. The quote or escape character is in
         # lex.state, not lex.token.
@@ -258,7 +258,7 @@ def _resolve_context(
                 ) as sub_ctx:
                     ctx = sub_ctx
                     args = ctx._protected_args + ctx.args
-            else:
+            else:  # pragma: no cover
                 break
 
     return ctx
