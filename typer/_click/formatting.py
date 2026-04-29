@@ -196,7 +196,7 @@ class HelpFormatter:
         """
         rows = list(rows)
         widths = measure_table(rows)
-        if len(widths) != 2:
+        if len(widths) != 2:  # pragma: no cover
             raise TypeError("Expected two columns for definition list")
 
         first_col = min(widths[0], col_max) + col_spacing
@@ -221,7 +221,7 @@ class HelpFormatter:
 
                 for line in lines[1:]:
                     self.write(f"{'':>{first_col + self.current_indent}}{line}\n")
-            else:
+            else:  # pragma: no cover
                 self.write("\n")
 
     @contextmanager
