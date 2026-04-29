@@ -2,6 +2,23 @@
 
 ## Latest Changes
 
+### Internal
+
+* ⬆ Bump ruff from 0.15.11 to 0.15.12. PR [#1722](https://github.com/fastapi/typer/pull/1722) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump prek from 0.3.10 to 0.3.11. PR [#1723](https://github.com/fastapi/typer/pull/1723) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
+## 0.25.0 (2026-04-26)
+
+### Features
+
+* 🚸 Don't truncate code lines in traceback when formatted with Rich. PR [#1695](https://github.com/fastapi/typer/pull/1695) by [@YuriiMotov](https://github.com/YuriiMotov).
+
+## 0.24.2 (2026-04-22)
+
+### Fixes
+
+* 🐛 Ensure that `typer.launch` forwards correctly when launching a file. PR [#1708](https://github.com/fastapi/typer/pull/1708) by [@svlandeg](https://github.com/svlandeg).
+
 ### Refactors
 
 * 🎨 Ensure `ty` runs without errors. PR [#1628](https://github.com/fastapi/typer/pull/1628) by [@svlandeg](https://github.com/svlandeg).
@@ -17,6 +34,13 @@
 
 ### Internal
 
+* ⬆ Bump mypy from 1.20.1 to 1.20.2. PR [#1715](https://github.com/fastapi/typer/pull/1715) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump prek from 0.3.9 to 0.3.10. PR [#1716](https://github.com/fastapi/typer/pull/1716) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pydantic-settings from 2.13.1 to 2.14.0. PR [#1713](https://github.com/fastapi/typer/pull/1713) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ty from 0.0.31 to 0.0.32. PR [#1711](https://github.com/fastapi/typer/pull/1711) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pydantic from 2.13.2 to 2.13.3. PR [#1712](https://github.com/fastapi/typer/pull/1712) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pygments from 2.19.2 to 2.20.0. PR [#1667](https://github.com/fastapi/typer/pull/1667) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pymdown-extensions from 10.20 to 10.21.2. PR [#1710](https://github.com/fastapi/typer/pull/1710) by [@YuriiMotov](https://github.com/YuriiMotov).
 * ⬆ Bump actions/cache from 5.0.4 to 5.0.5. PR [#1700](https://github.com/fastapi/typer/pull/1700) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pydantic from 2.13.1 to 2.13.2. PR [#1703](https://github.com/fastapi/typer/pull/1703) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump actions/upload-artifact from 7.0.0 to 7.0.1. PR [#1701](https://github.com/fastapi/typer/pull/1701) by [@dependabot[bot]](https://github.com/apps/dependabot).
