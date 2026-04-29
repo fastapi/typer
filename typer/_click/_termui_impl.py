@@ -1,20 +1,17 @@
 """
-This module contains implementations for the termui module. To keep the
-import time of Click down, some infrequently used functionality is
-placed in this module and only imported as needed.
+To keep the import times down, some infrequently used termui functionality
+is placed here and only imported as needed.
 """
 
-from __future__ import annotations
-
-import collections.abc as cabc
 import contextlib
 import math
 import os
 import sys
 import time
-import typing as t
+from collections.abc import Callable, Iterable, Iterator
 from io import StringIO
 from types import TracebackType
+from typing import Generic, TextIO, TypeVar, cast
 
 from ._compat import (
     CYGWIN,
@@ -26,7 +23,7 @@ from ._compat import (
 )
 from .utils import echo
 
-V = t.TypeVar("V")
+V = TypeVar("V")
 
 if os.name == "nt":
     BEFORE_BAR = "\r"
@@ -36,10 +33,10 @@ else:
     AFTER_BAR = "\033[?25h\n"
 
 
-class ProgressBar(t.Generic[V]):
+class ProgressBar(Generic[V]):
     def __init__(
         self,
-        iterable: cabc.Iterable[V] | None,
+        iterable: Iterable[V] | None,
         length: int | None = None,
         fill_char: str = "#",
         empty_char: str = " ",
@@ -49,9 +46,9 @@ class ProgressBar(t.Generic[V]):
         show_eta: bool = True,
         show_percent: bool | None = None,
         show_pos: bool = False,
-        item_show_func: t.Callable[[V | None], str | None] | None = None,
+        item_show_func: Callable[[V | None], str | None] | None = None,
         label: str | None = None,
-        file: t.TextIO | None = None,
+        file: TextIO | None = None,
         color: bool | None = None,
         update_min_steps: int = 1,
         width: int = 30,
@@ -72,7 +69,7 @@ class ProgressBar(t.Generic[V]):
 
             # There are no standard streams attached to write to. For example,
             # pythonw on Windows.
-            if file is None:
+            if file is None:  # pragma: no cover
                 file = StringIO()
 
         self.file = file
@@ -87,13 +84,13 @@ class ProgressBar(t.Generic[V]):
 
             length = length_hint(iterable, -1)
 
-            if length == -1:
+            if length == -1:  # pragma: no cover
                 length = None
         if iterable is None:
-            if length is None:
+            if length is None:  # pragma: no cover
                 raise TypeError("iterable or length is required")
-            iterable = t.cast("cabc.Iterable[V]", range(length))
-        self.iter: cabc.Iterable[V] = iter(iterable)
+            iterable = cast("Iterable[V]", range(length))
+        self.iter: Iterable[V] = iter(iterable)
         self.length = length
         self.pos: int = 0
         self.avg: list[float] = []
@@ -108,7 +105,7 @@ class ProgressBar(t.Generic[V]):
         self._is_atty = isatty(self.file)
         self._last_line: str | None = None
 
-    def __enter__(self) -> ProgressBar[V]:
+    def __enter__(self) -> "ProgressBar[V]":
         self.entered = True
         self.render_progress()
         return self
@@ -121,7 +118,7 @@ class ProgressBar(t.Generic[V]):
     ) -> None:
         self.render_finish()
 
-    def __iter__(self) -> cabc.Iterator[V]:
+    def __iter__(self) -> Iterator[V]:
         if not self.entered:
             raise RuntimeError("You need to use progress bars in a with block.")
         self.render_progress()
@@ -297,25 +294,8 @@ class ProgressBar(t.Generic[V]):
 
         self.eta_known = self.length is not None
 
-    def update(self, n_steps: int, current_item: V | None = None) -> None:
-        """Update the progress bar by advancing a specified number of
-        steps, and optionally set the ``current_item`` for this new
-        position.
-
-        :param n_steps: Number of steps to advance.
-        :param current_item: Optional item to set as ``current_item``
-            for the updated position.
-
-        .. versionchanged:: 8.0
-            Added the ``current_item`` optional parameter.
-
-        .. versionchanged:: 8.0
-            Only render when the number of steps meets the
-            ``update_min_steps`` threshold.
-        """
-        if current_item is not None:
-            self.current_item = current_item
-
+    def update(self, n_steps: int) -> None:
+        """Update the progress bar by advancing a specified number of steps."""
         self._completed_intervals += n_steps
 
         if self._completed_intervals >= self.update_min_steps:
@@ -328,7 +308,7 @@ class ProgressBar(t.Generic[V]):
         self.current_item = None
         self.finished = True
 
-    def generator(self) -> cabc.Iterator[V]:
+    def generator(self) -> Iterator[V]:
         """Return a generator which yields the items added to the bar
         during construction, and updates the progress bar *after* the
         yielded block returns.
@@ -340,7 +320,7 @@ class ProgressBar(t.Generic[V]):
         # `iter(bar)` and `next(bar)`. `next()` in particular may call
         # `self.generator()` repeatedly, and this must remain safe in
         # order for that interface to work.
-        if not self.entered:
+        if not self.entered:  # pragma: no cover
             raise RuntimeError("You need to use progress bars in a with block.")
 
         if not self._is_atty:
@@ -400,7 +380,7 @@ def open_url(url: str, wait: bool = False, locate: bool = False) -> int:
         except OSError:
             # Command not found
             return 127
-    elif CYGWIN:
+    elif CYGWIN:  # pragma: no cover
         if locate:
             url = _unquote_file(url)
             args = ["cygstart", os.path.dirname(url)]
@@ -424,7 +404,8 @@ def open_url(url: str, wait: bool = False, locate: bool = False) -> int:
         if wait:
             return c.wait()
         return 0
-    except OSError:
+    except OSError:  # pragma: no cover
+        # TODO: remove this part, doesn't get hit by Typer code paths?
         if url.startswith(("http://", "https://")) and not locate and not wait:
             import webbrowser
 
@@ -450,7 +431,7 @@ if sys.platform == "win32":
     import msvcrt
 
     @contextlib.contextmanager
-    def raw_terminal() -> cabc.Iterator[int]:
+    def raw_terminal() -> Iterator[int]:
         yield -1
 
     def getchar(echo: bool) -> str:
@@ -485,9 +466,9 @@ if sys.platform == "win32":
         # is doing the right thing in more situations than with `getch`.
 
         if echo:
-            func = t.cast(t.Callable[[], str], msvcrt.getwche)
+            func = cast(Callable[[], str], msvcrt.getwche)
         else:
-            func = t.cast(t.Callable[[], str], msvcrt.getwch)
+            func = cast(Callable[[], str], msvcrt.getwch)
 
         rv = func()
 
@@ -504,8 +485,8 @@ else:
     import tty
 
     @contextlib.contextmanager
-    def raw_terminal() -> cabc.Iterator[int]:
-        f: t.TextIO | None
+    def raw_terminal() -> Iterator[int]:
+        f: TextIO | None
         fd: int
 
         if not isatty(sys.stdin):
@@ -527,14 +508,14 @@ else:
 
                 if f is not None:
                     f.close()
-        except termios.error:
+        except termios.error:  # pragma: no cover
             pass
 
     def getchar(echo: bool) -> str:
         with raw_terminal() as fd:
             ch = os.read(fd, 32).decode(get_best_encoding(sys.stdin), "replace")
 
-            if echo and isatty(sys.stdout):
+            if echo and isatty(sys.stdout):  # pragma: no cover
                 sys.stdout.write(ch)
 
             _translate_ch_to_exc(ch)

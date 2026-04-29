@@ -22,62 +22,57 @@ Copyright 2002-2006 Python Software Foundation. All rights reserved.
 # maintained by the Python Software Foundation.
 # Copyright 2001-2006 Gregory P. Ward
 # Copyright 2002-2006 Python Software Foundation
-from __future__ import annotations
-
-import collections.abc as cabc
-import typing as t
 from collections import deque
-from gettext import gettext as _
-from gettext import ngettext
+from collections.abc import Sequence
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    TypeVar,
+    Union,
+)
 
-from ._utils import FLAG_NEEDS_VALUE, UNSET
 from .exceptions import BadArgumentUsage, BadOptionUsage, NoSuchOption, UsageError
 
-if t.TYPE_CHECKING:
+if TYPE_CHECKING:
     from typer.core import TyperArgument as CoreArgument
     from typer.core import TyperOption as CoreOption
 
-    from ._utils import T_FLAG_NEEDS_VALUE, T_UNSET
     from .core import Context
     from .core import Parameter as CoreParameter
 
-V = t.TypeVar("V")
+V = TypeVar("V")
 
 
 def _unpack_args(
-    args: cabc.Sequence[str], nargs_spec: cabc.Sequence[int]
-) -> tuple[cabc.Sequence[str | cabc.Sequence[str | None] | None], list[str]]:
+    args: Sequence[str], nargs_spec: Sequence[int]
+) -> tuple[Sequence[str | Sequence[str | None] | None], list[str]]:
     """Given an iterable of arguments and an iterable of nargs specifications,
     it returns a tuple with all the unpacked arguments at the first index
     and all remaining arguments as the second.
 
     The nargs specification is the number of arguments that should be consumed
     or `-1` to indicate that this position should eat up all the remainders.
-
-    Missing items are filled with ``UNSET``.
     """
     args = deque(args)
     nargs_spec = deque(nargs_spec)
-    rv: list[str | tuple[str | T_UNSET, ...] | T_UNSET] = []
+    rv: list[str | tuple[str | None, ...] | None] = []
     spos: int | None = None
 
-    def _fetch(c: deque[V]) -> V | T_UNSET:
+    def _fetch(c: deque[V]) -> V | None:
         try:
             if spos is None:
                 return c.popleft()
             else:
                 return c.pop()
         except IndexError:
-            return UNSET
+            return None
 
     while nargs_spec:
         nargs = _fetch(nargs_spec)
-
-        if nargs is None:
-            continue
+        assert nargs is not None
 
         if nargs == 1:
-            rv.append(_fetch(args))  # type: ignore[arg-type]
+            rv.append(_fetch(args))
         elif nargs > 1:
             x = [_fetch(args) for _ in range(nargs)]
 
@@ -88,11 +83,11 @@ def _unpack_args(
 
             rv.append(tuple(x))
         elif nargs < 0:
-            if spos is not None:
+            if spos is not None:  # pragma: no cover
                 raise TypeError("Cannot have two nargs < 0")
 
             spos = len(rv)
-            rv.append(UNSET)
+            rv.append(None)
 
     # spos is the position of the wildcard (star).  If it's not `None`,
     # we fill it with the remainder.
@@ -113,7 +108,7 @@ def _split_opt(opt: str) -> tuple[str, str]:
     return first, opt[1:]
 
 
-def _normalize_opt(opt: str, ctx: Context | None) -> str:
+def _normalize_opt(opt: str, ctx: Union["Context", None]) -> str:
     if ctx is None or ctx.token_normalize_func is None:
         return opt
     prefix, opt = _split_opt(opt)
@@ -123,12 +118,12 @@ def _normalize_opt(opt: str, ctx: Context | None) -> str:
 class _Option:
     def __init__(
         self,
-        obj: CoreOption,
-        opts: cabc.Sequence[str],
+        obj: "CoreOption",
+        opts: Sequence[str],
         dest: str | None,
-        action: str | None = None,
+        action: str = "store",
         nargs: int = 1,
-        const: t.Any | None = None,
+        const: Any | None = None,
     ):
         self._short_opts = []
         self._long_opts = []
@@ -136,7 +131,7 @@ class _Option:
 
         for opt in opts:
             prefix, value = _split_opt(opt)
-            if not prefix:
+            if not prefix:  # pragma: no cover
                 raise ValueError(f"Invalid start character for option ({opt})")
             self.prefixes.add(prefix[0])
             if len(prefix) == 1 and len(value) == 1:
@@ -144,9 +139,6 @@ class _Option:
             else:
                 self._long_opts.append(opt)
                 self.prefixes.add(prefix)
-
-        if action is None:
-            action = "store"
 
         self.dest = dest
         self.action = action
@@ -158,7 +150,7 @@ class _Option:
     def takes_value(self) -> bool:
         return self.action in ("store", "append")
 
-    def process(self, value: t.Any, state: _ParsingState) -> None:
+    def process(self, value: Any, state: "_ParsingState") -> None:
         if self.action == "store":
             state.opts[self.dest] = value  # type: ignore
         elif self.action == "store_const":
@@ -169,37 +161,36 @@ class _Option:
             state.opts.setdefault(self.dest, []).append(self.const)  # type: ignore
         elif self.action == "count":
             state.opts[self.dest] = state.opts.get(self.dest, 0) + 1  # type: ignore
-        else:
+        else:  # pragma: no cover
             raise ValueError(f"unknown action '{self.action}'")
         state.order.append(self.obj)
 
 
 class _Argument:
-    def __init__(self, obj: CoreArgument, dest: str | None, nargs: int = 1):
+    def __init__(self, obj: "CoreArgument", dest: str | None, nargs: int = 1):
         self.dest = dest
         self.nargs = nargs
         self.obj = obj
 
     def process(
         self,
-        value: str | cabc.Sequence[str | None] | None | T_UNSET,
-        state: _ParsingState,
+        value: str | Sequence[str | None] | None,
+        state: "_ParsingState",
     ) -> None:
         if self.nargs > 1:
-            assert isinstance(value, cabc.Sequence)
-            holes = sum(1 for x in value if x is UNSET)
+            assert value is not None
+            holes = sum(1 for x in value if x is None)
             if holes == len(value):
-                value = UNSET
+                value = None
             elif holes != 0:
                 raise BadArgumentUsage(
-                    _("Argument {name!r} takes {nargs} values.").format(
-                        name=self.dest, nargs=self.nargs
-                    )
+                    f"Argument {self.dest!r} takes {self.nargs} values."
                 )
 
-        # We failed to collect any argument value so we consider the argument as unset.
-        if value == ():
-            value = UNSET
+        if self.nargs == -1 and self.obj.envvar is not None and value == ():
+            # Replace empty tuple with None so that a value from the
+            # environment may be tried.
+            value = None
 
         state.opts[self.dest] = value  # type: ignore
         state.order.append(self.obj)
@@ -207,7 +198,7 @@ class _Argument:
 
 class _ParsingState:
     def __init__(self, rargs: list[str]) -> None:
-        self.opts: dict[str, t.Any] = {}
+        self.opts: dict[str, Any] = {}
         self.largs: list[str] = []
         self.rargs = rargs
         self.order: list[CoreParameter] = []
@@ -222,27 +213,19 @@ class _OptionParser:
     It's not nearly as extensible as optparse or argparse as it does not
     implement features that are implemented on a higher level (such as
     types or defaults).
-
-    :param ctx: optionally the :class:`~click.Context` where this parser
-                should go with.
-
-    .. deprecated:: 8.2
-        Will be removed in Click 9.0.
     """
 
-    def __init__(self, ctx: Context | None = None) -> None:
-        #: The :class:`~click.Context` for this parser.  This might be
-        #: `None` for some advanced use cases.
+    def __init__(self, ctx: Union["Context", None] = None) -> None:
         self.ctx = ctx
-        #: This controls how the parser deals with interspersed arguments.
-        #: If this is set to `False`, the parser will stop on the first
-        #: non-option.  Click uses this to implement nested subcommands
-        #: safely.
+        # This controls how the parser deals with interspersed arguments.
+        # If this is set to `False`, the parser will stop on the first
+        # non-option.  Click uses this to implement nested subcommands
+        # safely.
         self.allow_interspersed_args: bool = True
-        #: This tells the parser how to deal with unknown options.  By
-        #: default it will error out (which is sensible), but there is a
-        #: second mode where it will ignore it and continue processing
-        #: after shifting all the unknown options into the resulting args.
+        # This tells the parser how to deal with unknown options.  By
+        # default it will error out (which is sensible), but there is a
+        # second mode where it will ignore it and continue processing
+        # after shifting all the unknown options into the resulting args.
         self.ignore_unknown_options: bool = False
 
         if ctx is not None:
@@ -256,12 +239,12 @@ class _OptionParser:
 
     def add_option(
         self,
-        obj: CoreOption,
-        opts: cabc.Sequence[str],
+        obj: "CoreOption",
+        opts: Sequence[str],
         dest: str | None,
-        action: str | None = None,
+        action: str = "store",
         nargs: int = 1,
-        const: t.Any | None = None,
+        const: Any | None = None,
     ) -> None:
         """Adds a new option named `dest` to the parser.  The destination
         is not inferred (unlike with optparse) and needs to be explicitly
@@ -279,7 +262,9 @@ class _OptionParser:
         for opt in option._long_opts:
             self._long_opt[opt] = option
 
-    def add_argument(self, obj: CoreArgument, dest: str | None, nargs: int = 1) -> None:
+    def add_argument(
+        self, obj: "CoreArgument", dest: str | None, nargs: int = 1
+    ) -> None:
         """Adds a positional argument named `dest` to the parser.
 
         The `obj` can be used to identify the option in the order list
@@ -289,7 +274,7 @@ class _OptionParser:
 
     def parse_args(
         self, args: list[str]
-    ) -> tuple[dict[str, t.Any], list[str], list[CoreParameter]]:
+    ) -> tuple[dict[str, Any], list[str], list["CoreParameter"]]:
         """Parses positional arguments and returns ``(values, args, order)``
         for the parsed options and arguments as well as the leftover
         arguments if there are any.  The order is a list of objects as they
@@ -372,13 +357,11 @@ class _OptionParser:
 
             value = self._get_value_from_state(opt, option, state)
 
-        elif explicit_value is not None:
-            raise BadOptionUsage(
-                opt, _("Option {name!r} does not take a value.").format(name=opt)
-            )
+        elif explicit_value is not None:  # pragma: no cover
+            raise BadOptionUsage(opt, f"Option {opt!r} does not take a value.")
 
         else:
-            value = UNSET
+            value = None
 
         option.process(value, state)
 
@@ -408,7 +391,7 @@ class _OptionParser:
                 value = self._get_value_from_state(opt, option, state)
 
             else:
-                value = UNSET
+                value = None
 
             option.process(value, state)
 
@@ -424,38 +407,19 @@ class _OptionParser:
 
     def _get_value_from_state(
         self, option_name: str, option: _Option, state: _ParsingState
-    ) -> str | cabc.Sequence[str] | T_FLAG_NEEDS_VALUE:
+    ) -> str | Sequence[str]:
         nargs = option.nargs
 
-        value: str | cabc.Sequence[str] | T_FLAG_NEEDS_VALUE
+        value: str | Sequence[str]
 
         if len(state.rargs) < nargs:
-            if option.obj._depr_flag_needs_value:
-                # Option allows omitting the value.
-                value = FLAG_NEEDS_VALUE
-            else:
-                raise BadOptionUsage(
-                    option_name,
-                    ngettext(
-                        "Option {name!r} requires an argument.",
-                        "Option {name!r} requires {nargs} arguments.",
-                        nargs,
-                    ).format(name=option_name, nargs=nargs),
-                )
+            msg = "an argument." if nargs == 1 else f"{nargs} arguments."
+            raise BadOptionUsage(
+                option_name,
+                f"Option {option_name!r} requires {msg}",
+            )
         elif nargs == 1:
-            next_rarg = state.rargs[0]
-
-            if (
-                option.obj._depr_flag_needs_value
-                and isinstance(next_rarg, str)
-                and next_rarg[:1] in self._opt_prefixes
-                and len(next_rarg) > 1
-            ):
-                # The next arg looks like the start of an option, don't
-                # use it as the value if omitting the value is allowed.
-                value = FLAG_NEEDS_VALUE
-            else:
-                value = state.rargs.pop(0)
+            value = state.rargs.pop(0)
         else:
             value = tuple(state.rargs[:nargs])
             del state.rargs[:nargs]
@@ -493,36 +457,3 @@ class _OptionParser:
                 raise
 
             state.largs.append(arg)
-
-
-def __getattr__(name: str) -> object:
-    import warnings
-
-    if name in {
-        "OptionParser",
-        "Argument",
-        "Option",
-        "split_opt",
-        "normalize_opt",
-        "ParsingState",
-    }:
-        warnings.warn(
-            f"'parser.{name}' is deprecated and will be removed in Click 9.0."
-            " The old parser is available in 'optparse'.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        return globals()[f"_{name}"]
-
-    if name == "split_arg_string":
-        from .shell_completion import split_arg_string
-
-        warnings.warn(
-            "Importing 'parser.split_arg_string' is deprecated, it will only be"
-            " available in 'shell_completion' in Click 9.0.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        return split_arg_string
-
-    raise AttributeError(name)

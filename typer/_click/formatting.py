@@ -1,8 +1,5 @@
-from __future__ import annotations
-
-import collections.abc as cabc
+from collections.abc import Iterable, Iterator, Sequence
 from contextlib import contextmanager
-from gettext import gettext as _
 
 from ._compat import term_len
 from .parser import _split_opt
@@ -11,7 +8,7 @@ from .parser import _split_opt
 FORCED_WIDTH: int | None = None
 
 
-def measure_table(rows: cabc.Iterable[tuple[str, str]]) -> tuple[int, ...]:
+def measure_table(rows: Iterable[tuple[str, str]]) -> tuple[int, ...]:
     widths: dict[int, int] = {}
 
     for row in rows:
@@ -22,8 +19,8 @@ def measure_table(rows: cabc.Iterable[tuple[str, str]]) -> tuple[int, ...]:
 
 
 def iter_rows(
-    rows: cabc.Iterable[tuple[str, str]], col_count: int
-) -> cabc.Iterator[tuple[str, ...]]:
+    rows: Iterable[tuple[str, str]], col_count: int
+) -> Iterator[tuple[str, ...]]:
     for row in rows:
         yield row + ("",) * (col_count - len(row))
 
@@ -43,15 +40,6 @@ def wrap_text(
     If paragraphs are handled, a paragraph can be prefixed with an empty
     line containing the ``\\b`` character (``\\x08``) to indicate that
     no rewrapping should happen in that block.
-
-    :param text: the text that should be rewrapped.
-    :param width: the maximum width for the text.
-    :param initial_indent: the initial indent that should be placed on the
-                           first line as a string.
-    :param subsequent_indent: the indent string that should be placed on
-                              each consecutive line.
-    :param preserve_paragraphs: if this flag is set then the wrapping will
-                                intelligently handle paragraphs.
     """
     from ._textwrap import TextWrapper
 
@@ -107,10 +95,6 @@ class HelpFormatter:
     exposed so that developers can write their own fancy outputs.
 
     At present, it always writes into memory.
-
-    :param indent_increment: the additional increment for each level.
-    :param width: the width for the text.  This defaults to the terminal
-                  width clamped to a maximum of 78.
     """
 
     def __init__(
@@ -145,15 +129,9 @@ class HelpFormatter:
         self.current_indent -= self.indent_increment
 
     def write_usage(self, prog: str, args: str = "", prefix: str | None = None) -> None:
-        """Writes a usage line into the buffer.
-
-        :param prog: the program name.
-        :param args: whitespace separated list of arguments.
-        :param prefix: The prefix for the first line. Defaults to
-            ``"Usage: "``.
-        """
+        """Writes a usage line into the buffer."""
         if prefix is None:
-            prefix = f"{_('Usage:')} "
+            prefix = "Usage: "
 
         usage_prefix = f"{prefix:>{self.current_indent}}{prog} "
         text_width = self.width - self.current_indent
@@ -209,21 +187,16 @@ class HelpFormatter:
 
     def write_dl(
         self,
-        rows: cabc.Sequence[tuple[str, str]],
+        rows: Sequence[tuple[str, str]],
         col_max: int = 30,
         col_spacing: int = 2,
     ) -> None:
         """Writes a definition list into the buffer.  This is how options
         and commands are usually formatted.
-
-        :param rows: a list of two item tuples for the terms and values.
-        :param col_max: the maximum width of the first column.
-        :param col_spacing: the number of spaces between the first and
-                            second column.
         """
         rows = list(rows)
         widths = measure_table(rows)
-        if len(widths) != 2:
+        if len(widths) != 2:  # pragma: no cover
             raise TypeError("Expected two columns for definition list")
 
         first_col = min(widths[0], col_max) + col_spacing
@@ -248,15 +221,13 @@ class HelpFormatter:
 
                 for line in lines[1:]:
                     self.write(f"{'':>{first_col + self.current_indent}}{line}\n")
-            else:
+            else:  # pragma: no cover
                 self.write("\n")
 
     @contextmanager
-    def section(self, name: str) -> cabc.Iterator[None]:
+    def section(self, name: str) -> Iterator[None]:
         """Helpful context manager that writes a paragraph, a heading,
         and the indents.
-
-        :param name: the section name that is written as heading.
         """
         self.write_paragraph()
         self.write_heading(name)
@@ -267,7 +238,7 @@ class HelpFormatter:
             self.dedent()
 
     @contextmanager
-    def indentation(self) -> cabc.Iterator[None]:
+    def indentation(self) -> Iterator[None]:
         """A context manager that increases the indentation."""
         self.indent()
         try:
@@ -280,7 +251,7 @@ class HelpFormatter:
         return "".join(self.buffer)
 
 
-def join_options(options: cabc.Sequence[str]) -> tuple[str, bool]:
+def join_options(options: Sequence[str]) -> tuple[str, bool]:
     """Given a list of option strings this joins them in the most appropriate
     way and returns them in the form ``(formatted_string,
     any_prefix_is_slash)`` where the second item in the tuple is a flag that

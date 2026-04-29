@@ -204,7 +204,7 @@ def install(
     prog_name: str | None = None,
     complete_var: str | None = None,
 ) -> tuple[str, Path]:
-    prog_name = prog_name or _click.get_current_context().find_root().info_name
+    prog_name = prog_name or _click.globals.get_current_context().find_root().info_name
     assert prog_name
     if complete_var is None:
         complete_var = "_{}_COMPLETE".format(prog_name.replace("-", "_").upper())

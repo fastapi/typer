@@ -14,7 +14,7 @@ from typing import (
 )
 
 from . import _click
-from ._click import UNSET, types
+from ._click import types
 from ._click.parser import _OptionParser
 from ._typing import Literal
 from .utils import parse_boolean_env_var
@@ -194,10 +194,10 @@ def _main(
                 ctx.exit()
         except EOFError as e:
             _click.echo(file=sys.stderr)
-            raise _click.Abort() from e
+            raise _click.exceptions.Abort() from e
         except KeyboardInterrupt as e:
             raise _click.exceptions.Exit(130) from e
-        except _click.ClickException as e:
+        except _click.exceptions.ClickException as e:
             if not standalone_mode:
                 raise
             # Typer override
@@ -229,7 +229,7 @@ def _main(
             # `ctx.exit(1)` and to `return 1`, the caller won't be able to
             # tell the difference between the two
             return e.exit_code
-    except _click.Abort:
+    except _click.exceptions.Abort:
         if not standalone_mode:
             raise
         # Typer override
@@ -252,7 +252,7 @@ class TyperArgument(_click.core.Parameter):
         # Parameter
         param_decls: list[str],
         type: Any | None = None,
-        required: bool | None = None,
+        required: bool = False,
         default: Any | None = None,
         callback: Callable[..., Any] | None = None,
         nargs: int | None = None,
@@ -284,20 +284,6 @@ class TyperArgument(_click.core.Parameter):
         self.hidden = hidden
         self.rich_help_panel = rich_help_panel
 
-        # Auto-detect the requirement status of the argument if not explicitly set.
-        # TODO: Doesn't hit coverage -> investigate, maybe remove
-        if required is None:
-            # The argument gets automatically required if it has no explicit default
-            # value set and is setup to match at least one value.
-            if default is _click.UNSET:
-                if nargs is not None:
-                    required = nargs > 0
-                else:
-                    required = True
-            # If the argument has a default value, it is not required.
-            else:
-                required = False
-
         super().__init__(
             param_decls=param_decls,
             type=type,
@@ -317,7 +303,8 @@ class TyperArgument(_click.core.Parameter):
     def human_readable_name(self) -> str:
         if self.metavar is not None:
             return self.metavar
-        return self.name.upper()  # type: ignore
+        assert self.name is not None, "self.name or self.metavar should be set"
+        return self.name.upper()
 
     def _get_default_string(
         self,
@@ -453,7 +440,7 @@ class TyperOption(_click.Parameter):
         # Parameter
         param_decls: list[str],
         type: _click.types.ParamType | Any | None = None,
-        required: bool | None = None,
+        required: bool = False,
         default: Any | None = None,
         callback: Callable[..., Any] | None = None,
         nargs: int | None = None,
@@ -488,9 +475,6 @@ class TyperOption(_click.Parameter):
     ):
         if help:
             help = inspect.cleandoc(help)
-
-        # TODO: this was added for mypy: type mismatch between TyperOption and Parameter
-        assert required is not None
 
         super().__init__(
             param_decls,
@@ -528,45 +512,14 @@ class TyperOption(_click.Parameter):
             self.prompt is not None and not self.prompt_required
         )
 
-        if is_flag is None:
-            # if flag_value is not UNSET:
-            #     is_flag = True
-            # elif
-            if self._depr_flag_needs_value:
-                is_flag = False
-            elif self.secondary_opts:
-                is_flag = True
-        elif is_flag is False and not self._depr_flag_needs_value:
-            self._depr_flag_needs_value = self.default is UNSET
-
-        if is_flag:
-            # if self.default is UNSET and not self.required and not self.prompt:
-            #     if multiple:
-            #         self.default = ()
-
-            if type is None:
-                # if flag_value is UNSET:
-                self.type: types.ParamType = types.BoolParamType()
-                # elif isinstance(flag_value, bool):
-                #     self.type = types.BoolParamType()
-                # else:
-                # self.type = types.convert_type(None, flag_value)
+        if is_flag and type is None:
+            self.type: types.ParamType = types.BoolParamType()
 
         self.is_flag: bool = bool(is_flag)
         self.is_bool_flag: bool = bool(
             is_flag and isinstance(self.type, types.BoolParamType)
         )
-        # self._depr_flag_value: Any = UNSET
 
-        # Set boolean flag default to False if unset and not required.
-        if self.is_bool_flag:
-            if self.default is UNSET and not self.required:
-                self.default = False
-
-        # if self.default is True and self.flag_value is not UNSET:
-        #     self.default = self.flag_value
-
-        # if self._depr_flag_value is UNSET:
         if self.is_flag:
             self._depr_flag_value = True
         else:
@@ -574,11 +527,8 @@ class TyperOption(_click.Parameter):
 
         # Counting. TODO: test or remove? Not currently in coverage.
         self.count = count
-        if count:
-            if type is None:
-                self.type = _click.IntRange(min=0)
-            if self.default is _click.UNSET:
-                self.default = 0
+        if count and type is None:
+            self.type = _click.types.IntRange(min=0)
 
         self.allow_from_autoenv = allow_from_autoenv
         self.help = help
@@ -675,93 +625,6 @@ class TyperOption(_click.Parameter):
                 nargs=self.nargs,
             )
 
-    def get_help_extra(self, ctx: _click.Context) -> _click.types.OptionHelpExtra:
-        extra: _click.types.OptionHelpExtra = {}
-
-        # TODO: no coverage. Test or remove?
-        if self.show_envvar:
-            envvar = self.envvar
-
-            if envvar is None:
-                if (
-                    self.allow_from_autoenv
-                    and ctx.auto_envvar_prefix is not None
-                    and self.name is not None
-                ):
-                    envvar = f"{ctx.auto_envvar_prefix}_{self.name.upper()}"
-
-            if envvar is not None:
-                if isinstance(envvar, str):
-                    extra["envvars"] = (envvar,)
-                else:
-                    extra["envvars"] = tuple(str(d) for d in envvar)
-
-        # Temporarily enable resilient parsing to avoid type casting
-        # failing for the default. Might be possible to extend this to
-        # help formatting in general.
-        resilient = ctx.resilient_parsing
-        ctx.resilient_parsing = True
-
-        try:
-            default_value = self.get_default(ctx, call=False)
-        finally:
-            ctx.resilient_parsing = resilient
-
-        show_default = False
-        show_default_is_str = False
-
-        # TODO: no coverage. Test or remove?
-        if self.show_default is not None:
-            if isinstance(self.show_default, str):
-                show_default_is_str = show_default = True
-            else:
-                show_default = self.show_default
-        elif ctx.show_default is not None:
-            show_default = ctx.show_default
-
-        if show_default_is_str or (
-            show_default and (default_value not in (None, _click.UNSET))
-        ):
-            if show_default_is_str:
-                default_string = f"({self.show_default})"
-            elif isinstance(default_value, (list, tuple)):
-                default_string = ", ".join(str(d) for d in default_value)
-            elif isinstance(default_value, Enum):
-                default_string = default_value.name
-            elif inspect.isfunction(default_value):
-                default_string = _("(dynamic)")
-            elif self.is_bool_flag and self.secondary_opts:
-                # For boolean flags that have distinct True/False opts,
-                # use the opt without prefix instead of the value.
-                default_string = _split_opt(
-                    (self.opts if default_value else self.secondary_opts)[0]
-                )[1]
-            elif self.is_bool_flag and not self.secondary_opts and not default_value:
-                default_string = ""
-            elif default_value == "":
-                default_string = '""'
-            else:
-                default_string = str(default_value)
-
-            if default_string:
-                extra["default"] = default_string
-
-        # TODO: no coverage. Test or remove?
-        if (
-            isinstance(self.type, _click.types._NumberRangeBase)
-            # skip count with default range type
-            and not (self.count and self.type.min == 0 and self.type.max is None)
-        ):
-            range_str = self.type._describe_range()
-
-            if range_str:
-                extra["range"] = range_str
-
-        if self.required:
-            extra["required"] = "required"
-
-        return extra
-
     def prompt_for_value(self, ctx: _click.Context) -> Any:
         """This is an alternative flow that can be activated in the full
         value processing if a value does not exist.  It will prompt the
@@ -776,10 +639,6 @@ class TyperOption(_click.Parameter):
 
         # A boolean flag can use a simplified [y/n] confirmation prompt.
         if self.is_bool_flag:
-            # If we have no boolean default, we force the user to explicitly provide
-            # one.
-            if default in (_click.UNSET, None):
-                default = None
             # Nothing prevent you to declare an option that is simultaneously:
             # 1) auto-detected as a boolean flag,
             # 2) allowed to prompt, and
@@ -789,9 +648,9 @@ class TyperOption(_click.Parameter):
             # because the option is still a boolean flag. That way, instead of [y/n],
             # we get [Y/n] or [y/N] depending on the truthy value of the default.
             # Refs: https://github.com/pallets/click/pull/3030#discussion_r2289180249
-            else:
+            if default is not None:
                 default = bool(default)
-            return _click.confirm(self.prompt, default)
+            return _click.termui.confirm(self.prompt, default)
 
         # If show_default is set to True/False, provide this to `prompt` as well. For
         # non-bool values of `show_default`, we use `prompt`'s default behavior
@@ -799,11 +658,11 @@ class TyperOption(_click.Parameter):
         if isinstance(self.show_default, bool):
             prompt_kwargs["show_default"] = self.show_default
 
-        return _click.prompt(
+        return _click.termui.prompt(
             self.prompt,
             # Use ``None`` to inform the prompt() function to reiterate until a valid
             # value is provided by the user if we have no default.
-            default=None if default is _click.UNSET else default,
+            default=default,
             type=self.type,
             hide_input=self.hide_input,
             show_choices=self.show_choices,
@@ -841,44 +700,19 @@ class TyperOption(_click.Parameter):
     def consume_value(
         self, ctx: _click.Context, opts: Mapping[str, _click.Parameter]
     ) -> tuple[Any, _click.core.ParameterSource]:
-        """For :class:`Option`, the value can be collected from an interactive prompt
-        if the option is a flag that needs a value (and the :attr:`prompt` property is
+        """For `Option`, the value can be collected from an interactive prompt
+        if the option is a flag that needs a value (and the `prompt` property is
         set).
 
         Additionally, this method handles flag option that are activated without a
-        value, in which case the :attr:`flag_value` is returned.
+        value, in which case the `flag_value` is returned.
         """
         value, source = super().consume_value(ctx, opts)
 
-        # TODO: evaluate this code. Needed for Typer?
-
-        # Re-interpret a multiple option which has been sent as-is by the parser.
-        # Here we replace each occurrence of value-less flags (marked by the
-        # FLAG_NEEDS_VALUE sentinel) with the flag_value.
-        if (
-            self.multiple
-            and value is not _click.UNSET
-            and source
-            not in (
-                _click.core.ParameterSource.DEFAULT,
-                _click.core.ParameterSource.DEFAULT_MAP,
-            )
-            and any(v is _click._utils.FLAG_NEEDS_VALUE for v in value)
-        ):
-            value = list(value)
-            source = _click.core.ParameterSource.COMMANDLINE
-
         # The value wasn't set, or used the param's default, prompt for one to the user
         # if prompting is enabled.
-        elif (
-            (
-                value is _click.UNSET
-                or source
-                in (
-                    _click.core.ParameterSource.DEFAULT,
-                    _click.core.ParameterSource.DEFAULT_MAP,
-                )
-            )
+        if (
+            source in {None, _click.core.ParameterSource.DEFAULT}
             and self.prompt is not None
             and (self.required or self.prompt_required)
             and not ctx.resilient_parsing
@@ -887,28 +721,6 @@ class TyperOption(_click.Parameter):
             source = _click.core.ParameterSource.PROMPT
 
         return value, source
-
-    def process_value(self, ctx: _click.Context, value: Any) -> Any:
-        # process_value has to be overridden on Options in order to capture
-        # `value == UNSET` cases before `type_cast_value()` gets called.
-        #
-        # Refs:
-        # https://github.com/pallets/click/issues/3069
-        if (
-            self.is_flag
-            and not self.required
-            and self.is_bool_flag
-            and value is _click.UNSET
-        ):
-            value = False
-
-            if self.callback is not None:
-                value = self.callback(ctx, self, value)
-
-            return value
-
-        # in the normal case, rely on Parameter.process_value
-        return super().process_value(ctx, value)
 
     def _get_default_string(
         self,
@@ -1034,10 +846,6 @@ class TyperOption(_click.Parameter):
 def _value_is_missing(param: _click.Parameter, value: Any) -> bool:
     if value is None:
         return True
-
-    # Click 8.3 and beyond
-    # if value is UNSET:
-    #     return True
 
     if (param.nargs != 1 or param.multiple) and value == ():
         return True  # pragma: no cover
@@ -1335,7 +1143,7 @@ class TyperGroup(_click.Command):
     def _click_resolve_command(
         self, ctx: _click.Context, args: list[str]
     ) -> tuple[str | None, _click.Command | None, list[str]]:
-        cmd_name = _click.utils.make_str(args[0])
+        cmd_name = args[0]
         original_cmd_name = cmd_name
 
         # Get the command
@@ -1356,7 +1164,7 @@ class TyperGroup(_click.Command):
     ) -> tuple[str | None, _click.Command | None, list[str]]:
         try:
             return self._click_resolve_command(ctx, args)
-        except _click.UsageError as e:
+        except _click.exceptions.UsageError as e:
             if self.suggest_commands:
                 available_commands = list(self.commands.keys())
                 if available_commands and args:

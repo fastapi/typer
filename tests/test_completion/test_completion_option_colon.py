@@ -165,6 +165,39 @@ def test_completion_colon_powershell_single():
     assert "nvidia/cuda:10.0-devel-ubuntu18.04" not in result.stdout
 
 
+def test_completion_powershell_option_equals_value() -> None:
+    result = subprocess.run(
+        [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
+        capture_output=True,
+        encoding="utf-8",
+        env={
+            **os.environ,
+            "_COLON_EXAMPLE.PY_COMPLETE": "complete_powershell",
+            "_TYPER_COMPLETE_ARGS": "colon_example.py --name=alpine",
+            "_TYPER_COMPLETE_WORD_TO_COMPLETE": "--name=alpine",
+        },
+    )
+    assert "alpine:hello" in result.stdout
+    assert "alpine:latest" in result.stdout
+    assert "nvidia/cuda:10.0-devel-ubuntu18.04" not in result.stdout
+
+
+def test_completion_powershell_option_equals_only() -> None:
+    result = subprocess.run(
+        [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
+        capture_output=True,
+        encoding="utf-8",
+        env={
+            **os.environ,
+            "_COLON_EXAMPLE.PY_COMPLETE": "complete_powershell",
+            "_TYPER_COMPLETE_ARGS": "colon_example.py --name=",
+            "_TYPER_COMPLETE_WORD_TO_COMPLETE": "=",
+        },
+    )
+    assert result.returncode == 0
+    assert result.stdout.strip() == ""
+
+
 def test_completion_colon_pwsh_all():
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
