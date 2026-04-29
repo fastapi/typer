@@ -36,6 +36,12 @@ def hello_all(names: list[str] = typer.Argument(["World"], envvar="NAMES")) -> N
         print(f"Hello {name}!")
 
 
+@app.command()
+def split_variadic_and_pair(items: list[str], pair: tuple[str, str]) -> None:
+    print(f"items={items}")
+    print(f"pair={pair}")
+
+
 runner = CliRunner()
 
 
@@ -101,6 +107,13 @@ def test_split_envvar_value(monkeypatch) -> None:
     assert result.exit_code == 0
     assert "Hello Rick!" in result.output
     assert "Hello Morty!" in result.output
+
+
+def test_list_pair() -> None:
+    result = runner.invoke(app, ["split-variadic-and-pair", "a", "b", "c", "x", "y"])
+    assert result.exit_code == 0
+    assert "items=['a', 'b', 'c']" in result.output
+    assert "pair=('x', 'y')" in result.output
 
 
 def test_float_range_open_bounds_with_clamp_not_allowed():

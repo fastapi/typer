@@ -297,6 +297,18 @@ def test_callback_4_list_none():
     assert "Hello World" in result.stdout
 
 
+def test_multiple_bool_flags() -> None:
+    app = typer.Typer()
+
+    @app.command()
+    def main(choices: list[bool] = typer.Option([], "--accept/--reject")) -> None:
+        print(choices)
+
+    result = runner.invoke(app, ["--accept", "--reject", "--accept"])
+    assert result.exit_code == 0
+    assert "[True, False, True]" in result.stdout
+
+
 def test_empty_list_default_generator():
     def empty_list() -> list[str]:
         return []

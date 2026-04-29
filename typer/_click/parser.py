@@ -69,9 +69,7 @@ def _unpack_args(
 
     while nargs_spec:
         nargs = _fetch(nargs_spec)
-
-        if nargs is None:
-            continue
+        assert nargs is not None
 
         if nargs == 1:
             rv.append(_fetch(args))
@@ -85,7 +83,7 @@ def _unpack_args(
 
             rv.append(tuple(x))
         elif nargs < 0:
-            if spos is not None:
+            if spos is not None:  # pragma: no cover
                 raise TypeError("Cannot have two nargs < 0")
 
             spos = len(rv)
@@ -123,7 +121,7 @@ class _Option:
         obj: "CoreOption",
         opts: Sequence[str],
         dest: str | None,
-        action: str | None = None,
+        action: str = "store",
         nargs: int = 1,
         const: Any | None = None,
     ):
@@ -133,7 +131,7 @@ class _Option:
 
         for opt in opts:
             prefix, value = _split_opt(opt)
-            if not prefix:
+            if not prefix:  # pragma: no cover
                 raise ValueError(f"Invalid start character for option ({opt})")
             self.prefixes.add(prefix[0])
             if len(prefix) == 1 and len(value) == 1:
@@ -141,9 +139,6 @@ class _Option:
             else:
                 self._long_opts.append(opt)
                 self.prefixes.add(prefix)
-
-        if action is None:
-            action = "store"
 
         self.dest = dest
         self.action = action
@@ -166,7 +161,7 @@ class _Option:
             state.opts.setdefault(self.dest, []).append(self.const)  # type: ignore
         elif self.action == "count":
             state.opts[self.dest] = state.opts.get(self.dest, 0) + 1  # type: ignore
-        else:
+        else:  # pragma: no cover
             raise ValueError(f"unknown action '{self.action}'")
         state.order.append(self.obj)
 
@@ -247,7 +242,7 @@ class _OptionParser:
         obj: "CoreOption",
         opts: Sequence[str],
         dest: str | None,
-        action: str | None = None,
+        action: str = "store",
         nargs: int = 1,
         const: Any | None = None,
     ) -> None:
@@ -362,7 +357,7 @@ class _OptionParser:
 
             value = self._get_value_from_state(opt, option, state)
 
-        elif explicit_value is not None:
+        elif explicit_value is not None:  # pragma: no cover
             raise BadOptionUsage(opt, f"Option {opt!r} does not take a value.")
 
         else:
