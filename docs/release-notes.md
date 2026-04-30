@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Features
+
+* 🔧 Add Typer Library Skill for Agents. PR [#1620](https://github.com/fastapi/typer/pull/1620) by [@svlandeg](https://github.com/svlandeg).
+
 ### Internal
 
 * ⬆ Bump ruff from 0.15.11 to 0.15.12. PR [#1722](https://github.com/fastapi/typer/pull/1722) by [@dependabot[bot]](https://github.com/apps/dependabot).
