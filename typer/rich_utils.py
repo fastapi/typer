@@ -379,7 +379,10 @@ def _print_options_panel(
         if (
             isinstance(param, click.Argument)
             and param.name
-            and metavar_str == param.name.upper()
+            and (
+                metavar_str == param.name.upper()
+                or metavar_str == f"[{param.name.upper()}]"
+            )
         ):
             metavar_str = param.type.name.upper()
 
