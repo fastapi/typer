@@ -3,6 +3,7 @@ from typer.testing import CliRunner
 
 runner = CliRunner()
 
+
 def test_boolean_help_display():
     app = typer.Typer()
 
@@ -14,6 +15,7 @@ def test_boolean_help_display():
     assert result.exit_code == 0
     assert "BOOL" in result.stdout
     assert "[default: False]" in result.stdout
+
 
 def test_boolean_argument_help_display():
     app = typer.Typer()

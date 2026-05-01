@@ -387,8 +387,10 @@ def _print_options_panel(
             metavar_str = "BOOL"
 
         # Skip booleans and choices (handled above)
-        if metavar_str != "BOOL" or (isinstance(param, click.Option) and param.show_default):
-             metavar.append(metavar_str)
+        if metavar_str != "BOOL" or (
+            isinstance(param, click.Option) and param.show_default
+        ):
+            metavar.append(metavar_str)
 
         # Range - from
         # https://github.com/pallets/click/blob/c63c70dabd3f86ca68678b4f00951f78f52d0270/src/click/core.py#L2698-L2706  # noqa: E501
