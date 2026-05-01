@@ -3,11 +3,12 @@ from typer.testing import CliRunner
 
 runner = CliRunner()
 
-def test_boolean_help_display():
+
+def test_boolean_help_display() -> None:
     app = typer.Typer()
 
     @app.command()
-    def main(debug: bool = typer.Option(False, "--debug", help="Enable debug mode")):
+    def main(debug: bool = typer.Option(False, "--debug", help="Enable debug mode")) -> None:
         pass
 
     result = runner.invoke(app, ["--help"])
@@ -15,11 +16,12 @@ def test_boolean_help_display():
     assert "BOOL" in result.stdout
     assert "[default: False]" in result.stdout
 
-def test_boolean_argument_help_display():
+
+def test_boolean_argument_help_display() -> None:
     app = typer.Typer()
 
     @app.command()
-    def main(force: bool = typer.Argument(False, help="Force execution")):
+    def main(force: bool = typer.Argument(False, help="Force execution")) -> None:
         pass
 
     result = runner.invoke(app, ["--help"])
