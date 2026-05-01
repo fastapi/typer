@@ -8,7 +8,9 @@ def test_boolean_help_display() -> None:
     app = typer.Typer()
 
     @app.command()
-    def main(debug: bool = typer.Option(False, "--debug", help="Enable debug mode")) -> None:
+    def main(
+        debug: bool = typer.Option(False, "--debug", help="Enable debug mode"),
+    ) -> None:
         pass
 
     result = runner.invoke(app, ["--help"])
