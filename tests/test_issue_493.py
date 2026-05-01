@@ -24,7 +24,9 @@ def test_boolean_help_display_show_default_false() -> None:
 
     @app.command()
     def main(
-        debug: bool = typer.Option(False, "--debug", help="Enable debug mode", show_default=False),
+        debug: bool = typer.Option(
+            False, "--debug", help="Enable debug mode", show_default=False
+        ),
     ) -> None:
         pass
 
@@ -41,7 +43,9 @@ def test_boolean_help_display_true_default_secondary() -> None:
 
     @app.command()
     def main(
-        debug: bool = typer.Option(True, "--debug/--no-debug", help="Enable debug mode"),
+        debug: bool = typer.Option(
+            True, "--debug/--no-debug", help="Enable debug mode"
+        ),
     ) -> None:
         pass
 
@@ -56,7 +60,9 @@ def test_boolean_help_display_false_default_secondary() -> None:
 
     @app.command()
     def main(
-        debug: bool = typer.Option(False, "--debug/--no-debug", help="Enable debug mode"),
+        debug: bool = typer.Option(
+            False, "--debug/--no-debug", help="Enable debug mode"
+        ),
     ) -> None:
         pass
 
