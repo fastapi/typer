@@ -408,7 +408,8 @@ class Typer:
             bool,
             Doc(
                 """
-                Toggle whether or not to add the `--show-sub-commands` option to the app. `False` by default.
+                Toggle whether or not to add the `--show-sub-commands` option to the app.
+                Set to `False` by default.
 
                 **Example**
 
@@ -419,8 +420,8 @@ class Typer:
                 app = typer.Typer(command_tree=True)
                 ```
                 """
-            )
-        ] = False,
+            ),
+        ] = Default(False),
         # Rich settings
         rich_markup_mode: Annotated[
             MarkupMode,
