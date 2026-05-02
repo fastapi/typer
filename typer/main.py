@@ -417,17 +417,17 @@ class Typer:
             bool,
             Doc(
                 """
-            Toggle whether or not to add the `--show-sub-commands` option to the app.
-            Set to `False` by default.
+                Toggle whether or not to add the `--show-sub-commands` option to the app.
+                Set to `False` by default.
 
-            ***Example***
+                ***Example***
 
-            ```python
-            import typer
+                ```python
+                import typer
 
-            app = typer.Typer(command_tree=True)
-            ```
-            """
+                app = typer.Typer(command_tree=True)
+                ```
+                """
             ),
         ] = Default(False),
         # Rich settings
