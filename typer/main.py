@@ -1392,7 +1392,9 @@ def get_command_name(name: str) -> str:
 
 def get_params_convertors_ctx_param_name_from_function(
     callback: Callable[..., Any] | None,
-) -> tuple[list[click.Argument | click.Option | click.Parameter], dict[str, Any], str | None]:
+) -> tuple[
+    list[click.Argument | click.Option | click.Parameter], dict[str, Any], str | None
+]:
     # NOTE: this function does NOT generate click.Parameters, but needs to allow them to be added to the list later
     params: list[click.Argument | click.Option | click.Parameter] = []
     convertors = {}
