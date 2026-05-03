@@ -2,6 +2,23 @@
 
 ## Latest Changes
 
+## 0.25.1 (2026-04-30)
+
+### Features
+
+* 🔧 Add Typer Library Skill for Agents. PR [#1620](https://github.com/fastapi/typer/pull/1620) by [@svlandeg](https://github.com/svlandeg).
+
+### Internal
+
+* ⬆ Bump ruff from 0.15.11 to 0.15.12. PR [#1722](https://github.com/fastapi/typer/pull/1722) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump prek from 0.3.10 to 0.3.11. PR [#1723](https://github.com/fastapi/typer/pull/1723) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
+## 0.25.0 (2026-04-26)
+
+### Features
+
+* 🚸 Don't truncate code lines in traceback when formatted with Rich. PR [#1695](https://github.com/fastapi/typer/pull/1695) by [@YuriiMotov](https://github.com/YuriiMotov).
+
 ## 0.24.2 (2026-04-22)
 
 ### Fixes
