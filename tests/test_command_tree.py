@@ -63,12 +63,8 @@ def test_subcommands_help(args: list[str], expected: bool):
         encoding="utf-8",
     )
     assert result.returncode == 0
-    if expected:
-        assert SUBCMD_FLAG in result.stdout
-        assert SUBCMD_HELP in result.stdout
-    else:
-        assert SUBCMD_FLAG not in result.stdout
-        assert SUBCMD_HELP not in result.stdout
+    assert bool(SUBCMD_FLAG in result.stdout) == expected
+    assert bool(SUBCMD_HELP in result.stdout) == expected
 
 
 def test_subcommands_top_tree():
