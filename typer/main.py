@@ -1351,7 +1351,7 @@ def get_group_from_info(
         context_param_name,
     ) = get_params_convertors_ctx_param_name_from_function(solved_info.callback)
     if command_tree:
-        params.append(get_command_tree_parameter())  # ty: ignore
+        params.append(get_command_tree_parameter())
     cls = solved_info.cls or TyperGroup
     assert issubclass(cls, TyperGroup), f"{cls} should be a subclass of {TyperGroup}"
     group = cls(
@@ -1392,8 +1392,9 @@ def get_command_name(name: str) -> str:
 
 def get_params_convertors_ctx_param_name_from_function(
     callback: Callable[..., Any] | None,
-) -> tuple[list[click.Argument | click.Option], dict[str, Any], str | None]:
-    params = []
+) -> tuple[list[click.Argument | click.Option | click.Parameter], dict[str, Any], str | None]:
+    # NOTE: this function does NOT generate click.Parameters, but needs to allow them to be added to the list later
+    params: list[click.Argument | click.Option | click.Parameter] = []
     convertors = {}
     context_param_name = None
     if callback:
@@ -1438,7 +1439,7 @@ def get_command_from_info(
             context_param_name=context_param_name,
             pretty_exceptions_short=pretty_exceptions_short,
         ),
-        params=params,  # type: ignore
+        params=params,
         help=use_help,
         epilog=command_info.epilog,
         short_help=command_info.short_help,
