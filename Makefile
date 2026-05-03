@@ -5,10 +5,10 @@ _TYPER_FORCE_DISABLE_TERMINAL ?= 1
 # Run autocompletion install tests in the CI
 _TYPER_RUN_INSTALL_COMPLETION_TESTS ?= 1
 
-PYTEST_TARGET ?= 
+PYTEST_TARGET ?=
 PYTEST_ARGS_BASE = -o console_output_style=progress --numprocesses=auto --show-locals
 PYTEST_ARGS_COV ?= --cov --cov-report=term-missing --cov-report=html
-PYTEST_ARGS_USER ?= 
+PYTEST_ARGS_USER ?=
 
 RUN ?= uv run
 LINT_DIRS := typer
