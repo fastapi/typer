@@ -1339,7 +1339,7 @@ def get_group_from_info(
     solved_info = solve_typer_info_defaults(group_info)
     params, context_param_name = _get_params_name_from_function(solved_info.callback)
     if command_tree:
-        params.append(get_command_tree_parameter())  # type: ignore[arg-type]
+        params.append(get_command_tree_parameter())  # ty: ignore
     cls = solved_info.cls or TyperGroup
     assert issubclass(cls, TyperGroup), f"{cls} should be a subclass of {TyperGroup}"
     group = cls(
