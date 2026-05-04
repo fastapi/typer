@@ -212,3 +212,21 @@ Use 'typer._completion_shared._get_shell_name' instead of using \
 
 [tool.ty.terminal]
 error-on-warning = true
+
+[tool.typos.files]
+extend-exclude = [
+    "coverage/",
+    "dist/",
+    "docs/img/",
+    "docs/release-notes.md",
+    "htmlcov/",
+    "site/",
+    "site_build/",
+    "uv.lock",
+]
+
+[tool.typos.default.extend-identifiers]
+alls = "alls"
+
+[tool.typos.default.extend-words]
+Ines = "Ines"
