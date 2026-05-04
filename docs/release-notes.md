@@ -4,6 +4,7 @@
 
 ### Internal
 
+* ⬆ Bump ty from 0.0.33 to 0.0.34. PR [#1729](https://github.com/fastapi/typer/pull/1729) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ty from 0.0.32 to 0.0.33. PR [#1724](https://github.com/fastapi/typer/pull/1724) by [@dependabot[bot]](https://github.com/apps/dependabot).
 
 ## 0.25.1 (2026-04-30)
