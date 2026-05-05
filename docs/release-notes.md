@@ -4,6 +4,7 @@
 
 ### Internal
 
+* 👷 Add pre-commit for typos. PR [#1730](https://github.com/fastapi/typer/pull/1730) by [@tiangolo](https://github.com/tiangolo).
 * ⬆ Bump ty from 0.0.33 to 0.0.34. PR [#1729](https://github.com/fastapi/typer/pull/1729) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ty from 0.0.32 to 0.0.33. PR [#1724](https://github.com/fastapi/typer/pull/1724) by [@dependabot[bot]](https://github.com/apps/dependabot).
 
