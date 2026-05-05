@@ -43,7 +43,7 @@ $ python main.py
 
 ## Exceptions without Rich
 
-You can disable Rich globally using the environmental variable `TYPER_USE_RICH`.
+You can disable Rich globally using the environment variable `TYPER_USE_RICH`.
 
 In this case, Typer will still do some tricks to show you the information **as clearly as possible**:
 
