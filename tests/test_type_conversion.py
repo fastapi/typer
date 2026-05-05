@@ -1,6 +1,6 @@
 from enum import Enum
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional, Union
 
 import click
 import pytest
@@ -46,6 +46,135 @@ def test_union_type_optional():
     result = runner.invoke(app, ["--user", "Camila"])
     assert result.exit_code == 0
     assert "User: Camila" in result.output
+
+
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [("0", "ROOTED!"), ("12", "ID: 12"), ("name", "USER: name")],
+)
+def test_union(value, expected):
+    app = typer.Typer()
+
+    @app.command()
+    def opt(id_or_name: int | str):
+        if isinstance(id_or_name, int):
+            if id_or_name == 0:
+                print("ROOTED!")
+            else:
+                print(f"ID: {id_or_name}")
+        else:
+            print(f"USER: {id_or_name}")
+
+    result = runner.invoke(app, [value])
+    assert result.exit_code == 0
+    assert expected in result.output
+
+
+def test_union_optional():
+    app = typer.Typer()
+
+    @app.command()
+    def cmd(x: int | str | None = None):
+        print(f"x={x!r} ({type(x).__name__})")
+
+    result = runner.invoke(app)
+    assert result.exit_code == 0
+    assert "x=None (NoneType)" in result.output
+
+    result = runner.invoke(app, ["--x", "7"])
+    assert result.exit_code == 0
+    assert "x=7 (int)" in result.output
+
+    result = runner.invoke(app, ["--x", "hello"])
+    assert result.exit_code == 0
+    assert "x='hello' (str)" in result.output
+
+
+def test_union_rejects_invalid():
+    app = typer.Typer()
+
+    @app.command()
+    def cmd(x: int | float):
+        print(x)
+
+    result = runner.invoke(app, ["1"])
+    assert result.exit_code == 0
+    assert "1" in result.output
+
+    result = runner.invoke(app, ["not-a-number"])
+    assert result.exit_code != 0
+
+
+def test_union_metavar_in_help():
+    app = typer.Typer()
+
+    @app.command()
+    def cmd(x: int | str):
+        """Cmd."""
+
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "INTEGER | TEXT" in result.output
+
+
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [("0", "ROOTED!"), ("12", "ID: 12"), ("name", "USER: name")],
+)
+def test_union_pipe(value, expected):
+    app = typer.Typer()
+
+    @app.command()
+    def opt(id_or_name: int | str):
+        if isinstance(id_or_name, int):
+            if id_or_name == 0:
+                print("ROOTED!")
+            else:
+                print(f"ID: {id_or_name}")
+        else:
+            print(f"USER: {id_or_name}")
+
+    result = runner.invoke(app, [value])
+    assert result.exit_code == 0
+    assert expected in result.output
+
+
+def test_union_pipe_optional():
+    app = typer.Typer()
+
+    @app.command()
+    def cmd(x: int | str | None = None):
+        print(f"x={x!r} ({type(x).__name__})")
+
+    result = runner.invoke(app)
+    assert result.exit_code == 0
+    assert "x=None (NoneType)" in result.output
+
+    result = runner.invoke(app, ["--x", "7"])
+    assert result.exit_code == 0
+    assert "x=7 (int)" in result.output
+
+    result = runner.invoke(app, ["--x", "hello"])
+    assert result.exit_code == 0
+    assert "x='hello' (str)" in result.output
+
+
+@pytest.mark.parametrize("args", [[], ["--x", "7"], ["--x", "hello"]])
+def test_union_pipe_and_typing_equivalent(args):
+    def make_app(annotation):
+        app = typer.Typer()
+
+        @app.command()
+        def cmd(x: annotation = None):
+            print(f"x={x!r} ({type(x).__name__})")
+
+        return app
+
+    typing_out = runner.invoke(make_app(Union[int, str, None]), args).output  # noqa: UP007
+    pipe_out = runner.invoke(make_app(int | str | None), args).output
+    optional_out = runner.invoke(make_app(Optional[int | str]), args).output  # noqa: UP045
+
+    assert typing_out == pipe_out == optional_out
 
 
 def test_optional_tuple():
