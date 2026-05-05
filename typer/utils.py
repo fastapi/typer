@@ -1,7 +1,7 @@
 import inspect
 from collections.abc import Callable
 from copy import copy
-from typing import Any, cast
+from typing import Any
 
 from ._typing import Annotated, get_args, get_origin, get_type_hints
 from .models import ArgumentInfo, OptionInfo, ParameterInfo, ParamMeta
@@ -141,9 +141,10 @@ def get_params_from_function(func: Callable[..., Any]) -> dict[str, ParamMeta]:
             if (
                 isinstance(parameter_info, OptionInfo)
                 and parameter_info.default is not ...
+                and isinstance(parameter_info.default, str)
             ):
                 parameter_info.param_decls = (
-                    cast(str, parameter_info.default),
+                    parameter_info.default,
                     *(parameter_info.param_decls or ()),
                 )
                 parameter_info.default = ...
