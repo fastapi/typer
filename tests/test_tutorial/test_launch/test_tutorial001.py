@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 from typer.testing import CliRunner
 
-from docs_src.launch import tutorial001_py39 as mod
+from docs_src.launch import tutorial001_py310 as mod
 
 runner = CliRunner()
 

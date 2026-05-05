@@ -6,7 +6,7 @@ If you are executing an operation that can take some time, you can inform it to 
 
 You can use <a href="https://rich.readthedocs.io/en/stable/progress.html" class="external-link" target="_blank">Rich's Progress Display</a> to show a progress bar, for example:
 
-{* docs_src/progressbar/tutorial001_py39.py hl[4,12] *}
+{* docs_src/progressbar/tutorial001_py310.py hl[4,12] *}
 
 You put the thing that you want to iterate over inside of Rich's `track()`, and then iterate over that.
 
@@ -46,7 +46,7 @@ Rich allows you to display many things in complex and advanced ways.
 
 For example, this will show two spinners:
 
-{* docs_src/progressbar/tutorial002_py39.py hl[4,11:18] *}
+{* docs_src/progressbar/tutorial002_py310.py hl[4,11:18] *}
 
 I can't show you the beautiful animation here in the docs. 😅
 
@@ -75,13 +75,7 @@ If you can use Rich, use the information above, the Rich docs, and skip the rest
 
 ///
 
-But if you can't use Rich, Typer (actually Click) comes with a simple utility to show progress bars.
-
-/// info
-
-`typer.progressbar()` comes directly from Click, you can read more about it in <a href="https://click.palletsprojects.com/en/8.1.x/utils/#showing-progress-bars" class="external-link" target="_blank">Click's docs</a>.
-
-///
+But if you can't use Rich and have it disabled, Typer comes with a simple utility to show progress bars.
 
 ### Use `typer.progressbar`
 
@@ -100,7 +94,7 @@ with typer.progressbar(something) as progress:
 
 And you pass as function argument to `typer.progressbar()` the thing that you would normally iterate over.
 
-{* docs_src/progressbar/tutorial003_py39.py hl[11] *}
+{* docs_src/progressbar/tutorial003_py310.py hl[11] *}
 
 So, if you have a list of users, this could be:
 
@@ -113,7 +107,7 @@ with typer.progressbar(users) as progress:
 
 And the `with` statement using `typer.progressbar()` gives you an object that you can iterate over, just like if it was the same thing that you would iterate over normally.
 
-But by iterating over this object **Typer** (actually Click) will know to update the progress bar:
+But by iterating over this object **Typer** will know to update the progress bar:
 
 ```Python
 users = ["Camila", "Rick", "Morty"]
@@ -163,7 +157,7 @@ The progress bar is generated from the length of the iterable (e.g. the list of 
 
 But if the length is not available (for example, with something that fetches a new user from a web API each time) you can pass an explicit `length` to `typer.progressbar()`.
 
-{* docs_src/progressbar/tutorial004_py39.py hl[18] *}
+{* docs_src/progressbar/tutorial004_py310.py hl[18] *}
 
 Check it:
 
@@ -211,7 +205,7 @@ Remember, you are much better off using <a href="https://rich.readthedocs.io/" c
 
 You can also set a `label`:
 
-{* docs_src/progressbar/tutorial005_py39.py hl[11] *}
+{* docs_src/progressbar/tutorial005_py310.py hl[11] *}
 
 Check it:
 
@@ -227,7 +221,7 @@ If you need to manually iterate over something and update the progress bar irreg
 
 And then calling the `.update()` method in the object from the `with` statement:
 
-{* docs_src/progressbar/tutorial006_py39.py hl[11,17] *}
+{* docs_src/progressbar/tutorial006_py310.py hl[11,17] *}
 
 Check it:
 

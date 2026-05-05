@@ -7,7 +7,7 @@ import typer
 import typer.completion
 from typer.testing import CliRunner
 
-from docs_src.typer_app import tutorial001_py39 as mod
+from docs_src.typer_app import tutorial001_py310 as mod
 
 runner = CliRunner()
 app = mod.app
@@ -45,7 +45,7 @@ def test_completion_show_bash():
         },
     )
     assert (
-        "complete -o default -F _tutorial001_py39py_completion tutorial001_py39.py"
+        "complete -o default -F _tutorial001_py310py_completion tutorial001_py310.py"
         in result.stdout
     )
 
@@ -68,7 +68,9 @@ def test_completion_source_zsh():
             "_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION": "True",
         },
     )
-    assert "compdef _tutorial001_py39py_completion tutorial001_py39.py" in result.stdout
+    assert (
+        "compdef _tutorial001_py310py_completion tutorial001_py310.py" in result.stdout
+    )
 
 
 def test_completion_source_fish():
@@ -89,7 +91,7 @@ def test_completion_source_fish():
             "_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION": "True",
         },
     )
-    assert "complete --command tutorial001_py39.py --no-files" in result.stdout
+    assert "complete --command tutorial001_py310.py --no-files" in result.stdout
 
 
 def test_completion_source_powershell():
@@ -111,7 +113,7 @@ def test_completion_source_powershell():
         },
     )
     assert (
-        "Register-ArgumentCompleter -Native -CommandName tutorial001_py39.py -ScriptBlock $scriptblock"
+        "Register-ArgumentCompleter -Native -CommandName tutorial001_py310.py -ScriptBlock $scriptblock"
         in result.stdout
     )
 
@@ -135,7 +137,7 @@ def test_completion_source_pwsh():
         },
     )
     assert (
-        "Register-ArgumentCompleter -Native -CommandName tutorial001_py39.py -ScriptBlock $scriptblock"
+        "Register-ArgumentCompleter -Native -CommandName tutorial001_py310.py -ScriptBlock $scriptblock"
         in result.stdout
     )
 

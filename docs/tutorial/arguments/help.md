@@ -4,7 +4,7 @@ In the *First Steps* section you saw how to add help for a CLI app/command by ad
 
 Here's how that last example looked like:
 
-{* docs_src/first_steps/tutorial006_py39.py *}
+{* docs_src/first_steps/tutorial006_py310.py *}
 
 Now that you also know how to use `typer.Argument()`, let's use it to add documentation specific for a *CLI argument*.
 
@@ -12,7 +12,7 @@ Now that you also know how to use `typer.Argument()`, let's use it to add docume
 
 You can use the `help` parameter to add a help text for a *CLI argument*:
 
-{* docs_src/arguments/help/tutorial001_an_py39.py hl[9] *}
+{* docs_src/arguments/help/tutorial001_an_py310.py hl[9] *}
 
 And it will be used in the automatic `--help` option:
 
@@ -37,7 +37,7 @@ Options:
 
 And of course, you can also combine that `help` with the <abbr title="a multi-line string as the first expression inside a function (not assigned to any variable) used for documentation">docstring</abbr>:
 
-{* docs_src/arguments/help/tutorial002_an_py39.py hl[9:12] *}
+{* docs_src/arguments/help/tutorial002_an_py310.py hl[9:12] *}
 
 And the `--help` option will combine all the information:
 
@@ -64,7 +64,7 @@ Options:
 
 If you have a *CLI argument* with a default value, like `"World"`:
 
-{* docs_src/arguments/help/tutorial003_an_py39.py hl[9] *}
+{* docs_src/arguments/help/tutorial003_an_py310.py hl[9] *}
 
 It will show that default value in the help text:
 
@@ -89,7 +89,7 @@ Options:
 
 But you can disable that if you want to, with `show_default=False`:
 
-{* docs_src/arguments/help/tutorial004_an_py39.py hl[11] *}
+{* docs_src/arguments/help/tutorial004_an_py310.py hl[11] *}
 
 And then it won't show the default value:
 
@@ -112,19 +112,11 @@ Options:
 
 </div>
 
-/// note | Technical Details
-
-In Click applications the default values are hidden by default. 🙈
-
-In **Typer** these default values are shown by default. 👀
-
-///
-
 ## Custom default string
 
 You can use the same `show_default` to pass a custom string (instead of a `bool`) to customize the default value to be shown in the help text:
 
-{* docs_src/arguments/help/tutorial005_an_py39.py hl[13] *}
+{* docs_src/arguments/help/tutorial005_an_py310.py hl[13] *}
 
 And it will be used in the help text:
 
@@ -169,7 +161,7 @@ But you can customize it with the `metavar` parameter for `typer.Argument()`.
 
 For example, let's say you don't want to have the default of `NAME`, you want to have `username`, in lowercase, and you really want ✨ emojis ✨ everywhere:
 
-{* docs_src/arguments/help/tutorial006_an_py39.py hl[9] *}
+{* docs_src/arguments/help/tutorial006_an_py310.py hl[9] *}
 
 Now the generated help text will have `✨username✨` instead of `NAME`:
 
@@ -195,7 +187,7 @@ You might want to show the help information for *CLI arguments* in different pan
 
 If you have installed Rich as described in the docs for [Printing and Colors](../printing.md){.internal-link target=_blank}, you can set the `rich_help_panel` parameter to the name of the panel where you want this *CLI argument* to be shown:
 
-{* docs_src/arguments/help/tutorial007_an_py39.py hl[12,16] *}
+{* docs_src/arguments/help/tutorial007_an_py310.py hl[12,16] *}
 
 Then, if you check the `--help` option, you will see a default panel named "`Arguments`" for the *CLI arguments* that don't have a custom `rich_help_panel`.
 
@@ -238,7 +230,7 @@ If you want, you can make a *CLI argument* **not** show up in the `Arguments` se
 
 You will probably not want to do this normally, but it's possible:
 
-{* docs_src/arguments/help/tutorial008_an_py39.py hl[9] *}
+{* docs_src/arguments/help/tutorial008_an_py310.py hl[9] *}
 
 Check it:
 
@@ -266,28 +258,10 @@ But it won't show up in the main help text under the `Arguments` section.
 
 ///
 
-### Help text for *CLI arguments* in Click
+### Help text for *CLI arguments*
 
-Click itself doesn't support adding help for *CLI arguments*, and it doesn't generate help for them as in the "`Arguments:`" sections in the examples above.
-
-Not supporting `help` in *CLI arguments* is an intentional <a href="https://click.palletsprojects.com/en/7.x/documentation/#documenting-arguments" class="external-link" target="_blank">design decision in Click</a>:
-
-> This is to follow the general convention of Unix tools of using arguments for only the most necessary things, and to document them in the command help text by referring to them by name.
-
-So, in Click applications, you are expected to write all the documentation for *CLI arguments* by hand in the <abbr title="a multi-line string as the first expression inside a function (not assigned to any variable) used for documentation">docstring</abbr>.
-
----
-
-Nevertheless, **Typer supports `help` for *CLI arguments***. ✨ 🤷‍♂
-
-**Typer** doesn't follow that convention and instead supports `help` to make it easier to have consistent help texts with a consistent format for your CLI programs. 🎨
+**Typer supports `help` for *CLI arguments*** to make it easier to have consistent help texts with a consistent format for your CLI programs. 🎨
 
 This is also to help you create CLI programs that are ✨ awesome ✨ *by default*. With very little code.
 
-If you want to keep Click's convention in a **Typer** app, you can do it with the `hidden` parameter as described above.
-
-/// note | Technical Details
-
-To support `help` in *CLI arguments* **Typer** does a lot of internal work in its own sub-classes of Click's internal classes.
-
-///
+If you don't want the CLI Argument to be shown in help outputs, you can set the `hidden` parameter to `True`.

@@ -47,7 +47,7 @@ content = b"la cig\xc3\xbce\xc3\xb1a trae al ni\xc3\xb1o"
 
 You will get all the correct editor support, attributes, methods, etc for the file-like object:`
 
-{* docs_src/parameter_types/file/tutorial001_an_py39.py hl[9] *}
+{* docs_src/parameter_types/file/tutorial001_an_py310.py hl[9] *}
 
 Check it:
 
@@ -74,7 +74,7 @@ Config line: some more settings
 
 For writing text, you can use `typer.FileTextWrite`:
 
-{* docs_src/parameter_types/file/tutorial002_an_py39.py hl[9:10] *}
+{* docs_src/parameter_types/file/tutorial002_an_py310.py hl[9:10] *}
 
 This would be for writing human text, like:
 
@@ -118,7 +118,7 @@ You will receive `bytes` from it.
 
 It's useful for reading binary files like images:
 
-{* docs_src/parameter_types/file/tutorial003_an_py39.py hl[9] *}
+{* docs_src/parameter_types/file/tutorial003_an_py310.py hl[9] *}
 
 Check it:
 
@@ -147,7 +147,7 @@ Have in mind that you have to pass `bytes` to its `.write()` method, not `str`.
 
 If you have a `str`, you have to encode it first to get `bytes`.
 
-{* docs_src/parameter_types/file/tutorial004_an_py39.py hl[9] *}
+{* docs_src/parameter_types/file/tutorial004_an_py310.py hl[9] *}
 
 <div class="termy">
 
@@ -173,7 +173,7 @@ You can use several configuration parameters for these types (classes) in `typer
     * Read more about it below.
 * `encoding`: to force a specific encoding, e.g. `"utf-8"`.
 * `lazy`: delay <abbr title="input and output, reading and writing files">I/O</abbr> operations. Automatic by default.
-    * By default, when writing files, Click will generate a file-like object that is not yet the actual file. Once you start writing, it will go, open the file and start writing to it, but not before. This is mainly useful to avoid creating the file until you start writing to it. It's normally safe to leave this automatic. But you can overwrite it setting `lazy=False`. By default, it's `lazy=True` for writing and `lazy=False` for reading.
+    * By default, when writing files, Typer will generate a file-like object that is not yet the actual file. Once you start writing, it will go, open the file and start writing to it, but not before. This is mainly useful to avoid creating the file until you start writing to it. It's normally safe to leave this automatic. But you can overwrite it setting `lazy=False`. By default, it's `lazy=True` for writing and `lazy=False` for reading.
 * `atomic`: if true, all writes will actually go to a temporal file and then moved to the final destination after completing. This is useful with files modified frequently by several users/programs.
 
 ## Advanced `mode`
@@ -197,7 +197,7 @@ You can override the `mode` from the defaults above.
 
 For example, you could use `mode="a"` to write "appending" to the same file:
 
-{* docs_src/parameter_types/file/tutorial005_an_py39.py hl[9] *}
+{* docs_src/parameter_types/file/tutorial005_an_py310.py hl[9] *}
 
 /// tip
 
@@ -232,21 +232,3 @@ This is a single line
 ```
 
 </div>
-
-## About the different types
-
-/// info
-
-These are technical details about why the different types/classes provided by **Typer**.
-
-But you don't need this information to be able to use them. You can skip it.
-
-///
-
-**Typer** provides you these different types (classes) because they inherit directly from the actual Python implementation that will be provided underneath for each case.
-
-This way your editor will give you the right type checks and completion for each type.
-
-Even if you use `lazy`. When you use `lazy` Click creates a especial object to delay writes, and serves as a "proxy" to the actual file that will be written. But this especial proxy object doesn't expose the attributes and methods needed for type checks and completion in the editor. If you access those attributes or call the methods, the "proxy" lazy object will call them in the final object and it will all work. But you wouldn't get autocompletion for them.
-
-But because these **Typer** classes inherit from the actual implementation that will be provided underneath (not the lazy object), you will get all the autocompletion and type checks in the editor.

@@ -2,7 +2,7 @@
 
 You can use the normal `print()` to show information on the screen:
 
-{* docs_src/typer_app/tutorial001_py39.py hl[8] *}
+{* docs_src/typer_app/tutorial001_py310.py hl[8] *}
 
 It will show the output normally:
 
@@ -24,7 +24,7 @@ You can also display beautiful and more complex information using <a href="https
 
 For the simplest cases, you can just import `print` from `rich` and use it instead of the standard `print`:
 
-{* docs_src/printing/tutorial001_py39.py hl[2,18] *}
+{* docs_src/printing/tutorial001_py310.py hl[2,18] *}
 
 Just with that, **Rich** will be able to print your data with nice colors and structure:
 
@@ -52,7 +52,7 @@ Here's the data
 
 Rich also supports a <a href="https://rich.readthedocs.io/en/stable/markup.html" class="external-link" target="_blank">custom markup syntax</a> to set colors and styles, for example:
 
-{* docs_src/printing/tutorial002_py39.py hl[9] *}
+{* docs_src/printing/tutorial002_py310.py hl[9] *}
 
 <div class="termy">
 
@@ -76,7 +76,7 @@ When you call Rich's `print`, it automatically creates this object and uses it.
 
 But for advanced use cases, you could create a `Console` yourself.
 
-{* docs_src/printing/tutorial003_py39.py hl[2:3,5,12:15] *}
+{* docs_src/printing/tutorial003_py310.py hl[2:3,5,12:15] *}
 
 In this example, we create a `Console`, and a `Table`. And then we can add some rows to the table, and print it.
 
@@ -112,7 +112,7 @@ In general, **Typer** tends to be the entry point to your program, taking the fi
 
 **Rich** is useful for the parts that need to *display* information. Showing beautiful content on the screen.
 
-The best results for your command line application would be achieved combining both **Typer** and **Rich**.
+The best results for your command line application are achieved combining both **Typer** and **Rich**.
 
 ## "Standard Output" and "Standard Error"
 
@@ -152,7 +152,7 @@ You can print to "standard error" creating a Rich `Console` with `stderr=True`.
 
 Using `stderr=True` tells **Rich** that the output should be shown in "standard error".
 
-{* docs_src/printing/tutorial004_py39.py hl[4,11] *}
+{* docs_src/printing/tutorial004_py310.py hl[4,11] *}
 
 When you try it in the terminal, it will probably just look the same:
 
@@ -188,7 +188,7 @@ You can probably skip the rest of this section. 🎉😎
 
 ///
 
-**Typer** also has a small utility `typer.echo()` to print information on the screen, it comes directly from Click. But normally you shouldn't need it.
+**Typer** also has a small utility `typer.echo()` to print information on the screen. But normally you shouldn't need it.
 
 For the simplest cases, you can use the standard Python `print()`.
 
@@ -203,12 +203,6 @@ But in most of the cases you wouldn't need it, as in modern Python strings (`str
 If you have some `bytes` objects, you would probably want to decode them intentionally and directly before trying to print them.
 
 And if you want to print data with colors and other features, you are much better off with the more advanced tools in **Rich**.
-
-/// info
-
-`typer.echo()` comes directly from Click, you can read more about it in <a href="https://click.palletsprojects.com/en/7.x/quickstart/#echoing" class="external-link" target="_blank">Click's docs</a>.
-
-///
 
 ### Color
 
@@ -228,7 +222,7 @@ Again, you are much better off using <a href="https://rich.readthedocs.io/" clas
 
 You can create colored strings to output to the terminal with `typer.style()`, that gives you `str`s that you can then pass to `typer.echo()`:
 
-{* docs_src/printing/tutorial005_py39.py hl[10,12] *}
+{* docs_src/printing/tutorial005_py310.py hl[10,12] *}
 
 /// tip
 
@@ -258,12 +252,6 @@ You can pass these function arguments to `typer.style()`:
 * `reverse`: enable or disable inverse rendering (foreground becomes background and the other way round).
 * `reset`: by default a reset-all code is added at the end of the string which means that styles do not carry over.  This can be disabled to compose styles.
 
-/// info
-
-You can read more about it in <a href="https://click.palletsprojects.com/en/7.x/api/#click.style" class="external-link" target="_blank">Click's docs about `style()`</a>
-
-///
-
 ### `typer.secho()` - style and print
 
 /// tip
@@ -274,7 +262,7 @@ In case you didn't see above, you are much better off using <a href="https://ric
 
 There's a shorter form to style and print at the same time with `typer.secho()` it's like `typer.echo()` but also adds style like `typer.style()`:
 
-{* docs_src/printing/tutorial006_py39.py hl[8] *}
+{* docs_src/printing/tutorial006_py310.py hl[8] *}
 
 Check it:
 

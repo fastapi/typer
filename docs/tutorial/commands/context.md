@@ -1,6 +1,6 @@
 # Using the Context
 
-When you create a **Typer** application it uses Click underneath. And every Click application has a special object called a <a href="https://click.palletsprojects.com/en/8.1.x/commands/#nested-handling-and-contexts" class="external-link" target="_blank">"Context"</a> that is normally hidden.
+When you create a **Typer** application it always has a special, hidden object underneath called the "Context".
 
 But you can access the context by declaring a function parameter of type `typer.Context`.
 
@@ -14,7 +14,7 @@ For example, let's say that you want to execute some logic in a `Typer` callback
 
 You can get the name of the subcommand from the context:
 
-{* docs_src/commands/context/tutorial001_py39.py hl[17,21] *}
+{* docs_src/commands/context/tutorial001_py310.py hl[17,21] *}
 
 Check it:
 
@@ -44,7 +44,7 @@ And if no command is provided, the help message is shown.
 
 But we could make it run even without a subcommand with `invoke_without_command=True`:
 
-{* docs_src/commands/context/tutorial002_py39.py hl[16] *}
+{* docs_src/commands/context/tutorial002_py310.py hl[16] *}
 
 Check it:
 
@@ -74,7 +74,7 @@ For that, we can get the `typer.Context` and check if there's an invoked command
 
 If it's `None`, it means that we are not calling a subcommand but the main program (the callback) directly:
 
-{* docs_src/commands/context/tutorial003_py39.py hl[17,21] *}
+{* docs_src/commands/context/tutorial003_py310.py hl[17,21] *}
 
 Check it:
 
@@ -99,13 +99,11 @@ Creating user: Camila
 
 You can pass configurations for the context when creating a command or callback.
 
-To read more about the available configurations check the docs for <a href="https://click.palletsprojects.com/en/7.x/api/#context" class="external-link" target="_blank">Click's `Context`</a>.
-
 For example, you could keep additional *CLI parameters* not declared in your CLI program with `ignore_unknown_options` and `allow_extra_args`.
 
 Then you can access those extra raw *CLI parameters* as a `list` of `str` in `ctx.args`:
 
-{* docs_src/commands/context/tutorial004_py39.py hl[7,9,10] *}
+{* docs_src/commands/context/tutorial004_py310.py hl[7,9,10] *}
 
 <div class="termy">
 
