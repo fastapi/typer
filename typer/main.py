@@ -1665,9 +1665,14 @@ def get_click_param(
                 if type_ is NoneType:
                     continue
                 types.append(type_)
-            assert len(types) == 1, "Typer Currently doesn't support Union types"
-            main_type = types[0]
-            origin = get_origin(main_type)
+            if not (
+                parameter_info.parser is not None
+                or parameter_info.click_type is not None
+            ):
+                assert len(types) == 1, "Typer Currently doesn't support Union types"
+            if len(types) == 1:
+                main_type = types[0]
+                origin = get_origin(main_type)
         # Handle Tuples and Lists
         if lenient_issubclass(origin, list):
             main_type = get_args(main_type)[0]
