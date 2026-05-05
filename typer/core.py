@@ -115,21 +115,12 @@ def _get_default_string(
         # default_string = click.parser.split_opt(
         #     (self.opts if self.default else self.secondary_opts)[0]
         # )[1]
-        if obj.default:
-            if obj.opts:
-                default_string = _split_opt(obj.opts[0])[1]
-            else:
-                default_string = str(default_value)
-        else:
+        default_string = str(default_value)
+        if obj.default and obj.opts:
+            default_string = _split_opt(obj.opts[0])[1]
+        elif not obj.default and obj.secondary_opts:
             default_string = _split_opt(obj.secondary_opts[0])[1]
         # Typer override end
-    elif (
-        isinstance(obj, TyperOption)
-        and obj.is_bool_flag
-        and not obj.secondary_opts
-        and not default_value
-    ):
-        default_string = ""
     else:
         default_string = str(default_value)
     return default_string
