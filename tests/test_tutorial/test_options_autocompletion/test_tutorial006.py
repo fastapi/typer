@@ -23,13 +23,13 @@ def get_mod(request: pytest.FixtureRequest) -> ModuleType:
 
 
 def test_1(mod: ModuleType):
-    result = runner.invoke(mod.app, ["--name", "Camila"])
+    result = runner.invoke(mod.app, ["--user", "Camila"])
     assert result.exit_code == 0
     assert "Hello Camila" in result.output
 
 
 def test_2(mod: ModuleType):
-    result = runner.invoke(mod.app, ["--name", "Camila", "--name", "Sebastian"])
+    result = runner.invoke(mod.app, ["--user", "Camila", "--user", "Sebastian"])
     assert result.exit_code == 0
     assert "Hello Camila" in result.output
     assert "Hello Sebastian" in result.output

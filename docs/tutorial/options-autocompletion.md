@@ -33,11 +33,11 @@ utils  -- Extra utility commands for Typer apps.
 // Then try with "run" and --
 $ typer ./main.py run --[TAB][TAB]
 
-// You will get completion for --name, depending on your terminal it will look something like this
---name  -- The name to say hi to.
+// You will get completion for --user, depending on your terminal it will look something like this
+--user  -- The user to say hi to.
 
 // And you can run it as if it was with Python directly
-$ typer ./main.py run --name Camila
+$ typer ./main.py run --user Camila
 
 Hello Camila
 ```
@@ -52,14 +52,14 @@ We can provide completion for the values creating an `autocompletion` function, 
 
 {* docs_src/options_autocompletion/tutorial002_an_py310.py hl[6:7,16] *}
 
-We return a `list` of strings from the `complete_name()` function.
+We return a `list` of strings from the `complete_user()` function.
 
 And then we get those values when using completion:
 
 <div class="termy">
 
 ```console
-$ typer ./main.py run --name [TAB][TAB]
+$ typer ./main.py run --user [TAB][TAB]
 
 // We get the values returned from the function 🎉
 Camila     Carlos     Sebastian
@@ -75,7 +75,7 @@ Right now, we always return those values, even if users start typing `Sebast` an
 
 But we can fix that so that it always works correctly.
 
-Modify the `complete_name()` function to receive a parameter of type `str`, it will contain the incomplete value.
+Modify the `complete_user()` function to receive a parameter of type `str`, it will contain the incomplete value.
 
 Then we can check and return only the values that start with the incomplete value from the command line:
 
@@ -86,7 +86,7 @@ Now let's try it:
 <div class="termy">
 
 ```console
-$ typer ./main.py run --name Ca[TAB][TAB]
+$ typer ./main.py run --user Ca[TAB][TAB]
 
 // We get the values returned from the function that start with Ca 🎉
 Camila     Carlos
@@ -114,7 +114,7 @@ But some shells (Zsh, Fish, PowerShell) are capable of showing extra help text f
 
 We can provide that extra help text so that those shells can show it.
 
-In the `complete_name()` function, instead of providing one `str` per completion element, we provide a `tuple` with 2 items. The first item is the actual completion string, and the second item is the help text.
+In the `complete_user()` function, instead of providing one `str` per completion element, we provide a `tuple` with 2 items. The first item is the actual completion string, and the second item is the help text.
 
 So, in the end, we return a `list` of `tuples` of `str`:
 
@@ -141,7 +141,7 @@ If you have a shell like Zsh, it would look like:
 <div class="termy">
 
 ```console
-$ typer ./main.py run --name [TAB][TAB]
+$ typer ./main.py run --user [TAB][TAB]
 
 // We get the completion items with their help text 🎉
 Camila     -- The reader of books.
@@ -181,7 +181,7 @@ But each of the elements for completion has to be a `str` or a `tuple` (when con
 
 Let's say that now we want to modify the program to be able to "say hi" to multiple people at the same time.
 
-So, we will allow multiple `--name` *CLI options*.
+So, we will allow multiple `--user` *CLI options*.
 
 /// tip
 
@@ -200,7 +200,7 @@ And then we can use it like:
 <div class="termy">
 
 ```console
-$ typer ./main.py run --name Camila --name Sebastian
+$ typer ./main.py run --user Camila --user Sebastian
 
 Hello Camila
 Hello Sebastian
@@ -210,7 +210,7 @@ Hello Sebastian
 
 ### Getting completion for multiple values
 
-And the same way as before, we want to provide **completion** for those names. But we don't want to provide the **same names** for completion if they were already given in previous parameters.
+And the same way as before, we want to provide **completion** for those users. But we don't want to provide the names of the **same users** for completion if they were already given in previous parameters.
 
 For that, we will access and use the "Context". Every Typer application has a special object called a "Context" that is normally hidden.
 
@@ -220,11 +220,11 @@ And from that context you can get the current values for each parameter.
 
 {* docs_src/options_autocompletion/tutorial007_an_py310.py hl[12:13,15] *}
 
-We are getting the `names` already provided with `--name` in the command line before this completion was triggered.
+We are getting the `previous_users` already provided with `--user` in the command line before this completion was triggered.
 
-If there's no `--name` in the command line, it will be `None`, so we use `or []` to make sure we have a `list` (even if empty) to check its contents later.
+If there's no `--user` in the command line, it will be `None`, so we use `or []` to make sure we have a `list` (even if empty) to check its contents later.
 
-Then, when we have a completion candidate, we check if each `name` was already provided with `--name` by checking if it's in that list of `names` with `name not in names`.
+Then, when we have a completion candidate, we check if each `user` was already provided with `--user` by checking if it's in that list of `previous_users` with `user not in previous_users`.
 
 And then we `yield` each item that has not been used yet.
 
@@ -233,22 +233,22 @@ Check it:
 <div class="termy">
 
 ```console
-$ typer ./main.py run --name [TAB][TAB]
+$ typer ./main.py run --user [TAB][TAB]
 
-// The first time we trigger completion, we get all the names
+// The first time we trigger completion, we get all the users
 Camila     -- The reader of books.
 Carlos     -- The writer of scripts.
 Sebastian  -- The type hints guy.
 
-// Add a name and trigger completion again
-$ typer ./main.py run --name Sebastian --name Ca[TAB][TAB]
+// Add a user and trigger completion again
+$ typer ./main.py run --user Sebastian --user Ca[TAB][TAB]
 
-// Now we get completion only for the names we haven't used 🎉
+// Now we get completion only for the users we haven't used 🎉
 Camila  -- The reader of books.
 Carlos  -- The writer of scripts.
 
-// And if we add another of the available names:
-$ typer ./main.py run --name Sebastian --name Camila --name [TAB][TAB]
+// And if we add another of the available users:
+$ typer ./main.py run --user Sebastian --user Camila --user [TAB][TAB]
 
 // We get completion for the only available one
 Carlos  -- The writer of scripts.
@@ -262,11 +262,43 @@ It's quite possible that if there's only one option left, your shell will comple
 
 ///
 
+## Reusing generic completer functions
+
+You may want to reuse completer functions across CLI applications or within the same CLI application. In this case, you need to first determine which parameter is being asked to complete.
+
+This can be done by declaring a parameter of type <a href="https://click.palletsprojects.com/en/stable/api/#click.Parameter" class="external-link" target="_blank">click.Parameter</a>, and accessing its `param.name` attribute.
+
+For example, lets revisit our above example and add a second greeter argument that reuses the same completer function, now called `complete_user_or_greeter`:
+
+{* docs_src/options_autocompletion/tutorial010_an_py310.py hl[15:16] *}
+
+/// tip
+
+You may also return <a href="https://click.palletsprojects.com/en/stable/api/#click.shell_completion.CompletionItem" class="external-link" target="_blank">click.shell_completion.CompletionItem</a> objects from completer functions instead of 2-tuples.
+
+///
+
+
+Check it:
+
+<div class="termy">
+
+```console
+$ typer ./main.py run --user Sebastian --greeter Camila --greeter [TAB][TAB]
+
+// Our function returns Sebastian too because it is completing 'greeter', not 'user'
+Carlos     -- The writer of scripts.
+Sebastian  -- The type hints guy.
+```
+
+</div>
+
+
 ## Getting the raw *CLI parameters*
 
 You can also get the raw *CLI parameters*, just a `list` of `str` with everything passed in the command line before the incomplete value.
 
-For example, something like `["typer", "main.py", "run", "--name"]`.
+For example, something like `["typer", "main.py", "run", "--user"]`.
 
 /// tip
 
@@ -317,10 +349,10 @@ And then we just print it to "standard error".
 <div class="termy">
 
 ```console
-$ typer ./main.py run --name [TAB][TAB]
+$ typer ./main.py run --user [TAB][TAB]
 
 // First we see the raw CLI parameters
-['./main.py', 'run', '--name']
+['./main.py', 'run', '--user']
 
 // And then we see the actual completion
 Camila     -- The reader of books.
@@ -340,7 +372,7 @@ But it's probably useful only in very advanced use cases.
 
 ## Getting the Context and the raw *CLI parameters*
 
-Of course, you can declare everything if you need it, the context, the raw *CLI parameters*, and the incomplete `str`:
+Of course, you can declare everything if you need it, the context, the raw *CLI parameters*, the `Parameter` and the incomplete `str`:
 
 {* docs_src/options_autocompletion/tutorial009_an_py310.py hl[15] *}
 
@@ -349,20 +381,20 @@ Check it:
 <div class="termy">
 
 ```console
-$ typer ./main.py run --name [TAB][TAB]
+$ typer ./main.py run --user [TAB][TAB]
 
 // First we see the raw CLI parameters
-['./main.py', 'run', '--name']
+['./main.py', 'run', '--user']
 
 // And then we see the actual completion
 Camila     -- The reader of books.
 Carlos     -- The writer of scripts.
 Sebastian  -- The type hints guy.
 
-$ typer ./main.py run --name Sebastian --name Ca[TAB][TAB]
+$ typer ./main.py run --user Sebastian --user Ca[TAB][TAB]
 
 // Again, we see the raw CLI parameters
-['./main.py', 'run', '--name', 'Sebastian', '--name']
+['./main.py', 'run', '--user', 'Sebastian', '--user']
 
 // And then we see the rest of the valid completion items
 Camila     -- The reader of books.
@@ -379,6 +411,7 @@ You can declare function parameters of these types:
 
 * `str`: for the incomplete value.
 * `typer.Context`: for the current context.
+* `click.Parameter`: for the CLI parameter being completed.
 * `list[str]`: for the raw *CLI parameters*.
 
-It doesn't matter how you name them, in which order, or which ones of the 3 options you declare. It will all "**just work**" ✨
+It doesn't matter how you name them, in which order, or which ones of the 4 options you declare. It will all "**just work**" ✨

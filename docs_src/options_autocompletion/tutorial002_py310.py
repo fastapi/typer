@@ -1,7 +1,7 @@
 import typer
 
 
-def complete_name():
+def complete_user():
     return ["Camila", "Carlos", "Sebastian"]
 
 
@@ -10,11 +10,11 @@ app = typer.Typer()
 
 @app.command()
 def main(
-    name: str = typer.Option(
-        "World", help="The name to say hi to.", autocompletion=complete_name
+    user: str = typer.Option(
+        "World", help="The user to say hi to.", autocompletion=complete_user
     ),
 ):
-    print(f"Hello {name}")
+    print(f"Hello {user}")
 
 
 if __name__ == "__main__":
