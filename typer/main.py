@@ -1321,6 +1321,8 @@ def get_group_from_info(
         params,
         convertors,
         context_param_name,
+        _,
+        _,
     ) = get_params_convertors_ctx_param_name_from_function(solved_info.callback)
     cls = solved_info.cls or TyperGroup
     assert issubclass(cls, TyperGroup), f"{cls} should be a subclass of {TyperGroup}"
@@ -1362,11 +1364,25 @@ def get_command_name(name: str) -> str:
 
 def get_params_convertors_ctx_param_name_from_function(
     callback: Callable[..., Any] | None,
-) -> tuple[list[click.Argument | click.Option], dict[str, Any], str | None]:
+) -> tuple[
+    list[click.Argument | click.Option],
+    dict[str, Any],
+    str | None,
+    str | None,
+    str | None,
+]:
     params = []
     convertors = {}
     context_param_name = None
+    var_keyword_param_name = None
+    var_positional_param_name = None
     if callback:
+        sig = inspect.signature(callback)
+        for p in sig.parameters.values():
+            if p.kind == inspect.Parameter.VAR_KEYWORD:
+                var_keyword_param_name = p.name
+            elif p.kind == inspect.Parameter.VAR_POSITIONAL:
+                var_positional_param_name = p.name
         parameters = get_params_from_function(callback)
         for param_name, param in parameters.items():
             if lenient_issubclass(param.annotation, click.Context):
@@ -1376,7 +1392,13 @@ def get_params_convertors_ctx_param_name_from_function(
             if convertor:
                 convertors[param_name] = convertor
             params.append(click_param)
-    return params, convertors, context_param_name
+    return (
+        params,
+        convertors,
+        context_param_name,
+        var_keyword_param_name,
+        var_positional_param_name,
+    )
 
 
 def get_command_from_info(
@@ -1396,8 +1418,14 @@ def get_command_from_info(
         params,
         convertors,
         context_param_name,
+        var_keyword_param_name,
+        var_positional_param_name,
     ) = get_params_convertors_ctx_param_name_from_function(command_info.callback)
     cls = command_info.cls or TyperCommand
+    extra_cls_kwargs: dict[str, Any] = {}
+    if issubclass(cls, TyperCommand):
+        extra_cls_kwargs["var_keyword_param_name"] = var_keyword_param_name
+        extra_cls_kwargs["var_positional_param_name"] = var_positional_param_name
     command = cls(
         name=name,
         context_settings=command_info.context_settings,
@@ -1406,6 +1434,8 @@ def get_command_from_info(
             params=params,
             convertors=convertors,
             context_param_name=context_param_name,
+            var_keyword_param_name=var_keyword_param_name,
+            var_positional_param_name=var_positional_param_name,
             pretty_exceptions_short=pretty_exceptions_short,
         ),
         params=params,  # type: ignore
@@ -1420,6 +1450,7 @@ def get_command_from_info(
         rich_markup_mode=rich_markup_mode,
         # Rich settings
         rich_help_panel=command_info.rich_help_panel,
+        **extra_cls_kwargs,
     )
     return command
 
@@ -1489,6 +1520,8 @@ def get_callback(
     params: Sequence[click.Parameter] = [],
     convertors: dict[str, Callable[[str], Any]] | None = None,
     context_param_name: str | None = None,
+    var_keyword_param_name: str | None = None,
+    var_positional_param_name: str | None = None,
     pretty_exceptions_short: bool,
 ) -> Callable[..., Any] | None:
     use_convertors = convertors or {}
@@ -1502,6 +1535,26 @@ def get_callback(
         if param.name:
             use_params[param.name] = param.default
 
+    # Pre-compute ordered param names for positional call when *args is present.
+    # Params before *args must be passed positionally so Python routes them correctly.
+    if var_positional_param_name is not None:
+        _cb_sig = inspect.signature(callback)
+        _pos_names: list[str] = []
+        _kw_only_names: list[str] = []
+        for _pname, _p in _cb_sig.parameters.items():
+            if _p.kind == inspect.Parameter.VAR_POSITIONAL:
+                continue
+            if _p.kind in (
+                inspect.Parameter.POSITIONAL_OR_KEYWORD,
+                inspect.Parameter.POSITIONAL_ONLY,
+            ):
+                _pos_names.append(_pname)
+            elif _p.kind == inspect.Parameter.KEYWORD_ONLY:
+                _kw_only_names.append(_pname)
+    else:
+        _pos_names = []
+        _kw_only_names = []
+
     def wrapper(**kwargs: Any) -> Any:
         _rich_traceback_guard = pretty_exceptions_short  # noqa: F841
         for k, v in kwargs.items():
@@ -1511,6 +1564,29 @@ def get_callback(
                 use_params[k] = v
         if context_param_name:
             use_params[context_param_name] = click.get_current_context()
+        if var_positional_param_name is not None or var_keyword_param_name is not None:
+            ctx = click.get_current_context()
+            extra_kw_val: dict[str, Any] = (
+                ctx.meta.get("_typer_extra_kwargs", {})
+                if var_keyword_param_name is not None
+                else {}
+            )
+            if var_positional_param_name is not None:
+                positional_val: tuple[Any, ...] = ctx.meta.get(
+                    "_typer_var_positional", ()
+                )
+                # Build positional args for params before *args, then append *args.
+                pos_call_args = [use_params[n] for n in _pos_names]
+                kw_call = {n: use_params[n] for n in _kw_only_names}
+                return callback(
+                    *pos_call_args, *positional_val, **{**kw_call, **extra_kw_val}
+                )
+            else:
+                # Only **kwargs — safe to call with keyword args.
+                call_kwargs = {
+                    k: v for k, v in use_params.items() if k != var_keyword_param_name
+                }
+                return callback(**{**call_kwargs, **extra_kw_val})
         return callback(**use_params)
 
     update_wrapper(wrapper, callback)
