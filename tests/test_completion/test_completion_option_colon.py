@@ -216,4 +216,52 @@ def test_completion_colon_pwsh_single():
     assert "nvidia/cuda:10.0-devel-ubuntu18.04" not in result.stdout
 
 
-# TODO: tests for complete_fish
+def test_completion_colon_fish_all():
+    result = subprocess.run(
+        [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
+        capture_output=True,
+        encoding="utf-8",
+        env={
+            **os.environ,
+            "_COLON_EXAMPLE.PY_COMPLETE": "complete_fish",
+            "_TYPER_COMPLETE_ARGS": "colon_example.py --name ",
+            "_TYPER_COMPLETE_FISH_ACTION": "get-args",
+        },
+    )
+    assert "alpine:hello" in result.stdout
+    assert "alpine:latest" in result.stdout
+    assert "nvidia/cuda:10.0-devel-ubuntu18.04" in result.stdout
+
+
+def test_completion_colon_fish_partial():
+    result = subprocess.run(
+        [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
+        capture_output=True,
+        encoding="utf-8",
+        env={
+            **os.environ,
+            "_COLON_EXAMPLE.PY_COMPLETE": "complete_fish",
+            "_TYPER_COMPLETE_ARGS": "colon_example.py --name alpine",
+            "_TYPER_COMPLETE_FISH_ACTION": "get-args",
+        },
+    )
+    assert "alpine:hello" in result.stdout
+    assert "alpine:latest" in result.stdout
+    assert "nvidia/cuda:10.0-devel-ubuntu18.04" not in result.stdout
+
+
+def test_completion_colon_fish_single():
+    result = subprocess.run(
+        [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
+        capture_output=True,
+        encoding="utf-8",
+        env={
+            **os.environ,
+            "_COLON_EXAMPLE.PY_COMPLETE": "complete_fish",
+            "_TYPER_COMPLETE_ARGS": "colon_example.py --name alpine:hell",
+            "_TYPER_COMPLETE_FISH_ACTION": "get-args",
+        },
+    )
+    assert "alpine:hello" in result.stdout
+    assert "alpine:latest" not in result.stdout
+    assert "nvidia/cuda:10.0-devel-ubuntu18.04" not in result.stdout
