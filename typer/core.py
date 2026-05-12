@@ -508,10 +508,6 @@ class TyperOption(_click.Parameter):
         self.hidden = hidden
 
         # TODO: revisit all of this flag stuff
-        self._depr_flag_needs_value = (
-            self.prompt is not None and not self.prompt_required
-        )
-
         if is_flag and type is None:
             self.type: types.ParamType = types.BoolParamType()
 
