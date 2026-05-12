@@ -365,3 +365,15 @@ def test_split_opt(value: str, expected_prefix: str, expected_opt: str) -> None:
     prefix, opt = _split_opt(value)
     assert prefix == expected_prefix
     assert opt == expected_opt
+
+
+def test_nargs_default_map():
+    app = typer.Typer()
+
+    @app.command()
+    def main(names: list[str] = typer.Option(None)):
+        print(names)  # pragma: no cover
+
+    result = runner.invoke(app, [], default_map={"names": "not-a-list"})
+    assert result.exit_code == 2
+    assert "Invalid value" in result.output

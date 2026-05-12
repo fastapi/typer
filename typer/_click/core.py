@@ -946,8 +946,10 @@ class Parameter(ABC):
             return () if self.multiple or self.nargs == -1 else None
 
         def check_iter(value: Any) -> Iterator[Any]:
-            assert not isinstance(value, str)
-            return iter(value)
+            if isinstance(value, str):
+                raise BadParameter("Value must be an iterable.", ctx=ctx, param=self)
+            else:
+                return iter(value)
 
         # Define the conversion function based on nargs and type.
         if self.nargs == 1 or self.type.is_composite:
