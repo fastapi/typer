@@ -215,9 +215,15 @@ def get_docs_for_click(
             docs += f"{command_name} "
         docs += f"{' '.join(usage_pieces)}\n"
         docs += "```\n\n"
+    # Parameters marked with hidden=True are intentionally omitted from the live CLI
+    # help rendered by Rich (see rich_format_help in rich_utils.py). Generated Markdown
+    # from `typer ... utils docs` should follow the same rules so published docs do not
+    # leak internal or experimental flags/commands that authors hid from --help.
     args = []
     opts = []
     for param in obj.get_params(ctx):
+        if getattr(param, "hidden", False):
+            continue
         rv = param.get_help_record(ctx)
         if rv is not None:
             if param.param_type_name == "argument":
@@ -244,21 +250,33 @@ def get_docs_for_click(
         docs += f"{obj.epilog}\n\n"
     if isinstance(obj, Group):
         group = obj
-        commands = group.list_commands(ctx)
-        if commands:
+        # Subcommands registered with hidden=True still appear in list_commands() but
+        # are excluded from the command panels in rich_format_help. Mirror that here so
+        # the Markdown outline and nested sections match what users see when they run
+        # --help on each group.
+        visible_commands: list[str] = []
+        for cmd_name in group.list_commands(ctx):
+            command_obj = group.get_command(ctx, cmd_name)
+            if command_obj is None:
+                continue
+            if getattr(command_obj, "hidden", False):
+                continue
+            visible_commands.append(cmd_name)
+
+        if visible_commands:
             docs += "**Commands**:\n\n"
-            for command in commands:
-                command_obj = group.get_command(ctx, command)
-                assert command_obj
+            for cmd_name in visible_commands:
+                command_obj = group.get_command(ctx, cmd_name)
+                assert command_obj is not None
                 docs += f"* `{command_obj.name}`"
                 command_help = command_obj.get_short_help_str()
                 if command_help:
                     docs += f": {_parse_html(to_parse, command_help)}"
                 docs += "\n"
             docs += "\n"
-        for command in commands:
-            command_obj = group.get_command(ctx, command)
-            assert command_obj
+        for cmd_name in visible_commands:
+            command_obj = group.get_command(ctx, cmd_name)
+            assert command_obj is not None
             use_prefix = ""
             if command_name:
                 use_prefix += f"{command_name}"
