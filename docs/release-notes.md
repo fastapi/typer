@@ -8,6 +8,7 @@
 
 ### Internal
 
+* 🔧 Remove unnecessary Ruff rule. PR [#1752](https://github.com/fastapi/typer/pull/1752) by [@tiangolo](https://github.com/tiangolo).
 * 🔒️ Add zizmor and fix audit findings. PR [#1705](https://github.com/fastapi/typer/pull/1705) by [@YuriiMotov](https://github.com/YuriiMotov).
 * 🔒️ Only allow team members to modify dependencies. PR [#1744](https://github.com/fastapi/typer/pull/1744) by [@svlandeg](https://github.com/svlandeg).
 * ⬆ Bump mypy from 2.0.0 to 2.1.0. PR [#1742](https://github.com/fastapi/typer/pull/1742) by [@dependabot[bot]](https://github.com/apps/dependabot).
