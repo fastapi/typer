@@ -240,8 +240,5 @@ extra_javascript:
   - js/termynal.js
   - js/custom.js
 
-hooks:
-  - scripts/mkdocs_hooks.py
-
 validation:
   unresolved_references: false
