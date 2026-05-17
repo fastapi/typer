@@ -1,3 +1,8 @@
+---
+include_yaml:
+    members: data/members.yml
+---
+
 # Repository Management
 
 Here's a short description of how the Typer repository is managed and maintained.
