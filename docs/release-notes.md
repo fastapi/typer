@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Upgrades
+
+* 📌 Pin max version of Click to `>= 8.2.1, < 8.4` temporarily to prevent incompatibilities. PR [#1753](https://github.com/fastapi/typer/pull/1753) by [@tiangolo](https://github.com/tiangolo).
+
 ### Internal
 
 * 🔒️ Add zizmor and fix audit findings. PR [#1705](https://github.com/fastapi/typer/pull/1705) by [@YuriiMotov](https://github.com/YuriiMotov).
