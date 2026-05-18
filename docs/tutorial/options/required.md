@@ -23,7 +23,7 @@ Or you can explicitly pass `...` to `typer.Option(default=...)`:
 
 {* docs_src/options/required/tutorial002_py310.py hl[7] *}
 
-/// info
+/// note
 
 If you hadn't seen that `...` before: it is a special single value, it is <a href="https://docs.python.org/3/library/constants.html#Ellipsis" class="external-link" target="_blank">part of Python and is called "Ellipsis"</a>.
 

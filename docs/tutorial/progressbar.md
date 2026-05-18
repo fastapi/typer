@@ -123,7 +123,7 @@ Notice that there are 2 levels of code blocks. One for the `with` statement and 
 
 ///
 
-/// info
+/// note
 
 This is mostly useful for operations that take some time.
 

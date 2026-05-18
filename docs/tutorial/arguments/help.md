@@ -250,7 +250,7 @@ Options:
 
 </div>
 
-/// info
+/// note
 
 Have in mind that the *CLI argument* will still show up in the first line with `Usage`.
 

@@ -128,7 +128,7 @@ In the end, the return will be a `list` (or other iterable) of `tuples` of 2 `st
 
 ///
 
-/// info
+/// note
 
 The help text will be visible in Zsh, Fish, and PowerShell.
 
@@ -169,7 +169,7 @@ In the end, that's just to save us a couple of lines of code.
 
 ///
 
-/// info
+/// note
 
 The function can use `yield`, so it doesn't have to return strictly a `list`, it just has to be <a href="https://docs.python.org/3.8/glossary.html#term-iterable" class="external-link" target="_blank">iterable</a>.
 
@@ -296,7 +296,7 @@ Using `stderr=True` tells **Rich** that the output should be shown in "standard 
 
 {* docs_src/options_autocompletion/tutorial008_an_py310.py hl[12,15:16] *}
 
-/// info
+/// note
 
 If you have disabled Rich, you can also use `print(lastname, file=sys.stderr)` or `typer.echo("some text", err=True)` instead.
 
