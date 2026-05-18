@@ -20,7 +20,7 @@ When you use `typer.run()`, **Typer** is doing more or less the same as above, i
 * Create a new "`command`" with your function.
 * Call the same "application" as if it was a function with "`app()`".
 
-/// info | `@decorator` Info
+/// note | `@decorator` Info
 
 That `@something` syntax in Python is called a "decorator".
 

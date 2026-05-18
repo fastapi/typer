@@ -30,7 +30,7 @@ You can pass the *CLI option* name that you want to have in the following positi
 
 {* docs_src/options/name/tutorial001_an_py310.py hl[9] *}
 
-/// info
+/// note
 
 "<a href="https://docs.python.org/3.8/glossary.html#term-argument" class="external-link" target="_blank">Positional</a>" means that it's not a function argument with a keyword name.
 

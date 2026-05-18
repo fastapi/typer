@@ -45,7 +45,7 @@ Or, using an explicit `Typer()` instance creation:
 
 {* docs_src/arguments/optional/tutorial001_an_py310.py hl[9] *}
 
-/// info
+/// note
 
 Typer added support for `Annotated` (and started recommending it) in version 0.9.0.
 
@@ -209,7 +209,7 @@ Not passing any value to the `default` argument is the same as marking it as req
 name: str = typer.Argument(default=...)
 ```
 
-/// info
+/// note
 
 If you hadn't seen that `...` before: it is a special single value, it is <a href="https://docs.python.org/3/library/constants.html#Ellipsis" class="external-link" target="_blank">part of Python and is called "Ellipsis"</a>.
 

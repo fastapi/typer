@@ -119,7 +119,7 @@ Then install `typer` completion:
 $ typer --install-completion
 ```
 
-/// info
+/// note
 
 In `pwsh` you will probably get a warning of:
 

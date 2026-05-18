@@ -130,7 +130,7 @@ And there's another "**virtual file**" called "**standard error**" that is norma
 
 But we can also "print" to "standard error". And both are shown on the terminal to the users.
 
-/// info
+/// note
 
 If you use PowerShell it's quite possible that what you print to "standard error" won't be shown in the terminal.
 
