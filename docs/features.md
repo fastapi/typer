@@ -2,9 +2,9 @@
 
 ## Design based on **FastAPI**
 
-<a href="https://fastapi.tiangolo.com" target="_blank"><img src="https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png" style="width: 20%;"></a>
+<a href="https://fastapi.tiangolo.com"><img src="https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png" style="width: 20%;"></a>
 
-**Typer** is <a href="https://fastapi.tiangolo.com" class="external-link" target="_blank">FastAPI</a>'s little sibling.
+**Typer** is [FastAPI](https://fastapi.tiangolo.com)'s little sibling.
 
 It follows the same design and ideas. If you know **FastAPI**, you already know **Typer**... more or less.
 
@@ -12,9 +12,9 @@ It follows the same design and ideas. If you know **FastAPI**, you already know 
 
 It's all based on standard **Python type** declarations. No new syntax to learn. Just standard modern Python.
 
-If you need a 2 minute refresher of how to use Python types (even if you don't use FastAPI or Typer), check the FastAPI tutorial section: <a href="https://fastapi.tiangolo.com/python-types/" class="external-link" target="_blank">Python types intro</a>.
+If you need a 2 minute refresher of how to use Python types (even if you don't use FastAPI or Typer), check the FastAPI tutorial section: [Python types intro](https://fastapi.tiangolo.com/python-types/).
 
-You will also see a 20 seconds refresher on the section [Tutorial - User Guide: First Steps](tutorial/first-steps.md){.internal-link target=_blank}.
+You will also see a 20 seconds refresher on the section [Tutorial - User Guide: First Steps](tutorial/first-steps.md).
 
 ## Editor support
 
@@ -24,11 +24,11 @@ You will rarely need to come back to the docs.
 
 Here's how your editor might help you:
 
-* in <a href="https://code.visualstudio.com/" class="external-link" target="_blank">Visual Studio Code</a>:
+* in [Visual Studio Code](https://code.visualstudio.com/):
 
 ![editor support](img/vscode-completion.png)
 
-* in <a href="https://www.jetbrains.com/pycharm/" class="external-link" target="_blank">PyCharm</a>:
+* in [PyCharm](https://www.jetbrains.com/pycharm/):
 
 ![editor support](img/pycharm-completion.png)
 
