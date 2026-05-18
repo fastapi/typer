@@ -193,6 +193,9 @@ You can [contribute](contributing.md){.internal-link target=_blank} to the sourc
     * Make sure to add tests.
     * Make sure to add documentation if it's relevant.
 
+Note that PRs from non-team members are not allowed to modify `pyproject.toml` or `uv.lock`, to prevent supply chain risk.
+If you would like to add a new dependency, create a new [Discussion](https://github.com/fastapi/typer/discussions/categories/questions) to explain why.
+
 ## Help Maintain Typer
 
 Help me maintain **Typer**! 🤓

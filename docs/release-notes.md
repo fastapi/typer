@@ -2,6 +2,38 @@
 
 ## Latest Changes
 
+### Upgrades
+
+* 📌 Pin max version of Click to `>= 8.2.1, < 8.4` temporarily to prevent incompatibilities. PR [#1753](https://github.com/fastapi/typer/pull/1753) by [@tiangolo](https://github.com/tiangolo).
+
+### Internal
+
+* 🔧 Remove unnecessary Ruff rule. PR [#1752](https://github.com/fastapi/typer/pull/1752) by [@tiangolo](https://github.com/tiangolo).
+* 🔒️ Add zizmor and fix audit findings. PR [#1705](https://github.com/fastapi/typer/pull/1705) by [@YuriiMotov](https://github.com/YuriiMotov).
+* 🔒️ Only allow team members to modify dependencies. PR [#1744](https://github.com/fastapi/typer/pull/1744) by [@svlandeg](https://github.com/svlandeg).
+* ⬆ Bump mypy from 2.0.0 to 2.1.0. PR [#1742](https://github.com/fastapi/typer/pull/1742) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pydantic-settings from 2.14.0 to 2.14.1. PR [#1739](https://github.com/fastapi/typer/pull/1739) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ty from 0.0.34 to 0.0.35. PR [#1740](https://github.com/fastapi/typer/pull/1740) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump actions/add-to-project from 1.0.2 to 2.0.0. PR [#1731](https://github.com/fastapi/typer/pull/1731) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump actions/labeler from 6.0.1 to 6.1.0. PR [#1734](https://github.com/fastapi/typer/pull/1734) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pydantic from 2.13.3 to 2.13.4. PR [#1736](https://github.com/fastapi/typer/pull/1736) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump prek from 0.3.11 to 0.3.13. PR [#1735](https://github.com/fastapi/typer/pull/1735) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mypy from 1.20.2 to 2.0.0. PR [#1737](https://github.com/fastapi/typer/pull/1737) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 👷 Add pre-commit for typos. PR [#1730](https://github.com/fastapi/typer/pull/1730) by [@tiangolo](https://github.com/tiangolo).
+* ⬆ Bump ty from 0.0.33 to 0.0.34. PR [#1729](https://github.com/fastapi/typer/pull/1729) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ty from 0.0.32 to 0.0.33. PR [#1724](https://github.com/fastapi/typer/pull/1724) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
+## 0.25.1 (2026-04-30)
+
+### Features
+
+* 🔧 Add Typer Library Skill for Agents. PR [#1620](https://github.com/fastapi/typer/pull/1620) by [@svlandeg](https://github.com/svlandeg).
+
+### Internal
+
+* ⬆ Bump ruff from 0.15.11 to 0.15.12. PR [#1722](https://github.com/fastapi/typer/pull/1722) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump prek from 0.3.10 to 0.3.11. PR [#1723](https://github.com/fastapi/typer/pull/1723) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
 ## 0.25.0 (2026-04-26)
 
 ### Features

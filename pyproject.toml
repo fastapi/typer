@@ -33,7 +33,7 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
-    "click >= 8.2.1",
+    "click >= 8.2.1, < 8.4",
     "shellingham >=1.3.0",
     "rich >=13.8.0",
     "annotated-doc >=0.0.2",
@@ -56,6 +56,7 @@ dev = [
     { include-group = "tests" },
     { include-group = "docs" },
     "prek >=0.3.2",
+    "zizmor >=1.23.1",
 ]
 docs = [
     "cairosvg >=2.8.2",
@@ -165,7 +166,6 @@ ignore = [
     "E501",  # line too long, handled by black
     "B008",  # do not perform function calls in argument defaults
     "C901",  # too complex
-    "W191", # indentation contains tabs
     "TID252", # relative imports okay
 ]
 
@@ -214,3 +214,21 @@ Use 'typer._completion_shared._get_shell_name' instead of using \
 
 [tool.ty.terminal]
 error-on-warning = true
+
+[tool.typos.files]
+extend-exclude = [
+    "coverage/",
+    "dist/",
+    "docs/img/",
+    "docs/release-notes.md",
+    "htmlcov/",
+    "site/",
+    "site_build/",
+    "uv.lock",
+]
+
+[tool.typos.default.extend-identifiers]
+alls = "alls"
+
+[tool.typos.default.extend-words]
+Ines = "Ines"
