@@ -241,10 +241,10 @@ Go into the docs directory at `docs/`:
 $ cd docs/
 ```
 
-Then run `mkdocs` in that directory:
+Then run `zensical` in that directory:
 
 ```console
-$ mkdocs serve --dev-addr 8008
+$ zensical serve --dev-addr 8008
 ```
 
 ///
@@ -270,7 +270,7 @@ Completion will take effect once you restart the terminal.
 
 ### Docs Structure
 
-The documentation uses <a href="https://www.mkdocs.org/" class="external-link" target="_blank">MkDocs</a>.
+The documentation uses <a href="https://zensical.org" class="external-link" target="_blank">Zensical</a>.
 
 And there are extra tools/scripts in place in `./scripts/docs.py`.
 

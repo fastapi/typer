@@ -1,3 +1,8 @@
+---
+include_yaml:
+    - data/members.yml
+---
+
 # Repository Management
 
 Here's a short description of how the Typer repository is managed and maintained.
@@ -29,7 +34,7 @@ Joining the team is by invitation only, and I could update or remove permissions
 This is the current list of team members. 😎
 
 <div class="user-list user-list-center">
-{% for user in members["members"] %}
+{% for user in members %}
 
 <div class="user"><a href="https://github.com/{{ user.login }}" target="_blank"><div class="avatar-wrapper"><img src="https://github.com/{{ user.login }}.png"/></div><div class="title">@{{ user.login }}</div></a></div>
 {% endfor %}
