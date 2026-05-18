@@ -2,8 +2,23 @@
 
 ## Latest Changes
 
+### Upgrades
+
+* 📌 Pin max version of Click to `>= 8.2.1, < 8.4` temporarily to prevent incompatibilities. PR [#1753](https://github.com/fastapi/typer/pull/1753) by [@tiangolo](https://github.com/tiangolo).
+
+### Docs
+
+* 📝 Update link syntax to minimal Markdown. PR [#1623](https://github.com/fastapi/typer/pull/1623) by [@tiangolo](https://github.com/tiangolo).
+* 📝 Update and simplify usage of admonitions. PR [#1755](https://github.com/fastapi/typer/pull/1755) by [@tiangolo](https://github.com/tiangolo).
+
 ### Internal
 
+* ⬆ Bump actions/github-script from 7.1.0 to 9.0.0. PR [#1746](https://github.com/fastapi/typer/pull/1746) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 🔧 Fix GitHub link in docs. PR [#1754](https://github.com/fastapi/typer/pull/1754) by [@tiangolo](https://github.com/tiangolo).
+* ⬆️ Migrate to Zensical. PR [#1470](https://github.com/fastapi/typer/pull/1470) by [@tiangolo](https://github.com/tiangolo).
+* ⬆ Bump urllib3 from 2.6.3 to 2.7.0. PR [#1741](https://github.com/fastapi/typer/pull/1741) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 🔧 Remove unnecessary Ruff rule. PR [#1752](https://github.com/fastapi/typer/pull/1752) by [@tiangolo](https://github.com/tiangolo).
+* 🔒️ Add zizmor and fix audit findings. PR [#1705](https://github.com/fastapi/typer/pull/1705) by [@YuriiMotov](https://github.com/YuriiMotov).
 * 🔒️ Only allow team members to modify dependencies. PR [#1744](https://github.com/fastapi/typer/pull/1744) by [@svlandeg](https://github.com/svlandeg).
 * ⬆ Bump mypy from 2.0.0 to 2.1.0. PR [#1742](https://github.com/fastapi/typer/pull/1742) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pydantic-settings from 2.14.0 to 2.14.1. PR [#1739](https://github.com/fastapi/typer/pull/1739) by [@dependabot[bot]](https://github.com/apps/dependabot).
