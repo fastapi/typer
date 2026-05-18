@@ -112,7 +112,7 @@ def main(name: str = typer.Argument(default="World")):
     print(f"Hello {name}")
 ```
 
-Similarly, the old style could use ellipsis (...) to explicitely mark an argument as required.
+Similarly, the old style could use ellipsis (...) to explicitly mark an argument as required.
 
 ```python
 # DO NOT DO THIS: old style. Use Annotated without a default value instead.
