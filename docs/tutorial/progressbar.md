@@ -4,7 +4,7 @@ If you are executing an operation that can take some time, you can inform it to 
 
 ## Progress Bar
 
-You can use <a href="https://rich.readthedocs.io/en/stable/progress.html" class="external-link" target="_blank">Rich's Progress Display</a> to show a progress bar, for example:
+You can use [Rich's Progress Display](https://rich.readthedocs.io/en/stable/progress.html) to show a progress bar, for example:
 
 {* docs_src/progressbar/tutorial001_py310.py hl[4,12] *}
 
@@ -63,7 +63,7 @@ $ python main.py
 
 </div>
 
-You can learn more about it in the <a href="https://rich.readthedocs.io/en/stable/progress.html" class="external-link" target="_blank">Rich docs for Progress Display</a>.
+You can learn more about it in the [Rich docs for Progress Display](https://rich.readthedocs.io/en/stable/progress.html).
 
 ## Typer `progressbar`
 
@@ -81,7 +81,7 @@ But if you can't use Rich and have it disabled, Typer comes with a simple utilit
 
 /// tip
 
-Remember, you are much better off using <a href="https://rich.readthedocs.io/" class="external-link" target="_blank">Rich</a> for this. 😎
+Remember, you are much better off using [Rich](https://rich.readthedocs.io/) for this. 😎
 
 ///
 
@@ -149,7 +149,7 @@ Processed 100 things.
 
 /// tip
 
-Remember, you are much better off using <a href="https://rich.readthedocs.io/" class="external-link" target="_blank">Rich</a> for this. 😎
+Remember, you are much better off using [Rich](https://rich.readthedocs.io/) for this. 😎
 
 ///
 
@@ -175,7 +175,7 @@ Processed 100 user IDs.
 
 #### About the function with `yield`
 
-If you hadn't seen something like that `yield` above, that's a "<a href="https://docs.python.org/3/glossary.html#term-generator" class="external-link" target="_blank">generator</a>".
+If you hadn't seen something like that `yield` above, that's a "[generator](https://docs.python.org/3/glossary.html#term-generator)".
 
 You can iterate over that function with a `for` and at each iteration it will give you the value at `yield`.
 
@@ -199,7 +199,7 @@ would print each of the "user IDs" (here it's just the numbers from `0` to `99`)
 
 /// tip
 
-Remember, you are much better off using <a href="https://rich.readthedocs.io/" class="external-link" target="_blank">Rich</a> for this. 😎
+Remember, you are much better off using [Rich](https://rich.readthedocs.io/) for this. 😎
 
 ///
 

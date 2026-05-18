@@ -10,7 +10,7 @@ There have been many tools created before that have helped inspire its creation.
 
 ## Previous tools
 
-### <a href="https://docs.python.org/3/library/argparse.html" class="external-link" target="_blank">`argparse`</a>
+### [`argparse`](https://docs.python.org/3/library/argparse.html)
 
 `argparse` is the Python standard library's module to write CLIs.
 
@@ -22,7 +22,7 @@ Provide a better development experience than just reading *CLI Parameters* by ha
 
 ///
 
-### <a href="https://hugapi.github.io/hug/" class="external-link" target="_blank">Hug</a>
+### [Hug](https://hugapi.github.io/hug/)
 
 Hug is a library to create APIs and CLIs, it uses parameters in functions to declare the required data.
 
@@ -34,7 +34,7 @@ Use function parameters to declare *CLI arguments* and *CLI options* as it simpl
 
 ///
 
-### <a href="https://plac.readthedocs.io/en/latest/" class="external-link" target="_blank">Plac</a>
+### [Plac](https://plac.readthedocs.io/en/latest/)
 
 Plac is another library to create CLIs using parameters in functions, similar to Hug.
 
@@ -44,7 +44,7 @@ Provide a simple way to use a function as a command line app, without having to 
 
 ///
 
-### <a href="https://pydantic-docs.helpmanual.io/" class="external-link" target="_blank">Pydantic</a>
+### [Pydantic](https://pydantic-docs.helpmanual.io/)
 
 Pydantic is a library to handle data validation using standard modern Python type annotations.
 
@@ -58,7 +58,7 @@ Use standard Python type annotations to declare types instead of library-specifi
 
 ///
 
-### <a href="https://click.palletsprojects.com" class="external-link" target="_blank">Click</a>
+### [Click](https://click.palletsprojects.com)
 
 Click is one of the most widely used libraries to create CLIs in Python.
 
@@ -76,11 +76,11 @@ Everything. 🚀
 
 **Typer** mainly adds a layer on top of Click, making the code simpler and easier to use, with autocompletion everywhere, etc, but providing all the powerful features of Click underneath.
 
-As someone pointed out: <em><a href="https://twitter.com/fishnets88/status/1210126833745838080" class="external-link" target="_blank">"Nice to see it is built on Click but adds the type stuff. Me gusta!"</a></em>
+As someone pointed out: <em>["Nice to see it is built on Click but adds the type stuff. Me gusta!"](https://twitter.com/fishnets88/status/1210126833745838080)</em>
 
 ///
 
-### <a href="https://github.com/click-contrib/click-completion" class="external-link" target="_blank">`click-completion`</a>
+### [`click-completion`](https://github.com/click-contrib/click-completion)
 
 `click-completion` is a plug-in for Click. It was created to extend completion support for shells when Click only had support for Bash completion.
 
@@ -94,9 +94,9 @@ Provide auto completion for all the shells.
 
 ///
 
-### <a href="https://fastapi.tiangolo.com/" class="external-link" target="_blank">FastAPI</a>
+### [FastAPI](https://fastapi.tiangolo.com/)
 
-I created **FastAPI** to provide an easy way to build APIs with autocompletion for everything in the code (and some other <a href="https://fastapi.tiangolo.com/features/" class="external-link" target="_blank">features</a>).
+I created **FastAPI** to provide an easy way to build APIs with autocompletion for everything in the code (and some other [features](https://fastapi.tiangolo.com/features/)).
 
 **Typer** is the "FastAPI of CLIs".
 

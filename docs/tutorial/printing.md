@@ -18,7 +18,7 @@ Hello World
 
 ## Use Rich
 
-You can also display beautiful and more complex information using <a href="https://rich.readthedocs.io/" class="external-link" target="_blank">Rich</a>. It comes by default when you install `typer`.
+You can also display beautiful and more complex information using [Rich](https://rich.readthedocs.io/). It comes by default when you install `typer`.
 
 ### Use Rich `print`
 
@@ -50,7 +50,7 @@ Here's the data
 
 ### Rich Markup
 
-Rich also supports a <a href="https://rich.readthedocs.io/en/stable/markup.html" class="external-link" target="_blank">custom markup syntax</a> to set colors and styles, for example:
+Rich also supports a [custom markup syntax](https://rich.readthedocs.io/en/stable/markup.html) to set colors and styles, for example:
 
 {* docs_src/printing/tutorial002_py310.py hl[9] *}
 
@@ -66,7 +66,7 @@ $ python main.py
 
 In this example you can see how to use font styles, colors, and even emojis.
 
-To learn more check out the <a href="https://rich.readthedocs.io/en/stable/markup.html" class="external-link" target="_blank">Rich docs</a>.
+To learn more check out the [Rich docs](https://rich.readthedocs.io/en/stable/markup.html).
 
 ### Rich Tables
 
@@ -99,9 +99,9 @@ $ python main.py
 
 Rich has many other features, as an example, you can check the docs for:
 
-* <a href="https://rich.readthedocs.io/en/stable/prompt.html" class="external-link" target="_blank">Prompt</a>
-* <a href="https://rich.readthedocs.io/en/stable/markdown.html" class="external-link" target="_blank">Markdown</a>
-* <a href="https://rich.readthedocs.io/en/stable/panel.html" class="external-link" target="_blank">Panel</a>
+* [Prompt](https://rich.readthedocs.io/en/stable/prompt.html)
+* [Markdown](https://rich.readthedocs.io/en/stable/markdown.html)
+* [Panel](https://rich.readthedocs.io/en/stable/panel.html)
 * ...and more.
 
 ### Typer and Rich
@@ -182,7 +182,7 @@ But understanding that will come handy in the future, for example for autocomple
 
 /// warning
 
-In most of the cases, for displaying advanced information, it is recommended to use <a href="https://rich.readthedocs.io/" class="external-link" target="_blank">Rich</a>.
+In most of the cases, for displaying advanced information, it is recommended to use [Rich](https://rich.readthedocs.io/).
 
 You can probably skip the rest of this section. 🎉😎
 
@@ -216,7 +216,7 @@ So, a colored text is still just a `str`.
 
 /// tip
 
-Again, you are much better off using <a href="https://rich.readthedocs.io/" class="external-link" target="_blank">Rich</a> for this. 😎
+Again, you are much better off using [Rich](https://rich.readthedocs.io/) for this. 😎
 
 ///
 
@@ -256,7 +256,7 @@ You can pass these function arguments to `typer.style()`:
 
 /// tip
 
-In case you didn't see above, you are much better off using <a href="https://rich.readthedocs.io/" class="external-link" target="_blank">Rich</a> for this. 😎
+In case you didn't see above, you are much better off using [Rich](https://rich.readthedocs.io/) for this. 😎
 
 ///
 
