@@ -119,7 +119,7 @@ Then install `typer` completion:
 $ typer --install-completion
 ```
 
-/// info
+/// note
 
 In `pwsh` you will probably get a warning of:
 
@@ -241,10 +241,10 @@ Go into the docs directory at `docs/`:
 $ cd docs/
 ```
 
-Then run `mkdocs` in that directory:
+Then run `zensical` in that directory:
 
 ```console
-$ mkdocs serve --dev-addr 8008
+$ zensical serve --dev-addr 8008
 ```
 
 ///
@@ -270,7 +270,7 @@ Completion will take effect once you restart the terminal.
 
 ### Docs Structure
 
-The documentation uses [MkDocs](https://www.mkdocs.org/).
+The documentation uses [Zensical](https://zensical.org).
 
 And there are extra tools/scripts in place in `./scripts/docs.py`.
 

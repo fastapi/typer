@@ -376,7 +376,7 @@ class TyperArgument(click.core.Argument):
             help = f"{help}  {extra_str}" if help else f"{extra_str}"
         return name, help
 
-    def make_metavar(self, ctx: click.Context | None = None) -> str:
+    def make_metavar(self, ctx: click.Context) -> str:
         # Modified version of click.core.Argument.make_metavar()
         # to include Argument name
         if self.metavar is not None:
@@ -387,8 +387,7 @@ class TyperArgument(click.core.Argument):
         var = (self.name or "").upper()
         if not self.required:
             var = f"[{var}]"
-        type_var = self.type.get_metavar(self, ctx=ctx)  # type: ignore[arg-type]
-        # type_var = self.type.get_metavar(self, ctx=ctx)
+        type_var = self.type.get_metavar(self, ctx=ctx)
         if type_var:
             var += f":{type_var}"
         if self.nargs != 1:
@@ -487,8 +486,8 @@ class TyperOption(click.core.Option):
     ) -> Any | Callable[[], Any] | None:
         return _extract_default_help_str(self, ctx=ctx)
 
-    def make_metavar(self, ctx: click.Context | None = None) -> str:
-        return super().make_metavar(ctx=ctx)  # type: ignore[arg-type]
+    def make_metavar(self, ctx: click.Context) -> str:
+        return super().make_metavar(ctx=ctx)
 
     def get_help_record(self, ctx: click.Context) -> tuple[str, str] | None:
         # Duplicate all of Click's logic only to modify a single line, to allow boolean

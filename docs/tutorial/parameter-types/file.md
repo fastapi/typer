@@ -102,7 +102,7 @@ Some config written by the app
 
 </div>
 
-/// info | Technical Details
+/// note | Technical Details
 
 `typer.FileTextWrite` is a just a convenience class.
 

@@ -1,6 +1,6 @@
 # UUID
 
-/// info
+/// note
 
 A UUID is a ["Universally Unique Identifier"](https://en.wikipedia.org/wiki/Universally_unique_identifier).
 

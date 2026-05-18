@@ -1386,7 +1386,7 @@ def get_command_from_info(
     rich_markup_mode: MarkupMode,
 ) -> click.Command:
     assert command_info.callback, "A command must have a callback function"
-    name = command_info.name or get_command_name(command_info.callback.__name__)  # ty:ignore[unresolved-attribute]
+    name = command_info.name or get_command_name(command_info.callback.__name__)  # ty: ignore
     use_help = command_info.help
     if use_help is None:
         use_help = inspect.getdoc(command_info.callback)
@@ -2010,4 +2010,4 @@ def launch(
         return 0
 
     else:
-        return click.launch(url)
+        return click.launch(url, wait=wait, locate=locate)

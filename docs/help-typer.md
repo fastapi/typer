@@ -12,7 +12,7 @@ And there are several ways to get help too.
 
 ## Subscribe to the newsletter
 
-You can subscribe to the (infrequent) [**FastAPI and friends** newsletter](/newsletter/) to stay updated about:
+You can subscribe to the (infrequent) [**FastAPI and friends** newsletter](https://fastapi.tiangolo.com/newsletter/) to stay updated about:
 
 * News about FastAPI and friends, including Typer 🚀
 * Guides 📝
@@ -157,7 +157,7 @@ And if there's any other style or consistency need, I'll ask directly for that, 
 
 * Then **comment** saying that you did that, that's how I will know you really checked it.
 
-/// info
+/// note
 
 Unfortunately, I can't simply trust PRs that just have several approvals.
 
@@ -192,6 +192,9 @@ You can [contribute](contributing.md) to the source code with Pull Requests, for
 * To add a new feature.
     * Make sure to add tests.
     * Make sure to add documentation if it's relevant.
+
+Note that PRs from non-team members are not allowed to modify `pyproject.toml` or `uv.lock`, to prevent supply chain risk.
+If you would like to add a new dependency, create a new [Discussion](https://github.com/fastapi/typer/discussions/categories/questions) to explain why.
 
 ## Help Maintain Typer
 

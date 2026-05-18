@@ -4,6 +4,7 @@ site_description: Typer, build great CLIs. Easy to code. Based on Python type hi
 site_url: https://typer.tiangolo.com/
 
 theme:
+  variant: classic
   name: material
   custom_dir: docs/overrides
   palette:
@@ -49,24 +50,13 @@ theme:
   - toc.follow
 
   icon:
-    repo: fontawesome/brands/github-alt
+    repo: octicons/mark-github-24
   logo: img/icon.svg
   favicon: img/favicon.png
   language: en
 repo_name: fastapi/typer
 repo_url: https://github.com/fastapi/typer
 plugins:
-  # Material for MkDocs
-  search:
-  social:
-  typeset:
-  # Other plugins
-  macros:
-    include_yaml:
-    - members: data/members.yml
-  redirects:
-    redirect_maps:
-      typer-cli.md: tutorial/typer-command.md
   mkdocstrings:
     handlers:
       python:
@@ -90,7 +80,7 @@ plugins:
 nav:
   - Typer: index.md
   - features.md
-  - Tutorial - User Guide:
+  - "":
       - tutorial/index.md
       - environment-variables.md
       - virtual-environments.md
@@ -99,14 +89,14 @@ nav:
       - tutorial/typer-app.md
       - tutorial/printing.md
       - tutorial/terminating.md
-      - CLI Arguments:
+      - "":
           - tutorial/arguments/index.md
           - tutorial/arguments/optional.md
           - tutorial/arguments/default.md
           - tutorial/arguments/help.md
           - tutorial/arguments/envvar.md
           - tutorial/arguments/other-uses.md
-      - CLI Options:
+      - "":
           - tutorial/options/index.md
           - tutorial/options/help.md
           - tutorial/options/required.md
@@ -115,7 +105,7 @@ nav:
           - tutorial/options/name.md
           - tutorial/options/callback-and-context.md
           - tutorial/options/version.md
-      - Commands:
+      - "":
           - tutorial/commands/index.md
           - tutorial/commands/arguments.md
           - tutorial/commands/options.md
@@ -125,7 +115,7 @@ nav:
           - tutorial/commands/one-or-multiple.md
           - tutorial/commands/context.md
       - tutorial/options-autocompletion.md
-      - CLI Parameter Types:
+      - "":
           - tutorial/parameter-types/index.md
           - tutorial/parameter-types/number.md
           - tutorial/parameter-types/bool.md
@@ -135,14 +125,14 @@ nav:
           - tutorial/parameter-types/path.md
           - tutorial/parameter-types/file.md
           - tutorial/parameter-types/custom-types.md
-      - SubCommands - Command Groups:
+      - "":
           - tutorial/subcommands/index.md
           - tutorial/subcommands/add-typer.md
           - tutorial/subcommands/single-file.md
           - tutorial/subcommands/nested-subcommands.md
           - tutorial/subcommands/callback-override.md
           - tutorial/subcommands/name-and-help.md
-      - Multiple Values:
+      - "":
           - tutorial/multiple-values/index.md
           - tutorial/multiple-values/multiple-options.md
           - tutorial/multiple-values/options-with-multiple-values.md
@@ -156,19 +146,19 @@ nav:
       - tutorial/exceptions.md
       - tutorial/one-file-per-command.md
       - tutorial/typer-command.md
-  - Reference (Code API):
+  - "":
     - reference/index.md
     - reference/typer.md
     - reference/run_launch.md
     - reference/parameters.md
     - reference/file_objects.md
     - reference/context.md
-  - Resources:
+  - "":
     - resources/index.md
     - help-typer.md
     - contributing.md
     - management-tasks.md
-  - About:
+  - "":
     - about/index.md
     - alternatives.md
     - management.md
@@ -180,6 +170,7 @@ markdown_extensions:
     targets:
       include:
         - "*"
+  zensical.extensions.macros:
   # Python Markdown
   abbr:
   attr_list:
@@ -195,6 +186,7 @@ markdown_extensions:
   pymdownx.caret:
   pymdownx.highlight:
     line_spans: __span
+    linenums_style: pymdownx-inline
   pymdownx.inlinehilite:
   pymdownx.keys:
   pymdownx.mark:
@@ -207,18 +199,6 @@ markdown_extensions:
 
   # pymdownx blocks
   pymdownx.blocks.admonition:
-    types:
-    - note
-    - attention
-    - caution
-    - danger
-    - error
-    - tip
-    - hint
-    - warning
-    # Custom types
-    - info
-    - check
   pymdownx.blocks.details:
   pymdownx.blocks.tab:
     alternate_style: True
@@ -229,16 +209,14 @@ markdown_extensions:
 
 extra:
   social:
-    - icon: fontawesome/brands/github-alt
+    - icon: octicons/mark-github-24
       link: https://github.com/fastapi/typer
-    - icon: fontawesome/brands/twitter
-      link: https://twitter.com/tiangolo
+    - icon: fontawesome/brands/x-twitter
+      link: https://x.com/tiangolo
+    - icon: fontawesome/brands/bluesky
+      link: https://bsky.app/profile/tiangolo.com
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/in/tiangolo
-    - icon: fontawesome/brands/dev
-      link: https://dev.to/tiangolo
-    - icon: fontawesome/brands/medium
-      link: https://medium.com/@tiangolo
     - icon: fontawesome/solid/globe
       link: https://tiangolo.com
 
@@ -250,5 +228,5 @@ extra_javascript:
   - js/termynal.js
   - js/custom.js
 
-hooks:
-  - scripts/mkdocs_hooks.py
+validation:
+  unresolved_references: false

@@ -75,7 +75,7 @@ You could also check the output sent to "standard error" (`stderr`) or "standard
 
 ///
 
-/// info
+/// note
 
 If you need a refresher about what is "standard output" and "standard error" check the section in [Printing and Colors: "Standard Output" and "Standard Error"](printing.md#standard-output-and-standard-error).
 
@@ -129,7 +129,7 @@ You can test the input typed in the terminal using `input="camila@example.com\n"
 
 This is because what you type in the terminal goes to "**standard input**" and is handled by the operating system as if it was a "virtual file".
 
-/// info
+/// note
 
 If you need a refresher about what is "standard output", "standard error", and "standard input" check the section in [Printing and Colors: "Standard Output" and "Standard Error"](printing.md#standard-output-and-standard-error).
 

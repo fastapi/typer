@@ -204,7 +204,7 @@ If there are multiple close matches, Typer will suggest them all. This feature u
 
 Typer installs **Rich** to allow for more formatting in the docstrings and the `help` parameter for *CLI arguments* and *CLI options*. You will see more about it below. 👇
 
-/// info
+/// note
 
 You can disable rich text formatting by setting `rich_markup_mode` to `None` for your specific app.
 Alternatively, you can disable it globally using an environmental variable `TYPER_USE_RICH` set to `False` or `0`.
@@ -338,7 +338,7 @@ $ python main.py delete --help
 
 </div>
 
-/// info
+/// note
 
 Notice that in Markdown you cannot define colors. For colors you might prefer to use Rich markup.
 
