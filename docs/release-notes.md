@@ -8,6 +8,7 @@
 
 ### Internal
 
+* ⬆ Bump urllib3 from 2.6.3 to 2.7.0. PR [#1741](https://github.com/fastapi/typer/pull/1741) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * 🔧 Remove unnecessary Ruff rule. PR [#1752](https://github.com/fastapi/typer/pull/1752) by [@tiangolo](https://github.com/tiangolo).
 * 🔒️ Add zizmor and fix audit findings. PR [#1705](https://github.com/fastapi/typer/pull/1705) by [@YuriiMotov](https://github.com/YuriiMotov).
 * 🔒️ Only allow team members to modify dependencies. PR [#1744](https://github.com/fastapi/typer/pull/1744) by [@svlandeg](https://github.com/svlandeg).
