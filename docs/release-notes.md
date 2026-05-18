@@ -6,6 +6,10 @@
 
 * 📌 Pin max version of Click to `>= 8.2.1, < 8.4` temporarily to prevent incompatibilities. PR [#1753](https://github.com/fastapi/typer/pull/1753) by [@tiangolo](https://github.com/tiangolo).
 
+### Docs
+
+* 📝 Update and simplify usage of admonitions. PR [#1755](https://github.com/fastapi/typer/pull/1755) by [@tiangolo](https://github.com/tiangolo).
+
 ### Internal
 
 * ⬆ Bump actions/github-script from 7.1.0 to 9.0.0. PR [#1746](https://github.com/fastapi/typer/pull/1746) by [@dependabot[bot]](https://github.com/apps/dependabot).
