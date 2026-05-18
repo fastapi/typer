@@ -8,6 +8,7 @@
 
 ### Internal
 
+* ⬆ Bump actions/github-script from 7.1.0 to 9.0.0. PR [#1746](https://github.com/fastapi/typer/pull/1746) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * 🔧 Fix GitHub link in docs. PR [#1754](https://github.com/fastapi/typer/pull/1754) by [@tiangolo](https://github.com/tiangolo).
 * ⬆️ Migrate to Zensical. PR [#1470](https://github.com/fastapi/typer/pull/1470) by [@tiangolo](https://github.com/tiangolo).
 * ⬆ Bump urllib3 from 2.6.3 to 2.7.0. PR [#1741](https://github.com/fastapi/typer/pull/1741) by [@dependabot[bot]](https://github.com/apps/dependabot).
