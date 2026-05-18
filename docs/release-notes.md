@@ -8,6 +8,7 @@
 
 ### Internal
 
+* 🔧 Fix GitHub link in docs. PR [#1754](https://github.com/fastapi/typer/pull/1754) by [@tiangolo](https://github.com/tiangolo).
 * ⬆️ Migrate to Zensical. PR [#1470](https://github.com/fastapi/typer/pull/1470) by [@tiangolo](https://github.com/tiangolo).
 * ⬆ Bump urllib3 from 2.6.3 to 2.7.0. PR [#1741](https://github.com/fastapi/typer/pull/1741) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * 🔧 Remove unnecessary Ruff rule. PR [#1752](https://github.com/fastapi/typer/pull/1752) by [@tiangolo](https://github.com/tiangolo).
