@@ -1517,6 +1517,30 @@ def get_callback(
     return wrapper
 
 
+class UnionParamType(click.ParamType):
+    @property
+    def name(self) -> str:  # type: ignore[override]
+        return " | ".join(_type.name for _type in self._types)
+
+    def __init__(self, types: list[click.ParamType]):
+        super().__init__()
+        self._types = types
+
+    def convert(
+        self,
+        value: Any,
+        param: click.Parameter | None,
+        ctx: click.Context | None,
+    ) -> Any:
+        error_messages = []
+        for _type in self._types:
+            try:
+                return _type.convert(value, param, ctx)
+            except click.BadParameter as e:
+                error_messages.append(str(e))
+        self.fail("\n" + "\nbut also\n".join(error_messages), param, ctx)
+
+
 def get_click_type(
     *, annotation: Any, parameter_info: ParameterInfo
 ) -> click.ParamType:
@@ -1617,6 +1641,13 @@ def get_click_type(
             literal_values(annotation),
             case_sensitive=parameter_info.case_sensitive,
         )
+    elif get_origin(annotation) is not None and is_union(get_origin(annotation)):
+        types = [
+            get_click_type(annotation=arg, parameter_info=parameter_info)
+            for arg in get_args(annotation)
+            if arg is not NoneType
+        ]
+        return UnionParamType(types)
     raise RuntimeError(f"Type not yet supported: {annotation}")  # pragma: no cover
 
 
@@ -1665,9 +1696,14 @@ def get_click_param(
                 if type_ is NoneType:
                     continue
                 types.append(type_)
-            assert len(types) == 1, "Typer Currently doesn't support Union types"
-            main_type = types[0]
-            origin = get_origin(main_type)
+            if len(types) == 1:
+                (main_type,) = types
+                origin = get_origin(main_type)
+            else:
+                for type_ in get_args(main_type):
+                    assert not get_origin(type_), (
+                        "Union types with complex sub-types are not currently supported"
+                    )
         # Handle Tuples and Lists
         if lenient_issubclass(origin, list):
             main_type = get_args(main_type)[0]
