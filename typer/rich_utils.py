@@ -219,14 +219,18 @@ def _get_help_text(
     if remaining_paragraphs:
         # Add a newline inbetween the header and the remaining paragraphs
         yield Text("")
-        # Join with double linebreaks for markdown and Rich markup
-        remaining_lines = "\n\n".join(remaining_paragraphs)
+        remaining_lines = _fix_linebreaks(remaining_paragraphs, markup_mode)
 
         yield _make_rich_text(
             text=remaining_lines,
             style=STYLE_HELPTEXT,
             markup_mode=markup_mode,
         )
+
+
+def _fix_linebreaks(paragraphs: list[str], markup_mode: MarkupModeStrict) -> str:
+    # Join with double linebreaks for markdown and Rich markup
+    return "\n\n".join(paragraphs)
 
 
 def _get_parameter_help(
@@ -669,7 +673,7 @@ def rich_format_help(
     if obj.epilog:
         # Remove single linebreaks, replace double with single
         lines = obj.epilog.split("\n\n")
-        epilogue = "\n".join([x.replace("\n", " ").strip() for x in lines])
+        epilogue = _fix_linebreaks(lines, markup_mode)
         epilogue_text = _make_rich_text(text=epilogue, markup_mode=markup_mode)
         console.print(Padding(Align(epilogue_text, pad=False), 1))
 
