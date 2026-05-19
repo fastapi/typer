@@ -34,6 +34,10 @@ state = State()
 def maybe_update_state(ctx: click.Context) -> None:
     path_or_module = ctx.params.get("path_or_module")
     if path_or_module:
+        if ":" in path_or_module:
+            module_part, func_part = path_or_module.rsplit(":", 1)
+            path_or_module = module_part
+            ctx.params.update({"func": func_part})
         file_path = Path(path_or_module)
         if file_path.exists() and file_path.is_file():
             state.file = file_path
