@@ -168,3 +168,15 @@ def test_custom_click_type():
 
     result = runner.invoke(app, ["0x56"])
     assert result.exit_code == 0
+
+
+def test_multiple_list_arguments_error():
+    """Test that multiple List arguments raises a clear error (issue #260)."""
+    app = typer.Typer()
+
+    @app.command()
+    def cmd(names: list[str], others: list[str]):
+        print(f"names={names}, others={others}")
+
+    with pytest.raises(click.UsageError, match="Only one argument can take multiple values"):
+        runner.invoke(app, ["a", "b"], catch_exceptions=False)
