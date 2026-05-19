@@ -109,6 +109,11 @@ def get_params_from_function(func: Callable[..., Any]) -> dict[str, ParamMeta]:
     type_hints = get_type_hints(func)
     params = {}
     for param in signature.parameters.values():
+        if param.kind in (
+            inspect.Parameter.VAR_KEYWORD,
+            inspect.Parameter.VAR_POSITIONAL,
+        ):
+            continue
         annotation, typer_annotations = _split_annotation_from_typer_annotations(
             param.annotation,
         )
