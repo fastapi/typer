@@ -1,0 +1,160 @@
+import base64
+import binascii
+
+import typer
+from typer.testing import CliRunner
+
+runner = CliRunner()
+
+
+def test_base64_encode_decode():
+    """Test base64 encoding and decoding with bytes type."""
+    app = typer.Typer()
+
+    @app.command()
+    def encode(text: bytes):
+        """Encode text to base64."""
+        encoded = base64.b64encode(text)
+        typer.echo(encoded.decode())
+
+    @app.command()
+    def decode(encoded: str):
+        """Decode base64 to bytes."""
+        decoded = base64.b64decode(encoded)
+        typer.echo(repr(decoded))
+
+    # Test encoding
+    result = runner.invoke(app, ["encode", "Hello, world!"])
+    assert result.exit_code == 0
+    assert result.stdout.strip() == "SGVsbG8sIHdvcmxkIQ=="
+
+    # Test decoding
+    result = runner.invoke(app, ["decode", "SGVsbG8sIHdvcmxkIQ=="])
+    assert result.exit_code == 0
+    assert result.stdout.strip() == repr(b"Hello, world!")
+
+
+def test_hex_encode_decode():
+    """Test hex encoding and decoding with bytes type."""
+    app = typer.Typer()
+
+    @app.command()
+    def to_hex(data: bytes):
+        """Convert bytes to hex string."""
+        hex_str = binascii.hexlify(data).decode()
+        typer.echo(hex_str)
+
+    @app.command()
+    def from_hex(hex_str: str):
+        """Convert hex string to bytes."""
+        data = binascii.unhexlify(hex_str)
+        typer.echo(repr(data))
+
+    # Test to_hex
+    result = runner.invoke(app, ["to-hex", "ABC123"])
+    assert result.exit_code == 0
+    assert result.stdout.strip() == "414243313233"  # Hex for "ABC123"
+
+    # Test from_hex
+    result = runner.invoke(app, ["from-hex", "414243313233"])
+    assert result.exit_code == 0
+    assert result.stdout.strip() == repr(b"ABC123")
+
+
+def test_complex_bytes_operations():
+    """Test more complex operations with bytes type."""
+    app = typer.Typer()
+
+    @app.command()
+    def main(
+        data: bytes = typer.Argument(..., help="Data to process"),
+        encoding: str = typer.Option("utf-8", help="Encoding to use for output"),
+        prefix: bytes = typer.Option(b"PREFIX:", help="Prefix to add to the data"),
+    ):
+        """Process bytes data with options."""
+        result = prefix + data
+        typer.echo(result.decode(encoding))
+
+    # Test with default encoding
+    result = runner.invoke(app, ["Hello"])
+    assert result.exit_code == 0
+    assert result.stdout.strip() == "PREFIX:Hello"
+
+    # Test with custom encoding
+    result = runner.invoke(app, ["Hello", "--encoding", "ascii"])
+    assert result.exit_code == 0
+    assert result.stdout.strip() == "PREFIX:Hello"
+
+    # Test with custom prefix
+    result = runner.invoke(app, ["Hello", "--prefix", "CUSTOM:"])
+    assert result.exit_code == 0
+    assert result.stdout.strip() == "CUSTOM:Hello"
+
+
+def test_bytes_default_utf8():
+    app = typer.Typer()
+
+    @app.command()
+    def main(name: bytes):
+        typer.echo(repr(name))
+
+    result = runner.invoke(app, ["héllö"])
+    assert result.exit_code == 0
+    assert result.stdout.strip() == repr("héllö".encode())
+
+
+def test_bytes_custom_encoding_option():
+    app = typer.Typer()
+
+    @app.command()
+    def main(name: bytes = typer.Option(..., encoding="latin-1")):
+        typer.echo(repr(name))
+
+    result = runner.invoke(app, ["--name", "ñ"])
+    assert result.exit_code == 0
+    assert result.stdout.strip() == repr("ñ".encode("latin-1"))
+
+
+def test_bytes_custom_encoding_argument():
+    app = typer.Typer()
+
+    @app.command()
+    def main(name: bytes = typer.Argument(..., encoding="latin-1")):
+        typer.echo(repr(name))
+
+    result = runner.invoke(app, ["ñ"])
+    assert result.exit_code == 0
+    assert result.stdout.strip() == repr("ñ".encode("latin-1"))
+
+
+def test_bytes_errors_replace_ascii():
+    app = typer.Typer()
+
+    @app.command()
+    def main(name: bytes = typer.Option(..., encoding="ascii", errors="replace")):
+        typer.echo(repr(name))
+
+    result = runner.invoke(app, ["--name", "é"])
+    assert result.exit_code == 0
+    assert result.stdout.strip() == repr("é".encode("ascii", "replace"))
+
+
+def test_bytes_invalid_encoding_name():
+    app = typer.Typer()
+
+    @app.command()
+    def main(name: bytes = typer.Option(..., encoding="no-such-enc")):
+        print(name)  # pragma: no cover
+
+    result = runner.invoke(app, ["--name", "x"])
+    assert result.exit_code != 0
+
+    # Check for the error message in either stderr or combined output
+    # to handle different Click testing behavior across Python versions
+    error_message = "Could not encode"
+    try:
+        # Try stderr first (works in newer versions)
+        assert error_message in result.stderr
+    except (ValueError, AttributeError):
+        # Fallback to checking combined output for older versions
+        assert error_message in (result.output or "")
