@@ -379,12 +379,20 @@ def _print_options_panel(
         if (
             isinstance(param, click.Argument)
             and param.name
-            and metavar_str == param.name.upper()
+            and (
+                metavar_str == param.name.upper()
+                or metavar_str == f"[{param.name.upper()}]"
+            )
         ):
             metavar_str = param.type.name.upper()
 
+        if metavar_str == "BOOLEAN":
+            metavar_str = "BOOL"
+
         # Skip booleans and choices (handled above)
-        if metavar_str != "BOOLEAN":
+        if metavar_str != "BOOL" or (
+            isinstance(param, click.Option) and param.show_default
+        ):
             metavar.append(metavar_str)
 
         # Range - from
