@@ -77,10 +77,10 @@ def test_completion_colon_zsh_all():
             "_TYPER_COMPLETE_ARGS": "colon_example.py --name ",
         },
     )
-    assert "alpine\\\\:latest" in result.stdout
-    assert "latest alpine image" in result.stdout
     assert "alpine\\\\:hello" in result.stdout
     assert "fake image\\\\: for testing" in result.stdout
+    assert "alpine\\\\:latest" in result.stdout
+    assert "latest alpine image" in result.stdout
     assert "nvidia/cuda\\\\:10.0-devel-ubuntu18.04" in result.stdout
 
 
@@ -95,10 +95,10 @@ def test_completion_colon_zsh_partial():
             "_TYPER_COMPLETE_ARGS": "colon_example.py --name alpine",
         },
     )
-    assert "alpine\\\\:latest" in result.stdout
-    assert "latest alpine image" in result.stdout
     assert "alpine\\\\:hello" in result.stdout
     assert "fake image\\\\: for testing" in result.stdout
+    assert "alpine\\\\:latest" in result.stdout
+    assert "latest alpine image" in result.stdout
     assert "nvidia/cuda\\\\:10.0-devel-ubuntu18.04" not in result.stdout
 
 
@@ -132,10 +132,10 @@ def test_completion_colon_powershell_all():
             "_TYPER_COMPLETE_WORD_TO_COMPLETE": "",
         },
     )
-    assert "alpine:latest" in result.stdout
-    assert "latest alpine image" in result.stdout
     assert "alpine:hello" in result.stdout
     assert "fake image: for testing" in result.stdout
+    assert "alpine:latest" in result.stdout
+    assert "latest alpine image" in result.stdout
     assert "nvidia/cuda:10.0-devel-ubuntu18.04" in result.stdout
 
 
@@ -151,10 +151,10 @@ def test_completion_colon_powershell_partial():
             "_TYPER_COMPLETE_WORD_TO_COMPLETE": "alpine",
         },
     )
-    assert "alpine:latest" in result.stdout
-    assert "latest alpine image" in result.stdout
     assert "alpine:hello" in result.stdout
     assert "fake image: for testing" in result.stdout
+    assert "alpine:latest" in result.stdout
+    assert "latest alpine image" in result.stdout
     assert "nvidia/cuda:10.0-devel-ubuntu18.04" not in result.stdout
 
 
@@ -189,10 +189,10 @@ def test_completion_colon_pwsh_all():
         },
     )
 
-    assert "alpine:latest" in result.stdout
-    assert "latest alpine image" in result.stdout
     assert "alpine:hello" in result.stdout
     assert "fake image: for testing" in result.stdout
+    assert "alpine:latest" in result.stdout
+    assert "latest alpine image" in result.stdout
     assert "nvidia/cuda:10.0-devel-ubuntu18.04" in result.stdout
 
 
@@ -208,10 +208,10 @@ def test_completion_colon_pwsh_partial():
             "_TYPER_COMPLETE_WORD_TO_COMPLETE": "alpine",
         },
     )
-    assert "alpine:latest" in result.stdout
-    assert "latest alpine image" in result.stdout
     assert "alpine:hello" in result.stdout
     assert "fake image: for testing" in result.stdout
+    assert "alpine:latest" in result.stdout
+    assert "latest alpine image" in result.stdout
     assert "nvidia/cuda:10.0-devel-ubuntu18.04" not in result.stdout
 
 
