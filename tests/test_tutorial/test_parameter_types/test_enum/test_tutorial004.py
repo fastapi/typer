@@ -6,18 +6,14 @@ from types import ModuleType
 import pytest
 from typer.testing import CliRunner
 
-from ....utils import needs_py310
-
 runner = CliRunner()
 
 
 @pytest.fixture(
     name="mod",
     params=[
-        pytest.param("tutorial004_py39"),
-        pytest.param("tutorial004_py310", marks=needs_py310),
-        pytest.param("tutorial004_an_py39"),
-        pytest.param("tutorial004_an_py310", marks=needs_py310),
+        pytest.param("tutorial004_py310"),
+        pytest.param("tutorial004_an_py310"),
     ],
 )
 def get_mod(request: pytest.FixtureRequest) -> ModuleType:

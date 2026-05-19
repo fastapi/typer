@@ -1,6 +1,6 @@
 # Repository Management Tasks
 
-These are the tasks that can be performed to manage the Typer repository by [team members](./management.md#team){.internal-link target=_blank}.
+These are the tasks that can be performed to manage the Typer repository by [team members](./management.md#team).
 
 /// tip
 
@@ -8,9 +8,9 @@ This section is useful only to a handful of people, team members with permission
 
 ///
 
-...so, you are a [team member of Typer](./management.md#team){.internal-link target=_blank}? Wow, you are so cool! 😎
+...so, you are a [team member of Typer](./management.md#team)? Wow, you are so cool! 😎
 
-You can help with everything on [Help Typer - Get Help](./help-typer.md){.internal-link target=_blank} the same ways as external contributors. But additionally, there are some tasks that only you (as part of the team) can perform.
+You can help with everything on [Help Typer - Get Help](./help-typer.md) the same ways as external contributors. But additionally, there are some tasks that only you (as part of the team) can perform.
 
 Here are the general instructions for the tasks you can perform.
 
@@ -40,22 +40,22 @@ For conversations that are more difficult, for example to reject a PR, you can a
 
 ## Edit PR Titles
 
-* Edit the PR title to start with an emoji from <a href="https://gitmoji.dev/" class="external-link" target="_blank">gitmoji</a>.
+* Edit the PR title to start with an emoji from [gitmoji](https://gitmoji.dev/).
     * Use the emoji character, not the GitHub code. So, use `🐛` instead of `:bug:`. This is so that it shows up correctly outside of GitHub, for example in the release notes.
 * Start the title with a verb. For example `Add`, `Refactor`, `Fix`, etc. This way the title will say the action that the PR does. Like `Add support for teleporting`, instead of `Teleporting wasn't working, so this PR fixes it`.
 * Edit the text of the PR title to start in "imperative", like giving an order. So, instead of `Adding support for teleporting` use `Add support for teleporting`.
 * Try to make the title descriptive about what it achieves. If it's a feature, try to describe it, for example `Add support for teleporting` instead of `Create TeleportAdapter class`.
 * Do not finish the title with a period (`.`).
 
-Once the PR is merged, a GitHub Action (<a href="https://github.com/tiangolo/latest-changes" class="external-link" target="_blank">latest-changes</a>) will use the PR title to update the latest changes automatically.
+Once the PR is merged, a GitHub Action ([latest-changes](https://github.com/tiangolo/latest-changes)) will use the PR title to update the latest changes automatically.
 
 So, having a nice PR title will not only look nice in GitHub, but also in the release notes. 📝
 
 ## Add Labels to PRs
 
-The same GitHub Action <a href="https://github.com/tiangolo/latest-changes" class="external-link" target="_blank">latest-changes</a> uses one label in the PR to decide the section in the release notes to put this PR in.
+The same GitHub Action [latest-changes](https://github.com/tiangolo/latest-changes) uses one label in the PR to decide the section in the release notes to put this PR in.
 
-Make sure you use a supported label from the <a href="https://github.com/tiangolo/latest-changes#using-labels" class="external-link" target="_blank">latest-changes list of labels</a>:
+Make sure you use a supported label from the [latest-changes list of labels](https://github.com/tiangolo/latest-changes#using-labels):
 
 * `breaking`: Breaking Changes
     * Existing code will break if they update the version without changing their code. This rarely happens, so this label is not frequently used.
@@ -68,7 +68,7 @@ Make sure you use a supported label from the <a href="https://github.com/tiangol
 * `refactor`: Refactors
     * This is normally for changes to the internal code that don't change the behavior. Normally it improves maintainability, or enables future features, etc.
 * `upgrade`: Upgrades
-    * This is for upgrades to direct dependencies from the project, or extra optional dependencies, normally in `pyproject.toml`. So, things that would affect final users, they would end up receiving the upgrade in their code base once they update. But this is not for upgrades to internal dependencies used for development, testing, docs, etc. Those internal dependencies, normally in `requirements.txt` files or GitHub Action versions should be marked as `internal`, not `upgrade`.
+    * This is for upgrades to direct dependencies from the project, or extra optional dependencies, normally in `pyproject.toml`. So, things that would affect final users, they would end up receiving the upgrade in their code base once they update. But this is not for upgrades to internal dependencies used for development, testing, docs, etc. Those internal dependencies or GitHub Action versions should be marked as `internal`, not `upgrade`.
 * `docs`: Docs
     * Changes in docs. This includes updating the docs, fixing typos. But it doesn't include changes to translations.
     * You can normally quickly detect it by going to the "Files changed" tab in the PR and checking if the updated file(s) starts with `docs/en/docs`. The original version of the docs is always in English, so in `docs/en/docs`.
@@ -83,14 +83,18 @@ Some tools like Dependabot, will add some labels, like `dependencies`, but have 
 
 ## Review PRs
 
-If a PR doesn't explain what it does or why, ask for more information.
+* If a PR doesn't explain what it does or why, if it seems like it could be useful, ask for more information. Otherwise, feel free to close it.
 
-A PR should have a specific use case that it is solving.
+* If a PR seems to be spam, meaningless, only to change statistics (to appear as "contributor") or similar, you can simply mark it as `invalid`, and it will be automatically closed.
+
+* If a PR seems to be AI generated, and seems like reviewing it would take more time from you than the time it took to write the prompt, mark it as `maybe-ai`, and it will be automatically closed.
+
+* A PR should have a specific use case that it is solving.
 
 * If the PR is for a feature, it should have docs.
     * Unless it's a feature we want to discourage, like support for a corner case that we don't want users to use.
 * The docs should include a source example file, not write Python directly in Markdown.
-* If the source example(s) file can have different syntax for Python different Python versions, there should be different versions of the file, and they should be shown in tabs in the docs.
+* If the source example(s) file can have different syntax for different Python versions, there should be different versions of the file, and they should be shown in tabs in the docs.
 * There should be tests testing the source example.
 * Before the PR is applied, the new tests should fail.
 * After applying the PR, the new tests should pass.
@@ -103,13 +107,11 @@ A PR should have a specific use case that it is solving.
 
 Dependabot will create PRs to update dependencies for several things, and those PRs all look similar, but some are way more delicate than others.
 
-* If the PR is for a direct dependency, so, Dependabot is modifying `pyproject.toml`, **don't merge it**. 😱 Let me check it first. There's a good chance that some additional tweaks or updates are needed.
-* If the PR updates one of the internal dependencies, for example it's modifying `requirements.txt` files, or GitHub Action versions, if the tests are passing, the release notes (shown in a summary in the PR) don't show any obvious potential breaking change, you can merge it. 😎
+* If the PR is for a direct dependency, so, Dependabot is modifying `pyproject.toml` in the main dependencies, **don't merge it**. 😱 Let me check it first. There's a good chance that some additional tweaks or updates are needed.
+* If the PR updates one of the internal dependencies, for example the group `dev` in `pyproject.toml`, or GitHub Action versions, if the tests are passing, the release notes (shown in a summary in the PR) don't show any obvious potential breaking change, you can merge it. 😎
 
 ## Mark GitHub Discussions Answers
 
 When a question in GitHub Discussions has been answered, mark the answer by clicking "Mark as answer".
 
-Many of the current Discussion Questions were migrated from old issues. Many have the label `answered`, that means they were answered when they were issues, but now in GitHub Discussions, it's not known what is the actual response from the messages.
-
-You can filter discussions by <a href="https://github.com/fastapi/typer/discussions/categories/questions?discussions_q=category:Questions+is:open+is:unanswered" class="external-link" target="_blank">`Questions` that are `Unanswered`</a>.
+You can filter discussions by [`Questions` that are `Unanswered`](https://github.com/fastapi/typer/discussions/categories/questions?discussions_q=category:Questions+is:open+is:unanswered).

@@ -1,5 +1,4 @@
 from importlib.machinery import ModuleSpec
-from typing import Union
 from unittest.mock import patch
 
 import pytest
@@ -32,7 +31,7 @@ from typer._completion_classes import _sanitize_help_text
     ],
 )
 def test_sanitize_help_text(
-    find_spec: Union[ModuleSpec, None], help_text: str, expected: str
+    find_spec: ModuleSpec | None, help_text: str, expected: str
 ):
     with patch("importlib.util.find_spec", return_value=find_spec) as mock_find_spec:
         assert _sanitize_help_text(help_text) == expected

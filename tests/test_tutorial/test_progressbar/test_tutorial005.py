@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 from typer.testing import CliRunner
 
-import docs_src.progressbar.tutorial005_py39 as mod
+import docs_src.progressbar.tutorial005_py310 as mod
 from tests.utils import normalize_rich_output
 
 app = mod.app

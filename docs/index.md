@@ -1,3 +1,5 @@
+#
+
 <style>
 .md-content .md-typeset h1 { display: none; }
 </style>
@@ -12,24 +14,24 @@
     <em>Typer, build great CLIs. Easy to code. Based on Python type hints.</em>
 </p>
 <p align="center">
-<a href="https://github.com/fastapi/typer/actions?query=workflow%3ATest+event%3Apush+branch%3Amaster" target="_blank">
+<a href="https://github.com/fastapi/typer/actions?query=workflow%3ATest+event%3Apush+branch%3Amaster">
     <img src="https://github.com/fastapi/typer/actions/workflows/test.yml/badge.svg?event=push&branch=master" alt="Test">
 </a>
-<a href="https://github.com/fastapi/typer/actions?query=workflow%3APublish" target="_blank">
+<a href="https://github.com/fastapi/typer/actions?query=workflow%3APublish">
     <img src="https://github.com/fastapi/typer/workflows/Publish/badge.svg" alt="Publish">
 </a>
-<a href="https://coverage-badge.samuelcolvin.workers.dev/redirect/fastapi/typer" target="_blank">
+<a href="https://coverage-badge.samuelcolvin.workers.dev/redirect/fastapi/typer">
     <img src="https://coverage-badge.samuelcolvin.workers.dev/fastapi/typer.svg" alt="Coverage">
-<a href="https://pypi.org/project/typer" target="_blank">
+<a href="https://pypi.org/project/typer">
     <img src="https://img.shields.io/pypi/v/typer?color=%2334D058&label=pypi%20package" alt="Package version">
 </a>
 </p>
 
 ---
 
-**Documentation**: <a href="https://typer.tiangolo.com" target="_blank">https://typer.tiangolo.com</a>
+**Documentation**: [https://typer.tiangolo.com](https://typer.tiangolo.com)
 
-**Source Code**: <a href="https://github.com/fastapi/typer" target="_blank">https://github.com/fastapi/typer</a>
+**Source Code**: [https://github.com/fastapi/typer](https://github.com/fastapi/typer)
 
 ---
 
@@ -48,11 +50,11 @@ The key features are:
 
 ## FastAPI of CLIs
 
-**Typer** is <a href="https://fastapi.tiangolo.com" class="external-link" target="_blank">FastAPI</a>'s little sibling, it's the FastAPI of CLIs.
+**Typer** is [FastAPI](https://fastapi.tiangolo.com)'s little sibling, it's the FastAPI of CLIs.
 
 ## Installation
 
-Create and activate a <a href="https://typer.tiangolo.com/virtual-environments/" class="external-link" target="_blank">virtual environment</a> and then install **Typer**:
+Create and activate a [virtual environment](https://typer.tiangolo.com/virtual-environments/) and then install **Typer**:
 
 <div class="termy">
 
@@ -358,34 +360,19 @@ For a more complete example including more features, see the <a href="https://ty
 
 ## Dependencies
 
-**Typer** stands on the shoulders of a giant. Its only internal required dependency is <a href="https://click.palletsprojects.com/" class="external-link" target="_blank">Click</a>.
+**Typer** stands on the shoulders of giants. It has three required dependencies:
 
-By default it also comes with extra standard dependencies:
-
-* <a href="https://rich.readthedocs.io/en/stable/index.html" class="external-link" target="_blank"><code>rich</code></a>: to show nicely formatted errors automatically.
-* <a href="https://github.com/sarugaku/shellingham" class="external-link" target="_blank"><code>shellingham</code></a>: to automatically detect the current shell when installing completion.
-    * With `shellingham` you can just use `--install-completion`.
-    * Without `shellingham`, you have to pass the name of the shell to install completion for, e.g. `--install-completion bash`.
+* [Click](https://click.palletsprojects.com/): a popular tool for building CLIs in Python. Typer is based on it.
+* [`rich`](https://rich.readthedocs.io/en/stable/index.html): to show nicely formatted errors automatically.
+* [`shellingham`](https://github.com/sarugaku/shellingham): to automatically detect the current shell when installing completion.
 
 ### `typer-slim`
 
-If you don't want the extra standard optional dependencies, install `typer-slim` instead.
+There used to be a slimmed-down version of Typer called `typer-slim`, which didn't include the dependencies `rich` and `shellingham`, nor the `typer` command.
 
-When you install with:
+However, since version 0.22.0, we have stopped supporting this, and `typer-slim` now simply installs (all of) Typer.
 
-```bash
-pip install typer
-```
-
-...it includes the same code and dependencies as:
-
-```bash
-pip install "typer-slim[standard]"
-```
-
-The `standard` extra dependencies are `rich` and `shellingham`.
-
-**Note**: The `typer` command is only included in the `typer` package.
+If you want to disable Rich globally, you can set an environmental variable `TYPER_USE_RICH` to `False` or `0`.
 
 ## License
 

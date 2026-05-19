@@ -6,13 +6,13 @@ So far, you have seen how to create a single function and then pass that functio
 
 For example:
 
-{* docs_src/first_steps/tutorial002_py39.py hl[9] *}
+{* docs_src/first_steps/tutorial002_py310.py hl[9] *}
 
 But that is actually a shortcut. Under the hood, **Typer** converts that to a CLI application with `typer.Typer()` and executes it. All that inside of `typer.run()`.
 
 There's also a more explicit way to achieve the same:
 
-{* docs_src/typer_app/tutorial001_py39.py hl[3,6,12] *}
+{* docs_src/typer_app/tutorial001_py310.py hl[3,6,12] *}
 
 When you use `typer.run()`, **Typer** is doing more or less the same as above, it will:
 
@@ -20,7 +20,7 @@ When you use `typer.run()`, **Typer** is doing more or less the same as above, i
 * Create a new "`command`" with your function.
 * Call the same "application" as if it was a function with "`app()`".
 
-/// info | `@decorator` Info
+/// note | `@decorator` Info
 
 That `@something` syntax in Python is called a "decorator".
 
@@ -29,7 +29,7 @@ You put it on top of a function. Like a pretty decorative hat (I guess that's wh
 A "decorator" takes the function below and does something with it.
 
 In our case, this decorator tells **Typer** that the function below is a "`command`".
-You will learn more about commands later in the section [commands](./commands/index.md){.internal-link target=_blank}.
+You will learn more about commands later in the section [commands](./commands/index.md).
 
 ///
 
@@ -113,6 +113,6 @@ Having a standalone program like that allows setting up shell/tab completion.
 
 The first step to be able to create an installable package like that is to use an explicit `typer.Typer()` app.
 
-Later you can learn all the process to create a standalone CLI application and [Build a Package](./package.md){.internal-link target=_blank}.
+Later you can learn all the process to create a standalone CLI application and [Build a Package](./package.md).
 
 But for now, it's just good to know that you are on that path. 😎

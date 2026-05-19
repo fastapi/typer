@@ -7,7 +7,7 @@ import pytest
 import typer
 from typer.testing import CliRunner
 
-from docs_src.launch import tutorial002_py39 as mod
+from docs_src.launch import tutorial002_py310 as mod
 
 runner = CliRunner()
 

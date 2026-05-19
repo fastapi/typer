@@ -2,7 +2,7 @@
 
 It's also possible to, instead of just showing an error, ask for the missing value with `prompt=True`:
 
-{* docs_src/options/prompt/tutorial001_an_py39.py hl[9] *}
+{* docs_src/options/prompt/tutorial001_an_py310.py hl[9] *}
 
 And then your program will ask the user for it in the terminal:
 
@@ -24,7 +24,7 @@ Hello Camila Gutiérrez
 
 You can also set a custom prompt, passing the string that you want to use instead of just `True`:
 
-{* docs_src/options/prompt/tutorial002_an_py39.py hl[11] *}
+{* docs_src/options/prompt/tutorial002_an_py310.py hl[11] *}
 
 And then your program will ask for it using with your custom prompt:
 
@@ -50,7 +50,7 @@ You can do it passing the parameter `confirmation_prompt=True`.
 
 Let's say it's a CLI app to delete a project:
 
-{* docs_src/options/prompt/tutorial003_an_py39.py hl[10] *}
+{* docs_src/options/prompt/tutorial003_an_py310.py hl[10] *}
 
 And it will prompt the user for a value and then for the confirmation:
 

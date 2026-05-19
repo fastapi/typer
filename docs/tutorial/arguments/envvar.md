@@ -4,13 +4,13 @@ You can also configure a *CLI argument* to read a value from an environment vari
 
 /// tip
 
-You can learn more about environment variables in the [Environment Variables](../../environment-variables.md){.internal-link target=_blank} page.
+You can learn more about environment variables in the [Environment Variables](../../environment-variables.md) page.
 
 ///
 
 To do that, use the `envvar` parameter for `typer.Argument()`:
 
-{* docs_src/arguments/envvar/tutorial001_an_py39.py hl[9] *}
+{* docs_src/arguments/envvar/tutorial001_an_py310.py hl[9] *}
 
 In this case, the *CLI argument* `name` will have a default value of `"World"`, but will also read any value passed to the environment variable `AWESOME_NAME` if no value is provided in the command line:
 
@@ -55,7 +55,7 @@ Hello Mr. Czernobog
 
 You are not restricted to a single environment variable, you can declare a list of environment variables that could be used to get a value if it was not passed in the command line:
 
-{* docs_src/arguments/envvar/tutorial002_an_py39.py hl[10] *}
+{* docs_src/arguments/envvar/tutorial002_an_py310.py hl[10] *}
 
 Check it:
 
@@ -90,7 +90,7 @@ Hello Mr. Anubis
 
 By default, environment variables used will be shown in the help text, but you can disable them with `show_envvar=False`:
 
-{* docs_src/arguments/envvar/tutorial003_an_py39.py hl[11] *}
+{* docs_src/arguments/envvar/tutorial003_an_py310.py hl[11] *}
 
 Check it:
 
@@ -116,11 +116,3 @@ Hello Mr. Wednesday
 ```
 
 </div>
-
-/// note | Technical Details
-
-In Click applications the env vars are hidden by default. 🙈
-
-In **Typer** these env vars are shown by default. 👀
-
-///
