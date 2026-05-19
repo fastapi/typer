@@ -247,7 +247,9 @@ def test_completion_colon_fish_all():
         },
     )
     assert "alpine:hello" in result.stdout
+    assert "fake image: for testing" in result.stdout
     assert "alpine:latest" in result.stdout
+    assert "latest alpine image" in result.stdout
     assert "nvidia/cuda:10.0-devel-ubuntu18.04" in result.stdout
 
 
@@ -264,7 +266,9 @@ def test_completion_colon_fish_partial():
         },
     )
     assert "alpine:hello" in result.stdout
+    assert "fake image: for testing" in result.stdout
     assert "alpine:latest" in result.stdout
+    assert "latest alpine image" in result.stdout
     assert "nvidia/cuda:10.0-devel-ubuntu18.04" not in result.stdout
 
 
@@ -281,5 +285,7 @@ def test_completion_colon_fish_single():
         },
     )
     assert "alpine:hello" in result.stdout
+    assert "fake image: for testing" in result.stdout
     assert "alpine:latest" not in result.stdout
+    assert "latest alpine image" not in result.stdout
     assert "nvidia/cuda:10.0-devel-ubuntu18.04" not in result.stdout
