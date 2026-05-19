@@ -138,7 +138,12 @@ def shell_complete(
 
     # Typer override to print the completion help msg with Rich
     if instruction == "complete":
-        click.echo(comp.complete())
+        # Write the completion output as raw bytes so Python's text-mode I/O
+        # on Windows doesn't translate the in-string ``\n`` separators into
+        # ``\r\n``. Bash splits on ``\n`` only, and any stray ``\r`` leaks
+        # into the option names (showing up as ``^M`` between completions in
+        # MSYS2 / Git Bash). See https://github.com/fastapi/typer/issues/202.
+        click.echo(comp.complete().encode("utf-8"))
         return 0
     # Typer override end
 

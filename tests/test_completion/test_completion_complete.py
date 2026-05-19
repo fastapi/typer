@@ -185,3 +185,29 @@ def test_completion_complete_subcommand_noshell(mod: ModuleType):
         },
     )
     assert ("") in result.stdout
+
+
+def test_completion_complete_output_has_no_carriage_returns(mod: ModuleType):
+    """Bash on MSYS2 / Git Bash splits completion output on ``\\n`` only, so
+    any stray ``\\r`` (introduced by Windows text-mode I/O translating
+    in-string ``\\n`` to ``\\r\\n``) leaks into the option names and shows
+    up as ``^M`` between completions.
+
+    Regression test for https://github.com/fastapi/typer/issues/202.
+    """
+    file_name = Path(mod.__file__).name
+    result = subprocess.run(
+        [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
+        capture_output=True,
+        env={
+            **os.environ,
+            f"_{file_name.upper()}_COMPLETE": "complete_bash",
+            "COMP_WORDS": f"{file_name} del",
+            "COMP_CWORD": "1",
+        },
+    )
+    # Read raw bytes — encoding="utf-8" on subprocess.run would hide a
+    # newline-translation regression by silently decoding it away. The
+    # in-string separator must remain a bare ``\\n``.
+    assert b"delete\ndelete-all" in result.stdout
+    assert b"delete\r\ndelete-all" not in result.stdout
