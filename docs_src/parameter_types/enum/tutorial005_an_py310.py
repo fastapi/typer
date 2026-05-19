@@ -1,0 +1,23 @@
+import enum
+from typing import Annotated
+
+import typer
+
+
+class Access(enum.IntEnum):
+    private = 1
+    protected = 2
+    public = 3
+    open = 4
+
+
+app = typer.Typer()
+
+
+@app.command()
+def main(access: Annotated[Access, typer.Option(enum_by_name=True)] = "private"):
+    typer.echo(f"Access level: {access.name} ({access.value})")
+
+
+if __name__ == "__main__":
+    app()
