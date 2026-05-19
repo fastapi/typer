@@ -55,9 +55,9 @@ $scriptblock = {
         [System.Management.Automation.CompletionResult]::new(
             $command, $command, 'ParameterValue', $helpString)
     }
-    $Env:%(autocomplete_var)s = ""
-    $Env:_TYPER_COMPLETE_ARGS = ""
-    $Env:_TYPER_COMPLETE_WORD_TO_COMPLETE = ""
+    Remove-Item Env:%(autocomplete_var)s -ErrorAction SilentlyContinue
+    Remove-Item Env:_TYPER_COMPLETE_ARGS -ErrorAction SilentlyContinue
+    Remove-Item Env:_TYPER_COMPLETE_WORD_TO_COMPLETE -ErrorAction SilentlyContinue
 }
 Register-ArgumentCompleter -Native -CommandName %(prog_name)s -ScriptBlock $scriptblock
 """

@@ -12,3 +12,4 @@ htmlcov
 coverage.xml
 .coverage*
 .cache
+venv/
