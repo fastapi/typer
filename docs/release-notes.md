@@ -2,10 +2,6 @@
 
 ## Latest Changes
 
-### Features
-
-* ✅ Add Fish shell completion tests for colon options. PR [#1475](https://github.com/fastapi/typer/pull/1475) by [@Mohamed-Elwasila](https://github.com/Mohamed-Elwasila).
-
 ### Upgrades
 
 * 📌 Pin max version of Click to `>= 8.2.1, < 8.4` temporarily to prevent incompatibilities. PR [#1753](https://github.com/fastapi/typer/pull/1753) by [@tiangolo](https://github.com/tiangolo).
@@ -17,6 +13,7 @@
 
 ### Internal
 
+* ✅ Add Fish shell completion tests for colon options. PR [#1475](https://github.com/fastapi/typer/pull/1475) by [@Mohamed-Elwasila](https://github.com/Mohamed-Elwasila).
 * ✅ Extend completion unit tests for zsh, powershell and pwsh. PR [#1767](https://github.com/fastapi/typer/pull/1767) by [@ADiTyaRaj8969](https://github.com/ADiTyaRaj8969).
 * ⬆ Bump actions/github-script from 7.1.0 to 9.0.0. PR [#1746](https://github.com/fastapi/typer/pull/1746) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * 🔧 Fix GitHub link in docs. PR [#1754](https://github.com/fastapi/typer/pull/1754) by [@tiangolo](https://github.com/tiangolo).
