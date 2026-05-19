@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Features
+
+* ✅ Add Fish shell completion tests for colon options. PR [#1475](https://github.com/fastapi/typer/pull/1475) by [@Mohamed-Elwasila](https://github.com/Mohamed-Elwasila).
+
 ### Upgrades
 
 * 📌 Pin max version of Click to `>= 8.2.1, < 8.4` temporarily to prevent incompatibilities. PR [#1753](https://github.com/fastapi/typer/pull/1753) by [@tiangolo](https://github.com/tiangolo).
