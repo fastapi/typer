@@ -1,13 +1,13 @@
 import typer
 
-valid_names = ["Camila", "Carlos", "Sebastian"]
+valid_users = ["Camila", "Carlos", "Sebastian"]
 
 
 def complete_name(incomplete: str):
     completion = []
-    for name in valid_names:
-        if name.startswith(incomplete):
-            completion.append(name)
+    for user in valid_users:
+        if user.startswith(incomplete):
+            completion.append(user)
     return completion
 
 
@@ -16,11 +16,11 @@ app = typer.Typer()
 
 @app.command()
 def main(
-    name: str = typer.Option(
+    user: str = typer.Option(
         "World", help="The name to say hi to.", autocompletion=complete_name
     ),
 ):
-    print(f"Hello {name}")
+    print(f"Hello {user}")
 
 
 if __name__ == "__main__":

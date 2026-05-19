@@ -1,6 +1,7 @@
 from typing import Annotated
 
 import typer
+from click.core import Parameter
 from rich.console import Console
 
 valid_completion_items = [
@@ -12,12 +13,14 @@ valid_completion_items = [
 err_console = Console(stderr=True)
 
 
-def complete_name(ctx: typer.Context, args: list[str], incomplete: str):
+def complete_user(
+    ctx: typer.Context, args: list[str], param: Parameter, incomplete: str
+):
     err_console.print(f"{args}")
-    names = ctx.params.get("name") or []
-    for name, help_text in valid_completion_items:
-        if name.startswith(incomplete) and name not in names:
-            yield (name, help_text)
+    previous_users = ctx.params.get(param.name) or []
+    for user, help_text in valid_completion_items:
+        if user.startswith(incomplete) and user not in previous_users:
+            yield (user, help_text)
 
 
 app = typer.Typer()
@@ -25,12 +28,12 @@ app = typer.Typer()
 
 @app.command()
 def main(
-    name: Annotated[
+    user: Annotated[
         list[str],
-        typer.Option(help="The name to say hi to.", autocompletion=complete_name),
+        typer.Option(help="The user to say hi to.", autocompletion=complete_user),
     ] = ["World"],
 ):
-    for n in name:
+    for n in user:
         print(f"Hello {n}")
 
 

@@ -12,7 +12,7 @@ def shell_complete(ctx: click.Context, param: click.Parameter, incomplete: str):
 
 
 @app.command(context_settings={"auto_envvar_prefix": "TEST"})
-def main(name: str = typer.Argument(shell_complete=shell_complete)):
+def main(user: str = typer.Argument(shell_complete=shell_complete)):
     """
     Say hello.
     """
