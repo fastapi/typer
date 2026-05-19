@@ -1671,10 +1671,24 @@ def get_click_param(
         # Handle Tuples and Lists
         if lenient_issubclass(origin, list):
             main_type = get_args(main_type)[0]
-            assert not get_origin(main_type), (
-                "List types with complex sub-types are not currently supported"
-            )
+            list_origin = get_origin(main_type)
+            list_origin_is_tuple = lenient_issubclass(list_origin, tuple)
+            if not list_origin_is_tuple:
+                assert not list_origin, (
+                    "List types with complex sub-types are not currently supported"
+                )
             is_list = True
+            if list_origin_is_tuple:
+                types = []
+                for type_ in get_args(main_type):
+                    assert not get_origin(type_), (
+                        "List[Tuple] types with complex Tuple sub-types are not "
+                        "currently supported"
+                    )
+                    types.append(
+                        get_click_type(annotation=type_, parameter_info=parameter_info)
+                    )
+                parameter_type = tuple(types)
         elif lenient_issubclass(origin, tuple):
             types = []
             for type_ in get_args(main_type):
@@ -1692,6 +1706,8 @@ def get_click_param(
         )
     convertor = determine_type_convertor(main_type)
     if is_list:
+        if list_origin_is_tuple:
+            convertor = generate_tuple_convertor(get_args(main_type))
         convertor = generate_list_convertor(
             convertor=convertor, default_value=default_value
         )
