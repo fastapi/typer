@@ -1200,6 +1200,25 @@ def get_command(typer_instance: Typer) -> click.Command:
         if typer_instance._add_completion:
             click_command.params.append(click_install_param)
             click_command.params.append(click_show_param)
+
+        click_callback = click_command.callback
+        use_result_callback = None
+        if typer_instance.info.result_callback:
+            if isinstance(typer_instance.info.result_callback, DefaultPlaceholder):
+                use_result_callback = typer_instance.info.result_callback.value
+            else:
+                use_result_callback = typer_instance.info.result_callback
+
+        if click_callback and use_result_callback:
+
+            def callback_wrapper(*args: Any, **kwargs: Any) -> Any:
+                result = click_callback(*args, **kwargs)
+                ctx = click.get_current_context()
+                return ctx.invoke(use_result_callback, result)
+
+            update_wrapper(callback_wrapper, click_callback)
+            click_command.callback = callback_wrapper
+
         return click_command
     raise RuntimeError(
         "Could not get a command for this Typer instance"
