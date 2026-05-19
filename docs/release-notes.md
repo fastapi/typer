@@ -13,6 +13,7 @@
 
 ### Internal
 
+* 📝 Fix categorization of PR 1475 in release notes. PR [#1769](https://github.com/fastapi/typer/pull/1769) by [@svlandeg](https://github.com/svlandeg).
 * ✅ Add Fish shell completion tests for colon options. PR [#1475](https://github.com/fastapi/typer/pull/1475) by [@Mohamed-Elwasila](https://github.com/Mohamed-Elwasila).
 * ✅ Extend completion unit tests for zsh, powershell and pwsh. PR [#1767](https://github.com/fastapi/typer/pull/1767) by [@ADiTyaRaj8969](https://github.com/ADiTyaRaj8969).
 * ⬆ Bump actions/github-script from 7.1.0 to 9.0.0. PR [#1746](https://github.com/fastapi/typer/pull/1746) by [@dependabot[bot]](https://github.com/apps/dependabot).
