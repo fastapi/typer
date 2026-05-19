@@ -13,6 +13,7 @@
 
 ### Internal
 
+* ✅ Extend completion unit tests for zsh, powershell and pwsh. PR [#1767](https://github.com/fastapi/typer/pull/1767) by [@ADiTyaRaj8969](https://github.com/ADiTyaRaj8969).
 * ⬆ Bump actions/github-script from 7.1.0 to 9.0.0. PR [#1746](https://github.com/fastapi/typer/pull/1746) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * 🔧 Fix GitHub link in docs. PR [#1754](https://github.com/fastapi/typer/pull/1754) by [@tiangolo](https://github.com/tiangolo).
 * ⬆️ Migrate to Zensical. PR [#1470](https://github.com/fastapi/typer/pull/1470) by [@tiangolo](https://github.com/tiangolo).
