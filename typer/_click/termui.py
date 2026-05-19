@@ -1,24 +1,21 @@
-from __future__ import annotations
-
-import collections.abc as cabc
 import io
-import typing as t
+from collections.abc import Callable, Iterable
 from contextlib import AbstractContextManager
-from gettext import gettext as _
+from typing import IO, TYPE_CHECKING, Any, AnyStr, TextIO, TypeVar, overload
 
 from .exceptions import Abort, UsageError
 from .globals import resolve_color_default
 from .types import ParamType, convert_type
 from .utils import LazyFile, echo
 
-if t.TYPE_CHECKING:
+if TYPE_CHECKING:
     from ._termui_impl import ProgressBar
 
-V = t.TypeVar("V")
+V = TypeVar("V")
 
 # The prompt functions to use.  The doc tools currently override these
 # functions to customize how they work.
-visible_prompt_func: t.Callable[[str], str] = input
+visible_prompt_func: Callable[[str], str] = input
 
 _ansi_colors = {
     "black": 30,
@@ -52,7 +49,7 @@ def _build_prompt(
     text: str,
     suffix: str,
     show_default: bool = False,
-    default: t.Any | None = None,
+    default: Any | None = None,
     show_choices: bool = True,
     type: ParamType | None = None,
 ) -> str:
@@ -67,7 +64,7 @@ def _build_prompt(
     return f"{prompt}{suffix}"
 
 
-def _format_default(default: t.Any) -> t.Any:
+def _format_default(default: Any) -> Any:
     if isinstance(default, (io.IOBase, LazyFile)) and hasattr(default, "name"):
         return default.name
 
@@ -76,58 +73,21 @@ def _format_default(default: t.Any) -> t.Any:
 
 def prompt(
     text: str,
-    default: t.Any | None = None,
+    default: Any | None = None,
     hide_input: bool = False,
     confirmation_prompt: bool | str = False,
-    type: ParamType | t.Any | None = None,
-    value_proc: t.Callable[[str], t.Any] | None = None,
+    type: ParamType | Any | None = None,
+    value_proc: Callable[[str], Any] | None = None,
     prompt_suffix: str = ": ",
     show_default: bool = True,
     err: bool = False,
     show_choices: bool = True,
-) -> t.Any:
+) -> Any:
     """Prompts a user for input.  This is a convenience function that can
     be used to prompt a user for input later.
 
     If the user aborts the input by sending an interrupt signal, this
-    function will catch it and raise a :exc:`Abort` exception.
-
-    :param text: the text to show for the prompt.
-    :param default: the default value to use if no input happens.  If this
-                    is not given it will prompt until it's aborted.
-    :param hide_input: if this is set to true then the input value will
-                       be hidden.
-    :param confirmation_prompt: Prompt a second time to confirm the
-        value. Can be set to a string instead of ``True`` to customize
-        the message.
-    :param type: the type to use to check the value against.
-    :param value_proc: if this parameter is provided it's a function that
-                       is invoked instead of the type conversion to
-                       convert a value.
-    :param prompt_suffix: a suffix that should be added to the prompt.
-    :param show_default: shows or hides the default value in the prompt.
-    :param err: if set to true the file defaults to ``stderr`` instead of
-                ``stdout``, the same as with echo.
-    :param show_choices: Show or hide choices if the passed type is a Choice.
-                         For example if type is a Choice of either day or week,
-                         show_choices is true and text is "Group by" then the
-                         prompt will be "Group by (day, week): ".
-
-    .. versionchanged:: 8.3.1
-        A space is no longer appended to the prompt.
-
-    .. versionadded:: 8.0
-        ``confirmation_prompt`` can be a custom string.
-
-    .. versionadded:: 7.0
-        Added the ``show_choices`` parameter.
-
-    .. versionadded:: 6.0
-        Added unicode support for cmd.exe on Windows.
-
-    .. versionadded:: 4.0
-        Added the `err` parameter.
-
+    function will catch it and raise an `Abort` exception.
     """
 
     def prompt_func(text: str) -> str:
@@ -139,7 +99,7 @@ def prompt(
             # Echo the last character to stdout to work around an issue where
             # readline causes backspace to clear the whole line.
             return f(text[-1:])
-        except (KeyboardInterrupt, EOFError):
+        except (KeyboardInterrupt, EOFError):  # pragma: no cover
             # getpass doesn't print a newline if the user aborts input with ^C.
             # Allegedly this behavior is inherited from getpass(3).
             # A doc bug has been filed at https://bugs.python.org/issue24711
@@ -156,7 +116,7 @@ def prompt(
 
     if confirmation_prompt:
         if confirmation_prompt is True:
-            confirmation_prompt = _("Repeat for confirmation")
+            confirmation_prompt = "Repeat for confirmation"
 
         confirmation_prompt = _build_prompt(confirmation_prompt, prompt_suffix)
 
@@ -170,11 +130,11 @@ def prompt(
                 break
         try:
             result = value_proc(value)
-        except UsageError as e:
+        except UsageError as e:  # pragma: no cover
             if hide_input:
-                echo(_("Error: The value you entered was invalid."), err=err)
+                echo("Error: The value you entered was invalid.", err=err)
             else:
-                echo(_("Error: {e.message}").format(e=e), err=err)
+                echo(f"Error: {e.message}", err=err)
             continue
         if not confirmation_prompt:
             return result
@@ -185,7 +145,7 @@ def prompt(
                 break
         if value == value2:
             return result
-        echo(_("Error: The two entered values do not match."), err=err)
+        echo("Error: The two entered values do not match.", err=err)
 
 
 def confirm(
@@ -199,26 +159,7 @@ def confirm(
     """Prompts for confirmation (yes/no question).
 
     If the user aborts the input by sending a interrupt signal this
-    function will catch it and raise a :exc:`Abort` exception.
-
-    :param text: the question to ask.
-    :param default: The default value to use when no input is given. If
-        ``None``, repeat until input is given.
-    :param abort: if this is set to `True` a negative answer aborts the
-                  exception by raising :exc:`Abort`.
-    :param prompt_suffix: a suffix that should be added to the prompt.
-    :param show_default: shows or hides the default value in the prompt.
-    :param err: if set to true the file defaults to ``stderr`` instead of
-                ``stdout``, the same as with echo.
-
-    .. versionchanged:: 8.3.1
-        A space is no longer appended to the prompt.
-
-    .. versionchanged:: 8.0
-        Repeat until input is given if ``default`` is ``None``.
-
-    .. versionadded:: 4.0
-        Added the ``err`` parameter.
+    function will catch it and raise an `Abort` exception.
     """
     prompt = _build_prompt(
         text,
@@ -235,7 +176,7 @@ def confirm(
             # Echo the last character to stdout to work around an issue where
             # readline causes backspace to clear the whole line.
             value = visible_prompt_func(prompt[-1:]).lower().strip()
-        except (KeyboardInterrupt, EOFError):
+        except (KeyboardInterrupt, EOFError):  # pragma: no cover
             raise Abort() from None
         if value in ("y", "yes"):
             rv = True
@@ -243,8 +184,8 @@ def confirm(
             rv = False
         elif default is not None and value == "":
             rv = default
-        else:
-            echo(_("Error: invalid input"), err=err)
+        else:  # pragma: no cover
+            echo("Error: invalid input", err=err)
             continue
         break
     if abort and not rv:
@@ -252,7 +193,7 @@ def confirm(
     return rv
 
 
-@t.overload
+@overload
 def progressbar(
     *,
     length: int,
@@ -266,51 +207,51 @@ def progressbar(
     bar_template: str = "%(label)s  [%(bar)s]  %(info)s",
     info_sep: str = "  ",
     width: int = 36,
-    file: t.TextIO | None = None,
+    file: TextIO | None = None,
     color: bool | None = None,
     update_min_steps: int = 1,
-) -> ProgressBar[int]: ...
+) -> "ProgressBar[int]": ...
 
 
-@t.overload
+@overload
 def progressbar(
-    iterable: cabc.Iterable[V] | None = None,
+    iterable: Iterable[V] | None = None,
     length: int | None = None,
     label: str | None = None,
     hidden: bool = False,
     show_eta: bool = True,
     show_percent: bool | None = None,
     show_pos: bool = False,
-    item_show_func: t.Callable[[V | None], str | None] | None = None,
+    item_show_func: Callable[[V | None], str | None] | None = None,
     fill_char: str = "#",
     empty_char: str = "-",
     bar_template: str = "%(label)s  [%(bar)s]  %(info)s",
     info_sep: str = "  ",
     width: int = 36,
-    file: t.TextIO | None = None,
+    file: TextIO | None = None,
     color: bool | None = None,
     update_min_steps: int = 1,
-) -> ProgressBar[V]: ...
+) -> "ProgressBar[V]": ...
 
 
 def progressbar(
-    iterable: cabc.Iterable[V] | None = None,
+    iterable: Iterable[V] | None = None,
     length: int | None = None,
     label: str | None = None,
     hidden: bool = False,
     show_eta: bool = True,
     show_percent: bool | None = None,
     show_pos: bool = False,
-    item_show_func: t.Callable[[V | None], str | None] | None = None,
+    item_show_func: Callable[[V | None], str | None] | None = None,
     fill_char: str = "#",
     empty_char: str = "-",
     bar_template: str = "%(label)s  [%(bar)s]  %(info)s",
     info_sep: str = "  ",
     width: int = 36,
-    file: t.TextIO | None = None,
+    file: TextIO | None = None,
     color: bool | None = None,
     update_min_steps: int = 1,
-) -> ProgressBar[V]:
+) -> "ProgressBar[V]":
     """This function creates an iterable context manager that can be used
     to iterate over something while showing a progress bar.  It will
     either iterate over the `iterable` or `length` items (that are counted
@@ -333,101 +274,6 @@ def progressbar(
 
     No printing must happen or the progress bar will be unintentionally
     destroyed.
-
-    Example usage::
-
-        with progressbar(items) as bar:
-            for item in bar:
-                do_something_with(item)
-
-    Alternatively, if no iterable is specified, one can manually update the
-    progress bar through the `update()` method instead of directly
-    iterating over the progress bar.  The update method accepts the number
-    of steps to increment the bar with::
-
-        with progressbar(length=chunks.total_bytes) as bar:
-            for chunk in chunks:
-                process_chunk(chunk)
-                bar.update(chunks.bytes)
-
-    The ``update()`` method also takes an optional value specifying the
-    ``current_item`` at the new position. This is useful when used
-    together with ``item_show_func`` to customize the output for each
-    manual step::
-
-        with click.progressbar(
-            length=total_size,
-            label='Unzipping archive',
-            item_show_func=lambda a: a.filename
-        ) as bar:
-            for archive in zip_file:
-                archive.extract()
-                bar.update(archive.size, archive)
-
-    :param iterable: an iterable to iterate over.  If not provided the length
-                     is required.
-    :param length: the number of items to iterate over.  By default the
-                   progressbar will attempt to ask the iterator about its
-                   length, which might or might not work.  If an iterable is
-                   also provided this parameter can be used to override the
-                   length.  If an iterable is not provided the progress bar
-                   will iterate over a range of that length.
-    :param label: the label to show next to the progress bar.
-    :param hidden: hide the progressbar. Defaults to ``False``. When no tty is
-        detected, it will only print the progressbar label. Setting this to
-        ``False`` also disables that.
-    :param show_eta: enables or disables the estimated time display.  This is
-                     automatically disabled if the length cannot be
-                     determined.
-    :param show_percent: enables or disables the percentage display.  The
-                         default is `True` if the iterable has a length or
-                         `False` if not.
-    :param show_pos: enables or disables the absolute position display.  The
-                     default is `False`.
-    :param item_show_func: A function called with the current item which
-        can return a string to show next to the progress bar. If the
-        function returns ``None`` nothing is shown. The current item can
-        be ``None``, such as when entering and exiting the bar.
-    :param fill_char: the character to use to show the filled part of the
-                      progress bar.
-    :param empty_char: the character to use to show the non-filled part of
-                       the progress bar.
-    :param bar_template: the format string to use as template for the bar.
-                         The parameters in it are ``label`` for the label,
-                         ``bar`` for the progress bar and ``info`` for the
-                         info section.
-    :param info_sep: the separator between multiple info items (eta etc.)
-    :param width: the width of the progress bar in characters, 0 means full
-                  terminal width
-    :param file: The file to write to. If this is not a terminal then
-        only the label is printed.
-    :param color: controls if the terminal supports ANSI colors or not.  The
-                  default is autodetection.  This is only needed if ANSI
-                  codes are included anywhere in the progress bar output
-                  which is not the case by default.
-    :param update_min_steps: Render only when this many updates have
-        completed. This allows tuning for very fast iterators.
-
-    .. versionadded:: 8.2
-        The ``hidden`` argument.
-
-    .. versionchanged:: 8.0
-        Output is shown even if execution time is less than 0.5 seconds.
-
-    .. versionchanged:: 8.0
-        ``item_show_func`` shows the current item, not the previous one.
-
-    .. versionchanged:: 8.0
-        Labels are echoed if the output is not a TTY. Reverts a change
-        in 7.0 that removed all output.
-
-    .. versionadded:: 8.0
-       The ``update_min_steps`` parameter.
-
-    .. versionadded:: 4.0
-        The ``color`` parameter and ``update`` method.
-
-    .. versionadded:: 2.0
     """
     from ._termui_impl import ProgressBar
 
@@ -464,7 +310,7 @@ def _interpret_color(color: int | tuple[int, int, int] | str, offset: int = 0) -
 
 
 def style(
-    text: t.Any,
+    text: Any,
     fg: int | tuple[int, int, int] | str | None = None,
     bg: int | tuple[int, int, int] | str | None = None,
     bold: bool | None = None,
@@ -481,77 +327,6 @@ def style(
     default the styling is self contained which means that at the end
     of the string a reset code is issued.  This can be prevented by
     passing ``reset=False``.
-
-    Examples::
-
-        click.echo(click.style('Hello World!', fg='green'))
-        click.echo(click.style('ATTENTION!', blink=True))
-        click.echo(click.style('Some things', reverse=True, fg='cyan'))
-        click.echo(click.style('More colors', fg=(255, 12, 128), bg=117))
-
-    Supported color names:
-
-    * ``black`` (might be a gray)
-    * ``red``
-    * ``green``
-    * ``yellow`` (might be an orange)
-    * ``blue``
-    * ``magenta``
-    * ``cyan``
-    * ``white`` (might be light gray)
-    * ``bright_black``
-    * ``bright_red``
-    * ``bright_green``
-    * ``bright_yellow``
-    * ``bright_blue``
-    * ``bright_magenta``
-    * ``bright_cyan``
-    * ``bright_white``
-    * ``reset`` (reset the color code only)
-
-    If the terminal supports it, color may also be specified as:
-
-    -   An integer in the interval [0, 255]. The terminal must support
-        8-bit/256-color mode.
-    -   An RGB tuple of three integers in [0, 255]. The terminal must
-        support 24-bit/true-color mode.
-
-    See https://en.wikipedia.org/wiki/ANSI_color and
-    https://gist.github.com/XVilka/8346728 for more information.
-
-    :param text: the string to style with ansi codes.
-    :param fg: if provided this will become the foreground color.
-    :param bg: if provided this will become the background color.
-    :param bold: if provided this will enable or disable bold mode.
-    :param dim: if provided this will enable or disable dim mode.  This is
-                badly supported.
-    :param underline: if provided this will enable or disable underline.
-    :param overline: if provided this will enable or disable overline.
-    :param italic: if provided this will enable or disable italic.
-    :param blink: if provided this will enable or disable blinking.
-    :param reverse: if provided this will enable or disable inverse
-                    rendering (foreground becomes background and the
-                    other way round).
-    :param strikethrough: if provided this will enable or disable
-        striking through text.
-    :param reset: by default a reset-all code is added at the end of the
-                  string which means that styles do not carry over.  This
-                  can be disabled to compose styles.
-
-    .. versionchanged:: 8.0
-        A non-string ``message`` is converted to a string.
-
-    .. versionchanged:: 8.0
-       Added support for 256 and RGB color codes.
-
-    .. versionchanged:: 8.0
-        Added the ``strikethrough``, ``italic``, and ``overline``
-        parameters.
-
-    .. versionchanged:: 7.0
-        Added support for bright colors.
-
-    .. versionadded:: 2.0
     """
     if not isinstance(text, str):
         text = str(text)
@@ -593,33 +368,14 @@ def style(
 
 
 def secho(
-    message: t.Any | None = None,
-    file: t.IO[t.AnyStr] | None = None,
+    message: Any | None = None,
+    file: IO[AnyStr] | None = None,
     nl: bool = True,
     err: bool = False,
     color: bool | None = None,
-    **styles: t.Any,
+    **styles: Any,
 ) -> None:
-    """This function combines :func:`echo` and :func:`style` into one
-    call.  As such the following two calls are the same::
-
-        click.secho('Hello World!', fg='green')
-        click.echo(click.style('Hello World!', fg='green'))
-
-    All keyword arguments are forwarded to the underlying functions
-    depending on which one they go with.
-
-    Non-string types will be converted to :class:`str`. However,
-    :class:`bytes` are passed directly to :meth:`echo` without applying
-    style. If you want to style bytes that represent text, call
-    :meth:`bytes.decode` first.
-
-    .. versionchanged:: 8.0
-        A non-string ``message`` is converted to a string. Bytes are
-        passed through without style applied.
-
-    .. versionadded:: 2.0
-    """
+    """This function combines `echo` and `style` into one call."""
     if message is not None and not isinstance(message, (bytes, bytearray)):
         message = style(message, **styles)
 
@@ -632,23 +388,6 @@ def launch(url: str, wait: bool = False, locate: bool = False) -> int:
     might launch the executable in a new session.  The return value is
     the exit code of the launched application.  Usually, ``0`` indicates
     success.
-
-    Examples::
-
-        click.launch('https://click.palletsprojects.com/')
-        click.launch('/my/downloaded/file', locate=True)
-
-    .. versionadded:: 2.0
-
-    :param url: URL or filename of the thing to launch.
-    :param wait: Wait for the program to exit before returning. This
-        only works if the launched program blocks. In particular,
-        ``xdg-open`` on Linux does not block.
-    :param locate: if this is set to `True` then instead of launching the
-                   application associated with the URL it will attempt to
-                   launch a file manager with the file located.  This
-                   might have weird effects if the URL does not point to
-                   the filesystem.
     """
     from ._termui_impl import open_url
 
@@ -657,7 +396,7 @@ def launch(url: str, wait: bool = False, locate: bool = False) -> int:
 
 # If this is provided, getchar() calls into this instead.  This is used
 # for unittesting purposes.
-_getchar: t.Callable[[bool], str] | None = None
+_getchar: Callable[[bool], str] | None = None
 
 
 def getchar(echo: bool = False) -> str:
@@ -674,11 +413,6 @@ def getchar(echo: bool = False) -> str:
     Note for Windows: in rare cases when typing non-ASCII characters, this
     function might wait for a second character and then return both at once.
     This is because certain Unicode characters look like special-key markers.
-
-    .. versionadded:: 2.0
-
-    :param echo: if set to `True`, the character read will also show up on
-                 the terminal.  The default is to not show it.
     """
     global _getchar
 

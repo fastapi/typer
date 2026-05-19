@@ -12,7 +12,7 @@ from typing import (
     cast,
 )
 
-from . import _click, format_filename
+from . import _click
 
 if TYPE_CHECKING:  # pragma: no cover
     from .core import TyperCommand, TyperGroup
@@ -297,7 +297,7 @@ class ParameterInfo:
         default_factory: Callable[[], Any] | None = None,
         # Custom type
         parser: Callable[[str], Any] | None = None,
-        click_type: _click.ParamType | None = None,
+        click_type: _click.types.ParamType | None = None,
         # TyperArgument
         show_default: bool | str = True,
         show_choices: bool = True,
@@ -406,7 +406,7 @@ class OptionInfo(ParameterInfo):
         default_factory: Callable[[], Any] | None = None,
         # Custom type
         parser: Callable[[str], Any] | None = None,
-        click_type: _click.ParamType | None = None,
+        click_type: _click.types.ParamType | None = None,
         # Option
         show_default: bool | str = True,
         prompt: bool | str = False,
@@ -534,7 +534,7 @@ class ArgumentInfo(ParameterInfo):
         default_factory: Callable[[], Any] | None = None,
         # Custom type
         parser: Callable[[str], Any] | None = None,
-        click_type: _click.ParamType | None = None,
+        click_type: _click.types.ParamType | None = None,
         # TyperArgument
         show_default: bool | str = True,
         show_choices: bool = True,
@@ -643,7 +643,7 @@ class DeveloperExceptionConfig:
         self.pretty_exceptions_short = pretty_exceptions_short
 
 
-class TyperPath(_click.ParamType):
+class TyperPath(_click.types.ParamType):
     # Based originally on code from Click 8.3.1
     # Partly rewritten and added an override for shell_complete
 
@@ -659,14 +659,12 @@ class TyperPath(_click.ParamType):
         resolve_path: bool = False,
         allow_dash: bool = False,
         path_type: type[Any] | None = None,
-        executable: bool = False,
     ):
         self.exists = exists
         self.file_okay = file_okay
         self.dir_okay = dir_okay
         self.readable = readable
         self.writable = writable
-        self.executable = executable
         self.resolve_path = resolve_path
         self.allow_dash = allow_dash
         self.type = path_type
@@ -682,7 +680,9 @@ class TyperPath(_click.ParamType):
         self, value: str | os.PathLike[str]
     ) -> str | bytes | os.PathLike[str]:
         if self.type is not None and not isinstance(value, self.type):
-            if self.type is str:
+            if (
+                self.type is str
+            ):  # pragma: no cover  # TODO: perhaps this branch can't be hit and should be removed
                 return os.fsdecode(value)
             elif self.type is bytes:
                 return os.fsencode(value)
@@ -711,13 +711,13 @@ class TyperPath(_click.ParamType):
                 if not self.exists:
                     return self.coerce_path_result(rv)
                 self.fail(
-                    f"{self.name.title()} {format_filename(value)!r} does not exist.",
+                    f"{self.name.title()} {_click.utils.format_filename(value)!r} does not exist.",
                     param,
                     ctx,
                 )
 
             name = self.name.title()
-            loc = repr(format_filename(value))
+            loc = repr(_click.utils.format_filename(value))
             if not self.file_okay and stat.S_ISREG(st.st_mode):
                 self.fail(f"{name} {loc} is a file.", param, ctx)
 
@@ -729,9 +729,6 @@ class TyperPath(_click.ParamType):
 
             if self.writable and not os.access(rv, os.W_OK):
                 self.fail(f"{name} {loc} is not writable.", param, ctx)
-
-            if self.executable and not os.access(value, os.X_OK):
-                self.fail(f"{name} {loc} is not executable.", param, ctx)
 
         return self.coerce_path_result(rv)
 

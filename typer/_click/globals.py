@@ -1,47 +1,41 @@
-from __future__ import annotations
-
-import typing as t
 from threading import local
+from typing import TYPE_CHECKING, Literal, Union, cast, overload
 
-if t.TYPE_CHECKING:
+if TYPE_CHECKING:
     from .core import Context
 
 _local = local()
 
 
-@t.overload
-def get_current_context(silent: t.Literal[False] = False) -> Context: ...
+@overload
+def get_current_context(silent: Literal[False] = False) -> "Context": ...
 
 
-@t.overload
-def get_current_context(silent: bool = ...) -> Context | None: ...
+@overload
+def get_current_context(silent: bool = ...) -> Union["Context", None]: ...
 
 
-def get_current_context(silent: bool = False) -> Context | None:
+def get_current_context(silent: bool = False) -> Union["Context", None]:
     """Returns the current click context.  This can be used as a way to
     access the current context object from anywhere.  This is a more implicit
-    alternative to the :func:`pass_context` decorator.  This function is
-    primarily useful for helpers such as :func:`echo` which might be
+    alternative to the `pass_context` decorator.  This function is
+    primarily useful for helpers such as `echo` which might be
     interested in changing its behavior based on the current context.
 
-    To push the current context, :meth:`Context.scope` can be used.
-
-    .. versionadded:: 5.0
-
-    :param silent: if set to `True` the return value is `None` if no context
-                   is available.  The default behavior is to raise a
-                   :exc:`RuntimeError`.
+    To push the current context, `Context.scope` can be used.
     """
     try:
-        return t.cast("Context", _local.stack[-1])
+        return cast("Context", _local.stack[-1])
     except (AttributeError, IndexError) as e:
         if not silent:
-            raise RuntimeError("There is no active click context.") from e
+            raise RuntimeError(
+                "There is no active click context."
+            ) from e  # pragma: no cover
 
     return None
 
 
-def push_context(ctx: Context) -> None:
+def push_context(ctx: "Context") -> None:
     """Pushes a new context to the current stack."""
     _local.__dict__.setdefault("stack", []).append(ctx)
 

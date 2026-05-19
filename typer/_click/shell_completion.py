@@ -1,49 +1,9 @@
-from __future__ import annotations
-
-import collections.abc as cabc
 import re
-import typing as t
+from abc import ABC, abstractmethod
+from collections.abc import MutableMapping
+from typing import Any, ClassVar, TypeVar
 
 from .core import Command, Context, Parameter, ParameterSource
-from .utils import echo
-
-
-def shell_complete(
-    cli: Command,
-    ctx_args: cabc.MutableMapping[str, t.Any],
-    prog_name: str,
-    complete_var: str,
-    instruction: str,
-) -> int:
-    """Perform shell completion for the given CLI program.
-
-    :param cli: Command being called.
-    :param ctx_args: Extra arguments to pass to
-        ``cli.make_context``.
-    :param prog_name: Name of the executable in the shell.
-    :param complete_var: Name of the environment variable that holds
-        the completion instruction.
-    :param instruction: Value of ``complete_var`` with the completion
-        instruction and shell, in the form ``instruction_shell``.
-    :return: Status code to exit with.
-    """
-    shell, _, instruction = instruction.partition("_")
-    comp_cls = get_completion_class(shell)
-
-    if comp_cls is None:
-        return 1
-
-    comp = comp_cls(cli, ctx_args, prog_name, complete_var)
-
-    if instruction == "source":
-        echo(comp.source())
-        return 0
-
-    if instruction == "complete":
-        echo(comp.complete())
-        return 0
-
-    return 1
 
 
 class CompletionItem:
@@ -55,62 +15,47 @@ class CompletionItem:
     Arbitrary parameters can be passed when creating the object, and
     accessed using ``item.attr``. If an attribute wasn't passed,
     accessing it returns ``None``.
-
-    :param value: The completion suggestion.
-    :param type: Tells the shell script to provide special completion
-        support for the type. Click uses ``"dir"`` and ``"file"``.
-    :param help: String shown next to the value if supported.
-    :param kwargs: Arbitrary metadata. The built-in implementations
-        don't use this, but custom type completions paired with custom
-        shell support could use it.
     """
 
     __slots__ = ("value", "type", "help", "_info")
 
     def __init__(
         self,
-        value: t.Any,
+        value: Any,
         type: str = "plain",
         help: str | None = None,
-        **kwargs: t.Any,
+        **kwargs: Any,
     ) -> None:
-        self.value: t.Any = value
+        self.value: Any = value
         self.type: str = type
         self.help: str | None = help
         self._info = kwargs
 
-    def __getattr__(self, name: str) -> t.Any:
+    def __getattr__(self, name: str) -> Any:
         return self._info.get(name)
 
 
-class ShellComplete:
+class ShellComplete(ABC):
     """Base class for providing shell completion support. A subclass for
     a given shell will override attributes and methods to implement the
     completion instructions (``source`` and ``complete``).
-
-    :param cli: Command being called.
-    :param prog_name: Name of the executable in the shell.
-    :param complete_var: Name of the environment variable that holds
-        the completion instruction.
-
-    .. versionadded:: 8.0
     """
 
-    name: t.ClassVar[str]
-    """Name to register the shell as with :func:`add_completion_class`.
+    name: ClassVar[str]
+    """Name to register the shell as with `add_completion_class`.
     This is used in completion instructions (``{name}_source`` and
     ``{name}_complete``).
     """
 
-    source_template: t.ClassVar[str]
-    """Completion script template formatted by :meth:`source`. This must
+    source_template: ClassVar[str]
+    """Completion script template formatted by `source`. This must
     be provided by subclasses.
     """
 
     def __init__(
         self,
         cli: Command,
-        ctx_args: cabc.MutableMapping[str, t.Any],
+        ctx_args: MutableMapping[str, Any],
         prog_name: str,
         complete_var: str,
     ) -> None:
@@ -127,58 +72,47 @@ class ShellComplete:
         safe_name = re.sub(r"\W*", "", self.prog_name.replace("-", "_"), flags=re.ASCII)
         return f"_{safe_name}_completion"
 
-    def source_vars(self) -> dict[str, t.Any]:
-        """Vars for formatting :attr:`source_template`.
-
-        By default this provides ``complete_func``, ``complete_var``,
-        and ``prog_name``.
-        """
-        return {
-            "complete_func": self.func_name,
-            "complete_var": self.complete_var,
-            "prog_name": self.prog_name,
-        }
+    @abstractmethod
+    def source_vars(self) -> dict[str, Any]:
+        """Vars for formatting `source_template`."""
+        pass  # pragma: no cover
 
     def source(self) -> str:
         """Produce the shell script that defines the completion
         function. By default this ``%``-style formats
-        :attr:`source_template` with the dict returned by
-        :meth:`source_vars`.
+        `source_template` with the dict returned by `source_vars`.
         """
         return self.source_template % self.source_vars()
 
+    @abstractmethod
     def get_completion_args(self) -> tuple[list[str], str]:
         """Use the env vars defined by the shell script to return a
         tuple of ``args, incomplete``. This must be implemented by
         subclasses.
         """
-        raise NotImplementedError
+        pass  # pragma: no cover
 
     def get_completions(self, args: list[str], incomplete: str) -> list[CompletionItem]:
         """Determine the context and last complete command or parameter
         from the complete args. Call that object's ``shell_complete``
         method to get the completions for the incomplete value.
-
-        :param args: List of complete args before the incomplete value.
-        :param incomplete: Value being completed. May be empty.
         """
         ctx = _resolve_context(self.cli, self.ctx_args, self.prog_name, args)
         obj, incomplete = _resolve_incomplete(ctx, args, incomplete)
         return obj.shell_complete(ctx, incomplete)
 
+    @abstractmethod
     def format_completion(self, item: CompletionItem) -> str:
         """Format a completion item into the form recognized by the
         shell script. This must be implemented by subclasses.
-
-        :param item: Completion item to format.
         """
-        raise NotImplementedError
+        pass  # pragma: no cover
 
     def complete(self) -> str:
         """Produce the completion data to send back to the shell.
 
-        By default this calls :meth:`get_completion_args`, gets the
-        completions, then calls :meth:`format_completion` for each
+        By default this calls `get_completion_args`, gets the
+        completions, then calls `format_completion` for each
         completion.
         """
         args, incomplete = self.get_completion_args()
@@ -187,59 +121,34 @@ class ShellComplete:
         return "\n".join(out)
 
 
-ShellCompleteType = t.TypeVar("ShellCompleteType", bound="type[ShellComplete]")
+ShellCompleteType = TypeVar("ShellCompleteType", bound="type[ShellComplete]")
 
 
 _available_shells: dict[str, type[ShellComplete]] = {}
 
 
-def add_completion_class(
-    cls: ShellCompleteType, name: str | None = None
-) -> ShellCompleteType:
-    """Register a :class:`ShellComplete` subclass under the given name.
+def add_completion_class(cls: ShellCompleteType, name: str) -> ShellCompleteType:
+    """Register a `ShellComplete` subclass under the given name.
     The name will be provided by the completion instruction environment
     variable during completion.
-
-    :param cls: The completion class that will handle completion for the
-        shell.
-    :param name: Name to register the class under. Defaults to the
-        class's ``name`` attribute.
     """
-    if name is None:
-        name = cls.name
-
     _available_shells[name] = cls
 
     return cls
 
 
 def get_completion_class(shell: str) -> type[ShellComplete] | None:
-    """Look up a registered :class:`ShellComplete` subclass by the name
+    """Look up a registered `ShellComplete` subclass by the name
     provided by the completion instruction environment variable. If the
     name isn't registered, returns ``None``.
-
-    :param shell: Name the class is registered under.
     """
     return _available_shells.get(shell)
 
 
 def split_arg_string(string: str) -> list[str]:
-    """Split an argument string as with :func:`shlex.split`, but don't
+    """Split an argument string as with `shlex.split`, but don't
     fail if the string is incomplete. Ignores a missing closing quote or
     incomplete escape sequence and uses the partial token as-is.
-
-    .. code-block:: python
-
-        split_arg_string("example 'my file")
-        ["example", "my file"]
-
-        split_arg_string("example my\\")
-        ["example", "my"]
-
-    :param string: String to split.
-
-    .. versionchanged:: 8.2
-        Moved to ``shell_completion`` from ``parser``.
     """
     import shlex
 
@@ -251,7 +160,7 @@ def split_arg_string(string: str) -> list[str]:
     try:
         for token in lex:
             out.append(token)
-    except ValueError:
+    except ValueError:  # pragma: no cover
         # Raised when end-of-string is reached in an invalid state. Use
         # the partial token as-is. The quote or escape character is in
         # lex.state, not lex.token.
@@ -263,10 +172,6 @@ def split_arg_string(string: str) -> list[str]:
 def _is_incomplete_argument(ctx: Context, param: Parameter) -> bool:
     """Determine if the given parameter is an argument that can still
     accept values.
-
-    :param ctx: Invocation context for the command represented by the
-        parsed complete args.
-    :param param: Argument object being checked.
     """
     # avoid circular imports
     from ..core import TyperArgument
@@ -298,11 +203,7 @@ def _start_of_option(ctx: Context, value: str) -> bool:
 
 
 def _is_incomplete_option(ctx: Context, args: list[str], param: Parameter) -> bool:
-    """Determine if the given parameter is an option that needs a value.
-
-    :param args: List of complete args before the incomplete value.
-    :param param: Option object being checked.
-    """
+    """Determine if the given parameter is an option that needs a value."""
     # avoid circular imports
     from ..core import TyperOption
 
@@ -327,17 +228,13 @@ def _is_incomplete_option(ctx: Context, args: list[str], param: Parameter) -> bo
 
 def _resolve_context(
     cli: Command,
-    ctx_args: cabc.MutableMapping[str, t.Any],
+    ctx_args: MutableMapping[str, Any],
     prog_name: str,
     args: list[str],
 ) -> Context:
     """Produce the context hierarchy starting with the command and
     traversing the complete arguments. This only follows the commands,
     it doesn't trigger input prompts or callbacks.
-
-    :param cli: Command being called.
-    :param prog_name: Name of the executable in the shell.
-    :param args: List of complete args before the incomplete value.
     """
     # avoid circular imports
     from ..core import TyperGroup
@@ -361,7 +258,7 @@ def _resolve_context(
                 ) as sub_ctx:
                     ctx = sub_ctx
                     args = ctx._protected_args + ctx.args
-            else:
+            else:  # pragma: no cover
                 break
 
     return ctx
@@ -372,11 +269,6 @@ def _resolve_incomplete(
 ) -> tuple[Command | Parameter, str]:
     """Find the Click object that will handle the completion of the
     incomplete value. Return the object and the incomplete value.
-
-    :param ctx: Invocation context for the command represented by
-        the parsed complete args.
-    :param args: List of complete args before the incomplete value.
-    :param incomplete: Value being completed. May be empty.
     """
     # Different shells treat an "=" between a long option name and
     # value differently. Might keep the value joined, return the "="

@@ -24,6 +24,19 @@ def get_mod(request: pytest.FixtureRequest) -> ModuleType:
     return mod
 
 
+def test_type_repr(mod: ModuleType):
+    command = typer.main.get_command(mod.app)
+
+    id_param = next(param for param in command.params if param.name == "id")
+    assert repr(id_param.type) == "<IntRange 0<=x<=1000>"
+
+    age_param = next(param for param in command.params if param.name == "age")
+    assert repr(age_param.type) == "<IntRange x>=18>"
+
+    score_param = next(param for param in command.params if param.name == "score")
+    assert repr(score_param.type) == "<FloatRange x<=100>"
+
+
 def test_help(mod: ModuleType):
     result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0

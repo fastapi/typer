@@ -36,6 +36,7 @@ dependencies = [
     "shellingham >=1.3.0",
     "rich >=12.3.0",
     "annotated-doc >=0.0.2",
+    "colorama; platform_system == 'Windows'",
 ]
 readme = "README.md"
 

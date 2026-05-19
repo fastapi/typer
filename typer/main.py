@@ -1509,7 +1509,7 @@ def get_callback(
             else:
                 use_params[k] = v
         if context_param_name:
-            use_params[context_param_name] = _click.get_current_context()
+            use_params[context_param_name] = _click.globals.get_current_context()
         return callback(**use_params)
 
     update_wrapper(wrapper, callback)
@@ -1518,7 +1518,7 @@ def get_callback(
 
 def get_click_type(
     *, annotation: Any, parameter_info: ParameterInfo
-) -> _click.ParamType:
+) -> _click.types.ParamType:
     if parameter_info.click_type is not None:
         return parameter_info.click_type
 
@@ -1526,7 +1526,7 @@ def get_click_type(
         return _click.types.FuncParamType(parameter_info.parser)
 
     elif annotation is str:
-        return _click.STRING
+        return _click.types.STRING
     elif annotation is int:
         if parameter_info.min is not None or parameter_info.max is not None:
             min_ = None
@@ -1535,24 +1535,24 @@ def get_click_type(
                 min_ = int(parameter_info.min)
             if parameter_info.max is not None:
                 max_ = int(parameter_info.max)
-            return _click.IntRange(min=min_, max=max_, clamp=parameter_info.clamp)
+            return _click.types.IntRange(min=min_, max=max_, clamp=parameter_info.clamp)
         else:
-            return _click.INT
+            return _click.types.INT
     elif annotation is float:
         if parameter_info.min is not None or parameter_info.max is not None:
-            return _click.FloatRange(
+            return _click.types.FloatRange(
                 min=parameter_info.min,
                 max=parameter_info.max,
                 clamp=parameter_info.clamp,
             )
         else:
-            return _click.FLOAT
+            return _click.types.FLOAT
     elif annotation is bool:
-        return _click.BOOL
+        return _click.types.BOOL
     elif annotation == UUID:
-        return _click.UUID
+        return _click.types.UUID
     elif annotation == datetime:
-        return _click.DateTime(formats=parameter_info.formats)
+        return _click.types.DateTime(formats=parameter_info.formats)
     elif (
         annotation == Path
         or parameter_info.allow_dash
@@ -1570,7 +1570,7 @@ def get_click_type(
             path_type=parameter_info.path_type,
         )
     elif lenient_issubclass(annotation, FileTextWrite):
-        return _click.File(
+        return _click.types.File(
             mode=parameter_info.mode or "w",
             encoding=parameter_info.encoding,
             errors=parameter_info.errors,
@@ -1578,7 +1578,7 @@ def get_click_type(
             atomic=parameter_info.atomic,
         )
     elif lenient_issubclass(annotation, FileText):
-        return _click.File(
+        return _click.types.File(
             mode=parameter_info.mode or "r",
             encoding=parameter_info.encoding,
             errors=parameter_info.errors,
@@ -1586,7 +1586,7 @@ def get_click_type(
             atomic=parameter_info.atomic,
         )
     elif lenient_issubclass(annotation, FileBinaryRead):
-        return _click.File(
+        return _click.types.File(
             mode=parameter_info.mode or "rb",
             encoding=parameter_info.encoding,
             errors=parameter_info.errors,
@@ -1594,7 +1594,7 @@ def get_click_type(
             atomic=parameter_info.atomic,
         )
     elif lenient_issubclass(annotation, FileBinaryWrite):
-        return _click.File(
+        return _click.types.File(
             mode=parameter_info.mode or "wb",
             encoding=parameter_info.encoding,
             errors=parameter_info.errors,
@@ -2004,4 +2004,4 @@ def launch(
         return 0
 
     else:
-        return _click.launch(url)
+        return _click.launch(url, wait=wait, locate=locate)

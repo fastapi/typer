@@ -96,7 +96,7 @@ def Option(
     autocompletion: Callable[..., Any] | None = None,
     default_factory: Callable[[], Any] | None = None,
     # Custom type
-    click_type: _click.ParamType | None = None,
+    click_type: _click.types.ParamType | None = None,
     # Option
     show_default: bool | str = True,
     prompt: bool | str = False,
@@ -343,7 +343,7 @@ def Option(
         ),
     ] = None,
     click_type: Annotated[
-        _click.ParamType | None,
+        _click.types.ParamType | None,
         Doc(
             """
             Define this parameter to use a [custom Click type](https://click.palletsprojects.com/en/stable/parameters/#implementing-custom-types) in your Typer applications.
@@ -1077,7 +1077,7 @@ def Argument(
     autocompletion: Callable[..., Any] | None = None,
     default_factory: Callable[[], Any] | None = None,
     # Custom type
-    click_type: _click.ParamType | None = None,
+    click_type: _click.types.ParamType | None = None,
     # TyperArgument
     show_default: bool | str = True,
     show_choices: bool = True,
@@ -1297,7 +1297,7 @@ def Argument(
         ),
     ] = None,
     click_type: Annotated[
-        _click.ParamType | None,
+        _click.types.ParamType | None,
         Doc(
             """
             Define this parameter to use a [custom Click type](https://click.palletsprojects.com/en/stable/parameters/#implementing-custom-types) in your Typer applications.

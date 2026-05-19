@@ -33,7 +33,7 @@ def install_callback(ctx: _click.Context, param: _click.Parameter, value: Any) -
         shell, path = install(shell=value)
     else:
         shell, path = install()
-    _click.secho(f"{shell} completion installed in {path}", fg="green")
+    _click.termui.secho(f"{shell} completion installed in {path}", fg="green")
     _click.echo("Completion will take effect once you restart the terminal")
     sys.exit(0)
 
