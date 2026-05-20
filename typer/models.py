@@ -13,6 +13,8 @@ from typing import (
 )
 
 from . import _click
+from ._click import types
+from ._click.shell_completion import CompletionItem
 
 if TYPE_CHECKING:  # pragma: no cover
     from .core import TyperCommand, TyperGroup
@@ -290,14 +292,14 @@ class ParameterInfo:
         # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Callable[
             [_click.Context, _click.Parameter, str],
-            list["_click.shell_completion.CompletionItem"] | list[str],
+            list["CompletionItem"] | list[str],
         ]
         | None = None,
         autocompletion: Callable[..., Any] | None = None,
         default_factory: Callable[[], Any] | None = None,
         # Custom type
         parser: Callable[[str], Any] | None = None,
-        click_type: _click.types.ParamType | None = None,
+        click_type: types.ParamType | None = None,
         # TyperArgument
         show_default: bool | str = True,
         show_choices: bool = True,
@@ -399,14 +401,14 @@ class OptionInfo(ParameterInfo):
         # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Callable[
             [_click.Context, _click.Parameter, str],
-            list["_click.shell_completion.CompletionItem"] | list[str],
+            list["CompletionItem"] | list[str],
         ]
         | None = None,
         autocompletion: Callable[..., Any] | None = None,
         default_factory: Callable[[], Any] | None = None,
         # Custom type
         parser: Callable[[str], Any] | None = None,
-        click_type: _click.types.ParamType | None = None,
+        click_type: types.ParamType | None = None,
         # Option
         show_default: bool | str = True,
         prompt: bool | str = False,
@@ -527,14 +529,14 @@ class ArgumentInfo(ParameterInfo):
         # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Callable[
             [_click.Context, _click.Parameter, str],
-            list["_click.shell_completion.CompletionItem"] | list[str],
+            list["CompletionItem"] | list[str],
         ]
         | None = None,
         autocompletion: Callable[..., Any] | None = None,
         default_factory: Callable[[], Any] | None = None,
         # Custom type
         parser: Callable[[str], Any] | None = None,
-        click_type: _click.types.ParamType | None = None,
+        click_type: types.ParamType | None = None,
         # TyperArgument
         show_default: bool | str = True,
         show_choices: bool = True,
@@ -643,7 +645,7 @@ class DeveloperExceptionConfig:
         self.pretty_exceptions_short = pretty_exceptions_short
 
 
-class TyperPath(_click.types.ParamType):
+class TyperPath(types.ParamType):
     # Based originally on code from Click 8.3.1
     # Partly rewritten and added an override for shell_complete
 
@@ -691,7 +693,7 @@ class TyperPath(_click.types.ParamType):
 
         return value
 
-    def convert(
+    def convert(  # ty: ignore[invalid-method-override]
         self,
         value: str | os.PathLike[str],
         param: _click.Parameter | None,
@@ -734,7 +736,7 @@ class TyperPath(_click.types.ParamType):
 
     def shell_complete(
         self, ctx: _click.Context, param: _click.Parameter, incomplete: str
-    ) -> list[_click.shell_completion.CompletionItem]:
+    ) -> list[CompletionItem]:
         """Return an empty list so that the autocompletion functionality
         will work properly from the commandline.
         """

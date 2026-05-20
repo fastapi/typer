@@ -261,11 +261,11 @@ def echo(
             out = strip_ansi(out)
         elif WIN:
             if auto_wrap_for_ansi is not None:
-                file = auto_wrap_for_ansi(file, color)  # type: ignore
+                file = auto_wrap_for_ansi(file, color)  # type: ignore[arg-type,call-arg]
             elif not color:
                 out = strip_ansi(out)
 
-    file.write(out)  # type: ignore
+    file.write(out)  # type: ignore[arg-type]
     file.flush()
 
 

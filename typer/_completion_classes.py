@@ -5,7 +5,7 @@ import sys
 from typing import Any
 
 from . import _click
-from ._click.shell_completion import ShellComplete, add_completion_class
+from ._click.shell_completion import CompletionItem, ShellComplete, add_completion_class
 from ._click.shell_completion import split_arg_string as click_split_arg_string
 from ._completion_shared import (
     COMPLETION_SCRIPT_BASH,
@@ -48,7 +48,7 @@ class BashComplete(ShellComplete):
 
         return args, incomplete
 
-    def format_completion(self, item: _click.shell_completion.CompletionItem) -> str:
+    def format_completion(self, item: CompletionItem) -> str:
         # TODO: Explore replicating the new behavior from Click, with item types and
         # triggering completion for files and directories
         # return f"{item.type},{item.value}"
@@ -117,7 +117,7 @@ class ZshComplete(ShellComplete):
             incomplete = ""
         return args, incomplete
 
-    def format_completion(self, item: _click.shell_completion.CompletionItem) -> str:
+    def format_completion(self, item: CompletionItem) -> str:
         def escape(s: str) -> str:
             return (
                 s.replace('"', '""')
@@ -168,7 +168,7 @@ class FishComplete(ShellComplete):
             incomplete = ""
         return args, incomplete
 
-    def format_completion(self, item: _click.shell_completion.CompletionItem) -> str:
+    def format_completion(self, item: CompletionItem) -> str:
         # TODO: Explore replicating the new behavior from Click, pay attention to
         # the difference with and without formatted help
         # if item.help:
@@ -217,7 +217,7 @@ class PowerShellComplete(ShellComplete):
         args = cwords[1:-1] if incomplete else cwords[1:]
         return args, incomplete
 
-    def format_completion(self, item: _click.shell_completion.CompletionItem) -> str:
+    def format_completion(self, item: CompletionItem) -> str:
         return f"{item.value}:::{_sanitize_help_text(item.help) if item.help else ' '}"
 
 

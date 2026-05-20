@@ -16,6 +16,7 @@ from typing import (
 from . import _click
 from ._click import types
 from ._click.parser import _OptionParser
+from ._click.shell_completion import CompletionItem
 from ._typing import Literal
 from .utils import parse_boolean_env_var
 
@@ -62,9 +63,7 @@ def _typer_param_setup_autocompletion_compat(
 
         def compat_autocompletion(
             ctx: _click.Context, param: _click.core.Parameter, incomplete: str
-        ) -> list["_click.shell_completion.CompletionItem"]:
-            from ._click.shell_completion import CompletionItem
-
+        ) -> list[CompletionItem]:
             out = []
 
             for c in autocompletion(ctx, [], incomplete):
@@ -264,7 +263,7 @@ class TyperArgument(_click.core.Parameter):
         # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Callable[
             [_click.Context, _click.Parameter, str],
-            list["_click.shell_completion.CompletionItem"] | list[str],
+            list[CompletionItem] | list[str],
         ]
         | None = None,
         autocompletion: Callable[..., Any] | None = None,
@@ -439,7 +438,7 @@ class TyperOption(_click.Parameter):
         *,
         # Parameter
         param_decls: list[str],
-        type: _click.types.ParamType | Any | None = None,
+        type: types.ParamType | Any | None = None,
         required: bool = False,
         default: Any | None = None,
         callback: Callable[..., Any] | None = None,
@@ -452,7 +451,7 @@ class TyperOption(_click.Parameter):
         # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Callable[
             [_click.Context, _click.Parameter, str],
-            list["_click.shell_completion.CompletionItem"] | list[str],
+            list[CompletionItem] | list[str],
         ]
         | None = None,
         autocompletion: Callable[..., Any] | None = None,
@@ -524,7 +523,7 @@ class TyperOption(_click.Parameter):
         # Counting. TODO: test or remove? Not currently in coverage.
         self.count = count
         if count and type is None:
-            self.type = _click.types.IntRange(min=0)
+            self.type = types.IntRange(min=0)
 
         self.allow_from_autoenv = allow_from_autoenv
         self.help = help
@@ -810,7 +809,7 @@ class TyperOption(_click.Parameter):
             if default_string:
                 extra.append(_("default: {default}").format(default=default_string))
 
-        if isinstance(self.type, _click.types._NumberRangeBase):
+        if isinstance(self.type, types._NumberRangeBase):
             range_str = self.type._describe_range()
 
             if range_str:
@@ -1010,9 +1009,13 @@ class TyperGroup(_click.Command):
         if commands is None:
             commands = {}
         elif isinstance(commands, Sequence):
-            commands = {c.name: c for c in commands if c.name is not None}
+            commands = {
+                c.name: c
+                for c in commands
+                if isinstance(c, _click.Command) and c.name is not None
+            }
 
-        self.commands: MutableMapping[str, _click.Command] = commands
+        self.commands = cast(MutableMapping[str, _click.Command], commands)
         self.no_args_is_help = no_args_is_help
         self.invoke_without_command = invoke_without_command
 
@@ -1105,16 +1108,14 @@ class TyperGroup(_click.Command):
 
     def shell_complete(
         self, ctx: _click.Context, incomplete: str
-    ) -> list[_click.shell_completion.CompletionItem]:
+    ) -> list[CompletionItem]:
         """Return a list of completions for the incomplete value. Looks
         at the names of options, subcommands, and chained
         multi-commands.
         """
 
         results = [
-            _click.shell_completion.CompletionItem(
-                name, help=command.get_short_help_str()
-            )
+            CompletionItem(name, help=command.get_short_help_str())
             for name, command in _click.core._complete_visible_commands(ctx, incomplete)
         ]
         results.extend(super().shell_complete(ctx, incomplete))

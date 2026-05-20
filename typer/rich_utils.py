@@ -25,6 +25,7 @@ from rich.traceback import Traceback
 from typer.models import DeveloperExceptionConfig
 
 from . import _click
+from ._click import types
 from .core import TyperArgument, TyperGroup, TyperOption
 
 # Default styles
@@ -393,7 +394,7 @@ def _print_options_panel(
         # https://github.com/pallets/click/blob/c63c70dabd3f86ca68678b4f00951f78f52d0270/src/click/core.py#L2698-L2706  # noqa: E501
         # skip count with default range type
         if (
-            isinstance(param.type, _click.types._NumberRangeBase)
+            isinstance(param.type, types._NumberRangeBase)
             and isinstance(param, TyperOption)
             and not (param.count and param.type.min == 0 and param.type.max is None)
         ):

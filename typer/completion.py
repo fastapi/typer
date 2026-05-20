@@ -4,6 +4,7 @@ from collections.abc import MutableMapping
 from typing import Any
 
 from . import _click
+from ._click import shell_completion
 from ._completion_classes import completion_init
 from ._completion_shared import Shells, _get_shell_name, get_completion_script, install
 from .models import ParamMeta
@@ -122,7 +123,7 @@ def shell_complete(
     instruction, _, shell = instruction.partition("_")
     # Typer override end
 
-    comp_cls = _click.shell_completion.get_completion_class(shell)
+    comp_cls = shell_completion.get_completion_class(shell)
 
     if comp_cls is None:
         _click.echo(f"Shell {shell} not supported.", err=True)

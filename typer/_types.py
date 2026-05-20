@@ -3,12 +3,13 @@ from enum import Enum
 from typing import Any, Generic, TypeVar
 
 from . import _click
+from ._click import types
 from ._click.shell_completion import CompletionItem
 
 ParamTypeValue = TypeVar("ParamTypeValue")
 
 
-class TyperChoice(_click.types.ParamType, Generic[ParamTypeValue]):
+class TyperChoice(types.ParamType, Generic[ParamTypeValue]):
     # Code adapted from Click 8.3.1, with Typer using enum values in normalize_choice
     name = "choice"
 
@@ -49,8 +50,7 @@ class TyperChoice(_click.types.ParamType, Generic[ParamTypeValue]):
     def get_metavar(self, param: _click.Parameter, ctx: _click.Context) -> str | None:
         if param.param_type_name == "option" and not param.show_choices:  # type: ignore
             choice_metavars = [
-                _click.types.convert_type(type(choice)).name.upper()
-                for choice in self.choices
+                types.convert_type(type(choice)).name.upper() for choice in self.choices
             ]
             choices_str = "|".join([*dict.fromkeys(choice_metavars)])
         else:
