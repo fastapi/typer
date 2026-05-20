@@ -358,7 +358,7 @@ For a more complete example including more features, see the <a href="https://ty
 * [`shellingham`](https://github.com/sarugaku/shellingham): to automatically detect the current shell when installing completion.
 
 Typer used to depend on [Click](https://click.palletsprojects.com/) as well, a popular tool for building CLIs in Python.
-Since v0.26.0, Typer has vendored Click and has unified the two code bases for easier maintainability in the future. 
+Since v0.26.0, Typer has vendored Click and has unified the two code bases for easier maintainability in the future.
 Note that some Click functionality will not be available anymore in the future, as we continue to improve and extend Typer's codebase.
 
 For Windows users, Typer also installs [`colorama`](https://github.com/tartley/colorama) for producing colored terminal text.
