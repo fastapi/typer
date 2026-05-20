@@ -133,7 +133,7 @@ class _WindowsConsoleReader(_WindowsConsoleRawIOBase):
         return True
 
     def readinto(self, b: "Buffer") -> int:
-        bytes_to_be_read = len(b)  # ty: ignore[invalid-argument-type]
+        bytes_to_be_read = len(b)
         if not bytes_to_be_read:
             return 0
         elif bytes_to_be_read % 2:
@@ -141,7 +141,7 @@ class _WindowsConsoleReader(_WindowsConsoleRawIOBase):
                 "cannot read odd number of bytes from UTF-16-LE encoded console"
             )
 
-        buffer = get_buffer(b, writable=True)  # ty: ignore[call-non-callable]
+        buffer = get_buffer(b, writable=True)
         code_units_to_be_read = bytes_to_be_read // 2
         code_units_read = c_ulong()
 
@@ -176,8 +176,8 @@ class _WindowsConsoleWriter(_WindowsConsoleRawIOBase):
         return f"Windows error {errno}"
 
     def write(self, b: "Buffer") -> int:
-        bytes_to_be_written = len(b)  # ty: ignore[invalid-argument-type]
-        buf = get_buffer(b)  # ty: ignore[call-non-callable]
+        bytes_to_be_written = len(b)
+        buf = get_buffer(b)
         code_units_to_be_written = min(bytes_to_be_written, MAX_BYTES_WRITTEN) // 2
         code_units_written = c_ulong()
 
