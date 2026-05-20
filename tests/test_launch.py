@@ -132,3 +132,17 @@ def test_open_url_linux_locate(monkeypatch):
 
     assert typer.launch("/tmp/sub/file.txt", wait=False, locate=True) == 0
     assert recorded[-1] == ["xdg-open", "/tmp/sub"]
+
+
+@needs_windows
+def test_launch_file():
+    with (
+        patch("_click._termui_impl.sys.platform", "win32"),
+        patch("_click._termui_impl.WIN", True),
+        patch("_click._termui_impl.CYGWIN", False),
+        patch("subprocess.call", return_value=0) as call_mock,
+    ):
+        result = typer.launch("C:/tmp/file.txt", locate=True)
+
+    assert result == 0
+    call_mock.assert_called_once_with(["explorer", "/select,C:/tmp/file.txt"])

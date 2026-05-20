@@ -2,6 +2,62 @@
 
 ## Latest Changes
 
+### Upgrades
+
+* 📌 Pin max version of Click to `>= 8.2.1, < 8.4` temporarily to prevent incompatibilities. PR [#1753](https://github.com/fastapi/typer/pull/1753) by [@tiangolo](https://github.com/tiangolo).
+
+### Docs
+
+* 📝 Update link syntax to minimal Markdown. PR [#1623](https://github.com/fastapi/typer/pull/1623) by [@tiangolo](https://github.com/tiangolo).
+* 📝 Update and simplify usage of admonitions. PR [#1755](https://github.com/fastapi/typer/pull/1755) by [@tiangolo](https://github.com/tiangolo).
+
+### Internal
+
+* 📝 Fix categorization of PR 1475 in release notes. PR [#1769](https://github.com/fastapi/typer/pull/1769) by [@svlandeg](https://github.com/svlandeg).
+* ✅ Add Fish shell completion tests for colon options. PR [#1475](https://github.com/fastapi/typer/pull/1475) by [@Mohamed-Elwasila](https://github.com/Mohamed-Elwasila).
+* ✅ Extend completion unit tests for zsh, powershell and pwsh. PR [#1767](https://github.com/fastapi/typer/pull/1767) by [@ADiTyaRaj8969](https://github.com/ADiTyaRaj8969).
+* ⬆ Bump actions/github-script from 7.1.0 to 9.0.0. PR [#1746](https://github.com/fastapi/typer/pull/1746) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 🔧 Fix GitHub link in docs. PR [#1754](https://github.com/fastapi/typer/pull/1754) by [@tiangolo](https://github.com/tiangolo).
+* ⬆️ Migrate to Zensical. PR [#1470](https://github.com/fastapi/typer/pull/1470) by [@tiangolo](https://github.com/tiangolo).
+* ⬆ Bump urllib3 from 2.6.3 to 2.7.0. PR [#1741](https://github.com/fastapi/typer/pull/1741) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 🔧 Remove unnecessary Ruff rule. PR [#1752](https://github.com/fastapi/typer/pull/1752) by [@tiangolo](https://github.com/tiangolo).
+* 🔒️ Add zizmor and fix audit findings. PR [#1705](https://github.com/fastapi/typer/pull/1705) by [@YuriiMotov](https://github.com/YuriiMotov).
+* 🔒️ Only allow team members to modify dependencies. PR [#1744](https://github.com/fastapi/typer/pull/1744) by [@svlandeg](https://github.com/svlandeg).
+* ⬆ Bump mypy from 2.0.0 to 2.1.0. PR [#1742](https://github.com/fastapi/typer/pull/1742) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pydantic-settings from 2.14.0 to 2.14.1. PR [#1739](https://github.com/fastapi/typer/pull/1739) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ty from 0.0.34 to 0.0.35. PR [#1740](https://github.com/fastapi/typer/pull/1740) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump actions/add-to-project from 1.0.2 to 2.0.0. PR [#1731](https://github.com/fastapi/typer/pull/1731) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump actions/labeler from 6.0.1 to 6.1.0. PR [#1734](https://github.com/fastapi/typer/pull/1734) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pydantic from 2.13.3 to 2.13.4. PR [#1736](https://github.com/fastapi/typer/pull/1736) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump prek from 0.3.11 to 0.3.13. PR [#1735](https://github.com/fastapi/typer/pull/1735) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump mypy from 1.20.2 to 2.0.0. PR [#1737](https://github.com/fastapi/typer/pull/1737) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 👷 Add pre-commit for typos. PR [#1730](https://github.com/fastapi/typer/pull/1730) by [@tiangolo](https://github.com/tiangolo).
+* ⬆ Bump ty from 0.0.33 to 0.0.34. PR [#1729](https://github.com/fastapi/typer/pull/1729) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ty from 0.0.32 to 0.0.33. PR [#1724](https://github.com/fastapi/typer/pull/1724) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
+## 0.25.1 (2026-04-30)
+
+### Features
+
+* 🔧 Add Typer Library Skill for Agents. PR [#1620](https://github.com/fastapi/typer/pull/1620) by [@svlandeg](https://github.com/svlandeg).
+
+### Internal
+
+* ⬆ Bump ruff from 0.15.11 to 0.15.12. PR [#1722](https://github.com/fastapi/typer/pull/1722) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump prek from 0.3.10 to 0.3.11. PR [#1723](https://github.com/fastapi/typer/pull/1723) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
+## 0.25.0 (2026-04-26)
+
+### Features
+
+* 🚸 Don't truncate code lines in traceback when formatted with Rich. PR [#1695](https://github.com/fastapi/typer/pull/1695) by [@YuriiMotov](https://github.com/YuriiMotov).
+
+## 0.24.2 (2026-04-22)
+
+### Fixes
+
+* 🐛 Ensure that `typer.launch` forwards correctly when launching a file. PR [#1708](https://github.com/fastapi/typer/pull/1708) by [@svlandeg](https://github.com/svlandeg).
+
 ### Refactors
 
 * 🎨 Ensure `ty` runs without errors. PR [#1628](https://github.com/fastapi/typer/pull/1628) by [@svlandeg](https://github.com/svlandeg).
@@ -17,6 +73,27 @@
 
 ### Internal
 
+* ⬆ Bump mypy from 1.20.1 to 1.20.2. PR [#1715](https://github.com/fastapi/typer/pull/1715) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump prek from 0.3.9 to 0.3.10. PR [#1716](https://github.com/fastapi/typer/pull/1716) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pydantic-settings from 2.13.1 to 2.14.0. PR [#1713](https://github.com/fastapi/typer/pull/1713) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ty from 0.0.31 to 0.0.32. PR [#1711](https://github.com/fastapi/typer/pull/1711) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pydantic from 2.13.2 to 2.13.3. PR [#1712](https://github.com/fastapi/typer/pull/1712) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pygments from 2.19.2 to 2.20.0. PR [#1667](https://github.com/fastapi/typer/pull/1667) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pymdown-extensions from 10.20 to 10.21.2. PR [#1710](https://github.com/fastapi/typer/pull/1710) by [@YuriiMotov](https://github.com/YuriiMotov).
+* ⬆ Bump actions/cache from 5.0.4 to 5.0.5. PR [#1700](https://github.com/fastapi/typer/pull/1700) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pydantic from 2.13.1 to 2.13.2. PR [#1703](https://github.com/fastapi/typer/pull/1703) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump actions/upload-artifact from 7.0.0 to 7.0.1. PR [#1701](https://github.com/fastapi/typer/pull/1701) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ruff from 0.15.10 to 0.15.11. PR [#1704](https://github.com/fastapi/typer/pull/1704) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump cloudflare/wrangler-action from 3.14.1 to 3.15.0. PR [#1702](https://github.com/fastapi/typer/pull/1702) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump astral-sh/setup-uv from 7.6.0 to 8.1.0. PR [#1699](https://github.com/fastapi/typer/pull/1699) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump ty from 0.0.30 to 0.0.31. PR [#1696](https://github.com/fastapi/typer/pull/1696) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pydantic from 2.13.0 to 2.13.1. PR [#1697](https://github.com/fastapi/typer/pull/1697) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 🔒 Pin GitHub actions by commit SHA. PR [#1666](https://github.com/fastapi/typer/pull/1666) by [@YuriiMotov](https://github.com/YuriiMotov).
+* ⬆ Bump ty from 0.0.29 to 0.0.30. PR [#1693](https://github.com/fastapi/typer/pull/1693) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump prek from 0.3.8 to 0.3.9. PR [#1691](https://github.com/fastapi/typer/pull/1691) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pygithub from 2.9.0 to 2.9.1. PR [#1692](https://github.com/fastapi/typer/pull/1692) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump rich from 14.3.3 to 15.0.0. PR [#1688](https://github.com/fastapi/typer/pull/1688) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pydantic from 2.12.5 to 2.13.0. PR [#1687](https://github.com/fastapi/typer/pull/1687) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump mypy from 1.20.0 to 1.20.1. PR [#1689](https://github.com/fastapi/typer/pull/1689) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump cryptography from 46.0.6 to 46.0.7. PR [#1682](https://github.com/fastapi/typer/pull/1682) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump ruff from 0.15.9 to 0.15.10. PR [#1684](https://github.com/fastapi/typer/pull/1684) by [@dependabot[bot]](https://github.com/apps/dependabot).
