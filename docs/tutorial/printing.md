@@ -196,7 +196,7 @@ And for the cases where you want to display data more beautifully, or more advan
 
 ### Why `typer.echo`
 
-`typer.echo()` (which is actually just `click.echo()`) applies some checks to try and convert binary data to strings, and other similar things.
+`typer.echo()` applies some checks to try and convert binary data to strings, and other similar things.
 
 But in most of the cases you wouldn't need it, as in modern Python strings (`str`) already support and use Unicode, and you would rarely deal with pure `bytes` that you want to print on the screen.
 

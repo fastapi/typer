@@ -241,7 +241,7 @@ There you could buy me a coffee ☕️ to say thanks. 😄
 
 ## Sponsor the tools that power Typer
 
-As you have seen in the documentation, Typer is built on top of Click.
+As you have seen in the documentation, Typer has been built on top of Click.
 
 You can also sponsor:
 

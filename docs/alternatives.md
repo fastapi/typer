@@ -70,11 +70,9 @@ It uses decorators on top of functions to modify the actual value of those funct
 
 It was built with some great ideas and design using the features available in the language at the time (Python 2.x).
 
-/// tip | **Typer** uses it for
+/// tip | **Typer** builds on top of Click functionality. It has vendored Click v8.3.1 and adds a layer on top of it.
 
-Everything. 🚀
-
-**Typer** mainly adds a layer on top of Click, making the code simpler and easier to use, with autocompletion everywhere, etc, but providing all the powerful features of Click underneath.
+Typer aims to make the code simpler and easier to use, with autocompletion everywhere, etc, while still providing many of the powerful features of Click underneath.
 
 As someone pointed out: <em>["Nice to see it is built on Click but adds the type stuff. Me gusta!"](https://twitter.com/fishnets88/status/1210126833745838080)</em>
 

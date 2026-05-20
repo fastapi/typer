@@ -63,14 +63,6 @@ Auto completion works when you create a package (installable with `pip`). Or whe
 
 ///
 
-/// tip
-
-**Typer**'s completion is implemented internally, it uses ideas and components from Click and ideas from `click-completion`, but it doesn't use `click-completion` and re-implements some of the relevant parts of Click.
-
-Then it extends those ideas with features and bug fixes. For example, **Typer** programs also support modern versions of PowerShell (e.g. in Windows 10) among all the other shells.
-
-///
-
 ## Tested
 
 * 100% <abbr title="The amount of code that is automatically tested">test coverage</abbr>.
