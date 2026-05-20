@@ -265,7 +265,7 @@ def echo(
             elif not color:
                 out = strip_ansi(out)
 
-    file.write(out)  # type: ignore
+    file.write(out)  # type: ignore[arg-type]
     file.flush()
 
 

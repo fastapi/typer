@@ -123,7 +123,7 @@ class CompositeParamType(ParamType):
 
 class FuncParamType(ParamType):
     def __init__(self, func: Callable[[Any], Any]) -> None:
-        self.name: str = func.__name__
+        self.name: str = getattr(func, "__name__", "function")
         self.func = func
 
     def convert(
@@ -135,6 +135,7 @@ class FuncParamType(ParamType):
             try:
                 value = str(value)
             except UnicodeError:  # pragma: no cover
+                assert isinstance(value, bytes)
                 value = value.decode("utf-8", "replace")
 
             self.fail(value, param, ctx)
@@ -269,10 +270,10 @@ class _NumberRangeBase(_NumberParamTypeBase):
 
         if self.clamp:
             if lt_min:
-                return self._clamp(self.min, 1, self.min_open)  # type: ignore
+                return self._clamp(self.min, 1, self.min_open)  # type: ignore[arg-type]
 
             if gt_max:
-                return self._clamp(self.max, -1, self.max_open)  # type: ignore
+                return self._clamp(self.max, -1, self.max_open)  # type: ignore[arg-type]
 
         if lt_min or gt_max:
             self.fail(
@@ -592,7 +593,7 @@ class Tuple(CompositeParamType):
         self.types: Sequence[ParamType] = [convert_type(ty) for ty in types]
 
     @property
-    def name(self) -> str:  # type: ignore
+    def name(self) -> str:  # type: ignore[override]
         return f"<{' '.join(ty.name for ty in self.types)}>"
 
     @property

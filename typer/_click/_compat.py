@@ -495,7 +495,7 @@ if sys.platform.startswith("win") and WIN:
                 ansi_wrapper.reset_all()
                 raise
 
-        rv.write = _safe_write  # type: ignore[method-assign]
+        rv.write = _safe_write  # type: ignore[method-assign]  # ty: ignore[invalid-assignment]
 
         try:
             _ansi_stream_wrappers[stream] = rv

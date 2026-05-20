@@ -546,7 +546,7 @@ class Command(ABC):
         self.options_metavar = options_metavar
         self.short_help = short_help
         self.add_help_option = add_help_option
-        self._help_option = None
+        self._help_option: TyperOption | None = None
         self.no_args_is_help = no_args_is_help
         self.hidden = hidden
         self.deprecated = deprecated
@@ -610,7 +610,7 @@ class Command(ABC):
 
             # Apply help_option decorator and pop resulting option
             help_option(help_option_names)(self)
-            self._help_option = self.params.pop()  # type: ignore[assignment]
+            self._help_option = cast("TyperOption", self.params.pop())
 
         return self._help_option
 
