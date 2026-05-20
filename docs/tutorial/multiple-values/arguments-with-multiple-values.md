@@ -27,7 +27,7 @@ We also declared a final *CLI argument* `celebration`, and it's correctly used e
 
 ///
 
-/// info
+/// note
 
 A `list` can only be used in the last command (if there are subcommands), as this will take anything to the right and assume it's part of the expected *CLI arguments*.
 
