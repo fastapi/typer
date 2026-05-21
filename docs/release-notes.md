@@ -8,6 +8,7 @@
 
 ### Docs
 
+* 📝 Update contributing docs, reference central docs. PR [#1777](https://github.com/fastapi/typer/pull/1777) by [@tiangolo](https://github.com/tiangolo).
 * 📝 Update security policy. PR [#1775](https://github.com/fastapi/typer/pull/1775) by [@tiangolo](https://github.com/tiangolo).
 * 📝 Update link syntax to minimal Markdown. PR [#1623](https://github.com/fastapi/typer/pull/1623) by [@tiangolo](https://github.com/tiangolo).
 * 📝 Update and simplify usage of admonitions. PR [#1755](https://github.com/fastapi/typer/pull/1755) by [@tiangolo](https://github.com/tiangolo).
