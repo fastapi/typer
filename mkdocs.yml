@@ -146,6 +146,7 @@ nav:
       - tutorial/exceptions.md
       - tutorial/one-file-per-command.md
       - tutorial/typer-command.md
+      - tutorial/click.md
   - "":
     - reference/index.md
     - reference/typer.md
