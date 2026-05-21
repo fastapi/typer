@@ -36,8 +36,6 @@ body:
           required: true
         - label: I already read and followed all the tutorials in the docs and didn't find an answer.
           required: true
-        - label: I already checked if it is not related to Typer but to [Click](https://github.com/pallets/click).
-          required: true
   - type: checkboxes
     id: help
     attributes:

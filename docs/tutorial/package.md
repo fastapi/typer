@@ -60,11 +60,10 @@ $ uv add typer
 Using CPython 3.14.0 interpreter at: /location/of/python/
 Creating virtual environment at: .venv
 
-Resolved 10 packages in 21ms
+Resolved 9 packages in 21ms
       Built rick-portal-gun @ file:/home/rick-portal-gun
 Prepared 1 package in 19ms
-Installed 10 packages in 34ms
- + click==8.3.1
+Installed 9 packages in 34ms
  + colorama==0.4.6
  + markdown-it-py==4.0.0
  + mdurl==0.1.2
@@ -568,7 +567,6 @@ Collecting rick-portal-gun
   Downloading rick_portal_gun-0.1.0-py3-none-any.whl.metadata (435 bytes)
 Requirement already satisfied: typer<0.13.0,>=0.12.3 in ./.local/lib/python3.10/site-packages (from rick-portal-gun==0.1.0) (0.12.3)
 Requirement already satisfied: typing-extensions>=3.7.4.3 in ./.local/lib/python3.10/site-packages (from typer<0.13.0,>=0.12.3->rick-portal-gun==0.1.0) (4.11.0)
-Requirement already satisfied: click>=8.0.0 in ./.local/lib/python3.10/site-packages (from typer<0.13.0,>=0.12.3->rick-portal-gun==0.1.0) (8.1.7)
 Requirement already satisfied: shellingham>=1.3.0 in ./.local/lib/python3.10/site-packages (from typer<0.13.0,>=0.12.3->rick-portal-gun==0.1.0) (1.5.4)
 Requirement already satisfied: rich>=10.11.0 in ./.local/lib/python3.10/site-packages (from typer<0.13.0,>=0.12.3->rick-portal-gun==0.1.0) (13.7.1)
 Requirement already satisfied: pygments<3.0.0,>=2.13.0 in ./.local/lib/python3.10/site-packages (from rich>=10.11.0->typer<0.13.0,>=0.12.3->rick-portal-gun==0.1.0) (2.17.2)

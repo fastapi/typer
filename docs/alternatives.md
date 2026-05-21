@@ -70,7 +70,9 @@ It uses decorators on top of functions to modify the actual value of those funct
 
 It was built with some great ideas and design using the features available in the language at the time (Python 2.x).
 
-/// tip | **Typer** builds on top of Click functionality. It has vendored Click v8.3.1 and adds a layer on top of it.
+/// tip | **Typer** builds on top of Click functionality
+
+It has <abbr title="included Click's source code internally, instead of installing it as a third party package">vendored</abbr> Click version 8.3.1 and adds a layer on top of it.
 
 Typer aims to make the code simpler and easier to use, with autocompletion everywhere, etc, while still providing many of the powerful features of Click underneath.
 
