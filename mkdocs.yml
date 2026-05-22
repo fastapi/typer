@@ -157,7 +157,6 @@ nav:
     - resources/index.md
     - help-typer.md
     - contributing.md
-    - management-tasks.md
   - "":
     - about/index.md
     - alternatives.md
