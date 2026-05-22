@@ -352,10 +352,11 @@ For a more complete example including more features, see the <a href="https://ty
 
 ## Dependencies
 
-**Typer** stands on the shoulders of giants. It has two required dependencies:
+**Typer** requires only a few dependencies (most are tiny):
 
 * [`rich`](https://rich.readthedocs.io/en/stable/index.html): to show nicely formatted errors automatically.
 * [`shellingham`](https://github.com/sarugaku/shellingham): to automatically detect the current shell when installing completion.
+* [`annotated-doc`](https://github.com/fastapi/annotated-doc): to generate documentation from Python type annotations.
 * [`colorama`](https://github.com/tartley/colorama) (only on Windows): for producing colored terminal text on Windows.
 
 ### Click code
