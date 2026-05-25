@@ -16,6 +16,7 @@
 
 ### Internal
 
+* 👷 Configure Dependabot to group updates and update weekly. PR [#1768](https://github.com/fastapi/typer/pull/1768) by [@YuriiMotov](https://github.com/YuriiMotov).
 * 🔥 Remove config files now in central GitHub repo. PR [#1780](https://github.com/fastapi/typer/pull/1780) by [@tiangolo](https://github.com/tiangolo).
 * ⬆ Bump idna from 3.11 to 3.15. PR [#1771](https://github.com/fastapi/typer/pull/1771) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pymdown-extensions from 10.21.2 to 10.21.3. PR [#1772](https://github.com/fastapi/typer/pull/1772) by [@dependabot[bot]](https://github.com/apps/dependabot).
