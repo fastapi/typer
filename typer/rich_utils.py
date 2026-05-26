@@ -25,6 +25,7 @@ from rich.traceback import Traceback
 from typer.models import DeveloperExceptionConfig
 
 from . import _click
+from ._click import types
 from .core import TyperArgument, TyperGroup, TyperOption
 
 # Default styles
@@ -389,27 +390,27 @@ def _print_options_panel(
                 secondary_opt_short_strs.append(opt_str)
 
         # Column for recording the type
-        types = Text(style=STYLE_TYPES, overflow="fold")
+        types_data = Text(style=STYLE_TYPES, overflow="fold")
 
         # Fetch type
         if metavar_type and metavar_type != "BOOLEAN":
-            types.append(metavar_type)
+            types_data.append(metavar_type)
         else:
             type_str = param.type.name.upper()
             if type_str != "BOOLEAN":
-                types.append(type_str)
+                types_data.append(type_str)
 
         # Range - from
         # https://github.com/pallets/click/blob/c63c70dabd3f86ca68678b4f00951f78f52d0270/src/click/core.py#L2698-L2706  # noqa: E501
         # skip count with default range type
         if (
-            isinstance(param.type, _click.types._NumberRangeBase)
+            isinstance(param.type, types._NumberRangeBase)
             and isinstance(param, TyperOption)
             and not (param.count and param.type.min == 0 and param.type.max is None)
         ):
             range_str = param.type._describe_range()
             if range_str:
-                types.append(RANGE_STRING.format(range_str))
+                types_data.append(RANGE_STRING.format(range_str))
 
         # Required asterisk
         required: str | Text = ""
@@ -423,7 +424,7 @@ def _print_options_panel(
                 highlighter(",".join(opt_short_strs)),
                 negative_highlighter(",".join(secondary_opt_long_strs)),
                 negative_highlighter(",".join(secondary_opt_short_strs)),
-                types_highlighter(types),
+                types_highlighter(types_data),
                 _get_parameter_help(
                     param=param,
                     ctx=ctx,
