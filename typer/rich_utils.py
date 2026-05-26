@@ -25,7 +25,6 @@ from rich.traceback import Traceback
 from typer.models import DeveloperExceptionConfig
 
 from . import _click
-from ._click import types
 from .core import TyperArgument, TyperGroup, TyperOption
 
 # Default styles
