@@ -672,6 +672,7 @@ class TyperOption(_click.Parameter):
         # Absent environment variable or an empty string is interpreted as unset.
         if rv is None:
             return None
+        return rv
 
     def resolve_envvar_value(self, ctx: _click.Context) -> str | None:
         rv = super().resolve_envvar_value(ctx)
