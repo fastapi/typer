@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Internal
+
+* ⬆ Bump python-dotenv from 1.2.1 to 1.2.2. PR [#1714](https://github.com/fastapi/typer/pull/1714) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
 ## 0.26.0 (2026-05-26)
 
 ### Breaking Changes
