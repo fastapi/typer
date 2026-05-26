@@ -325,6 +325,18 @@ def test_empty_list_default_generator():
     assert "[]" in result.output
 
 
+def test_option_uses_envvar_when_required():
+    app = typer.Typer()
+
+    @app.command()
+    def main(user: Annotated[str, typer.Option(envvar="ME")]):
+        print(f"Hello {user}")
+
+    result = runner.invoke(app, env={"ME": "rick"})
+    assert result.exit_code == 0
+    assert "Hello rick" in result.output
+
+
 def test_completion_argument():
     file_path = Path(__file__).parent / "assets/completion_argument.py"
     result = subprocess.run(
