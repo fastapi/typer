@@ -360,11 +360,20 @@ For a more complete example including more features, see the <a href="https://ty
 
 ## Dependencies
 
-**Typer** stands on the shoulders of giants. It has three required dependencies:
+**Typer** requires only a few dependencies (most are tiny):
 
-* [Click](https://click.palletsprojects.com/): a popular tool for building CLIs in Python. Typer is based on it.
 * [`rich`](https://rich.readthedocs.io/en/stable/index.html): to show nicely formatted errors automatically.
 * [`shellingham`](https://github.com/sarugaku/shellingham): to automatically detect the current shell when installing completion.
+* [`annotated-doc`](https://github.com/fastapi/annotated-doc): to generate documentation from Python type annotations.
+* [`colorama`](https://github.com/tartley/colorama) (only on Windows): for producing colored terminal text on Windows.
+
+### Click code
+
+Typer used to depend on [Click](https://click.palletsprojects.com/) as well, a popular tool for building CLIs in Python.
+
+Since version 0.26.0, Typer has vendored Click (included Click's source code internally, instead of installing it as a third party package) and has unified the code interactions between Typer and the embedded Click source code for easier maintainability in the future.
+
+Note that some Click functionality will not be available anymore in the future, as we continue to improve and extend Typer's codebase.
 
 ### `typer-slim`
 

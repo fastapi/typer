@@ -15,10 +15,12 @@ from types import TracebackType
 from typing import Annotated, Any
 from uuid import UUID
 
-import click
 from annotated_doc import Doc
 from typer._types import TyperChoice
 
+from . import _click
+from ._click import types
+from ._click.globals import get_current_context
 from ._typing import get_args, get_origin, is_literal_type, is_union, literal_values
 from .completion import get_completion_inspect_parameters
 from .core import (
@@ -73,7 +75,7 @@ def except_hook(
         _original_except_hook(exc_type, exc_value, tb)
         return
     typer_path = os.path.dirname(__file__)
-    click_path = os.path.dirname(click.__file__)
+    click_path = os.path.dirname(_click.__file__)
     internal_dir_names = [typer_path, click_path]
     exc = exc_value
     if HAS_RICH:
@@ -107,7 +109,7 @@ def except_hook(
     return
 
 
-def get_install_completion_arguments() -> tuple[click.Parameter, click.Parameter]:
+def get_install_completion_arguments() -> tuple[_click.Parameter, _click.Parameter]:
     install_param, show_param = get_completion_inspect_parameters()
     click_install_param, _ = get_click_param(install_param)
     click_show_param, _ = get_click_param(show_param)
@@ -1168,7 +1170,7 @@ def get_group(typer_instance: Typer) -> TyperGroup:
     return group
 
 
-def get_command(typer_instance: Typer) -> click.Command:
+def get_command(typer_instance: Typer) -> _click.Command:
     if typer_instance._add_completion:
         click_install_param, click_show_param = get_install_completion_arguments()
     if (
@@ -1178,7 +1180,7 @@ def get_command(typer_instance: Typer) -> click.Command:
         or len(typer_instance.registered_commands) > 1
     ):
         # Create a Group
-        click_command: click.Command = get_group(typer_instance)
+        click_command: _click.Command = get_group(typer_instance)
         if typer_instance._add_completion:
             click_command.params.append(click_install_param)
             click_command.params.append(click_show_param)
@@ -1288,7 +1290,7 @@ def get_group_from_info(
     assert group_info.typer_instance, (
         "A Typer instance is needed to generate a Click Group"
     )
-    commands: dict[str, click.Command] = {}
+    commands: dict[str, _click.Command] = {}
     for command_info in group_info.typer_instance.registered_commands:
         command = get_command_from_info(
             command_info=command_info,
@@ -1330,7 +1332,6 @@ def get_group_from_info(
         invoke_without_command=solved_info.invoke_without_command,
         no_args_is_help=solved_info.no_args_is_help,
         subcommand_metavar=solved_info.subcommand_metavar,
-        chain=solved_info.chain,
         result_callback=solved_info.result_callback,
         context_settings=solved_info.context_settings,
         callback=get_callback(
@@ -1362,14 +1363,14 @@ def get_command_name(name: str) -> str:
 
 def get_params_convertors_ctx_param_name_from_function(
     callback: Callable[..., Any] | None,
-) -> tuple[list[click.Argument | click.Option], dict[str, Any], str | None]:
+) -> tuple[list[TyperArgument | TyperOption], dict[str, Any], str | None]:
     params = []
     convertors = {}
     context_param_name = None
     if callback:
         parameters = get_params_from_function(callback)
         for param_name, param in parameters.items():
-            if lenient_issubclass(param.annotation, click.Context):
+            if lenient_issubclass(param.annotation, _click.Context):
                 context_param_name = param_name
                 continue
             click_param, convertor = get_click_param(param)
@@ -1384,7 +1385,7 @@ def get_command_from_info(
     *,
     pretty_exceptions_short: bool,
     rich_markup_mode: MarkupMode,
-) -> click.Command:
+) -> _click.Command:
     assert command_info.callback, "A command must have a callback function"
     name = command_info.name or get_command_name(command_info.callback.__name__)  # ty: ignore
     use_help = command_info.help
@@ -1486,7 +1487,7 @@ def generate_tuple_convertor(
 def get_callback(
     *,
     callback: Callable[..., Any] | None = None,
-    params: Sequence[click.Parameter] = [],
+    params: Sequence[_click.Parameter] = [],
     convertors: dict[str, Callable[[str], Any]] | None = None,
     context_param_name: str | None = None,
     pretty_exceptions_short: bool,
@@ -1510,7 +1511,7 @@ def get_callback(
             else:
                 use_params[k] = v
         if context_param_name:
-            use_params[context_param_name] = click.get_current_context()
+            use_params[context_param_name] = get_current_context()
         return callback(**use_params)
 
     update_wrapper(wrapper, callback)
@@ -1519,15 +1520,15 @@ def get_callback(
 
 def get_click_type(
     *, annotation: Any, parameter_info: ParameterInfo
-) -> click.ParamType:
+) -> types.ParamType:
     if parameter_info.click_type is not None:
         return parameter_info.click_type
 
     elif parameter_info.parser is not None:
-        return click.types.FuncParamType(parameter_info.parser)
+        return types.FuncParamType(parameter_info.parser)
 
     elif annotation is str:
-        return click.STRING
+        return types.STRING
     elif annotation is int:
         if parameter_info.min is not None or parameter_info.max is not None:
             min_ = None
@@ -1536,24 +1537,24 @@ def get_click_type(
                 min_ = int(parameter_info.min)
             if parameter_info.max is not None:
                 max_ = int(parameter_info.max)
-            return click.IntRange(min=min_, max=max_, clamp=parameter_info.clamp)
+            return types.IntRange(min=min_, max=max_, clamp=parameter_info.clamp)
         else:
-            return click.INT
+            return types.INT
     elif annotation is float:
         if parameter_info.min is not None or parameter_info.max is not None:
-            return click.FloatRange(
+            return types.FloatRange(
                 min=parameter_info.min,
                 max=parameter_info.max,
                 clamp=parameter_info.clamp,
             )
         else:
-            return click.FLOAT
+            return types.FLOAT
     elif annotation is bool:
-        return click.BOOL
+        return types.BOOL
     elif annotation == UUID:
-        return click.UUID
+        return types.UUID
     elif annotation == datetime:
-        return click.DateTime(formats=parameter_info.formats)
+        return types.DateTime(formats=parameter_info.formats)
     elif (
         annotation == Path
         or parameter_info.allow_dash
@@ -1571,7 +1572,7 @@ def get_click_type(
             path_type=parameter_info.path_type,
         )
     elif lenient_issubclass(annotation, FileTextWrite):
-        return click.File(
+        return types.File(
             mode=parameter_info.mode or "w",
             encoding=parameter_info.encoding,
             errors=parameter_info.errors,
@@ -1579,7 +1580,7 @@ def get_click_type(
             atomic=parameter_info.atomic,
         )
     elif lenient_issubclass(annotation, FileText):
-        return click.File(
+        return types.File(
             mode=parameter_info.mode or "r",
             encoding=parameter_info.encoding,
             errors=parameter_info.errors,
@@ -1587,7 +1588,7 @@ def get_click_type(
             atomic=parameter_info.atomic,
         )
     elif lenient_issubclass(annotation, FileBinaryRead):
-        return click.File(
+        return types.File(
             mode=parameter_info.mode or "rb",
             encoding=parameter_info.encoding,
             errors=parameter_info.errors,
@@ -1595,7 +1596,7 @@ def get_click_type(
             atomic=parameter_info.atomic,
         )
     elif lenient_issubclass(annotation, FileBinaryWrite):
-        return click.File(
+        return types.File(
             mode=parameter_info.mode or "wb",
             encoding=parameter_info.encoding,
             errors=parameter_info.errors,
@@ -1603,17 +1604,12 @@ def get_click_type(
             atomic=parameter_info.atomic,
         )
     elif lenient_issubclass(annotation, Enum):
-        # The custom TyperChoice is only needed for Click < 8.2.0, to parse the
-        # command line values matching them to the enum values. Click 8.2.0 added
-        # support for enum values but reading enum names.
-        # Passing here the list of enum values (instead of just the enum) accounts for
-        # Click < 8.2.0.
         return TyperChoice(
             [item.value for item in annotation],
             case_sensitive=parameter_info.case_sensitive,
         )
     elif is_literal_type(annotation):
-        return click.Choice(
+        return TyperChoice(
             literal_values(annotation),
             case_sensitive=parameter_info.case_sensitive,
         )
@@ -1626,7 +1622,7 @@ def lenient_issubclass(cls: Any, class_or_tuple: AnyType | tuple[AnyType, ...]) 
 
 def get_click_param(
     param: ParamMeta,
-) -> tuple[click.Argument | click.Option, Any]:
+) -> tuple[TyperArgument | TyperOption, Any]:
     # First, find out what will be:
     # * ParamInfo (ArgumentInfo or OptionInfo)
     # * default_value
@@ -1784,7 +1780,7 @@ def get_click_param(
             ),
             convertor,
         )
-    raise AssertionError("A click.Parameter should be returned")  # pragma: no cover
+    raise AssertionError("A _click.Parameter should be returned")  # pragma: no cover
 
 
 def get_param_callback(
@@ -1800,9 +1796,9 @@ def get_param_callback(
     value_name = None
     untyped_names: list[str] = []
     for param_name, param_sig in parameters.items():
-        if lenient_issubclass(param_sig.annotation, click.Context):
+        if lenient_issubclass(param_sig.annotation, _click.Context):
             ctx_name = param_name
-        elif lenient_issubclass(param_sig.annotation, click.Parameter):
+        elif lenient_issubclass(param_sig.annotation, _click.Parameter):
             click_param_name = param_name
         else:
             untyped_names.append(param_name)
@@ -1817,11 +1813,11 @@ def get_param_callback(
             if untyped_names:
                 click_param_name = untyped_names.pop(0)
         if untyped_names:
-            raise click.ClickException(
+            raise _click.ClickException(
                 "Too many CLI parameter callback function parameters"
             )
 
-    def wrapper(ctx: click.Context, param: click.Parameter, value: Any) -> Any:
+    def wrapper(ctx: _click.Context, param: _click.Parameter, value: Any) -> Any:
         use_params: dict[str, Any] = {}
         if ctx_name:
             use_params[ctx_name] = ctx
@@ -1851,7 +1847,7 @@ def get_param_completion(
     unassigned_params = list(parameters.values())
     for param_sig in unassigned_params[:]:
         origin = get_origin(param_sig.annotation)
-        if lenient_issubclass(param_sig.annotation, click.Context):
+        if lenient_issubclass(param_sig.annotation, _click.Context):
             ctx_name = param_sig.name
             unassigned_params.remove(param_sig)
         elif lenient_issubclass(origin, list):
@@ -1874,11 +1870,11 @@ def get_param_completion(
     # Extract value param name first
     if unassigned_params:
         show_params = " ".join([param.name for param in unassigned_params])
-        raise click.ClickException(
+        raise _click.ClickException(
             f"Invalid autocompletion callback parameters: {show_params}"
         )
 
-    def wrapper(ctx: click.Context, args: list[str], incomplete: str | None) -> Any:
+    def wrapper(ctx: _click.Context, args: list[str], incomplete: str | None) -> Any:
         use_params: dict[str, Any] = {}
         if ctx_name:
             use_params[ctx_name] = ctx
@@ -2010,4 +2006,4 @@ def launch(
         return 0
 
     else:
-        return click.launch(url, wait=wait, locate=locate)
+        return _click.launch(url, wait=wait, locate=locate)

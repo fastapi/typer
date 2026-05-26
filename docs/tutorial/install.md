@@ -9,7 +9,7 @@ First, make sure you create your [virtual environment](../virtual-environments.m
 ```console
 $ pip install typer
 ---> 100%
-Successfully installed typer click shellingham rich
+Successfully installed typer shellingham rich
 ```
 
 </div>
