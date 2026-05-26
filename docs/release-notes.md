@@ -11,6 +11,7 @@
     * This simplifies the work done by both Click and Typer teams.
     * It allows Typer to evolve independently, and enables several new planned features.
     * It will solve several dependency conflict situations for projects that use some packages that depend on Click and some that depend on Typer.
+    * This also means that Click-specific functionality is no longer supported, like extracting the Click app and adding Click-specific plug-ins, or customizing the field types with Click-specific types.
     * You can read more about it in the docs for [Vendored Click](https://typer.tiangolo.com/tutorial/click/).
 
 ### Upgrades
