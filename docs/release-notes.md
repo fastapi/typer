@@ -5,6 +5,11 @@
 ### Breaking Changes
 
 * ➖ Vendor Click and streamline Typer's functionality and code base. PR [#1774](https://github.com/fastapi/typer/pull/1774) by [@svlandeg](https://github.com/svlandeg).
+    * Typer no longer depends on Click as a third party dependency, it vendors (includes the source code of) Click.
+    * This simplifies the work done by both Click and Typer teams.
+    * It allows Typer to evolve independently, and enables several new planned features.
+    * It will solve several dependency conflict situations for projects that use some packages that depend on Click and some that depend on Typer.
+    * You can read more about it in the docs for [Vendored Click](https://typer.tiangolo.com/tutorial/click/).
 
 ### Upgrades
 
