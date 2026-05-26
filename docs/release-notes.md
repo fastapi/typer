@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Breaking Changes
+
+* ➖ Vendor Click and streamline Typer's functionality and code base. PR [#1774](https://github.com/fastapi/typer/pull/1774) by [@svlandeg](https://github.com/svlandeg).
+
 ### Upgrades
 
 * 📌 Pin max version of Click to `>= 8.2.1, < 8.4` temporarily to prevent incompatibilities. PR [#1753](https://github.com/fastapi/typer/pull/1753) by [@tiangolo](https://github.com/tiangolo).
