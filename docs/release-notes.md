@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.26.1 (2026-05-26)
+
 ### Fixes
 
 * 🐛 Ensure that an envvar set for `typer.Option` works as expected. PR [#1788](https://github.com/fastapi/typer/pull/1788) by [@svlandeg](https://github.com/svlandeg).
