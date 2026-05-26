@@ -14,10 +14,6 @@
     * This also means that Click-specific functionality is no longer supported, like extracting the Click app and adding Click-specific plug-ins, or customizing the field types with Click-specific types.
     * You can read more about it in the docs for [Vendored Click](https://typer.tiangolo.com/tutorial/click/).
 
-### Upgrades
-
-* 📌 Pin max version of Click to `>= 8.2.1, < 8.4` temporarily to prevent incompatibilities. PR [#1753](https://github.com/fastapi/typer/pull/1753) by [@tiangolo](https://github.com/tiangolo).
-
 ### Docs
 
 * 📝 Update and simplify docs about help and management. PR [#1778](https://github.com/fastapi/typer/pull/1778) by [@tiangolo](https://github.com/tiangolo).
@@ -28,6 +24,8 @@
 
 ### Internal
 
+* 📌 Pin max version of Click to `>= 8.2.1, < 8.4` temporarily to prevent incompatibilities. PR [#1753](https://github.com/fastapi/typer/pull/1753) by [@tiangolo](https://github.com/tiangolo).
+    * Superseded by vendoring Click.
 * 👷 Configure Dependabot to group updates and update weekly. PR [#1768](https://github.com/fastapi/typer/pull/1768) by [@YuriiMotov](https://github.com/YuriiMotov).
 * 🔥 Remove config files now in central GitHub repo. PR [#1780](https://github.com/fastapi/typer/pull/1780) by [@tiangolo](https://github.com/tiangolo).
 * ⬆ Bump idna from 3.11 to 3.15. PR [#1771](https://github.com/fastapi/typer/pull/1771) by [@dependabot[bot]](https://github.com/apps/dependabot).
