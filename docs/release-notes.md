@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Fixes
+
+* 🐛 Ensure that an envvar set for `typer.Option` works as expected. PR [#1788](https://github.com/fastapi/typer/pull/1788) by [@svlandeg](https://github.com/svlandeg).
+
 ### Internal
 
 * ⬆ Bump python-dotenv from 1.2.1 to 1.2.2. PR [#1714](https://github.com/fastapi/typer/pull/1714) by [@dependabot[bot]](https://github.com/apps/dependabot).
