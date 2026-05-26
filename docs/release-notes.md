@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.26.0 (2026-05-26)
+
 ### Breaking Changes
 
 * ➖ Vendor Click and streamline Typer's functionality and code base. PR [#1774](https://github.com/fastapi/typer/pull/1774) by [@svlandeg](https://github.com/svlandeg).
