@@ -340,13 +340,15 @@ def test_option_envvar():
 def test_option_envvar_list():
     app = typer.Typer()
 
-    @app.command("opt")
-    def from_option(user: Annotated[list[str], typer.Option(envvar="ME")]):
-        print(f"Hello {user}")
+    @app.command()
+    def main(users: Annotated[list[str], typer.Option(envvar="ME")]):
+        for u in users:
+            print(f"Hello {u}")
 
-    result = runner.invoke(app, env={"ME": "rick and morty"})
+    result = runner.invoke(app, env={"ME": "rick morty"})
     assert result.exit_code == 0
-    assert "Hello ['rick', 'and', 'morty']" in result.output
+    assert "Hello rick" in result.output
+    assert "Hello morty" in result.output
 
 
 def test_completion_argument():
