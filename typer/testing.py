@@ -136,11 +136,9 @@ class CliRunner:
         self,
         charset: str = "utf-8",
         env: Mapping[str, str | None] | None = None,
-        catch_exceptions: bool = True,
     ) -> None:
         self.charset = charset
         self.env: Mapping[str, str | None] = env or {}
-        self.catch_exceptions = catch_exceptions
 
     def get_default_prog_name(self, cli: _click.Command) -> str:
         """Return the default program name for a command.
@@ -284,35 +282,8 @@ class CliRunner:
         color: bool = False,
         **extra: Any,
     ) -> Result:
-        use_cli = _get_command(app)
-        return self._invoke(
-            use_cli,
-            args=args,
-            input=input,
-            env=env,
-            catch_exceptions=catch_exceptions,
-            color=color,
-            **extra,
-        )
-
-    def _invoke(
-        self,
-        cli: _click.Command,
-        args: str | Sequence[str] | None = None,
-        input: str | bytes | None = None,
-        env: Mapping[str, str | None] | None = None,
-        catch_exceptions: bool | None = None,
-        color: bool = False,
-        **extra: Any,
-    ) -> Result:
-        """Invokes a command in an isolated environment.  The arguments are
-        forwarded directly to the command line script, the `extra` keyword
-        arguments are passed to the `Command.main` function of
-        the command.
-        """
+        cli = _get_command(app)
         exc_info = None
-        if catch_exceptions is None:
-            catch_exceptions = self.catch_exceptions
 
         with self.isolation(input=input, env=env, color=color) as outstreams:
             return_value = None
