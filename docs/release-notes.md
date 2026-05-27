@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.26.2 (2026-05-27)
+
 ### Fixes
 
 * 🐛 Ensure that an envvar set for a `typer.Option` list is split on whitespace. PR [#1791](https://github.com/fastapi/typer/pull/1791) by [@svlandeg](https://github.com/svlandeg).
