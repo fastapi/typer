@@ -123,16 +123,6 @@ def test_filelike_conversion() -> None:
     assert stream.getvalue() == "This is a single line\n"
 
 
-def test_input_stream() -> None:
-    binary_stream = BytesIO(b"hello")
-    converted = make_input_stream(binary_stream, charset="utf-8")
-    assert converted is binary_stream
-
-    text_stream = TextIOWrapper(BytesIO(b"hello"), encoding="utf-8")
-    converted = make_input_stream(text_stream, charset="utf-8")
-    assert converted is text_stream.buffer
-
-
 def test_binary_dash() -> None:
     result = runner.invoke(app, ["write-binary", "--file-out=-"])
     assert result.exit_code == 0

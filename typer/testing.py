@@ -12,24 +12,12 @@ from typer.main import get_command as _get_command
 
 from . import _click
 from ._click import _compat, formatting, termui, utils
-from ._click._compat import _find_binary_reader
 
 if TYPE_CHECKING:
     from _typeshed import ReadableBuffer
 
 
-def make_input_stream(input: str | bytes | IO[Any] | None, charset: str) -> BinaryIO:
-    # Is already an input stream.
-    if hasattr(input, "read"):
-        rv = _find_binary_reader(cast("IO[Any]", input))
-
-        if rv is not None:
-            return rv
-
-        raise TypeError(
-            "Could not find binary reader for input stream."
-        )  # pragma: no cover
-
+def make_input_stream(input: str | bytes | None, charset: str) -> BinaryIO:
     if input is None:
         input = b""
     elif isinstance(input, str):
@@ -66,11 +54,7 @@ class StreamMixer:
         self.stderr: io.BytesIO = BytesIOCopy(copy_to=self.output)
 
     def __del__(self) -> None:
-        """
-        Guarantee that embedded file-like objects are closed in a
-        predictable order, protecting against races between
-        self.output being closed and other streams being flushed on close
-        """
+        """Guarantee that file-like objects are closed in a predictable order"""
         self.stderr.close()
         self.stdout.close()
         self.output.close()
@@ -176,15 +160,13 @@ class CliRunner:
     @contextlib.contextmanager
     def isolation(
         self,
-        input: str | bytes | IO[Any] | None = None,
+        input: str | bytes | None = None,
         env: Mapping[str, str | None] | None = None,
         color: bool = False,
     ) -> Iterator[tuple[io.BytesIO, io.BytesIO, io.BytesIO]]:
         """A context manager that sets up the isolation for invoking of a
         command line tool.  This sets up `<stdin>` with the given input data
         and `os.environ` with the overrides from the given dictionary.
-        This also rebinds some internals in Click to be mocked (like the
-        prompt functionality).
         """
         bytes_input = make_input_stream(input, self.charset)
 
@@ -296,7 +278,7 @@ class CliRunner:
         self,
         app: Typer,
         args: str | Sequence[str] | None = None,
-        input: bytes | str | IO[Any] | None = None,
+        input: bytes | str | None = None,
         env: Mapping[str, str | None] | None = None,
         catch_exceptions: bool = True,
         color: bool = False,
@@ -317,7 +299,7 @@ class CliRunner:
         self,
         cli: _click.Command,
         args: str | Sequence[str] | None = None,
-        input: str | bytes | IO[Any] | None = None,
+        input: str | bytes | None = None,
         env: Mapping[str, str | None] | None = None,
         catch_exceptions: bool | None = None,
         color: bool = False,
