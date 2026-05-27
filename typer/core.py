@@ -667,11 +667,16 @@ class TyperOption(_click.Parameter):
         )
 
     def value_from_envvar(self, ctx: _click.Context) -> Any:
+        # TODO: clean up
         rv = self.resolve_envvar_value(ctx)
 
         # Absent environment variable or an empty string is interpreted as unset.
         if rv is None:
             return None
+
+        if self.nargs != 1 or self.multiple:
+            return self.type.split_envvar_value(rv)
+
         return rv
 
     def resolve_envvar_value(self, ctx: _click.Context) -> str | None:

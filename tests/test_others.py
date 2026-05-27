@@ -325,7 +325,7 @@ def test_empty_list_default_generator():
     assert "[]" in result.output
 
 
-def test_option_uses_envvar_when_required():
+def test_option_envvar():
     app = typer.Typer()
 
     @app.command()
@@ -335,6 +335,20 @@ def test_option_uses_envvar_when_required():
     result = runner.invoke(app, env={"ME": "rick"})
     assert result.exit_code == 0
     assert "Hello rick" in result.output
+
+
+def test_option_envvar_list():
+    app = typer.Typer()
+
+    @app.command()
+    def main(users: Annotated[list[str], typer.Option(envvar="ME")]):
+        for u in users:
+            print(f"Hello {u}")
+
+    result = runner.invoke(app, env={"ME": "rick morty"})
+    assert result.exit_code == 0
+    assert "Hello rick" in result.output
+    assert "Hello morty" in result.output
 
 
 def test_completion_argument():
