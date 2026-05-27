@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 import typer
 from typer._click._compat import get_best_encoding, should_strip_ansi
-from typer._click.testing import make_input_stream
+from typer.testing import make_input_stream
 from typer._click.utils import PacifyFlushWrapper
 from typer.testing import CliRunner
 
