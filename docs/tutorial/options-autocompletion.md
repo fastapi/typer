@@ -48,7 +48,7 @@ Hello Camila
 
 Right now we get completion for the *CLI option* names, but not for the values.
 
-We can provide completion for the values creating an `autocompletion` function, similar to the `callback` functions from [CLI Option Callback and Context](./options/callback-and-context.md){.internal-link target=_blank}:
+We can provide completion for the values creating an `autocompletion` function, similar to the `callback` functions from [CLI Option Callback and Context](./options/callback-and-context.md):
 
 {* docs_src/options_autocompletion/tutorial002_an_py310.py hl[6:7,16] *}
 
@@ -128,7 +128,7 @@ In the end, the return will be a `list` (or other iterable) of `tuples` of 2 `st
 
 ///
 
-/// info
+/// note
 
 The help text will be visible in Zsh, Fish, and PowerShell.
 
@@ -155,7 +155,7 @@ Sebastian  -- The type hints guy.
 
 Instead of creating and returning a list with values (`str` or `tuple`), we can use `yield` with each value that we want in the completion.
 
-That way our function will be a <a href="https://docs.python.org/3.8/glossary.html#index-19" class="external-link" target="_blank">generator</a> that **Typer** can iterate:
+That way our function will be a [generator](https://docs.python.org/3.8/glossary.html#index-19) that **Typer** can iterate:
 
 {* docs_src/options_autocompletion/tutorial005_an_py310.py hl[12:15] *}
 
@@ -169,9 +169,9 @@ In the end, that's just to save us a couple of lines of code.
 
 ///
 
-/// info
+/// note
 
-The function can use `yield`, so it doesn't have to return strictly a `list`, it just has to be <a href="https://docs.python.org/3.8/glossary.html#term-iterable" class="external-link" target="_blank">iterable</a>.
+The function can use `yield`, so it doesn't have to return strictly a `list`, it just has to be [iterable](https://docs.python.org/3.8/glossary.html#term-iterable).
 
 But each of the elements for completion has to be a `str` or a `tuple` (when containing a help text).
 
@@ -284,7 +284,7 @@ Because completion is based on the output printed by your program (handled inter
 
 /// tip
 
-If you need a refresher about what is "standard output" and "standard error" check the section in [Printing and Colors: "Standard Output" and "Standard Error"](./printing.md#standard-output-and-standard-error){.internal-link target=_blank}.
+If you need a refresher about what is "standard output" and "standard error" check the section in [Printing and Colors: "Standard Output" and "Standard Error"](./printing.md#standard-output-and-standard-error).
 
 ///
 
@@ -296,7 +296,7 @@ Using `stderr=True` tells **Rich** that the output should be shown in "standard 
 
 {* docs_src/options_autocompletion/tutorial008_an_py310.py hl[12,15:16] *}
 
-/// info
+/// note
 
 If you have disabled Rich, you can also use `print(lastname, file=sys.stderr)` or `typer.echo("some text", err=True)` instead.
 

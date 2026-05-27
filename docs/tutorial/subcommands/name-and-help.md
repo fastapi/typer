@@ -305,7 +305,7 @@ You can set it when creating a new `typer.Typer()`:
 
 {* docs_src/subcommands/name_help/tutorial006_py310.py hl[12] *}
 
-/// info
+/// note
 
 The rest of the callbacks and overrides are there only to show you that they don't affect the name and help text when you set it explicitly.
 

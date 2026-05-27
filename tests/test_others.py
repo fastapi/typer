@@ -6,12 +6,11 @@ from pathlib import Path
 from typing import Annotated
 from unittest import mock
 
-import click
 import pytest
 import typer
 import typer._completion_shared
 import typer.completion
-from typer.core import _split_opt
+from typer import _click
 from typer.main import solve_typer_info_defaults, solve_typer_info_help
 from typer.models import ParameterInfo, TyperInfo
 from typer.testing import CliRunner
@@ -37,14 +36,14 @@ def test_too_many_parsers():
     def custom_parser(value: str) -> int:
         return int(value)  # pragma: no cover
 
-    class CustomClickParser(click.ParamType):
+    class CustomClickParser(_click.types.ParamType):
         name = "custom_parser"
 
         def convert(
             self,
             value: str,
-            param: click.Parameter | None,
-            ctx: click.Context | None,
+            param: _click.Parameter | None,
+            ctx: _click.Context | None,
         ) -> typing.Any:
             return int(value)  # pragma: no cover
 
@@ -61,14 +60,14 @@ def test_valid_parser_permutations():
     def custom_parser(value: str) -> int:
         return int(value)  # pragma: no cover
 
-    class CustomClickParser(click.ParamType):
+    class CustomClickParser(_click.types.ParamType):
         name = "custom_parser"
 
         def convert(
             self,
             value: str,
-            param: click.Parameter | None,
-            ctx: click.Context | None,
+            param: _click.Parameter | None,
+            ctx: _click.Context | None,
         ) -> typing.Any:
             return int(value)  # pragma: no cover
 
@@ -104,7 +103,7 @@ def test_callback_too_many_parameters():
     def main(name: str = typer.Option(..., callback=name_callback)):
         pass  # pragma: no cover
 
-    with pytest.raises(click.ClickException) as exc_info:
+    with pytest.raises(_click.ClickException) as exc_info:
         runner.invoke(app, ["--name", "Camila"])
     assert (
         exc_info.value.message == "Too many CLI parameter callback function parameters"
@@ -125,6 +124,135 @@ def test_callback_2_untyped_parameters():
     result = runner.invoke(app, ["--name", "Camila"])
     assert "info name is: main" in result.stdout
     assert "value is: Camila" in result.stdout
+
+
+@pytest.mark.parametrize(
+    ("param_hint", "option_decls", "expected_message"),
+    [
+        ("--name", (), "Invalid value for --name"),
+        (None, ("--name", "-n"), "Invalid value for '--name' / '-n'"),
+    ],
+)
+def test_bad_parameter_callback(
+    param_hint: str | None, option_decls: tuple[str, ...], expected_message: str
+) -> None:
+    app = typer.Typer()
+
+    def my_bad(value: str) -> str:
+        kwargs = {"param_hint": param_hint} if param_hint is not None else {}
+        raise typer.BadParameter("custom validation failed", **kwargs)
+
+    @app.command()
+    def main(name: str = typer.Option(..., *option_decls, callback=my_bad)) -> None:
+        typer.echo(name)  # pragma: no cover
+
+    result = runner.invoke(app, ["--name", "Camila"])
+    assert result.exit_code == 2
+    assert expected_message in result.stderr
+    assert "custom validation failed" in result.stderr
+
+
+def test_bad_parameter_main() -> None:
+    app = typer.Typer()
+
+    @app.command()
+    def main() -> None:
+        raise typer.BadParameter("custom validation failed")
+
+    result = runner.invoke(app, [])
+    assert result.exit_code == 2
+    assert "Invalid value: custom validation failed" in result.stderr
+
+
+@pytest.mark.parametrize(
+    ("kw", "msg"),
+    [
+        (
+            {"param_hint": ["--name", "-n"], "param_type": "parameter"},
+            "Missing parameter '--name' / '-n'.",
+        ),
+        ({"param_type": "value"}, "Missing value."),
+    ],
+)
+def test_missing_parameter_msg(kw: dict[str, object], msg: str) -> None:
+    app = typer.Typer(rich_markup_mode=None)
+
+    @app.command()
+    def main() -> None:
+        raise typer._click.exceptions.MissingParameter(**kw)
+
+    result = runner.invoke(app, [])
+    assert result.exit_code == 2
+    assert msg in result.stderr
+
+
+def test_missing_parameter_callback_msg() -> None:
+    def my_cb(ctx: typer.Context, param: typer.CallbackParam, value: str) -> str:
+        raise typer._click.exceptions.MissingParameter(
+            message="My bad", ctx=ctx, param=param, param_type="parameter"
+        )
+
+    app = typer.Typer(rich_markup_mode=None)
+
+    @app.command()
+    def main(
+        mode: Annotated[
+            typing.Literal["alpha", "beta"],
+            typer.Option(..., "--mode", callback=my_cb),
+        ],
+    ) -> None:
+        typer.echo(mode)  # pragma: no cover
+
+    result = runner.invoke(app, ["--mode", "alpha"])
+    assert result.exit_code == 2
+    assert "Missing parameter '--mode'." in result.stderr
+    assert "My bad. Choose from:" in result.stderr
+    assert "alpha" in result.stderr
+    assert "beta" in result.stderr
+    result_msg = runner.invoke(app, ["--mode", "alpha"], standalone_mode=False)
+    assert isinstance(result_msg.exception, typer._click.exceptions.MissingParameter)
+    assert str(result_msg.exception) == "My bad"
+
+
+def test_missing_parameter_str() -> None:
+    def my_cb(ctx: typer.Context, param: typer.CallbackParam, value: str) -> str:
+        raise typer._click.exceptions.MissingParameter(ctx=ctx, param=param)
+
+    app = typer.Typer()
+
+    @app.command()
+    def main(mode: str = typer.Option(..., "--mode", callback=my_cb)) -> None:
+        typer.echo(mode)  # pragma: no cover
+
+    result2 = runner.invoke(app, ["--mode", "alpha"], standalone_mode=False)
+    assert isinstance(result2.exception, typer._click.exceptions.MissingParameter)
+    assert str(result2.exception) == "Missing parameter: mode"
+
+
+def test_click_exception_show_default_file() -> None:
+    app = typer.Typer(rich_markup_mode=None)
+
+    @app.command()
+    def main() -> None:
+        raise typer._click.ClickException("custom click failure")
+
+    result = runner.invoke(app, [])
+    assert result.exit_code == 1
+    assert "custom click" in result.stderr
+    assert "failure" in result.stderr
+
+
+def test_no_args_is_help_show() -> None:
+    app = typer.Typer(rich_markup_mode=None)
+
+    @app.callback(invoke_without_command=True, no_args_is_help=True)
+    def main() -> None:
+        return None  # pragma: no cover
+
+    result = runner.invoke(app, [])
+    assert result.exit_code == 2
+    assert "Usage:" in result.stderr
+    assert "Show this message and exit." in result.stderr
 
 
 def test_callback_3_untyped_parameters():
@@ -169,6 +297,18 @@ def test_callback_4_list_none():
     assert "Hello World" in result.stdout
 
 
+def test_multiple_bool_flags() -> None:
+    app = typer.Typer()
+
+    @app.command()
+    def main(choices: list[bool] = typer.Option([], "--accept/--reject")) -> None:
+        print(choices)
+
+    result = runner.invoke(app, ["--accept", "--reject", "--accept"])
+    assert result.exit_code == 0
+    assert "[True, False, True]" in result.stdout
+
+
 def test_empty_list_default_generator():
     def empty_list() -> list[str]:
         return []
@@ -183,6 +323,18 @@ def test_empty_list_default_generator():
 
     result = runner.invoke(app)
     assert "[]" in result.output
+
+
+def test_option_uses_envvar_when_required():
+    app = typer.Typer()
+
+    @app.command()
+    def main(user: Annotated[str, typer.Option(envvar="ME")]):
+        print(f"Hello {user}")
+
+    result = runner.invoke(app, env={"ME": "rick"})
+    assert result.exit_code == 0
+    assert "Hello rick" in result.output
 
 
 def test_completion_argument():
@@ -266,7 +418,7 @@ def test_autocompletion_too_many_parameters():
     def main(name: str = typer.Option(..., autocompletion=name_callback)):
         pass  # pragma: no cover
 
-    with pytest.raises(click.ClickException) as exc_info:
+    with pytest.raises(_click.ClickException) as exc_info:
         runner.invoke(app, ["--name", "Camila"])
     assert exc_info.value.message == "Invalid autocompletion callback parameters: val2"
 
@@ -301,24 +453,6 @@ def test_context_settings_inheritance_single_command():
 
     result = runner.invoke(app, ["main", "-h"])
     assert "Show this message and exit." in result.stdout
-
-
-def test_split_opt():
-    prefix, opt = _split_opt("--verbose")
-    assert prefix == "--"
-    assert opt == "verbose"
-
-    prefix, opt = _split_opt("//verbose")
-    assert prefix == "//"
-    assert opt == "verbose"
-
-    prefix, opt = _split_opt("-verbose")
-    assert prefix == "-"
-    assert opt == "verbose"
-
-    prefix, opt = _split_opt("verbose")
-    assert prefix == ""
-    assert opt == "verbose"
 
 
 def test_options_metadata_typer_default():
