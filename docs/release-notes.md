@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.26.3 (2026-05-28)
+
 ### Refactors
 
 * ♻️ Unify the testing functionality. PR [#1792](https://github.com/fastapi/typer/pull/1792) by [@svlandeg](https://github.com/svlandeg).
