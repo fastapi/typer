@@ -6,6 +6,10 @@
 
 * ♻️ Unify the testing functionality. PR [#1792](https://github.com/fastapi/typer/pull/1792) by [@svlandeg](https://github.com/svlandeg).
 
+### Internal
+
+* 👷 Update version of latest-changes GitHub action. PR [#1798](https://github.com/fastapi/typer/pull/1798) by [@tiangolo](https://github.com/tiangolo).
+
 ## 0.26.2 (2026-05-27)
 
 ### Fixes
