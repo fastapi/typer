@@ -1,10 +1,10 @@
 # Ask with Prompt
 
-When you need to ask the user for info interactively you should normally use [*CLI Option*s with Prompt](options/prompt.md){.internal-link target=_blank}, because they allow using the CLI program in a non-interactive way (for example, a Bash script could use it).
+When you need to ask the user for info interactively you should normally use [*CLI Option*s with Prompt](options/prompt.md), because they allow using the CLI program in a non-interactive way (for example, a Bash script could use it).
 
 But if you absolutely need to ask for interactive information without using a *CLI option*, you can use `typer.prompt()`:
 
-{* docs_src/prompt/tutorial001.py hl[8] *}
+{* docs_src/prompt/tutorial001_py310.py hl[8] *}
 
 Check it:
 
@@ -22,9 +22,9 @@ Hello Camila
 
 ## Confirm
 
-There's also an alternative to ask for confirmation. Again, if possible, you should use a [*CLI Option* with a confirmation prompt](options/prompt.md){.internal-link target=_blank}:
+There's also an alternative to ask for confirmation. Again, if possible, you should use a [*CLI Option* with a confirmation prompt](options/prompt.md):
 
-{* docs_src/prompt/tutorial002.py hl[8] *}
+{* docs_src/prompt/tutorial002_py310.py hl[8] *}
 
 Check it:
 
@@ -52,7 +52,7 @@ Aborted!
 
 As it's very common to abort if the user doesn't confirm, there's an integrated parameter `abort` that does it automatically:
 
-{* docs_src/prompt/tutorial003.py hl[8] *}
+{* docs_src/prompt/tutorial003_py310.py hl[8] *}
 
 <div class="termy">
 
@@ -75,9 +75,9 @@ Aborted!
 
 ## Prompt with Rich
 
-If you installed Rich as described in [Printing and Colors](printing.md){.internal-link target=_blank}, you can use Rich to prompt the user for input:
+You can use Rich to prompt the user for input:
 
-{* docs_src/prompt/tutorial004.py hl[2,9] *}
+{* docs_src/prompt/tutorial004_py310.py hl[2,9] *}
 
 And when you run it, it will look like:
 

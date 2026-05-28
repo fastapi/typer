@@ -1,3 +1,5 @@
+from typing import Annotated
+
 import pytest
 import typer
 from typer.testing import CliRunner
@@ -8,7 +10,6 @@ from typer.utils import (
     MultipleTyperAnnotationsError,
     _split_annotation_from_typer_annotations,
 )
-from typing_extensions import Annotated
 
 runner = CliRunner()
 

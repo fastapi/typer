@@ -1,13 +1,13 @@
 import inspect
-import sys
+from collections.abc import Callable
 from copy import copy
-from typing import Any, Callable, Dict, List, Tuple, Type, cast
+from typing import Any, cast
 
 from ._typing import Annotated, get_args, get_origin, get_type_hints
 from .models import ArgumentInfo, OptionInfo, ParameterInfo, ParamMeta
 
 
-def _param_type_to_user_string(param_type: Type[ParameterInfo]) -> str:
+def _param_type_to_user_string(param_type: type[ParameterInfo]) -> str:
     # Render a `ParameterInfo` subclass for use in error messages.
     # User code doesn't call `*Info` directly, so errors should present the classes how
     # they were (probably) defined in the user code.
@@ -21,9 +21,9 @@ def _param_type_to_user_string(param_type: Type[ParameterInfo]) -> str:
 
 class AnnotatedParamWithDefaultValueError(Exception):
     argument_name: str
-    param_type: Type[ParameterInfo]
+    param_type: type[ParameterInfo]
 
-    def __init__(self, argument_name: str, param_type: Type[ParameterInfo]):
+    def __init__(self, argument_name: str, param_type: type[ParameterInfo]):
         self.argument_name = argument_name
         self.param_type = param_type
 
@@ -37,14 +37,14 @@ class AnnotatedParamWithDefaultValueError(Exception):
 
 class MixedAnnotatedAndDefaultStyleError(Exception):
     argument_name: str
-    annotated_param_type: Type[ParameterInfo]
-    default_param_type: Type[ParameterInfo]
+    annotated_param_type: type[ParameterInfo]
+    default_param_type: type[ParameterInfo]
 
     def __init__(
         self,
         argument_name: str,
-        annotated_param_type: Type[ParameterInfo],
-        default_param_type: Type[ParameterInfo],
+        annotated_param_type: type[ParameterInfo],
+        default_param_type: type[ParameterInfo],
     ):
         self.argument_name = argument_name
         self.annotated_param_type = annotated_param_type
@@ -77,9 +77,9 @@ class MultipleTyperAnnotationsError(Exception):
 
 class DefaultFactoryAndDefaultValueError(Exception):
     argument_name: str
-    param_type: Type[ParameterInfo]
+    param_type: type[ParameterInfo]
 
-    def __init__(self, argument_name: str, param_type: Type[ParameterInfo]):
+    def __init__(self, argument_name: str, param_type: type[ParameterInfo]):
         self.argument_name = argument_name
         self.param_type = param_type
 
@@ -92,8 +92,8 @@ class DefaultFactoryAndDefaultValueError(Exception):
 
 
 def _split_annotation_from_typer_annotations(
-    base_annotation: Type[Any],
-) -> Tuple[Type[Any], List[ParameterInfo]]:
+    base_annotation: type[Any],
+) -> tuple[type[Any], list[ParameterInfo]]:
     if get_origin(base_annotation) is not Annotated:
         return base_annotation, []
     base_annotation, *maybe_typer_annotations = get_args(base_annotation)
@@ -104,12 +104,8 @@ def _split_annotation_from_typer_annotations(
     ]
 
 
-def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
-    if sys.version_info >= (3, 10):
-        signature = inspect.signature(func, eval_str=True)
-    else:
-        signature = inspect.signature(func)
-
+def get_params_from_function(func: Callable[..., Any]) -> dict[str, ParamMeta]:
+    signature = inspect.signature(func, eval_str=True)
     type_hints = get_type_hints(func)
     params = {}
     for param in signature.parameters.values():
@@ -188,3 +184,14 @@ def get_params_from_function(func: Callable[..., Any]) -> Dict[str, ParamMeta]:
             name=param.name, default=default, annotation=annotation
         )
     return params
+
+
+def parse_boolean_env_var(env_var_value: str | None, default: bool) -> bool:
+    if env_var_value is None:
+        return default
+    value = env_var_value.lower()
+    if value in ("y", "yes", "t", "true", "on", "1"):
+        return True
+    if value in ("n", "no", "f", "false", "off", "0"):
+        return False
+    return default

@@ -5,8 +5,8 @@
     <em>Typer, build great CLIs. Easy to code. Based on Python type hints.</em>
 </p>
 <p align="center">
-<a href="https://github.com/fastapi/typer/actions?query=workflow%3ATest" target="_blank">
-    <img src="https://github.com/fastapi/typer/workflows/Test/badge.svg" alt="Test">
+<a href="https://github.com/fastapi/typer/actions?query=workflow%3ATest+event%3Apush+branch%3Amaster" target="_blank">
+    <img src="https://github.com/fastapi/typer/actions/workflows/test.yml/badge.svg?event=push&branch=master" alt="Test">
 </a>
 <a href="https://github.com/fastapi/typer/actions?query=workflow%3APublish" target="_blank">
     <img src="https://github.com/fastapi/typer/workflows/Publish/badge.svg" alt="Publish">
@@ -28,6 +28,8 @@
 
 Typer is a library for building <abbr title="command line interface, programs executed from a terminal">CLI</abbr> applications that users will **love using** and developers will **love creating**. Based on Python type hints.
 
+It's also a command line tool to run scripts, automatically converting them to CLI applications.
+
 ## Typer CLI
 
 ⚠️ Do not install this package. ⚠️
@@ -38,7 +40,7 @@ All the functionality has been integrated into `typer`.
 
 The only reason this package exists is as a migration path for old projects that used to depend on `typer-cli`, so that they can get the latest version of `typer`.
 
-You probably **should not** install this package.
+You **should not** install this package.
 
 Install instead:
 
@@ -47,6 +49,8 @@ pip install typer
 ```
 
 That includes the `typer` command.
+
+This package is deprecated and will stop receiving any updates and published versions.
 
 ## License
 

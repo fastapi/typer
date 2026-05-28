@@ -3,9 +3,12 @@ import subprocess
 import sys
 from pathlib import Path
 
-from docs_src.typer_app import tutorial001 as mod
+from typer._click.shell_completion import CompletionItem
+
+from docs_src.typer_app import tutorial001_py310 as mod
 
 from ..utils import needs_bash, needs_linux, requires_completion_permission
+from . import completion_option_then_argument as mod_option_arg
 
 
 @needs_bash
@@ -21,7 +24,7 @@ def test_show_completion():
         encoding="utf-8",
         env={**os.environ, "SHELL": "/bin/bash", "_TYPER_COMPLETE_TESTING": "True"},
     )
-    assert "_TUTORIAL001.PY_COMPLETE=complete_bash" in result.stdout
+    assert "_TUTORIAL001_PY310.PY_COMPLETE=complete_bash" in result.stdout
 
 
 @needs_bash
@@ -45,7 +48,7 @@ def test_install_completion():
     new_text = bash_completion_path.read_text()
     bash_completion_path.write_text(text)
     assert "source" in new_text
-    assert str(Path(".bash_completions/tutorial001.py.sh")) in new_text
+    assert str(Path(".bash_completions/tutorial001_py310.py.sh")) in new_text
     assert "completion installed in" in result.stdout
     assert "Completion will take effect once you restart the terminal" in result.stdout
 
@@ -57,7 +60,7 @@ def test_completion_invalid_instruction():
         encoding="utf-8",
         env={
             **os.environ,
-            "_TUTORIAL001.PY_COMPLETE": "sourcebash",
+            "_TUTORIAL001_PY310.PY_COMPLETE": "sourcebash",
         },
     )
     assert result.returncode != 0
@@ -71,11 +74,11 @@ def test_completion_source_bash():
         encoding="utf-8",
         env={
             **os.environ,
-            "_TUTORIAL001.PY_COMPLETE": "source_bash",
+            "_TUTORIAL001_PY310.PY_COMPLETE": "source_bash",
         },
     )
     assert (
-        "complete -o default -F _tutorial001py_completion tutorial001.py"
+        "complete -o default -F _tutorial001_py310py_completion tutorial001_py310.py"
         in result.stdout
     )
 
@@ -87,7 +90,7 @@ def test_completion_source_invalid_shell():
         encoding="utf-8",
         env={
             **os.environ,
-            "_TUTORIAL001.PY_COMPLETE": "source_xxx",
+            "_TUTORIAL001_PY310.PY_COMPLETE": "source_xxx",
         },
     )
     assert "Shell xxx not supported." in result.stderr
@@ -100,7 +103,7 @@ def test_completion_source_invalid_instruction():
         encoding="utf-8",
         env={
             **os.environ,
-            "_TUTORIAL001.PY_COMPLETE": "explode_bash",
+            "_TUTORIAL001_PY310.PY_COMPLETE": "explode_bash",
         },
     )
     assert 'Completion instruction "explode" not supported.' in result.stderr
@@ -113,10 +116,12 @@ def test_completion_source_zsh():
         encoding="utf-8",
         env={
             **os.environ,
-            "_TUTORIAL001.PY_COMPLETE": "source_zsh",
+            "_TUTORIAL001_PY310.PY_COMPLETE": "source_zsh",
         },
     )
-    assert "compdef _tutorial001py_completion tutorial001.py" in result.stdout
+    assert (
+        "compdef _tutorial001_py310py_completion tutorial001_py310.py" in result.stdout
+    )
 
 
 def test_completion_source_fish():
@@ -126,10 +131,10 @@ def test_completion_source_fish():
         encoding="utf-8",
         env={
             **os.environ,
-            "_TUTORIAL001.PY_COMPLETE": "source_fish",
+            "_TUTORIAL001_PY310.PY_COMPLETE": "source_fish",
         },
     )
-    assert "complete --command tutorial001.py --no-files" in result.stdout
+    assert "complete --command tutorial001_py310.py --no-files" in result.stdout
 
 
 def test_completion_source_powershell():
@@ -139,11 +144,11 @@ def test_completion_source_powershell():
         encoding="utf-8",
         env={
             **os.environ,
-            "_TUTORIAL001.PY_COMPLETE": "source_powershell",
+            "_TUTORIAL001_PY310.PY_COMPLETE": "source_powershell",
         },
     )
     assert (
-        "Register-ArgumentCompleter -Native -CommandName tutorial001.py -ScriptBlock $scriptblock"
+        "Register-ArgumentCompleter -Native -CommandName tutorial001_py310.py -ScriptBlock $scriptblock"
         in result.stdout
     )
 
@@ -155,10 +160,34 @@ def test_completion_source_pwsh():
         encoding="utf-8",
         env={
             **os.environ,
-            "_TUTORIAL001.PY_COMPLETE": "source_pwsh",
+            "_TUTORIAL001_PY310.PY_COMPLETE": "source_pwsh",
         },
     )
     assert (
-        "Register-ArgumentCompleter -Native -CommandName tutorial001.py -ScriptBlock $scriptblock"
+        "Register-ArgumentCompleter -Native -CommandName tutorial001_py310.py -ScriptBlock $scriptblock"
         in result.stdout
     )
+
+
+def test_completion_option_argument() -> None:
+    file_name = Path(mod_option_arg.__file__).name
+    result = subprocess.run(
+        [sys.executable, "-m", "coverage", "run", mod_option_arg.__file__, " "],
+        capture_output=True,
+        encoding="utf-8",
+        env={
+            **os.environ,
+            f"_{file_name.upper()}_COMPLETE": "complete_bash",
+            "COMP_WORDS": f"{file_name} --name chosen ",
+            "COMP_CWORD": "3",
+        },
+    )
+    assert "arg-choice" in result.stdout
+    assert "opt-choice" not in result.stdout
+
+
+def test_completion_item_getattr() -> None:
+    item = CompletionItem("demo", source="envvar")
+
+    assert item.source == "envvar"
+    assert item.missing is None

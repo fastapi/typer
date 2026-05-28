@@ -5,15 +5,24 @@ on:
     - cron: "0 0 * * *"
   workflow_dispatch:
 
+permissions: {}
+
+env:
+  UV_NO_SYNC: true
+
 jobs:
   test-latest-python:
     runs-on: ubuntu-latest
     continue-on-error: true
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v6
-      - name: Checkout CPython main
-        uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
+          persist-credentials: false
+      - name: Checkout CPython main
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
           repository: python/cpython
           ref: main
           path: ./.cpython
@@ -24,30 +33,28 @@ jobs:
           cd ./.cpython
           ./configure && make -j $(nproc)
       - name: Setup uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
         with:
-          version: "0.4.15"
+          # Before upgrading uv version, make sure astral-sh/setup-uv knows its checksum.
+          # See: https://github.com/astral-sh/setup-uv/issues/851#issuecomment-4282017837
+          version: "0.11.4"
           enable-cache: true
           cache-dependency-glob: |
-            requirements**.txt
             pyproject.toml
-      - name: Create venv with CPython
-        run: uv venv --python ./.cpython/python .venv
+            uv.lock
       - name: Install Dependencies
-        run: uv pip install -r requirements-tests.txt
-      - name: Activate venv
-        run: echo "$PWD/.venv/bin" >> $GITHUB_PATH
+        run: uv sync --locked --no-dev --group tests --python ./.cpython/python
       - name: Lint
-        run: bash scripts/lint.sh
+        run: uv run bash scripts/lint.sh
       - run: mkdir coverage
-      - run: bash ./scripts/test-files.sh
+      - run: uv run bash scripts/test-files.sh
       - name: Test
-        run: bash scripts/test.sh
+        run: uv run bash scripts/test.sh
         env:
           COVERAGE_FILE: coverage/.coverage.ubuntu-cpython-main
           CONTEXT: ubuntu-cpython-main
       - name: Store coverage files
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: coverage-ubuntu-cpython-main
           path: coverage

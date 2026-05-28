@@ -4,9 +4,9 @@ When you create a CLI program with **Typer** you probably want to create your ow
 
 That's what allows your users to install it and have it as an independent program that they can use in their terminal.
 
-And that's also required for shell auto completion to work (unless you use your program through `typer` command).
+And that's also required for shell auto completion to work (unless you use your program through the `typer` command).
 
-Nowadays, there are several ways and tools to create Python packages (what you install with `pip install something`).
+Nowadays, there are several ways and tools to create Python packages (what you install with `pip install something` or `uv add something`).
 
 You might even have your favorite already.
 
@@ -20,9 +20,9 @@ If you already have a favorite way of creating Python packages, feel free to ski
 
 ## Prerequisites
 
-For this guide we'll use <a href="https://python-poetry.org/" class="external-link" target="_blank">Poetry</a>.
+For this guide we'll use [uv](https://docs.astral.sh/uv/).
 
-Poetry's docs are great, so go ahead, check them and install it.
+uv's docs are great, so go ahead, check them and install it.
 
 ## Create a project
 
@@ -32,14 +32,14 @@ To make sure your package doesn't collide with the package created by someone el
 
 So, if your name is Rick, we'll call it `rick-portal-gun`.
 
-Create a project with Poetry:
+Create a project with uv:
 
 <div class="termy">
 
 ```console
-$ poetry new rick-portal-gun
+$ uv init --package rick-portal-gun
 
-Created package rick_portal_gun in rick-portal-gun
+Initialized project `rick-portal-gun` at `/home/rick-portal-gun`
 
 // Enter the new project directory
 cd ./rick-portal-gun
@@ -54,34 +54,29 @@ Add `typer` to your dependencies:
 <div class="termy">
 
 ```console
-$ poetry add typer
+$ uv add typer
 
 // It creates a virtual environment for your project
-Creating virtualenv rick-portal-gun-w31dJa0b-py3.10 in /home/rick/.cache/pypoetry/virtualenvs
-Using version ^0.12.0 for typer
+Using CPython 3.14.0 interpreter at: /location/of/python/
+Creating virtual environment at: .venv
 
-Updating dependencies
-Resolving dependencies... (1.2s)
+Resolved 9 packages in 21ms
+      Built rick-portal-gun @ file:/home/rick-portal-gun
+Prepared 1 package in 19ms
+Installed 9 packages in 34ms
+ + colorama==0.4.6
+ + markdown-it-py==4.0.0
+ + mdurl==0.1.2
+ + pygments==2.19.2
+ + rich==14.2.0
+ + rick-portal-gun==0.1.0 (from file:/home/rick-portal-gun)
+ + shellingham==1.5.4
+ + typer==0.21.0
+ + typing-extensions==4.15.0
 
----> 100%
-
-Package operations: 8 installs, 0 updates, 0 removals
-
-  - Installing mdurl (0.1.2)
-  - Installing markdown-it-py (3.0.0)
-  - Installing pygments (2.17.2)
-  - Installing click (8.1.7)
-  - Installing rich (13.7.1)
-  - Installing shellingham (1.5.4)
-  - Installing typing-extensions (4.11.0)
-  - Installing typer (0.12.3)
-
-Writing lock file
 
 // Activate that new virtual environment
-$ poetry shell
-
-Spawning shell within /home/rick/.cache/pypoetry/virtualenvs/rick-portal-gun-w31dJa0b-py3.10
+$ source .venv/bin/activate
 
 // Open an editor using this new environment, for example VS Code
 $ code ./
@@ -93,20 +88,19 @@ You can see that you have a generated project structure that looks like:
 
 ```
 .
-├── poetry.lock
 ├── pyproject.toml
 ├── README.md
-├── rick_portal_gun
-│   └── __init__.py
-└── tests
-    └── __init__.py
+├── src
+│   └── rick_portal_gun
+│     └── __init__.py
+└── uv.lock
 ```
 
 ## Create your app
 
 Now let's create an extremely simple **Typer** app.
 
-Create a file `rick_portal_gun/main.py` with:
+Create a file `src/rick_portal_gun/main.py` with:
 
 ```Python
 import typer
@@ -156,30 +150,30 @@ The awesome Portal Gun
 
 ## Add a "script"
 
-We are creating a Python package that can be installed with `pip install`.
+We are creating a Python package that can be installed with `uv add` or `pip install`.
 
 But we want it to provide a CLI program that can be executed in the shell.
 
-To do that, we add a configuration to the `pyproject.toml` in the section `[tool.poetry.scripts]`:
+To do that, we add a configuration to the `pyproject.toml` in the section `[project.scripts]`:
 
-```TOML hl_lines="8 9"
-[tool.poetry]
+```TOML hl_lines="12 13"
+[project]
 name = "rick-portal-gun"
 version = "0.1.0"
-description = ""
-authors = ["Rick Sanchez <rick@example.com>"]
+description = "Add your description here"
 readme = "README.md"
+authors = ["Rick Sanchez <rick@example.com>"]
+requires-python = ">=3.14"
+dependencies = [
+    "typer>=0.21.0",
+]
 
-[tool.poetry.scripts]
+[project.scripts]
 rick-portal-gun = "rick_portal_gun.main:app"
 
-[tool.poetry.dependencies]
-python = "^3.10"
-typer = "^0.12.0"
-
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["uv_build>=0.8.14,<0.9.0"]
+build-backend = "uv_build"
 ```
 
 Here's what that line means:
@@ -209,7 +203,7 @@ from rick_portal_gun.main import app
 app()
 ```
 
-That config section tells Poetry that when this package is installed we want it to create a command line program called `rick-portal-gun`.
+That config section tells uv that when this package is installed, we want it to create a command line program called `rick-portal-gun`.
 
 And that the object to call (like a function) is the one in the variable `app` inside of the module `rick_portal_gun.main`.
 
@@ -222,20 +216,22 @@ You can now install it:
 <div class="termy">
 
 ```console
-$ poetry install
+$ uv sync
 
-Installing dependencies from lock file
+Resolved 10 packages in 1ms
+      Built rick-portal-gun @ file:/home/rick-portal-gun
+Prepared 1 package in 18ms
+Uninstalled 1 package in 1ms
+Installed 1 package in 13ms
+ ~ rick-portal-gun==0.1.0 (from file:/home/rick-portal-gun)
 
-No dependencies to install or update
-
-  - Installing the current project: rick-portal-gun (0.1.0)
 ```
 
 </div>
 
 ## Try your CLI program
 
-Your package is installed in the environment created by Poetry, but you can already use it.
+Your package is installed in the environment created by uv, but you can already use it.
 
 <div class="termy">
 
@@ -244,7 +240,7 @@ Your package is installed in the environment created by Poetry, but you can alre
 $ which rick-portal-gun
 
 // You get the one from your environment
-/home/rick/.cache/pypoetry/virtualenvs/rick-portal-gun-w31dJa0b-py3.10/bin/rick-portal-gun
+/home/rick-portal-gun/.venv/bin/rick-portal-gun
 
 // Try it
 $ rick-portal-gun --help
@@ -261,8 +257,8 @@ Options:
   --help                Show this message and exit.
 
 Commands:
-  load   Load the portal gun
   shoot  Shoot the portal gun
+  load   Load the portal gun
 ```
 
 </div>
@@ -271,18 +267,17 @@ Commands:
 
 Python packages have a standard format called a "wheel". It's a file that ends in `.whl`.
 
-You can create a wheel with Poetry:
+You can create a wheel with uv:
 
 <div class="termy">
 
 ```console
-$ poetry build
+$ uv build
 
-Building rick-portal-gun (0.1.0)
- - Building sdist
- - Built rick-portal-gun-0.1.0.tar.gz
- - Building wheel
- - Built rick_portal_gun-0.1.0-py3-none-any.whl
+Building source distribution (uv build backend)...
+Building wheel from source distribution (uv build backend)...
+Successfully built dist/rick_portal_gun-0.1.0.tar.gz
+Successfully built dist/rick_portal_gun-0.1.0-py3-none-any.whl
 ```
 
 </div>
@@ -325,7 +320,7 @@ If you installed it in the global system (e.g. with `sudo`) you could install a 
 
 /// tip
 
-Bonus points if you use <a href="https://github.com/pipxproject/pipx" class="external-link" target="_blank">`pipx`</a> to install it while keeping an isolated environment for your Python CLI programs 🚀
+Bonus points if you use [uvx](https://docs.astral.sh/uv/) to install it while keeping an isolated environment for your Python CLI programs 🚀
 
 ///
 
@@ -415,19 +410,18 @@ You can support that same style of calling the package/module for your own packa
 
 Python will look for that file and execute it.
 
-The file would live right beside `__init__.py`:
+The file would live right beside `__init__.py` and `main.py`:
 
 ``` hl_lines="7"
 .
-├── poetry.lock
 ├── pyproject.toml
 ├── README.md
-├── rick_portal_gun
-│   ├── __init__.py
-│   ├── __main__.py
-│   └── main.py
-└── tests
-    └── __init__.py
+├── src
+│   └── rick_portal_gun
+│     ├── __init__.py
+│     ├── __main__.py
+│     └── main.py
+└── uv.lock
 ```
 
 No other file has to import it, you don't have to reference it in your `pyproject.toml` or anything else, it just works by default, as it is standard Python behavior.
@@ -439,14 +433,14 @@ from .main import app
 app()
 ```
 
-Now, after installing your package, if you call it with `python -m` it will work (for the main part):
+Now, after installing your package, if you call it with `python -m` it will work:
 
 <div class="termy">
 
 ```console
 $ python -m rick_portal_gun --help
 
-Usage: __main__.py [OPTIONS] COMMAND [ARGS]...
+Usage: python -m rick_portal_gun [OPTIONS] COMMAND [ARGS]...
 
   Awesome Portal Gun
 
@@ -457,8 +451,8 @@ Options:
   --help                Show this message and exit.
 
 Commands:
-  load   Load the portal gun
   shoot  Shoot the portal gun
+  load   Load the portal gun
 ```
 
 </div>
@@ -469,59 +463,7 @@ Notice that you have to pass the importable version of the package name, so `ric
 
 ///
 
-That works! 🚀 Sort of... 🤔
-
-See the `__main__.py` in the help instead of `rick-portal-gun`? We'll fix that next.
-
-### Set a program name in `__main__.py`
-
-We are setting the program name in the file `pyproject.toml` in the line like:
-
-```TOML
-[tool.poetry.scripts]
-rick-portal-gun = "rick_portal_gun.main:app"
-```
-
-But when Python runs our package as a script with `python -m`, it doesn't have the information of the program name.
-
-So, to fix the help text to use the correct program name when called with `python -m`, we can pass it to the app in `__main__.py`:
-
-```Python
-from .main import app
-app(prog_name="rick-portal-gun")
-```
-
-/// tip
-
-You can pass all the arguments and keyword arguments you could pass to a Click application, including `prog_name`.
-
-///
-
-<div class="termy">
-
-```console
-$ python -m rick_portal_gun --help
-
-Usage: rick-portal-gun [OPTIONS] COMMAND [ARGS]...
-
-  Awesome Portal Gun
-
-Options:
-  --install-completion  Install completion for the current shell.
-  --show-completion     Show completion for the current shell, to copy it or customize the installation.
-
-  --help                Show this message and exit.
-
-Commands:
-  load   Load the portal gun
-  shoot  Shoot the portal gun
-```
-
-</div>
-
-Great! That works correctly! 🎉 ✅
-
-Notice that now it uses `rick-portal-gun` instead of `__main__.py` in the help.
+That works! 🚀
 
 ### Autocompletion and `python -m`
 
@@ -543,7 +485,7 @@ But you can still support `python -m` for the cases where it's useful.
 
 ## Publish to PyPI (optional)
 
-You can publish that new package to <a href="https://pypi.org/" class="external-link" target="_blank">PyPI</a> to make it public, so others can install it easily.
+You can publish that new package to [PyPI](https://pypi.org/) to make it public, so others can install it easily.
 
 So, go ahead and create an account there (it's free).
 
@@ -551,9 +493,9 @@ So, go ahead and create an account there (it's free).
 
 To do it, you first need to configure a PyPI auth token.
 
-Login to <a href="https://pypi.org/" class="external-link" target="_blank">PyPI</a>.
+Login to [PyPI](https://pypi.org/).
 
-And then go to <a href="https://pypi.org/manage/account/token/" class="external-link" target="_blank">https://pypi.org/manage/account/token/</a> to create a new token.
+And then go to [https://pypi.org/manage/account/token/](https://pypi.org/manage/account/token/) to create a new token.
 
 Let's say your new API token is:
 
@@ -561,12 +503,12 @@ Let's say your new API token is:
 pypi-wubalubadubdub-deadbeef1234
 ```
 
-Now configure Poetry to use this token with the command `poetry config pypi-token.pypi`:
+Now configure uv to use this token by setting an environment variable:
 
 <div class="termy">
 
 ```console
-$ poetry config pypi-token.pypi pypi-wubalubadubdub-deadbeef1234
+$ export UV_PUBLISH_TOKEN=pypi-wubalubadubdub-deadbeef1234
 // It won't show any output, but it's already configured
 ```
 
@@ -574,39 +516,27 @@ $ poetry config pypi-token.pypi pypi-wubalubadubdub-deadbeef1234
 
 ### Publish to PyPI
 
-Now you can publish your package with Poetry.
-
-You could build the package (as we did above) and then publish later, or you could tell poetry to build it before publishing in one go:
+Now you can publish your package.
 
 <div class="termy">
 
 ```console
-$ poetry publish --build
+$ uv publish
 
-# There are 2 files ready for publishing. Build anyway? (yes/no) [no] $ yes
-
----> 100%
-
-Building rick-portal-gun (0.1.0)
- - Building sdist
- - Built rick-portal-gun-0.1.0.tar.gz
- - Building wheel
- - Built rick_portal_gun-0.1.0-py3-none-any.whl
-
-Publishing rick-portal-gun (0.1.0) to PyPI
- - Uploading rick-portal-gun-0.1.0.tar.gz 100%
- - Uploading rick_portal_gun-0.1.0-py3-none-any.whl 100%
+Publishing 2 files https://upload.pypi.org/legacy/
+Uploading rick_portal_gun-0.1.0-py3-none-any.whl (2.3KiB)
+Uploading rick_portal_gun-0.1.0.tar.gz (841.0B)
 ```
 
 </div>
 
-Now you can go to PyPI and check your projects at <a href="https://pypi.org/manage/projects/" class="external-link" target="_blank">https://pypi.org/manage/projects/</a>.
+Now you can go to PyPI and check your projects at [https://pypi.org/manage/projects/](https://pypi.org/manage/projects/).
 
 You should now see your new "rick-portal-gun" package.
 
 ### Install from PyPI
 
-Now to see that we can install it form PyPI, open another terminal, and uninstall the currently installed package.
+Now to see that we can install it from PyPI, open another terminal, and uninstall the currently installed package.
 
 <div class="termy">
 
@@ -637,7 +567,6 @@ Collecting rick-portal-gun
   Downloading rick_portal_gun-0.1.0-py3-none-any.whl.metadata (435 bytes)
 Requirement already satisfied: typer<0.13.0,>=0.12.3 in ./.local/lib/python3.10/site-packages (from rick-portal-gun==0.1.0) (0.12.3)
 Requirement already satisfied: typing-extensions>=3.7.4.3 in ./.local/lib/python3.10/site-packages (from typer<0.13.0,>=0.12.3->rick-portal-gun==0.1.0) (4.11.0)
-Requirement already satisfied: click>=8.0.0 in ./.local/lib/python3.10/site-packages (from typer<0.13.0,>=0.12.3->rick-portal-gun==0.1.0) (8.1.7)
 Requirement already satisfied: shellingham>=1.3.0 in ./.local/lib/python3.10/site-packages (from typer<0.13.0,>=0.12.3->rick-portal-gun==0.1.0) (1.5.4)
 Requirement already satisfied: rich>=10.11.0 in ./.local/lib/python3.10/site-packages (from typer<0.13.0,>=0.12.3->rick-portal-gun==0.1.0) (13.7.1)
 Requirement already satisfied: pygments<3.0.0,>=2.13.0 in ./.local/lib/python3.10/site-packages (from rich>=10.11.0->typer<0.13.0,>=0.12.3->rick-portal-gun==0.1.0) (2.17.2)
@@ -681,12 +610,6 @@ You just have to pass it the module to import (`rick_portal_gun.main`) and it wi
 
 By specifying the `--name` of the program it will be able to use it while generating the docs.
 
-/// tip
-
-If you installed `typer-slim` and don't have the `typer` command, you can use `python -m typer` instead.
-
-///
-
 ### Publish a new version with the docs
 
 Now you can publish a new version with the updated docs.
@@ -694,29 +617,23 @@ Now you can publish a new version with the updated docs.
 For that you need to first increase the version in `pyproject.toml`:
 
 ```TOML hl_lines="3"
-[tool.poetry]
+[project]
 name = "rick-portal-gun"
 version = "0.2.0"
-description = ""
-authors = ["Rick Sanchez <rick@example.com>"]
+description = "Add your description here"
 readme = "README.md"
+authors = ["Rick Sanchez <rick@example.com>"]
+requires-python = ">=3.14"
+dependencies = [
+    "typer>=0.21.0",
+]
 
-[tool.poetry.scripts]
+[project.scripts]
 rick-portal-gun = "rick_portal_gun.main:app"
 
-[tool.poetry.dependencies]
-python = "^3.10"
-typer = "^0.12.0"
-
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
-```
-
-And in the file `rick_portal_gun/__init__.py`:
-
-```Python
-__version__ = '0.2.0'
+requires = ["uv_build>=0.8.14,<0.9.0"]
+build-backend = "uv_build"
 ```
 
 And then build and publish again:
@@ -724,19 +641,12 @@ And then build and publish again:
 <div class="termy">
 
 ```console
-$ poetry publish --build
+$ uv build
+$ uv publish
 
----> 100%
-
-Building rick-portal-gun (0.2.0)
- - Building sdist
- - Built rick-portal-gun-0.2.0.tar.gz
- - Building wheel
- - Built rick_portal_gun-0.2.0-py3-none-any.whl
-
-Publishing rick-portal-gun (0.2.0) to PyPI
- - Uploading rick-portal-gun-0.2.0.tar.gz 100%
- - Uploading rick_portal_gun-0.2.0-py3-none-any.whl 100%
+Publishing 2 files https://upload.pypi.org/legacy/
+Uploading rick_portal_gun-0.2.0-py3-none-any.whl (2.3KiB)
+Uploading rick_portal_gun-0.2.0.tar.gz (840.0B)
 ```
 
 </div>
@@ -747,16 +657,14 @@ And now you can go to PyPI, to the project page, and reload it, and it will now 
 
 This is a very simple guide. You could add many more steps.
 
-For example, you should use <a href="https://git-scm.com/" class="external-link" target="_blank">Git</a>, the version control system, to save your code.
+For example, you should use [Git](https://git-scm.com/), the version control system, to save your code.
 
-You can add a lot of extra metadata to your `pyproject.toml`, check the docs for <a href="https://python-poetry.org/docs/libraries/" class="external-link" target="_blank">Poetry: Libraries</a>.
+You could use [uv](https://docs.astral.sh/uv/) to manage your installed CLI Python programs in isolated environments.
 
-You could use <a href="https://github.com/pipxproject/pipx" class="external-link" target="_blank">`pipx`</a> to manage your installed CLI Python programs in isolated environments.
+Maybe use automatic formatting with [Ruff](https://docs.astral.sh/ruff/).
 
-Maybe use automatic formatting with <a href="https://github.com/psf/black" class="external-link" target="_blank">Black</a>.
-
-You'll probably want to publish your code as open source to <a href="https://github.com/" class="external-link" target="_blank">GitHub</a>.
+You'll probably want to publish your code as open source to [GitHub](https://github.com/).
 
 And then you could integrate a <abbr title="Continuous Integration">CI</abbr> tool to run your tests and deploy your package automatically.
 
-And there's a long etc. But now you have the basics and you can continue on your own 🚀.
+And there's a long etc. But now you have the basics and you can continue on your own. 🚀

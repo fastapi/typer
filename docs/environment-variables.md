@@ -67,7 +67,7 @@ print(f"Hello {name} from Python")
 
 /// tip
 
-The second argument to <a href="https://docs.python.org/3.8/library/os.html#os.getenv" class="external-link" target="_blank">`os.getenv()`</a> is the default value to return.
+The second argument to [`os.getenv()`](https://docs.python.org/3.8/library/os.html#os.getenv) is the default value to return.
 
 If not provided, it's `None` by default, here we provide `"World"` as the default value to use.
 
@@ -155,7 +155,7 @@ Hello World from Python
 
 /// tip
 
-You can read more about it at <a href="https://12factor.net/config" class="external-link" target="_blank">The Twelve-Factor App: Config</a>.
+You can read more about it at [The Twelve-Factor App: Config](https://12factor.net/config).
 
 ///
 
@@ -165,7 +165,7 @@ These environment variables can only handle **text strings**, as they are extern
 
 That means that **any value** read in Python from an environment variable **will be a `str`**, and any conversion to a different type or any validation has to be done in code.
 
-You will learn more about using environment variables for your <abbr title="command line interface">CLI</abbr> applications later in the section about [CLI Arguments with Environment Variables](./tutorial/arguments/envvar.md){.internal-link target=_blank}.
+You will learn more about using environment variables for your <abbr title="command line interface">CLI</abbr> applications later in the section about [CLI Arguments with Environment Variables](./tutorial/arguments/envvar.md).
 
 ## `PATH` Environment Variable
 
@@ -227,8 +227,6 @@ It could look like this:
 /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/custompython/bin
 ```
 
-This way, when you type `python` in the terminal, the system will find the Python program in `/opt/custompython/bin` (the last directory) and use that one.
-
 ////
 
 //// tab | Windows
@@ -240,8 +238,6 @@ If you say yes to update the `PATH` environment variable, then the installer wil
 ```plaintext
 C:\Program Files\Python312\Scripts;C:\Program Files\Python312;C:\Windows\System32;C:\opt\custompython\bin
 ```
-
-This way, when you type `python` in the terminal, the system will find the Python program in `C:\opt\custompython\bin` (the last directory) and use that one.
 
 ////
 
@@ -257,7 +253,7 @@ $ python
 
 //// tab | Linux, macOS
 
-The system will **find** the `python` program in `/opt/custompython/bin` and run it.
+The system will **find** the `python` program in `/opt/custompython/bin` (the last directory) and run it.
 
 It would be roughly equivalent to typing:
 
@@ -273,7 +269,7 @@ $ /opt/custompython/bin/python
 
 //// tab | Windows
 
-The system will **find** the `python` program in `C:\opt\custompython\bin\python` and run it.
+The system will **find** the `python` program in `C:\opt\custompython\bin\python` (the last directory) and run it.
 
 It would be roughly equivalent to typing:
 
@@ -287,7 +283,7 @@ $ C:\opt\custompython\bin\python
 
 ////
 
-This information will be useful when learning about [Virtual Environments](virtual-environments.md){.internal-link target=_blank}.
+This information will be useful when learning about [Virtual Environments](virtual-environments.md).
 
 It will also be useful when you **create your own CLI programs** as, for them to be available for your users, they will need to be somewhere in the `PATH` environment variable.
 
@@ -295,7 +291,7 @@ It will also be useful when you **create your own CLI programs** as, for them to
 
 With this you should have a basic understanding of what **environment variables** are and how to use them in Python.
 
-You can also read more about them in the <a href="https://en.wikipedia.org/wiki/Environment_variable" class="external-link" target="_blank">Wikipedia for Environment Variable</a>.
+You can also read more about them in the [Wikipedia for Environment Variable](https://en.wikipedia.org/wiki/Environment_variable).
 
 In many cases it's not very obvious how environment variables would be useful and applicable right away. But they keep showing up in many different scenarios when you are developing, so it's good to know about them.
 

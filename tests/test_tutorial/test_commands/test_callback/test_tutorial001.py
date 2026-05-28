@@ -5,7 +5,7 @@ import pytest
 import typer.core
 from typer.testing import CliRunner
 
-from docs_src.commands.callback import tutorial001 as mod
+from docs_src.commands.callback import tutorial001_py310 as mod
 
 app = mod.app
 

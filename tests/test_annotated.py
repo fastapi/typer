@@ -1,11 +1,10 @@
 import sys
 from pathlib import Path
+from typing import Annotated
 
+import pytest
 import typer
 from typer.testing import CliRunner
-from typing_extensions import Annotated
-
-from .utils import needs_py310
 
 runner = CliRunner()
 
@@ -26,7 +25,6 @@ def test_annotated_argument_with_default():
     assert "hello 42" in result.output
 
 
-@needs_py310
 def test_annotated_argument_in_string_type_with_default():
     app = typer.Typer()
 
@@ -98,3 +96,14 @@ def test_annotated_custom_path():
 
     result = runner.invoke(app, "/some/quirky/path/implementation")
     assert result.exit_code == 0
+
+
+def test_annotated_option_invalid():
+    app = typer.Typer()
+
+    @app.command()
+    def cmd(value: Annotated[str, typer.Option(..., "foo-bar")]):
+        print(value)  # pragma: no cover
+
+    with pytest.raises(ValueError, match="Invalid start character for option"):
+        runner.invoke(app, ["--help"], catch_exceptions=False)
