@@ -40,7 +40,7 @@ There used to be a slimmed-down version of Typer called `typer-slim`, which didn
 
 However, since version 0.22.0, we have stopped supporting this, and `typer-slim` now simply installs (all of) Typer.
 
-If you want to disable Rich globally, you can set an environmental variable `TYPER_USE_RICH` to `False` or `0`.
+If you want to disable Rich globally, you can set an environment variable `TYPER_USE_RICH` to `False` or `0`.
 
 The only reason this package exists is as a migration path for old projects that used to depend on `typer-slim`, so that they can get the latest version of `typer`.
 
