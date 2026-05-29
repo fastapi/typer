@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Internal
+
+* ⬆ Bump the python-packages group across 1 directory with 5 updates. PR [#1793](https://github.com/fastapi/typer/pull/1793) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
 ## 0.26.3 (2026-05-28)
 
 ### Refactors
