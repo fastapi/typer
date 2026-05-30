@@ -2,8 +2,7 @@ import sys
 from gettext import gettext as _
 from typing import Any
 
-import click
-
+from . import _click
 from .core import DEFAULT_MARKUP_MODE, HAS_RICH
 from .models import ParamMeta
 from .params import Option
@@ -36,8 +35,8 @@ def _commands_from_info(
 
 
 def show_command_tree(
-    ctx: click.Context,
-    param: click.Parameter,
+    ctx: _click.Context,
+    param: _click.Parameter,
     value: Any,
 ) -> Any:
     if not value or ctx.resilient_parsing:
@@ -59,7 +58,7 @@ def show_command_tree(
             formatter.section(SUBCOMMAND_TITLE)
             formatter.write_dl(items)
             content = formatter.getvalue().rstrip("\n")
-            click.echo(content)
+            _click.echo(content)
         else:
             from . import rich_utils
 
