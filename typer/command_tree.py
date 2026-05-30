@@ -3,7 +3,7 @@ from gettext import gettext as _
 from typing import Any
 
 from . import _click
-from .core import DEFAULT_MARKUP_MODE, HAS_RICH
+from .core import DEFAULT_MARKUP_MODE, HAS_RICH, TyperCommand, TyperGroup
 from .models import ParamMeta
 from .params import Option
 from .utils import get_params_from_function
@@ -12,24 +12,27 @@ SUBCMD_INDENT = "  "
 SUBCOMMAND_TITLE = _("Sub-Commands")
 
 
-def _commands_from_info(
-    info: dict[str, Any], indent_level: int
+def _subcommand_items(
+    command: TyperCommand | TyperGroup | Any, indent_level: int
 ) -> list[tuple[str, str]]:
+    if not isinstance(command, (TyperGroup, TyperCommand)):
+        return []  # pragma: no cover
+
     items = []
-    subcommands = info.get("commands", {})
+    subcommands = command.commands if isinstance(command, TyperGroup) else {}
 
     # get info for this command
     indent = SUBCMD_INDENT * indent_level
     note = "*" if not subcommands else ""
-    name = indent + info.get("name", "unknown") + note
-    help = info.get("short_help") or info.get("help") or ""
+    name = indent + (command.name or "unknown") + note
+    help = command.short_help or command.help or ""
     items.append((name, help))
 
     # recursively call for sub-commands with larger indent
     for subcommand in subcommands.values():
-        if subcommand.get("hidden", False):
+        if subcommand.hidden:
             continue
-        items.extend(_commands_from_info(subcommand, indent_level + 1))
+        items.extend(_subcommand_items(subcommand, indent_level + 1))
 
     return items
 
@@ -42,14 +45,14 @@ def show_command_tree(
     if not value or ctx.resilient_parsing:
         return value  # pragma: no cover
 
-    info = ctx.to_info_dict()
-    subcommands = info.get("command", {}).get("commands", {})  # skips top-level
-
+    command = ctx.command
+    if not isinstance(command, TyperGroup):
+        return value  # pragma: no cover
     items = []
-    for subcommand in subcommands.values():
-        if subcommand.get("hidden", False):
+    for subcommand in command.commands.values():
+        if subcommand.hidden:
             continue
-        items.extend(_commands_from_info(subcommand, 0))
+        items.extend(_subcommand_items(subcommand, 0))
 
     if items:
         markup_mode = DEFAULT_MARKUP_MODE
