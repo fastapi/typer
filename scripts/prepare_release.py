@@ -109,6 +109,7 @@ def prepare(
     release_date: Annotated[
         str,
         typer.Option(
+            "--date",
             envvar="PREPARE_RELEASE_DATE",
             help="Release date in YYYY-MM-DD format. Defaults to today.",
         ),
