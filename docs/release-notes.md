@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Features
+
+* 📝 Update AI Library Skill to avoid verbose code for CLI Options. PR [#1808](https://github.com/fastapi/typer/pull/1808) by [@tiangolo](https://github.com/tiangolo).
+
 ### Internal
 
 * 👷 Add CI to create draft release after merging a `release` PR. PR [#1807](https://github.com/fastapi/typer/pull/1807) by [@tiangolo](https://github.com/tiangolo).
