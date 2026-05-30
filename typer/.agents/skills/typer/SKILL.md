@@ -112,7 +112,7 @@ def main(name: str = typer.Argument(default="World")):
     print(f"Hello {name}")
 ```
 
-Similarly, the old style could use ellipsis (...) to explicitely mark an argument as required.
+Similarly, the old style could use ellipsis (...) to explicitly mark an argument as required.
 
 ```python
 # DO NOT DO THIS: old style. Use Annotated without a default value instead.
@@ -259,7 +259,7 @@ if __name__ == "__main__":
 
 ## Click
 
-Originally, Typer was built on Click. However, going forward Typer will vendor Click. As such, Click extensions should not be used anymore.
+Originally, Typer was built on Click. However, since version 0.26.0, Typer has vendored Click. As such, Click extensions should not be used anymore.
 
 Other settings of `Option` and `Argument` that came from Click but shouldn't be used in Typer anymore, include: `expose_value`, `shell_complete`, `show_choices`, `errors`, `prompt_required`, `is_flag`, `flag_value` and `allow_from_autoenv`.
 

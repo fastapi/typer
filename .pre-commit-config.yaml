@@ -12,6 +12,12 @@ repos:
       - id: end-of-file-fixer
       - id: trailing-whitespace
 
+-   repo: https://github.com/crate-ci/typos
+    rev: bbaefadf97b0ec5fdc942684b647f1a6ab250274 # v1.46.0
+    hooks:
+      - id: typos
+        args: [--force-exclude]
+
 -   repo: local
     hooks:
       - id: local-ruff-check
@@ -54,4 +60,12 @@ repos:
         name: generate README.md from index.md
         entry: uv run ./scripts/docs.py generate-readme
         files: ^docs/index\.md|scripts/docs\.py$
+        pass_filenames: false
+
+      - id: zizmor
+        name: zizmor
+        language: python
+        entry: uv run zizmor .
+        files: ^\.github\/workflows\/
+        require_serial: true
         pass_filenames: false
