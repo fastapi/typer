@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.26.4 (2026-05-30)
+
 ### Features
 
 * 📝 Update AI Library Skill to avoid verbose code for CLI Options. PR [#1808](https://github.com/fastapi/typer/pull/1808) by [@tiangolo](https://github.com/tiangolo).
