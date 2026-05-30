@@ -8,6 +8,7 @@ from typing import Annotated, Literal
 import typer
 
 VERSION_PATTERN = re.compile(r'(?m)^__version__ = "(\d+\.\d+\.\d+)"$')
+VERSION_HEADING_PATTERN = re.compile(r"(?m)^## (\d+\.\d+\.\d+)(?: \([^)]+\))?$")
 RELEASE_NOTES_HEADER = "# Release Notes\n\n"
 LATEST_CHANGES_HEADER = "## Latest Changes"
 BumpType = Literal["major", "minor", "patch"]
@@ -71,6 +72,24 @@ def update_release_notes(
         f"{RELEASE_NOTES_HEADER}{LATEST_CHANGES_HEADER}\n\n{release_header}\n",
         1,
     )
+
+
+def get_release_notes_body(content: str, version: str, release_notes_file: Path) -> str:
+    version_heading = re.compile(rf"(?m)^## {re.escape(version)}(?: \([^)]+\))?$")
+    match = version_heading.search(content)
+    if not match:
+        raise RuntimeError(
+            f"Could not find release notes section for {version} in {release_notes_file}"
+        )
+
+    next_match = VERSION_HEADING_PATTERN.search(content, match.end())
+    end = next_match.start() if next_match else len(content)
+    body = content[match.end() : end].strip()
+    if not body:
+        raise RuntimeError(
+            f"Release notes section for {version} in {release_notes_file} is empty"
+        )
+    return f"{body}\n"
 
 
 @app.command()
@@ -150,6 +169,40 @@ def current_version(
     ],
 ) -> None:
     typer.echo(get_current_version(version_file.read_text(), version_file))
+
+
+@app.command()
+def release_notes(
+    version_file: Annotated[
+        Path,
+        typer.Option(
+            envvar="PREPARE_RELEASE_VERSION_FILE",
+            exists=True,
+            file_okay=True,
+            dir_okay=False,
+            readable=True,
+            help="Path to the Python file containing the __version__ assignment.",
+        ),
+    ],
+    release_notes_file: Annotated[
+        Path,
+        typer.Option(
+            envvar="PREPARE_RELEASE_RELEASE_NOTES_FILE",
+            exists=True,
+            file_okay=True,
+            dir_okay=False,
+            readable=True,
+            help="Path to the release notes Markdown file.",
+        ),
+    ],
+) -> None:
+    version = get_current_version(version_file.read_text(), version_file)
+    typer.echo(
+        get_release_notes_body(
+            release_notes_file.read_text(), version, release_notes_file
+        ),
+        nl=False,
+    )
 
 
 if __name__ == "__main__":
