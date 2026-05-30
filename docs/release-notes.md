@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.26.4 (2026-05-30)
+
 ### Internal
 
 * 👷 Update GitHub Action permissions for prepare-release. PR [#1804](https://github.com/fastapi/typer/pull/1804) by [@tiangolo](https://github.com/tiangolo).
