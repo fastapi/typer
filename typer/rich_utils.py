@@ -716,7 +716,7 @@ def rich_format_subcommands(
     console.print(SUBCOMMAND_NOTE.format(style=STYLE_COMMANDS_TABLE_FIRST_COLUMN))
 
 
-def rich_format_error(self: click.ClickException) -> None:
+def rich_format_error(self: _click.ClickException) -> None:
     """Print richly formatted click errors.
 
     Called by custom exception handler to print richly formatted click errors.

@@ -117,7 +117,7 @@ def get_install_completion_arguments() -> tuple[_click.Parameter, _click.Paramet
     return click_install_param, click_show_param
 
 
-def get_command_tree_parameter() -> click.Parameter:
+def get_command_tree_parameter() -> _click.Parameter:
     meta = get_command_tree_param_meta()
     param, _ = get_click_param(meta)
     return param
@@ -1394,10 +1394,10 @@ def get_command_name(name: str) -> str:
 def get_params_convertors_ctx_param_name_from_function(
     callback: Callable[..., Any] | None,
 ) -> tuple[
-    list[TyperArgument | TyperOption | click.Parameter], dict[str, Any], str | None
+    list[TyperArgument | TyperOption | _click.Parameter], dict[str, Any], str | None
 ]:
-    # NOTE: this function does NOT generate click.Parameters, but needs to allow them to be added to the list later
-    params: list[TyperArgument | TyperOption | click.Parameter] = []
+    # NOTE: this function does NOT generate _click.Parameters, but needs to allow them to be added to the list later
+    params: list[TyperArgument | TyperOption | _click.Parameter] = []
     convertors = {}
     context_param_name = None
     if callback:
