@@ -8,6 +8,7 @@ from scripts.prepare_release import (
     BumpType,
     app,
     bump_version,
+    get_release_notes_body,
     update_release_notes,
     update_version_file,
 )
@@ -97,6 +98,96 @@ def test_update_release_notes_rejects_existing_version() -> None:
         )
 
 
+def test_get_release_notes_body_with_dated_heading() -> None:
+    content = """# Release Notes
+
+## Latest Changes
+
+## 0.26.3 (2026-05-28)
+
+### Fixes
+
+* Fix something.
+
+## 0.26.2 (2026-05-27)
+
+### Fixes
+
+* Previous fix.
+"""
+
+    body = get_release_notes_body(content, "0.26.3", Path("docs/release-notes.md"))
+
+    assert (
+        body
+        == """### Fixes
+
+* Fix something.
+"""
+    )
+
+
+def test_get_release_notes_body_with_plain_heading() -> None:
+    content = """# Release Notes
+
+## Latest Changes
+
+## 0.26.3
+
+### Fixes
+
+* Fix something.
+"""
+
+    body = get_release_notes_body(content, "0.26.3", Path("docs/release-notes.md"))
+
+    assert body == "### Fixes\n\n* Fix something.\n"
+
+
+def test_get_release_notes_body_allows_non_version_h2_content() -> None:
+    content = """# Release Notes
+
+## Latest Changes
+
+## 0.26.3
+
+## Highlights
+
+* Fix something.
+
+## 0.26.2
+
+* Previous fix.
+"""
+
+    body = get_release_notes_body(content, "0.26.3", Path("docs/release-notes.md"))
+
+    assert body == "## Highlights\n\n* Fix something.\n"
+
+
+def test_get_release_notes_body_requires_version_section() -> None:
+    content = "# Release Notes\n\n## Latest Changes\n"
+
+    with pytest.raises(RuntimeError, match="Could not find"):
+        get_release_notes_body(content, "0.26.3", Path("docs/release-notes.md"))
+
+
+def test_get_release_notes_body_requires_non_empty_section() -> None:
+    content = """# Release Notes
+
+## Latest Changes
+
+## 0.26.3
+
+## 0.26.2
+
+* Previous fix.
+"""
+
+    with pytest.raises(RuntimeError, match="is empty"):
+        get_release_notes_body(content, "0.26.3", Path("docs/release-notes.md"))
+
+
 def test_cli_updates_configured_files(tmp_path: Path) -> None:
     version_file = tmp_path / "package" / "__init__.py"
     version_file.parent.mkdir()
@@ -169,3 +260,36 @@ def test_cli_prints_current_version(tmp_path: Path) -> None:
 
     assert result.exit_code == 0, result.output
     assert result.output == "0.26.2\n"
+
+
+def test_cli_prints_release_notes(tmp_path: Path) -> None:
+    version_file = tmp_path / "package" / "__init__.py"
+    version_file.parent.mkdir()
+    version_file.write_text('__version__ = "0.26.3"\n')
+    release_notes_file = tmp_path / "release-notes.md"
+    release_notes_file.write_text(
+        """# Release Notes
+
+## Latest Changes
+
+## 0.26.3 (2026-05-28)
+
+### Fixes
+
+* Fix something.
+"""
+    )
+
+    result = runner.invoke(
+        app,
+        [
+            "release-notes",
+            "--version-file",
+            str(version_file),
+            "--release-notes-file",
+            str(release_notes_file),
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert result.output == "### Fixes\n\n* Fix something.\n"
