@@ -4,6 +4,7 @@
 
 ### Internal
 
+* 👷 Update GitHub Action permissions for prepare-release. PR [#1804](https://github.com/fastapi/typer/pull/1804) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Add GitHub Actions prepare release workflow. PR [#1802](https://github.com/fastapi/typer/pull/1802) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Update publish action, do not use uv cache. PR [#1803](https://github.com/fastapi/typer/pull/1803) by [@tiangolo](https://github.com/tiangolo).
 * ⬆ Bump the python-packages group across 1 directory with 5 updates. PR [#1793](https://github.com/fastapi/typer/pull/1793) by [@dependabot[bot]](https://github.com/apps/dependabot).
