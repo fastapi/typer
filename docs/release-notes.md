@@ -4,6 +4,7 @@
 
 ### Internal
 
+* 👷 Add CI to create draft release after merging a `release` PR. PR [#1807](https://github.com/fastapi/typer/pull/1807) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Update labeler to accept label `release`. PR [#1806](https://github.com/fastapi/typer/pull/1806) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Update GitHub Action permissions for prepare-release. PR [#1804](https://github.com/fastapi/typer/pull/1804) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Add GitHub Actions prepare release workflow. PR [#1802](https://github.com/fastapi/typer/pull/1802) by [@tiangolo](https://github.com/tiangolo).
