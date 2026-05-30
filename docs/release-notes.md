@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.26.4 (2026-05-30)
+
 ### Internal
 
 * 👷 Add GitHub Actions prepare release workflow. PR [#1802](https://github.com/fastapi/typer/pull/1802) by [@tiangolo](https://github.com/tiangolo).
