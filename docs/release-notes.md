@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.26.5 (2026-06-01)
+
 ### Fixes
 
 * 🐛 Ensure that hidden commands are not shown when Rich markup is disabled. PR [#1812](https://github.com/fastapi/typer/pull/1812) by [@svlandeg](https://github.com/svlandeg).
