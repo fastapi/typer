@@ -80,9 +80,9 @@ tests = [
     "mypy >=1.19.1",
     "ty >=0.0.25",
     "pytest >=9.0.0",
-    "pytest-cov >=4.0.0",
-    "pytest-sugar >=0.9.5",
-    "pytest-xdist >=1.32.0",
+    "pytest-cov >=7.0.0",
+    "pytest-sugar >=1.0.0",
+    "pytest-xdist >=3.6.1",
     "rich >=12.3.0",
     "ruff >=0.15.0",
     "shellingham >=1.3.0",
@@ -113,6 +113,8 @@ filterwarnings = [
 ]
 
 [tool.coverage.run]
+# pytest-cov 7+ subprocess coverage (replaces removed .pth auto-instrumentation).
+patch = ["subprocess"]
 parallel = true
 data_file = "coverage/.coverage"
 source = [

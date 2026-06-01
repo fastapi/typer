@@ -139,8 +139,10 @@ def test_binary_stderr() -> None:
     result = subprocess.run(
         [
             sys.executable,
-            "-c",
-            "from tests.test_types_file import app; app()",
+            "-m",
+            "coverage",
+            "run",
+            __file__,
             "write-binary-stderr",
         ],
         capture_output=True,
@@ -382,3 +384,7 @@ def test_should_strip_ansi(monkeypatch) -> None:
     assert should_strip_ansi(stream=None, color=None) is True
     assert should_strip_ansi(stream=None, color=True) is False
     assert should_strip_ansi(stream=None, color=False) is True
+
+
+if __name__ == "__main__":
+    app()
