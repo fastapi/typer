@@ -21,7 +21,7 @@ jobs:
   test:
     strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        os: [ ubuntu-latest, windows-2025-vs2026, macos-latest ]
         python-version: [ "3.14" ]
         uv-resolution:
           - highest
@@ -32,7 +32,7 @@ jobs:
           - os: macos-latest
             python-version: "3.11"
             uv-resolution: highest
-          - os: windows-latest
+          - os: windows-2025-vs2026
             python-version: "3.12"
             uv-resolution: lowest-direct
           - os: ubuntu-latest
