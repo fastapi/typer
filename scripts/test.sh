@@ -10,4 +10,9 @@ export _TYPER_FORCE_DISABLE_TERMINAL=1
 # Run autocompletion install tests in the CI
 export _TYPER_RUN_INSTALL_COMPLETION_TESTS=1
 # It seems xdist-pytest ensures modified sys.path to import relative modules in examples keeps working
-pytest --cov --cov-report=term-missing -o console_output_style=progress --showlocals --numprocesses=auto ${@}
+# Windows CI runners have few vCPUs; -n auto overspawns and slows pytest+cov (spawn + .coverage I/O).
+numprocesses=auto
+if [ "$(python -c 'import os; print(os.name)')" = "nt" ]; then
+  numprocesses=2
+fi
+pytest --cov --cov-report=term-missing -o console_output_style=progress --showlocals --numprocesses="${numprocesses}" "$@"
