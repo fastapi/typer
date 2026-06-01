@@ -48,5 +48,5 @@ def test_hidden_commands(monkeypatch: pytest.MonkeyPatch, use_rich: bool) -> Non
     assert result.exit_code == 0
     assert "visible" in result.output
     assert "hidden-decorated" not in result.output
-    assert "hidden-latebound" not in result.output
+    assert "hidden-var" not in result.output
     assert "hidden-subgroup" not in result.output
