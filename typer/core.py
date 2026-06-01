@@ -1051,6 +1051,8 @@ class TyperGroup(_click.Command):
         commands = []
         for subcommand in self.list_commands(ctx):
             cmd = self.get_command(ctx, subcommand)
+            if cmd is None or cmd.hidden:
+                continue
 
             commands.append((subcommand, cmd))
 
