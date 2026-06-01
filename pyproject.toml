@@ -113,8 +113,6 @@ filterwarnings = [
 ]
 
 [tool.coverage.run]
-# pytest-cov 7+ subprocess coverage (replaces removed .pth auto-instrumentation).
-patch = ["subprocess"]
 parallel = true
 data_file = "coverage/.coverage"
 source = [
