@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Internal
+
+* 👷 Speed up the CI by shuffling the test matrix. PR [#1815](https://github.com/fastapi/typer/pull/1815) by [@svlandeg](https://github.com/svlandeg).
+
 ## 0.26.5 (2026-06-01)
 
 ### Fixes
