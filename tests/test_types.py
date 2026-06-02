@@ -31,7 +31,13 @@ def hello_no_choices(
 
 
 @app.command()
-def hello_all(names: list[str] = typer.Argument(["World"])) -> None:
+def hello_all_options(name: list[str] = typer.Option(["World"])) -> None:
+    for n in name:
+        print(f"Hello {n}!")
+
+
+@app.command()
+def hello_all_args(names: list[str] = typer.Argument(["World"])) -> None:
     for name in names:
         print(f"Hello {name}!")
 
@@ -108,8 +114,26 @@ def test_enum_choice_missing_message() -> None:
     assert "morty" in result.output
 
 
-def test_variadic_argument_empty() -> None:
-    result = runner.invoke(app, ["hello-all"])
+def test_list() -> None:
+    result = runner.invoke(app, ["hello-all-options", "--name", "Rick", "--name", "Morty"])
+    assert result.exit_code == 0
+    assert "Hello World!" not in result.output
+    assert "Hello Rick!" in result.output
+    assert "Hello Morty!" in result.output
+
+    result = runner.invoke(app, ["hello-all-args", "Rick", "Morty"])
+    assert result.exit_code == 0
+    assert "Hello World!" not in result.output
+    assert "Hello Rick!" in result.output
+    assert "Hello Morty!" in result.output
+
+
+def test_list_empty() -> None:
+    result = runner.invoke(app, ["hello-all-args"])
+    assert result.exit_code == 0
+    assert "Hello World!" in result.output
+
+    result = runner.invoke(app, ["hello-all-options"])
     assert result.exit_code == 0
     assert "Hello World!" in result.output
 
