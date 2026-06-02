@@ -115,7 +115,9 @@ def test_enum_choice_missing_message() -> None:
 
 
 def test_list() -> None:
-    result = runner.invoke(app, ["hello-all-options", "--name", "Rick", "--name", "Morty"])
+    result = runner.invoke(
+        app, ["hello-all-options", "--name", "Rick", "--name", "Morty"]
+    )
     assert result.exit_code == 0
     assert "Hello World!" not in result.output
     assert "Hello Rick!" in result.output
