@@ -57,10 +57,11 @@ def test_sanitize_help_text_respects_has_rich(
     has_rich: bool, help_text: str, expected: str
 ):
     """When HAS_RICH is False, rich tags are preserved even if rich is installed."""
-    with patch(
-        "typer._completion_classes.HAS_RICH", has_rich
-    ), patch(
-        "importlib.util.find_spec",
-        return_value=ModuleSpec("rich", loader=None),
+    with (
+        patch("typer._completion_classes.HAS_RICH", has_rich),
+        patch(
+            "importlib.util.find_spec",
+            return_value=ModuleSpec("rich", loader=None),
+        ),
     ):
         assert _sanitize_help_text(help_text) == expected
