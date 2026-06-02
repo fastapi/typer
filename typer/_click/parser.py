@@ -187,9 +187,9 @@ class _Argument:
                     f"Argument {self.dest!r} takes {self.nargs} values."
                 )
 
-        if self.nargs == -1 and self.obj.envvar is not None and value == ():
-            # Replace empty tuple with None so that a value from the
-            # environment may be tried.
+        if self.nargs == -1 and value == ():
+            # Replace empty tuple with None so regular default resolution
+            # (env var, default map, and parameter default) can be tried.
             value = None
 
         state.opts[self.dest] = value  # type: ignore

@@ -109,6 +109,12 @@ def test_split_envvar_value(monkeypatch) -> None:
     assert "Hello Morty!" in result.output
 
 
+def test_variadic_argument_empty() -> None:
+    result = runner.invoke(app, ["hello-all"])
+    assert result.exit_code == 0
+    assert "Hello World!" in result.output
+
+
 def test_list_pair() -> None:
     result = runner.invoke(app, ["split-variadic-and-pair", "a", "b", "c", "x", "y"])
     assert result.exit_code == 0
