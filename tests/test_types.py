@@ -31,7 +31,15 @@ def hello_no_choices(
 
 
 @app.command()
-def hello_all(names: list[str] = typer.Argument(["World"], envvar="NAMES")) -> None:
+def hello_all(names: list[str] = typer.Argument(["World"])) -> None:
+    for name in names:
+        print(f"Hello {name}!")
+
+
+@app.command()
+def hello_all_envvar(
+    names: list[str] = typer.Argument(["World"], envvar="NAMES"),
+) -> None:
     for name in names:
         print(f"Hello {name}!")
 
@@ -100,19 +108,23 @@ def test_enum_choice_missing_message() -> None:
     assert "morty" in result.output
 
 
-def test_split_envvar_value(monkeypatch) -> None:
-    # This will use split_envvar_value to produce two strings from the envvar
-    monkeypatch.setenv("NAMES", "Rick   Morty")
-    result = runner.invoke(app, ["hello-all"])
-    assert result.exit_code == 0
-    assert "Hello Rick!" in result.output
-    assert "Hello Morty!" in result.output
-
-
 def test_variadic_argument_empty() -> None:
     result = runner.invoke(app, ["hello-all"])
     assert result.exit_code == 0
     assert "Hello World!" in result.output
+
+    result = runner.invoke(app, ["hello-all-envvar"])
+    assert result.exit_code == 0
+    assert "Hello World!" in result.output
+
+
+def test_split_envvar_value(monkeypatch) -> None:
+    # This will use split_envvar_value to produce two strings from the envvar
+    monkeypatch.setenv("NAMES", "Rick   Morty")
+    result = runner.invoke(app, ["hello-all-envvar"])
+    assert result.exit_code == 0
+    assert "Hello Rick!" in result.output
+    assert "Hello Morty!" in result.output
 
 
 def test_list_pair() -> None:
