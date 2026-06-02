@@ -14,11 +14,18 @@ from ._completion_shared import (
     COMPLETION_SCRIPT_ZSH,
     Shells,
 )
+from .core import HAS_RICH
 
 
 def _sanitize_help_text(text: str) -> str:
-    """Sanitizes the help text by removing rich tags"""
+    """Sanitizes the help text by removing rich tags.
+
+    Checks both that rich is installed AND that it is enabled
+    (respecting the TYPER_USE_RICH environment variable).
+    """
     if not importlib.util.find_spec("rich"):
+        return text
+    if not HAS_RICH:
         return text
     from . import rich_utils
 
