@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Fixes
+
+* 🐛 Ensure that the default of a list argument is used correctly. PR [#1821](https://github.com/fastapi/typer/pull/1821) by [@svlandeg](https://github.com/svlandeg).
+
 ### Internal
 
 * 👷 Speed up the CI by shuffling the test matrix. PR [#1815](https://github.com/fastapi/typer/pull/1815) by [@svlandeg](https://github.com/svlandeg).
