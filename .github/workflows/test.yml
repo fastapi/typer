@@ -32,10 +32,10 @@ jobs:
           - os: macos-latest
             python-version: "3.11"
             uv-resolution: highest
-          - os: windows-latest
+          - os: macos-latest
             python-version: "3.12"
             uv-resolution: lowest-direct
-          - os: ubuntu-latest
+          - os: windows-latest
             python-version: "3.13"
             uv-resolution: highest
       fail-fast: false
