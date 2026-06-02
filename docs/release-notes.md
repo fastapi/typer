@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.26.6 (2026-06-02)
+
 ### Fixes
 
 * 🐛 Ensure that the default of a list argument is used correctly. PR [#1821](https://github.com/fastapi/typer/pull/1821) by [@svlandeg](https://github.com/svlandeg).
