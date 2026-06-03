@@ -2,7 +2,7 @@ import errno
 import inspect
 import os
 import sys
-from collections.abc import Callable, MutableMapping, Sequence
+from collections.abc import Callable, Mapping, MutableMapping, Sequence
 from difflib import get_close_matches
 from enum import Enum
 from gettext import gettext as _
@@ -13,13 +13,10 @@ from typing import (
     cast,
 )
 
-import click
-import click.core
-import click.formatting
-import click.shell_completion
-import click.types
-import click.utils
-
+from . import _click
+from ._click import types
+from ._click.parser import _OptionParser
+from ._click.shell_completion import CompletionItem
 from ._typing import Literal
 from .utils import parse_boolean_env_var
 
@@ -34,7 +31,7 @@ else:
     DEFAULT_MARKUP_MODE = None
 
 
-# Copy from click.parser._split_opt
+# Copy from _click.parser._split_opt
 def _split_opt(opt: str) -> tuple[str, str]:
     first = opt[:1]
     if first.isalnum():
@@ -45,10 +42,10 @@ def _split_opt(opt: str) -> tuple[str, str]:
 
 
 def _typer_param_setup_autocompletion_compat(
-    self: click.Parameter,
+    self: _click.Parameter,
     *,
     autocompletion: Callable[
-        [click.Context, list[str], str], list[tuple[str, str] | str]
+        [_click.Context, list[str], str], list[tuple[str, str] | str]
     ]
     | None = None,
 ) -> None:
@@ -65,10 +62,8 @@ def _typer_param_setup_autocompletion_compat(
     if autocompletion is not None:
 
         def compat_autocompletion(
-            ctx: click.Context, param: click.core.Parameter, incomplete: str
-        ) -> list["click.shell_completion.CompletionItem"]:
-            from click.shell_completion import CompletionItem
-
+            ctx: _click.Context, param: _click.core.Parameter, incomplete: str
+        ) -> list[CompletionItem]:
             out = []
 
             for c in autocompletion(ctx, [], incomplete):
@@ -89,11 +84,11 @@ def _typer_param_setup_autocompletion_compat(
 def _get_default_string(
     obj: Union["TyperArgument", "TyperOption"],
     *,
-    ctx: click.Context,
+    ctx: _click.Context,
     show_default_is_str: bool,
     default_value: list[Any] | tuple[Any, ...] | str | Callable[..., Any] | Any,
 ) -> str:
-    # Extracted from click.core.Option.get_help_record() to be reused by
+    # Extracted from _click.core.Option.get_help_record() to be reused by
     # rich_utils avoiding RegEx hacks
     if show_default_is_str:
         default_string = f"({obj.show_default})"
@@ -112,7 +107,7 @@ def _get_default_string(
         # For boolean flags that have distinct True/False opts,
         # use the opt without prefix instead of the value.
         # Typer override, original commented
-        # default_string = click.parser.split_opt(
+        # default_string = _click.parser.split_opt(
         #     (self.opts if self.default else self.secondary_opts)[0]
         # )[1]
         if obj.default:
@@ -136,9 +131,9 @@ def _get_default_string(
 
 
 def _extract_default_help_str(
-    obj: Union["TyperArgument", "TyperOption"], *, ctx: click.Context
+    obj: Union["TyperArgument", "TyperOption"], *, ctx: _click.Context
 ) -> Any | Callable[[], Any] | None:
-    # Extracted from click.core.Option.get_help_record() to be reused by
+    # Extracted from _click.core.Option.get_help_record() to be reused by
     # rich_utils avoiding RegEx hacks
     # Temporarily enable resilient parsing to avoid type casting
     # failing for the default. Might be possible to extend this to
@@ -154,7 +149,7 @@ def _extract_default_help_str(
 
 
 def _main(
-    self: click.Command,
+    self: _click.Command,
     *,
     args: Sequence[str] | None = None,
     prog_name: str | None = None,
@@ -164,7 +159,7 @@ def _main(
     rich_markup_mode: MarkupMode = DEFAULT_MARKUP_MODE,
     **extra: Any,
 ) -> Any:
-    # Typer override, duplicated from click.main() to handle custom rich exceptions
+    # Typer override, duplicated from _click.main() to handle custom rich exceptions
     # Verify that the environment is configured correctly, or reject
     # further execution to avoid a broken script.
     if args is None:
@@ -172,12 +167,12 @@ def _main(
 
         # Covered in Click tests
         if os.name == "nt" and windows_expand_args:  # pragma: no cover
-            args = click.utils._expand_args(args)
+            args = _click.utils._expand_args(args)
     else:
         args = list(args)
 
     if prog_name is None:
-        prog_name = click.utils._detect_program_name()
+        prog_name = _click.utils._detect_program_name()
 
     # Process shell completion requests and exit early.
     self._main_shell_completion(extra, prog_name, complete_var)
@@ -197,11 +192,11 @@ def _main(
                 # by its truthiness/falsiness
                 ctx.exit()
         except EOFError as e:
-            click.echo(file=sys.stderr)
-            raise click.Abort() from e
+            _click.echo(file=sys.stderr)
+            raise _click.exceptions.Abort() from e
         except KeyboardInterrupt as e:
-            raise click.exceptions.Exit(130) from e
-        except click.ClickException as e:
+            raise _click.exceptions.Exit(130) from e
+        except _click.exceptions.ClickException as e:
             if not standalone_mode:
                 raise
             # Typer override
@@ -215,12 +210,12 @@ def _main(
             sys.exit(e.exit_code)
         except OSError as e:
             if e.errno == errno.EPIPE:
-                sys.stdout = cast(TextIO, click.utils.PacifyFlushWrapper(sys.stdout))
-                sys.stderr = cast(TextIO, click.utils.PacifyFlushWrapper(sys.stderr))
+                sys.stdout = cast(TextIO, _click.utils.PacifyFlushWrapper(sys.stdout))
+                sys.stderr = cast(TextIO, _click.utils.PacifyFlushWrapper(sys.stderr))
                 sys.exit(1)
             else:
                 raise
-    except click.exceptions.Exit as e:
+    except _click.exceptions.Exit as e:
         if standalone_mode:
             sys.exit(e.exit_code)
         else:
@@ -233,7 +228,7 @@ def _main(
             # `ctx.exit(1)` and to `return 1`, the caller won't be able to
             # tell the difference between the two
             return e.exit_code
-    except click.Abort:
+    except _click.exceptions.Abort:
         if not standalone_mode:
             raise
         # Typer override
@@ -242,19 +237,21 @@ def _main(
 
             rich_utils.rich_abort_error()
         else:
-            click.echo(_("Aborted!"), file=sys.stderr)
+            _click.echo(_("Aborted!"), file=sys.stderr)
         # Typer override end
         sys.exit(1)
 
 
-class TyperArgument(click.core.Argument):
+class TyperArgument(_click.core.Parameter):
+    param_type_name = "argument"
+
     def __init__(
         self,
         *,
         # Parameter
         param_decls: list[str],
         type: Any | None = None,
-        required: bool | None = None,
+        required: bool = False,
         default: Any | None = None,
         callback: Callable[..., Any] | None = None,
         nargs: int | None = None,
@@ -265,8 +262,8 @@ class TyperArgument(click.core.Argument):
         # Note that shell_complete is not fully supported and will be removed in future versions
         # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Callable[
-            [click.Context, click.Parameter, str],
-            list["click.shell_completion.CompletionItem"] | list[str],
+            [_click.Context, _click.Parameter, str],
+            list[CompletionItem] | list[str],
         ]
         | None = None,
         autocompletion: Callable[..., Any] | None = None,
@@ -301,10 +298,17 @@ class TyperArgument(click.core.Argument):
         )
         _typer_param_setup_autocompletion_compat(self, autocompletion=autocompletion)
 
+    @property
+    def human_readable_name(self) -> str:
+        if self.metavar is not None:
+            return self.metavar
+        assert self.name is not None, "self.name or self.metavar should be set"
+        return self.name.upper()
+
     def _get_default_string(
         self,
         *,
-        ctx: click.Context,
+        ctx: _click.Context,
         show_default_is_str: bool,
         default_value: list[Any] | tuple[Any, ...] | str | Callable[..., Any] | Any,
     ) -> str:
@@ -316,12 +320,12 @@ class TyperArgument(click.core.Argument):
         )
 
     def _extract_default_help_str(
-        self, *, ctx: click.Context
+        self, *, ctx: _click.Context
     ) -> Any | Callable[[], Any] | None:
         return _extract_default_help_str(self, ctx=ctx)
 
-    def get_help_record(self, ctx: click.Context) -> tuple[str, str] | None:
-        # Modified version of click.core.Option.get_help_record()
+    def get_help_record(self, ctx: _click.Context) -> tuple[str, str] | None:
+        # Modified version of _click.core.Option.get_help_record()
         # to support Arguments
         if self.hidden:
             return None
@@ -376,8 +380,8 @@ class TyperArgument(click.core.Argument):
             help = f"{help}  {extra_str}" if help else f"{extra_str}"
         return name, help
 
-    def make_metavar(self, ctx: click.Context) -> str:
-        # Modified version of click.core.Argument.make_metavar()
+    def make_metavar(self, ctx: _click.Context) -> str:
+        # Modified version of _click.core.Argument.make_metavar()
         # to include Argument name
         if self.metavar is not None:
             var = self.metavar
@@ -397,15 +401,45 @@ class TyperArgument(click.core.Argument):
     def value_is_missing(self, value: Any) -> bool:
         return _value_is_missing(self, value)
 
+    def _parse_decls(
+        self, decls: Sequence[str], expose_value: bool
+    ) -> tuple[str | None, list[str], list[str]]:
+        if not decls:
+            if not expose_value:
+                return None, [], []
+            raise TypeError("Argument is marked as exposed, but does not have a name.")
+        if len(decls) == 1:
+            name = arg = decls[0]
+            name = name.replace("-", "_").lower()
+        else:
+            raise TypeError(
+                "Arguments take exactly one parameter declaration, got"
+                f" {len(decls)}: {decls}."
+            )
+        return name, [arg], []
 
-class TyperOption(click.core.Option):
+    def get_usage_pieces(self, ctx: _click.Context) -> list[str]:
+        return [self.make_metavar(ctx)]
+
+    def get_error_hint(self, ctx: _click.Context) -> str:
+        return f"'{self.make_metavar(ctx)}'"
+
+    def add_to_parser(self, parser: _OptionParser, ctx: _click.Context) -> None:
+        parser.add_argument(dest=self.name, nargs=self.nargs, obj=self)
+
+
+class TyperOption(_click.Parameter):
+    param_type_name = "option"
+
+    _depr_flag_value: bool | None
+
     def __init__(
         self,
         *,
         # Parameter
         param_decls: list[str],
-        type: click.types.ParamType | Any | None = None,
-        required: bool | None = None,
+        type: types.ParamType | Any | None = None,
+        required: bool = False,
         default: Any | None = None,
         callback: Callable[..., Any] | None = None,
         nargs: int | None = None,
@@ -416,8 +450,8 @@ class TyperOption(click.core.Option):
         # Note that shell_complete is not fully supported and will be removed in future versions
         # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Callable[
-            [click.Context, click.Parameter, str],
-            list["click.shell_completion.CompletionItem"] | list[str],
+            [_click.Context, _click.Parameter, str],
+            list[CompletionItem] | list[str],
         ]
         | None = None,
         autocompletion: Callable[..., Any] | None = None,
@@ -438,9 +472,13 @@ class TyperOption(click.core.Option):
         # Rich settings
         rich_help_panel: str | None = None,
     ):
+        if help:
+            help = inspect.cleandoc(help)
+
         super().__init__(
-            param_decls=param_decls,
+            param_decls,
             type=type,
+            multiple=multiple,
             required=required,
             default=default,
             callback=callback,
@@ -449,28 +487,246 @@ class TyperOption(click.core.Option):
             expose_value=expose_value,
             is_eager=is_eager,
             envvar=envvar,
-            show_default=show_default,
-            prompt=prompt,
-            confirmation_prompt=confirmation_prompt,
-            hide_input=hide_input,
-            is_flag=is_flag,
-            multiple=multiple,
-            count=count,
-            allow_from_autoenv=allow_from_autoenv,
-            help=help,
-            hidden=hidden,
-            show_choices=show_choices,
-            show_envvar=show_envvar,
-            prompt_required=prompt_required,
             shell_complete=shell_complete,
         )
+
+        if prompt is True:
+            if self.name is None:
+                raise TypeError("'name' is required with 'prompt=True'.")
+
+            prompt_text: str | None = self.name.replace("_", " ").capitalize()
+        elif prompt is False:
+            prompt_text = None
+        else:
+            prompt_text = prompt
+
+        self.prompt = prompt_text
+        self.confirmation_prompt = confirmation_prompt
+        self.prompt_required = prompt_required
+        self.hide_input = hide_input
+        self.hidden = hidden
+
+        # TODO: revisit all of this flag stuff
+        if is_flag and type is None:
+            self.type: types.ParamType = types.BoolParamType()
+
+        self.is_flag: bool = bool(is_flag)
+        self.is_bool_flag: bool = bool(
+            is_flag and isinstance(self.type, types.BoolParamType)
+        )
+
+        if self.is_flag:
+            self._depr_flag_value = True
+        else:
+            self._depr_flag_value = None
+
+        # Counting. TODO: test or remove? Not currently in coverage.
+        self.count = count
+        if count and type is None:
+            self.type = types.IntRange(min=0)
+
+        self.allow_from_autoenv = allow_from_autoenv
+        self.help = help
+        self.show_default = show_default
+        self.show_choices = show_choices
+        self.show_envvar = show_envvar
+
         _typer_param_setup_autocompletion_compat(self, autocompletion=autocompletion)
         self.rich_help_panel = rich_help_panel
+
+    def get_error_hint(self, ctx: _click.Context) -> str:
+        result = super().get_error_hint(ctx)
+        if self.show_envvar and self.envvar is not None:
+            result += f" (env var: '{self.envvar}')"
+        return result
+
+    def _parse_decls(
+        self, decls: Sequence[str], expose_value: bool
+    ) -> tuple[str | None, list[str], list[str]]:
+        opts = []
+        secondary_opts = []
+        name = None
+        possible_names = []
+
+        for decl in decls:
+            if decl.isidentifier():
+                if name is not None:
+                    raise TypeError(f"Name '{name}' defined twice")
+                name = decl
+            else:
+                split_char = ";" if decl[:1] == "/" else "/"
+                if split_char in decl:
+                    first, second = decl.split(split_char, 1)
+                    first = first.rstrip()
+                    if first:
+                        possible_names.append(_split_opt(first))
+                        opts.append(first)
+                    second = second.lstrip()
+                    if second:
+                        secondary_opts.append(second.lstrip())
+                    if first == second:
+                        raise ValueError(
+                            f"Boolean option {decl!r} cannot use the"
+                            " same flag for true/false."
+                        )
+                else:
+                    possible_names.append(_split_opt(decl))
+                    opts.append(decl)
+
+        if name is None and possible_names:
+            possible_names.sort(key=lambda x: -len(x[0]))  # group long options first
+            name = possible_names[0][1].replace("-", "_").lower()
+            if not name.isidentifier():
+                name = None
+
+        return name, opts, secondary_opts
+
+    def add_to_parser(self, parser: _OptionParser, ctx: _click.Context) -> None:
+        if self.multiple:
+            action = "append"
+        elif self.count:
+            action = "count"
+        else:
+            action = "store"
+
+        if self.is_flag:
+            action = f"{action}_const"
+
+            if self.is_bool_flag and self.secondary_opts:
+                parser.add_option(
+                    obj=self, opts=self.opts, dest=self.name, action=action, const=True
+                )
+                parser.add_option(
+                    obj=self,
+                    opts=self.secondary_opts,
+                    dest=self.name,
+                    action=action,
+                    const=False,
+                )
+            else:
+                parser.add_option(
+                    obj=self,
+                    opts=self.opts,
+                    dest=self.name,
+                    action=action,
+                    const=self._depr_flag_value,
+                )
+        else:
+            parser.add_option(
+                obj=self,
+                opts=self.opts,
+                dest=self.name,
+                action=action,
+                nargs=self.nargs,
+            )
+
+    def prompt_for_value(self, ctx: _click.Context) -> Any:
+        """This is an alternative flow that can be activated in the full
+        value processing if a value does not exist.  It will prompt the
+        user until a valid value exists and then returns the processed
+        value as result.
+        """
+        assert self.prompt is not None
+
+        # Calculate the default before prompting anything to lock in the value before
+        # attempting any user interaction.
+        default = self.get_default(ctx)
+
+        # A boolean flag can use a simplified [y/n] confirmation prompt.
+        if self.is_bool_flag:
+            # Nothing prevent you to declare an option that is simultaneously:
+            # 1) auto-detected as a boolean flag,
+            # 2) allowed to prompt, and
+            # 3) still declare a non-boolean default.
+            # This forced casting into a boolean is necessary to align any non-boolean
+            # default to the prompt, which is going to be a [y/n]-style confirmation
+            # because the option is still a boolean flag. That way, instead of [y/n],
+            # we get [Y/n] or [y/N] depending on the truthy value of the default.
+            # Refs: https://github.com/pallets/click/pull/3030#discussion_r2289180249
+            if default is not None:
+                default = bool(default)
+            return _click.termui.confirm(self.prompt, default)
+
+        # If show_default is set to True/False, provide this to `prompt` as well. For
+        # non-bool values of `show_default`, we use `prompt`'s default behavior
+        prompt_kwargs: Any = {}
+        if isinstance(self.show_default, bool):
+            prompt_kwargs["show_default"] = self.show_default
+
+        return _click.termui.prompt(
+            self.prompt,
+            # Use ``None`` to inform the prompt() function to reiterate until a valid
+            # value is provided by the user if we have no default.
+            default=default,
+            type=self.type,
+            hide_input=self.hide_input,
+            show_choices=self.show_choices,
+            confirmation_prompt=self.confirmation_prompt,
+            value_proc=lambda x: self.process_value(ctx, x),
+            **prompt_kwargs,
+        )
+
+    def value_from_envvar(self, ctx: _click.Context) -> Any:
+        # TODO: clean up
+        rv = self.resolve_envvar_value(ctx)
+
+        # Absent environment variable or an empty string is interpreted as unset.
+        if rv is None:
+            return None
+
+        if self.nargs != 1 or self.multiple:
+            return self.type.split_envvar_value(rv)
+
+        return rv
+
+    def resolve_envvar_value(self, ctx: _click.Context) -> str | None:
+        rv = super().resolve_envvar_value(ctx)
+
+        if rv is not None:
+            return rv
+
+        if (
+            self.allow_from_autoenv
+            and ctx.auto_envvar_prefix is not None
+            and self.name is not None
+        ):
+            envvar = f"{ctx.auto_envvar_prefix}_{self.name.upper()}"
+            rv = os.environ.get(envvar)
+
+            if rv:
+                return rv
+
+        return None
+
+    def consume_value(
+        self, ctx: _click.Context, opts: Mapping[str, _click.Parameter]
+    ) -> tuple[Any, _click.core.ParameterSource]:
+        """For `Option`, the value can be collected from an interactive prompt
+        if the option is a flag that needs a value (and the `prompt` property is
+        set).
+
+        Additionally, this method handles flag option that are activated without a
+        value, in which case the `flag_value` is returned.
+        """
+        value, source = super().consume_value(ctx, opts)
+
+        # The value wasn't set, or used the param's default, prompt for one to the user
+        # if prompting is enabled.
+        if (
+            source in {None, _click.core.ParameterSource.DEFAULT}
+            and self.prompt is not None
+            and (self.required or self.prompt_required)
+            and not ctx.resilient_parsing
+        ):
+            value = self.prompt_for_value(ctx)
+            source = _click.core.ParameterSource.PROMPT
+
+        return value, source
 
     def _get_default_string(
         self,
         *,
-        ctx: click.Context,
+        ctx: _click.Context,
         show_default_is_str: bool,
         default_value: list[Any] | tuple[Any, ...] | str | Callable[..., Any] | Any,
     ) -> str:
@@ -482,14 +738,14 @@ class TyperOption(click.core.Option):
         )
 
     def _extract_default_help_str(
-        self, *, ctx: click.Context
+        self, *, ctx: _click.Context
     ) -> Any | Callable[[], Any] | None:
         return _extract_default_help_str(self, ctx=ctx)
 
-    def make_metavar(self, ctx: click.Context) -> str:
+    def make_metavar(self, ctx: _click.Context) -> str:
         return super().make_metavar(ctx=ctx)
 
-    def get_help_record(self, ctx: click.Context) -> tuple[str, str] | None:
+    def get_help_record(self, ctx: _click.Context) -> tuple[str, str] | None:
         # Duplicate all of Click's logic only to modify a single line, to allow boolean
         # flags with only names for False values as it's currently supported by Typer
         # Ref: https://typer.tiangolo.com/tutorial/parameter-types/bool/#only-names-for-false
@@ -501,7 +757,7 @@ class TyperOption(click.core.Option):
         def _write_opts(opts: Sequence[str]) -> str:
             nonlocal any_prefix_is_slash
 
-            rv, any_slashes = click.formatting.join_options(opts)
+            rv, any_slashes = _click.formatting.join_options(opts)
 
             if any_slashes:
                 any_prefix_is_slash = True
@@ -559,7 +815,7 @@ class TyperOption(click.core.Option):
             if default_string:
                 extra.append(_("default: {default}").format(default=default_string))
 
-        if isinstance(self.type, click.types._NumberRangeBase):
+        if isinstance(self.type, types._NumberRangeBase):
             range_str = self.type._describe_range()
 
             if range_str:
@@ -588,13 +844,9 @@ class TyperOption(click.core.Option):
         return _value_is_missing(self, value)
 
 
-def _value_is_missing(param: click.Parameter, value: Any) -> bool:
+def _value_is_missing(param: _click.Parameter, value: Any) -> bool:
     if value is None:
         return True
-
-    # Click 8.3 and beyond
-    # if value is UNSET:
-    #     return True
 
     if (param.nargs != 1 or param.multiple) and value == ():
         return True  # pragma: no cover
@@ -603,7 +855,7 @@ def _value_is_missing(param: click.Parameter, value: Any) -> bool:
 
 
 def _typer_format_options(
-    self: click.core.Command, *, ctx: click.Context, formatter: click.HelpFormatter
+    self: _click.core.Command, *, ctx: _click.Context, formatter: _click.HelpFormatter
 ) -> None:
     args = []
     opts = []
@@ -624,7 +876,7 @@ def _typer_format_options(
 
 
 def _typer_main_shell_completion(
-    self: click.core.Command,
+    self: _click.core.Command,
     *,
     ctx_args: MutableMapping[str, Any],
     prog_name: str,
@@ -644,14 +896,14 @@ def _typer_main_shell_completion(
     sys.exit(rv)
 
 
-class TyperCommand(click.core.Command):
+class TyperCommand(_click.core.Command):
     def __init__(
         self,
         name: str | None,
         *,
         context_settings: dict[str, Any] | None = None,
         callback: Callable[..., Any] | None = None,
-        params: list[click.Parameter] | None = None,
+        params: list[_click.Parameter] | None = None,
         help: str | None = None,
         epilog: str | None = None,
         short_help: str | None = None,
@@ -682,7 +934,7 @@ class TyperCommand(click.core.Command):
         self.rich_help_panel = rich_help_panel
 
     def format_options(
-        self, ctx: click.Context, formatter: click.HelpFormatter
+        self, ctx: _click.Context, formatter: _click.HelpFormatter
     ) -> None:
         _typer_format_options(self, ctx=ctx, formatter=formatter)
 
@@ -716,7 +968,7 @@ class TyperCommand(click.core.Command):
             **extra,
         )
 
-    def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
+    def format_help(self, ctx: _click.Context, formatter: _click.HelpFormatter) -> None:
         if not HAS_RICH or self.rich_markup_mode is None:
             if not hasattr(ctx, "obj") or ctx.obj is None:
                 ctx.ensure_object(dict)
@@ -732,25 +984,153 @@ class TyperCommand(click.core.Command):
         )
 
 
-class TyperGroup(click.core.Group):
+class TyperGroup(_click.Command):
+    allow_extra_args = True
+    allow_interspersed_args = False
+    command_class: type[_click.Command] | None = None
+    group_class: type["TyperGroup"] | type[type] | None = None
+
     def __init__(
         self,
         *,
         name: str | None = None,
-        commands: dict[str, click.Command] | Sequence[click.Command] | None = None,
+        commands: dict[str, _click.Command] | Sequence[_click.Command] | None = None,
         # Rich settings
         rich_markup_mode: MarkupMode = DEFAULT_MARKUP_MODE,
         rich_help_panel: str | None = None,
         suggest_commands: bool = True,
+        # Click settings
+        invoke_without_command: bool = False,
+        no_args_is_help: bool = False,
+        subcommand_metavar: str | None = None,
+        result_callback: Callable[..., Any] | None = None,
         **attrs: Any,
     ) -> None:
-        super().__init__(name=name, commands=commands, **attrs)
+        super().__init__(name=name, **attrs)
         self.rich_markup_mode: MarkupMode = rich_markup_mode
         self.rich_help_panel = rich_help_panel
         self.suggest_commands = suggest_commands
 
+        # copied from Click's init
+        if commands is None:
+            commands = {}
+        elif isinstance(commands, Sequence):
+            commands = {
+                c.name: c
+                for c in commands
+                if isinstance(c, _click.Command) and c.name is not None
+            }
+
+        self.commands = cast(MutableMapping[str, _click.Command], commands)
+        self.no_args_is_help = no_args_is_help
+        self.invoke_without_command = invoke_without_command
+
+        if subcommand_metavar is None:
+            subcommand_metavar = "COMMAND [ARGS]..."
+
+        self.subcommand_metavar = subcommand_metavar
+        self._result_callback = result_callback
+
+    def add_command(self, cmd: _click.Command, name: str | None = None) -> None:
+        name = name or cmd.name
+        if name is None:
+            raise TypeError("Command has no name.")
+        self.commands[name] = cmd
+
+    def get_command(self, ctx: _click.Context, cmd_name: str) -> _click.Command | None:
+        return self.commands.get(cmd_name)
+
+    def collect_usage_pieces(self, ctx: _click.Context) -> list[str]:
+        rv = super().collect_usage_pieces(ctx)
+        rv.append(self.subcommand_metavar)
+        return rv
+
+    def format_commands(
+        self, ctx: _click.Context, formatter: _click.HelpFormatter
+    ) -> None:
+        commands = []
+        for subcommand in self.list_commands(ctx):
+            cmd = self.get_command(ctx, subcommand)
+            if cmd is None or cmd.hidden:
+                continue
+
+            commands.append((subcommand, cmd))
+
+        # allow for 3 times the default spacing
+        if len(commands):
+            limit = formatter.width - 6 - max(len(cmd[0]) for cmd in commands)
+
+            rows = []
+            for subcommand, cmd in commands:
+                assert cmd is not None
+                help = cmd.get_short_help_str(limit)
+                rows.append((subcommand, help))
+
+            if rows:
+                with formatter.section(_("Commands")):
+                    formatter.write_dl(rows)
+
+    def parse_args(self, ctx: _click.Context, args: list[str]) -> list[str]:
+        if not args and self.no_args_is_help and not ctx.resilient_parsing:
+            raise _click.exceptions.NoArgsIsHelpError(ctx)
+
+        rest = super().parse_args(ctx, args)
+
+        if rest:
+            ctx._protected_args, ctx.args = rest[:1], rest[1:]
+
+        return ctx.args
+
+    def invoke(self, ctx: _click.Context) -> Any:
+        def _process_result(value: Any) -> Any:
+            if self._result_callback is not None:
+                value = ctx.invoke(self._result_callback, value, **ctx.params)
+            return value
+
+        if not ctx._protected_args:
+            if self.invoke_without_command:
+                # No subcommand was invoked, so the result callback is
+                # invoked with the group return value for regular
+                # groups, or an empty list for chained groups.
+                with ctx:
+                    rv = super().invoke(ctx)
+                    # return _process_result([] if self.chain else rv)
+                    return _process_result(rv)
+            ctx.fail(_("Missing command."))
+
+        # Fetch args back out
+        args = [*ctx._protected_args, *ctx.args]
+        ctx.args = []
+        ctx._protected_args = []
+
+        # Make sure the context is entered so we do not clean up
+        # resources until the result processor has worked.
+        with ctx:
+            cmd_name, cmd, args = self.resolve_command(ctx, args)
+            assert cmd is not None
+            ctx.invoked_subcommand = cmd_name
+            super().invoke(ctx)
+            sub_ctx = cmd.make_context(cmd_name, args, parent=ctx)
+            with sub_ctx:
+                return _process_result(sub_ctx.command.invoke(sub_ctx))
+
+    def shell_complete(
+        self, ctx: _click.Context, incomplete: str
+    ) -> list[CompletionItem]:
+        """Return a list of completions for the incomplete value. Looks
+        at the names of options, subcommands, and chained
+        multi-commands.
+        """
+
+        results = [
+            CompletionItem(name, help=command.get_short_help_str())
+            for name, command in _click.core._complete_visible_commands(ctx, incomplete)
+        ]
+        results.extend(super().shell_complete(ctx, incomplete))
+        return results
+
     def format_options(
-        self, ctx: click.Context, formatter: click.HelpFormatter
+        self, ctx: _click.Context, formatter: _click.HelpFormatter
     ) -> None:
         _typer_format_options(self, ctx=ctx, formatter=formatter)
         self.format_commands(ctx, formatter)
@@ -765,12 +1145,31 @@ class TyperGroup(click.core.Group):
             self, ctx_args=ctx_args, prog_name=prog_name, complete_var=complete_var
         )
 
+    def _click_resolve_command(
+        self, ctx: _click.Context, args: list[str]
+    ) -> tuple[str | None, _click.Command | None, list[str]]:
+        cmd_name = args[0]
+        original_cmd_name = cmd_name
+
+        # Get the command
+        cmd = self.get_command(ctx, cmd_name)
+
+        if cmd is None and ctx.token_normalize_func is not None:
+            cmd_name = ctx.token_normalize_func(cmd_name)
+            cmd = self.get_command(ctx, cmd_name)
+
+        if cmd is None and not ctx.resilient_parsing:
+            if _split_opt(cmd_name)[0]:
+                self.parse_args(ctx, args)
+            ctx.fail(_("No such command {name!r}.").format(name=original_cmd_name))
+        return cmd_name if cmd else None, cmd, args[1:]
+
     def resolve_command(
-        self, ctx: click.Context, args: list[str]
-    ) -> tuple[str | None, click.Command | None, list[str]]:
+        self, ctx: _click.Context, args: list[str]
+    ) -> tuple[str | None, _click.Command | None, list[str]]:
         try:
-            return super().resolve_command(ctx, args)
-        except click.UsageError as e:
+            return self._click_resolve_command(ctx, args)
+        except _click.exceptions.UsageError as e:
             if self.suggest_commands:
                 available_commands = list(self.commands.keys())
                 if available_commands and args:
@@ -802,7 +1201,7 @@ class TyperGroup(click.core.Group):
             **extra,
         )
 
-    def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
+    def format_help(self, ctx: _click.Context, formatter: _click.HelpFormatter) -> None:
         if not HAS_RICH or self.rich_markup_mode is None:
             return super().format_help(ctx, formatter)
         from . import rich_utils
@@ -813,8 +1212,6 @@ class TyperGroup(click.core.Group):
             markup_mode=self.rich_markup_mode,
         )
 
-    def list_commands(self, ctx: click.Context) -> list[str]:
-        """Returns a list of subcommand names.
-        Note that in Click's Group class, these are sorted.
-        In Typer, we wish to maintain the original order of creation (cf Issue #933)"""
+    def list_commands(self, ctx: _click.Context) -> list[str]:
+        """Returns a list of subcommand names, maintaining the original order of creation (cf Issue #933)"""
         return [n for n, c in self.commands.items()]
