@@ -1,31 +1,32 @@
-import click
 import typer
-import typer.core
+
+from typer.core import TyperCommand, TyperOption, TyperGroup
+from typer.models import TyperPath
 
 
-class DynamicGroup(typer.core.TyperGroup):
+class DynamicGroup(TyperGroup):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.add_command(process_cmd, "process")
 
 
-process_cmd = click.Command(
+process_cmd = TyperCommand(
     name="process",
     callback=lambda **kw: print(kw),
     params=[
-        click.Option(
-            ["--input", "-i"],
-            type=click.Path(exists=False),
+        TyperOption(
+            param_decls=["--input", "-i"],
+            type=TyperPath(exists=False),
             required=True,
             help="Input file",
         ),
-        click.Option(
-            ["--output-dir", "-o"],
-            type=click.Path(file_okay=False, dir_okay=True),
+        TyperOption(
+            param_decls=["--output-dir", "-o"],
+            type=TyperPath(file_okay=False, dir_okay=True),
             help="Output directory",
         ),
-        click.Option(
-            ["--count", "-n"],
+        TyperOption(
+            param_decls=["--count", "-n"],
             type=int,
             default=1,
             help="Number of items",
