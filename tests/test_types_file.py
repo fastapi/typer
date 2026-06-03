@@ -1,3 +1,4 @@
+import os
 import subprocess
 import sys
 from io import BytesIO, StringIO
@@ -9,6 +10,7 @@ from typer._click._compat import get_best_encoding, should_strip_ansi
 from typer._click.utils import PacifyFlushWrapper
 from typer.testing import CliRunner
 
+import tests
 from tests.utils import needs_linux, needs_windows
 
 app = typer.Typer()
@@ -136,6 +138,17 @@ def test_binary_dash() -> None:
 
 
 def test_binary_stderr() -> None:
+    env = os.environ.copy()
+    env.update(
+        {
+            "PYTHONPATH": ":".join(
+                [str(Path(tests.__path__[0]).parent)] + [env["PYTHONPATH"]]
+            )
+        }
+        if "PYTHONPATH" in env
+        else {}
+    )
+
     result = subprocess.run(
         [
             sys.executable,
@@ -146,6 +159,7 @@ def test_binary_stderr() -> None:
             "write-binary-stderr",
         ],
         capture_output=True,
+        env=env,
     )
     assert result.returncode == 0
     assert result.stderr == b"binary-stderr\n"
