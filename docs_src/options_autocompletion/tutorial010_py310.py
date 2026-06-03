@@ -1,6 +1,6 @@
-import click
+from typer import _click
 import typer
-from click.shell_completion import CompletionItem
+from typer._click.shell_completion import CompletionItem
 
 valid_completion_items = [
     ("Camila", "The reader of books."),
@@ -10,7 +10,7 @@ valid_completion_items = [
 
 
 def complete_user_or_greeter(
-    ctx: typer.Context, param: click.Parameter, incomplete: str
+    ctx: typer.Context, param: _click.Parameter, incomplete: str
 ):
     previous_items = (ctx.params.get(param.name) if param.name else []) or []
     for item, help_text in valid_completion_items:
