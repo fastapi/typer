@@ -1,6 +1,5 @@
 import typer
-
-from typer.core import TyperCommand, TyperOption, TyperGroup
+from typer.core import TyperCommand, TyperGroup, TyperOption
 from typer.models import TyperPath
 
 
