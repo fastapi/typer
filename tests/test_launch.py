@@ -1,6 +1,6 @@
 import io
 import subprocess
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 import pytest
 import typer
@@ -50,6 +50,41 @@ def test_launch_url_no_xdg_open():
         typer.launch(url)
 
     mock_webbrowser_open.assert_called_once_with(url)
+
+
+def test_launch_url_linux_xdg_open_does_not_wait_by_default():
+    proc = Mock()
+
+    with (
+        patch("platform.system", return_value="Linux"),
+        patch("shutil.which", return_value=True),
+        patch("subprocess.Popen", return_value=proc) as mock_popen,
+    ):
+        result = typer.launch(url)
+
+    assert result == 0
+    mock_popen.assert_called_once_with(
+        ["xdg-open", url], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT
+    )
+    proc.wait.assert_not_called()
+
+
+def test_launch_url_linux_xdg_open_waits_when_requested():
+    proc = Mock()
+    proc.wait.return_value = 42
+
+    with (
+        patch("platform.system", return_value="Linux"),
+        patch("shutil.which", return_value=True),
+        patch("subprocess.Popen", return_value=proc) as mock_popen,
+    ):
+        result = typer.launch(url, wait=True)
+
+    assert result == 42
+    mock_popen.assert_called_once_with(
+        ["xdg-open", url], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT
+    )
+    proc.wait.assert_called_once_with()
 
 
 @pytest.fixture
