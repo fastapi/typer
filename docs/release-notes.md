@@ -6,6 +6,10 @@
 
 * 📝 Fix formatting for help link to support GitHub-specific overview edge-case. PR [#1826](https://github.com/fastapi/typer/pull/1826) by [@phalberg](https://github.com/phalberg).
 
+### Internal
+
+* ⬆ Bump the python-packages group with 3 updates. PR [#1829](https://github.com/fastapi/typer/pull/1829) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
 ## 0.26.7 (2026-06-03)
 
 ### Fixes
