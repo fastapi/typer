@@ -5,6 +5,7 @@ from datetime import datetime
 from typing import (
     IO,
     TYPE_CHECKING,
+    Annotated,
     Any,
     ClassVar,
     Literal,
@@ -16,7 +17,7 @@ from typing import (
     cast,
 )
 
-from pydantic import TypeAdapter, ValidationError
+from pydantic import Field, TypeAdapter, ValidationError
 
 from ._compat import _get_argv_encoding, open_stream
 from .exceptions import BadParameter
@@ -27,6 +28,14 @@ if TYPE_CHECKING:
     from .shell_completion import CompletionItem
 
 ParamTypeValue = TypeVar("ParamTypeValue")
+
+
+def _get_error_msg(exc: ValidationError) -> str:
+    """Get a string representation of the (first) validation error."""
+    errors = exc.errors()
+    if errors:
+        return errors[0]["msg"]
+    return str(exc)
 
 
 class ParamType:
@@ -228,21 +237,23 @@ class DateTime(ParamType):
 
 class _NumberParamTypeBase(ParamType):
     _number_class: ClassVar[type[Any]]
+    _class_adapter: TypeAdapter[Any]
+
+    def __init__(self) -> None:
+        self._class_adapter = TypeAdapter(self._number_class)
 
     def convert(
         self, value: Any, param: Union["Parameter", None], ctx: Union["Context", None]
     ) -> Any:
         try:
-            return TypeAdapter(self._number_class).validate_python(value)
-        except ValidationError:
-            self.fail(
-                f"{value!r} is not a valid {self.name}.",
-                param,
-                ctx,
-            )
+            return self._class_adapter.validate_python(value)
+        except ValidationError as exc:
+            self.fail(_get_error_msg(exc), param, ctx)
 
 
 class _NumberRangeBase(_NumberParamTypeBase):
+    _range_adapter: TypeAdapter[Any]
+
     def __init__(
         self,
         min: float | None = None,
@@ -251,18 +262,49 @@ class _NumberRangeBase(_NumberParamTypeBase):
         max_open: bool = False,
         clamp: bool = False,
     ) -> None:
+        super().__init__()
         self.min = min
         self.max = max
         self.min_open = min_open
         self.max_open = max_open
         self.clamp = clamp
+        self._range_adapter = self._build_range_adapter()
+
+    def _build_range_adapter(self) -> TypeAdapter[Any]:
+        field_kwargs: dict[str, Any] = {}
+        if self.min is not None:
+            if self.min_open:
+                field_kwargs["gt"] = self.min
+            else:
+                field_kwargs["ge"] = self.min
+        if self.max is not None:
+            if self.max_open:
+                field_kwargs["lt"] = self.max
+            else:
+                field_kwargs["le"] = self.max
+        if not field_kwargs:
+            return self._class_adapter
+        annotated = Annotated[self._number_class, Field(**field_kwargs)]
+        return TypeAdapter(annotated)
 
     def convert(
         self, value: Any, param: Union["Parameter", None], ctx: Union["Context", None]
     ) -> Any:
+        if not self.clamp:
+            try:
+                return self._range_adapter.validate_python(value)
+            except ValidationError as exc:
+                self.fail(_get_error_msg(exc), param, ctx)
+
+        # Clamping - only check the class, don't error on range
+        try:
+            rv = self._class_adapter.validate_python(value)
+        except ValidationError as exc:
+            self.fail(_get_error_msg(exc), param, ctx)
+
+        # adjust the min/max accordingly
         import operator
 
-        rv = super().convert(value, param, ctx)
         lt_min: bool = self.min is not None and (
             operator.le if self.min_open else operator.lt
         )(rv, self.min)
@@ -270,19 +312,11 @@ class _NumberRangeBase(_NumberParamTypeBase):
             operator.ge if self.max_open else operator.gt
         )(rv, self.max)
 
-        if self.clamp:
-            if lt_min:
-                return self._clamp(self.min, 1, self.min_open)  # type: ignore[arg-type]
+        if lt_min:
+            return self._clamp(self.min, 1, self.min_open)  # type: ignore[arg-type]
 
-            if gt_max:
-                return self._clamp(self.max, -1, self.max_open)  # type: ignore[arg-type]
-
-        if lt_min or gt_max:
-            self.fail(
-                f"{rv} is not in the range {self._describe_range()}.",
-                param,
-                ctx,
-            )
+        if gt_max:
+            return self._clamp(self.max, -1, self.max_open)  # type: ignore[arg-type]
 
         return rv
 

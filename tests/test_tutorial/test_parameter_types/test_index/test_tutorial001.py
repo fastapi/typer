@@ -44,7 +44,7 @@ def test_invalid():
     result = runner.invoke(app, ["Camila", "--age", "15.3"])
     assert result.exit_code != 0
     assert "Invalid value for '--age'" in result.output
-    assert "'15.3' is not a valid integer" in result.output
+    assert "Input should be a valid integer" in result.output
 
 
 def test_script():

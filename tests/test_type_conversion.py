@@ -381,7 +381,7 @@ def test_int_rejects_float_default() -> None:
     # Pydantic validation rejects floats as int instead of converting int(15.3) to 15
     result = runner.invoke(app)
     assert result.exit_code != 0
-    assert "15.3 is not a valid integer" in result.stderr
+    assert "Input should be a valid integer" in result.stderr
 
 
 @pytest.mark.parametrize(
