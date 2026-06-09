@@ -33,6 +33,7 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
+    "pydantic >=2.5.3",
     "shellingham >=1.3.0",
     "rich >=13.8.0",
     "annotated-doc >=0.0.2",
