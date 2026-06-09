@@ -1,10 +1,13 @@
 from collections.abc import Iterable, Mapping, Sequence
 from enum import Enum
-from typing import Any, Generic, TypeVar
+from typing import Annotated, Any, Generic, TypeVar
+
+from pydantic import BeforeValidator, TypeAdapter, ValidationError
 
 from . import _click
 from ._click import types
 from ._click.shell_completion import CompletionItem
+from ._click.types import _get_error_msg
 
 ParamTypeValue = TypeVar("ParamTypeValue")
 
@@ -72,29 +75,27 @@ class TyperChoice(types.ParamType, Generic[ParamTypeValue]):
         choices = ",\n\t".join(self._normalized_mapping(ctx=ctx).values())
         return f"Choose from:\n\t{choices}"
 
+    def _build_class_adapter(
+        self, ctx: _click.Context | None
+    ) -> TypeAdapter[ParamTypeValue]:
+        normalized_mapping = self._normalized_mapping(ctx=ctx)
+
+        def parse_choice(value: Any) -> ParamTypeValue:
+            normed_value = self.normalize_choice(choice=value, ctx=ctx)
+            for original, normalized in normalized_mapping.items():
+                if normalized == normed_value:
+                    return original
+            raise ValueError(self.get_invalid_choice_message(value=value, ctx=ctx))
+
+        return TypeAdapter(Annotated[ParamTypeValue, BeforeValidator(parse_choice)])
+
     def convert(
         self, value: Any, param: _click.Parameter | None, ctx: _click.Context | None
     ) -> ParamTypeValue:
-        """
-        For a given value from the parser, normalize it and find its
-        matching normalized value in the list of choices. Then return the
-        matched "original" choice.
-        """
-        normed_value = self.normalize_choice(choice=value, ctx=ctx)
-        normalized_mapping = self._normalized_mapping(ctx=ctx)
-
         try:
-            return next(
-                original
-                for original, normalized in normalized_mapping.items()
-                if normalized == normed_value
-            )
-        except StopIteration:
-            self.fail(
-                self.get_invalid_choice_message(value=value, ctx=ctx),
-                param=param,
-                ctx=ctx,
-            )
+            return self._build_class_adapter(ctx).validate_python(value)
+        except ValidationError as exc:
+            self.fail(_get_error_msg(exc), param=param, ctx=ctx)
 
     def get_invalid_choice_message(self, value: Any, ctx: _click.Context | None) -> str:
         """Get the error message when the given choice is invalid."""
