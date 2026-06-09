@@ -16,6 +16,8 @@ from typing import (
     cast,
 )
 
+from pydantic import TypeAdapter, ValidationError
+
 from ._compat import _get_argv_encoding, open_stream
 from .exceptions import BadParameter
 from .utils import LazyFile, format_filename, safecall
@@ -231,8 +233,8 @@ class _NumberParamTypeBase(ParamType):
         self, value: Any, param: Union["Parameter", None], ctx: Union["Context", None]
     ) -> Any:
         try:
-            return self._number_class(value)
-        except ValueError:
+            return TypeAdapter(self._number_class).validate_python(value)
+        except ValidationError:
             self.fail(
                 f"{value!r} is not a valid {self.name}.",
                 param,

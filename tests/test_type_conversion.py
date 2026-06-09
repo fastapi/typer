@@ -368,6 +368,22 @@ def test_convert_type():
     assert func_type.name == "CustomType"
 
 
+def test_int_rejects_float_default() -> None:
+    app = typer.Typer()
+
+    @app.command()
+    def main(age: int = typer.Option(15.3)):
+        typer.echo(age)
+
+    result = runner.invoke(app, ["--age", 42])
+    assert "42" in result.stdout
+
+    # Pydantic validation rejects floats as int instead of converting int(15.3) to 15
+    result = runner.invoke(app)
+    assert result.exit_code != 0
+    assert "15.3 is not a valid integer" in result.stderr
+
+
 @pytest.mark.parametrize(
     ("platform_case", "stdin_encoding", "filesystem_encoding"),
     [
