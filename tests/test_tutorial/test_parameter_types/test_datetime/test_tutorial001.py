@@ -20,7 +20,7 @@ def test_type_repr():
 def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "[%Y-%m-%d|%Y-%m-%dT%H:%M:%S|%Y-%m-%d %H:%M:%S]" in result.output
+    assert "[%Y-%m-%d]" in result.output
 
 
 def test_main():
@@ -42,14 +42,8 @@ def test_main_datetime_object():
 def test_invalid():
     result = runner.invoke(app, ["july-19-1989"])
     assert result.exit_code != 0
-    assert (
-        "Invalid value for 'BIRTH:[%Y-%m-%d|%Y-%m-%dT%H:%M:%S|%Y-%m-%d %H:%M:%S]':"
-        in result.output
-    )
-    assert "'july-19-1989' does not match the formats" in result.output
-    assert "%Y-%m-%d" in result.output
-    assert "%Y-%m-%dT%H:%M:%S" in result.output
-    assert "%Y-%m-%d %H:%M:%S" in result.output
+    assert "Invalid value for 'BIRTH:[%Y-%m-%d]'" in result.output
+    assert "should be a valid datetime" in result.output
 
 
 def test_script():

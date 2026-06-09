@@ -18,7 +18,7 @@ from typing import (
     cast,
 )
 
-from pydantic import Field, TypeAdapter, ValidationError
+from pydantic import BeforeValidator, Field, TypeAdapter, ValidationError
 
 from ._compat import _get_argv_encoding, open_stream
 from .exceptions import BadParameter
@@ -196,41 +196,42 @@ class DateTime(ParamType):
     """
 
     name = "datetime"
+    _class_adapter: TypeAdapter[datetime]
 
     def __init__(self, formats: Sequence[str] | None = None):
-        self.formats: Sequence[str] = formats or [
-            "%Y-%m-%d",
-            "%Y-%m-%dT%H:%M:%S",
-            "%Y-%m-%d %H:%M:%S",
-        ]
+        self.formats = tuple(formats) if formats else None
+        self._class_adapter = self._build_datetime_adapter()
 
     def get_metavar(self, param: "Parameter", ctx: "Context") -> str | None:
-        return f"[{'|'.join(self.formats)}]"
+        formats = self.formats or ["%Y-%m-%d"]
+        return f"[{'|'.join(formats)}]"
 
-    def _try_to_convert_date(self, value: Any, format: str) -> datetime | None:
-        try:
-            return datetime.strptime(value, format)
-        except ValueError:
-            return None
+    def _build_datetime_adapter(self) -> TypeAdapter[datetime]:
+        if self.formats is None:
+            return TypeAdapter(datetime)
+
+        formats = self.formats
+
+        def parse_datetime(value: Any) -> datetime:
+            if isinstance(value, datetime):
+                return value
+            for format in formats:
+                try:
+                    return datetime.strptime(value, format)
+                except ValueError:
+                    continue
+            formats_str = ", ".join(map(repr, formats))
+            raise ValueError(f"{value!r} does not match the formats {formats_str}.")
+
+        return TypeAdapter(Annotated[datetime, BeforeValidator(parse_datetime)])
 
     def convert(
         self, value: Any, param: Union["Parameter", None], ctx: Union["Context", None]
     ) -> Any:
-        if isinstance(value, datetime):
-            return value
-
-        for format in self.formats:
-            converted = self._try_to_convert_date(value, format)
-
-            if converted is not None:
-                return converted
-
-        formats_str = ", ".join(map(repr, self.formats))
-        self.fail(
-            f"{value!r} does not match the formats {formats_str}.",
-            param,
-            ctx,
-        )
+        try:
+            return self._class_adapter.validate_python(value)
+        except ValidationError as exc:
+            self.fail(_get_error_msg(exc), param, ctx)
 
     def __repr__(self) -> str:
         return "DateTime"
