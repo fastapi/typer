@@ -39,6 +39,26 @@ def _get_error_msg(exc: ValidationError) -> str:
     return str(exc)
 
 
+def _build_datetime_adapter(
+    formats: Sequence[str] | None,
+) -> TypeAdapter[datetime]:
+    if formats is None:
+        return TypeAdapter(datetime)
+
+    def parse_datetime(value: Any) -> datetime:
+        if isinstance(value, datetime):
+            return value
+        for format in formats:
+            try:
+                return datetime.strptime(value, format)
+            except ValueError:
+                continue
+        formats_str = ", ".join(map(repr, formats))
+        raise ValueError(f"{value!r} does not match the formats {formats_str}.")
+
+    return TypeAdapter(Annotated[datetime, BeforeValidator(parse_datetime)])
+
+
 class ParamType:
     """Represents the type of a parameter. Validates and converts values
     from the command line or Python into the correct type.
@@ -125,6 +145,47 @@ class ParamType:
         return []
 
 
+class PydanticParamType(ParamType):
+    _class_adapter: TypeAdapter[Any]
+
+    def __init__(
+        self,
+        adapter: TypeAdapter[Any],
+        *,
+        name: str,
+        repr_name: str | None = None,
+        metavar: str
+        | Callable[["Parameter", "Context"], str | None]
+        | None = None,
+        preprocess: Callable[[Any], Any] | None = None,
+    ) -> None:
+        self._class_adapter = adapter
+        self.name = name
+        self._repr_name = repr_name or name
+        self._metavar = metavar
+        self._preprocess = preprocess
+
+    def convert(
+        self, value: Any, param: Union["Parameter", None], ctx: Union["Context", None]
+    ) -> Any:
+        if self._preprocess is not None:
+            value = self._preprocess(value)
+        try:
+            return self._class_adapter.validate_python(value)
+        except ValidationError as exc:
+            self.fail(_get_error_msg(exc), param, ctx)
+
+    def get_metavar(self, param: "Parameter", ctx: "Context") -> str | None:
+        if self._metavar is None:
+            return None
+        if callable(self._metavar):
+            return self._metavar(param, ctx)
+        return self._metavar
+
+    def __repr__(self) -> str:
+        return self._repr_name
+
+
 class CompositeParamType(ParamType):
     is_composite = True
 
@@ -179,7 +240,7 @@ class StringParamType(ParamType):
         return "STRING"
 
 
-class DateTime(ParamType):
+class DateTime(PydanticParamType):
     """The DateTime type converts date strings into `datetime` objects.
 
     The format strings which are checked are configurable, but default to some
@@ -195,65 +256,22 @@ class DateTime(ParamType):
     parses successfully is used.
     """
 
-    name = "datetime"
-    _class_adapter: TypeAdapter[datetime]
+    formats: Sequence[str] | None
 
     def __init__(self, formats: Sequence[str] | None = None):
-        self.formats = tuple(formats) if formats else None
-        self._class_adapter = self._build_datetime_adapter()
-
-    def get_metavar(self, param: "Parameter", ctx: "Context") -> str | None:
-        formats = self.formats or ["%Y-%m-%d"]
-        return f"[{'|'.join(formats)}]"
-
-    def _build_datetime_adapter(self) -> TypeAdapter[datetime]:
-        if self.formats is None:
-            return TypeAdapter(datetime)
-
-        formats = self.formats
-
-        def parse_datetime(value: Any) -> datetime:
-            if isinstance(value, datetime):
-                return value
-            for format in formats:
-                try:
-                    return datetime.strptime(value, format)
-                except ValueError:
-                    continue
-            formats_str = ", ".join(map(repr, formats))
-            raise ValueError(f"{value!r} does not match the formats {formats_str}.")
-
-        return TypeAdapter(Annotated[datetime, BeforeValidator(parse_datetime)])
-
-    def convert(
-        self, value: Any, param: Union["Parameter", None], ctx: Union["Context", None]
-    ) -> Any:
-        try:
-            return self._class_adapter.validate_python(value)
-        except ValidationError as exc:
-            self.fail(_get_error_msg(exc), param, ctx)
-
-    def __repr__(self) -> str:
-        return "DateTime"
+        self.formats = tuple(formats) if formats is not None else None
+        metavar_formats = self.formats or ["%Y-%m-%d"]
+        super().__init__(
+            _build_datetime_adapter(self.formats),
+            name="datetime",
+            repr_name="DateTime",
+            metavar=f"[{'|'.join(metavar_formats)}]",
+        )
 
 
-class _NumberParamTypeBase(ParamType):
+class _NumberRangeBase(ParamType):
     _number_class: ClassVar[type[Any]]
     _class_adapter: TypeAdapter[Any]
-
-    def __init__(self) -> None:
-        self._class_adapter = TypeAdapter(self._number_class)
-
-    def convert(
-        self, value: Any, param: Union["Parameter", None], ctx: Union["Context", None]
-    ) -> Any:
-        try:
-            return self._class_adapter.validate_python(value)
-        except ValidationError as exc:
-            self.fail(_get_error_msg(exc), param, ctx)
-
-
-class _NumberRangeBase(_NumberParamTypeBase):
     _range_adapter: TypeAdapter[Any]
 
     def __init__(
@@ -265,6 +283,9 @@ class _NumberRangeBase(_NumberParamTypeBase):
         clamp: bool = False,
     ) -> None:
         super().__init__()
+        range_name = type(self).__dict__.get("name")
+        if range_name is not None:
+            self.name = range_name
         self.min = min
         self.max = max
         self.min_open = min_open
@@ -347,12 +368,15 @@ class _NumberRangeBase(_NumberParamTypeBase):
         return f"<{type(self).__name__} {self._describe_range()}{clamp}>"
 
 
-class IntParamType(_NumberParamTypeBase):
-    name = "integer"
+class IntParamType(PydanticParamType):
     _number_class = int
 
-    def __repr__(self) -> str:
-        return "INT"
+    def __init__(self) -> None:
+        super().__init__(
+            TypeAdapter(int),
+            name="integer",
+            repr_name="INT",
+        )
 
 
 class IntRange(_NumberRangeBase, IntParamType):
@@ -377,12 +401,15 @@ class IntRange(_NumberRangeBase, IntParamType):
         return bound + dir
 
 
-class FloatParamType(_NumberParamTypeBase):
-    name = "float"
+class FloatParamType(PydanticParamType):
     _number_class = float
 
-    def __repr__(self) -> str:
-        return "FLOAT"
+    def __init__(self) -> None:
+        super().__init__(
+            TypeAdapter(float),
+            name="float",
+            repr_name="FLOAT",
+        )
 
 
 class FloatRange(_NumberRangeBase, FloatParamType):
@@ -484,25 +511,14 @@ class BoolParamType(ParamType):
         return "BOOL"
 
 
-class UUIDParameterType(ParamType):
-    name = "uuid"
-    _class_adapter: TypeAdapter[UUID]
-
+class UUIDParameterType(PydanticParamType):
     def __init__(self) -> None:
-        self._class_adapter = TypeAdapter(UUID)
-
-    def convert(
-        self, value: Any, param: Union["Parameter", None], ctx: Union["Context", None]
-    ) -> Any:
-        if isinstance(value, str):
-            value = value.strip()
-        try:
-            return self._class_adapter.validate_python(value)
-        except ValidationError as exc:
-            self.fail(_get_error_msg(exc), param, ctx)
-
-    def __repr__(self) -> str:
-        return "UUID"
+        super().__init__(
+            TypeAdapter(UUID),
+            name="uuid",
+            repr_name="UUID",
+            preprocess=lambda value: value.strip() if isinstance(value, str) else value,
+        )
 
 
 class File(ParamType):
