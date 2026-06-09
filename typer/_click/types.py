@@ -2,6 +2,7 @@ import os
 import sys
 from collections.abc import Callable, Sequence
 from datetime import datetime
+from uuid import UUID
 from typing import (
     IO,
     TYPE_CHECKING,
@@ -484,21 +485,20 @@ class BoolParamType(ParamType):
 
 class UUIDParameterType(ParamType):
     name = "uuid"
+    _class_adapter: TypeAdapter[UUID]
+
+    def __init__(self) -> None:
+        self._class_adapter = TypeAdapter(UUID)
 
     def convert(
         self, value: Any, param: Union["Parameter", None], ctx: Union["Context", None]
     ) -> Any:
-        import uuid
-
-        if isinstance(value, uuid.UUID):
-            return value
-
-        value = value.strip()
-
+        if isinstance(value, str):
+            value = value.strip()
         try:
-            return uuid.UUID(value)
-        except ValueError:
-            self.fail(f"{value!r} is not a valid UUID.", param, ctx)
+            return self._class_adapter.validate_python(value)
+        except ValidationError as exc:
+            self.fail(_get_error_msg(exc), param, ctx)
 
     def __repr__(self) -> str:
         return "UUID"
