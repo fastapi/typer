@@ -1426,12 +1426,9 @@ def get_command_from_info(
 
 
 def determine_type_convertor(type_: Any) -> Callable[[Any], Any] | None:
-    convertor: Callable[[Any], Any] | None = None
     if lenient_issubclass(type_, Path):
-        convertor = param_path_convertor
-    if lenient_issubclass(type_, Enum):
-        convertor = generate_enum_convertor(type_)
-    return convertor
+        return param_path_convertor
+    return None
 
 
 def param_path_convertor(value: str | None = None) -> Path | None:
@@ -1440,19 +1437,6 @@ def param_path_convertor(value: str | None = None) -> Path | None:
         # it back to a Path
         return value if isinstance(value, Path) else Path(value)
     return None
-
-
-def generate_enum_convertor(enum: type[Enum]) -> Callable[[Any], Any]:
-    val_map = {str(val.value): val for val in enum}
-
-    def convertor(value: Any) -> Any:
-        if value is not None:
-            val = str(value)
-            if val in val_map:
-                key = val_map[val]
-                return enum(key)
-
-    return convertor
 
 
 def generate_list_convertor(
@@ -1589,7 +1573,7 @@ def get_click_type(
         )
     elif lenient_issubclass(annotation, Enum):
         return TyperChoice(
-            [item.value for item in annotation],
+            list(annotation),
             case_sensitive=parameter_info.case_sensitive,
         )
     elif is_literal_type(annotation):

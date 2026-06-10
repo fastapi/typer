@@ -105,12 +105,17 @@ class TyperChoice(types.ParamType, Generic[ParamTypeValue]):
     def __repr__(self) -> str:
         return f"Choice({list(self.choices)})"
 
+    def _choice_as_str(self, choice: ParamTypeValue) -> str:
+        if isinstance(choice, Enum):
+            return str(choice.value)
+        return str(choice)
+
     def shell_complete(
         self, ctx: _click.Context, param: _click.Parameter, incomplete: str
     ) -> list[CompletionItem]:
         """Complete choices that start with the incomplete value."""
 
-        str_choices = map(str, self.choices)
+        str_choices = map(self._choice_as_str, self.choices)
 
         if self.case_sensitive:
             matched = (c for c in str_choices if c.startswith(incomplete))
