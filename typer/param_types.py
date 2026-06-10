@@ -75,7 +75,7 @@ def param_type_from_annotation(
     if annotation is UUIDType:
         return types.UUID
     if annotation is datetime:
-        return types.DateTime(formats=parameter_info.formats)
+        return types.datetime_param_type(formats=parameter_info.formats)
     if annotation is bool:
         return types.BOOL
     if _needs_typer_path(annotation, parameter_info):

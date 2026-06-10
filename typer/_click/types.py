@@ -285,33 +285,16 @@ class StringParamType(ParamType):
         return "STRING"
 
 
-class DateTime(PydanticParamType):
-    """The DateTime type converts date strings into `datetime` objects.
+def datetime_param_type(formats: Sequence[str] | None = None) -> PydanticParamType:
+    formats_tuple = tuple(formats) if formats is not None else None
+    metavar_formats = formats_tuple or ["%Y-%m-%d"]
 
-    The format strings which are checked are configurable, but default to some
-    common (non-timezone aware) ISO 8601 formats.
-
-    When specifying *DateTime* formats, you should only pass a list or a tuple.
-    Other iterables, like generators, may lead to surprising results.
-
-    The format strings are processed using ``datetime.strptime``, and this
-    consequently defines the format strings which are allowed.
-
-    Parsing is tried using each format, in order, and the first format which
-    parses successfully is used.
-    """
-
-    formats: Sequence[str] | None
-
-    def __init__(self, formats: Sequence[str] | None = None):
-        self.formats = tuple(formats) if formats is not None else None
-        metavar_formats = self.formats or ["%Y-%m-%d"]
-        super().__init__(
-            build_type_adapter(datetime, formats=self.formats),
-            name="datetime",
-            repr_name="DateTime",
-            metavar=f"[{'|'.join(metavar_formats)}]",
-        )
+    return PydanticParamType(
+        build_type_adapter(datetime, formats=formats_tuple),
+        name="datetime",
+        repr_name="DateTime",
+        metavar=f"[{'|'.join(metavar_formats)}]",
+    )
 
 
 class _NumberRangeBase(ParamType):
