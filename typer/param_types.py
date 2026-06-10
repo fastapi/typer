@@ -7,7 +7,31 @@ from uuid import UUID as UUIDType
 from ._click import types
 from ._types import TyperChoice
 from ._typing import is_literal_type, literal_values
-from .models import ParameterInfo, TyperPath
+from .models import (
+    AnyType,
+    FileBinaryRead,
+    FileBinaryWrite,
+    FileText,
+    FileTextWrite,
+    ParameterInfo,
+    TyperPath,
+)
+
+
+def lenient_issubclass(
+    cls: Any, class_or_tuple: AnyType | tuple[AnyType, ...]
+) -> bool:
+    return isinstance(cls, type) and issubclass(cls, class_or_tuple)
+
+
+def _file_param_type(parameter_info: ParameterInfo, *, mode: str) -> types.File:
+    return types.File(
+        mode=parameter_info.mode or mode,
+        encoding=parameter_info.encoding,
+        errors=parameter_info.errors,
+        lazy=parameter_info.lazy,
+        atomic=parameter_info.atomic,
+    )
 
 
 def _needs_typer_path(annotation: Any, parameter_info: ParameterInfo) -> bool:
@@ -45,11 +69,7 @@ def param_type_from_annotation(
         return types.BOOL
     if _needs_typer_path(annotation, parameter_info):
         resolved_path_type: type[Any] | None = parameter_info.path_type
-        if (
-            resolved_path_type is None
-            and isinstance(annotation, type)
-            and issubclass(annotation, Path)
-        ):
+        if resolved_path_type is None and lenient_issubclass(annotation, Path):
             resolved_path_type = annotation
         return TyperPath(
             exists=parameter_info.exists,
@@ -61,7 +81,7 @@ def param_type_from_annotation(
             allow_dash=parameter_info.allow_dash,
             path_type=resolved_path_type,
         )
-    if isinstance(annotation, type) and issubclass(annotation, Enum):
+    if lenient_issubclass(annotation, Enum):
         return TyperChoice(
             list(annotation),
             case_sensitive=parameter_info.case_sensitive,
@@ -71,4 +91,14 @@ def param_type_from_annotation(
             literal_values(annotation),
             case_sensitive=parameter_info.case_sensitive,
         )
+    if annotation is str:
+        return types.STRING
+    if lenient_issubclass(annotation, FileTextWrite):
+        return _file_param_type(parameter_info, mode="w")
+    if lenient_issubclass(annotation, FileText):
+        return _file_param_type(parameter_info, mode="r")
+    if lenient_issubclass(annotation, FileBinaryRead):
+        return _file_param_type(parameter_info, mode="rb")
+    if lenient_issubclass(annotation, FileBinaryWrite):
+        return _file_param_type(parameter_info, mode="wb")
     return None

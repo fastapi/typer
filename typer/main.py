@@ -28,17 +28,12 @@ from .core import (
     TyperOption,
 )
 from .models import (
-    AnyType,
     ArgumentInfo,
     CommandFunctionType,
     CommandInfo,
     Default,
     DefaultPlaceholder,
     DeveloperExceptionConfig,
-    FileBinaryRead,
-    FileBinaryWrite,
-    FileText,
-    FileTextWrite,
     NoneType,
     OptionInfo,
     ParameterInfo,
@@ -46,7 +41,7 @@ from .models import (
     Required,
     TyperInfo,
 )
-from .param_types import param_type_from_annotation
+from .param_types import lenient_issubclass, param_type_from_annotation
 from .utils import get_params_from_function
 
 _original_except_hook = sys.excepthook
@@ -1491,46 +1486,7 @@ def get_click_type(
     if param_type is not None:
         return param_type
 
-    if annotation is str:
-        return types.STRING
-
-    if lenient_issubclass(annotation, FileTextWrite):
-        return types.File(
-            mode=parameter_info.mode or "w",
-            encoding=parameter_info.encoding,
-            errors=parameter_info.errors,
-            lazy=parameter_info.lazy,
-            atomic=parameter_info.atomic,
-        )
-    if lenient_issubclass(annotation, FileText):
-        return types.File(
-            mode=parameter_info.mode or "r",
-            encoding=parameter_info.encoding,
-            errors=parameter_info.errors,
-            lazy=parameter_info.lazy,
-            atomic=parameter_info.atomic,
-        )
-    if lenient_issubclass(annotation, FileBinaryRead):
-        return types.File(
-            mode=parameter_info.mode or "rb",
-            encoding=parameter_info.encoding,
-            errors=parameter_info.errors,
-            lazy=parameter_info.lazy,
-            atomic=parameter_info.atomic,
-        )
-    if lenient_issubclass(annotation, FileBinaryWrite):
-        return types.File(
-            mode=parameter_info.mode or "wb",
-            encoding=parameter_info.encoding,
-            errors=parameter_info.errors,
-            lazy=parameter_info.lazy,
-            atomic=parameter_info.atomic,
-        )
     raise RuntimeError(f"Type not yet supported: {annotation}")  # pragma: no cover
-
-
-def lenient_issubclass(cls: Any, class_or_tuple: AnyType | tuple[AnyType, ...]) -> bool:
-    return isinstance(cls, type) and issubclass(cls, class_or_tuple)
 
 
 def get_click_param(
