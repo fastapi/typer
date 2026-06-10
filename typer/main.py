@@ -1529,32 +1529,16 @@ def get_click_type(
 
     elif annotation is str:
         return types.STRING
-    elif annotation is int:
-        if parameter_info.min is not None or parameter_info.max is not None:
-            min_ = None
-            max_ = None
-            if parameter_info.min is not None:
-                min_ = int(parameter_info.min)
-            if parameter_info.max is not None:
-                max_ = int(parameter_info.max)
-            return types.IntRange(min=min_, max=max_, clamp=parameter_info.clamp)
-        else:
-            return types.INT
-    elif annotation is float:
-        if parameter_info.min is not None or parameter_info.max is not None:
-            return types.FloatRange(
-                min=parameter_info.min,
-                max=parameter_info.max,
-                clamp=parameter_info.clamp,
-            )
-        else:
-            return types.FLOAT
+    elif pydantic_scalar := types.param_type_from_annotation(
+        annotation,
+        min=parameter_info.min,
+        max=parameter_info.max,
+        clamp=parameter_info.clamp,
+        formats=parameter_info.formats,
+    ):
+        return pydantic_scalar
     elif annotation is bool:
         return types.BOOL
-    elif annotation == UUID:
-        return types.UUID
-    elif annotation == datetime:
-        return types.DateTime(formats=parameter_info.formats)
     elif (
         annotation == Path
         or parameter_info.allow_dash

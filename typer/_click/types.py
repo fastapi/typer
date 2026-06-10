@@ -2,7 +2,7 @@ import os
 import sys
 from collections.abc import Callable, Sequence
 from datetime import datetime
-from uuid import UUID
+from uuid import UUID as UUIDType
 from typing import (
     IO,
     TYPE_CHECKING,
@@ -57,6 +57,41 @@ def _build_datetime_adapter(
         raise ValueError(f"{value!r} does not match the formats {formats_str}.")
 
     return TypeAdapter(Annotated[datetime, BeforeValidator(parse_datetime)])
+
+
+def build_type_adapter(
+    annotation: Any,
+    *,
+    min: float | None = None,
+    max: float | None = None,
+    min_open: bool = False,
+    max_open: bool = False,
+    formats: Sequence[str] | None = None,
+) -> TypeAdapter[Any]:
+    """Build a Pydantic ``TypeAdapter`` for a CLI annotation and constraints.
+
+    Known constraints (ranges, custom datetime formats, etc.) are applied first;
+    everything else is delegated to Pydantic via ``TypeAdapter(annotation)``.
+    """
+    if annotation is datetime and formats is not None:
+        return _build_datetime_adapter(formats)
+
+    if annotation is int or annotation is float:
+        field_kwargs: dict[str, Any] = {}
+        if min is not None:
+            if min_open:
+                field_kwargs["gt"] = min
+            else:
+                field_kwargs["ge"] = min
+        if max is not None:
+            if max_open:
+                field_kwargs["lt"] = max
+            else:
+                field_kwargs["le"] = max
+        if field_kwargs:
+            return TypeAdapter(Annotated[annotation, Field(**field_kwargs)])
+
+    return TypeAdapter(annotation)
 
 
 class ParamType:
@@ -186,6 +221,10 @@ class PydanticParamType(ParamType):
         return self._repr_name
 
 
+def _strip_string(value: Any) -> Any:
+    return value.strip() if isinstance(value, str) else value
+
+
 class CompositeParamType(ParamType):
     is_composite = True
 
@@ -262,7 +301,7 @@ class DateTime(PydanticParamType):
         self.formats = tuple(formats) if formats is not None else None
         metavar_formats = self.formats or ["%Y-%m-%d"]
         super().__init__(
-            _build_datetime_adapter(self.formats),
+            build_type_adapter(datetime, formats=self.formats),
             name="datetime",
             repr_name="DateTime",
             metavar=f"[{'|'.join(metavar_formats)}]",
@@ -282,7 +321,7 @@ class _NumberRangeBase(ParamType):
         max_open: bool = False,
         clamp: bool = False,
     ) -> None:
-        super().__init__()
+        self._class_adapter = build_type_adapter(self._number_class)
         range_name = type(self).__dict__.get("name")
         if range_name is not None:
             self.name = range_name
@@ -294,21 +333,13 @@ class _NumberRangeBase(ParamType):
         self._range_adapter = self._build_range_adapter()
 
     def _build_range_adapter(self) -> TypeAdapter[Any]:
-        field_kwargs: dict[str, Any] = {}
-        if self.min is not None:
-            if self.min_open:
-                field_kwargs["gt"] = self.min
-            else:
-                field_kwargs["ge"] = self.min
-        if self.max is not None:
-            if self.max_open:
-                field_kwargs["lt"] = self.max
-            else:
-                field_kwargs["le"] = self.max
-        if not field_kwargs:
-            return self._class_adapter
-        annotated = Annotated[self._number_class, Field(**field_kwargs)]
-        return TypeAdapter(annotated)
+        return build_type_adapter(
+            self._number_class,
+            min=self.min,
+            max=self.max,
+            min_open=self.min_open,
+            max_open=self.max_open,
+        )
 
     def convert(
         self, value: Any, param: Union["Parameter", None], ctx: Union["Context", None]
@@ -368,18 +399,8 @@ class _NumberRangeBase(ParamType):
         return f"<{type(self).__name__} {self._describe_range()}{clamp}>"
 
 
-class IntParamType(PydanticParamType):
+class IntRange(_NumberRangeBase):
     _number_class = int
-
-    def __init__(self) -> None:
-        super().__init__(
-            TypeAdapter(int),
-            name="integer",
-            repr_name="INT",
-        )
-
-
-class IntRange(_NumberRangeBase, IntParamType):
     """Restrict an `INT` value to a range of accepted values. See
 
     If ``min`` or ``max`` are not passed, any value is accepted in that
@@ -401,18 +422,8 @@ class IntRange(_NumberRangeBase, IntParamType):
         return bound + dir
 
 
-class FloatParamType(PydanticParamType):
+class FloatRange(_NumberRangeBase):
     _number_class = float
-
-    def __init__(self) -> None:
-        super().__init__(
-            TypeAdapter(float),
-            name="float",
-            repr_name="FLOAT",
-        )
-
-
-class FloatRange(_NumberRangeBase, FloatParamType):
     """Restrict a `FLOAT` value to a range of accepted
     values. See `ranges`.
 
@@ -509,16 +520,6 @@ class BoolParamType(ParamType):
 
     def __repr__(self) -> str:
         return "BOOL"
-
-
-class UUIDParameterType(PydanticParamType):
-    def __init__(self) -> None:
-        super().__init__(
-            TypeAdapter(UUID),
-            name="uuid",
-            repr_name="UUID",
-            preprocess=lambda value: value.strip() if isinstance(value, str) else value,
-        )
 
 
 class File(ParamType):
@@ -727,18 +728,57 @@ STRING = StringParamType()
 
 # An integer parameter.  This can also be selected by using ``int`` as
 # type.
-INT = IntParamType()
+INT = PydanticParamType(
+    build_type_adapter(int), name="integer", repr_name="INT"
+)
 
 # A floating point value parameter.  This can also be selected by using
 # ``float`` as type.
-FLOAT = FloatParamType()
+FLOAT = PydanticParamType(
+    build_type_adapter(float), name="float", repr_name="FLOAT"
+)
 
 # A boolean parameter.  This is the default for boolean flags.  This can
 # also be selected by using ``bool`` as a type.
 BOOL = BoolParamType()
 
 # A UUID parameter.
-UUID = UUIDParameterType()
+UUID = PydanticParamType(
+    build_type_adapter(UUIDType),
+    name="uuid",
+    repr_name="UUID",
+    preprocess=_strip_string,
+)
+
+
+def param_type_from_annotation(
+    annotation: Any,
+    *,
+    min: int | float | None = None,
+    max: int | float | None = None,
+    clamp: bool = False,
+    formats: Sequence[str] | None = None,
+) -> ParamType | None:
+    """Map a type annotation and Typer constraints to a ``ParamType``.
+
+    Unconstrained scalars use ``build_type_adapter`` via ``PydanticParamType``.
+    ``IntRange`` / ``FloatRange`` are used when ``min``/``max`` (or ``clamp``) apply.
+    """
+    if annotation is int:
+        if min is not None or max is not None:
+            min_ = int(min) if min is not None else None
+            max_ = int(max) if max is not None else None
+            return IntRange(min=min_, max=max_, clamp=clamp)
+        return INT
+    if annotation is float:
+        if min is not None or max is not None:
+            return FloatRange(min=min, max=max, clamp=clamp)
+        return FLOAT
+    if annotation is UUIDType:
+        return UUID
+    if annotation is datetime:
+        return DateTime(formats=formats)
+    return None
 
 
 class OptionHelpExtra(TypedDict, total=False):
