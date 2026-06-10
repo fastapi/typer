@@ -3,6 +3,7 @@ import io
 import os
 import stat
 from collections.abc import Callable, Sequence
+from pathlib import Path
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -12,9 +13,12 @@ from typing import (
     cast,
 )
 
+from pydantic import ValidationError
+
 from . import _click
 from ._click import types
 from ._click.shell_completion import CompletionItem
+from ._click.types import _get_error_msg, build_type_adapter
 
 if TYPE_CHECKING:  # pragma: no cover
     from .core import TyperCommand, TyperGroup
@@ -678,6 +682,24 @@ class TyperPath(types.ParamType):
         else:
             self.name = "path"
 
+    def _parse_path_value(
+        self,
+        value: Any,
+        param: _click.Parameter | None,
+        ctx: Context | None,
+    ) -> Any:
+        if self.type is None or self.type is str or self.type is bytes:
+            return value
+        if isinstance(self.type, type) and issubclass(self.type, Path):
+            if isinstance(value, self.type):
+                return value
+            if isinstance(value, (str, os.PathLike)):
+                try:
+                    return build_type_adapter(self.type).validate_python(value)
+                except ValidationError as exc:
+                    self.fail(_get_error_msg(exc), param, ctx)
+        return value
+
     def coerce_path_result(
         self, value: str | os.PathLike[str]
     ) -> str | bytes | os.PathLike[str]:
@@ -699,7 +721,7 @@ class TyperPath(types.ParamType):
         param: _click.Parameter | None,
         ctx: Context | None,  # type: ignore[override]
     ) -> str | bytes | os.PathLike[str]:
-        rv = value
+        rv = self._parse_path_value(value, param, ctx)
 
         is_dash = self.file_okay and self.allow_dash and rv in (b"-", "-")
 

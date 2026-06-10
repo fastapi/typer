@@ -705,38 +705,6 @@ UUID = PydanticParamType(
 )
 
 
-def param_type_from_annotation(
-    annotation: Any,
-    *,
-    min: int | float | None = None,
-    max: int | float | None = None,
-    clamp: bool = False,
-    formats: Sequence[str] | None = None,
-) -> ParamType | None:
-    """Map a type annotation and Typer constraints to a ``ParamType``.
-
-    Unconstrained scalars use ``build_type_adapter`` via ``PydanticParamType``.
-    ``IntRange`` / ``FloatRange`` are used when ``min``/``max`` (or ``clamp``) apply.
-    """
-    if annotation is int:
-        if min is not None or max is not None:
-            min_ = int(min) if min is not None else None
-            max_ = int(max) if max is not None else None
-            return IntRange(min=min_, max=max_, clamp=clamp)
-        return INT
-    if annotation is float:
-        if min is not None or max is not None:
-            return FloatRange(min=min, max=max, clamp=clamp)
-        return FLOAT
-    if annotation is UUIDType:
-        return UUID
-    if annotation is datetime:
-        return DateTime(formats=formats)
-    if annotation is bool:
-        return BOOL
-    return None
-
-
 class OptionHelpExtra(TypedDict, total=False):
     envvars: tuple[str, ...]
     default: str

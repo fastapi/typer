@@ -6,20 +6,17 @@ import subprocess
 import sys
 import traceback
 from collections.abc import Callable, Sequence
-from enum import Enum
 from functools import update_wrapper
-from pathlib import Path
 from traceback import FrameSummary, StackSummary
 from types import TracebackType
 from typing import Annotated, Any
 
 from annotated_doc import Doc
-from typer._types import TyperChoice
 
 from . import _click
 from ._click import types
 from ._click.globals import get_current_context
-from ._typing import get_args, get_origin, is_literal_type, is_union, literal_values
+from ._typing import get_args, get_origin, is_union
 from .completion import get_completion_inspect_parameters
 from .core import (
     DEFAULT_MARKUP_MODE,
@@ -48,8 +45,8 @@ from .models import (
     ParamMeta,
     Required,
     TyperInfo,
-    TyperPath,
 )
+from .param_types import param_type_from_annotation
 from .utils import get_params_from_function
 
 _original_except_hook = sys.excepthook
@@ -1423,45 +1420,26 @@ def get_command_from_info(
     return command
 
 
-def determine_type_convertor(type_: Any) -> Callable[[Any], Any] | None:
-    if lenient_issubclass(type_, Path):
-        return param_path_convertor
-    return None
-
-
-def param_path_convertor(value: str | None = None) -> Path | None:
-    if value is not None:
-        # allow returning any subclass of Path created by an annotated parser without converting
-        # it back to a Path
-        return value if isinstance(value, Path) else Path(value)
-    return None
-
-
 def generate_list_convertor(
-    convertor: Callable[[Any], Any] | None, default_value: Any | None
+    default_value: Any | None,
 ) -> Callable[[Sequence[Any] | None], list[Any] | None]:
     def internal_convertor(value: Sequence[Any] | None) -> list[Any] | None:
         if (value is None) or (default_value is None and len(value) == 0):
             return None
-        return [convertor(v) if convertor else v for v in value]
+        return list(value)
 
     return internal_convertor
 
 
-def generate_tuple_convertor(
-    types: Sequence[Any],
-) -> Callable[[tuple[Any, ...] | None], tuple[Any, ...] | None]:
-    convertors = [determine_type_convertor(type_) for type_ in types]
-
+def generate_tuple_convertor() -> Callable[
+    [tuple[Any, ...] | None], tuple[Any, ...] | None
+]:
     def internal_convertor(
         param_args: tuple[Any, ...] | None,
     ) -> tuple[Any, ...] | None:
         if param_args is None:
             return None
-        return tuple(
-            convertor(arg) if convertor else arg
-            for (convertor, arg) in zip(convertors, param_args, strict=False)
-        )
+        return param_args
 
     return internal_convertor
 
@@ -1506,36 +1484,17 @@ def get_click_type(
     if parameter_info.click_type is not None:
         return parameter_info.click_type
 
-    elif parameter_info.parser is not None:
+    if parameter_info.parser is not None:
         return types.FuncParamType(parameter_info.parser)
 
-    elif annotation is str:
+    param_type = param_type_from_annotation(annotation, parameter_info)
+    if param_type is not None:
+        return param_type
+
+    if annotation is str:
         return types.STRING
-    elif pydantic_scalar := types.param_type_from_annotation(
-        annotation,
-        min=parameter_info.min,
-        max=parameter_info.max,
-        clamp=parameter_info.clamp,
-        formats=parameter_info.formats,
-    ):
-        return pydantic_scalar
-    elif (
-        annotation == Path
-        or parameter_info.allow_dash
-        or parameter_info.path_type
-        or parameter_info.resolve_path
-    ):
-        return TyperPath(
-            exists=parameter_info.exists,
-            file_okay=parameter_info.file_okay,
-            dir_okay=parameter_info.dir_okay,
-            writable=parameter_info.writable,
-            readable=parameter_info.readable,
-            resolve_path=parameter_info.resolve_path,
-            allow_dash=parameter_info.allow_dash,
-            path_type=parameter_info.path_type,
-        )
-    elif lenient_issubclass(annotation, FileTextWrite):
+
+    if lenient_issubclass(annotation, FileTextWrite):
         return types.File(
             mode=parameter_info.mode or "w",
             encoding=parameter_info.encoding,
@@ -1543,7 +1502,7 @@ def get_click_type(
             lazy=parameter_info.lazy,
             atomic=parameter_info.atomic,
         )
-    elif lenient_issubclass(annotation, FileText):
+    if lenient_issubclass(annotation, FileText):
         return types.File(
             mode=parameter_info.mode or "r",
             encoding=parameter_info.encoding,
@@ -1551,7 +1510,7 @@ def get_click_type(
             lazy=parameter_info.lazy,
             atomic=parameter_info.atomic,
         )
-    elif lenient_issubclass(annotation, FileBinaryRead):
+    if lenient_issubclass(annotation, FileBinaryRead):
         return types.File(
             mode=parameter_info.mode or "rb",
             encoding=parameter_info.encoding,
@@ -1559,23 +1518,13 @@ def get_click_type(
             lazy=parameter_info.lazy,
             atomic=parameter_info.atomic,
         )
-    elif lenient_issubclass(annotation, FileBinaryWrite):
+    if lenient_issubclass(annotation, FileBinaryWrite):
         return types.File(
             mode=parameter_info.mode or "wb",
             encoding=parameter_info.encoding,
             errors=parameter_info.errors,
             lazy=parameter_info.lazy,
             atomic=parameter_info.atomic,
-        )
-    elif lenient_issubclass(annotation, Enum):
-        return TyperChoice(
-            list(annotation),
-            case_sensitive=parameter_info.case_sensitive,
-        )
-    elif is_literal_type(annotation):
-        return TyperChoice(
-            literal_values(annotation),
-            case_sensitive=parameter_info.case_sensitive,
         )
     raise RuntimeError(f"Type not yet supported: {annotation}")  # pragma: no cover
 
@@ -1650,13 +1599,11 @@ def get_click_param(
         parameter_type = get_click_type(
             annotation=main_type, parameter_info=parameter_info
         )
-    convertor = determine_type_convertor(main_type)
+    convertor: Callable[..., Any] | None = None
     if is_list:
-        convertor = generate_list_convertor(
-            convertor=convertor, default_value=default_value
-        )
-    if is_tuple:
-        convertor = generate_tuple_convertor(get_args(main_type))
+        convertor = generate_list_convertor(default_value)
+    elif is_tuple:
+        convertor = generate_tuple_convertor()
     if isinstance(parameter_info, OptionInfo):
         if main_type is bool:
             is_flag = True

@@ -310,6 +310,17 @@ def test_path_coerced(path_type) -> None:
     assert "my_awesome_file" in result.output
 
 
+def test_str_with_path_options() -> None:
+    app = typer.Typer()
+
+    @app.command()
+    def warp(loc: str = typer.Option(..., resolve_path=True)):
+        print(loc)
+
+    param = next(p for p in typer.main.get_command(app).params if p.name == "loc")
+    assert isinstance(param.type, models.TyperPath)
+
+
 @pytest.mark.parametrize(
     ("create_file", "option_kwargs", "deny_mode", "expected_error"),
     [
