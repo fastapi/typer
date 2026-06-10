@@ -14,7 +14,6 @@ from typing import Annotated, Any
 from annotated_doc import Doc
 
 from . import _click
-from ._click import types
 from ._click.globals import get_current_context
 from ._typing import get_args, get_origin, is_union
 from .completion import get_completion_inspect_parameters
@@ -41,7 +40,7 @@ from .models import (
     Required,
     TyperInfo,
 )
-from .param_types import lenient_issubclass, param_type_from_annotation, get_param_type
+from .param_types import get_param_type, lenient_issubclass
 from .utils import get_params_from_function
 
 _original_except_hook = sys.excepthook
