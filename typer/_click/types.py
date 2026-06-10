@@ -17,7 +17,13 @@ from typing import (
 )
 from uuid import UUID as UUIDType
 
-from pydantic import AfterValidator, BeforeValidator, Field, TypeAdapter, ValidationError
+from pydantic import (
+    AfterValidator,
+    BeforeValidator,
+    Field,
+    TypeAdapter,
+    ValidationError,
+)
 
 from ._compat import _get_argv_encoding, open_stream
 from .exceptions import BadParameter
