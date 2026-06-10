@@ -365,9 +365,6 @@ def test_convert_type():
     assert convert_type(float) is _click.types.FLOAT
     assert convert_type(bool) is _click.types.BOOL
 
-    param_type = _click.types.IntRange(min=0, max=10)
-    assert convert_type(param_type) is param_type
-
     guessed_int = convert_type(None, default=42)
     assert guessed_int is _click.types.INT
 

@@ -17,7 +17,7 @@ from typing import (
 )
 from uuid import UUID as UUIDType
 
-from pydantic import BeforeValidator, Field, TypeAdapter, ValidationError
+from pydantic import AfterValidator, BeforeValidator, Field, TypeAdapter, ValidationError
 
 from ._compat import _get_argv_encoding, open_stream
 from .exceptions import BadParameter
@@ -72,22 +72,46 @@ def _parse_cli_bool(value: Any) -> bool:
     return _bool_adapter.validate_python(value)
 
 
+def _make_number_clamp_validator(
+    number_class: type[Any],
+    min: float | None,
+    max: float | None,
+) -> Callable[[Any], Any]:
+    def clamp_number(value: Any) -> Any:
+        if min is not None and value < min:
+            return number_class(min)
+        if max is not None and value > max:
+            return number_class(max)
+        return value
+
+    return clamp_number
+
+
 def build_type_adapter(
     annotation: Any,
     *,
     min: float | None = None,
     max: float | None = None,
+    clamp: bool = False,
     formats: Sequence[str] | None = None,
 ) -> TypeAdapter[Any]:
-    """Build a Pydantic ``TypeAdapter`` for a CLI annotation and constraints.
+    """Build a Pydantic TypeAdapter for a CLI annotation and constraints.
 
-    Known constraints (ranges, custom datetime formats, etc.) are applied first;
-    everything else is delegated to Pydantic via ``TypeAdapter(annotation)``.
+    Known constraints (ranges, custom datetime formats, etc.) are applied first,
+    everything else is delegated to Pydantic.
     """
     if annotation is datetime and formats is not None:
         return _build_datetime_adapter(formats)
 
     if annotation is int or annotation is float:
+        if clamp:
+            # Use AfterValidator so it runs after coercion
+            return TypeAdapter(
+                Annotated[
+                    annotation,
+                    AfterValidator(_make_number_clamp_validator(annotation, min, max)),
+                ]
+            )
         field_kwargs: dict[str, Any] = {}
         if min is not None:
             field_kwargs["ge"] = min
@@ -295,100 +319,6 @@ def datetime_param_type(formats: Sequence[str] | None = None) -> PydanticParamTy
         repr_name="DateTime",
         metavar=f"[{'|'.join(metavar_formats)}]",
     )
-
-
-class _NumberRangeBase(ParamType):
-    _number_class: ClassVar[type[Any]]
-    _class_adapter: TypeAdapter[Any]
-    _range_adapter: TypeAdapter[Any]
-
-    def __init__(
-        self,
-        min: float | None = None,
-        max: float | None = None,
-        clamp: bool = False,
-    ) -> None:
-        self._class_adapter = build_type_adapter(self._number_class)
-        range_name = type(self).__dict__.get("name")
-        if range_name is not None:
-            self.name = range_name
-        self.min = min
-        self.max = max
-        self.clamp = clamp
-        self._range_adapter = self._build_range_adapter()
-
-    def _build_range_adapter(self) -> TypeAdapter[Any]:
-        return build_type_adapter(
-            self._number_class,
-            min=self.min,
-            max=self.max,
-        )
-
-    def convert(
-        self, value: Any, param: Union["Parameter", None], ctx: Union["Context", None]
-    ) -> Any:
-        if not self.clamp:
-            try:
-                return self._range_adapter.validate_python(value)
-            except ValidationError as exc:
-                self.fail(_get_error_msg(exc), param, ctx)
-
-        # Clamping - only check the class, don't error on range
-        try:
-            rv = self._class_adapter.validate_python(value)
-        except ValidationError as exc:
-            self.fail(_get_error_msg(exc), param, ctx)
-
-        # adjust the min/max accordingly
-        if self.min is not None and rv < self.min:
-            return self.min
-
-        if self.max is not None and rv > self.max:
-            return self.max
-
-        return rv
-
-    def _describe_range(self) -> str:
-        """Describe the range for use in help text."""
-        if self.min is None:
-            return f"x<={self.max}"
-
-        if self.max is None:
-            return f"x>={self.min}"
-
-        return f"{self.min}<=x<={self.max}"
-
-    def __repr__(self) -> str:
-        clamp = " clamped" if self.clamp else ""
-        return f"<{type(self).__name__} {self._describe_range()}{clamp}>"
-
-
-class IntRange(_NumberRangeBase):
-    _number_class = int
-    """Restrict an `INT` value to a range of accepted values.
-
-    If ``min`` or ``max`` are not passed, any value is accepted in that
-    direction.
-
-    If ``clamp`` is enabled, a value outside the range is clamped to the
-    boundary instead of failing.
-    """
-
-    name = "integer range"
-
-
-class FloatRange(_NumberRangeBase):
-    _number_class = float
-    """Restrict a `FLOAT` value to a range of accepted values.
-
-    If ``min`` or ``max`` are not passed, any value is accepted in that
-    direction.
-
-    If ``clamp`` is enabled, a value outside the range is clamped to the
-    boundary instead of failing.
-    """
-
-    name = "float range"
 
 
 class File(ParamType):

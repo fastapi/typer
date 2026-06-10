@@ -93,8 +93,8 @@ def test_parameter_constructor() -> None:
         required=False,
         count=True,
     )
-    assert isinstance(option.type, _click.types.IntRange)
-    assert option.type.min == 0
+    assert option.type.name == "integer range"
+    assert option.min == 0
 
 
 def test_option_error_hint() -> None:

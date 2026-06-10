@@ -186,6 +186,33 @@ def get_params_from_function(func: Callable[..., Any]) -> dict[str, ParamMeta]:
     return params
 
 
+def describe_number_range(
+    min: int | float | None,
+    max: int | float | None,
+) -> str | None:
+    if min is None and max is None:
+        return None
+    if min is None:
+        return f"x<={max}"
+    if max is None:
+        return f"x>={min}"
+    return f"{min}<=x<={max}"
+
+
+def number_range_repr_name(
+    class_name: str,
+    min: int | float | None,
+    max: int | float | None,
+    *,
+    clamp: bool = False,
+) -> str:
+    range_str = describe_number_range(min, max)
+    if range_str is None:
+        return class_name
+    clamp_suffix = " clamped" if clamp else ""
+    return f"<{class_name} {range_str}{clamp_suffix}>"
+
+
 def parse_boolean_env_var(env_var_value: str | None, default: bool) -> bool:
     if env_var_value is None:
         return default

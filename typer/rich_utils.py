@@ -25,8 +25,12 @@ from rich.traceback import Traceback
 from typer.models import DeveloperExceptionConfig
 
 from . import _click
-from ._click import types
-from .core import TyperArgument, TyperGroup, TyperOption
+from .core import (
+    TyperArgument,
+    TyperGroup,
+    TyperOption,
+    get_number_range_help_str,
+)
 
 # Default styles
 STYLE_OPTION = "bold cyan"
@@ -390,17 +394,9 @@ def _print_options_panel(
         if metavar_str != "BOOLEAN":
             metavar.append(metavar_str)
 
-        # Range - from
-        # https://github.com/pallets/click/blob/c63c70dabd3f86ca68678b4f00951f78f52d0270/src/click/core.py#L2698-L2706  # noqa: E501
-        # skip count with default range type
-        if (
-            isinstance(param.type, types._NumberRangeBase)
-            and isinstance(param, TyperOption)
-            and not (param.count and param.type.min == 0 and param.type.max is None)
-        ):
-            range_str = param.type._describe_range()
-            if range_str:
-                metavar.append(RANGE_STRING.format(range_str))
+        range_str = get_number_range_help_str(param)
+        if range_str:
+            metavar.append(RANGE_STRING.format(range_str))
 
         # Required asterisk
         required: str | Text = ""

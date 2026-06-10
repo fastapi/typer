@@ -16,6 +16,7 @@ from .models import (
     ParameterInfo,
     TyperPath,
 )
+from .utils import number_range_repr_name
 
 
 def lenient_issubclass(cls: Any, class_or_tuple: AnyType | tuple[AnyType, ...]) -> bool:
@@ -29,6 +30,22 @@ def _file_param_type(parameter_info: ParameterInfo, *, mode: str) -> types.File:
         errors=parameter_info.errors,
         lazy=parameter_info.lazy,
         atomic=parameter_info.atomic,
+    )
+
+
+def _ranged_number_param_type(
+    number_class: type[Any],
+    *,
+    class_name: str,
+    name: str,
+    min: int | float | None,
+    max: int | float | None,
+    clamp: bool,
+) -> types.ParamType:
+    return types.PydanticParamType(
+        types.build_type_adapter(number_class, min=min, max=max, clamp=clamp),
+        name=name,
+        repr_name=number_range_repr_name(class_name, min, max, clamp=clamp),
     )
 
 
@@ -62,11 +79,21 @@ def param_type_from_annotation(
         if parameter_info.min is not None or parameter_info.max is not None:
             min_ = int(parameter_info.min) if parameter_info.min is not None else None
             max_ = int(parameter_info.max) if parameter_info.max is not None else None
-            return types.IntRange(min=min_, max=max_, clamp=parameter_info.clamp)
+            return _ranged_number_param_type(
+                int,
+                class_name="IntRange",
+                name="integer range",
+                min=min_,
+                max=max_,
+                clamp=parameter_info.clamp,
+            )
         return types.INT
     if annotation is float:
         if parameter_info.min is not None or parameter_info.max is not None:
-            return types.FloatRange(
+            return _ranged_number_param_type(
+                float,
+                class_name="FloatRange",
+                name="float range",
                 min=parameter_info.min,
                 max=parameter_info.max,
                 clamp=parameter_info.clamp,

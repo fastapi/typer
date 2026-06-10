@@ -18,7 +18,7 @@ from ._click import types
 from ._click.parser import _OptionParser
 from ._click.shell_completion import CompletionItem
 from ._typing import Literal
-from .utils import parse_boolean_env_var
+from .utils import describe_number_range, parse_boolean_env_var
 
 MarkupMode = Literal["markdown", "rich", None]
 MARKUP_MODE_KEY = "TYPER_RICH_MARKUP_MODE"
@@ -29,6 +29,17 @@ if HAS_RICH:
     DEFAULT_MARKUP_MODE: MarkupMode = "rich"
 else:
     DEFAULT_MARKUP_MODE = None
+
+
+def get_number_range_help_str(param: "TyperOption | TyperArgument") -> str | None:
+    if (
+        isinstance(param, TyperOption)
+        and param.count
+        and param.min == 0
+        and param.max is None
+    ):
+        return None
+    return describe_number_range(param.min, param.max)
 
 
 # Copy from _click.parser._split_opt
@@ -273,6 +284,9 @@ class TyperArgument(_click.core.Parameter):
         show_envvar: bool = True,
         help: str | None = None,
         hidden: bool = False,
+        # Numbers
+        min: int | float | None = None,
+        max: int | float | None = None,
         # Rich settings
         rich_help_panel: str | None = None,
     ):
@@ -281,6 +295,8 @@ class TyperArgument(_click.core.Parameter):
         self.show_choices = show_choices
         self.show_envvar = show_envvar
         self.hidden = hidden
+        self.min = min
+        self.max = max
         self.rich_help_panel = rich_help_panel
 
         super().__init__(
@@ -363,6 +379,9 @@ class TyperArgument(_click.core.Parameter):
             # Typer override end
             if default_string:
                 extra.append(_("default: {default}").format(default=default_string))
+        range_str = get_number_range_help_str(self)
+        if range_str:
+            extra.append(range_str)
         if self.required:
             extra.append(_("required"))
         if extra:
@@ -469,11 +488,17 @@ class TyperOption(_click.Parameter):
         hidden: bool = False,
         show_choices: bool = True,
         show_envvar: bool = False,
+        # Numbers
+        min: int | float | None = None,
+        max: int | float | None = None,
         # Rich settings
         rich_help_panel: str | None = None,
     ):
         if help:
             help = inspect.cleandoc(help)
+
+        self.min = min
+        self.max = max
 
         super().__init__(
             param_decls,
@@ -518,10 +543,16 @@ class TyperOption(_click.Parameter):
         else:
             self._depr_flag_value = None
 
-        # Counting. TODO: test or remove? Not currently in coverage.
+        # Counting
         self.count = count
         if count and type is None:
-            self.type = types.IntRange(min=0)
+            self.type = types.PydanticParamType(
+                types.build_type_adapter(int, min=0),
+                name="integer range",
+                repr_name="INT",
+            )
+            if self.min is None:
+                self.min = 0
 
         self.allow_from_autoenv = allow_from_autoenv
         self.help = help
@@ -813,11 +844,9 @@ class TyperOption(_click.Parameter):
             if default_string:
                 extra.append(_("default: {default}").format(default=default_string))
 
-        if isinstance(self.type, types._NumberRangeBase):
-            range_str = self.type._describe_range()
-
-            if range_str:
-                extra.append(range_str)
+        range_str = get_number_range_help_str(self)
+        if range_str:
+            extra.append(range_str)
 
         if self.required:
             extra.append(_("required"))

@@ -1560,6 +1560,8 @@ def get_param(
             envvar=parameter_info.envvar,
             shell_complete=parameter_info.shell_complete,
             autocompletion=get_param_completion(parameter_info.autocompletion),
+            min=parameter_info.min,
+            max=parameter_info.max,
             # Rich settings
             rich_help_panel=parameter_info.rich_help_panel,
         )
@@ -1589,6 +1591,8 @@ def get_param(
             envvar=parameter_info.envvar,
             shell_complete=parameter_info.shell_complete,
             autocompletion=get_param_completion(parameter_info.autocompletion),
+            min=parameter_info.min,
+            max=parameter_info.max,
             # Rich settings
             rich_help_panel=parameter_info.rich_help_panel,
         )
