@@ -12,7 +12,7 @@ import typer._completion_shared
 import typer.completion
 from typer import _click
 from typer.main import solve_typer_info_defaults, solve_typer_info_help
-from typer.models import ParameterInfo, TyperInfo
+from typer.models import TyperInfo
 from typer.testing import CliRunner
 
 from .utils import requires_completion_permission
