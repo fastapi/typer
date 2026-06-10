@@ -16,7 +16,6 @@ from .models import (
     ParameterInfo,
     TyperPath,
 )
-from .utils import number_range_repr_name
 
 
 def lenient_issubclass(cls: Any, class_or_tuple: AnyType | tuple[AnyType, ...]) -> bool:
@@ -36,16 +35,13 @@ def _file_param_type(parameter_info: ParameterInfo, *, mode: str) -> types.File:
 def _ranged_number_param_type(
     number_class: type[Any],
     *,
-    class_name: str,
-    name: str,
     min: int | float | None,
     max: int | float | None,
     clamp: bool,
 ) -> types.ParamType:
     return types.PydanticParamType(
         types.build_type_adapter(number_class, min=min, max=max, clamp=clamp),
-        name=name,
-        repr_name=number_range_repr_name(class_name, min, max, clamp=clamp),
+        name="integer range" if number_class is int else "float range",
     )
 
 
@@ -75,30 +71,20 @@ def param_type_from_annotation(
     annotation: Any,
     parameter_info: ParameterInfo,
 ) -> types.ParamType | None:
-    if annotation is int:
+    if annotation is int or annotation is float:
         if parameter_info.min is not None or parameter_info.max is not None:
-            min_ = int(parameter_info.min) if parameter_info.min is not None else None
-            max_ = int(parameter_info.max) if parameter_info.max is not None else None
+            min_ = parameter_info.min
+            max_ = parameter_info.max
+            if annotation is int:
+                min_ = int(min_) if min_ is not None else None
+                max_ = int(max_) if max_ is not None else None
             return _ranged_number_param_type(
-                int,
-                class_name="IntRange",
-                name="integer range",
+                annotation,
                 min=min_,
                 max=max_,
                 clamp=parameter_info.clamp,
             )
-        return types.INT
-    if annotation is float:
-        if parameter_info.min is not None or parameter_info.max is not None:
-            return _ranged_number_param_type(
-                float,
-                class_name="FloatRange",
-                name="float range",
-                min=parameter_info.min,
-                max=parameter_info.max,
-                clamp=parameter_info.clamp,
-            )
-        return types.FLOAT
+        return types.INT if annotation is int else types.FLOAT
     if annotation is UUIDType:
         return types.UUID
     if annotation is datetime:

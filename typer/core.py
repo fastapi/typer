@@ -549,7 +549,6 @@ class TyperOption(_click.Parameter):
             self.type = types.PydanticParamType(
                 types.build_type_adapter(int, min=0),
                 name="integer range",
-                repr_name="INT",
             )
             if self.min is None:
                 self.min = 0
