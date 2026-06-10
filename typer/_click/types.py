@@ -8,7 +8,6 @@ from typing import (
     Annotated,
     Any,
     ClassVar,
-    Literal,
     NoReturn,
     TypedDict,
     TypeGuard,
@@ -78,8 +77,6 @@ def build_type_adapter(
     *,
     min: float | None = None,
     max: float | None = None,
-    min_open: bool = False,
-    max_open: bool = False,
     formats: Sequence[str] | None = None,
 ) -> TypeAdapter[Any]:
     """Build a Pydantic ``TypeAdapter`` for a CLI annotation and constraints.
@@ -93,15 +90,9 @@ def build_type_adapter(
     if annotation is int or annotation is float:
         field_kwargs: dict[str, Any] = {}
         if min is not None:
-            if min_open:
-                field_kwargs["gt"] = min
-            else:
-                field_kwargs["ge"] = min
+            field_kwargs["ge"] = min
         if max is not None:
-            if max_open:
-                field_kwargs["lt"] = max
-            else:
-                field_kwargs["le"] = max
+            field_kwargs["le"] = max
         if field_kwargs:
             return TypeAdapter(Annotated[annotation, Field(**field_kwargs)])
 
@@ -332,8 +323,6 @@ class _NumberRangeBase(ParamType):
         self,
         min: float | None = None,
         max: float | None = None,
-        min_open: bool = False,
-        max_open: bool = False,
         clamp: bool = False,
     ) -> None:
         self._class_adapter = build_type_adapter(self._number_class)
@@ -342,8 +331,6 @@ class _NumberRangeBase(ParamType):
             self.name = range_name
         self.min = min
         self.max = max
-        self.min_open = min_open
-        self.max_open = max_open
         self.clamp = clamp
         self._range_adapter = self._build_range_adapter()
 
@@ -352,8 +339,6 @@ class _NumberRangeBase(ParamType):
             self._number_class,
             min=self.min,
             max=self.max,
-            min_open=self.min_open,
-            max_open=self.max_open,
         )
 
     def convert(
@@ -372,42 +357,23 @@ class _NumberRangeBase(ParamType):
             self.fail(_get_error_msg(exc), param, ctx)
 
         # adjust the min/max accordingly
-        import operator
+        if self.min is not None and rv < self.min:
+            return self.min
 
-        lt_min: bool = self.min is not None and (
-            operator.le if self.min_open else operator.lt
-        )(rv, self.min)
-        gt_max: bool = self.max is not None and (
-            operator.ge if self.max_open else operator.gt
-        )(rv, self.max)
-
-        if lt_min:
-            return self._clamp(self.min, 1, self.min_open)  # type: ignore[arg-type]
-
-        if gt_max:
-            return self._clamp(self.max, -1, self.max_open)  # type: ignore[arg-type]
+        if self.max is not None and rv > self.max:
+            return self.max
 
         return rv
-
-    def _clamp(self, bound: float, dir: Literal[1, -1], open: bool) -> float:
-        """Find the valid value to clamp to bound in the given
-        direction.
-        """
-        raise NotImplementedError  # pragma: no cover
 
     def _describe_range(self) -> str:
         """Describe the range for use in help text."""
         if self.min is None:
-            op = "<" if self.max_open else "<="
-            return f"x{op}{self.max}"
+            return f"x<={self.max}"
 
         if self.max is None:
-            op = ">" if self.min_open else ">="
-            return f"x{op}{self.min}"
+            return f"x>={self.min}"
 
-        lop = "<" if self.min_open else "<="
-        rop = "<" if self.max_open else "<="
-        return f"{self.min}{lop}x{rop}{self.max}"
+        return f"{self.min}<=x<={self.max}"
 
     def __repr__(self) -> str:
         clamp = " clamped" if self.clamp else ""
@@ -416,11 +382,10 @@ class _NumberRangeBase(ParamType):
 
 class IntRange(_NumberRangeBase):
     _number_class = int
-    """Restrict an `INT` value to a range of accepted values. See
+    """Restrict an `INT` value to a range of accepted values.
 
     If ``min`` or ``max`` are not passed, any value is accepted in that
-    direction. If ``min_open`` or ``max_open`` are enabled, the
-    corresponding boundary is not included in the range.
+    direction.
 
     If ``clamp`` is enabled, a value outside the range is clamped to the
     boundary instead of failing.
@@ -428,56 +393,19 @@ class IntRange(_NumberRangeBase):
 
     name = "integer range"
 
-    def _clamp(  # type: ignore
-        self, bound: int, dir: Literal[1, -1], open: bool
-    ) -> int:
-        if not open:
-            return bound
-
-        return bound + dir
-
 
 class FloatRange(_NumberRangeBase):
     _number_class = float
-    """Restrict a `FLOAT` value to a range of accepted
-    values. See `ranges`.
+    """Restrict a `FLOAT` value to a range of accepted values.
 
     If ``min`` or ``max`` are not passed, any value is accepted in that
-    direction. If ``min_open`` or ``max_open`` are enabled, the
-    corresponding boundary is not included in the range.
+    direction.
 
     If ``clamp`` is enabled, a value outside the range is clamped to the
-    boundary instead of failing. This is not supported if either
-    boundary is marked ``open``.
+    boundary instead of failing.
     """
 
     name = "float range"
-
-    def __init__(
-        self,
-        min: float | None = None,
-        max: float | None = None,
-        min_open: bool = False,
-        max_open: bool = False,
-        clamp: bool = False,
-    ) -> None:
-        super().__init__(
-            min=min, max=max, min_open=min_open, max_open=max_open, clamp=clamp
-        )
-
-        if (min_open or max_open) and clamp:
-            raise TypeError("Clamping is not supported for open bounds.")
-
-    def _clamp(self, bound: float, dir: Literal[1, -1], open: bool) -> float:
-        if not open:
-            return bound
-
-        # Could use math.nextafter here, but clamping an
-        # open float range doesn't seem to be particularly useful. It's
-        # left up to the user to write a callback to do it if needed.
-        raise RuntimeError(
-            "Clamping is not supported for open bounds."
-        )  # pragma: no cover
 
 
 class File(ParamType):

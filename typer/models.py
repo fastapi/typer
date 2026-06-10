@@ -303,7 +303,6 @@ class ParameterInfo:
         default_factory: Callable[[], Any] | None = None,
         # Custom type
         parser: Callable[[str], Any] | None = None,
-        click_type: types.ParamType | None = None,
         # TyperArgument
         show_default: bool | str = True,
         show_choices: bool = True,
@@ -336,13 +335,6 @@ class ParameterInfo:
         # Rich settings
         rich_help_panel: str | None = None,
     ):
-        # Check if user has provided multiple custom parsers
-        if parser and click_type:
-            raise ValueError(
-                "Multiple custom type parsers provided. "
-                "`parser` and `click_type` may not both be provided."
-            )
-
         self.default = default
         self.param_decls = param_decls
         self.callback = callback
@@ -355,7 +347,6 @@ class ParameterInfo:
         self.default_factory = default_factory
         # Custom type
         self.parser = parser
-        self.click_type = click_type
         # TyperArgument
         self.show_default = show_default
         self.show_choices = show_choices
@@ -412,7 +403,6 @@ class OptionInfo(ParameterInfo):
         default_factory: Callable[[], Any] | None = None,
         # Custom type
         parser: Callable[[str], Any] | None = None,
-        click_type: types.ParamType | None = None,
         # Option
         show_default: bool | str = True,
         prompt: bool | str = False,
@@ -467,7 +457,6 @@ class OptionInfo(ParameterInfo):
             default_factory=default_factory,
             # Custom type
             parser=parser,
-            click_type=click_type,
             # TyperArgument
             show_default=show_default,
             show_choices=show_choices,
@@ -540,7 +529,6 @@ class ArgumentInfo(ParameterInfo):
         default_factory: Callable[[], Any] | None = None,
         # Custom type
         parser: Callable[[str], Any] | None = None,
-        click_type: types.ParamType | None = None,
         # TyperArgument
         show_default: bool | str = True,
         show_choices: bool = True,
@@ -586,7 +574,6 @@ class ArgumentInfo(ParameterInfo):
             default_factory=default_factory,
             # Custom type
             parser=parser,
-            click_type=click_type,
             # TyperArgument
             show_default=show_default,
             show_choices=show_choices,

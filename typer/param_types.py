@@ -41,6 +41,19 @@ def _needs_typer_path(annotation: Any, parameter_info: ParameterInfo) -> bool:
     )
 
 
+def get_param_type(
+    *, annotation: Any, parameter_info: ParameterInfo
+) -> types.ParamType:
+    if parameter_info.parser is not None:
+        return types.FuncParamType(parameter_info.parser)
+
+    param_type = param_type_from_annotation(annotation, parameter_info)
+    if param_type is not None:
+        return param_type
+
+    raise RuntimeError(f"Type not yet supported: {annotation}")  # pragma: no cover
+
+
 def param_type_from_annotation(
     annotation: Any,
     parameter_info: ParameterInfo,

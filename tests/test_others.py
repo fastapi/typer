@@ -32,50 +32,6 @@ def test_defaults_from_info():
     assert value
 
 
-def test_too_many_parsers():
-    def custom_parser(value: str) -> int:
-        return int(value)  # pragma: no cover
-
-    class CustomClickParser(_click.types.ParamType):
-        name = "custom_parser"
-
-        def convert(
-            self,
-            value: str,
-            param: _click.Parameter | None,
-            ctx: _click.Context | None,
-        ) -> typing.Any:
-            return int(value)  # pragma: no cover
-
-    expected_error = (
-        "Multiple custom type parsers provided. "
-        "`parser` and `click_type` may not both be provided."
-    )
-
-    with pytest.raises(ValueError, match=expected_error):
-        ParameterInfo(parser=custom_parser, click_type=CustomClickParser())
-
-
-def test_valid_parser_permutations():
-    def custom_parser(value: str) -> int:
-        return int(value)  # pragma: no cover
-
-    class CustomClickParser(_click.types.ParamType):
-        name = "custom_parser"
-
-        def convert(
-            self,
-            value: str,
-            param: _click.Parameter | None,
-            ctx: _click.Context | None,
-        ) -> typing.Any:
-            return int(value)  # pragma: no cover
-
-    ParameterInfo()
-    ParameterInfo(parser=custom_parser)
-    ParameterInfo(click_type=CustomClickParser())
-
-
 @requires_completion_permission
 def test_install_invalid_shell():
     app = typer.Typer()

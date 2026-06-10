@@ -41,7 +41,7 @@ from .models import (
     Required,
     TyperInfo,
 )
-from .param_types import lenient_issubclass, param_type_from_annotation
+from .param_types import lenient_issubclass, param_type_from_annotation, get_param_type
 from .utils import get_params_from_function
 
 _original_except_hook = sys.excepthook
@@ -1449,22 +1449,6 @@ def get_callback(
 
     update_wrapper(wrapper, callback)
     return wrapper
-
-
-def get_param_type(
-    *, annotation: Any, parameter_info: ParameterInfo
-) -> types.ParamType:
-    if parameter_info.click_type is not None:
-        return parameter_info.click_type
-
-    if parameter_info.parser is not None:
-        return types.FuncParamType(parameter_info.parser)
-
-    param_type = param_type_from_annotation(annotation, parameter_info)
-    if param_type is not None:
-        return param_type
-
-    raise RuntimeError(f"Type not yet supported: {annotation}")  # pragma: no cover
 
 
 def get_param(

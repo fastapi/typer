@@ -175,45 +175,17 @@ def test_custom_parse_value_error():
     assert "Invalid value" in result.output
 
 
-def test_custom_click_type():
-    class BaseNumberParamType(_click.types.ParamType):
-        name = "base_integer"
-
-        def convert(
-            self,
-            value: Any,
-            param: _click.Parameter | None,
-            ctx: _click.Context | None,
-        ) -> Any:
-            return int(value, 0)
-
+def test_custom_parser_hex():
     app = typer.Typer()
 
     @app.command()
-    def custom_click_type(
-        hex_value: int = typer.Argument(None, click_type=BaseNumberParamType()),
+    def custom_parser_hex(
+        hex_value: int = typer.Argument(None, parser=lambda x: int(x, 0)),
     ):
         assert hex_value == 0x56
 
     result = runner.invoke(app, ["0x56"])
     assert result.exit_code == 0
-
-
-def test_int_range_open_bound_clamp():
-    app = typer.Typer()
-
-    @app.command()
-    def custom_click_type(
-        value: int = typer.Argument(
-            ...,
-            click_type=_click.types.IntRange(min=1, min_open=True, clamp=True),
-        ),
-    ):
-        print(value)
-
-    result = runner.invoke(app, ["1"])
-    assert result.exit_code == 0
-    assert "2" in result.output
 
 
 @pytest.mark.parametrize(

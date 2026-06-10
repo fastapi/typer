@@ -158,8 +158,3 @@ def test_list_pair() -> None:
     assert result.exit_code == 0
     assert "items=['a', 'b', 'c']" in result.output
     assert "pair=('x', 'y')" in result.output
-
-
-def test_float_range_open_bounds_with_clamp_not_allowed():
-    with pytest.raises(TypeError, match="Clamping is not supported for open bounds."):
-        _click.types.FloatRange(min=0.0, min_open=True, clamp=True)
