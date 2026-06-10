@@ -2,7 +2,6 @@ import os
 import sys
 from collections.abc import Callable, Sequence
 from datetime import datetime
-from uuid import UUID as UUIDType
 from typing import (
     IO,
     TYPE_CHECKING,
@@ -17,6 +16,7 @@ from typing import (
     Union,
     cast,
 )
+from uuid import UUID as UUIDType
 
 from pydantic import BeforeValidator, Field, TypeAdapter, ValidationError
 
@@ -206,9 +206,7 @@ class PydanticParamType(ParamType):
         *,
         name: str,
         repr_name: str | None = None,
-        metavar: str
-        | Callable[["Parameter", "Context"], str | None]
-        | None = None,
+        metavar: str | Callable[["Parameter", "Context"], str | None] | None = None,
         preprocess: Callable[[Any], Any] | None = None,
     ) -> None:
         self._class_adapter = adapter
@@ -688,21 +686,15 @@ STRING = StringParamType()
 
 # An integer parameter.  This can also be selected by using ``int`` as
 # type.
-INT = PydanticParamType(
-    build_type_adapter(int), name="integer", repr_name="INT"
-)
+INT = PydanticParamType(build_type_adapter(int), name="integer", repr_name="INT")
 
 # A floating point value parameter.  This can also be selected by using
 # ``float`` as type.
-FLOAT = PydanticParamType(
-    build_type_adapter(float), name="float", repr_name="FLOAT"
-)
+FLOAT = PydanticParamType(build_type_adapter(float), name="float", repr_name="FLOAT")
 
 # A boolean parameter.  This is the default for boolean flags.  This can
 # also be selected by using ``bool`` as a type.
-BOOL = PydanticParamType(
-    build_type_adapter(bool), name="boolean", repr_name="BOOL"
-)
+BOOL = PydanticParamType(build_type_adapter(bool), name="boolean", repr_name="BOOL")
 
 # A UUID parameter.
 UUID = PydanticParamType(

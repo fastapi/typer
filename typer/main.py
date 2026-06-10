@@ -6,14 +6,12 @@ import subprocess
 import sys
 import traceback
 from collections.abc import Callable, Sequence
-from datetime import datetime
 from enum import Enum
 from functools import update_wrapper
 from pathlib import Path
 from traceback import FrameSummary, StackSummary
 from types import TracebackType
 from typing import Annotated, Any
-from uuid import UUID
 
 from annotated_doc import Doc
 from typer._types import TyperChoice
