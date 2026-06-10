@@ -18,9 +18,7 @@ from .models import (
 )
 
 
-def lenient_issubclass(
-    cls: Any, class_or_tuple: AnyType | tuple[AnyType, ...]
-) -> bool:
+def lenient_issubclass(cls: Any, class_or_tuple: AnyType | tuple[AnyType, ...]) -> bool:
     return isinstance(cls, type) and issubclass(cls, class_or_tuple)
 
 
