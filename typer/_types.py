@@ -87,7 +87,7 @@ class TyperChoice(types.ParamType, Generic[ParamTypeValue]):
                     return original
             raise ValueError(self.get_invalid_choice_message(value=value, ctx=ctx))
 
-        return TypeAdapter(Annotated[ParamTypeValue, BeforeValidator(parse_choice)])
+        return TypeAdapter(Annotated[Any, BeforeValidator(parse_choice)])
 
     def convert(
         self, value: Any, param: _click.Parameter | None, ctx: _click.Context | None

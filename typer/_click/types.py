@@ -228,9 +228,9 @@ class PydanticParamType(ParamType):
     def get_metavar(self, param: "Parameter", ctx: "Context") -> str | None:
         if self._metavar is None:
             return None
-        if callable(self._metavar):
-            return self._metavar(param, ctx)
-        return self._metavar
+        if isinstance(self._metavar, str):
+            return self._metavar
+        return self._metavar(param, ctx)
 
     def __repr__(self) -> str:
         return self._repr_name
