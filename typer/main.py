@@ -1521,8 +1521,6 @@ def get_click_type(
         formats=parameter_info.formats,
     ):
         return pydantic_scalar
-    elif annotation is bool:
-        return types.BOOL
     elif (
         annotation == Path
         or parameter_info.allow_dash

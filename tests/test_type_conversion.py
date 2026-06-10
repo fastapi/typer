@@ -216,6 +216,40 @@ def test_int_range_open_bound_clamp():
     assert "2" in result.output
 
 
+@pytest.mark.parametrize(
+    ("cli_value", "expected"),
+    [
+        ("true", True),
+        ("false", False),
+        ("yes", True),
+        ("no", False),
+        ("1", True),
+        ("0", False),
+        ("on", True),
+        ("off", False),
+        ("t", True),
+        ("f", False),
+        ("y", True),
+        ("n", False),
+        ("", False),
+        (" true ", True),
+        (" FALSE ", False),
+        ("TRUE", True),
+        ("No", False),
+    ],
+)
+def test_bool_convert_valid(cli_value: str, expected: bool) -> None:
+    app = typer.Typer()
+
+    @app.command()
+    def main(value: bool):
+        print(value)
+
+    result = runner.invoke(app, [cli_value])
+    assert result.exit_code == 0
+    assert str(expected) in result.output
+
+
 def test_bool_convert_invalid():
     app = typer.Typer()
 
@@ -225,9 +259,7 @@ def test_bool_convert_invalid():
 
     result = runner.invoke(app, ["maybe"])
     assert result.exit_code == 2
-    assert "is not a valid boolean" in result.output
-    assert "yes" in result.output
-    assert "false" in result.output
+    assert "Input should be a valid boolean" in result.output
 
 
 @pytest.mark.parametrize(

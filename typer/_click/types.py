@@ -59,6 +59,20 @@ def _build_datetime_adapter(
     return TypeAdapter(Annotated[datetime, BeforeValidator(parse_datetime)])
 
 
+_bool_adapter = TypeAdapter(bool)
+
+
+def _parse_cli_bool(value: Any) -> bool:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        stripped = value.strip()
+        if stripped == "":
+            return False
+        value = stripped
+    return _bool_adapter.validate_python(value)
+
+
 def build_type_adapter(
     annotation: Any,
     *,
@@ -90,6 +104,9 @@ def build_type_adapter(
                 field_kwargs["le"] = max
         if field_kwargs:
             return TypeAdapter(Annotated[annotation, Field(**field_kwargs)])
+
+    if annotation is bool:
+        return TypeAdapter(Annotated[bool, BeforeValidator(_parse_cli_bool)])
 
     return TypeAdapter(annotation)
 
@@ -465,63 +482,6 @@ class FloatRange(_NumberRangeBase):
         )  # pragma: no cover
 
 
-class BoolParamType(ParamType):
-    name = "boolean"
-
-    bool_states: dict[str, bool] = {
-        "1": True,
-        "0": False,
-        "yes": True,
-        "no": False,
-        "true": True,
-        "false": False,
-        "on": True,
-        "off": False,
-        "t": True,
-        "f": False,
-        "y": True,
-        "n": False,
-        # Absence of value is considered False.
-        "": False,
-    }
-    """A mapping of string values to boolean states.
-
-    Mapping is inspired by `configparser.ConfigParser.BOOLEAN_STATES`
-    and extends it.
-    """
-
-    @staticmethod
-    def str_to_bool(value: str | bool) -> bool | None:
-        """Convert a string to a boolean value.
-
-        If the value is already a boolean, it is returned as-is. If the value is a
-        string, it is stripped of whitespaces and lower-cased, then checked against
-        the known boolean states pre-defined in the `BoolParamType.bool_states` mapping
-        above.
-
-        Returns `None` if the value does not match any known boolean state.
-        """
-        if isinstance(value, bool):
-            return value
-        return BoolParamType.bool_states.get(value.strip().lower())
-
-    def convert(
-        self, value: Any, param: Union["Parameter", None], ctx: Union["Context", None]
-    ) -> bool:
-        normalized = self.str_to_bool(value)
-        if normalized is None:
-            states = ", ".join(sorted(self.bool_states))
-            self.fail(
-                f"{value!r} is not a valid boolean. Recognized values: {states}",
-                param,
-                ctx,
-            )
-        return normalized
-
-    def __repr__(self) -> str:
-        return "BOOL"
-
-
 class File(ParamType):
     """Declares a parameter to be a file for reading or writing.  The file
     is automatically closed once the context tears down (after the command
@@ -740,7 +700,9 @@ FLOAT = PydanticParamType(
 
 # A boolean parameter.  This is the default for boolean flags.  This can
 # also be selected by using ``bool`` as a type.
-BOOL = BoolParamType()
+BOOL = PydanticParamType(
+    build_type_adapter(bool), name="boolean", repr_name="BOOL"
+)
 
 # A UUID parameter.
 UUID = PydanticParamType(
@@ -778,6 +740,8 @@ def param_type_from_annotation(
         return UUID
     if annotation is datetime:
         return DateTime(formats=formats)
+    if annotation is bool:
+        return BOOL
     return None
 
 

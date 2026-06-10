@@ -508,12 +508,10 @@ class TyperOption(_click.Parameter):
 
         # TODO: revisit all of this flag stuff
         if is_flag and type is None:
-            self.type: types.ParamType = types.BoolParamType()
+            self.type: types.ParamType = types.BOOL
 
         self.is_flag: bool = bool(is_flag)
-        self.is_bool_flag: bool = bool(
-            is_flag and isinstance(self.type, types.BoolParamType)
-        )
+        self.is_bool_flag: bool = bool(is_flag and self.type is types.BOOL)
 
         if self.is_flag:
             self._depr_flag_value = True
