@@ -206,7 +206,7 @@ class TyperPath(types.ParamType):
 
         return value
 
-    def convert(  # ty: ignore[invalid-method-override]
+    def convert(
         self,
         value: str | os.PathLike[str],
         param: _click.Parameter | None,
