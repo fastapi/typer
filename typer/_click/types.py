@@ -1,28 +1,16 @@
 import os
 import sys
 from collections.abc import Callable, Sequence
-from datetime import datetime
 from typing import (
     IO,
     TYPE_CHECKING,
-    Annotated,
     Any,
     ClassVar,
     NoReturn,
     TypedDict,
     TypeGuard,
-    TypeVar,
     Union,
     cast,
-)
-from uuid import UUID as UUIDType
-
-from pydantic import (
-    AfterValidator,
-    BeforeValidator,
-    Field,
-    TypeAdapter,
-    ValidationError,
 )
 
 from ._compat import _get_argv_encoding, open_stream
@@ -32,104 +20,6 @@ from .utils import LazyFile, format_filename, safecall
 if TYPE_CHECKING:
     from .core import Context, Parameter
     from .shell_completion import CompletionItem
-
-ParamTypeValue = TypeVar("ParamTypeValue")
-
-
-def _get_error_msg(exc: ValidationError) -> str:
-    """Get a string representation of the (first) validation error."""
-    errors = exc.errors()
-    if errors:
-        return errors[0]["msg"]
-    return str(exc)
-
-
-def _build_datetime_adapter(
-    formats: Sequence[str] | None,
-) -> TypeAdapter[datetime]:
-    if formats is None:
-        return TypeAdapter(datetime)
-
-    def parse_datetime(value: Any) -> datetime:
-        if isinstance(value, datetime):
-            return value
-        for format in formats:
-            try:
-                return datetime.strptime(value, format)
-            except ValueError:
-                continue
-        formats_str = ", ".join(map(repr, formats))
-        raise ValueError(f"{value!r} does not match the formats {formats_str}.")
-
-    return TypeAdapter(Annotated[datetime, BeforeValidator(parse_datetime)])
-
-
-_bool_adapter = TypeAdapter(bool)
-
-
-def _parse_cli_bool(value: Any) -> bool:
-    if isinstance(value, bool):
-        return value
-    if isinstance(value, str):
-        stripped = value.strip()
-        if stripped == "":
-            return False
-        value = stripped
-    return _bool_adapter.validate_python(value)
-
-
-def _make_number_clamp_validator(
-    number_class: type[Any],
-    min: float | None,
-    max: float | None,
-) -> Callable[[Any], Any]:
-    def clamp_number(value: Any) -> Any:
-        if min is not None and value < min:
-            return number_class(min)
-        if max is not None and value > max:
-            return number_class(max)
-        return value
-
-    return clamp_number
-
-
-def build_type_adapter(
-    annotation: Any,
-    *,
-    min: float | None = None,
-    max: float | None = None,
-    clamp: bool = False,
-    formats: Sequence[str] | None = None,
-) -> TypeAdapter[Any]:
-    """Build a Pydantic TypeAdapter for a CLI annotation and constraints.
-
-    Known constraints (ranges, custom datetime formats, etc.) are applied first,
-    everything else is delegated to Pydantic.
-    """
-    if annotation is datetime and formats is not None:
-        return _build_datetime_adapter(formats)
-
-    if annotation is int or annotation is float:
-        if clamp:
-            # Use AfterValidator so it runs after coercion
-            return TypeAdapter(
-                Annotated[
-                    annotation,
-                    AfterValidator(_make_number_clamp_validator(annotation, min, max)),
-                ]
-            )
-        field_kwargs: dict[str, Any] = {}
-        if min is not None:
-            field_kwargs["ge"] = min
-        if max is not None:
-            field_kwargs["le"] = max
-        if field_kwargs:
-            return TypeAdapter(Annotated[annotation, Field(**field_kwargs)])
-
-    if annotation is bool:
-        return TypeAdapter(Annotated[bool, BeforeValidator(_parse_cli_bool)])
-
-    return TypeAdapter(annotation)
 
 
 class ParamType:
@@ -218,49 +108,6 @@ class ParamType:
         return []
 
 
-class PydanticParamType(ParamType):
-    _class_adapter: TypeAdapter[Any]
-
-    def __init__(
-        self,
-        adapter: TypeAdapter[Any],
-        *,
-        name: str,
-        repr_name: str | None = None,
-        metavar: str | Callable[["Parameter", "Context"], str | None] | None = None,
-        preprocess: Callable[[Any], Any] | None = None,
-    ) -> None:
-        self._class_adapter = adapter
-        self.name = name
-        self._repr_name = repr_name or name
-        self._metavar = metavar
-        self._preprocess = preprocess
-
-    def convert(
-        self, value: Any, param: Union["Parameter", None], ctx: Union["Context", None]
-    ) -> Any:
-        if self._preprocess is not None:
-            value = self._preprocess(value)
-        try:
-            return self._class_adapter.validate_python(value)
-        except ValidationError as exc:
-            self.fail(_get_error_msg(exc), param, ctx)
-
-    def get_metavar(self, param: "Parameter", ctx: "Context") -> str | None:
-        if self._metavar is None:
-            return None
-        if isinstance(self._metavar, str):
-            return self._metavar
-        return self._metavar(param, ctx)
-
-    def __repr__(self) -> str:
-        return self._repr_name
-
-
-def _strip_string(value: Any) -> Any:
-    return value.strip() if isinstance(value, str) else value
-
-
 class CompositeParamType(ParamType):
     is_composite = True
 
@@ -313,18 +160,6 @@ class StringParamType(ParamType):
 
     def __repr__(self) -> str:
         return "STRING"
-
-
-def datetime_param_type(formats: Sequence[str] | None = None) -> PydanticParamType:
-    formats_tuple = tuple(formats) if formats is not None else None
-    metavar_formats = formats_tuple or ["%Y-%m-%d"]
-
-    return PydanticParamType(
-        build_type_adapter(datetime, formats=formats_tuple),
-        name="datetime",
-        repr_name="DateTime",
-        metavar=f"[{'|'.join(metavar_formats)}]",
-    )
 
 
 class File(ParamType):
@@ -482,6 +317,8 @@ def convert_type(ty: Any | None, default: Any | None = None) -> ParamType:
     type. If the type isn't provided, it can be inferred from a default
     value.
     """
+    from .. import param_types
+
     guessed_type = False
 
     if ty is None and default is not None:
@@ -513,13 +350,13 @@ def convert_type(ty: Any | None, default: Any | None = None) -> ParamType:
         return STRING
 
     if ty is int:
-        return INT
+        return param_types.INT
 
     if ty is float:
-        return FLOAT
+        return param_types.FLOAT
 
     if ty is bool:
-        return BOOL
+        return param_types.BOOL
 
     if guessed_type:
         return STRING
@@ -530,26 +367,6 @@ def convert_type(ty: Any | None, default: Any | None = None) -> ParamType:
 # A unicode string parameter type which is the implicit default.  This
 # can also be selected by using ``str`` as type.
 STRING = StringParamType()
-
-# An integer parameter.  This can also be selected by using ``int`` as
-# type.
-INT = PydanticParamType(build_type_adapter(int), name="integer", repr_name="INT")
-
-# A floating point value parameter.  This can also be selected by using
-# ``float`` as type.
-FLOAT = PydanticParamType(build_type_adapter(float), name="float", repr_name="FLOAT")
-
-# A boolean parameter.  This is the default for boolean flags.  This can
-# also be selected by using ``bool`` as a type.
-BOOL = PydanticParamType(build_type_adapter(bool), name="boolean", repr_name="BOOL")
-
-# A UUID parameter.
-UUID = PydanticParamType(
-    build_type_adapter(UUIDType),
-    name="uuid",
-    repr_name="UUID",
-    preprocess=_strip_string,
-)
 
 
 class OptionHelpExtra(TypedDict, total=False):

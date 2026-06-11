@@ -1,6 +1,6 @@
 import os
 import stat
-from collections.abc import Iterable, Mapping, Sequence
+from collections.abc import Callable, Iterable, Mapping, Sequence
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
@@ -9,10 +9,9 @@ from uuid import UUID as UUIDType
 
 from pydantic import BeforeValidator, TypeAdapter, ValidationError
 
-from . import _click
+from . import _click, adapters
 from ._click import types
 from ._click.shell_completion import CompletionItem
-from ._click.types import _get_error_msg, build_type_adapter
 from ._typing import is_literal_type, literal_values
 from .models import (
     AnyType,
@@ -28,6 +27,94 @@ ParamTypeValue = TypeVar("ParamTypeValue")
 
 def lenient_issubclass(cls: Any, class_or_tuple: AnyType | tuple[AnyType, ...]) -> bool:
     return isinstance(cls, type) and issubclass(cls, class_or_tuple)
+
+
+def _get_error_msg(exc: ValidationError) -> str:
+    """Get a string representation of the (first) validation error."""
+    errors = exc.errors()
+    if errors:
+        return errors[0]["msg"]
+    return str(exc)
+
+
+def _strip_string(value: Any) -> Any:
+    return value.strip() if isinstance(value, str) else value
+
+
+class PydanticParamType(types.ParamType):
+    _class_adapter: TypeAdapter[Any]
+
+    def __init__(
+        self,
+        adapter: TypeAdapter[Any],
+        *,
+        name: str,
+        repr_name: str | None = None,
+        metavar: str
+        | Callable[[_click.Parameter, _click.Context], str | None]
+        | None = None,
+        preprocess: Callable[[Any], Any] | None = None,
+    ) -> None:
+        self._class_adapter = adapter
+        self.name = name
+        self._repr_name = repr_name or name
+        self._metavar = metavar
+        self._preprocess = preprocess
+
+    def convert(
+        self,
+        value: Any,
+        param: _click.Parameter | None,
+        ctx: _click.Context | None,
+    ) -> Any:
+        if self._preprocess is not None:
+            value = self._preprocess(value)
+        try:
+            return self._class_adapter.validate_python(value)
+        except ValidationError as exc:
+            self.fail(_get_error_msg(exc), param, ctx)
+
+    def get_metavar(self, param: _click.Parameter, ctx: _click.Context) -> str | None:
+        if self._metavar is None:
+            return None
+        if isinstance(self._metavar, str):
+            return self._metavar
+        return self._metavar(param, ctx)
+
+    def __repr__(self) -> str:
+        return self._repr_name
+
+
+def datetime_param_type(formats: Sequence[str] | None = None) -> PydanticParamType:
+    formats_tuple = tuple(formats) if formats is not None else None
+    metavar_formats = formats_tuple or ["%Y-%m-%d"]
+
+    return PydanticParamType(
+        adapters.build_type_adapter(datetime, formats=formats_tuple),
+        name="datetime",
+        repr_name="DateTime",
+        metavar=f"[{'|'.join(metavar_formats)}]",
+    )
+
+
+INT = PydanticParamType(
+    adapters.build_type_adapter(int), name="integer", repr_name="INT"
+)
+
+FLOAT = PydanticParamType(
+    adapters.build_type_adapter(float), name="float", repr_name="FLOAT"
+)
+
+BOOL = PydanticParamType(
+    adapters.build_type_adapter(bool), name="boolean", repr_name="BOOL"
+)
+
+UUID = PydanticParamType(
+    adapters.build_type_adapter(UUIDType),
+    name="uuid",
+    repr_name="UUID",
+    preprocess=_strip_string,
+)
 
 
 class TyperChoice(types.ParamType, Generic[ParamTypeValue]):
@@ -186,7 +273,7 @@ class TyperPath(types.ParamType):
                 return value
             if isinstance(value, (str, os.PathLike)):
                 try:
-                    return build_type_adapter(self.type).validate_python(value)
+                    return adapters.build_type_adapter(self.type).validate_python(value)
                 except ValidationError as exc:
                     self.fail(_get_error_msg(exc), param, ctx)
         return value
@@ -273,8 +360,8 @@ def _ranged_number_param_type(
     max: int | float | None,
     clamp: bool,
 ) -> types.ParamType:
-    return types.PydanticParamType(
-        types.build_type_adapter(number_class, min=min, max=max, clamp=clamp),
+    return PydanticParamType(
+        adapters.build_type_adapter(number_class, min=min, max=max, clamp=clamp),
         name="integer range" if number_class is int else "float range",
     )
 
@@ -318,13 +405,13 @@ def param_type_from_annotation(
                 max=max_,
                 clamp=parameter_info.clamp,
             )
-        return types.INT if annotation is int else types.FLOAT
+        return INT if annotation is int else FLOAT
     if annotation is UUIDType:
-        return types.UUID
+        return UUID
     if annotation is datetime:
-        return types.datetime_param_type(formats=parameter_info.formats)
+        return datetime_param_type(formats=parameter_info.formats)
     if annotation is bool:
-        return types.BOOL
+        return BOOL
     if _needs_typer_path(annotation, parameter_info):
         resolved_path_type: type[Any] | None = parameter_info.path_type
         if resolved_path_type is None and lenient_issubclass(annotation, Path):

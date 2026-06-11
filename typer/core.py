@@ -13,7 +13,7 @@ from typing import (
     cast,
 )
 
-from . import _click
+from . import _click, adapters, param_types
 from ._click import types
 from ._click.parser import _OptionParser
 from ._click.shell_completion import CompletionItem
@@ -533,10 +533,10 @@ class TyperOption(_click.Parameter):
 
         # TODO: revisit all of this flag stuff
         if is_flag and type is None:
-            self.type: types.ParamType = types.BOOL
+            self.type: types.ParamType = param_types.BOOL
 
         self.is_flag: bool = bool(is_flag)
-        self.is_bool_flag: bool = bool(is_flag and self.type is types.BOOL)
+        self.is_bool_flag: bool = bool(is_flag and self.type is param_types.BOOL)
 
         if self.is_flag:
             self._depr_flag_value = True
@@ -546,8 +546,8 @@ class TyperOption(_click.Parameter):
         # Counting
         self.count = count
         if count and type is None:
-            self.type = types.PydanticParamType(
-                types.build_type_adapter(int, min=0),
+            self.type = param_types.PydanticParamType(
+                adapters.build_type_adapter(int, min=0),
                 name="integer range",
             )
             if self.min is None:

@@ -351,23 +351,23 @@ def test_convert_type():
     assert isinstance(tuple_type, _click.types.Tuple)
     assert [type(item) for item in tuple_type.types] == [
         type(_click.types.STRING),
-        type(_click.types.INT),
+        type(param_types.INT),
     ]
 
     guessed_tuple = convert_type(None, default=[(1, "x")])
     assert isinstance(guessed_tuple, _click.types.Tuple)
     assert [type(item) for item in guessed_tuple.types] == [
-        type(_click.types.INT),
+        type(param_types.INT),
         type(_click.types.STRING),
     ]
 
     # numbers
-    assert convert_type(int) is _click.types.INT
-    assert convert_type(float) is _click.types.FLOAT
-    assert convert_type(bool) is _click.types.BOOL
+    assert convert_type(int) is param_types.INT
+    assert convert_type(float) is param_types.FLOAT
+    assert convert_type(bool) is param_types.BOOL
 
     guessed_int = convert_type(None, default=42)
-    assert guessed_int is _click.types.INT
+    assert guessed_int is param_types.INT
 
     # custom type
     class CustomType:
