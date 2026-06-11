@@ -1,8 +1,10 @@
+import os
+import stat
 from collections.abc import Iterable, Mapping, Sequence
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Annotated, Any, Generic, TypeVar
+from typing import Annotated, Any, ClassVar, Generic, TypeVar, cast
 from uuid import UUID as UUIDType
 
 from pydantic import BeforeValidator, TypeAdapter, ValidationError
@@ -10,7 +12,7 @@ from pydantic import BeforeValidator, TypeAdapter, ValidationError
 from . import _click
 from ._click import types
 from ._click.shell_completion import CompletionItem
-from ._click.types import _get_error_msg
+from ._click.types import _get_error_msg, build_type_adapter
 from ._typing import is_literal_type, literal_values
 from .models import (
     AnyType,
@@ -19,7 +21,6 @@ from .models import (
     FileText,
     FileTextWrite,
     ParameterInfo,
-    TyperPath,
 )
 
 ParamTypeValue = TypeVar("ParamTypeValue")
@@ -140,6 +141,119 @@ class TyperChoice(types.ParamType, Generic[ParamTypeValue]):
             matched = (c for c in str_choices if c.lower().startswith(incomplete))
 
         return [CompletionItem(c) for c in matched]
+
+
+class TyperPath(types.ParamType):
+    envvar_list_splitter: ClassVar[str] = os.path.pathsep
+
+    def __init__(
+        self,
+        exists: bool = False,
+        file_okay: bool = True,
+        dir_okay: bool = True,
+        writable: bool = False,
+        readable: bool = True,
+        resolve_path: bool = False,
+        allow_dash: bool = False,
+        path_type: type[Any] | None = None,
+    ):
+        self.exists = exists
+        self.file_okay = file_okay
+        self.dir_okay = dir_okay
+        self.readable = readable
+        self.writable = writable
+        self.resolve_path = resolve_path
+        self.allow_dash = allow_dash
+        self.type = path_type
+
+        if self.file_okay and not self.dir_okay:
+            self.name = "file"
+        elif self.dir_okay and not self.file_okay:
+            self.name = "directory"
+        else:
+            self.name = "path"
+
+    def _parse_path_value(
+        self,
+        value: Any,
+        param: _click.Parameter | None,
+        ctx: _click.Context | None,
+    ) -> Any:
+        if self.type is None or self.type is str or self.type is bytes:
+            return value
+        if isinstance(self.type, type) and issubclass(self.type, Path):
+            if isinstance(value, self.type):
+                return value
+            if isinstance(value, (str, os.PathLike)):
+                try:
+                    return build_type_adapter(self.type).validate_python(value)
+                except ValidationError as exc:
+                    self.fail(_get_error_msg(exc), param, ctx)
+        return value
+
+    def coerce_path_result(
+        self, value: str | os.PathLike[str]
+    ) -> str | bytes | os.PathLike[str]:
+        if self.type is not None and not isinstance(value, self.type):
+            if (
+                self.type is str
+            ):  # pragma: no cover  # TODO: perhaps this branch can't be hit and should be removed
+                return os.fsdecode(value)
+            elif self.type is bytes:
+                return os.fsencode(value)
+            else:
+                return cast("os.PathLike[str]", self.type(value))
+
+        return value
+
+    def convert(  # ty: ignore[invalid-method-override]
+        self,
+        value: str | os.PathLike[str],
+        param: _click.Parameter | None,
+        ctx: _click.Context | None,
+    ) -> str | bytes | os.PathLike[str]:
+        rv = self._parse_path_value(value, param, ctx)
+
+        is_dash = self.file_okay and self.allow_dash and rv in (b"-", "-")
+
+        if not is_dash:
+            if self.resolve_path:
+                rv = os.path.realpath(rv)
+
+            try:
+                st = os.stat(rv)
+            except OSError:
+                if not self.exists:
+                    return self.coerce_path_result(rv)
+                self.fail(
+                    f"{self.name.title()} {_click.utils.format_filename(value)!r} does not exist.",
+                    param,
+                    ctx,
+                )
+
+            name = self.name.title()
+            loc = repr(_click.utils.format_filename(value))
+            if not self.file_okay and stat.S_ISREG(st.st_mode):
+                self.fail(f"{name} {loc} is a file.", param, ctx)
+
+            if not self.dir_okay and stat.S_ISDIR(st.st_mode):
+                self.fail(f"{name} {loc} is a directory.", param, ctx)
+
+            if self.readable and not os.access(rv, os.R_OK):
+                self.fail(f"{name} {loc} is not readable.", param, ctx)
+
+            if self.writable and not os.access(rv, os.W_OK):
+                self.fail(f"{name} {loc} is not writable.", param, ctx)
+
+        return self.coerce_path_result(rv)
+
+    def shell_complete(
+        self, ctx: _click.Context, param: _click.Parameter, incomplete: str
+    ) -> list[CompletionItem]:
+        """Return an empty list so that the autocompletion functionality
+        will work properly from the commandline.
+        """
+        return []
 
 
 def _file_param_type(parameter_info: ParameterInfo, *, mode: str) -> types.File:

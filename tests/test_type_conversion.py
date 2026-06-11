@@ -5,7 +5,8 @@ from typing import Any
 
 import pytest
 import typer
-from typer import _click, models
+from typer import _click, param_types
+from typer.param_types import TyperPath
 from typer.testing import CliRunner
 
 from tests.utils import needs_linux, needs_windows
@@ -290,7 +291,7 @@ def test_str_with_path_options() -> None:
         print(loc)
 
     param = next(p for p in typer.main.get_command(app).params if p.name == "loc")
-    assert isinstance(param.type, models.TyperPath)
+    assert isinstance(param.type, TyperPath)
 
 
 @pytest.mark.parametrize(
@@ -324,7 +325,7 @@ def test_path_convert_failures(
                 return False
             return original_access(path, mode)  # pragma: no cover
 
-        monkeypatch.setattr(models.os, "access", fake_access)
+        monkeypatch.setattr(param_types.os, "access", fake_access)
 
     path = tmp_path / "some_path"
     if create_file:

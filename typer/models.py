@@ -1,24 +1,15 @@
 import inspect
 import io
-import os
-import stat
 from collections.abc import Callable, Sequence
-from pathlib import Path
 from typing import (
     TYPE_CHECKING,
     Any,
-    ClassVar,
     Optional,
     TypeVar,
-    cast,
 )
 
-from pydantic import ValidationError
-
 from . import _click
-from ._click import types
 from ._click.shell_completion import CompletionItem
-from ._click.types import _get_error_msg, build_type_adapter
 
 if TYPE_CHECKING:  # pragma: no cover
     from .core import TyperCommand, TyperGroup
@@ -634,119 +625,3 @@ class DeveloperExceptionConfig:
         self.pretty_exceptions_enable = pretty_exceptions_enable
         self.pretty_exceptions_show_locals = pretty_exceptions_show_locals
         self.pretty_exceptions_short = pretty_exceptions_short
-
-
-class TyperPath(types.ParamType):
-    # Based originally on code from Click 8.3.1
-    # Partly rewritten and added an override for shell_complete
-
-    envvar_list_splitter: ClassVar[str] = os.path.pathsep
-
-    def __init__(
-        self,
-        exists: bool = False,
-        file_okay: bool = True,
-        dir_okay: bool = True,
-        writable: bool = False,
-        readable: bool = True,
-        resolve_path: bool = False,
-        allow_dash: bool = False,
-        path_type: type[Any] | None = None,
-    ):
-        self.exists = exists
-        self.file_okay = file_okay
-        self.dir_okay = dir_okay
-        self.readable = readable
-        self.writable = writable
-        self.resolve_path = resolve_path
-        self.allow_dash = allow_dash
-        self.type = path_type
-
-        if self.file_okay and not self.dir_okay:
-            self.name = "file"
-        elif self.dir_okay and not self.file_okay:
-            self.name = "directory"
-        else:
-            self.name = "path"
-
-    def _parse_path_value(
-        self,
-        value: Any,
-        param: _click.Parameter | None,
-        ctx: Context | None,
-    ) -> Any:
-        if self.type is None or self.type is str or self.type is bytes:
-            return value
-        if isinstance(self.type, type) and issubclass(self.type, Path):
-            if isinstance(value, self.type):
-                return value
-            if isinstance(value, (str, os.PathLike)):
-                try:
-                    return build_type_adapter(self.type).validate_python(value)
-                except ValidationError as exc:
-                    self.fail(_get_error_msg(exc), param, ctx)
-        return value
-
-    def coerce_path_result(
-        self, value: str | os.PathLike[str]
-    ) -> str | bytes | os.PathLike[str]:
-        if self.type is not None and not isinstance(value, self.type):
-            if (
-                self.type is str
-            ):  # pragma: no cover  # TODO: perhaps this branch can't be hit and should be removed
-                return os.fsdecode(value)
-            elif self.type is bytes:
-                return os.fsencode(value)
-            else:
-                return cast("os.PathLike[str]", self.type(value))
-
-        return value
-
-    def convert(  # ty: ignore[invalid-method-override]
-        self,
-        value: str | os.PathLike[str],
-        param: _click.Parameter | None,
-        ctx: Context | None,  # type: ignore[override]
-    ) -> str | bytes | os.PathLike[str]:
-        rv = self._parse_path_value(value, param, ctx)
-
-        is_dash = self.file_okay and self.allow_dash and rv in (b"-", "-")
-
-        if not is_dash:
-            if self.resolve_path:
-                rv = os.path.realpath(rv)
-
-            try:
-                st = os.stat(rv)
-            except OSError:
-                if not self.exists:
-                    return self.coerce_path_result(rv)
-                self.fail(
-                    f"{self.name.title()} {_click.utils.format_filename(value)!r} does not exist.",
-                    param,
-                    ctx,
-                )
-
-            name = self.name.title()
-            loc = repr(_click.utils.format_filename(value))
-            if not self.file_okay and stat.S_ISREG(st.st_mode):
-                self.fail(f"{name} {loc} is a file.", param, ctx)
-
-            if not self.dir_okay and stat.S_ISDIR(st.st_mode):
-                self.fail(f"{name} {loc} is a directory.", param, ctx)
-
-            if self.readable and not os.access(rv, os.R_OK):
-                self.fail(f"{name} {loc} is not readable.", param, ctx)
-
-            if self.writable and not os.access(rv, os.W_OK):
-                self.fail(f"{name} {loc} is not writable.", param, ctx)
-
-        return self.coerce_path_result(rv)
-
-    def shell_complete(
-        self, ctx: _click.Context, param: _click.Parameter, incomplete: str
-    ) -> list[CompletionItem]:
-        """Return an empty list so that the autocompletion functionality
-        will work properly from the commandline.
-        """
-        return []
