@@ -54,7 +54,7 @@ def _build_prompt(
     type: ParamType | None = None,
 ) -> str:
     # prevent circular imports
-    from .._types import TyperChoice
+    from ..param_types import TyperChoice
 
     prompt = text
     if type is not None and show_choices and isinstance(type, TyperChoice):
