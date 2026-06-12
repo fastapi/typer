@@ -1,3 +1,4 @@
+import sys
 from collections.abc import Callable, Sequence
 from datetime import datetime
 from typing import Annotated, Any
@@ -26,6 +27,30 @@ def _build_datetime_adapter(
 
 
 _bool_adapter = TypeAdapter(bool)
+
+
+def decode_cli_bytes(value: Any) -> Any:
+    """Decode bytes from argv/env; leave other values unchanged."""
+    if isinstance(value, bytes):
+        from ._click import _compat
+
+        enc = _compat._get_argv_encoding()
+        try:
+            return value.decode(enc)
+        except UnicodeError:
+            fs_enc = sys.getfilesystemencoding()
+            if fs_enc != enc:
+                try:
+                    return value.decode(fs_enc)
+                except UnicodeError:
+                    return value.decode("utf-8", "replace")
+            return value.decode("utf-8", "replace")
+    return value
+
+
+def _parse_cli_str(value: Any) -> str:
+    """Coerce a CLI value to str like legacy StringParamType.convert."""
+    return str(decode_cli_bytes(value))
 
 
 def _parse_cli_bool(value: Any) -> bool:
@@ -89,5 +114,8 @@ def build_type_adapter(
 
     if annotation is bool:
         return TypeAdapter(Annotated[bool, BeforeValidator(_parse_cli_bool)])
+
+    if annotation is str:
+        return TypeAdapter(Annotated[str, BeforeValidator(_parse_cli_str)])
 
     return TypeAdapter(annotation)

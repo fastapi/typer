@@ -40,7 +40,7 @@ from .models import (
     Required,
     TyperInfo,
 )
-from .param_types import get_param_type, lenient_issubclass
+from .param_types import infer_type_from_default, lenient_issubclass, resolve_param_type
 from .utils import get_params_from_function
 
 _original_except_hook = sys.excepthook
@@ -1471,48 +1471,61 @@ def get_param(
     else:
         default_value = param.default
         parameter_info = OptionInfo()
-    annotation: Any
-    if param.annotation is not param.empty:
-        annotation = param.annotation
-    else:
-        annotation = str
-    main_type = annotation
+    main_type: Any
     is_list = False
-    parameter_type: Any = None
     is_flag = None
-    origin = get_origin(main_type)
 
-    if origin is not None:
-        # Handle SomeType | None and Optional[SomeType]
-        if is_union(origin):
-            types = []
-            for type_ in get_args(main_type):
-                if type_ is NoneType:
-                    continue
-                types.append(type_)
-            assert len(types) == 1, "Typer Currently doesn't support Union types"
-            main_type = types[0]
-            origin = get_origin(main_type)
-        # Handle Tuples and Lists
-        if lenient_issubclass(origin, list):
-            main_type = get_args(main_type)[0]
-            assert not get_origin(main_type), (
-                "List types with complex sub-types are not currently supported"
+    if param.annotation is not param.empty:
+        main_type = param.annotation
+        origin = get_origin(main_type)
+
+        if origin is not None:
+            # Handle SomeType | None and Optional[SomeType]
+            if is_union(origin):
+                types = []
+                for type_ in get_args(main_type):
+                    if type_ is NoneType:
+                        continue
+                    types.append(type_)
+                assert len(types) == 1, "Typer Currently doesn't support Union types"
+                main_type = types[0]
+                origin = get_origin(main_type)
+            # Handle Tuples and Lists
+            if lenient_issubclass(origin, list):
+                main_type = get_args(main_type)[0]
+                assert not get_origin(main_type), (
+                    "List types with complex sub-types are not currently supported"
+                )
+                is_list = True
+                parameter_type = resolve_param_type(
+                    main_type, parameter_info=parameter_info
+                )
+            elif lenient_issubclass(origin, tuple):
+                type_args = get_args(main_type)
+                for type_ in type_args:
+                    assert not get_origin(type_), (
+                        "Tuple types with complex sub-types are not currently supported"
+                    )
+                parameter_type = resolve_param_type(
+                    tuple(type_args), parameter_info=parameter_info
+                )
+            else:
+                parameter_type = resolve_param_type(
+                    main_type, parameter_info=parameter_info
+                )
+        else:
+            parameter_type = resolve_param_type(
+                main_type, parameter_info=parameter_info
             )
-            is_list = True
-        elif lenient_issubclass(origin, tuple):
-            types = []
-            for type_ in get_args(main_type):
-                assert not get_origin(type_), (
-                    "Tuple types with complex sub-types are not currently supported"
-                )
-                types.append(
-                    get_param_type(annotation=type_, parameter_info=parameter_info)
-                )
-            parameter_type = tuple(types)
-    if parameter_type is None:
-        parameter_type = get_param_type(
-            annotation=main_type, parameter_info=parameter_info
+    else:
+        if default_value is not None:
+            main_type, _ = infer_type_from_default(default_value)
+            if main_type is None:
+                main_type = str
+        else:
+            main_type = str
+        parameter_type = resolve_param_type(
+            default=default_value, parameter_info=parameter_info
         )
     if isinstance(parameter_info, OptionInfo):
         if main_type is bool:

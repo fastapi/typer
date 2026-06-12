@@ -1,5 +1,4 @@
 import os
-import sys
 from collections.abc import Callable, Sequence
 from typing import (
     IO,
@@ -7,13 +6,12 @@ from typing import (
     Any,
     ClassVar,
     NoReturn,
-    TypedDict,
     TypeGuard,
     Union,
     cast,
 )
 
-from ._compat import _get_argv_encoding, open_stream
+from ._compat import open_stream
 from .exceptions import BadParameter
 from .utils import LazyFile, format_filename, safecall
 
@@ -134,32 +132,6 @@ class FuncParamType(ParamType):
                 value = value.decode("utf-8", "replace")
 
             self.fail(value, param, ctx)
-
-
-class StringParamType(ParamType):
-    name = "text"
-
-    def convert(
-        self, value: Any, param: Union["Parameter", None], ctx: Union["Context", None]
-    ) -> Any:
-        if isinstance(value, bytes):
-            enc = _get_argv_encoding()
-            try:
-                value = value.decode(enc)
-            except UnicodeError:
-                fs_enc = sys.getfilesystemencoding()
-                if fs_enc != enc:
-                    try:
-                        value = value.decode(fs_enc)
-                    except UnicodeError:
-                        value = value.decode("utf-8", "replace")
-                else:
-                    value = value.decode("utf-8", "replace")
-            return value
-        return str(value)
-
-    def __repr__(self) -> str:
-        return "STRING"
 
 
 class File(ParamType):
@@ -284,7 +256,12 @@ class Tuple(CompositeParamType):
     """
 
     def __init__(self, types: Sequence[type[Any] | ParamType]) -> None:
-        self.types: Sequence[ParamType] = [convert_type(ty) for ty in types]
+        from ..param_types import resolve_param_type
+
+        self.types: Sequence[ParamType] = [
+            item if isinstance(item, ParamType) else resolve_param_type(item)
+            for item in types
+        ]
 
     @property
     def name(self) -> str:  # type: ignore[override]
@@ -310,67 +287,3 @@ class Tuple(CompositeParamType):
         return tuple(
             ty(x, param, ctx) for ty, x in zip(self.types, value, strict=False)
         )
-
-
-def convert_type(ty: Any | None, default: Any | None = None) -> ParamType:
-    """Find the most appropriate `ParamType` for the given Python
-    type. If the type isn't provided, it can be inferred from a default
-    value.
-    """
-    from .. import param_types
-
-    guessed_type = False
-
-    if ty is None and default is not None:
-        if isinstance(default, (tuple, list)):
-            # If the default is empty, ty will remain None and will
-            # return STRING.
-            if default:
-                item = default[0]
-
-                # A tuple of tuples needs to detect the inner types.
-                # Can't call convert recursively because that would
-                # incorrectly unwind the tuple to a single type.
-                if isinstance(item, (tuple, list)):
-                    ty = tuple(map(type, item))
-                else:
-                    ty = type(item)
-        else:
-            ty = type(default)
-
-        guessed_type = True
-
-    if isinstance(ty, tuple):
-        return Tuple(ty)
-
-    if isinstance(ty, ParamType):
-        return ty
-
-    if ty is str or ty is None:
-        return STRING
-
-    if ty is int:
-        return param_types.INT
-
-    if ty is float:
-        return param_types.FLOAT
-
-    if ty is bool:
-        return param_types.BOOL
-
-    if guessed_type:
-        return STRING
-
-    return FuncParamType(ty)
-
-
-# A unicode string parameter type which is the implicit default.  This
-# can also be selected by using ``str`` as type.
-STRING = StringParamType()
-
-
-class OptionHelpExtra(TypedDict, total=False):
-    envvars: tuple[str, ...]
-    default: str
-    range: str
-    required: str

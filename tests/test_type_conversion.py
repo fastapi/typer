@@ -1,4 +1,5 @@
 import os
+import sys
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -6,7 +7,7 @@ from typing import Any
 import pytest
 import typer
 from typer import _click, param_types
-from typer.param_types import TyperPath
+from typer.param_types import BOOL, FLOAT, INT, STRING, TyperPath, resolve_param_type
 from typer.testing import CliRunner
 
 from tests.utils import needs_linux, needs_windows
@@ -261,8 +262,8 @@ def test_string_param_type_converts_bytes(
     name_param = next(param for param in command.params if param.name == "name")
     assert repr(name_param.type) == "STRING"
 
-    monkeypatch.setattr(_click.types, "_get_argv_encoding", lambda: arg_enc)
-    monkeypatch.setattr(_click.types.sys, "getfilesystemencoding", lambda: system_enc)
+    monkeypatch.setattr(_click._compat, "_get_argv_encoding", lambda: arg_enc)
+    monkeypatch.setattr(sys, "getfilesystemencoding", lambda: system_enc)
 
     result = runner.invoke(app, [], default_map={"name": raw_value})
     assert result.exit_code == 0
@@ -338,45 +339,73 @@ def test_path_convert_failures(
     assert expected_error in result.output
 
 
-def test_convert_type():
-    from typer._click.types import convert_type
+@pytest.mark.parametrize(
+    ("default", "expected_param_type", "cli_args", "expected_value", "value_type"),
+    [
+        (42, INT, [], 42, int),
+        (42, INT, ["--val", "99"], 99, int),
+        (0.5, FLOAT, [], 0.5, float),
+        ("morty", STRING, [], "morty", str),
+    ],
+    ids=["int", "int-cli", "float", "str"],
+)
+def test_default_infers_param_type(
+    default: Any,
+    expected_param_type: Any,
+    cli_args: list[str],
+    expected_value: Any,
+    value_type: type,
+) -> None:
+    app = typer.Typer()
+    seen: dict[str, Any] = {}
 
+    @app.command()
+    def cmd(val=default):
+        seen["val"] = val
+
+    param = next(p for p in typer.main.get_command(app).params if p.name == "val")
+    assert param.type is expected_param_type
+
+    result = runner.invoke(app, cli_args)
+    assert result.exit_code == 0, result.output
+    assert seen["val"] == expected_value
+    assert type(seen["val"]) is value_type
+
+
+def test_convert_type():
     # str
-    assert convert_type(str) is _click.types.STRING
-    assert convert_type(None) is _click.types.STRING
-    assert convert_type(None, default=["a"]) is _click.types.STRING
+    assert resolve_param_type(str) is STRING
+    assert resolve_param_type(None) is STRING
+    assert resolve_param_type(None, default=["a"]) is STRING
 
     # tuples
-    tuple_type = convert_type((str, int))
+    tuple_type = resolve_param_type((str, int))
     assert isinstance(tuple_type, _click.types.Tuple)
-    assert [type(item) for item in tuple_type.types] == [
-        type(_click.types.STRING),
-        type(param_types.INT),
-    ]
+    assert [type(item) for item in tuple_type.types] == [type(STRING), type(INT)]
 
-    guessed_tuple = convert_type(None, default=[(1, "x")])
+    guessed_tuple = resolve_param_type(None, default=[(1, "x")])
     assert isinstance(guessed_tuple, _click.types.Tuple)
     assert [type(item) for item in guessed_tuple.types] == [
-        type(param_types.INT),
-        type(_click.types.STRING),
+        type(INT),
+        type(STRING),
     ]
 
     # numbers
-    assert convert_type(int) is param_types.INT
-    assert convert_type(float) is param_types.FLOAT
-    assert convert_type(bool) is param_types.BOOL
+    assert resolve_param_type(int) is INT
+    assert resolve_param_type(float) is FLOAT
+    assert resolve_param_type(bool) is BOOL
 
-    guessed_int = convert_type(None, default=42)
-    assert guessed_int is param_types.INT
+    guessed_int = resolve_param_type(None, default=42)
+    assert guessed_int is INT
 
     # custom type
     class CustomType:
         pass
 
-    guessed_unknown = convert_type(None, default=CustomType())
-    assert guessed_unknown is _click.types.STRING
+    guessed_unknown = resolve_param_type(None, default=CustomType())
+    assert guessed_unknown is STRING
 
-    func_type = convert_type(CustomType)
+    func_type = resolve_param_type(CustomType)
     assert isinstance(func_type, _click.types.FuncParamType)
     assert func_type.name == "CustomType"
 
@@ -425,5 +454,5 @@ def test_argv_encoding(
         monkeypatch.setattr(sys, "stdin", FakeStdin(stdin_encoding))
         monkeypatch.setattr(sys, "getfilesystemencoding", lambda: filesystem_encoding)
 
-    converted = _click.types.STRING.convert(b"\xff", None, None)
+    converted = STRING.convert(b"\xff", None, None)
     assert converted == "ÿ"

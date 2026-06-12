@@ -5,7 +5,7 @@ from typing import IO, TYPE_CHECKING, Any, AnyStr, TextIO, TypeVar, overload
 
 from .exceptions import Abort, UsageError
 from .globals import resolve_color_default
-from .types import ParamType, convert_type
+from .types import ParamType
 from .utils import LazyFile, echo
 
 if TYPE_CHECKING:
@@ -108,7 +108,9 @@ def prompt(
             raise Abort() from None
 
     if value_proc is None:
-        value_proc = convert_type(type, default)
+        from ..param_types import resolve_param_type
+
+        value_proc = resolve_param_type(type, default)
 
     prompt = _build_prompt(
         text, prompt_suffix, show_default, default, show_choices, type

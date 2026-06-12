@@ -840,7 +840,9 @@ class Parameter(ABC):
         self.name, self.opts, self.secondary_opts = self._parse_decls(
             param_decls or (), expose_value
         )
-        self.type: types.ParamType = types.convert_type(type, default)
+        from ..param_types import resolve_param_type
+
+        self.type = resolve_param_type(type, default)
 
         # Default nargs to what the type tells us if we have that
         # information available.

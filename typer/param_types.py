@@ -116,6 +116,12 @@ UUID = PydanticParamType(
     preprocess=_strip_string,
 )
 
+STRING = PydanticParamType(
+    adapters.build_type_adapter(str),
+    name="text",
+    repr_name="STRING",
+)
+
 
 class TyperChoice(types.ParamType, Generic[ParamTypeValue]):
     name = "choice"
@@ -157,7 +163,7 @@ class TyperChoice(types.ParamType, Generic[ParamTypeValue]):
     def get_metavar(self, param: _click.Parameter, ctx: _click.Context) -> str | None:
         if param.param_type_name == "option" and not param.show_choices:  # type: ignore
             choice_metavars = [
-                types.convert_type(type(choice)).name.upper() for choice in self.choices
+                resolve_param_type(type(choice)).name.upper() for choice in self.choices
             ]
             choices_str = "|".join([*dict.fromkeys(choice_metavars)])
         else:
@@ -375,17 +381,72 @@ def _needs_typer_path(annotation: Any, parameter_info: ParameterInfo) -> bool:
     )
 
 
+def infer_type_from_default(default: Any) -> tuple[Any | None, bool]:
+    """Infer a type from a default value. Returns (annotation, guessed)."""
+    if isinstance(default, (tuple, list)):
+        if not default:
+            return None, True
+        item = default[0]
+        if isinstance(item, (tuple, list)):
+            return tuple(map(type, item)), True
+        return type(item), True
+    return type(default), True
+
+
+def resolve_param_type(
+    annotation: Any | None = None,
+    default: Any | None = None,
+    *,
+    parameter_info: ParameterInfo | None = None,
+) -> types.ParamType:
+    """Resolve a ParamType from a type and/or default value."""
+    guessed_type = False
+    if annotation is None and default is not None:
+        annotation, guessed_type = infer_type_from_default(default)
+
+    if isinstance(annotation, tuple):
+        element_types: list[types.ParamType] = []
+        for element in annotation:
+            if isinstance(element, types.ParamType):
+                element_types.append(element)
+            else:
+                element_types.append(
+                    resolve_param_type(
+                        annotation=element, parameter_info=parameter_info
+                    )
+                )
+        return types.Tuple(element_types)
+
+    if isinstance(annotation, types.ParamType):
+        return annotation
+
+    if parameter_info is not None and parameter_info.parser is not None:
+        return types.FuncParamType(parameter_info.parser)
+
+    if parameter_info is not None and annotation is not None:
+        param_type = param_type_from_annotation(annotation, parameter_info)
+        if param_type is not None:
+            return param_type
+
+    if annotation is str or annotation is None:
+        return STRING
+    if annotation is int:
+        return INT
+    if annotation is float:
+        return FLOAT
+    if annotation is bool:
+        return BOOL
+
+    if guessed_type:
+        return STRING
+
+    return types.FuncParamType(annotation)
+
+
 def get_param_type(
     *, annotation: Any, parameter_info: ParameterInfo
 ) -> types.ParamType:
-    if parameter_info.parser is not None:
-        return types.FuncParamType(parameter_info.parser)
-
-    param_type = param_type_from_annotation(annotation, parameter_info)
-    if param_type is not None:
-        return param_type
-
-    raise RuntimeError(f"Type not yet supported: {annotation}")  # pragma: no cover
+    return resolve_param_type(annotation=annotation, parameter_info=parameter_info)
 
 
 def param_type_from_annotation(
@@ -437,7 +498,7 @@ def param_type_from_annotation(
             case_sensitive=parameter_info.case_sensitive,
         )
     if annotation is str:
-        return types.STRING
+        return STRING
     if lenient_issubclass(annotation, FileTextWrite):
         return _file_param_type(parameter_info, mode="w")
     if lenient_issubclass(annotation, FileText):
