@@ -15,6 +15,7 @@ from annotated_doc import Doc
 
 from . import _click
 from ._click.globals import get_current_context
+from ._click.types import ParamType
 from ._typing import get_args, get_origin, is_union
 from .completion import get_completion_inspect_parameters
 from .core import (
@@ -1472,7 +1473,7 @@ def get_param(
         default_value = param.default
         parameter_info = OptionInfo()
     main_type: Any
-    parameter_type: _click.types.ParamType | None
+    parameter_type: ParamType | None
     is_list = False
     is_flag = None
 
