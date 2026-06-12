@@ -1472,6 +1472,7 @@ def get_param(
         default_value = param.default
         parameter_info = OptionInfo()
     main_type: Any
+    parameter_type: _click.types.ParamType | None
     is_list = False
     is_flag = None
 
