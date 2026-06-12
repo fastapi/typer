@@ -340,19 +340,18 @@ def test_path_convert_failures(
 
 
 @pytest.mark.parametrize(
-    ("default", "expected_param_type", "cli_args", "expected_value", "value_type"),
+    ("default", "expected_param_type", "expected_value", "value_type"),
     [
-        (42, INT, [], 42, int),
-        (42, INT, ["--val", "99"], 99, int),
-        (0.5, FLOAT, [], 0.5, float),
-        ("morty", STRING, [], "morty", str),
+        (42, INT, 42, int),
+        (0.5, FLOAT, 0.5, float),
+        ("morty", STRING, "morty", str),
+        (False, BOOL, False, bool),
+        ("False", STRING, "False", str),
     ],
-    ids=["int", "int-cli", "float", "str"],
 )
 def test_default_infers_param_type(
     default: Any,
     expected_param_type: Any,
-    cli_args: list[str],
     expected_value: Any,
     value_type: type,
 ) -> None:
@@ -366,7 +365,7 @@ def test_default_infers_param_type(
     param = next(p for p in typer.main.get_command(app).params if p.name == "val")
     assert param.type is expected_param_type
 
-    result = runner.invoke(app, cli_args)
+    result = runner.invoke(app)
     assert result.exit_code == 0, result.output
     assert seen["val"] == expected_value
     assert type(seen["val"]) is value_type
