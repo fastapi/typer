@@ -7,7 +7,15 @@ from typing import Any
 import pytest
 import typer
 from typer import _click, param_types
-from typer.param_types import BOOL, FLOAT, INT, STRING, TyperPath, resolve_param_type
+from typer.param_types import (
+    BOOL,
+    FLOAT,
+    INT,
+    STRING,
+    FuncParamType,
+    TyperPath,
+    resolve_param_type,
+)
 from typer.testing import CliRunner
 
 from tests.utils import needs_linux, needs_windows
@@ -405,7 +413,7 @@ def test_convert_type():
     assert guessed_unknown is STRING
 
     func_type = resolve_param_type(CustomType)
-    assert isinstance(func_type, _click.types.FuncParamType)
+    assert isinstance(func_type, FuncParamType)
     assert func_type.name == "CustomType"
 
 

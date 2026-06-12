@@ -49,7 +49,7 @@ def decode_cli_bytes(value: Any) -> Any:
 
 
 def _parse_cli_str(value: Any) -> str:
-    """Coerce a CLI value to str like legacy StringParamType.convert."""
+    """Coerce a CLI value to str"""
     return str(decode_cli_bytes(value))
 
 

@@ -10,7 +10,7 @@ from uuid import UUID as UUIDType
 from pydantic import BeforeValidator, TypeAdapter, ValidationError
 
 from . import _click, adapters
-from ._click import types
+from ._click import Context, Parameter, types
 from ._click.shell_completion import CompletionItem
 from ._typing import is_literal_type, literal_values
 from .models import (
@@ -41,6 +41,24 @@ def _strip_string(value: Any) -> Any:
     return value.strip() if isinstance(value, str) else value
 
 
+class FuncParamType(types.ParamType):
+    def __init__(self, func: Callable[[Any], Any]) -> None:
+        self.name: str = getattr(func, "__name__", "function")
+        self.func = func
+
+    def convert(self, value: Any, param: Parameter | None, ctx: Context | None) -> Any:
+        try:
+            return self.func(value)
+        except ValueError:
+            try:
+                value = str(value)
+            except UnicodeError:  # pragma: no cover
+                assert isinstance(value, bytes)
+                value = value.decode("utf-8", "replace")
+
+            self.fail(value, param, ctx)
+
+
 class PydanticParamType(types.ParamType):
     _class_adapter: TypeAdapter[Any]
 
@@ -50,9 +68,7 @@ class PydanticParamType(types.ParamType):
         *,
         name: str,
         repr_name: str | None = None,
-        metavar: str
-        | Callable[[_click.Parameter, _click.Context], str | None]
-        | None = None,
+        metavar: str | Callable[[Parameter, Context], str | None] | None = None,
         preprocess: Callable[[Any], Any] | None = None,
     ) -> None:
         self._class_adapter = adapter
@@ -64,8 +80,8 @@ class PydanticParamType(types.ParamType):
     def convert(
         self,
         value: Any,
-        param: _click.Parameter | None,
-        ctx: _click.Context | None,
+        param: Parameter | None,
+        ctx: Context | None,
     ) -> Any:
         if self._preprocess is not None:
             value = self._preprocess(value)
@@ -74,7 +90,7 @@ class PydanticParamType(types.ParamType):
         except ValidationError as exc:
             self.fail(_get_error_msg(exc), param, ctx)
 
-    def get_metavar(self, param: _click.Parameter, ctx: _click.Context) -> str | None:
+    def get_metavar(self, param: Parameter, ctx: Context) -> str | None:
         if self._metavar is None:
             return None
         if isinstance(self._metavar, str):
@@ -133,7 +149,7 @@ class TyperChoice(types.ParamType, Generic[ParamTypeValue]):
         self.case_sensitive = case_sensitive
 
     def _normalized_mapping(
-        self, ctx: _click.Context | None = None
+        self, ctx: Context | None = None
     ) -> Mapping[ParamTypeValue, str]:
         """
         Returns mapping where keys are the original choices and the values are
@@ -147,9 +163,7 @@ class TyperChoice(types.ParamType, Generic[ParamTypeValue]):
             for choice in self.choices
         }
 
-    def normalize_choice(
-        self, choice: ParamTypeValue, ctx: _click.Context | None
-    ) -> str:
+    def normalize_choice(self, choice: ParamTypeValue, ctx: Context | None) -> str:
         normed_value = str(choice.value) if isinstance(choice, Enum) else str(choice)
 
         if ctx is not None and ctx.token_normalize_func is not None:
@@ -160,7 +174,7 @@ class TyperChoice(types.ParamType, Generic[ParamTypeValue]):
 
         return normed_value
 
-    def get_metavar(self, param: _click.Parameter, ctx: _click.Context) -> str | None:
+    def get_metavar(self, param: Parameter, ctx: Context) -> str | None:
         if param.param_type_name == "option" and not param.show_choices:  # type: ignore
             choice_metavars = [
                 resolve_param_type(type(choice)).name.upper() for choice in self.choices
@@ -178,16 +192,12 @@ class TyperChoice(types.ParamType, Generic[ParamTypeValue]):
         # Use square braces to indicate an option or optional argument.
         return f"[{choices_str}]"
 
-    def get_missing_message(
-        self, param: _click.Parameter, ctx: _click.Context | None
-    ) -> str:
+    def get_missing_message(self, param: Parameter, ctx: Context | None) -> str:
         """Message shown when no choice is passed."""
         choices = ",\n\t".join(self._normalized_mapping(ctx=ctx).values())
         return f"Choose from:\n\t{choices}"
 
-    def _build_class_adapter(
-        self, ctx: _click.Context | None
-    ) -> TypeAdapter[ParamTypeValue]:
+    def _build_class_adapter(self, ctx: Context | None) -> TypeAdapter[ParamTypeValue]:
         normalized_mapping = self._normalized_mapping(ctx=ctx)
 
         def parse_choice(value: Any) -> ParamTypeValue:
@@ -200,14 +210,14 @@ class TyperChoice(types.ParamType, Generic[ParamTypeValue]):
         return TypeAdapter(Annotated[Any, BeforeValidator(parse_choice)])
 
     def convert(
-        self, value: Any, param: _click.Parameter | None, ctx: _click.Context | None
+        self, value: Any, param: Parameter | None, ctx: Context | None
     ) -> ParamTypeValue:
         try:
             return self._build_class_adapter(ctx).validate_python(value)
         except ValidationError as exc:
             self.fail(_get_error_msg(exc), param=param, ctx=ctx)
 
-    def get_invalid_choice_message(self, value: Any, ctx: _click.Context | None) -> str:
+    def get_invalid_choice_message(self, value: Any, ctx: Context | None) -> str:
         """Get the error message when the given choice is invalid."""
         choices_str = ", ".join(map(repr, self._normalized_mapping(ctx=ctx).values()))
         return f"{value!r} is not one of {choices_str}."
@@ -221,7 +231,7 @@ class TyperChoice(types.ParamType, Generic[ParamTypeValue]):
         return str(choice)
 
     def shell_complete(
-        self, ctx: _click.Context, param: _click.Parameter, incomplete: str
+        self, ctx: Context, param: Parameter, incomplete: str
     ) -> list[CompletionItem]:
         """Complete choices that start with the incomplete value."""
 
@@ -269,8 +279,8 @@ class TyperPath(types.ParamType):
     def _parse_path_value(
         self,
         value: Any,
-        param: _click.Parameter | None,
-        ctx: _click.Context | None,
+        param: Parameter | None,
+        ctx: Context | None,
     ) -> Any:
         if self.type is None or self.type is str or self.type is bytes:
             return value
@@ -302,8 +312,8 @@ class TyperPath(types.ParamType):
     def convert(
         self,
         value: str | os.PathLike[str],
-        param: _click.Parameter | None,
-        ctx: _click.Context | None,
+        param: Parameter | None,
+        ctx: Context | None,
     ) -> str | bytes | os.PathLike[str]:
         rv = self._parse_path_value(value, param, ctx)
 
@@ -341,7 +351,7 @@ class TyperPath(types.ParamType):
         return self.coerce_path_result(rv)
 
     def shell_complete(
-        self, ctx: _click.Context, param: _click.Parameter, incomplete: str
+        self, ctx: Context, param: Parameter, incomplete: str
     ) -> list[CompletionItem]:
         """Return an empty list so that the autocompletion functionality
         will work properly from the commandline.
@@ -421,7 +431,7 @@ def resolve_param_type(
         return annotation
 
     if parameter_info is not None and parameter_info.parser is not None:
-        return types.FuncParamType(parameter_info.parser)
+        return FuncParamType(parameter_info.parser)
 
     if parameter_info is not None and annotation is not None:
         param_type = param_type_from_annotation(annotation, parameter_info)
@@ -440,7 +450,7 @@ def resolve_param_type(
     if guessed_type:
         return STRING
 
-    return types.FuncParamType(annotation)
+    return FuncParamType(annotation)
 
 
 def get_param_type(

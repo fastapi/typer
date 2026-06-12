@@ -1,5 +1,5 @@
 import os
-from collections.abc import Callable, Sequence
+from collections.abc import Sequence
 from typing import (
     IO,
     TYPE_CHECKING,
@@ -112,26 +112,6 @@ class CompositeParamType(ParamType):
     @property
     def arity(self) -> int:  # type: ignore
         raise NotImplementedError()  # pragma: no cover
-
-
-class FuncParamType(ParamType):
-    def __init__(self, func: Callable[[Any], Any]) -> None:
-        self.name: str = getattr(func, "__name__", "function")
-        self.func = func
-
-    def convert(
-        self, value: Any, param: Union["Parameter", None], ctx: Union["Context", None]
-    ) -> Any:
-        try:
-            return self.func(value)
-        except ValueError:
-            try:
-                value = str(value)
-            except UnicodeError:  # pragma: no cover
-                assert isinstance(value, bytes)
-                value = value.decode("utf-8", "replace")
-
-            self.fail(value, param, ctx)
 
 
 class File(ParamType):
