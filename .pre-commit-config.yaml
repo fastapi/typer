@@ -61,3 +61,11 @@ repos:
         entry: uv run ./scripts/docs.py generate-readme
         files: ^docs/index\.md|scripts/docs\.py$
         pass_filenames: false
+
+      - id: zizmor
+        name: zizmor
+        language: python
+        entry: uv run zizmor .
+        files: ^\.github\/workflows\/
+        require_serial: true
+        pass_filenames: false

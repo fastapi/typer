@@ -4,7 +4,7 @@ When you create a **Typer** application it always has a special, hidden object u
 
 But you can access the context by declaring a function parameter of type `typer.Context`.
 
-You might have read it in [CLI Option Callback and Context](../options/callback-and-context.md){.internal-link target=_blank}.
+You might have read it in [CLI Option Callback and Context](../options/callback-and-context.md).
 
 The same way, in commands or in the main `Typer` callback you can access the context by declaring a function parameter of type `typer.Context`.
 

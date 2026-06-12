@@ -4,8 +4,10 @@ import subprocess
 from enum import Enum
 from pathlib import Path
 
-import click
 import shellingham
+
+from . import _click
+from ._click.globals import get_current_context
 
 
 class Shells(str, Enum):
@@ -78,8 +80,8 @@ def get_completion_script(*, prog_name: str, complete_var: str, shell: str) -> s
     cf_name = _invalid_ident_char_re.sub("", prog_name.replace("-", "_"))
     script = _completion_scripts.get(shell)
     if script is None:
-        click.echo(f"Shell {shell} not supported.", err=True)
-        raise click.exceptions.Exit(1)
+        _click.echo(f"Shell {shell} not supported.", err=True)
+        raise _click.exceptions.Exit(1)
     return (
         script
         % {
@@ -172,8 +174,8 @@ def install_powershell(*, prog_name: str, complete_var: str, shell: str) -> Path
         stdout=subprocess.PIPE,
     )
     if result.returncode != 0:  # pragma: no cover
-        click.echo("Couldn't get PowerShell user profile", err=True)
-        raise click.exceptions.Exit(result.returncode)
+        _click.echo("Couldn't get PowerShell user profile", err=True)
+        raise _click.exceptions.Exit(result.returncode)
     path_str = ""
     if isinstance(result.stdout, str):  # pragma: no cover
         path_str = result.stdout
@@ -185,8 +187,8 @@ def install_powershell(*, prog_name: str, complete_var: str, shell: str) -> Path
             except UnicodeDecodeError:  # pragma: no cover
                 pass
         if not path_str:  # pragma: no cover
-            click.echo("Couldn't decode the path automatically", err=True)
-            raise click.exceptions.Exit(1)
+            _click.echo("Couldn't decode the path automatically", err=True)
+            raise _click.exceptions.Exit(1)
     path_obj = Path(path_str.strip())
     parent_dir: Path = path_obj.parent
     parent_dir.mkdir(parents=True, exist_ok=True)
@@ -203,7 +205,7 @@ def install(
     prog_name: str | None = None,
     complete_var: str | None = None,
 ) -> tuple[str, Path]:
-    prog_name = prog_name or click.get_current_context().find_root().info_name
+    prog_name = prog_name or get_current_context().find_root().info_name
     assert prog_name
     if complete_var is None:
         complete_var = "_{}_COMPLETE".format(prog_name.replace("-", "_").upper())
@@ -231,8 +233,8 @@ def install(
         )
         return shell, installed_path
     else:
-        click.echo(f"Shell {shell} is not supported.")
-        raise click.exceptions.Exit(1)
+        _click.echo(f"Shell {shell} is not supported.")
+        raise _click.exceptions.Exit(1)
 
 
 def _get_shell_name() -> str | None:

@@ -8,9 +8,9 @@ You could consider this a **book**, a **course**, the **official** and recommend
 
 ## Python Types
 
-If you need a refresher about how to use Python type hints, check the first part of <a href="https://fastapi.tiangolo.com/python-types/" class="external-link" target="_blank">FastAPI's Python types intro</a>.
+If you need a refresher about how to use Python type hints, check the first part of [FastAPI's Python types intro](https://fastapi.tiangolo.com/python-types/).
 
-You can also check the <a href="https://mypy.readthedocs.io/en/latest/cheat_sheet_py3.html" class="external-link" target="_blank">mypy cheat sheet</a>.
+You can also check the [mypy cheat sheet](https://mypy.readthedocs.io/en/latest/cheat_sheet_py3.html).
 
 In short (very short), you can declare a function with parameters like:
 
