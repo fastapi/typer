@@ -4,7 +4,7 @@ from collections.abc import Callable, Iterable, Mapping, Sequence
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Annotated, Any, ClassVar, Generic, TypeVar, cast
+from typing import IO, Annotated, Any, ClassVar, Generic, TypeGuard, TypeVar, cast
 from uuid import UUID as UUIDType
 
 from pydantic import BeforeValidator, TypeAdapter, ValidationError
@@ -90,6 +90,18 @@ BOOL = DisplayParamType(name="boolean", repr_name="BOOL")
 UUID = DisplayParamType(name="uuid", repr_name="UUID")
 
 STRING = DisplayParamType(name="text", repr_name="STRING")
+
+
+class FileDisplayType(DisplayParamType):
+    envvar_list_splitter = os.path.pathsep
+
+    def shell_complete(
+        self, ctx: Context, param: Parameter, incomplete: str
+    ) -> list[CompletionItem]:
+        return [CompletionItem(incomplete, type="file")]
+
+
+FILE = FileDisplayType(name="filename", repr_name="File")
 
 
 class TyperChoice(types.ParamType, Generic[ParamTypeValue]):
@@ -312,14 +324,127 @@ class TyperPath(types.ParamType):
         return []
 
 
-def _file_param_type(parameter_info: ParameterInfo, *, mode: str) -> types.File:
-    return types.File(
-        mode=parameter_info.mode or mode,
-        encoding=parameter_info.encoding,
-        errors=parameter_info.errors,
-        lazy=parameter_info.lazy,
-        atomic=parameter_info.atomic,
+def is_file_annotation(annotation: Any) -> bool:
+    return (
+        lenient_issubclass(annotation, FileTextWrite)
+        or lenient_issubclass(annotation, FileText)
+        or lenient_issubclass(annotation, FileBinaryRead)
+        or lenient_issubclass(annotation, FileBinaryWrite)
     )
+
+
+def file_coercion_annotation(annotation: Any) -> Any | None:
+    """Return the file marker type when this parameter opens files."""
+    from ._typing import get_args as typer_get_args
+    from ._typing import get_origin as typer_get_origin
+
+    origin = typer_get_origin(annotation)
+    if origin is list:
+        args = typer_get_args(annotation)
+        if args and all(is_file_annotation(arg) for arg in args):
+            return args[0]
+        return None
+    if origin is tuple:
+        args = typer_get_args(annotation)
+        if args and all(is_file_annotation(arg) for arg in args):
+            return args[0]
+        return None
+    if is_file_annotation(annotation):
+        return annotation
+    return None
+
+
+def resolve_file_mode(parameter_info: ParameterInfo, annotation: Any) -> str:
+    if parameter_info.mode is not None:
+        return parameter_info.mode
+    if lenient_issubclass(annotation, FileBinaryWrite):
+        return "wb"
+    if lenient_issubclass(annotation, FileTextWrite):
+        return "w"
+    if lenient_issubclass(annotation, FileBinaryRead):
+        return "rb"
+    return "r"
+
+
+def _is_file_like(value: Any) -> TypeGuard[IO[Any]]:
+    return hasattr(value, "read") or hasattr(value, "write")
+
+
+def _resolve_file_lazy_flag(
+    value: str | os.PathLike[str],
+    *,
+    mode: str,
+    lazy: bool | None,
+) -> bool:
+    if lazy is not None:
+        return lazy
+    if os.fspath(value) == "-":
+        return False
+    if "w" in mode:
+        return True
+    return False
+
+
+def _open_cli_file(
+    value: str | os.PathLike[str] | IO[Any],
+    parameter_info: ParameterInfo,
+    *,
+    mode: str,
+    param: Parameter | None = None,
+    ctx: Context | None = None,
+) -> IO[Any]:
+    if _is_file_like(value):
+        return value
+
+    value = cast("str | os.PathLike[str]", value)
+    from ._click._compat import open_stream
+    from ._click.exceptions import BadParameter
+    from ._click.utils import LazyFile, format_filename, safecall
+
+    try:
+        lazy = _resolve_file_lazy_flag(
+            value,
+            mode=mode,
+            lazy=parameter_info.lazy,
+        )
+
+        if lazy:
+            lf = LazyFile(
+                value,
+                mode,
+                parameter_info.encoding,
+                parameter_info.errors,
+                atomic=parameter_info.atomic,
+            )
+
+            if ctx is not None:
+                ctx.call_on_close(lf.close_intelligently)
+
+            return cast("IO[Any]", lf)
+
+        f, should_close = open_stream(
+            value,
+            mode,
+            parameter_info.encoding,
+            parameter_info.errors,
+            atomic=parameter_info.atomic,
+        )
+
+        if ctx is not None:
+            if should_close:
+                ctx.call_on_close(safecall(f.close))
+            else:
+                ctx.call_on_close(safecall(f.flush))
+
+        return f
+    except OSError as exc:  # pragma: no cover
+        message = f"'{format_filename(value)}': {exc.strerror}"
+        raise BadParameter(message, ctx=ctx, param=param) from exc
+
+
+def _file_param_type(parameter_info: ParameterInfo, *, mode: str) -> FileDisplayType:
+    del mode, parameter_info
+    return FILE
 
 
 def _ranged_number_param_type(

@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+from abc import ABC, abstractmethod
 from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Any, Literal
+from typing import IO, Any, Literal
 
 from pydantic import TypeAdapter, ValidationError
 
@@ -18,7 +19,13 @@ from .models import (
     ParamMeta,
     Required,
 )
-from .param_types import infer_type_from_default, lenient_issubclass
+from .param_types import (
+    _open_cli_file,
+    file_coercion_annotation,
+    infer_type_from_default,
+    lenient_issubclass,
+    resolve_file_mode,
+)
 
 ParamKind = Literal["option", "argument"]
 
@@ -38,7 +45,7 @@ class DeclaredParam:
 
 
 @dataclass(frozen=True)
-class RuntimeParam:
+class RuntimeParam(ABC):
     """Runtime coercion contract for one command parameter."""
 
     name: str
@@ -46,7 +53,6 @@ class RuntimeParam:
     default: Any
     required: bool
     annotation: Any
-    adapter: TypeAdapter[Any]
     kind: ParamKind
     multiple: bool
     nargs: int
@@ -62,6 +68,32 @@ class RuntimeParam:
     ) -> Any:
         if value is None:
             return None
+        return self._coerce_value(value, param=param, ctx=ctx)
+
+    @abstractmethod
+    def _coerce_value(
+        self,
+        value: Any,
+        *,
+        param: Any | None,
+        ctx: Any | None,
+    ) -> Any:
+        pass
+
+
+@dataclass(frozen=True)
+class AdapterRuntimeParam(RuntimeParam):
+    """Coercion via a Pydantic TypeAdapter."""
+
+    adapter: TypeAdapter[Any]
+
+    def _coerce_value(
+        self,
+        value: Any,
+        *,
+        param: Any | None,
+        ctx: Any | None,
+    ) -> Any:
         try:
             return self.adapter.validate_python(value)
         except ValidationError as exc:
@@ -77,6 +109,35 @@ class RuntimeParam:
             from ._click.exceptions import BadParameter
 
             raise BadParameter(str(exc), ctx=ctx, param=param) from exc
+
+
+@dataclass(frozen=True)
+class FileRuntimeParam(RuntimeParam):
+    """Coercion by opening CLI file paths into IO streams."""
+
+    file_annotation: Any
+
+    def _coerce_value(
+        self,
+        value: Any,
+        *,
+        param: Any | None,
+        ctx: Any | None,
+    ) -> Any:
+        mode = resolve_file_mode(self.parameter_info, self.file_annotation)
+
+        def open_one(item: Any) -> IO[Any]:
+            return _open_cli_file(
+                item,
+                self.parameter_info,
+                mode=mode,
+                param=param,
+                ctx=ctx,
+            )
+
+        if isinstance(value, (list, tuple)):
+            return type(value)(open_one(item) for item in value)
+        return open_one(value)
 
 
 @dataclass(frozen=True)
@@ -201,6 +262,28 @@ def declare_param(param: ParamMeta) -> DeclaredParam:
     )
 
 
+def _runtime_param_fields(
+    declared: DeclaredParam,
+    *,
+    kind: ParamKind,
+    multiple: bool,
+    nargs: int,
+    is_bool_flag: bool,
+) -> dict[str, Any]:
+    return {
+        "name": declared.name,
+        "annotation": declared.annotation,
+        "parameter_info": declared.parameter_info,
+        "kind": kind,
+        "multiple": multiple,
+        "nargs": nargs,
+        "is_flag": bool(declared.is_flag),
+        "is_bool_flag": is_bool_flag,
+        "required": declared.required,
+        "default": declared.default,
+    }
+
+
 def runtime_param_from_declared(
     declared: DeclaredParam,
     *,
@@ -209,17 +292,18 @@ def runtime_param_from_declared(
     nargs: int,
     is_bool_flag: bool,
 ) -> RuntimeParam:
-    adapter = adapters.build_adapter(declared.annotation, declared.parameter_info)
-    return RuntimeParam(
-        name=declared.name,
-        annotation=declared.annotation,
-        parameter_info=declared.parameter_info,
-        adapter=adapter,
+    common = _runtime_param_fields(
+        declared,
         kind=kind,
         multiple=multiple,
         nargs=nargs,
-        is_flag=bool(declared.is_flag),
         is_bool_flag=is_bool_flag,
-        required=declared.required,
-        default=declared.default,
+    )
+    file_annotation = file_coercion_annotation(declared.annotation)
+    if file_annotation is not None:
+        return FileRuntimeParam(**common, file_annotation=file_annotation)
+    assert file_coercion_annotation(declared.annotation) is None
+    return AdapterRuntimeParam(
+        **common,
+        adapter=adapters.build_adapter(declared.annotation, declared.parameter_info),
     )

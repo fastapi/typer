@@ -9,13 +9,7 @@ from uuid import UUID as UUIDType
 from pydantic import AfterValidator, BeforeValidator, Field, TypeAdapter
 
 from ._typing import is_literal_type, literal_values
-from .models import (
-    FileBinaryRead,
-    FileBinaryWrite,
-    FileText,
-    FileTextWrite,
-    ParameterInfo,
-)
+from .models import ParameterInfo
 
 
 def _build_datetime_adapter(
@@ -220,14 +214,6 @@ def build_adapter(
         )
     if _needs_typer_path(annotation, parameter_info):
         return _build_path_adapter(annotation, parameter_info)
-    if lenient_issubclass(annotation, FileTextWrite):
-        return _build_file_adapter(parameter_info, mode="w")
-    if lenient_issubclass(annotation, FileText):
-        return _build_file_adapter(parameter_info, mode="r")
-    if lenient_issubclass(annotation, FileBinaryRead):
-        return _build_file_adapter(parameter_info, mode="rb")
-    if lenient_issubclass(annotation, FileBinaryWrite):
-        return _build_file_adapter(parameter_info, mode="wb")
     return build_leaf_adapter(annotation)
 
 
@@ -295,18 +281,3 @@ def _build_path_adapter(
         return typer_path.convert(value, param=None, ctx=None)
 
     return TypeAdapter(Annotated[Any, BeforeValidator(parse_path)])
-
-
-def _build_file_adapter(
-    parameter_info: ParameterInfo,
-    *,
-    mode: str,
-) -> TypeAdapter[Any]:
-    from .param_types import _file_param_type
-
-    file_type = _file_param_type(parameter_info, mode=mode)
-
-    def parse_file(value: Any) -> Any:
-        return file_type.convert(value, param=None, ctx=None)
-
-    return TypeAdapter(Annotated[Any, BeforeValidator(parse_file)])

@@ -1,19 +1,13 @@
-import os
 from collections.abc import Sequence
 from typing import (
-    IO,
     TYPE_CHECKING,
     Any,
     ClassVar,
     NoReturn,
-    TypeGuard,
     Union,
-    cast,
 )
 
-from ._compat import open_stream
 from .exceptions import BadParameter
-from .utils import LazyFile, format_filename, safecall
 
 if TYPE_CHECKING:
     from .core import Context, Parameter
@@ -112,115 +106,6 @@ class CompositeParamType(ParamType):
     @property
     def arity(self) -> int:  # type: ignore
         raise NotImplementedError()  # pragma: no cover
-
-
-class File(ParamType):
-    """Declares a parameter to be a file for reading or writing.  The file
-    is automatically closed once the context tears down (after the command
-    finished working).
-
-    Files can be opened for reading or writing.  The special value ``-``
-    indicates stdin or stdout depending on the mode.
-
-    By default, the file is opened for reading text data, but it can also be
-    opened in binary mode or for writing.  The encoding parameter can be used
-    to force a specific encoding.
-
-    The `lazy` flag controls if the file should be opened immediately or upon
-    first IO. The default is to be non-lazy for standard input and output
-    streams as well as files opened for reading, `lazy` otherwise. When opening a
-    file lazily for reading, it is still opened temporarily for validation, but
-    will not be held open until first IO. lazy is mainly useful when opening
-    for writing to avoid creating the file until it is needed.
-
-    Files can also be opened atomically in which case all writes go into a
-    separate file in the same folder and upon completion the file will
-    be moved over to the original location.  This is useful if a file
-    regularly read by other users is modified.
-    """
-
-    name = "filename"
-    envvar_list_splitter: ClassVar[str] = os.path.pathsep
-
-    def __init__(
-        self,
-        mode: str = "r",
-        encoding: str | None = None,
-        errors: str | None = "strict",
-        lazy: bool | None = None,
-        atomic: bool = False,
-    ) -> None:
-        self.mode = mode
-        self.encoding = encoding
-        self.errors = errors
-        self.lazy = lazy
-        self.atomic = atomic
-
-    def resolve_lazy_flag(self, value: str | os.PathLike[str]) -> bool:
-        if self.lazy is not None:
-            return self.lazy
-        if os.fspath(value) == "-":
-            return False
-        elif "w" in self.mode:
-            return True
-        return False
-
-    def convert(
-        self,
-        value: str | os.PathLike[str] | IO[Any],
-        param: Union["Parameter", None],
-        ctx: Union["Context", None],
-    ) -> IO[Any]:
-        if _is_file_like(value):
-            return value
-
-        value = cast("str | os.PathLike[str]", value)
-
-        try:
-            lazy = self.resolve_lazy_flag(value)
-
-            if lazy:
-                lf = LazyFile(
-                    value, self.mode, self.encoding, self.errors, atomic=self.atomic
-                )
-
-                if ctx is not None:
-                    ctx.call_on_close(lf.close_intelligently)
-
-                return cast("IO[Any]", lf)
-
-            f, should_close = open_stream(
-                value, self.mode, self.encoding, self.errors, atomic=self.atomic
-            )
-
-            # If a context is provided, we automatically close the file
-            # at the end of the context execution (or flush out).  If a
-            # context does not exist, it's the caller's responsibility to
-            # properly close the file.  This for instance happens when the
-            # type is used with prompts.
-            if ctx is not None:
-                if should_close:
-                    ctx.call_on_close(safecall(f.close))
-                else:
-                    ctx.call_on_close(safecall(f.flush))
-
-            return f
-        except OSError as e:  # pragma: no cover
-            self.fail(f"'{format_filename(value)}': {e.strerror}", param, ctx)
-
-    def shell_complete(
-        self, ctx: "Context", param: "Parameter", incomplete: str
-    ) -> list["CompletionItem"]:
-        """Return a special completion marker that tells the completion
-        system to use the shell to provide file path completions.
-        """
-        from .shell_completion import CompletionItem
-
-        return [CompletionItem(incomplete, type="file")]
-
-
-def _is_file_like(value: Any) -> TypeGuard[IO[Any]]:
-    return hasattr(value, "read") or hasattr(value, "write")
 
 
 class Tuple(CompositeParamType):

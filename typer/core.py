@@ -106,8 +106,6 @@ def _type_cast_runtime_value(
         raise _click.exceptions.BadParameter(
             "Value must be an iterable.", ctx=ctx, param=param
         )
-    if isinstance(param.type, types.File):
-        return param.type(value, param=param, ctx=ctx)
     if (
         isinstance(param.type, param_types.TyperChoice)
         and param.nargs == 1

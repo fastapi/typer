@@ -1,10 +1,13 @@
 from enum import Enum
+from pathlib import Path
 from typing import Any
 
 import pytest
 import typer
 from typer.adapters import build_adapter
 from typer.main import get_command
+from typer.param_types import file_coercion_annotation
+from typer.schema import FileRuntimeParam
 from typer.testing import CliRunner
 
 runner = CliRunner()
@@ -150,3 +153,42 @@ def test_schema_coerce_command_values() -> None:
     result = runner.invoke(app, ["Ada", "--count", "3"])
     assert result.exit_code == 0
     assert seen == {"name": "Ada", "count": 3}
+
+
+@pytest.mark.parametrize(
+    ("annotation", "expected"),
+    [
+        (typer.FileText, typer.FileText),
+        (list[typer.FileText], typer.FileText),
+        (tuple[typer.FileText], typer.FileText),
+        (tuple[typer.FileText, typer.FileTextWrite], typer.FileText),
+        (tuple[typer.FileText, str], None),
+        (tuple[str, str], None),
+    ],
+)
+def test_file_coercion_annotation(annotation: Any, expected: Any) -> None:
+    assert file_coercion_annotation(annotation) is expected
+
+
+def test_tuple_file_runtime_param(tmp_path: Path) -> None:
+    first = tmp_path / "first.txt"
+    second = tmp_path / "second.txt"
+    first.write_text("first-content\n", encoding="utf-8")
+    second.write_text("second-content\n", encoding="utf-8")
+
+    app = typer.Typer()
+    seen: list[str] = []
+
+    @app.command()
+    def main(files: tuple[typer.FileText, typer.FileText]):
+        seen.append(files[0].read())
+        seen.append(files[1].read())
+
+    schema = get_command(app).schema
+    runtime_param = schema.get_param("files")
+    assert isinstance(runtime_param, FileRuntimeParam)
+    assert runtime_param.file_annotation is typer.FileText
+
+    result = runner.invoke(app, [str(first), str(second)])
+    assert result.exit_code == 0, result.output
+    assert seen == ["first-content\n", "second-content\n"]
