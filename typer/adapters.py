@@ -1,9 +1,21 @@
 import sys
 from collections.abc import Callable, Sequence
 from datetime import datetime
-from typing import Annotated, Any
+from enum import Enum
+from pathlib import Path
+from typing import Annotated, Any, get_args, get_origin
+from uuid import UUID as UUIDType
 
 from pydantic import AfterValidator, BeforeValidator, Field, TypeAdapter
+
+from ._typing import is_literal_type, literal_values
+from .models import (
+    FileBinaryRead,
+    FileBinaryWrite,
+    FileText,
+    FileTextWrite,
+    ParameterInfo,
+)
 
 
 def _build_datetime_adapter(
@@ -79,7 +91,7 @@ def _make_number_clamp_validator(
     return clamp_number
 
 
-def build_type_adapter(
+def build_leaf_adapter(
     annotation: Any,
     *,
     min: float | None = None,
@@ -87,11 +99,7 @@ def build_type_adapter(
     clamp: bool = False,
     formats: Sequence[str] | None = None,
 ) -> TypeAdapter[Any]:
-    """Build a Pydantic TypeAdapter for a CLI annotation and constraints.
-
-    Known constraints (ranges, custom datetime formats, etc.) are applied first,
-    everything else is delegated to Pydantic.
-    """
+    """Build a Pydantic TypeAdapter for a leaf CLI annotation and constraints."""
     if annotation is datetime and formats is not None:
         return _build_datetime_adapter(formats)
 
@@ -119,3 +127,186 @@ def build_type_adapter(
         return TypeAdapter(Annotated[str, BeforeValidator(_parse_cli_str)])
 
     return TypeAdapter(annotation)
+
+
+def _build_parser_adapter(parser: Callable[[Any], Any]) -> TypeAdapter[Any]:
+    def parse_with_parser(value: Any) -> Any:
+        try:
+            return parser(value)
+        except ValueError:
+            try:
+                value = str(value)
+            except UnicodeError:  # pragma: no cover
+                assert isinstance(value, bytes)
+                value = value.decode("utf-8", "replace")
+            raise ValueError(value) from None
+
+    return TypeAdapter(Annotated[Any, BeforeValidator(parse_with_parser)])
+
+
+def build_adapter(
+    annotation: Any,
+    parameter_info: ParameterInfo,
+) -> TypeAdapter[Any]:
+    """Build a Pydantic TypeAdapter for a parameter annotation and metadata."""
+    if parameter_info.parser is not None:
+        return _build_parser_adapter(parameter_info.parser)
+
+    origin = get_origin(annotation)
+    if origin is list:
+        (item_type,) = get_args(annotation)
+        item_adapter = build_adapter(item_type, parameter_info)
+
+        def parse_list(value: Any) -> list[Any]:
+            if not isinstance(value, (list, tuple)):
+                value = (value,)
+            return [
+                None if item is None else item_adapter.validate_python(item)
+                for item in value
+            ]
+
+        return TypeAdapter(Annotated[list[Any], BeforeValidator(parse_list)])
+
+    if origin is tuple:
+        item_types = get_args(annotation)
+        item_adapters = [
+            build_adapter(item_type, parameter_info) for item_type in item_types
+        ]
+
+        def parse_tuple(value: Any) -> tuple[Any, ...]:
+            if not isinstance(value, (list, tuple)):
+                raise ValueError("value is not a valid tuple")
+            if len(value) != len(item_adapters):
+                raise ValueError(
+                    f"{len(item_adapters)} values are required, but {len(value)} given."
+                )
+            return tuple(
+                None if item is None else adapter.validate_python(item)
+                for adapter, item in zip(item_adapters, value, strict=False)
+            )
+
+        return TypeAdapter(Annotated[tuple[Any, ...], BeforeValidator(parse_tuple)])
+
+    if annotation is int or annotation is float:
+        return build_leaf_adapter(
+            annotation,
+            min=parameter_info.min,
+            max=parameter_info.max,
+            clamp=parameter_info.clamp,
+        )
+    if annotation is datetime:
+        return build_leaf_adapter(annotation, formats=parameter_info.formats)
+    if annotation is bool:
+        return build_leaf_adapter(bool)
+    if annotation is str:
+        return build_leaf_adapter(str)
+    if annotation is UUIDType:
+        return build_leaf_adapter(UUIDType)
+
+    from .param_types import (
+        _needs_typer_path,
+        lenient_issubclass,
+    )
+
+    if lenient_issubclass(annotation, Enum):
+        return _build_choice_adapter(
+            list(annotation),
+            case_sensitive=parameter_info.case_sensitive,
+        )
+    if is_literal_type(annotation):
+        return _build_choice_adapter(
+            literal_values(annotation),
+            case_sensitive=parameter_info.case_sensitive,
+        )
+    if _needs_typer_path(annotation, parameter_info):
+        return _build_path_adapter(annotation, parameter_info)
+    if lenient_issubclass(annotation, FileTextWrite):
+        return _build_file_adapter(parameter_info, mode="w")
+    if lenient_issubclass(annotation, FileText):
+        return _build_file_adapter(parameter_info, mode="r")
+    if lenient_issubclass(annotation, FileBinaryRead):
+        return _build_file_adapter(parameter_info, mode="rb")
+    if lenient_issubclass(annotation, FileBinaryWrite):
+        return _build_file_adapter(parameter_info, mode="wb")
+    return build_leaf_adapter(annotation)
+
+
+def _normalize_choice_value(
+    choice_or_value: Any,
+    *,
+    case_sensitive: bool,
+    ctx: Any | None,
+) -> str:
+    if isinstance(choice_or_value, Enum):
+        normed = str(choice_or_value.value)
+    else:
+        normed = str(choice_or_value)
+    if ctx is not None and ctx.token_normalize_func is not None:
+        normed = ctx.token_normalize_func(normed)
+    if not case_sensitive:
+        normed = normed.casefold()
+    return normed
+
+
+def _build_choice_adapter(
+    choices: Sequence[Any],
+    *,
+    case_sensitive: bool,
+) -> TypeAdapter[Any]:
+    def normalize(choice: Any) -> str:
+        return _normalize_choice_value(choice, case_sensitive=case_sensitive, ctx=None)
+
+    mapping = {normalize(choice): choice for choice in choices}
+
+    def parse_choice(value: Any) -> Any:
+        if any(isinstance(choice, Enum) and value is choice for choice in choices):
+            return value
+        key = normalize(value)
+        if key in mapping:
+            return mapping[key]
+        choices_str = ", ".join(map(repr, mapping.values()))
+        raise ValueError(f"{value!r} is not one of {choices_str}.")
+
+    return TypeAdapter(Annotated[Any, BeforeValidator(parse_choice)])
+
+
+def _build_path_adapter(
+    annotation: Any,
+    parameter_info: ParameterInfo,
+) -> TypeAdapter[Any]:
+    from .param_types import TyperPath, lenient_issubclass
+
+    path_type = parameter_info.path_type
+    if path_type is None and lenient_issubclass(annotation, Path):
+        path_type = annotation
+
+    typer_path = TyperPath(
+        exists=parameter_info.exists,
+        file_okay=parameter_info.file_okay,
+        dir_okay=parameter_info.dir_okay,
+        writable=parameter_info.writable,
+        readable=parameter_info.readable,
+        resolve_path=parameter_info.resolve_path,
+        allow_dash=parameter_info.allow_dash,
+        path_type=path_type,
+    )
+
+    def parse_path(value: Any) -> Any:
+        return typer_path.convert(value, param=None, ctx=None)
+
+    return TypeAdapter(Annotated[Any, BeforeValidator(parse_path)])
+
+
+def _build_file_adapter(
+    parameter_info: ParameterInfo,
+    *,
+    mode: str,
+) -> TypeAdapter[Any]:
+    from .param_types import _file_param_type
+
+    file_type = _file_param_type(parameter_info, mode=mode)
+
+    def parse_file(value: Any) -> Any:
+        return file_type.convert(value, param=None, ctx=None)
+
+    return TypeAdapter(Annotated[Any, BeforeValidator(parse_file)])

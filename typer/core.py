@@ -13,11 +13,12 @@ from typing import (
     cast,
 )
 
-from . import _click, adapters, param_types
+from . import _click, param_types
 from ._click import types
 from ._click.parser import _OptionParser
 from ._click.shell_completion import CompletionItem
 from ._typing import Literal
+from .schema import CommandSchema, RuntimeParam
 from .utils import describe_number_range, parse_boolean_env_var
 
 MarkupMode = Literal["markdown", "rich", None]
@@ -90,6 +91,30 @@ def _typer_param_setup_autocompletion_compat(
             return out
 
         self._custom_shell_complete = compat_autocompletion
+
+
+def _type_cast_runtime_value(
+    param: "TyperOption | TyperArgument",
+    ctx: _click.Context,
+    value: Any,
+) -> Any:
+    runtime_param = param.runtime_param
+    assert runtime_param is not None
+    if value is None:
+        return () if param.multiple or param.nargs == -1 else None
+    if (param.multiple or param.nargs == -1) and isinstance(value, str):
+        raise _click.exceptions.BadParameter(
+            "Value must be an iterable.", ctx=ctx, param=param
+        )
+    if isinstance(param.type, types.File):
+        return param.type(value, param=param, ctx=ctx)
+    if (
+        isinstance(param.type, param_types.TyperChoice)
+        and param.nargs == 1
+        and not param.multiple
+    ):
+        return param.type(value, param=param, ctx=ctx)
+    return runtime_param.coerce(value, param=param, ctx=ctx)
 
 
 def _get_default_string(
@@ -289,6 +314,7 @@ class TyperArgument(_click.core.Parameter):
         max: int | float | None = None,
         # Rich settings
         rich_help_panel: str | None = None,
+        runtime_param: RuntimeParam | None = None,
     ):
         self.help = help
         self.show_default = show_default
@@ -298,6 +324,7 @@ class TyperArgument(_click.core.Parameter):
         self.min = min
         self.max = max
         self.rich_help_panel = rich_help_panel
+        self.runtime_param = runtime_param
 
         super().__init__(
             param_decls=param_decls,
@@ -420,6 +447,11 @@ class TyperArgument(_click.core.Parameter):
     def value_is_missing(self, value: Any) -> bool:
         return _value_is_missing(self, value)
 
+    def type_cast_value(self, ctx: _click.Context, value: Any) -> Any:
+        if self.runtime_param is None:
+            return super().type_cast_value(ctx, value)
+        return _type_cast_runtime_value(self, ctx, value)
+
     def _parse_decls(
         self, decls: Sequence[str], expose_value: bool
     ) -> tuple[str | None, list[str], list[str]]:
@@ -493,12 +525,14 @@ class TyperOption(_click.Parameter):
         max: int | float | None = None,
         # Rich settings
         rich_help_panel: str | None = None,
+        runtime_param: RuntimeParam | None = None,
     ):
         if help:
             help = inspect.cleandoc(help)
 
         self.min = min
         self.max = max
+        self.runtime_param = runtime_param
 
         super().__init__(
             param_decls,
@@ -546,9 +580,8 @@ class TyperOption(_click.Parameter):
         # Counting
         self.count = count
         if count and type is None:
-            self.type = param_types.PydanticParamType(
-                adapters.build_type_adapter(int, min=0),
-                name="integer range",
+            self.type = param_types._ranged_number_param_type(
+                int, min=0, max=None, clamp=False
             )
             if self.min is None:
                 self.min = 0
@@ -567,6 +600,11 @@ class TyperOption(_click.Parameter):
         if self.show_envvar and self.envvar is not None:
             result += f" (env var: '{self.envvar}')"
         return result
+
+    def type_cast_value(self, ctx: _click.Context, value: Any) -> Any:
+        if self.runtime_param is None:
+            return super().type_cast_value(ctx, value)
+        return _type_cast_runtime_value(self, ctx, value)
 
     def _parse_decls(
         self, decls: Sequence[str], expose_value: bool
@@ -941,6 +979,7 @@ class TyperCommand(_click.core.Command):
         # Rich settings
         rich_markup_mode: MarkupMode = DEFAULT_MARKUP_MODE,
         rich_help_panel: str | None = None,
+        schema: CommandSchema | None = None,
     ) -> None:
         super().__init__(
             name=name,
@@ -958,6 +997,7 @@ class TyperCommand(_click.core.Command):
         )
         self.rich_markup_mode: MarkupMode = rich_markup_mode
         self.rich_help_panel = rich_help_panel
+        self.schema = schema or CommandSchema.from_params(params or [])
 
     def format_options(
         self, ctx: _click.Context, formatter: _click.HelpFormatter

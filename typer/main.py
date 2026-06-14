@@ -15,8 +15,8 @@ from annotated_doc import Doc
 
 from . import _click
 from ._click.globals import get_current_context
-from ._click.types import ParamType
-from ._typing import get_args, get_origin, is_union
+from ._click.types import ParamType, Tuple
+from ._typing import get_args, get_origin
 from .completion import get_completion_inspect_parameters
 from .core import (
     DEFAULT_MARKUP_MODE,
@@ -34,14 +34,12 @@ from .models import (
     Default,
     DefaultPlaceholder,
     DeveloperExceptionConfig,
-    NoneType,
     OptionInfo,
-    ParameterInfo,
     ParamMeta,
-    Required,
     TyperInfo,
 )
-from .param_types import infer_type_from_default, lenient_issubclass, resolve_param_type
+from .param_types import cli_param_type, lenient_issubclass
+from .schema import CommandSchema, declare_param, runtime_param_from_declared
 from .utils import get_params_from_function
 
 _original_except_hook = sys.excepthook
@@ -1380,6 +1378,7 @@ def get_command_from_info(
         command_info.callback
     )
     cls = command_info.cls or TyperCommand
+    schema = CommandSchema.from_params(params)
     command = cls(
         name=name,
         context_settings=command_info.context_settings,
@@ -1401,6 +1400,7 @@ def get_command_from_info(
         rich_markup_mode=rich_markup_mode,
         # Rich settings
         rich_help_panel=command_info.rich_help_panel,
+        schema=schema,
     )
     return command
 
@@ -1438,9 +1438,9 @@ def get_callback(
     def wrapper(**kwargs: Any) -> Any:
         _rich_traceback_guard = pretty_exceptions_short  # noqa: F841
         for k, v in kwargs.items():
-            click_param = params_by_name.get(k)
-            if click_param is not None:
-                use_params[k] = _normalize_collection_value(click_param, v)
+            matched_param = params_by_name.get(k)
+            if matched_param is not None:
+                use_params[k] = _normalize_collection_value(matched_param, v)
             else:
                 use_params[k] = v
         if context_param_name:
@@ -1454,86 +1454,22 @@ def get_callback(
 def get_param(
     param: ParamMeta,
 ) -> TyperArgument | TyperOption:
-    # First, find out what will be:
-    # * ParamInfo (ArgumentInfo or OptionInfo)
-    # * default_value
-    # * required
-    default_value = None
-    required = False
-    if isinstance(param.default, ParameterInfo):
-        parameter_info = param.default
-        if parameter_info.default == Required:
-            required = True
-        else:
-            default_value = parameter_info.default
-    elif param.default == Required or param.default is param.empty:
-        required = True
-        parameter_info = ArgumentInfo()
-    else:
-        default_value = param.default
-        parameter_info = OptionInfo()
-    main_type: Any
-    parameter_type: ParamType | None
-    is_list = False
-    is_flag = None
+    declared = declare_param(param)
+    parameter_info = declared.parameter_info
+    default_value = declared.default
+    required = declared.required
+    is_list = declared.is_list
+    is_flag = declared.is_flag
+    parameter_type: ParamType | None = cli_param_type(
+        annotation=declared.annotation,
+        parameter_info=parameter_info,
+        default=default_value,
+        is_list=is_list,
+        is_tuple=declared.is_tuple,
+    )
 
-    if param.annotation is not param.empty:
-        main_type = param.annotation
-        origin = get_origin(main_type)
-
-        if origin is not None:
-            # Handle SomeType | None and Optional[SomeType]
-            if is_union(origin):
-                types = []
-                for type_ in get_args(main_type):
-                    if type_ is NoneType:
-                        continue
-                    types.append(type_)
-                assert len(types) == 1, "Typer Currently doesn't support Union types"
-                main_type = types[0]
-                origin = get_origin(main_type)
-            # Handle Tuples and Lists
-            if lenient_issubclass(origin, list):
-                main_type = get_args(main_type)[0]
-                assert not get_origin(main_type), (
-                    "List types with complex sub-types are not currently supported"
-                )
-                is_list = True
-                parameter_type = resolve_param_type(
-                    main_type, parameter_info=parameter_info
-                )
-            elif lenient_issubclass(origin, tuple):
-                type_args = get_args(main_type)
-                for type_ in type_args:
-                    assert not get_origin(type_), (
-                        "Tuple types with complex sub-types are not currently supported"
-                    )
-                parameter_type = resolve_param_type(
-                    tuple(type_args), parameter_info=parameter_info
-                )
-            else:
-                parameter_type = resolve_param_type(
-                    main_type, parameter_info=parameter_info
-                )
-        else:
-            parameter_type = resolve_param_type(
-                main_type, parameter_info=parameter_info
-            )
-    else:
-        if default_value is not None:
-            main_type, _ = infer_type_from_default(default_value)
-            if main_type is None:
-                main_type = str
-        else:
-            main_type = str
-        parameter_type = resolve_param_type(
-            default=default_value, parameter_info=parameter_info
-        )
     if isinstance(parameter_info, OptionInfo):
-        if main_type is bool:
-            is_flag = True
-            # Click doesn't accept a flag of type bool, only None, and then it sets it
-            # to bool internally
+        if declared.is_flag:
             parameter_type = None
         default_option_name = get_command_name(param.name)
         if is_flag:
@@ -1547,6 +1483,19 @@ def get_param(
             param_decls.extend(parameter_info.param_decls)
         else:
             param_decls.append(default_option_declaration)
+        runtime_param = runtime_param_from_declared(
+            declared,
+            kind="option",
+            multiple=is_list,
+            nargs=1,
+            is_bool_flag=bool(
+                declared.is_flag
+                and (
+                    declared.annotation is bool
+                    or (declared.is_list and get_args(declared.annotation) == (bool,))
+                )
+            ),
+        )
         return TyperOption(
             # Option
             param_decls=param_decls,
@@ -1578,12 +1527,23 @@ def get_param(
             max=parameter_info.max,
             # Rich settings
             rich_help_panel=parameter_info.rich_help_panel,
+            runtime_param=runtime_param,
         )
     elif isinstance(parameter_info, ArgumentInfo):
         param_decls = [param.name]
         nargs = None
         if is_list:
             nargs = -1
+        binding_nargs = nargs if nargs is not None else 1
+        if isinstance(parameter_type, Tuple):
+            binding_nargs = parameter_type.arity
+        runtime_param = runtime_param_from_declared(
+            declared,
+            kind="argument",
+            multiple=is_list,
+            nargs=binding_nargs,
+            is_bool_flag=False,
+        )
         return TyperArgument(
             # Argument
             param_decls=param_decls,
@@ -1609,6 +1569,7 @@ def get_param(
             max=parameter_info.max,
             # Rich settings
             rich_help_panel=parameter_info.rich_help_panel,
+            runtime_param=runtime_param,
         )
     raise AssertionError("A Parameter should be returned")  # pragma: no cover
 
@@ -1621,26 +1582,26 @@ def get_param_callback(
         return None
     parameters = get_params_from_function(callback)
     ctx_name = None
-    click_param_name = None
+    param_arg_name = None
     value_name = None
     untyped_names: list[str] = []
     for param_name, param_sig in parameters.items():
         if lenient_issubclass(param_sig.annotation, _click.Context):
             ctx_name = param_name
         elif lenient_issubclass(param_sig.annotation, _click.Parameter):
-            click_param_name = param_name
+            param_arg_name = param_name
         else:
             untyped_names.append(param_name)
     # Extract value param name first
     if untyped_names:
         value_name = untyped_names.pop()
-    # If context and Click param were not typed (old/Click callback style) extract them
+    # If context and parameter were not typed, extract them by position.
     if untyped_names:
         if ctx_name is None:
             ctx_name = untyped_names.pop(0)
-        if click_param_name is None:
+        if param_arg_name is None:
             if untyped_names:
-                click_param_name = untyped_names.pop(0)
+                param_arg_name = untyped_names.pop(0)
         if untyped_names:
             raise _click.ClickException(
                 "Too many CLI parameter callback function parameters"
@@ -1650,8 +1611,8 @@ def get_param_callback(
         use_params: dict[str, Any] = {}
         if ctx_name:
             use_params[ctx_name] = ctx
-        if click_param_name:
-            use_params[click_param_name] = param
+        if param_arg_name:
+            use_params[param_arg_name] = param
         if value_name:
             use_params[value_name] = _normalize_collection_value(param, value)
         return callback(**use_params)

@@ -12,7 +12,6 @@ from typer.param_types import (
     FLOAT,
     INT,
     STRING,
-    FuncParamType,
     TyperPath,
     resolve_param_type,
 )
@@ -146,8 +145,9 @@ def test_tuple_parameter_elements_are_converted_recursively(type_annotation):
     assert result.exit_code == 0
 
 
-def test_tuple_wrong_arity():
+def test_tuple_wrong_arity(monkeypatch):
     app = typer.Typer()
+    monkeypatch.setenv("COLUMNS", "200")
 
     @app.command()
     def tuple_arity(value: tuple[str, str] = typer.Option(...)):
@@ -413,8 +413,7 @@ def test_convert_type():
     assert guessed_unknown is STRING
 
     func_type = resolve_param_type(CustomType)
-    assert isinstance(func_type, FuncParamType)
-    assert func_type.name == "CustomType"
+    assert func_type is STRING
 
 
 def test_int_rejects_float_default() -> None:
@@ -461,5 +460,5 @@ def test_argv_encoding(
         monkeypatch.setattr(sys, "stdin", FakeStdin(stdin_encoding))
         monkeypatch.setattr(sys, "getfilesystemencoding", lambda: filesystem_encoding)
 
-    converted = STRING.convert(b"\xff", None, None)
+    converted = typer.adapters.build_leaf_adapter(str).validate_python(b"\xff")
     assert converted == "ÿ"

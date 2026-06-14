@@ -37,45 +37,19 @@ def _get_error_msg(exc: ValidationError) -> str:
     return str(exc)
 
 
-def _strip_string(value: Any) -> Any:
-    return value.strip() if isinstance(value, str) else value
-
-
-class FuncParamType(types.ParamType):
-    def __init__(self, func: Callable[[Any], Any]) -> None:
-        self.name: str = getattr(func, "__name__", "function")
-        self.func = func
-
-    def convert(self, value: Any, param: Parameter | None, ctx: Context | None) -> Any:
-        try:
-            return self.func(value)
-        except ValueError:
-            try:
-                value = str(value)
-            except UnicodeError:  # pragma: no cover
-                assert isinstance(value, bytes)
-                value = value.decode("utf-8", "replace")
-
-            self.fail(value, param, ctx)
-
-
-class PydanticParamType(types.ParamType):
-    _class_adapter: TypeAdapter[Any]
+class DisplayParamType(types.ParamType):
+    """Used for metavar/help only."""
 
     def __init__(
         self,
-        adapter: TypeAdapter[Any],
         *,
         name: str,
         repr_name: str | None = None,
         metavar: str | Callable[[Parameter, Context], str | None] | None = None,
-        preprocess: Callable[[Any], Any] | None = None,
     ) -> None:
-        self._class_adapter = adapter
         self.name = name
         self._repr_name = repr_name or name
         self._metavar = metavar
-        self._preprocess = preprocess
 
     def convert(
         self,
@@ -83,12 +57,7 @@ class PydanticParamType(types.ParamType):
         param: Parameter | None,
         ctx: Context | None,
     ) -> Any:
-        if self._preprocess is not None:
-            value = self._preprocess(value)
-        try:
-            return self._class_adapter.validate_python(value)
-        except ValidationError as exc:
-            self.fail(_get_error_msg(exc), param, ctx)
+        return value
 
     def get_metavar(self, param: Parameter, ctx: Context) -> str | None:
         if self._metavar is None:
@@ -101,42 +70,26 @@ class PydanticParamType(types.ParamType):
         return self._repr_name
 
 
-def datetime_param_type(formats: Sequence[str] | None = None) -> PydanticParamType:
+def datetime_param_type(formats: Sequence[str] | None = None) -> DisplayParamType:
     formats_tuple = tuple(formats) if formats is not None else None
     metavar_formats = formats_tuple or ["%Y-%m-%d"]
 
-    return PydanticParamType(
-        adapters.build_type_adapter(datetime, formats=formats_tuple),
+    return DisplayParamType(
         name="datetime",
         repr_name="DateTime",
         metavar=f"[{'|'.join(metavar_formats)}]",
     )
 
 
-INT = PydanticParamType(
-    adapters.build_type_adapter(int), name="integer", repr_name="INT"
-)
+INT = DisplayParamType(name="integer", repr_name="INT")
 
-FLOAT = PydanticParamType(
-    adapters.build_type_adapter(float), name="float", repr_name="FLOAT"
-)
+FLOAT = DisplayParamType(name="float", repr_name="FLOAT")
 
-BOOL = PydanticParamType(
-    adapters.build_type_adapter(bool), name="boolean", repr_name="BOOL"
-)
+BOOL = DisplayParamType(name="boolean", repr_name="BOOL")
 
-UUID = PydanticParamType(
-    adapters.build_type_adapter(UUIDType),
-    name="uuid",
-    repr_name="UUID",
-    preprocess=_strip_string,
-)
+UUID = DisplayParamType(name="uuid", repr_name="UUID")
 
-STRING = PydanticParamType(
-    adapters.build_type_adapter(str),
-    name="text",
-    repr_name="STRING",
-)
+STRING = DisplayParamType(name="text", repr_name="STRING")
 
 
 class TyperChoice(types.ParamType, Generic[ParamTypeValue]):
@@ -289,7 +242,7 @@ class TyperPath(types.ParamType):
                 return value
             if isinstance(value, (str, os.PathLike)):
                 try:
-                    return adapters.build_type_adapter(self.type).validate_python(value)
+                    return adapters.build_leaf_adapter(self.type).validate_python(value)
                 except ValidationError as exc:
                     self.fail(_get_error_msg(exc), param, ctx)
         return value
@@ -376,8 +329,7 @@ def _ranged_number_param_type(
     max: int | float | None,
     clamp: bool,
 ) -> types.ParamType:
-    return PydanticParamType(
-        adapters.build_type_adapter(number_class, min=min, max=max, clamp=clamp),
+    return DisplayParamType(
         name="integer range" if number_class is int else "float range",
     )
 
@@ -409,7 +361,7 @@ def resolve_param_type(
     *,
     parameter_info: ParameterInfo | None = None,
 ) -> types.ParamType:
-    """Resolve a ParamType from a type and/or default value."""
+    """Resolve a display ``ParamType`` for metavar/help."""
     guessed_type = False
     if annotation is None and default is not None:
         annotation, guessed_type = infer_type_from_default(default)
@@ -430,9 +382,6 @@ def resolve_param_type(
     if isinstance(annotation, types.ParamType):
         return annotation
 
-    if parameter_info is not None and parameter_info.parser is not None:
-        return FuncParamType(parameter_info.parser)
-
     if parameter_info is not None and annotation is not None:
         param_type = param_type_from_annotation(annotation, parameter_info)
         if param_type is not None:
@@ -450,7 +399,29 @@ def resolve_param_type(
     if guessed_type:
         return STRING
 
-    return FuncParamType(annotation)
+    return STRING
+
+
+def cli_param_type(
+    *,
+    annotation: Any,
+    parameter_info: ParameterInfo,
+    default: Any,
+    is_list: bool,
+    is_tuple: bool,
+) -> types.ParamType:
+    """Defer the "type" for metavar/help."""
+    from ._typing import get_args as typer_get_args
+
+    if is_tuple:
+        type_args = typer_get_args(annotation)
+        return resolve_param_type(tuple(type_args), parameter_info=parameter_info)
+    if is_list:
+        (element_type,) = typer_get_args(annotation)
+        return resolve_param_type(element_type, parameter_info=parameter_info)
+    return resolve_param_type(
+        annotation, default=default, parameter_info=parameter_info
+    )
 
 
 def get_param_type(
