@@ -109,8 +109,10 @@ def prompt(
 
     if value_proc is None:
         from ..param_types import resolve_param_type
+        from ..schema import prompt_value_proc
 
-        value_proc = resolve_param_type(type, default)
+        value_proc = prompt_value_proc(type, default)
+        type = resolve_param_type(type, default)
 
     prompt = _build_prompt(
         text, prompt_suffix, show_default, default, show_choices, type

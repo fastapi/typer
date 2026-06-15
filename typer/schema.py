@@ -1,14 +1,15 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from typing import IO, Any, Literal
 
 from pydantic import TypeAdapter, ValidationError
 
 from . import adapters
-from ._click.exceptions import BadParameter
+from ._click.exceptions import BadParameter, UsageError
+from ._click.types import ParamType
 from ._typing import get_args as typer_get_args
 from ._typing import get_origin as typer_get_origin
 from ._typing import is_union
@@ -74,7 +75,13 @@ class RuntimeParam(ABC):
         ctx: Any | None = None,
     ) -> Any:
         if value is None:
+            if self.multiple or self.nargs == -1:
+                return ()
             return None
+        if (self.multiple or self.nargs == -1) and isinstance(value, str):
+            if param is None:
+                raise ValueError("Value must be an iterable.")
+            raise BadParameter("Value must be an iterable.", ctx=ctx, param=param)
         return self._coerce_value(value, param=param, ctx=ctx)
 
     @abstractmethod
@@ -335,6 +342,54 @@ def _runtime_param_fields(
         "required": declared.required,
         "default": declared.default,
     }
+
+
+def bool_flag_runtime_param(*, name: str, default: bool = False) -> RuntimeParam:
+    """Build runtime coercion for a standalone boolean flag option."""
+    declared = DeclaredParam(
+        name=name,
+        parameter_info=OptionInfo(),
+        default=default,
+        required=False,
+        annotation=bool,
+        is_list=False,
+        is_tuple=False,
+        is_flag=True,
+    )
+    return runtime_param_from_declared(
+        declared,
+        kind="option",
+        multiple=False,
+        nargs=1,
+        is_bool_flag=True,
+    )
+
+
+def prompt_value_proc(
+    type: Any | None = None,
+    default: Any | None = None,
+) -> Callable[[Any], Any]:
+    """Coerce interactive prompt input via the runtime adapter layer."""
+    annotation = type
+    if isinstance(annotation, ParamType):
+        annotation = None
+    if annotation is None and default is not None:
+        annotation, _ = infer_type_from_default(default)
+    if annotation is None:
+        annotation = str
+
+    parameter_info = OptionInfo()
+    adapter = adapters.build_adapter(annotation, parameter_info)
+
+    def coerce(value: Any) -> Any:
+        try:
+            return adapter.validate_python(value)
+        except ValidationError as exc:
+            raise UsageError(_get_error_msg(exc)) from exc
+        except ValueError as exc:
+            raise UsageError(str(exc)) from exc
+
+    return coerce
 
 
 def runtime_param_from_declared(

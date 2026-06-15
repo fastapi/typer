@@ -18,7 +18,14 @@ from ._click import types
 from ._click.parser import _OptionParser
 from ._click.shell_completion import CompletionItem
 from ._typing import Literal
-from .schema import CommandSchema, RuntimeParam
+from .models import OptionInfo
+from .schema import (
+    CommandSchema,
+    DeclaredParam,
+    RuntimeParam,
+    bool_flag_runtime_param,
+    runtime_param_from_declared,
+)
 from .utils import describe_number_range, parse_boolean_env_var
 
 MarkupMode = Literal["markdown", "rich", None]
@@ -93,20 +100,35 @@ def _typer_param_setup_autocompletion_compat(
         self._custom_shell_complete = compat_autocompletion
 
 
-def _type_cast_runtime_value(
-    param: "TyperOption | TyperArgument",
-    ctx: _click.Context,
-    value: Any,
-) -> Any:
-    runtime_param = param.runtime_param
-    assert runtime_param is not None
+def _value_is_missing(param: _click.Parameter, value: Any) -> bool:
     if value is None:
-        return () if param.multiple or param.nargs == -1 else None
-    if (param.multiple or param.nargs == -1) and isinstance(value, str):
-        raise _click.exceptions.BadParameter(
-            "Value must be an iterable.", ctx=ctx, param=param
-        )
-    return runtime_param.coerce(value, param=param, ctx=ctx)
+        return True
+
+    if (param.nargs != 1 or param.multiple) and value == ():
+        return True  # pragma: no cover
+
+    return False
+
+
+class TyperParameter(_click.core.Parameter):
+    """Typer parameter with runtime coercion."""
+
+    runtime_param: RuntimeParam | None
+
+    def process_value(self, ctx: _click.Context, value: Any) -> Any:
+        if self.runtime_param is None:
+            raise TypeError(
+                f"{self.__class__.__name__} {self.name!r} requires runtime_param"
+            )
+        value = self.runtime_param.coerce(value, param=self, ctx=ctx)
+        if self.required and self.value_is_missing(value):
+            raise _click.exceptions.MissingParameter(ctx=ctx, param=self)
+        if self.callback is not None:
+            value = self.callback(ctx, self, value)
+        return value
+
+    def value_is_missing(self, value: Any) -> bool:
+        return _value_is_missing(self, value)
 
 
 def _get_default_string(
@@ -270,7 +292,7 @@ def _main(
         sys.exit(1)
 
 
-class TyperArgument(_click.core.Parameter):
+class TyperArgument(TyperParameter):
     param_type_name = "argument"
 
     def __init__(
@@ -436,14 +458,6 @@ class TyperArgument(_click.core.Parameter):
             var += "..."
         return var
 
-    def value_is_missing(self, value: Any) -> bool:
-        return _value_is_missing(self, value)
-
-    def type_cast_value(self, ctx: _click.Context, value: Any) -> Any:
-        if self.runtime_param is None:
-            return super().type_cast_value(ctx, value)
-        return _type_cast_runtime_value(self, ctx, value)
-
     def _parse_decls(
         self, decls: Sequence[str], expose_value: bool
     ) -> tuple[str | None, list[str], list[str]]:
@@ -471,7 +485,7 @@ class TyperArgument(_click.core.Parameter):
         parser.add_argument(dest=self.name, nargs=self.nargs, obj=self)
 
 
-class TyperOption(_click.Parameter):
+class TyperOption(TyperParameter):
     param_type_name = "option"
 
     _depr_flag_value: bool | None
@@ -587,16 +601,41 @@ class TyperOption(_click.Parameter):
         _typer_param_setup_autocompletion_compat(self, autocompletion=autocompletion)
         self.rich_help_panel = rich_help_panel
 
+        if self.runtime_param is None and self.is_bool_flag:
+            default_flag = self.default if isinstance(self.default, bool) else False
+            self.runtime_param = bool_flag_runtime_param(
+                name=self.name or "flag",
+                default=default_flag,
+            )
+        elif self.runtime_param is None and self.count:
+            count_info = OptionInfo()
+            if self.min is not None:
+                count_info.min = self.min
+            if self.max is not None:
+                count_info.max = self.max
+            declared = DeclaredParam(
+                name=self.name or "count",
+                parameter_info=count_info,
+                default=self.default if self.default is not None else 0,
+                required=required,
+                annotation=int,
+                is_list=False,
+                is_tuple=False,
+                is_flag=False,
+            )
+            self.runtime_param = runtime_param_from_declared(
+                declared,
+                kind="option",
+                multiple=False,
+                nargs=1,
+                is_bool_flag=False,
+            )
+
     def get_error_hint(self, ctx: _click.Context) -> str:
         result = super().get_error_hint(ctx)
         if self.show_envvar and self.envvar is not None:
             result += f" (env var: '{self.envvar}')"
         return result
-
-    def type_cast_value(self, ctx: _click.Context, value: Any) -> Any:
-        if self.runtime_param is None:
-            return super().type_cast_value(ctx, value)
-        return _type_cast_runtime_value(self, ctx, value)
 
     def _parse_decls(
         self, decls: Sequence[str], expose_value: bool
@@ -895,19 +934,6 @@ class TyperOption(_click.Parameter):
             help = f"{help}  {extra_str}" if help else f"{extra_str}"
 
         return ("; " if any_prefix_is_slash else " / ").join(rv), help
-
-    def value_is_missing(self, value: Any) -> bool:
-        return _value_is_missing(self, value)
-
-
-def _value_is_missing(param: _click.Parameter, value: Any) -> bool:
-    if value is None:
-        return True
-
-    if (param.nargs != 1 or param.multiple) and value == ():
-        return True  # pragma: no cover
-
-    return False
 
 
 def _typer_format_options(

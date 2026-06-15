@@ -7,11 +7,13 @@ import typer
 from typer.adapters import build_adapter
 from typer.main import get_command
 from typer.param_types import (
+    TyperTuple,
     choice_coercion_annotation,
     file_coercion_annotation,
     path_uses_coercion,
 )
 from typer.schema import (
+    AdapterRuntimeParam,
     ChoiceRuntimeParam,
     FileRuntimeParam,
     PathRuntimeParam,
@@ -219,6 +221,30 @@ def test_path_runtime_param(tmp_path: Path) -> None:
     result = runner.invoke(app, ["--config", str(target)])
     assert result.exit_code == 0, result.output
     assert seen == [target]
+
+
+def test_tuple_arity_via_runtime_param() -> None:
+    app = typer.Typer()
+
+    @app.command()
+    def main(coords: tuple[int, int] = typer.Option(...)):
+        pass
+
+    command = get_command(app)
+    param = next(p for p in command.params if p.name == "coords")
+    assert isinstance(param.type, TyperTuple)
+    assert param.type.arity == 2
+
+    runtime_param = command.schema.get_param("coords")
+    assert runtime_param is not None
+    assert isinstance(runtime_param, AdapterRuntimeParam)
+    assert runtime_param.coerce(["4", "2"]) == (4, 2)
+
+    with pytest.raises(ValueError, match="2 values are required, but 1 given"):
+        runtime_param.coerce(["4"])
+
+    with pytest.raises(ValueError, match="2 values are required, but 3 given"):
+        runtime_param.coerce(["4", "2", "0"])
 
 
 def test_tuple_file_runtime_param(tmp_path: Path) -> None:

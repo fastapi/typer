@@ -43,15 +43,21 @@ def test_parameter_metavar() -> None:
 
 
 def test_parameter_nargs_gt_1() -> None:
-    param = TyperArgument(param_decls=["value"], type=str, nargs=2)
-    ctx = _click.Context(TyperCommand(name="cmd"))
+    app = typer.Typer()
 
-    assert param.type_cast_value(ctx, ("one", "two")) == ("one", "two")
+    @app.command()
+    def cmd(value: tuple[str, str]):
+        pass  # pragma: no cover
+
+    param = next(p for p in typer.main.get_command(app).params if p.name == "value")
+    ctx = _click.Context(TyperCommand(name="cmd"))
+    assert param.runtime_param is not None
+    assert param.process_value(ctx, ("one", "two")) == ("one", "two")
 
     with pytest.raises(
-        _click.exceptions.BadParameter, match="Takes 2 values but 1 given."
+        _click.exceptions.BadParameter, match="2 values are required, but 1 given"
     ):
-        param.type_cast_value(ctx, ("one",))
+        param.process_value(ctx, ("one",))
 
 
 def test_parameter_constructor() -> None:

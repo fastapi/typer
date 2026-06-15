@@ -1,7 +1,6 @@
 from collections.abc import Sequence
 from typing import (
     TYPE_CHECKING,
-    Any,
     ClassVar,
     NoReturn,
     Union,
@@ -15,22 +14,7 @@ if TYPE_CHECKING:
 
 
 class ParamType:
-    """Represents the type of a parameter. Validates and converts values
-    from the command line or Python into the correct type.
-
-    To implement a custom type, subclass and implement at least the
-    following:
-
-    -   The `name` class attribute must be set.
-    -   Calling an instance of the type with ``None`` must return
-        ``None``. This is already implemented by default.
-    -   `convert` must convert string values to the correct type.
-    -   `convert` must accept values that are already the correct
-        type.
-    -   It must be able to convert a value if the ``ctx`` and ``param``
-        arguments are ``None``. This can occur when converting prompt
-        input.
-    """
+    """Display and plumbing metadata for a CLI parameter type."""
 
     is_composite: ClassVar[bool] = False
     name: str
@@ -47,15 +31,6 @@ class ParamType:
     # Windows).
     envvar_list_splitter: ClassVar[str | None] = None
 
-    def __call__(
-        self,
-        value: Any,
-        param: Union["Parameter", None] = None,
-        ctx: Union["Context", None] = None,
-    ) -> Any:
-        if value is not None:
-            return self.convert(value, param, ctx)
-
     def get_metavar(self, param: "Parameter", ctx: "Context") -> str | None:
         """Returns the metavar default for this param if it provides one."""
         pass  # pragma: no cover
@@ -66,11 +41,6 @@ class ParamType:
         """Optionally might return extra information about a missing
         parameter.
         """
-        pass  # pragma: no cover
-
-    def convert(
-        self, value: Any, param: Union["Parameter", None], ctx: Union["Context", None]
-    ) -> Any:
         pass  # pragma: no cover
 
     def split_envvar_value(self, rv: str) -> Sequence[str]:

@@ -55,14 +55,6 @@ class DisplayParamType(types.ParamType):
         self._repr_name = repr_name or name
         self._metavar = metavar
 
-    def convert(
-        self,
-        value: Any,
-        param: Parameter | None,
-        ctx: Context | None,
-    ) -> Any:
-        return value
-
     def get_metavar(self, param: Parameter, ctx: Context) -> str | None:
         if self._metavar is None:
             return None
@@ -169,22 +161,6 @@ class TyperTuple(types.ParamType):
     def arity(self) -> int:
         return len(self.types)
 
-    def convert(
-        self,
-        value: Any,
-        param: Parameter | None,
-        ctx: Context | None,
-    ) -> Any:
-        len_type = len(self.types)
-        len_value = len(value)
-        if len_value != len_type:
-            self.fail(
-                f"{len_type} values are required, but {len_value} given.",
-                param=param,
-                ctx=ctx,
-            )
-        return value
-
 
 class TyperChoice(types.ParamType, Generic[ParamTypeValue]):
     name = "choice"
@@ -237,9 +213,6 @@ class TyperChoice(types.ParamType, Generic[ParamTypeValue]):
         """Message shown when no choice is passed."""
         choices = ",\n\t".join(self._normalized_mapping(ctx=ctx).values())
         return f"Choose from:\n\t{choices}"
-
-    def convert(self, value: Any, param: Parameter | None, ctx: Context | None) -> Any:
-        return value
 
     def get_invalid_choice_message(self, value: Any, ctx: Context | None) -> str:
         """Get the error message when the given choice is invalid."""
@@ -299,14 +272,6 @@ class TyperPath(types.ParamType):
             self.name = "directory"
         else:
             self.name = "path"
-
-    def convert(
-        self,
-        value: Any,
-        param: Parameter | None,
-        ctx: Context | None,
-    ) -> Any:
-        return value
 
     def shell_complete(
         self, ctx: Context, param: Parameter, incomplete: str

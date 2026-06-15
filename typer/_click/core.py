@@ -21,7 +21,6 @@ from .exceptions import (
     Abort,
     BadParameter,
     Exit,
-    MissingParameter,
     NoArgsIsHelpError,
     UsageError,
 )
@@ -940,65 +939,14 @@ class Parameter(ABC):
 
         return value, source
 
-    def type_cast_value(self, ctx: Context, value: Any) -> Any:
-        """Convert and validate a value against the parameter's
-        `type`, `multiple`, and `nargs`.
-        """
-        if value is None:
-            return () if self.multiple or self.nargs == -1 else None
-
-        def check_iter(value: Any) -> Iterator[Any]:
-            if isinstance(value, str):
-                raise BadParameter("Value must be an iterable.", ctx=ctx, param=self)
-            else:
-                return iter(value)
-
-        # Define the conversion function based on nargs and type.
-        if self.nargs == 1 or self.type.is_composite:
-
-            def convert(value: Any) -> Any:
-                return self.type(value, param=self, ctx=ctx)
-
-        elif self.nargs == -1:
-
-            def convert(value: Any) -> Any:  # tuple[t.Any, ...]
-                return tuple(self.type(x, self, ctx) for x in check_iter(value))
-
-        # TODO: evaluate whether we need to keep this in Typer
-        else:  # nargs > 1
-
-            def convert(value: Any) -> Any:  # tuple[t.Any, ...]
-                value = tuple(check_iter(value))
-
-                if len(value) != self.nargs:
-                    raise BadParameter(
-                        f"Takes {self.nargs} values but {len(value)} given.",
-                        ctx=ctx,
-                        param=self,
-                    )
-
-                return tuple(self.type(x, self, ctx) for x in value)
-
-        if self.multiple:
-            return tuple(convert(x) for x in check_iter(value))
-
-        return convert(value)
-
     @abstractmethod
     def value_is_missing(self, value: Any) -> bool:
         pass  # pragma: no cover
 
+    @abstractmethod
     def process_value(self, ctx: Context, value: Any) -> Any:
-        """Process the value of this parameter"""
-        value = self.type_cast_value(ctx, value)
-
-        if self.required and self.value_is_missing(value):
-            raise MissingParameter(ctx=ctx, param=self)
-
-        if self.callback is not None:
-            value = self.callback(ctx, self, value)
-
-        return value
+        """Process the value of this parameter."""
+        pass  # pragma: no cover
 
     def resolve_envvar_value(self, ctx: Context) -> str | None:
         """Returns the value found in the environment variable(s) attached to this
