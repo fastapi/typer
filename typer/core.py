@@ -106,12 +106,6 @@ def _type_cast_runtime_value(
         raise _click.exceptions.BadParameter(
             "Value must be an iterable.", ctx=ctx, param=param
         )
-    if (
-        isinstance(param.type, param_types.TyperChoice)
-        and param.nargs == 1
-        and not param.multiple
-    ):
-        return param.type(value, param=param, ctx=ctx)
     return runtime_param.coerce(value, param=param, ctx=ctx)
 
 

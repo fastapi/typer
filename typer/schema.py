@@ -23,6 +23,8 @@ from .models import (
 from .param_types import (
     _get_error_msg,
     _open_cli_file,
+    choice_coercion_annotation,
+    coerce_cli_choice,
     file_coercion_annotation,
     infer_type_from_default,
     lenient_issubclass,
@@ -137,6 +139,33 @@ class FileRuntimeParam(RuntimeParam):
         if isinstance(value, (list, tuple)):
             return type(value)(open_one(item) for item in value)
         return open_one(value)
+
+
+@dataclass(frozen=True)
+class ChoiceRuntimeParam(RuntimeParam):
+    """Coercion for enum and literal choice parameters."""
+
+    choices: tuple[Any, ...]
+    case_sensitive: bool
+
+    def _coerce_value(
+        self,
+        value: Any,
+        *,
+        param: Any | None,
+        ctx: Any | None,
+    ) -> Any:
+        try:
+            return coerce_cli_choice(
+                value,
+                choices=self.choices,
+                case_sensitive=self.case_sensitive,
+                ctx=ctx,
+            )
+        except ValueError as exc:
+            if param is None:
+                raise
+            raise BadParameter(str(exc), ctx=ctx, param=param) from exc
 
 
 @dataclass(frozen=True)
@@ -301,6 +330,14 @@ def runtime_param_from_declared(
     file_annotation = file_coercion_annotation(declared.annotation)
     if file_annotation is not None:
         return FileRuntimeParam(**common, file_annotation=file_annotation)
+    choice = choice_coercion_annotation(declared.annotation, declared.parameter_info)
+    if choice is not None:
+        choices, case_sensitive = choice
+        return ChoiceRuntimeParam(
+            **common,
+            choices=choices,
+            case_sensitive=case_sensitive,
+        )
     return AdapterRuntimeParam(
         **common,
         adapter=adapters.build_adapter(declared.annotation, declared.parameter_info),

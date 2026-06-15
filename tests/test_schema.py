@@ -6,8 +6,8 @@ import pytest
 import typer
 from typer.adapters import build_adapter
 from typer.main import get_command
-from typer.param_types import file_coercion_annotation
-from typer.schema import FileRuntimeParam
+from typer.param_types import choice_coercion_annotation, file_coercion_annotation
+from typer.schema import ChoiceRuntimeParam, FileRuntimeParam
 from typer.testing import CliRunner
 
 runner = CliRunner()
@@ -88,6 +88,7 @@ def test_schema_coerce_enum() -> None:
     schema = get_command(app).schema
     runtime_param = schema.get_param("color")
     assert runtime_param is not None
+    assert isinstance(runtime_param, ChoiceRuntimeParam)
     assert runtime_param.coerce("red") is Color.RED
 
 
@@ -168,6 +169,20 @@ def test_schema_coerce_command_values() -> None:
 )
 def test_file_coercion_annotation(annotation: Any, expected: Any) -> None:
     assert file_coercion_annotation(annotation) is expected
+
+
+def test_choice_coercion_annotation() -> None:
+    class Color(str, Enum):
+        RED = "red"
+        BLUE = "blue"
+
+    info = typer.models.OptionInfo()
+    result = choice_coercion_annotation(Color, info)
+    assert result is not None
+    choices, case_sensitive = result
+    assert Color.RED in choices
+    assert case_sensitive is True
+    assert choice_coercion_annotation(str, info) is None
 
 
 def test_tuple_file_runtime_param(tmp_path: Path) -> None:

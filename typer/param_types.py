@@ -4,10 +4,10 @@ from collections.abc import Callable, Iterable, Mapping, Sequence
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import IO, Annotated, Any, ClassVar, Generic, TypeGuard, TypeVar, cast
+from typing import IO, Any, ClassVar, Generic, TypeGuard, TypeVar, cast
 from uuid import UUID as UUIDType
 
-from pydantic import BeforeValidator, TypeAdapter, ValidationError
+from pydantic import TypeAdapter, ValidationError
 
 from ._click import Context, Parameter, types
 from ._click._compat import open_stream
@@ -110,6 +110,52 @@ FILE = FileDisplayType(name="filename", repr_name="File")
 CLI_FILE_TYPES = (FileTextWrite, FileText, FileBinaryRead, FileBinaryWrite)
 
 
+def normalize_choice_value(
+    choice: Any,
+    *,
+    case_sensitive: bool,
+    ctx: Context | None,
+) -> str:
+    normed_value = str(choice.value) if isinstance(choice, Enum) else str(choice)
+    if ctx is not None and ctx.token_normalize_func is not None:
+        normed_value = ctx.token_normalize_func(normed_value)
+    if not case_sensitive:
+        normed_value = normed_value.casefold()
+    return normed_value
+
+
+def coerce_cli_choice(
+    value: Any,
+    *,
+    choices: Sequence[Any],
+    case_sensitive: bool,
+    ctx: Context | None,
+) -> Any:
+    if any(isinstance(choice, Enum) and value is choice for choice in choices):
+        return value
+    normalized_mapping = {
+        choice: normalize_choice_value(choice, case_sensitive=case_sensitive, ctx=ctx)
+        for choice in choices
+    }
+    normed_value = normalize_choice_value(value, case_sensitive=case_sensitive, ctx=ctx)
+    for original, normalized in normalized_mapping.items():
+        if normalized == normed_value:
+            return original
+    choices_str = ", ".join(map(repr, normalized_mapping.values()))
+    raise ValueError(f"{value!r} is not one of {choices_str}.")
+
+
+def choice_coercion_annotation(
+    annotation: Any,
+    parameter_info: ParameterInfo,
+) -> tuple[tuple[Any, ...], bool] | None:
+    if lenient_issubclass(annotation, Enum):
+        return tuple(annotation), parameter_info.case_sensitive
+    if is_literal_type(annotation):
+        return literal_values(annotation), parameter_info.case_sensitive
+    return None
+
+
 class TyperTuple(types.ParamType):
     """Metavar and nargs information for tuple parameters."""
 
@@ -165,15 +211,9 @@ class TyperChoice(types.ParamType, Generic[ParamTypeValue]):
         }
 
     def normalize_choice(self, choice: ParamTypeValue, ctx: Context | None) -> str:
-        normed_value = str(choice.value) if isinstance(choice, Enum) else str(choice)
-
-        if ctx is not None and ctx.token_normalize_func is not None:
-            normed_value = ctx.token_normalize_func(normed_value)
-
-        if not self.case_sensitive:
-            normed_value = normed_value.casefold()
-
-        return normed_value
+        return normalize_choice_value(
+            choice, case_sensitive=self.case_sensitive, ctx=ctx
+        )
 
     def get_metavar(self, param: Parameter, ctx: Context) -> str | None:
         if param.param_type_name == "option" and not param.show_choices:  # type: ignore
@@ -198,25 +238,8 @@ class TyperChoice(types.ParamType, Generic[ParamTypeValue]):
         choices = ",\n\t".join(self._normalized_mapping(ctx=ctx).values())
         return f"Choose from:\n\t{choices}"
 
-    def _build_class_adapter(self, ctx: Context | None) -> TypeAdapter[ParamTypeValue]:
-        normalized_mapping = self._normalized_mapping(ctx=ctx)
-
-        def parse_choice(value: Any) -> ParamTypeValue:
-            normed_value = self.normalize_choice(choice=value, ctx=ctx)
-            for original, normalized in normalized_mapping.items():
-                if normalized == normed_value:
-                    return original
-            raise ValueError(self.get_invalid_choice_message(value=value, ctx=ctx))
-
-        return TypeAdapter(Annotated[Any, BeforeValidator(parse_choice)])
-
-    def convert(
-        self, value: Any, param: Parameter | None, ctx: Context | None
-    ) -> ParamTypeValue:
-        try:
-            return self._build_class_adapter(ctx).validate_python(value)
-        except ValidationError as exc:
-            self.fail(_get_error_msg(exc), param=param, ctx=ctx)
+    def convert(self, value: Any, param: Parameter | None, ctx: Context | None) -> Any:
+        return value
 
     def get_invalid_choice_message(self, value: Any, ctx: Context | None) -> str:
         """Get the error message when the given choice is invalid."""

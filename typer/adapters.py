@@ -10,7 +10,12 @@ from pydantic import AfterValidator, BeforeValidator, Field, TypeAdapter
 from ._click import _compat
 from ._typing import is_literal_type, is_number_type, literal_values
 from .models import ParameterInfo
-from .param_types import TyperPath, _needs_typer_path, lenient_issubclass
+from .param_types import (
+    TyperPath,
+    _needs_typer_path,
+    coerce_cli_choice,
+    lenient_issubclass,
+)
 
 
 def build_adapter(
@@ -205,41 +210,18 @@ def _build_parser_adapter(parser: Callable[[Any], Any]) -> TypeAdapter[Any]:
 
 
 # CHOICE #
-def _normalize_choice_value(
-    choice_or_value: Any,
-    *,
-    case_sensitive: bool,
-    ctx: Any | None,
-) -> str:
-    if isinstance(choice_or_value, Enum):
-        normed = str(choice_or_value.value)
-    else:
-        normed = str(choice_or_value)
-    if ctx is not None and ctx.token_normalize_func is not None:
-        normed = ctx.token_normalize_func(normed)
-    if not case_sensitive:
-        normed = normed.casefold()
-    return normed
-
-
 def _build_choice_adapter(
     choices: Sequence[Any],
     *,
     case_sensitive: bool,
 ) -> TypeAdapter[Any]:
-    def normalize(choice: Any) -> str:
-        return _normalize_choice_value(choice, case_sensitive=case_sensitive, ctx=None)
-
-    mapping = {normalize(choice): choice for choice in choices}
-
     def parse_choice(value: Any) -> Any:
-        if any(isinstance(choice, Enum) and value is choice for choice in choices):
-            return value
-        key = normalize(value)
-        if key in mapping:
-            return mapping[key]
-        choices_str = ", ".join(map(repr, mapping.values()))
-        raise ValueError(f"{value!r} is not one of {choices_str}.")
+        return coerce_cli_choice(
+            value,
+            choices=choices,
+            case_sensitive=case_sensitive,
+            ctx=None,
+        )
 
     return TypeAdapter(Annotated[Any, BeforeValidator(parse_choice)])
 
