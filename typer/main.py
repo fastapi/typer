@@ -15,7 +15,7 @@ from annotated_doc import Doc
 
 from . import _click
 from ._click.globals import get_current_context
-from ._click.types import ParamType, Tuple
+from ._click.types import ParamType
 from ._typing import get_args, get_origin
 from .completion import get_completion_inspect_parameters
 from .core import (
@@ -38,7 +38,7 @@ from .models import (
     ParamMeta,
     TyperInfo,
 )
-from .param_types import cli_param_type, lenient_issubclass
+from .param_types import TyperTuple, cli_param_type, lenient_issubclass
 from .schema import CommandSchema, declare_param, runtime_param_from_declared
 from .utils import get_params_from_function
 
@@ -1535,7 +1535,7 @@ def get_param(
         if is_list:
             nargs = -1
         binding_nargs = nargs if nargs is not None else 1
-        if isinstance(parameter_type, Tuple):
+        if isinstance(parameter_type, TyperTuple):
             binding_nargs = parameter_type.arity
         runtime_param = runtime_param_from_declared(
             declared,

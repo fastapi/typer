@@ -110,6 +110,36 @@ FILE = FileDisplayType(name="filename", repr_name="File")
 CLI_FILE_TYPES = (FileTextWrite, FileText, FileBinaryRead, FileBinaryWrite)
 
 
+class TyperTuple(types.ParamType):
+    """Metavar and nargs information for tuple parameters."""
+
+    is_composite = True
+
+    def __init__(self, element_types: Sequence[types.ParamType]) -> None:
+        self.types: tuple[types.ParamType, ...] = tuple(element_types)
+        self.name = f"<{' '.join(t.name for t in self.types)}>"
+
+    @property
+    def arity(self) -> int:
+        return len(self.types)
+
+    def convert(
+        self,
+        value: Any,
+        param: Parameter | None,
+        ctx: Context | None,
+    ) -> Any:
+        len_type = len(self.types)
+        len_value = len(value)
+        if len_value != len_type:
+            self.fail(
+                f"{len_type} values are required, but {len_value} given.",
+                param=param,
+                ctx=ctx,
+            )
+        return value
+
+
 class TyperChoice(types.ParamType, Generic[ParamTypeValue]):
     name = "choice"
 
@@ -496,7 +526,7 @@ def resolve_param_type(
                         annotation=element, parameter_info=parameter_info
                     )
                 )
-        return types.Tuple(element_types)
+        return TyperTuple(element_types)
 
     if isinstance(annotation, types.ParamType):
         return annotation

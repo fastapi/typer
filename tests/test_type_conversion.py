@@ -13,6 +13,7 @@ from typer.param_types import (
     INT,
     STRING,
     TyperPath,
+    TyperTuple,
     resolve_param_type,
 )
 from typer.testing import CliRunner
@@ -387,11 +388,11 @@ def test_convert_type():
 
     # tuples
     tuple_type = resolve_param_type((str, int))
-    assert isinstance(tuple_type, _click.types.Tuple)
+    assert isinstance(tuple_type, TyperTuple)
     assert [type(item) for item in tuple_type.types] == [type(STRING), type(INT)]
 
     guessed_tuple = resolve_param_type(None, default=[(1, "x")])
-    assert isinstance(guessed_tuple, _click.types.Tuple)
+    assert isinstance(guessed_tuple, TyperTuple)
     assert [type(item) for item in guessed_tuple.types] == [
         type(INT),
         type(STRING),

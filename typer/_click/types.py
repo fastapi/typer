@@ -33,8 +33,11 @@ class ParamType:
     """
 
     is_composite: ClassVar[bool] = False
-    arity: ClassVar[int] = 1
     name: str
+
+    @property
+    def arity(self) -> int:
+        return 1
 
     # if a list of this type is expected and the value is pulled from a
     # string environment variable, this is what splits it up.  `None`
@@ -98,57 +101,3 @@ class ParamType:
         completions as well.
         """
         return []
-
-
-class CompositeParamType(ParamType):
-    is_composite = True
-
-    @property
-    def arity(self) -> int:  # type: ignore
-        raise NotImplementedError()  # pragma: no cover
-
-
-class Tuple(CompositeParamType):
-    """The default behavior of Click is to apply a type on a value directly.
-    This works well in most cases, except for when `nargs` is set to a fixed
-    count and different types should be used for different items.  In this
-    case the `Tuple` type can be used.  This type can only be used
-    if `nargs` is set to a fixed number.
-
-    For more information see `tuple-type`.
-
-    This can be selected by using a Python tuple literal as a type.
-    """
-
-    def __init__(self, types: Sequence[type[Any] | ParamType]) -> None:
-        from ..param_types import resolve_param_type
-
-        self.types: Sequence[ParamType] = [
-            item if isinstance(item, ParamType) else resolve_param_type(item)
-            for item in types
-        ]
-
-    @property
-    def name(self) -> str:  # type: ignore[override]
-        return f"<{' '.join(ty.name for ty in self.types)}>"
-
-    @property
-    def arity(self) -> int:  # type: ignore
-        return len(self.types)
-
-    def convert(
-        self, value: Any, param: Union["Parameter", None], ctx: Union["Context", None]
-    ) -> Any:
-        len_type = len(self.types)
-        len_value = len(value)
-
-        if len_value != len_type:
-            self.fail(
-                f"{len_type} values are required, but {len_value} given.",
-                param=param,
-                ctx=ctx,
-            )
-
-        return tuple(
-            ty(x, param, ctx) for ty, x in zip(self.types, value, strict=False)
-        )
