@@ -8,6 +8,7 @@ from typing import IO, Any, Literal
 from pydantic import TypeAdapter, ValidationError
 
 from . import adapters
+from ._click.exceptions import BadParameter
 from ._typing import get_args as typer_get_args
 from ._typing import get_origin as typer_get_origin
 from ._typing import is_union
@@ -20,6 +21,7 @@ from .models import (
     Required,
 )
 from .param_types import (
+    _get_error_msg,
     _open_cli_file,
     file_coercion_annotation,
     infer_type_from_default,
@@ -99,14 +101,11 @@ class AdapterRuntimeParam(RuntimeParam):
         except ValidationError as exc:
             if param is None:
                 raise
-            from ._click.exceptions import BadParameter
-            from .param_types import _get_error_msg
 
             raise BadParameter(_get_error_msg(exc), ctx=ctx, param=param) from exc
         except ValueError as exc:
             if param is None:
                 raise
-            from ._click.exceptions import BadParameter
 
             raise BadParameter(str(exc), ctx=ctx, param=param) from exc
 
@@ -302,7 +301,6 @@ def runtime_param_from_declared(
     file_annotation = file_coercion_annotation(declared.annotation)
     if file_annotation is not None:
         return FileRuntimeParam(**common, file_annotation=file_annotation)
-    assert file_coercion_annotation(declared.annotation) is None
     return AdapterRuntimeParam(
         **common,
         adapter=adapters.build_adapter(declared.annotation, declared.parameter_info),

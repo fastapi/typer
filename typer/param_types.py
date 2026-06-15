@@ -9,9 +9,13 @@ from uuid import UUID as UUIDType
 
 from pydantic import BeforeValidator, TypeAdapter, ValidationError
 
-from . import _click
 from ._click import Context, Parameter, types
+from ._click._compat import open_stream
+from ._click.exceptions import BadParameter
 from ._click.shell_completion import CompletionItem
+from ._click.utils import LazyFile, format_filename, safecall
+from ._typing import get_args as typer_get_args
+from ._typing import get_origin as typer_get_origin
 from ._typing import is_literal_type, literal_values
 from .models import (
     AnyType,
@@ -102,6 +106,8 @@ class FileDisplayType(DisplayParamType):
 
 
 FILE = FileDisplayType(name="filename", repr_name="File")
+
+CLI_FILE_TYPES = (FileTextWrite, FileText, FileBinaryRead, FileBinaryWrite)
 
 
 class TyperChoice(types.ParamType, Generic[ParamTypeValue]):
@@ -294,13 +300,13 @@ class TyperPath(types.ParamType):
                 if not self.exists:
                     return self.coerce_path_result(rv)
                 self.fail(
-                    f"{self.name.title()} {_click.utils.format_filename(value)!r} does not exist.",
+                    f"{self.name.title()} {format_filename(value)!r} does not exist.",
                     param,
                     ctx,
                 )
 
             name = self.name.title()
-            loc = repr(_click.utils.format_filename(value))
+            loc = repr(format_filename(value))
             if not self.file_okay and stat.S_ISREG(st.st_mode):
                 self.fail(f"{name} {loc} is a file.", param, ctx)
 
@@ -325,19 +331,11 @@ class TyperPath(types.ParamType):
 
 
 def is_file_annotation(annotation: Any) -> bool:
-    return (
-        lenient_issubclass(annotation, FileTextWrite)
-        or lenient_issubclass(annotation, FileText)
-        or lenient_issubclass(annotation, FileBinaryRead)
-        or lenient_issubclass(annotation, FileBinaryWrite)
-    )
+    return lenient_issubclass(annotation, CLI_FILE_TYPES)
 
 
 def file_coercion_annotation(annotation: Any) -> Any | None:
     """Return the file marker type when this parameter opens files."""
-    from ._typing import get_args as typer_get_args
-    from ._typing import get_origin as typer_get_origin
-
     origin = typer_get_origin(annotation)
     if origin is list:
         args = typer_get_args(annotation)
@@ -397,9 +395,6 @@ def _open_cli_file(
         return value
 
     value = cast("str | os.PathLike[str]", value)
-    from ._click._compat import open_stream
-    from ._click.exceptions import BadParameter
-    from ._click.utils import LazyFile, format_filename, safecall
 
     try:
         lazy = _resolve_file_lazy_flag(
@@ -442,8 +437,7 @@ def _open_cli_file(
         raise BadParameter(message, ctx=ctx, param=param) from exc
 
 
-def _file_param_type(parameter_info: ParameterInfo, *, mode: str) -> FileDisplayType:
-    del mode, parameter_info
+def _file_param_type() -> FileDisplayType:
     return FILE
 
 
@@ -536,8 +530,6 @@ def cli_param_type(
     is_tuple: bool,
 ) -> types.ParamType:
     """Defer the "type" for metavar/help."""
-    from ._typing import get_args as typer_get_args
-
     if is_tuple:
         type_args = typer_get_args(annotation)
         return resolve_param_type(tuple(type_args), parameter_info=parameter_info)
@@ -605,12 +597,6 @@ def param_type_from_annotation(
         )
     if annotation is str:
         return STRING
-    if lenient_issubclass(annotation, FileTextWrite):
-        return _file_param_type(parameter_info, mode="w")
-    if lenient_issubclass(annotation, FileText):
-        return _file_param_type(parameter_info, mode="r")
-    if lenient_issubclass(annotation, FileBinaryRead):
-        return _file_param_type(parameter_info, mode="rb")
-    if lenient_issubclass(annotation, FileBinaryWrite):
-        return _file_param_type(parameter_info, mode="wb")
+    if lenient_issubclass(annotation, CLI_FILE_TYPES):
+        return _file_param_type()
     return None

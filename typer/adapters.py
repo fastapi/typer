@@ -7,6 +7,7 @@ from typing import Annotated, Any, get_args, get_origin
 
 from pydantic import AfterValidator, BeforeValidator, Field, TypeAdapter
 
+from ._click import _compat
 from ._typing import is_literal_type, is_number_type, literal_values
 from .models import ParameterInfo
 from .param_types import TyperPath, _needs_typer_path, lenient_issubclass
@@ -147,8 +148,6 @@ def _parse_cli_str(value: Any) -> str:
 def _decode_cli_bytes(value: Any) -> Any:
     """Decode bytes from argv/env; leave other values unchanged."""
     if isinstance(value, bytes):
-        from ._click import _compat
-
         enc = _compat._get_argv_encoding()
         try:
             return value.decode(enc)
