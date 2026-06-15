@@ -2,7 +2,6 @@ import sys
 from collections.abc import Callable, Sequence
 from datetime import datetime
 from enum import Enum
-from pathlib import Path
 from typing import Annotated, Any, get_args, get_origin
 
 from pydantic import AfterValidator, BeforeValidator, Field, TypeAdapter
@@ -11,10 +10,11 @@ from ._click import _compat
 from ._typing import is_literal_type, is_number_type, literal_values
 from .models import ParameterInfo
 from .param_types import (
-    TyperPath,
     _needs_typer_path,
     coerce_cli_choice,
+    coerce_cli_path,
     lenient_issubclass,
+    resolve_path_type,
 )
 
 
@@ -82,7 +82,7 @@ def build_adapter(
             case_sensitive=parameter_info.case_sensitive,
         )
     if _needs_typer_path(annotation, parameter_info):
-        return _build_path_adapter(annotation, parameter_info)
+        return build_path_adapter(annotation, parameter_info)
     return build_leaf_adapter(annotation)
 
 
@@ -227,26 +227,19 @@ def _build_choice_adapter(
 
 
 # PATH #
-def _build_path_adapter(
+def build_path_adapter(
     annotation: Any,
     parameter_info: ParameterInfo,
 ) -> TypeAdapter[Any]:
-    path_type = parameter_info.path_type
-    if path_type is None and lenient_issubclass(annotation, Path):
-        path_type = annotation
-
-    typer_path = TyperPath(
-        exists=parameter_info.exists,
-        file_okay=parameter_info.file_okay,
-        dir_okay=parameter_info.dir_okay,
-        writable=parameter_info.writable,
-        readable=parameter_info.readable,
-        resolve_path=parameter_info.resolve_path,
-        allow_dash=parameter_info.allow_dash,
-        path_type=path_type,
-    )
+    path_type = resolve_path_type(annotation, parameter_info)
 
     def parse_path(value: Any) -> Any:
-        return typer_path.convert(value, param=None, ctx=None)
+        return coerce_cli_path(
+            value,
+            parameter_info,
+            path_type=path_type,
+            param=None,
+            ctx=None,
+        )
 
     return TypeAdapter(Annotated[Any, BeforeValidator(parse_path)])

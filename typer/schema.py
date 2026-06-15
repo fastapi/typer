@@ -25,10 +25,13 @@ from .param_types import (
     _open_cli_file,
     choice_coercion_annotation,
     coerce_cli_choice,
+    coerce_cli_path,
     file_coercion_annotation,
     infer_type_from_default,
     lenient_issubclass,
+    path_uses_coercion,
     resolve_file_mode,
+    resolve_path_type,
 )
 
 ParamKind = Literal["option", "argument"]
@@ -139,6 +142,28 @@ class FileRuntimeParam(RuntimeParam):
         if isinstance(value, (list, tuple)):
             return type(value)(open_one(item) for item in value)
         return open_one(value)
+
+
+@dataclass(frozen=True)
+class PathRuntimeParam(RuntimeParam):
+    """Coercion for path parameters."""
+
+    path_type: type[Any] | None
+
+    def _coerce_value(
+        self,
+        value: Any,
+        *,
+        param: Any | None,
+        ctx: Any | None,
+    ) -> Any:
+        return coerce_cli_path(
+            value,
+            self.parameter_info,
+            path_type=self.path_type,
+            param=param,
+            ctx=ctx,
+        )
 
 
 @dataclass(frozen=True)
@@ -330,6 +355,11 @@ def runtime_param_from_declared(
     file_annotation = file_coercion_annotation(declared.annotation)
     if file_annotation is not None:
         return FileRuntimeParam(**common, file_annotation=file_annotation)
+    if path_uses_coercion(declared.annotation, declared.parameter_info):
+        return PathRuntimeParam(
+            **common,
+            path_type=resolve_path_type(declared.annotation, declared.parameter_info),
+        )
     choice = choice_coercion_annotation(declared.annotation, declared.parameter_info)
     if choice is not None:
         choices, case_sensitive = choice

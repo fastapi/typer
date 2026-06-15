@@ -291,7 +291,7 @@ class TyperPath(types.ParamType):
         self.writable = writable
         self.resolve_path = resolve_path
         self.allow_dash = allow_dash
-        self.type = path_type
+        self.path_type = path_type
 
         if self.file_okay and not self.dir_okay:
             self.name = "file"
@@ -300,79 +300,13 @@ class TyperPath(types.ParamType):
         else:
             self.name = "path"
 
-    def _parse_path_value(
+    def convert(
         self,
         value: Any,
         param: Parameter | None,
         ctx: Context | None,
     ) -> Any:
-        if self.type is None or self.type is str or self.type is bytes:
-            return value
-        if isinstance(self.type, type) and issubclass(self.type, Path):
-            if isinstance(value, self.type):
-                return value
-            if isinstance(value, (str, os.PathLike)):
-                try:
-                    return TypeAdapter(self.type).validate_python(value)
-                except ValidationError as exc:
-                    self.fail(_get_error_msg(exc), param, ctx)
         return value
-
-    def coerce_path_result(
-        self, value: str | os.PathLike[str]
-    ) -> str | bytes | os.PathLike[str]:
-        if self.type is not None and not isinstance(value, self.type):
-            if (
-                self.type is str
-            ):  # pragma: no cover  # TODO: perhaps this branch can't be hit and should be removed
-                return os.fsdecode(value)
-            elif self.type is bytes:
-                return os.fsencode(value)
-            else:
-                return cast("os.PathLike[str]", self.type(value))
-
-        return value
-
-    def convert(
-        self,
-        value: str | os.PathLike[str],
-        param: Parameter | None,
-        ctx: Context | None,
-    ) -> str | bytes | os.PathLike[str]:
-        rv = self._parse_path_value(value, param, ctx)
-
-        is_dash = self.file_okay and self.allow_dash and rv in (b"-", "-")
-
-        if not is_dash:
-            if self.resolve_path:
-                rv = os.path.realpath(rv)
-
-            try:
-                st = os.stat(rv)
-            except OSError:
-                if not self.exists:
-                    return self.coerce_path_result(rv)
-                self.fail(
-                    f"{self.name.title()} {format_filename(value)!r} does not exist.",
-                    param,
-                    ctx,
-                )
-
-            name = self.name.title()
-            loc = repr(format_filename(value))
-            if not self.file_okay and stat.S_ISREG(st.st_mode):
-                self.fail(f"{name} {loc} is a file.", param, ctx)
-
-            if not self.dir_okay and stat.S_ISDIR(st.st_mode):
-                self.fail(f"{name} {loc} is a directory.", param, ctx)
-
-            if self.readable and not os.access(rv, os.R_OK):
-                self.fail(f"{name} {loc} is not readable.", param, ctx)
-
-            if self.writable and not os.access(rv, os.W_OK):
-                self.fail(f"{name} {loc} is not writable.", param, ctx)
-
-        return self.coerce_path_result(rv)
 
     def shell_complete(
         self, ctx: Context, param: Parameter, incomplete: str
@@ -381,6 +315,121 @@ class TyperPath(types.ParamType):
         will work properly from the commandline.
         """
         return []
+
+
+def _path_display_name(parameter_info: ParameterInfo) -> str:
+    if parameter_info.file_okay and not parameter_info.dir_okay:
+        return "file"
+    if parameter_info.dir_okay and not parameter_info.file_okay:
+        return "directory"
+    return "path"
+
+
+def resolve_path_type(
+    annotation: Any,
+    parameter_info: ParameterInfo,
+) -> type[Any] | None:
+    path_type = parameter_info.path_type
+    if path_type is None and lenient_issubclass(annotation, Path):
+        path_type = annotation
+    return path_type
+
+
+def path_uses_coercion(annotation: Any, parameter_info: ParameterInfo) -> bool:
+    return _needs_typer_path(annotation, parameter_info)
+
+
+def _coerce_path_result(
+    value: str | os.PathLike[str],
+    path_type: type[Any] | None,
+) -> str | bytes | os.PathLike[str]:
+    if path_type is not None and not isinstance(value, path_type):
+        if path_type is bytes:
+            return os.fsencode(value)
+        return cast("os.PathLike[str]", path_type(value))
+    return value
+
+
+def coerce_cli_path(
+    value: str | os.PathLike[str],
+    parameter_info: ParameterInfo,
+    *,
+    path_type: type[Any] | None,
+    param: Parameter | None = None,
+    ctx: Context | None = None,
+) -> str | bytes | os.PathLike[str] | Path:
+    if path_type is None or path_type is str or path_type is bytes:
+        rv: Any = value
+    elif isinstance(path_type, type) and issubclass(path_type, Path):
+        if isinstance(value, path_type):
+            rv = value
+        elif isinstance(value, (str, os.PathLike)):
+            try:
+                rv = TypeAdapter(path_type).validate_python(value)
+            except ValidationError as exc:
+                raise BadParameter(_get_error_msg(exc), ctx=ctx, param=param) from exc
+        else:
+            rv = value
+    else:
+        rv = value
+
+    is_dash = (
+        parameter_info.file_okay and parameter_info.allow_dash and rv in (b"-", "-")
+    )
+
+    if not is_dash:
+        if parameter_info.resolve_path:
+            rv = os.path.realpath(rv)
+
+        name = _path_display_name(parameter_info)
+        try:
+            st = os.stat(rv)
+        except OSError:
+            if not parameter_info.exists:
+                return _coerce_path_result(rv, path_type)
+            raise BadParameter(
+                f"{name.title()} {format_filename(value)!r} does not exist.",
+                ctx=ctx,
+                param=param,
+            ) from None
+
+        name_title = name.title()
+        loc = repr(format_filename(value))
+        if not parameter_info.file_okay and stat.S_ISREG(st.st_mode):
+            raise BadParameter(f"{name_title} {loc} is a file.", ctx=ctx, param=param)
+
+        if not parameter_info.dir_okay and stat.S_ISDIR(st.st_mode):
+            raise BadParameter(
+                f"{name_title} {loc} is a directory.", ctx=ctx, param=param
+            )
+
+        if parameter_info.readable and not os.access(rv, os.R_OK):
+            raise BadParameter(
+                f"{name_title} {loc} is not readable.", ctx=ctx, param=param
+            )
+
+        if parameter_info.writable and not os.access(rv, os.W_OK):
+            raise BadParameter(
+                f"{name_title} {loc} is not writable.", ctx=ctx, param=param
+            )
+
+    return _coerce_path_result(rv, path_type)
+
+
+def typer_path_display_type(
+    annotation: Any,
+    parameter_info: ParameterInfo,
+) -> TyperPath:
+    return TyperPath(
+        exists=parameter_info.exists,
+        file_okay=parameter_info.file_okay,
+        dir_okay=parameter_info.dir_okay,
+        writable=parameter_info.writable,
+        readable=parameter_info.readable,
+        resolve_path=parameter_info.resolve_path,
+        allow_dash=parameter_info.allow_dash,
+        path_type=resolve_path_type(annotation, parameter_info),
+    )
 
 
 def is_file_annotation(annotation: Any) -> bool:
@@ -625,19 +674,7 @@ def param_type_from_annotation(
     if annotation is bool:
         return BOOL
     if _needs_typer_path(annotation, parameter_info):
-        resolved_path_type: type[Any] | None = parameter_info.path_type
-        if resolved_path_type is None and lenient_issubclass(annotation, Path):
-            resolved_path_type = annotation
-        return TyperPath(
-            exists=parameter_info.exists,
-            file_okay=parameter_info.file_okay,
-            dir_okay=parameter_info.dir_okay,
-            writable=parameter_info.writable,
-            readable=parameter_info.readable,
-            resolve_path=parameter_info.resolve_path,
-            allow_dash=parameter_info.allow_dash,
-            path_type=resolved_path_type,
-        )
+        return typer_path_display_type(annotation, parameter_info)
     if lenient_issubclass(annotation, Enum):
         return TyperChoice(
             list(annotation),

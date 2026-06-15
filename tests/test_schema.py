@@ -6,8 +6,16 @@ import pytest
 import typer
 from typer.adapters import build_adapter
 from typer.main import get_command
-from typer.param_types import choice_coercion_annotation, file_coercion_annotation
-from typer.schema import ChoiceRuntimeParam, FileRuntimeParam
+from typer.param_types import (
+    choice_coercion_annotation,
+    file_coercion_annotation,
+    path_uses_coercion,
+)
+from typer.schema import (
+    ChoiceRuntimeParam,
+    FileRuntimeParam,
+    PathRuntimeParam,
+)
 from typer.testing import CliRunner
 
 runner = CliRunner()
@@ -183,6 +191,34 @@ def test_choice_coercion_annotation() -> None:
     assert Color.RED in choices
     assert case_sensitive is True
     assert choice_coercion_annotation(str, info) is None
+
+
+def test_path_uses_coercion() -> None:
+    info = typer.models.OptionInfo()
+    assert path_uses_coercion(Path, info) is True
+    assert path_uses_coercion(str, info) is False
+    assert path_uses_coercion(str, typer.models.OptionInfo(resolve_path=True)) is True
+
+
+def test_path_runtime_param(tmp_path: Path) -> None:
+    target = tmp_path / "config.txt"
+    target.write_text("hello\n", encoding="utf-8")
+
+    app = typer.Typer()
+    seen: list[Path] = []
+
+    @app.command()
+    def main(config: Path = typer.Option(..., exists=True)):
+        seen.append(config)
+
+    schema = get_command(app).schema
+    runtime_param = schema.get_param("config")
+    assert isinstance(runtime_param, PathRuntimeParam)
+    assert runtime_param.path_type is Path
+
+    result = runner.invoke(app, ["--config", str(target)])
+    assert result.exit_code == 0, result.output
+    assert seen == [target]
 
 
 def test_tuple_file_runtime_param(tmp_path: Path) -> None:
