@@ -9,7 +9,7 @@ from uuid import UUID as UUIDType
 
 from pydantic import BeforeValidator, TypeAdapter, ValidationError
 
-from . import _click, adapters
+from . import _click
 from ._click import Context, Parameter, types
 from ._click.shell_completion import CompletionItem
 from ._typing import is_literal_type, literal_values
@@ -254,7 +254,7 @@ class TyperPath(types.ParamType):
                 return value
             if isinstance(value, (str, os.PathLike)):
                 try:
-                    return adapters.build_leaf_adapter(self.type).validate_python(value)
+                    return TypeAdapter(self.type).validate_python(value)
                 except ValidationError as exc:
                     self.fail(_get_error_msg(exc), param, ctx)
         return value
