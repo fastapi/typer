@@ -8,6 +8,7 @@
 
 ### Internal
 
+* ⬆ Bump pyjwt from 2.12.0 to 2.13.0. PR [#1839](https://github.com/fastapi/typer/pull/1839) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump the github-actions group across 1 directory with 3 updates. PR [#1828](https://github.com/fastapi/typer/pull/1828) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump the python-packages group with 3 updates. PR [#1829](https://github.com/fastapi/typer/pull/1829) by [@dependabot[bot]](https://github.com/apps/dependabot).
 
