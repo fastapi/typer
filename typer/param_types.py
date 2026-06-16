@@ -14,9 +14,7 @@ from ._click._compat import open_stream
 from ._click.exceptions import BadParameter
 from ._click.shell_completion import CompletionItem
 from ._click.utils import LazyFile, format_filename, safecall
-from ._typing import get_args as typer_get_args
-from ._typing import get_origin as typer_get_origin
-from ._typing import is_literal_type, literal_values
+from ._typing import get_args, get_origin, is_literal_type, literal_values
 from .models import (
     AnyType,
     FileBinaryRead,
@@ -179,10 +177,7 @@ class TyperChoice(types.ParamType, Generic[ParamTypeValue]):
         the normalized values that are accepted via the command line.
         """
         return {
-            choice: self.normalize_choice(
-                choice=choice,
-                ctx=ctx,
-            )
+            choice: self.normalize_choice(choice=choice, ctx=ctx)
             for choice in self.choices
         }
 
@@ -403,14 +398,14 @@ def is_file_annotation(annotation: Any) -> bool:
 
 def file_coercion_annotation(annotation: Any) -> Any | None:
     """Return the file marker type when this parameter opens files."""
-    origin = typer_get_origin(annotation)
+    origin = get_origin(annotation)
     if origin is list:
-        args = typer_get_args(annotation)
+        args = get_args(annotation)
         if args and all(is_file_annotation(arg) for arg in args):
             return args[0]
         return None
     if origin is tuple:
-        args = typer_get_args(annotation)
+        args = get_args(annotation)
         if args and all(is_file_annotation(arg) for arg in args):
             return args[0]
         return None
@@ -508,16 +503,8 @@ def _file_param_type() -> FileDisplayType:
     return FILE
 
 
-def _ranged_number_param_type(
-    number_class: type[Any],
-    *,
-    min: int | float | None,
-    max: int | float | None,
-    clamp: bool,
-) -> types.ParamType:
-    return DisplayParamType(
-        name="integer range" if number_class is int else "float range",
-    )
+def _ranged_number_param_type(number_class: type[Any]) -> types.ParamType:
+    return DisplayParamType(name=f"{number_class.__name__} range")
 
 
 def _needs_typer_path(annotation: Any, parameter_info: ParameterInfo) -> bool:
@@ -547,7 +534,7 @@ def resolve_param_type(
     *,
     parameter_info: ParameterInfo | None = None,
 ) -> types.ParamType:
-    """Resolve a display ``ParamType`` for metavar/help."""
+    """Resolve a display ParamType for metavar/help."""
     guessed_type = False
     if annotation is None and default is not None:
         annotation, guessed_type = infer_type_from_default(default)
@@ -598,10 +585,10 @@ def cli_param_type(
 ) -> types.ParamType:
     """Defer the "type" for metavar/help."""
     if is_tuple:
-        type_args = typer_get_args(annotation)
+        type_args = get_args(annotation)
         return resolve_param_type(tuple(type_args), parameter_info=parameter_info)
     if is_list:
-        (element_type,) = typer_get_args(annotation)
+        (element_type,) = get_args(annotation)
         return resolve_param_type(element_type, parameter_info=parameter_info)
     return resolve_param_type(
         annotation, default=default, parameter_info=parameter_info
@@ -620,17 +607,7 @@ def param_type_from_annotation(
 ) -> types.ParamType | None:
     if annotation is int or annotation is float:
         if parameter_info.min is not None or parameter_info.max is not None:
-            min_ = parameter_info.min
-            max_ = parameter_info.max
-            if annotation is int:
-                min_ = int(min_) if min_ is not None else None
-                max_ = int(max_) if max_ is not None else None
-            return _ranged_number_param_type(
-                annotation,
-                min=min_,
-                max=max_,
-                clamp=parameter_info.clamp,
-            )
+            return _ranged_number_param_type(annotation)
         return INT if annotation is int else FLOAT
     if annotation is UUIDType:
         return UUID

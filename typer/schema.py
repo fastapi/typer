@@ -10,9 +10,7 @@ from pydantic import TypeAdapter, ValidationError
 from . import adapters
 from ._click.exceptions import BadParameter, UsageError
 from ._click.types import ParamType
-from ._typing import get_args as typer_get_args
-from ._typing import get_origin as typer_get_origin
-from ._typing import is_union
+from ._typing import get_args, get_origin, is_union
 from .models import (
     ArgumentInfo,
     NoneType,
@@ -254,30 +252,30 @@ def declare_param(param: ParamMeta) -> DeclaredParam:
 
     if param.annotation is not param.empty:
         main_type = param.annotation
-        origin = typer_get_origin(main_type)
+        origin = get_origin(main_type)
 
         if origin is not None:
             if is_union(origin):
                 types = []
-                for type_ in typer_get_args(main_type):
+                for type_ in get_args(main_type):
                     if type_ is NoneType:
                         continue
                     types.append(type_)
                 assert len(types) == 1, "Typer Currently doesn't support Union types"
                 main_type = types[0]
-                origin = typer_get_origin(main_type)
+                origin = get_origin(main_type)
 
             if lenient_issubclass(origin, list):
-                element_type = typer_get_args(main_type)[0]
-                assert not typer_get_origin(element_type), (
+                element_type = get_args(main_type)[0]
+                assert not get_origin(element_type), (
                     "List types with complex sub-types are not currently supported"
                 )
                 is_list = True
                 pydantic_annotation = main_type
             elif lenient_issubclass(origin, tuple):
-                type_args = typer_get_args(main_type)
+                type_args = get_args(main_type)
                 for type_ in type_args:
-                    assert not typer_get_origin(type_), (
+                    assert not get_origin(type_), (
                         "Tuple types with complex sub-types are not currently supported"
                     )
                 is_tuple = True
@@ -303,7 +301,7 @@ def declare_param(param: ParamMeta) -> DeclaredParam:
         is_list
         and isinstance(parameter_info, OptionInfo)
         and parameter_info.param_decls
-        and typer_get_args(pydantic_annotation) == (bool,)
+        and get_args(pydantic_annotation) == (bool,)
     ):
         for decl in parameter_info.param_decls:
             if "/" in decl:

@@ -586,9 +586,7 @@ class TyperOption(TyperParameter):
         # Counting
         self.count = count
         if count and type is None:
-            self.type = param_types._ranged_number_param_type(
-                int, min=0, max=None, clamp=False
-            )
+            self.type = param_types._ranged_number_param_type(int)
             if self.min is None:
                 self.min = 0
 

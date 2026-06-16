@@ -28,7 +28,7 @@ def test_help(mod: ModuleType):
     result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
     assert "--age" in result.output
-    assert "INTEGER RANGE" in result.output
+    assert "INT RANGE" in result.output
     assert "--score" in result.output
     assert "FLOAT RANGE" in result.output
 
@@ -38,7 +38,7 @@ def test_help_no_rich(monkeypatch: pytest.MonkeyPatch, mod: ModuleType):
     result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
     assert "--age" in result.output
-    assert "INTEGER RANGE" in result.output
+    assert "INT RANGE" in result.output
     assert "--score" in result.output
     assert "FLOAT RANGE" in result.output
 

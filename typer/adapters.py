@@ -22,83 +22,80 @@ def build_adapter(
     annotation: Any,
     parameter_info: ParameterInfo,
 ) -> TypeAdapter[Any]:
-    """Build a Pydantic TypeAdapter for a parameter annotation and metadata."""
-    if parameter_info.parser is not None:
-        return _build_parser_adapter(parameter_info.parser)
-
+    """Build a Pydantic TypeAdapter for a parameter annotation and metadata.
+    Check for list/tuple and call this function recursively.
+    Otherwise, delegate to build_leaf_adapter.
+    """
     origin = get_origin(annotation)
     if origin is list:
-        (item_type,) = get_args(annotation)
-        item_adapter = build_adapter(item_type, parameter_info)
+        args = get_args(annotation)
+        if len(args) != 1:
+            raise ValueError(f"Expected one list item type, got: {args!r}")
+        list_type = args[0]
+        adapter = build_adapter(list_type, parameter_info)
 
         def parse_list(value: Any) -> list[Any]:
             if not isinstance(value, (list, tuple)):
-                value = (value,)
+                value = [value]
             return [
-                None if item is None else item_adapter.validate_python(item)
+                None if item is None else adapter.validate_python(item)
                 for item in value
             ]
 
         return TypeAdapter(Annotated[list[Any], BeforeValidator(parse_list)])
 
     if origin is tuple:
-        item_types = get_args(annotation)
-        item_adapters = [
-            build_adapter(item_type, parameter_info) for item_type in item_types
-        ]
+        types = get_args(annotation)
+        adapters = [build_adapter(t, parameter_info) for t in types]
 
         def parse_tuple(value: Any) -> tuple[Any, ...]:
             if not isinstance(value, (list, tuple)):
                 raise ValueError("value is not a valid tuple")
-            if len(value) != len(item_adapters):
+            if len(value) != len(adapters):
                 raise ValueError(
-                    f"{len(item_adapters)} values are required, but {len(value)} given."
+                    f"{len(adapters)} values are required, but {len(value)} given."
                 )
             return tuple(
                 None if item is None else adapter.validate_python(item)
-                for adapter, item in zip(item_adapters, value, strict=False)
+                for adapter, item in zip(adapters, value, strict=False)
             )
 
         return TypeAdapter(Annotated[tuple[Any, ...], BeforeValidator(parse_tuple)])
 
-    if is_number_type(annotation):
-        return build_leaf_adapter(
-            annotation,
-            min=parameter_info.min,
-            max=parameter_info.max,
-            clamp=parameter_info.clamp,
-        )
-    if annotation is datetime:
-        return build_leaf_adapter(annotation, formats=parameter_info.formats)
-
-    if lenient_issubclass(annotation, Enum):
-        return _build_choice_adapter(
-            list(annotation),
-            case_sensitive=parameter_info.case_sensitive,
-        )
-    if is_literal_type(annotation):
-        return _build_choice_adapter(
-            literal_values(annotation),
-            case_sensitive=parameter_info.case_sensitive,
-        )
-    if _needs_typer_path(annotation, parameter_info):
-        return build_path_adapter(annotation, parameter_info)
-    return build_leaf_adapter(annotation)
+    return build_leaf_adapter(annotation, parameter_info=parameter_info)
 
 
 def build_leaf_adapter(
     annotation: Any,
     *,
-    min: float | None = None,
-    max: float | None = None,
-    clamp: bool = False,
-    formats: Sequence[str] | None = None,
+    parameter_info: ParameterInfo,
 ) -> TypeAdapter[Any]:
     """Build a Pydantic TypeAdapter for a leaf CLI annotation and constraints."""
-    if annotation is datetime and formats is not None:
-        return _build_datetime_adapter(formats)
+    if parameter_info.parser is not None:
+        return _build_parser_adapter(parameter_info.parser)
+
+    if lenient_issubclass(annotation, Enum):
+        case_sensitive = parameter_info.case_sensitive
+        return _build_choice_adapter(
+            list(annotation),
+            case_sensitive=case_sensitive,
+        )
+    if is_literal_type(annotation):
+        case_sensitive = parameter_info.case_sensitive
+        return _build_choice_adapter(
+            literal_values(annotation),
+            case_sensitive=case_sensitive,
+        )
+    if _needs_typer_path(annotation, parameter_info):
+        return build_path_adapter(annotation, parameter_info)
+
+    if annotation is datetime:
+        return _build_datetime_adapter(parameter_info.formats)
 
     if is_number_type(annotation):
+        clamp = parameter_info.clamp
+        min = parameter_info.min
+        max = parameter_info.max
         if clamp:
             # Use AfterValidator so it runs after coercion
             return TypeAdapter(

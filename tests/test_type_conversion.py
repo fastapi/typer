@@ -447,6 +447,12 @@ def test_argv_encoding(
     stdin_encoding: str | None,
     filesystem_encoding: str,
 ) -> None:
+    app = typer.Typer()
+
+    @app.command()
+    def show(name: str = typer.Option(...)):
+        print(name)
+
     sys = _click._compat.sys
     if platform_case == "windows":
         import locale
@@ -461,5 +467,6 @@ def test_argv_encoding(
         monkeypatch.setattr(sys, "stdin", FakeStdin(stdin_encoding))
         monkeypatch.setattr(sys, "getfilesystemencoding", lambda: filesystem_encoding)
 
-    converted = typer.adapters.build_leaf_adapter(str).validate_python(b"\xff")
-    assert converted == "ÿ"
+    result = runner.invoke(app, [], default_map={"name": b"\xff"})
+    assert result.exit_code == 0
+    assert "ÿ" in result.output

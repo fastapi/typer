@@ -99,7 +99,7 @@ def test_parameter_constructor() -> None:
         required=False,
         count=True,
     )
-    assert option.type.name == "integer range"
+    assert option.type.name == "int range"
     assert option.min == 0
 
 
