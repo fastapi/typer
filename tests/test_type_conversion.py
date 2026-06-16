@@ -267,10 +267,6 @@ def test_string_param_type_converts_bytes(
     def show(name: str = typer.Option(...)):
         print(name)
 
-    command = typer.main.get_command(app)
-    name_param = next(param for param in command.params if param.name == "name")
-    assert repr(name_param.type) == "STRING"
-
     monkeypatch.setattr(_click._compat, "_get_argv_encoding", lambda: arg_enc)
     monkeypatch.setattr(sys, "getfilesystemencoding", lambda: system_enc)
 

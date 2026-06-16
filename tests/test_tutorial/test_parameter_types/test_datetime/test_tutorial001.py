@@ -2,19 +2,12 @@ import subprocess
 import sys
 from datetime import datetime
 
-import typer
 from typer.testing import CliRunner
 
 from docs_src.parameter_types.datetime import tutorial001_py310 as mod
 
 runner = CliRunner()
 app = mod.app
-
-
-def test_type_repr():
-    command = typer.main.get_command(app)
-    birth_param = next(param for param in command.params if param.name == "birth")
-    assert repr(birth_param.type) == "DateTime"
 
 
 def test_help():

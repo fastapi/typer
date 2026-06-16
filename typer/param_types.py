@@ -46,18 +46,13 @@ class DisplayParamType(types.ParamType):
         self,
         *,
         name: str,
-        repr_name: str | None = None,
         metavar: str | None = None,
     ) -> None:
         self.name = name
-        self._repr_name = repr_name or name
         self._metavar = metavar
 
     def get_metavar(self, param: Parameter, ctx: Context) -> str | None:
         return self._metavar
-
-    def __repr__(self) -> str:
-        return self._repr_name
 
 
 def datetime_param_type(formats: Sequence[str] | None = None) -> DisplayParamType:
@@ -66,20 +61,19 @@ def datetime_param_type(formats: Sequence[str] | None = None) -> DisplayParamTyp
 
     return DisplayParamType(
         name="datetime",
-        repr_name="DateTime",
         metavar=f"[{'|'.join(metavar_formats)}]",
     )
 
 
-INT = DisplayParamType(name="integer", repr_name="INT")
+INT = DisplayParamType(name="integer")
 
-FLOAT = DisplayParamType(name="float", repr_name="FLOAT")
+FLOAT = DisplayParamType(name="float")
 
-BOOL = DisplayParamType(name="boolean", repr_name="BOOL")
+BOOL = DisplayParamType(name="boolean")
 
-UUID = DisplayParamType(name="uuid", repr_name="UUID")
+UUID = DisplayParamType(name="uuid")
 
-STRING = DisplayParamType(name="text", repr_name="STRING")
+STRING = DisplayParamType(name="text")
 
 
 class FileDisplayType(DisplayParamType):
@@ -91,7 +85,7 @@ class FileDisplayType(DisplayParamType):
         return [CompletionItem(incomplete, type="file")]
 
 
-FILE = FileDisplayType(name="filename", repr_name="File")
+FILE = FileDisplayType(name="filename")
 
 CLI_FILE_TYPES = (FileTextWrite, FileText, FileBinaryRead, FileBinaryWrite)
 
@@ -209,9 +203,6 @@ class TyperChoice(types.ParamType, Generic[ParamTypeValue]):
         """Get the error message when the given choice is invalid."""
         choices_str = ", ".join(map(repr, self._normalized_mapping(ctx=ctx).values()))
         return f"{value!r} is not one of {choices_str}."
-
-    def __repr__(self) -> str:
-        return f"Choice({list(self.choices)})"
 
     def _choice_as_str(self, choice: ParamTypeValue) -> str:
         if isinstance(choice, Enum):

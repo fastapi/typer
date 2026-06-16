@@ -2,19 +2,12 @@ import subprocess
 import sys
 import uuid
 
-import typer
 from typer.testing import CliRunner
 
 from docs_src.parameter_types.uuid import tutorial001_py310 as mod
 
 runner = CliRunner()
 app = mod.app
-
-
-def test_type_repr():
-    command = typer.main.get_command(app)
-    user_id_param = next(param for param in command.params if param.name == "user_id")
-    assert repr(user_id_param.type) == "UUID"
 
 
 def test_main():

@@ -81,13 +81,6 @@ def test_enum_choice() -> None:
     assert "Hello Rick!" in result.output
 
 
-def test_enum_choice_repr() -> None:
-    root_command = typer.main.get_command(app)
-    command = root_command.commands["hello-option"]
-    name_param = next(param for param in command.params if param.name == "name")
-    assert repr(name_param.type).startswith("Choice([")
-
-
 def test_enum_choice_help() -> None:
     result = runner.invoke(app, ["hello-argument", "--help"])
     assert result.exit_code == 0
