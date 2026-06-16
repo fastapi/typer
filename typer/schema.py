@@ -3,11 +3,12 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
-from typing import IO, Any, Literal
+from typing import IO, TYPE_CHECKING, Any
 
 from pydantic import TypeAdapter, ValidationError
 
 from . import adapters
+from ._click import Context
 from ._click.exceptions import BadParameter, UsageError
 from ._click.types import ParamType
 from ._typing import get_args, get_origin, is_union
@@ -19,6 +20,9 @@ from .models import (
     ParamMeta,
     Required,
 )
+
+if TYPE_CHECKING:
+    from .core import TyperParameter
 from .param_types import (
     _get_error_msg,
     _open_cli_file,
@@ -33,8 +37,6 @@ from .param_types import (
     resolve_path_type,
 )
 
-ParamKind = Literal["option", "argument"]
-
 
 @dataclass(frozen=True)
 class DeclaredParam:
@@ -45,9 +47,6 @@ class DeclaredParam:
     default: Any
     required: bool
     annotation: Any
-    is_list: bool
-    is_tuple: bool
-    is_flag: bool | None
 
 
 @dataclass(frozen=True)
@@ -56,29 +55,21 @@ class RuntimeParam(ABC):
 
     name: str
     parameter_info: ParameterInfo
-    default: Any
-    required: bool
     annotation: Any
-    kind: ParamKind
-    multiple: bool
-    nargs: int
-    is_flag: bool
-    is_bool_flag: bool
 
     def coerce(
         self,
         value: Any,
         *,
-        param: Any | None = None,
-        ctx: Any | None = None,
+        param: TyperParameter,
+        ctx: Context,
     ) -> Any:
+        is_multi_value = param.multiple or param.nargs == -1
         if value is None:
-            if self.multiple or self.nargs == -1:
+            if is_multi_value:
                 return ()
             return None
-        if (self.multiple or self.nargs == -1) and isinstance(value, str):
-            if param is None:
-                raise ValueError("Value must be an iterable.")
+        if is_multi_value and isinstance(value, str):
             raise BadParameter("Value must be an iterable.", ctx=ctx, param=param)
         return self._coerce_value(value, param=param, ctx=ctx)
 
@@ -87,8 +78,8 @@ class RuntimeParam(ABC):
         self,
         value: Any,
         *,
-        param: Any | None,
-        ctx: Any | None,
+        param: TyperParameter,
+        ctx: Context,
     ) -> Any:
         pass
 
@@ -103,20 +94,14 @@ class AdapterRuntimeParam(RuntimeParam):
         self,
         value: Any,
         *,
-        param: Any | None,
-        ctx: Any | None,
+        param: TyperParameter,
+        ctx: Context,
     ) -> Any:
         try:
             return self.adapter.validate_python(value)
         except ValidationError as exc:
-            if param is None:
-                raise
-
             raise BadParameter(_get_error_msg(exc), ctx=ctx, param=param) from exc
         except ValueError as exc:
-            if param is None:
-                raise
-
             raise BadParameter(str(exc), ctx=ctx, param=param) from exc
 
 
@@ -130,8 +115,8 @@ class FileRuntimeParam(RuntimeParam):
         self,
         value: Any,
         *,
-        param: Any | None,
-        ctx: Any | None,
+        param: TyperParameter,
+        ctx: Context,
     ) -> Any:
         mode = resolve_file_mode(self.parameter_info, self.file_annotation)
 
@@ -159,8 +144,8 @@ class PathRuntimeParam(RuntimeParam):
         self,
         value: Any,
         *,
-        param: Any | None,
-        ctx: Any | None,
+        param: TyperParameter,
+        ctx: Context,
     ) -> Any:
         return coerce_cli_path(
             value,
@@ -182,8 +167,8 @@ class ChoiceRuntimeParam(RuntimeParam):
         self,
         value: Any,
         *,
-        param: Any | None,
-        ctx: Any | None,
+        param: TyperParameter,
+        ctx: Context,
     ) -> Any:
         try:
             return coerce_cli_choice(
@@ -193,8 +178,6 @@ class ChoiceRuntimeParam(RuntimeParam):
                 ctx=ctx,
             )
         except ValueError as exc:
-            if param is None:
-                raise
             raise BadParameter(str(exc), ctx=ctx, param=param) from exc
 
 
@@ -219,14 +202,6 @@ class CommandSchema:
                 return runtime_param
         return None
 
-    def coerce(self, values: dict[str, Any]) -> dict[str, Any]:
-        coerced: dict[str, Any] = {}
-        for name, value in values.items():
-            runtime_param = self.get_param(name)
-            if runtime_param is not None:
-                coerced[name] = runtime_param.coerce(value, param=None, ctx=None)
-        return coerced
-
 
 def declare_param(param: ParamMeta) -> DeclaredParam:
     """Declare metadata from a function parameter."""
@@ -245,9 +220,6 @@ def declare_param(param: ParamMeta) -> DeclaredParam:
         default = param.default
         parameter_info = OptionInfo()
 
-    is_list = False
-    is_tuple = False
-    is_flag: bool | None = None
     pydantic_annotation: Any
 
     if param.annotation is not param.empty:
@@ -270,7 +242,6 @@ def declare_param(param: ParamMeta) -> DeclaredParam:
                 assert not get_origin(element_type), (
                     "List types with complex sub-types are not currently supported"
                 )
-                is_list = True
                 pydantic_annotation = main_type
             elif lenient_issubclass(origin, tuple):
                 type_args = get_args(main_type)
@@ -278,7 +249,6 @@ def declare_param(param: ParamMeta) -> DeclaredParam:
                     assert not get_origin(type_), (
                         "Tuple types with complex sub-types are not currently supported"
                     )
-                is_tuple = True
                 pydantic_annotation = main_type
             else:
                 pydantic_annotation = main_type
@@ -295,50 +265,20 @@ def declare_param(param: ParamMeta) -> DeclaredParam:
             main_type = str
         pydantic_annotation = main_type
 
-    if isinstance(parameter_info, OptionInfo) and pydantic_annotation is bool:
-        is_flag = True
-    elif (
-        is_list
-        and isinstance(parameter_info, OptionInfo)
-        and parameter_info.param_decls
-        and get_args(pydantic_annotation) == (bool,)
-    ):
-        for decl in parameter_info.param_decls:
-            if "/" in decl:
-                is_flag = True
-                break
-
     return DeclaredParam(
         name=param.name,
         parameter_info=parameter_info,
         default=default,
         required=required,
         annotation=pydantic_annotation,
-        is_list=is_list,
-        is_tuple=is_tuple,
-        is_flag=is_flag,
     )
 
 
-def _runtime_param_fields(
-    declared: DeclaredParam,
-    *,
-    kind: ParamKind,
-    multiple: bool,
-    nargs: int,
-    is_bool_flag: bool,
-) -> dict[str, Any]:
+def _runtime_param_fields(declared: DeclaredParam) -> dict[str, Any]:
     return {
         "name": declared.name,
         "annotation": declared.annotation,
         "parameter_info": declared.parameter_info,
-        "kind": kind,
-        "multiple": multiple,
-        "nargs": nargs,
-        "is_flag": bool(declared.is_flag),
-        "is_bool_flag": is_bool_flag,
-        "required": declared.required,
-        "default": declared.default,
     }
 
 
@@ -350,17 +290,8 @@ def bool_flag_runtime_param(*, name: str, default: bool = False) -> RuntimeParam
         default=default,
         required=False,
         annotation=bool,
-        is_list=False,
-        is_tuple=False,
-        is_flag=True,
     )
-    return runtime_param_from_declared(
-        declared,
-        kind="option",
-        multiple=False,
-        nargs=1,
-        is_bool_flag=True,
-    )
+    return runtime_param_from_declared(declared)
 
 
 def prompt_value_proc(
@@ -390,21 +321,8 @@ def prompt_value_proc(
     return coerce
 
 
-def runtime_param_from_declared(
-    declared: DeclaredParam,
-    *,
-    kind: ParamKind,
-    multiple: bool,
-    nargs: int,
-    is_bool_flag: bool,
-) -> RuntimeParam:
-    common = _runtime_param_fields(
-        declared,
-        kind=kind,
-        multiple=multiple,
-        nargs=nargs,
-        is_bool_flag=is_bool_flag,
-    )
+def runtime_param_from_declared(declared: DeclaredParam) -> RuntimeParam:
+    common = _runtime_param_fields(declared)
     file_annotation = file_coercion_annotation(declared.annotation)
     if file_annotation is not None:
         return FileRuntimeParam(**common, file_annotation=file_annotation)

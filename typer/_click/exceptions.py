@@ -151,19 +151,10 @@ class MissingParameter(BadParameter):
                 else:
                     msg = msg_extra
 
-        msg = f" {msg}" if msg else ""
+        if msg:
+            return f"Missing {param_type}{param_hint}. {msg}"
 
-        # Translate param_type for known types.
-        if param_type == "argument":
-            missing = "Missing argument"
-        elif param_type == "option":
-            missing = "Missing option"
-        elif param_type == "parameter":
-            missing = "Missing parameter"
-        else:
-            missing = f"Missing {param_type}"
-
-        return f"{missing}{param_hint}.{msg}"
+        return f"Missing {param_type}{param_hint}."
 
     def __str__(self) -> str:
         if not self.message:

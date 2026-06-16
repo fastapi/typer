@@ -1,6 +1,6 @@
 import os
 import stat
-from collections.abc import Callable, Iterable, Mapping, Sequence
+from collections.abc import Iterable, Mapping, Sequence
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
@@ -47,18 +47,14 @@ class DisplayParamType(types.ParamType):
         *,
         name: str,
         repr_name: str | None = None,
-        metavar: str | Callable[[Parameter, Context], str | None] | None = None,
+        metavar: str | None = None,
     ) -> None:
         self.name = name
         self._repr_name = repr_name or name
         self._metavar = metavar
 
     def get_metavar(self, param: Parameter, ctx: Context) -> str | None:
-        if self._metavar is None:
-            return None
-        if isinstance(self._metavar, str):
-            return self._metavar
-        return self._metavar(param, ctx)
+        return self._metavar
 
     def __repr__(self) -> str:
         return self._repr_name

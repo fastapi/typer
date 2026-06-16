@@ -617,17 +617,8 @@ class TyperOption(TyperParameter):
                 default=self.default if self.default is not None else 0,
                 required=required,
                 annotation=int,
-                is_list=False,
-                is_tuple=False,
-                is_flag=False,
             )
-            self.runtime_param = runtime_param_from_declared(
-                declared,
-                kind="option",
-                multiple=False,
-                nargs=1,
-                is_bool_flag=False,
-            )
+            self.runtime_param = runtime_param_from_declared(declared)
 
     def get_error_hint(self, ctx: _click.Context) -> str:
         result = super().get_error_hint(ctx)
@@ -760,19 +751,6 @@ class TyperOption(TyperParameter):
             value_proc=lambda x: self.process_value(ctx, x),
             **prompt_kwargs,
         )
-
-    def value_from_envvar(self, ctx: _click.Context) -> Any:
-        # TODO: clean up
-        rv = self.resolve_envvar_value(ctx)
-
-        # Absent environment variable or an empty string is interpreted as unset.
-        if rv is None:
-            return None
-
-        if self.nargs != 1 or self.multiple:
-            return self.type.split_envvar_value(rv)
-
-        return rv
 
     def resolve_envvar_value(self, ctx: _click.Context) -> str | None:
         rv = super().resolve_envvar_value(ctx)

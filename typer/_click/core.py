@@ -986,15 +986,14 @@ class Parameter(ABC):
         return None
 
     def value_from_envvar(self, ctx: Context) -> str | Sequence[str] | None:
-        """Process the raw environment variable string for this parameter.
+        """Process the value from the environment variable.
 
         Returns the string as-is or splits it into a sequence of strings if the
-        parameter is expecting multiple values (i.e. its `nargs` property is set
-        to a value other than ``1``).
+        parameter is expecting multiple values.
         """
         rv: Any | None = self.resolve_envvar_value(ctx)
 
-        if rv is not None and self.nargs != 1:
+        if rv is not None and (self.nargs != 1 or self.multiple):
             rv = self.type.split_envvar_value(rv)
 
         return rv

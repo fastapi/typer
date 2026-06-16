@@ -38,7 +38,7 @@ from .models import (
     ParamMeta,
     TyperInfo,
 )
-from .param_types import TyperTuple, cli_param_type, lenient_issubclass
+from .param_types import cli_param_type, lenient_issubclass
 from .schema import CommandSchema, declare_param, runtime_param_from_declared
 from .utils import get_params_from_function
 
@@ -1458,18 +1458,29 @@ def get_param(
     parameter_info = declared.parameter_info
     default_value = declared.default
     required = declared.required
-    is_list = declared.is_list
-    is_flag = declared.is_flag
+    annotation_args = get_args(declared.annotation)
+    is_list = get_origin(declared.annotation) is list
+    is_flag = None
+    if isinstance(parameter_info, OptionInfo):
+        if declared.annotation is bool:
+            is_flag = True
+        elif (
+            is_list
+            and annotation_args == (bool,)
+            and parameter_info.param_decls
+            and any("/" in decl for decl in parameter_info.param_decls)
+        ):
+            is_flag = True
     parameter_type: ParamType | None = cli_param_type(
         annotation=declared.annotation,
         parameter_info=parameter_info,
         default=default_value,
         is_list=is_list,
-        is_tuple=declared.is_tuple,
+        is_tuple=get_origin(declared.annotation) is tuple,
     )
 
     if isinstance(parameter_info, OptionInfo):
-        if declared.is_flag:
+        if is_flag:
             parameter_type = None
         default_option_name = get_command_name(param.name)
         if is_flag:
@@ -1483,19 +1494,7 @@ def get_param(
             param_decls.extend(parameter_info.param_decls)
         else:
             param_decls.append(default_option_declaration)
-        runtime_param = runtime_param_from_declared(
-            declared,
-            kind="option",
-            multiple=is_list,
-            nargs=1,
-            is_bool_flag=bool(
-                declared.is_flag
-                and (
-                    declared.annotation is bool
-                    or (declared.is_list and get_args(declared.annotation) == (bool,))
-                )
-            ),
-        )
+        runtime_param = runtime_param_from_declared(declared)
         return TyperOption(
             # Option
             param_decls=param_decls,
@@ -1534,16 +1533,7 @@ def get_param(
         nargs = None
         if is_list:
             nargs = -1
-        binding_nargs = nargs if nargs is not None else 1
-        if isinstance(parameter_type, TyperTuple):
-            binding_nargs = parameter_type.arity
-        runtime_param = runtime_param_from_declared(
-            declared,
-            kind="argument",
-            multiple=is_list,
-            nargs=binding_nargs,
-            is_bool_flag=False,
-        )
+        runtime_param = runtime_param_from_declared(declared)
         return TyperArgument(
             # Argument
             param_decls=param_decls,
