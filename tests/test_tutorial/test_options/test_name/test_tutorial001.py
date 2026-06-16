@@ -26,7 +26,7 @@ def test_option_help(mod: ModuleType):
     result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
     assert "--name" in result.output
-    assert "TEXT" in result.output
+    assert "STR" in result.output
     assert "--user-name" not in result.output
 
 

@@ -130,6 +130,9 @@ class TyperParameter(_click.core.Parameter):
     def value_is_missing(self, value: Any) -> bool:
         return _value_is_missing(self, value)
 
+    def make_metavar(self, ctx: _click.Context) -> str:
+        return param_types.resolve_metavar(self, ctx=ctx)
+
 
 def _get_default_string(
     obj: Union["TyperArgument", "TyperOption"],
@@ -440,24 +443,6 @@ class TyperArgument(TyperParameter):
             help = f"{help}  {extra_str}" if help else f"{extra_str}"
         return name, help
 
-    def make_metavar(self, ctx: _click.Context) -> str:
-        # Modified version of _click.core.Argument.make_metavar()
-        # to include Argument name
-        if self.metavar is not None:
-            var = self.metavar
-            if not self.required and not var.startswith("["):
-                var = f"[{var}]"
-            return var
-        var = (self.name or "").upper()
-        if not self.required:
-            var = f"[{var}]"
-        type_var = self.type.get_metavar(self, ctx=ctx)
-        if type_var:
-            var += f":{type_var}"
-        if self.nargs != 1:
-            var += "..."
-        return var
-
     def _parse_decls(
         self, decls: Sequence[str], expose_value: bool
     ) -> tuple[str | None, list[str], list[str]]:
@@ -572,11 +557,12 @@ class TyperOption(TyperParameter):
         self.hidden = hidden
 
         # TODO: revisit all of this flag stuff
-        if is_flag and type is None:
-            self.type: types.ParamType = param_types.BOOL
+        inferred_bool_flag = bool(is_flag and type is None and not count)
+        if inferred_bool_flag:
+            self.type: types.ParamType = param_types.DEFAULT_PARAM_TYPE
 
         self.is_flag: bool = bool(is_flag)
-        self.is_bool_flag: bool = bool(is_flag and self.type is param_types.BOOL)
+        self.is_bool_flag: bool = inferred_bool_flag
 
         if self.is_flag:
             self._depr_flag_value = True
@@ -814,9 +800,6 @@ class TyperOption(TyperParameter):
         self, *, ctx: _click.Context
     ) -> Any | Callable[[], Any] | None:
         return _extract_default_help_str(self, ctx=ctx)
-
-    def make_metavar(self, ctx: _click.Context) -> str:
-        return super().make_metavar(ctx=ctx)
 
     def get_help_record(self, ctx: _click.Context) -> tuple[str, str] | None:
         # Duplicate all of Click's logic only to modify a single line, to allow boolean

@@ -39,7 +39,7 @@ def test_help(mod: ModuleType):
     result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
     assert "--lastname" in result.output
-    assert "TEXT" in result.output
+    assert "STR" in result.output
     assert "[required]" in result.output
 
 

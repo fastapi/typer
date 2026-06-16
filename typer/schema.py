@@ -259,6 +259,12 @@ def declare_param(param: ParamMeta) -> DeclaredParam:
             main_type, guessed = infer_type_from_default(default)
             if main_type is None:
                 main_type = str
+            elif (
+                guessed
+                and isinstance(main_type, tuple)
+                and all(isinstance(item, type) for item in main_type)
+            ):
+                main_type = tuple.__class_getitem__(main_type)
             elif guessed and main_type not in (int, float, bool, str):
                 main_type = str
         else:

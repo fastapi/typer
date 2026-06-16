@@ -2,20 +2,12 @@ import os
 import sys
 from enum import Enum
 from pathlib import Path
-from typing import Any
+from typing import Annotated, Any, get_args, get_origin
 
 import pytest
 import typer
 from typer import _click, param_types
-from typer.param_types import (
-    BOOL,
-    FLOAT,
-    INT,
-    STRING,
-    TyperPath,
-    TyperTuple,
-    resolve_param_type,
-)
+from typer.param_types import TyperPath
 from typer.testing import CliRunner
 
 from tests.utils import needs_linux, needs_windows
@@ -345,20 +337,19 @@ def test_path_convert_failures(
 
 
 @pytest.mark.parametrize(
-    ("default", "expected_param_type", "expected_value", "value_type"),
+    ("default", "expected_annotation"),
     [
-        (42, INT, 42, int),
-        (0.5, FLOAT, 0.5, float),
-        ("morty", STRING, "morty", str),
-        (False, BOOL, False, bool),
-        ("False", STRING, "False", str),
+        (42, int),
+        (0.5, float),
+        ("morty", str),
+        (False, bool),
+        ("False", str),
+        ((1, "x"), tuple[int, str]),
     ],
 )
 def test_default_infers_param_type(
     default: Any,
-    expected_param_type: Any,
-    expected_value: Any,
-    value_type: type,
+    expected_annotation: Any,
 ) -> None:
     app = typer.Typer()
     seen: dict[str, Any] = {}
@@ -368,49 +359,42 @@ def test_default_infers_param_type(
         seen["val"] = val
 
     param = next(p for p in typer.main.get_command(app).params if p.name == "val")
-    assert param.type is expected_param_type
+    assert param.runtime_param is not None
+    if get_origin(expected_annotation) is tuple:
+        assert get_origin(param.runtime_param.annotation) is tuple
+        assert get_args(param.runtime_param.annotation) == get_args(expected_annotation)
+    else:
+        assert param.runtime_param.annotation is expected_annotation
 
     result = runner.invoke(app)
     assert result.exit_code == 0, result.output
-    assert seen["val"] == expected_value
-    assert type(seen["val"]) is value_type
+    assert seen["val"] == default
+    if expected_annotation in (int, float, bool, str):
+        assert type(seen["val"]) is expected_annotation
+    elif get_origin(expected_annotation) is tuple:
+        assert isinstance(seen["val"], tuple)
 
 
-def test_convert_type():
-    # str
-    assert resolve_param_type(str) is STRING
-    assert resolve_param_type(None) is STRING
-    assert resolve_param_type(None, default=["a"]) is STRING
+@pytest.mark.parametrize(
+    ("annotation", "expected_metavar"),
+    [
+        (str, "STR"),
+        (int, "INT"),
+        (float, "FLOAT"),
+        (tuple[str, int], "<STR INT>"),
+    ],
+)
+def test_param_type_help_metavar(annotation: type, expected_metavar: str) -> None:
+    app = typer.Typer()
+    option = Annotated[annotation, typer.Option(...)]
 
-    # tuples
-    tuple_type = resolve_param_type((str, int))
-    assert isinstance(tuple_type, TyperTuple)
-    assert [type(item) for item in tuple_type.types] == [type(STRING), type(INT)]
+    @app.command()
+    def main(value: option):
+        pass  # pragma: no cover
 
-    guessed_tuple = resolve_param_type(None, default=[(1, "x")])
-    assert isinstance(guessed_tuple, TyperTuple)
-    assert [type(item) for item in guessed_tuple.types] == [
-        type(INT),
-        type(STRING),
-    ]
-
-    # numbers
-    assert resolve_param_type(int) is INT
-    assert resolve_param_type(float) is FLOAT
-    assert resolve_param_type(bool) is BOOL
-
-    guessed_int = resolve_param_type(None, default=42)
-    assert guessed_int is INT
-
-    # custom type
-    class CustomType:
-        pass
-
-    guessed_unknown = resolve_param_type(None, default=CustomType())
-    assert guessed_unknown is STRING
-
-    func_type = resolve_param_type(CustomType)
-    assert func_type is STRING
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert expected_metavar in result.output
 
 
 def test_int_rejects_float_default() -> None:

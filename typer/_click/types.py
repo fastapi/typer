@@ -17,7 +17,6 @@ class ParamType:
     """Display and plumbing metadata for a CLI parameter type."""
 
     is_composite: ClassVar[bool] = False
-    name: str
 
     @property
     def arity(self) -> int:
@@ -30,10 +29,6 @@ class ParamType:
     # are split by ``os.path.pathsep`` by default (":" on Unix and ";" on
     # Windows).
     envvar_list_splitter: ClassVar[str | None] = None
-
-    def get_metavar(self, param: "Parameter", ctx: "Context") -> str | None:
-        """Returns the metavar default for this param if it provides one."""
-        pass  # pragma: no cover
 
     def get_missing_message(
         self, param: "Parameter", ctx: Union["Context", None]

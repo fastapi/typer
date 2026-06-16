@@ -879,20 +879,6 @@ class Parameter(ABC):
         assert self.name is not None, "self.name should be set"
         return self.name
 
-    def make_metavar(self, ctx: Context) -> str:
-        if self.metavar is not None:
-            return self.metavar
-
-        metavar = self.type.get_metavar(param=self, ctx=ctx)
-
-        if metavar is None:
-            metavar = self.type.name.upper()
-
-        if self.nargs != 1:
-            metavar += "..."
-
-        return metavar
-
     @overload
     def get_default(self, ctx: Context, call: Literal[True] = True) -> Any | None: ...
 

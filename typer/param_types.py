@@ -5,7 +5,6 @@ from datetime import datetime
 from enum import Enum
 from pathlib import Path
 from typing import IO, Any, ClassVar, Generic, TypeGuard, TypeVar, cast
-from uuid import UUID as UUIDType
 
 from pydantic import TypeAdapter, ValidationError
 
@@ -39,44 +38,24 @@ def _get_error_msg(exc: ValidationError) -> str:
     return str(exc)
 
 
-class DisplayParamType(types.ParamType):
-    """Used for metavar/help only."""
-
-    def __init__(
-        self,
-        *,
-        name: str,
-        metavar: str | None = None,
-    ) -> None:
-        self.name = name
-        self._metavar = metavar
-
-    def get_metavar(self, param: Parameter, ctx: Context) -> str | None:
-        return self._metavar
+DEFAULT_PARAM_TYPE = types.ParamType()
 
 
-def datetime_param_type(formats: Sequence[str] | None = None) -> DisplayParamType:
-    formats_tuple = tuple(formats) if formats is not None else None
-    metavar_formats = formats_tuple or ["%Y-%m-%d"]
-
-    return DisplayParamType(
-        name="datetime",
-        metavar=f"[{'|'.join(metavar_formats)}]",
-    )
+class _DatetimeDisplayType(types.ParamType):
+    def __init__(self, *, formats: tuple[str, ...]) -> None:
+        self.formats = formats
 
 
-INT = DisplayParamType(name="integer")
-
-FLOAT = DisplayParamType(name="float")
-
-BOOL = DisplayParamType(name="boolean")
-
-UUID = DisplayParamType(name="uuid")
-
-STRING = DisplayParamType(name="text")
+def datetime_value_metavar(formats: Sequence[str]) -> str:
+    return f"[{'|'.join(formats)}]"
 
 
-class FileDisplayType(DisplayParamType):
+def datetime_param_type(formats: Sequence[str] | None = None) -> _DatetimeDisplayType:
+    formats_tuple = tuple(formats) if formats is not None else ("%Y-%m-%d",)
+    return _DatetimeDisplayType(formats=formats_tuple)
+
+
+class FileDisplayType(types.ParamType):
     envvar_list_splitter = os.path.pathsep
 
     def shell_complete(
@@ -85,14 +64,68 @@ class FileDisplayType(DisplayParamType):
         return [CompletionItem(incomplete, type="file")]
 
 
-FILE = FileDisplayType(name="filename")
+FILE = FileDisplayType()
+
+
+class _RangedNumberParamType(types.ParamType):
+    def __init__(self, annotation: type[Any]) -> None:
+        self.annotation = annotation
+
+
+def _param_annotation(param: Parameter) -> Any | None:
+    runtime_param = getattr(param, "runtime_param", None)
+    if runtime_param is not None:
+        return runtime_param.annotation
+    return None
+
+
+def _annotation_metavar_label(annotation: Any) -> str:
+    if annotation is None:
+        return "STR"
+    origin = get_origin(annotation)
+    if origin is list:
+        args = get_args(annotation)
+        if len(args) == 1:
+            return _annotation_metavar_label(args[0])
+    if origin is tuple:
+        labels = [_annotation_metavar_label(arg) for arg in get_args(annotation)]
+        return f"<{' '.join(labels)}>"
+    if isinstance(annotation, type):
+        return annotation.__name__.upper()
+    return str(annotation).upper()
+
+
+def param_type_metavar_label(
+    param_type: types.ParamType,
+    *,
+    annotation: Any | None = None,
+) -> str:
+    if isinstance(param_type, _DatetimeDisplayType):
+        return datetime_value_metavar(param_type.formats)
+    if isinstance(param_type, _RangedNumberParamType):
+        return f"{param_type.annotation.__name__.upper()} RANGE"
+    if isinstance(param_type, TyperTuple):
+        labels = [
+            _annotation_metavar_label(element)
+            for element in param_type.element_annotations
+        ]
+        return f"<{' '.join(labels)}>"
+    if isinstance(param_type, TyperPath):
+        if param_type.file_okay and not param_type.dir_okay:
+            return "FILE"
+        if param_type.dir_okay and not param_type.file_okay:
+            return "DIRECTORY"
+        return "PATH"
+    if annotation is not None:
+        return _annotation_metavar_label(annotation)
+    return "STR"
+
 
 CLI_FILE_TYPES = (FileTextWrite, FileText, FileBinaryRead, FileBinaryWrite)
 
 
 def normalize_choice_value(
     choice: Any,
-    *,
     case_sensitive: bool,
     ctx: Context | None,
 ) -> str:
@@ -114,10 +147,9 @@ def coerce_cli_choice(
     if any(isinstance(choice, Enum) and value is choice for choice in choices):
         return value
     normalized_mapping = {
-        choice: normalize_choice_value(choice, case_sensitive=case_sensitive, ctx=ctx)
-        for choice in choices
+        c: normalize_choice_value(c, case_sensitive, ctx) for c in choices
     }
-    normed_value = normalize_choice_value(value, case_sensitive=case_sensitive, ctx=ctx)
+    normed_value = normalize_choice_value(value, case_sensitive, ctx)
     for original, normalized in normalized_mapping.items():
         if normalized == normed_value:
             return original
@@ -141,13 +173,12 @@ class TyperTuple(types.ParamType):
 
     is_composite = True
 
-    def __init__(self, element_types: Sequence[types.ParamType]) -> None:
-        self.types: tuple[types.ParamType, ...] = tuple(element_types)
-        self.name = f"<{' '.join(t.name for t in self.types)}>"
+    def __init__(self, element_annotations: Sequence[Any]) -> None:
+        self.element_annotations: tuple[Any, ...] = tuple(element_annotations)
 
     @property
     def arity(self) -> int:
-        return len(self.types)
+        return len(self.element_annotations)
 
 
 class TyperChoice(types.ParamType, Generic[ParamTypeValue]):
@@ -172,27 +203,7 @@ class TyperChoice(types.ParamType, Generic[ParamTypeValue]):
         }
 
     def normalize_choice(self, choice: ParamTypeValue, ctx: Context | None) -> str:
-        return normalize_choice_value(
-            choice, case_sensitive=self.case_sensitive, ctx=ctx
-        )
-
-    def get_metavar(self, param: Parameter, ctx: Context) -> str | None:
-        if param.param_type_name == "option" and not param.show_choices:  # type: ignore
-            choice_metavars = [
-                resolve_param_type(type(choice)).name.upper() for choice in self.choices
-            ]
-            choices_str = "|".join([*dict.fromkeys(choice_metavars)])
-        else:
-            choices_str = "|".join(
-                [str(i) for i in self._normalized_mapping(ctx=ctx).values()]
-            )
-
-        # Use curly braces to indicate a required argument.
-        if param.required and param.param_type_name == "argument":
-            return f"{{{choices_str}}}"
-
-        # Use square braces to indicate an option or optional argument.
-        return f"[{choices_str}]"
+        return normalize_choice_value(choice, self.case_sensitive, ctx)
 
     def get_missing_message(self, param: Parameter, ctx: Context | None) -> str:
         """Message shown when no choice is passed."""
@@ -247,13 +258,6 @@ class TyperPath(types.ParamType):
         self.resolve_path = resolve_path
         self.allow_dash = allow_dash
         self.path_type = path_type
-
-        if self.file_okay and not self.dir_okay:
-            self.name = "file"
-        elif self.dir_okay and not self.file_okay:
-            self.name = "directory"
-        else:
-            self.name = "path"
 
     def shell_complete(
         self, ctx: Context, param: Parameter, incomplete: str
@@ -490,8 +494,8 @@ def _file_param_type() -> FileDisplayType:
     return FILE
 
 
-def _ranged_number_param_type(number_class: type[Any]) -> types.ParamType:
-    return DisplayParamType(name=f"{number_class.__name__} range")
+def _ranged_number_param_type(annotation: type[Any]) -> _RangedNumberParamType:
+    return _RangedNumberParamType(annotation)
 
 
 def _needs_typer_path(annotation: Any, parameter_info: ParameterInfo) -> bool:
@@ -505,6 +509,9 @@ def _needs_typer_path(annotation: Any, parameter_info: ParameterInfo) -> bool:
 
 def infer_type_from_default(default: Any) -> tuple[Any | None, bool]:
     """Infer a type from a default value. Returns (annotation, guessed)."""
+    if isinstance(default, tuple) and default:
+        if not isinstance(default[0], (tuple, list)):
+            return tuple(map(type, default)), True
     if isinstance(default, (tuple, list)):
         if not default:
             return None, True
@@ -522,22 +529,11 @@ def resolve_param_type(
     parameter_info: ParameterInfo | None = None,
 ) -> types.ParamType:
     """Resolve a display ParamType for metavar/help."""
-    guessed_type = False
     if annotation is None and default is not None:
-        annotation, guessed_type = infer_type_from_default(default)
+        annotation, _ = infer_type_from_default(default)
 
     if isinstance(annotation, tuple):
-        element_types: list[types.ParamType] = []
-        for element in annotation:
-            if isinstance(element, types.ParamType):
-                element_types.append(element)
-            else:
-                element_types.append(
-                    resolve_param_type(
-                        annotation=element, parameter_info=parameter_info
-                    )
-                )
-        return TyperTuple(element_types)
+        return TyperTuple(annotation)
 
     if isinstance(annotation, types.ParamType):
         return annotation
@@ -547,19 +543,7 @@ def resolve_param_type(
         if param_type is not None:
             return param_type
 
-    if annotation is str or annotation is None:
-        return STRING
-    if annotation is int:
-        return INT
-    if annotation is float:
-        return FLOAT
-    if annotation is bool:
-        return BOOL
-
-    if guessed_type:
-        return STRING
-
-    return STRING
+    return DEFAULT_PARAM_TYPE
 
 
 def cli_param_type(
@@ -595,27 +579,100 @@ def param_type_from_annotation(
     if annotation is int or annotation is float:
         if parameter_info.min is not None or parameter_info.max is not None:
             return _ranged_number_param_type(annotation)
-        return INT if annotation is int else FLOAT
-    if annotation is UUIDType:
-        return UUID
+        return None
     if annotation is datetime:
         return datetime_param_type(formats=parameter_info.formats)
-    if annotation is bool:
-        return BOOL
     if _needs_typer_path(annotation, parameter_info):
         return typer_path_display_type(annotation, parameter_info)
     if lenient_issubclass(annotation, Enum):
-        return TyperChoice(
-            list(annotation),
-            case_sensitive=parameter_info.case_sensitive,
-        )
+        return TyperChoice(list(annotation), parameter_info.case_sensitive)
     if is_literal_type(annotation):
-        return TyperChoice(
-            literal_values(annotation),
-            case_sensitive=parameter_info.case_sensitive,
-        )
-    if annotation is str:
-        return STRING
+        return TyperChoice(literal_values(annotation), parameter_info.case_sensitive)
     if lenient_issubclass(annotation, CLI_FILE_TYPES):
         return _file_param_type()
     return None
+
+
+def choice_value_metavar(
+    param: Parameter,
+    ctx: Context,
+    *,
+    choices: Sequence[Any],
+    case_sensitive: bool,
+) -> str:
+    if param.param_type_name == "option" and not param.show_choices:  # type: ignore
+        metavars = [_annotation_metavar_label(type(c)) for c in choices]
+        choices_str = "|".join([*dict.fromkeys(metavars)])
+    else:
+        normalized_mapping = {
+            c: normalize_choice_value(c, case_sensitive, ctx) for c in choices
+        }
+        choices_str = "|".join(normalized_mapping.values())
+
+    if param.required and param.param_type_name == "argument":
+        return f"{{{choices_str}}}"
+
+    return f"[{choices_str}]"
+
+
+def resolve_value_metavar(param: Parameter, ctx: Context) -> str | None:
+    param_type = param.type
+    if isinstance(param_type, TyperChoice):
+        return choice_value_metavar(
+            param,
+            ctx,
+            choices=param_type.choices,
+            case_sensitive=param_type.case_sensitive,
+        )
+    if isinstance(param_type, _DatetimeDisplayType):
+        return datetime_value_metavar(param_type.formats)
+    if getattr(param, "param_type_name", None) == "argument":
+        return None
+    return param_type_metavar_label(param_type, annotation=_param_annotation(param))
+
+
+def _format_option_metavar(param: Parameter, value_metavar: str) -> str:
+    if param.nargs != 1:
+        value_metavar += "..."
+    return value_metavar
+
+
+def _format_argument_metavar(param: Parameter, value_metavar: str | None) -> str:
+    var = (param.name or "").upper()
+    if not param.required:
+        var = f"[{var}]"
+    if value_metavar:
+        var += f":{value_metavar}"
+    if param.nargs != 1:
+        var += "..."
+    return var
+
+
+def resolve_metavar(param: Parameter, ctx: Context) -> str:
+    if param.metavar is not None:
+        var = param.metavar
+        if getattr(param, "param_type_name", None) == "argument":
+            if not param.required and not var.startswith("["):
+                var = f"[{var}]"
+        return var
+
+    value_metavar = resolve_value_metavar(param, ctx)
+    if getattr(param, "param_type_name", None) == "argument":
+        return _format_argument_metavar(param, value_metavar)
+    assert value_metavar is not None
+    return _format_option_metavar(param, value_metavar)
+
+
+def resolve_rich_metavar(param: Parameter, ctx: Context) -> str | None:
+    metavar_str = resolve_metavar(param, ctx)
+    if (
+        getattr(param, "param_type_name", None) == "argument"
+        and param.name
+        and metavar_str == param.name.upper()
+    ):
+        metavar_str = param_type_metavar_label(
+            param.type, annotation=_param_annotation(param)
+        )
+    if metavar_str == "BOOL":
+        return None
+    return metavar_str

@@ -13,7 +13,7 @@ def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     assert "--age" in result.output
-    assert "INTEGER" in result.output
+    assert "INT" in result.output
     assert "--height-meters" in result.output
     assert "FLOAT" in result.output
 

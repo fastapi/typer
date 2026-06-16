@@ -65,8 +65,8 @@ $ multiapp sub hello [OPTIONS]
 
 **Options**:
 
-* `--name TEXT`: [default: World]
-* `--age INTEGER`: The age of the user  [default: 0]
+* `--name STR`: [default: World]
+* `--age INT`: The age of the user  [default: 0]
 * `--help`: Show this message and exit.
 
 ### `multiapp sub hi`

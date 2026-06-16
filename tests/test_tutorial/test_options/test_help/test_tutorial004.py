@@ -34,7 +34,7 @@ def test_help(monkeypatch, mod: ModuleType):
     result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
     assert "--fullname" in result.output
-    assert "TEXT" in result.output
+    assert "STR" in result.output
     assert "[default: (Deadpoolio the amazing's name)]" in result.output
 
 
