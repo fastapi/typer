@@ -453,18 +453,13 @@ def test_argv_encoding(
     def show(name: str = typer.Option(...)):
         print(name)
 
-    sys = _click._compat.sys
     if platform_case == "windows":
         import locale
 
         monkeypatch.setattr(locale, "getpreferredencoding", lambda: "latin-1")
     else:
-
-        class FakeStdin:
-            def __init__(self, encoding: str | None) -> None:
-                self.encoding = encoding
-
-        monkeypatch.setattr(sys, "stdin", FakeStdin(stdin_encoding))
+        argv_encoding = stdin_encoding or filesystem_encoding
+        monkeypatch.setattr(_click._compat, "_get_argv_encoding", lambda: argv_encoding)
         monkeypatch.setattr(sys, "getfilesystemencoding", lambda: filesystem_encoding)
 
     result = runner.invoke(app, [], default_map={"name": b"\xff"})
