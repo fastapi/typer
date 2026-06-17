@@ -6,7 +6,7 @@ from typer.testing import CliRunner
 runner = CliRunner()
 
 
-def test_runtime_coercion_on_invoke() -> None:
+def test_coercion() -> None:
     app = typer.Typer()
     seen: dict[str, object] = {}
 
@@ -21,18 +21,19 @@ def test_runtime_coercion_on_invoke() -> None:
     assert seen == {"items": [1, 2], "active": True, "val": 7}
 
 
-def test_runtime_coercion_invalid_value() -> None:
+def test_coercion_invalid() -> None:
     app = typer.Typer()
 
     @app.command()
     def main(age: int):
         pass
 
-    result = runner.invoke(app, ["--age", "not-an-int"])
-    assert result.exit_code != 0
+    result = runner.invoke(app, ["not-an-int"])
+    assert "Input should be a valid integer" in result.stderr
+    assert result.exit_code == 2
 
 
-def test_path_runtime_coercion_on_invoke(tmp_path: Path) -> None:
+def test_coercion_path(tmp_path: Path) -> None:
     target = tmp_path / "config.txt"
     target.write_text("hello\n", encoding="utf-8")
     app = typer.Typer()
@@ -43,11 +44,11 @@ def test_path_runtime_coercion_on_invoke(tmp_path: Path) -> None:
         seen.append(config)
 
     result = runner.invoke(app, ["--config", str(target)])
-    assert result.exit_code == 0, result.output
+    assert result.exit_code == 0
     assert seen == [target]
 
 
-def test_tuple_file_runtime_coercion_on_invoke(tmp_path: Path) -> None:
+def test_coercion_tuple_files(tmp_path: Path) -> None:
     first = tmp_path / "first.txt"
     second = tmp_path / "second.txt"
     first.write_text("first-content\n", encoding="utf-8")

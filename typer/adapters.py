@@ -72,7 +72,13 @@ def build_leaf_adapter(
 ) -> TypeAdapter[Any]:
     """Build a Pydantic TypeAdapter for a leaf CLI annotation and constraints."""
     if parameter_info.parser is not None:
-        return _build_parser_adapter(parameter_info.parser)
+        parser = parameter_info.parser
+
+        # We need this because Pydantic would otherwise reject a callable class
+        def parse(value: Any) -> Any:
+            return parser(value)
+
+        return TypeAdapter(Annotated[Any, BeforeValidator(parse)])
 
     if lenient_issubclass(annotation, Enum):
         case_sensitive = parameter_info.case_sensitive
@@ -166,12 +172,13 @@ def _decode_cli_bytes(value: Any) -> Any:
 
 # BOOL #
 def _parse_cli_bool(value: Any) -> Any:
-    if isinstance(value, str):
-        stripped = value.strip()
-        if stripped == "":
-            return False
-        return stripped
-    return value
+    if not isinstance(value, str):
+        return value
+
+    stripped = value.strip()
+    if stripped == "":
+        return False
+    return stripped
 
 
 # NUMBER #
@@ -188,22 +195,6 @@ def _make_number_clamp_validator(
         return value
 
     return clamp_number
-
-
-# PARSER #
-def _build_parser_adapter(parser: Callable[[Any], Any]) -> TypeAdapter[Any]:
-    def parse_with_parser(value: Any) -> Any:
-        try:
-            return parser(value)
-        except ValueError:
-            try:
-                value = str(value)
-            except UnicodeError:  # pragma: no cover
-                assert isinstance(value, bytes)
-                value = value.decode("utf-8", "replace")
-            raise ValueError(value) from None
-
-    return TypeAdapter(Annotated[Any, BeforeValidator(parse_with_parser)])
 
 
 # CHOICE #

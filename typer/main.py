@@ -39,7 +39,7 @@ from .models import (
     TyperInfo,
 )
 from .param_types import cli_param_type, lenient_issubclass
-from .schema import CommandSchema, declare_param, runtime_param_from_declared
+from .schema import declare_param, runtime_param_from_declared
 from .utils import get_params_from_function
 
 _original_except_hook = sys.excepthook
@@ -1378,7 +1378,6 @@ def get_command_from_info(
         command_info.callback
     )
     cls = command_info.cls or TyperCommand
-    schema = CommandSchema.from_params(params)
     command = cls(
         name=name,
         context_settings=command_info.context_settings,
@@ -1400,7 +1399,6 @@ def get_command_from_info(
         rich_markup_mode=rich_markup_mode,
         # Rich settings
         rich_help_panel=command_info.rich_help_panel,
-        schema=schema,
     )
     return command
 

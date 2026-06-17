@@ -176,6 +176,7 @@ def test_custom_parse_value_error():
     result = runner.invoke(app, ["not-a-hex"])
     assert result.exit_code == 2
     assert "Invalid value" in result.output
+    assert "invalid literal for int()" in result.output
 
 
 def test_custom_parser_hex():

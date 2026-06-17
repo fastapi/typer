@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from collections.abc import Callable, Sequence
+from collections.abc import Callable
 from dataclasses import dataclass
 from typing import IO, TYPE_CHECKING, Any
 
@@ -179,28 +179,6 @@ class ChoiceRuntimeParam(RuntimeParam):
             )
         except ValueError as exc:
             raise BadParameter(str(exc), ctx=ctx, param=param) from exc
-
-
-@dataclass(frozen=True)
-class CommandSchema:
-    """Schema for all parameters on a Typer command."""
-
-    params: tuple[RuntimeParam, ...]
-
-    @classmethod
-    def from_params(cls, command_params: Sequence[Any]) -> CommandSchema:
-        runtime_params = [
-            param.runtime_param
-            for param in command_params
-            if getattr(param, "runtime_param", None) is not None
-        ]
-        return cls(params=tuple(runtime_params))
-
-    def get_param(self, name: str) -> RuntimeParam | None:
-        for runtime_param in self.params:
-            if runtime_param.name == name:
-                return runtime_param
-        return None
 
 
 def declare_param(param: ParamMeta) -> DeclaredParam:

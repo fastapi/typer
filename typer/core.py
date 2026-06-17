@@ -18,13 +18,8 @@ from ._click import types
 from ._click.parser import _OptionParser
 from ._click.shell_completion import CompletionItem
 from ._typing import Literal
-from .models import OptionInfo
 from .schema import (
-    CommandSchema,
-    DeclaredParam,
     RuntimeParam,
-    bool_flag_runtime_param,
-    runtime_param_from_declared,
 )
 from .utils import describe_number_range, parse_boolean_env_var
 
@@ -105,7 +100,7 @@ def _value_is_missing(param: _click.Parameter, value: Any) -> bool:
         return True
 
     if (param.nargs != 1 or param.multiple) and value == ():
-        return True  # pragma: no cover
+        return True
 
     return False
 
@@ -113,13 +108,9 @@ def _value_is_missing(param: _click.Parameter, value: Any) -> bool:
 class TyperParameter(_click.core.Parameter):
     """Typer parameter with runtime coercion."""
 
-    runtime_param: RuntimeParam | None
+    runtime_param: RuntimeParam
 
     def process_value(self, ctx: _click.Context, value: Any) -> Any:
-        if self.runtime_param is None:
-            raise TypeError(
-                f"{self.__class__.__name__} {self.name!r} requires runtime_param"
-            )
         value = self.runtime_param.coerce(value, param=self, ctx=ctx)
         if self.required and self.value_is_missing(value):
             raise _click.exceptions.MissingParameter(ctx=ctx, param=self)
@@ -303,6 +294,7 @@ class TyperArgument(TyperParameter):
         *,
         # Parameter
         param_decls: list[str],
+        runtime_param: RuntimeParam,
         type: Any | None = None,
         required: bool = False,
         default: Any | None = None,
@@ -331,7 +323,6 @@ class TyperArgument(TyperParameter):
         max: int | float | None = None,
         # Rich settings
         rich_help_panel: str | None = None,
-        runtime_param: RuntimeParam | None = None,
     ):
         self.help = help
         self.show_default = show_default
@@ -480,6 +471,7 @@ class TyperOption(TyperParameter):
         *,
         # Parameter
         param_decls: list[str],
+        runtime_param: RuntimeParam,
         type: types.ParamType | Any | None = None,
         required: bool = False,
         default: Any | None = None,
@@ -516,7 +508,6 @@ class TyperOption(TyperParameter):
         max: int | float | None = None,
         # Rich settings
         rich_help_panel: str | None = None,
-        runtime_param: RuntimeParam | None = None,
     ):
         if help:
             help = inspect.cleandoc(help)
@@ -584,27 +575,6 @@ class TyperOption(TyperParameter):
 
         _typer_param_setup_autocompletion_compat(self, autocompletion=autocompletion)
         self.rich_help_panel = rich_help_panel
-
-        if self.runtime_param is None and self.is_bool_flag:
-            default_flag = self.default if isinstance(self.default, bool) else False
-            self.runtime_param = bool_flag_runtime_param(
-                name=self.name or "flag",
-                default=default_flag,
-            )
-        elif self.runtime_param is None and self.count:
-            count_info = OptionInfo()
-            if self.min is not None:
-                count_info.min = self.min
-            if self.max is not None:
-                count_info.max = self.max
-            declared = DeclaredParam(
-                name=self.name or "count",
-                parameter_info=count_info,
-                default=self.default if self.default is not None else 0,
-                required=required,
-                annotation=int,
-            )
-            self.runtime_param = runtime_param_from_declared(declared)
 
     def get_error_hint(self, ctx: _click.Context) -> str:
         result = super().get_error_hint(ctx)
@@ -956,7 +926,6 @@ class TyperCommand(_click.core.Command):
         # Rich settings
         rich_markup_mode: MarkupMode = DEFAULT_MARKUP_MODE,
         rich_help_panel: str | None = None,
-        schema: CommandSchema | None = None,
     ) -> None:
         super().__init__(
             name=name,
@@ -974,7 +943,6 @@ class TyperCommand(_click.core.Command):
         )
         self.rich_markup_mode: MarkupMode = rich_markup_mode
         self.rich_help_panel = rich_help_panel
-        self.schema = schema or CommandSchema.from_params(params or [])
 
     def format_options(
         self, ctx: _click.Context, formatter: _click.HelpFormatter
