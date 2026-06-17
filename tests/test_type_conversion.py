@@ -378,10 +378,10 @@ def test_default_infers_param_type(
 @pytest.mark.parametrize(
     ("annotation", "expected_metavar"),
     [
-        (str, "STR"),
-        (int, "INT"),
-        (float, "FLOAT"),
-        (tuple[str, int], "<STR INT>"),
+        (str, "<str>"),
+        (int, "<int>"),
+        (float, "<float>"),
+        (tuple[str, int], "<str,int>"),
     ],
 )
 def test_param_type_help_metavar(annotation: type, expected_metavar: str) -> None:

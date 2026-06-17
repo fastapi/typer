@@ -19,7 +19,7 @@ def test_help():
     assert "NAME" in result.output
     assert "[required]" in result.output
     assert "--lastname" in result.output
-    assert "STR" in result.output
+    assert "<str>" in result.output
     assert "--formal" in result.output
     assert "--no-formal" in result.output
 

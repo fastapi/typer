@@ -79,20 +79,25 @@ def _param_annotation(param: Parameter) -> Any | None:
     return None
 
 
-def _annotation_metavar_label(annotation: Any) -> str:
+def _annotation_metavar_label_bare(annotation: Any) -> str:
+    display_type = str(annotation)
     if annotation is None:
-        return "STR"
+        display_type = "str"
     origin = get_origin(annotation)
     if origin is list:
         args = get_args(annotation)
         if len(args) == 1:
-            return _annotation_metavar_label(args[0])
+            display_type = _annotation_metavar_label_bare(args[0])
     if origin is tuple:
-        labels = [_annotation_metavar_label(arg) for arg in get_args(annotation)]
-        return f"<{' '.join(labels)}>"
+        labels = [_annotation_metavar_label_bare(arg) for arg in get_args(annotation)]
+        display_type = ",".join(labels)
     if isinstance(annotation, type):
-        return annotation.__name__.upper()
-    return str(annotation).upper()
+        display_type = annotation.__name__
+    return display_type
+
+
+def _annotation_metavar_label(annotation: Any) -> str:
+    return f"<{_annotation_metavar_label_bare(annotation)}>"
 
 
 def param_type_metavar_label(
@@ -106,10 +111,10 @@ def param_type_metavar_label(
         return f"{param_type.annotation.__name__.upper()} RANGE"
     if isinstance(param_type, TyperTuple):
         labels = [
-            _annotation_metavar_label(element)
+            _annotation_metavar_label_bare(element)
             for element in param_type.element_annotations
         ]
-        return f"<{' '.join(labels)}>"
+        return f"<{','.join(labels)}>"
     if isinstance(param_type, TyperPath):
         if param_type.file_okay and not param_type.dir_okay:
             return "FILE"

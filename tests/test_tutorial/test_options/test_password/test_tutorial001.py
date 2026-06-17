@@ -44,7 +44,7 @@ def test_help(mod: ModuleType):
     result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
     output_without_double_spaces = strip_double_spaces(result.output)
-    assert "--email STR [required]" in output_without_double_spaces
+    assert "--email <str> [required]" in output_without_double_spaces
 
 
 def test_script(mod: ModuleType):
