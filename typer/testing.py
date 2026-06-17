@@ -5,7 +5,7 @@ import shlex
 import sys
 from collections.abc import Iterator, Mapping, Sequence
 from types import TracebackType
-from typing import IO, TYPE_CHECKING, Any, BinaryIO, cast
+from typing import IO, Any, BinaryIO, cast
 
 from typer.main import Typer
 from typer.main import get_command as _get_command
