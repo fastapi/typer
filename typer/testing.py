@@ -13,9 +13,6 @@ from typer.main import get_command as _get_command
 from . import _click
 from ._click import _compat, formatting, termui, utils
 
-if TYPE_CHECKING:
-    from _typeshed import ReadableBuffer
-
 
 def make_input_stream(input: str | bytes | None, charset: str) -> BinaryIO:
     if input is None:
