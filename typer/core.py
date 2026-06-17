@@ -14,10 +14,11 @@ from typing import (
 )
 
 from . import _click, param_types
-from ._click import types
 from ._click.parser import _OptionParser
 from ._click.shell_completion import CompletionItem
+from ._click.types import ParamType
 from ._typing import Literal
+from .param_types import DEFAULT_PARAM_TYPE, TyperRanged
 from .schema import (
     RuntimeParam,
 )
@@ -472,7 +473,7 @@ class TyperOption(TyperParameter):
         # Parameter
         param_decls: list[str],
         runtime_param: RuntimeParam,
-        type: types.ParamType | Any | None = None,
+        type: ParamType | Any | None = None,
         required: bool = False,
         default: Any | None = None,
         callback: Callable[..., Any] | None = None,
@@ -550,7 +551,7 @@ class TyperOption(TyperParameter):
         # TODO: revisit all of this flag stuff
         inferred_bool_flag = bool(is_flag and type is None and not count)
         if inferred_bool_flag:
-            self.type: types.ParamType = param_types.DEFAULT_PARAM_TYPE
+            self.type: ParamType = DEFAULT_PARAM_TYPE
 
         self.is_flag: bool = bool(is_flag)
         self.is_bool_flag: bool = inferred_bool_flag
@@ -563,7 +564,7 @@ class TyperOption(TyperParameter):
         # Counting
         self.count = count
         if count and type is None:
-            self.type = param_types._ranged_number_param_type(int)
+            self.type = TyperRanged(int)
             if self.min is None:
                 self.min = 0
 

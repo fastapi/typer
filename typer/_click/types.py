@@ -9,7 +9,8 @@ from typing import (
 from .exceptions import BadParameter
 
 if TYPE_CHECKING:
-    from .core import Context, Parameter
+    from ..core import TyperParameter
+    from .core import Context
     from .shell_completion import CompletionItem
 
 
@@ -31,7 +32,7 @@ class ParamType:
     envvar_list_splitter: ClassVar[str | None] = None
 
     def get_missing_message(
-        self, param: "Parameter", ctx: Union["Context", None]
+        self, param: "TyperParameter", ctx: Union["Context", None]
     ) -> str | None:
         """Optionally might return extra information about a missing
         parameter.
@@ -51,14 +52,14 @@ class ParamType:
     def fail(
         self,
         message: str,
-        param: Union["Parameter", None] = None,
+        param: Union["TyperParameter", None] = None,
         ctx: Union["Context", None] = None,
     ) -> NoReturn:
         """Helper method to fail with an invalid value message."""
         raise BadParameter(message, ctx=ctx, param=param)
 
     def shell_complete(
-        self, ctx: "Context", param: "Parameter", incomplete: str
+        self, ctx: "Context", param: "TyperParameter", incomplete: str
     ) -> list["CompletionItem"]:
         """Return a list of `CompletionItem` objects for the
         incomplete value. Most types do not provide completions, but

@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -61,7 +59,7 @@ class RuntimeParam(ABC):
         self,
         value: Any,
         *,
-        param: TyperParameter,
+        param: "TyperParameter",
         ctx: Context,
     ) -> Any:
         is_multi_value = param.multiple or param.nargs == -1
@@ -78,7 +76,7 @@ class RuntimeParam(ABC):
         self,
         value: Any,
         *,
-        param: TyperParameter,
+        param: "TyperParameter",
         ctx: Context,
     ) -> Any:
         pass
@@ -94,7 +92,7 @@ class AdapterRuntimeParam(RuntimeParam):
         self,
         value: Any,
         *,
-        param: TyperParameter,
+        param: "TyperParameter",
         ctx: Context,
     ) -> Any:
         try:
@@ -115,7 +113,7 @@ class FileRuntimeParam(RuntimeParam):
         self,
         value: Any,
         *,
-        param: TyperParameter,
+        param: "TyperParameter",
         ctx: Context,
     ) -> Any:
         mode = resolve_file_mode(self.parameter_info, self.file_annotation)
@@ -144,7 +142,7 @@ class PathRuntimeParam(RuntimeParam):
         self,
         value: Any,
         *,
-        param: TyperParameter,
+        param: "TyperParameter",
         ctx: Context,
     ) -> Any:
         return coerce_cli_path(
@@ -167,7 +165,7 @@ class ChoiceRuntimeParam(RuntimeParam):
         self,
         value: Any,
         *,
-        param: TyperParameter,
+        param: "TyperParameter",
         ctx: Context,
     ) -> Any:
         try:

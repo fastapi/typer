@@ -30,7 +30,6 @@ def test_not_exists(tmpdir, mod: ModuleType):
     result = runner.invoke(mod.app, ["--config", f"{config_file}"])
     assert result.exit_code != 0
     assert "Invalid value for '--config'" in result.output
-    assert "File" in result.output
     assert "does not exist" in result.output
 
 
@@ -47,7 +46,7 @@ def test_dir(mod: ModuleType):
     result = runner.invoke(mod.app, ["--config", "./"])
     assert result.exit_code != 0
     assert "Invalid value for '--config'" in result.output
-    assert "File './' is a directory." in result.output
+    assert "file './' is a directory." in result.output
 
 
 def test_script(mod: ModuleType):

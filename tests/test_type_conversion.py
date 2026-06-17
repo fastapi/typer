@@ -1,8 +1,9 @@
 import os
 import sys
+from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Annotated, Any, get_args, get_origin
+from typing import Annotated, Any, Literal, get_args, get_origin
 
 import pytest
 import typer
@@ -377,20 +378,41 @@ def test_default_infers_param_type(
 
 
 @pytest.mark.parametrize(
-    ("annotation", "expected_metavar"),
+    ("parameter", "expected_metavar"),
     [
-        (str, "<str>"),
-        (int, "<int>"),
-        (float, "<float>"),
-        (tuple[str, int], "<str,int>"),
+        pytest.param(Annotated[str, typer.Option(...)], "<str>"),
+        pytest.param(Annotated[int, typer.Option(...)], "<int>"),
+        pytest.param(Annotated[float, typer.Option(...)], "<float>"),
+        pytest.param(
+            Annotated[float, typer.Option(..., min=0.666, max=3.42)], "<float range>"
+        ),
+        pytest.param(Annotated[bytes, typer.Option(...)], "<bytes>"),
+        pytest.param(Annotated[list[str], typer.Option(...)], "<list>"),
+        pytest.param(Annotated[tuple[str, int], typer.Option(...)], "<str,int>"),
+        pytest.param(Annotated[tuple[Path, str], typer.Option(...)], "<Path,str>"),
+        pytest.param(Annotated[Path, typer.Option(...)], "<path>"),
+        pytest.param(Annotated[str, typer.Option(..., resolve_path=True)], "<path>"),
+        pytest.param(Annotated[Path, typer.Option(..., dir_okay=False)], "<file>"),
+        pytest.param(Annotated[Path, typer.Option(..., file_okay=False)], "<dir>"),
+        pytest.param(Annotated[SomeEnum, typer.Option(...)], "[one|two|three]"),
+        pytest.param(Annotated[SomeEnum, typer.Argument()], "{one|two|three}"),
+        pytest.param(
+            Annotated[SomeEnum, typer.Option(..., show_choices=False)], "[SomeEnum]"
+        ),
+        pytest.param(Annotated[Literal["x", "y"], typer.Option(...)], "[x|y]"),
+        pytest.param(Annotated[typer.FileText, typer.Option(...)], "<FileText>"),
+        pytest.param(Annotated[datetime, typer.Option(...)], "<%Y-%m-%d>"),
+        pytest.param(
+            Annotated[datetime, typer.Option(..., formats=["%Y-%m-%d", "%d/%m/%Y"])],
+            "<%Y-%m-%d|%d/%m/%Y>",
+        ),
     ],
 )
-def test_param_type_help_metavar(annotation: type, expected_metavar: str) -> None:
+def test_param_type_help_metavar(parameter: Any, expected_metavar: str) -> None:
     app = typer.Typer()
-    option = Annotated[annotation, typer.Option(...)]
 
     @app.command()
-    def main(value: option):
+    def main(value: parameter):
         pass  # pragma: no cover
 
     result = runner.invoke(app, ["--help"])

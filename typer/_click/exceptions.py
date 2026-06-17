@@ -6,7 +6,8 @@ from .globals import resolve_color_default
 from .utils import echo, format_filename
 
 if TYPE_CHECKING:
-    from .core import Command, Context, Parameter
+    from ..core import TyperParameter
+    from .core import Command, Context
 
 
 def _join_param_hints(param_hint: Sequence[str] | str | None) -> str | None:
@@ -90,7 +91,7 @@ class BadParameter(UsageError):
         self,
         message: str,
         ctx: Union["Context", None] = None,
-        param: Union["Parameter", None] = None,
+        param: Union["TyperParameter", None] = None,
         param_hint: Sequence[str] | str | None = None,
     ) -> None:
         super().__init__(message, ctx)
@@ -118,7 +119,7 @@ class MissingParameter(BadParameter):
         self,
         message: str | None = None,
         ctx: Union["Context", None] = None,
-        param: Union["Parameter", None] = None,
+        param: Union["TyperParameter", None] = None,
         param_hint: Sequence[str] | str | None = None,
         param_type: str | None = None,
     ) -> None:

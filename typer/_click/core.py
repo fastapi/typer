@@ -31,7 +31,7 @@ from .termui import style
 from .utils import echo, make_default_short_help
 
 if TYPE_CHECKING:
-    from ..core import TyperOption
+    from ..core import TyperOption, TyperParameter
     from .shell_completion import CompletionItem
 
 F = TypeVar("F", bound="Callable[..., Any]")
@@ -59,7 +59,7 @@ def _complete_visible_commands(
 
 @contextmanager
 def augment_usage_errors(
-    ctx: "Context", param: Union["Parameter", None] = None
+    ctx: "Context", param: Union["TyperParameter", None] = None
 ) -> Iterator[None]:
     """Context manager that attaches extra information to exceptions."""
     try:
@@ -996,7 +996,9 @@ class Parameter(ABC):
         the value has been explicitly set by the user (and as such, is not coming from
         a default).
         """
-        with augment_usage_errors(ctx, param=self):
+        from ..core import TyperParameter
+
+        with augment_usage_errors(ctx, param=cast(TyperParameter, self)):
             value, source = self.consume_value(ctx, opts)
 
             ctx.set_parameter_source(self.name, source)  # type: ignore
@@ -1043,4 +1045,9 @@ class Parameter(ABC):
 
             return cast("list[CompletionItem]", results)
 
-        return self.type.shell_complete(ctx, self, incomplete)
+        # All Parameter objects will in fact be TyperParameter objects
+        # This will be cleaned up in later iterations
+        from ..core import TyperParameter
+
+        param = cast(TyperParameter, self)
+        return self.type.shell_complete(ctx, param, incomplete)
