@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Fixes
+
+* 🐛 Fix formatting in `NoSuchOption.format_message()`. PR [#1843](https://github.com/fastapi/typer/pull/1843) by [@foomunleong](https://github.com/foomunleong).
+
 ### Docs
 
 * 📝 Fix formatting for help link to support GitHub-specific overview edge-case. PR [#1826](https://github.com/fastapi/typer/pull/1826) by [@phalberg](https://github.com/phalberg).
