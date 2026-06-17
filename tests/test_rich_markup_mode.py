@@ -330,6 +330,8 @@ def test_markup_mode_default():
     # We're assuming the test suite is run with rich installed
     app = typer.Typer()
     assert app.rich_markup_mode == "rich"
+
+
 @pytest.mark.parametrize(
     "mode,expected_collapsed",
     [
