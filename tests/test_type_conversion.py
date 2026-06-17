@@ -387,7 +387,7 @@ def test_default_infers_param_type(
             Annotated[float, typer.Option(..., min=0.666, max=3.42)], "<float range>"
         ),
         pytest.param(Annotated[bytes, typer.Option(...)], "<bytes>"),
-        pytest.param(Annotated[list[str], typer.Option(...)], "<list>"),
+        pytest.param(Annotated[list[str], typer.Option(...)], "<list[str]>"),
         pytest.param(Annotated[tuple[str, int], typer.Option(...)], "<str,int>"),
         pytest.param(Annotated[tuple[Path, str], typer.Option(...)], "<Path,str>"),
         pytest.param(Annotated[Path, typer.Option(...)], "<path>"),

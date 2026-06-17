@@ -106,24 +106,30 @@ def resolve_rich_metavar(param: "TyperParameter", ctx: Context) -> str | None:
 
 def _annotation_metavar_label(annotation: Any) -> str:
     display_type = str(annotation)
+    origin = get_origin(annotation)
     if annotation is None:
         display_type = "str"
-    origin = get_origin(annotation)
-    if origin is list:
+    elif origin is list:
         args = get_args(annotation)
         if len(args) == 1:
-            display_type = _annotation_metavar_label(args[0])
-    if origin is tuple:
+            element_label = _annotation_metavar_label(args[0])
+            display_type = f"list[{element_label}]"
+        else:
+            display_type = "list"
+    elif origin is tuple:
         labels = [_annotation_metavar_label(arg) for arg in get_args(annotation)]
         display_type = ",".join(labels)
-    if isinstance(annotation, type):
+    elif isinstance(annotation, type):
         display_type = annotation.__name__
     return display_type
 
 
 def param_type_metavar_label(param: "TyperParameter") -> str:
+    annotation = param.runtime_param.annotation
     param_type = param.type
-    if isinstance(param_type, TyperDatetime):
+    if get_origin(annotation) is list:
+        label = _annotation_metavar_label(annotation)
+    elif isinstance(param_type, TyperDatetime):
         label = "|".join(param_type.formats)
     elif isinstance(param_type, TyperRanged):
         label = f"{param_type.annotation.__name__} range"
