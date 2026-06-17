@@ -330,3 +330,50 @@ def test_markup_mode_default():
     # We're assuming the test suite is run with rich installed
     app = typer.Typer()
     assert app.rich_markup_mode == "rich"
+@pytest.mark.parametrize(
+    "mode,expected_collapsed",
+    [
+        pytest.param("rich", True),
+        pytest.param("markdown", True),
+    ],
+)
+def test_commands_panel_single_newline_collapsed(mode: str, expected_collapsed: bool):
+    """Single newlines in a subcommand's help should be collapsed to spaces in the
+    commands panel (the summary line shown next to each command name in a group's
+    --help output), regardless of markup_mode.
+
+    In rich mode, _make_command_help previously used ``markup_mode != MARKUP_MODE_RICH``
+    (inverted) so single newlines were *not* collapsed, causing multi-line rows in the
+    commands table.  The fix aligns the condition with _get_help_text and
+    _get_parameter_help, which both use ``markup_mode != MARKUP_MODE_MARKDOWN``.
+    """
+    app = typer.Typer(rich_markup_mode=mode)
+
+    @app.command()
+    def cmd1():
+        """First line
+        second line"""
+        pass  # pragma: no cover
+
+    @app.command()
+    def cmd2():
+        """Normal help"""
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+
+    # The commands panel must show "First line second line" on a single row.
+    # If the bug is present, "second line" appears on a separate row without a
+    # command name, i.e. the stripped line "second line" exists in the output.
+    stripped_lines = [line.strip() for line in result.stdout.split("\n")]
+    # "second line" must appear as part of the same row as "cmd1", not standalone.
+    assert "second line" not in stripped_lines, (
+        f"In {mode!r} mode, 'second line' appeared as a standalone stripped line, "
+        "meaning single newlines were not collapsed in the commands panel."
+    )
+    # The collapsed text should appear somewhere in the output.
+    assert "First line second line" in result.stdout, (
+        f"In {mode!r} mode, the collapsed text 'First line second line' was not found "
+        "in the commands panel output."
+    )
