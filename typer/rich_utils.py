@@ -31,7 +31,6 @@ from .core import (
     TyperOption,
     get_number_range_help_str,
 )
-from .param_types import resolve_rich_metavar
 
 # Default styles
 STYLE_OPTION = "bold cyan"
@@ -382,7 +381,7 @@ def _print_options_panel(
 
         # Column for a metavar, if we have one
         metavar = Text(style=STYLE_METAVAR, overflow="fold")
-        metavar_str = resolve_rich_metavar(param, ctx=ctx)
+        metavar_str = param.resolve_rich_metavar(ctx=ctx)
         if metavar_str is not None:
             metavar.append(metavar_str)
 

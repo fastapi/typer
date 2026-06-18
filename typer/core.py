@@ -11,6 +11,8 @@ from typing import (
     TextIO,
     Union,
     cast,
+    get_args,
+    get_origin,
 )
 
 from . import _click, param_types
@@ -18,11 +20,19 @@ from ._click.parser import _OptionParser
 from ._click.shell_completion import CompletionItem
 from ._click.types import ParamType
 from ._typing import Literal
-from .param_types import DEFAULT_PARAM_TYPE, TyperRanged
+from .display import describe_number_range
+from .param_types import (
+    DEFAULT_PARAM_TYPE,
+    TyperChoice,
+    TyperDatetime,
+    TyperPath,
+    TyperRanged,
+    TyperTuple,
+)
 from .schema import (
     RuntimeParam,
 )
-from .utils import describe_number_range, parse_boolean_env_var
+from .utils import parse_boolean_env_var
 
 MarkupMode = Literal["markdown", "rich", None]
 MARKUP_MODE_KEY = "TYPER_RICH_MARKUP_MODE"
@@ -122,8 +132,63 @@ class TyperParameter(_click.core.Parameter):
     def value_is_missing(self, value: Any) -> bool:
         return _value_is_missing(self, value)
 
-    def make_metavar(self, ctx: _click.Context) -> str:
-        return param_types.resolve_metavar(self, ctx=ctx)
+    def make_metavar(self, ctx: _click.Context) -> str | None:
+        return self.metavar
+
+    def metavar_label(self) -> str:
+        annotation = self.runtime_param.annotation
+        param_type = self.type
+        if get_origin(annotation) is list:
+            label = self.metavar_type()
+        elif isinstance(param_type, TyperDatetime):
+            label = "|".join(param_type.formats)
+        elif isinstance(param_type, TyperRanged):
+            label = f"{param_type.annotation.__name__} range"
+        elif isinstance(param_type, TyperTuple):
+            labels = [
+                self._metavar_type_by_annotation(a)
+                for a in param_type.element_annotations
+            ]
+            label = ",".join(labels)
+        elif isinstance(param_type, TyperPath):
+            label = param_types.path_metavar_label(self.runtime_param.parameter_info)
+        else:
+            label = self.metavar_type()
+        return f"<{label}>"
+
+    def resolve_value_metavar(self, ctx: _click.Context) -> str | None:
+        return self.metavar_label()
+
+    def resolve_rich_metavar(self, ctx: _click.Context) -> str | None:
+        metavar_str = self.make_metavar(ctx)
+        if metavar_str == "BOOL":
+            return None
+        return metavar_str
+
+    def metavar_type(self) -> str:
+        annotation = self.runtime_param.annotation
+        return self._metavar_type_by_annotation(annotation)
+
+    def _metavar_type_by_annotation(self, annotation: type) -> str:
+        display_type = str(annotation)
+        origin = get_origin(annotation)
+        if annotation is None:
+            display_type = "str"
+        elif origin is list:
+            args = get_args(annotation)
+            if len(args) == 1:
+                element_label = self._metavar_type_by_annotation(args[0])
+                display_type = f"list[{element_label}]"
+            else:
+                display_type = "list"
+        elif origin is tuple:
+            labels = [
+                self._metavar_type_by_annotation(arg) for arg in get_args(annotation)
+            ]
+            display_type = ",".join(labels)
+        elif isinstance(annotation, type):
+            display_type = annotation.__name__
+        return display_type
 
 
 def _get_default_string(
@@ -460,6 +525,48 @@ class TyperArgument(TyperParameter):
 
     def add_to_parser(self, parser: _OptionParser, ctx: _click.Context) -> None:
         parser.add_argument(dest=self.name, nargs=self.nargs, obj=self)
+
+    def make_metavar(self, ctx: _click.Context) -> str:
+        if self.metavar is not None:
+            var = self.metavar
+            if not self.required and not var.startswith("["):
+                var = f"[{var}]"
+            return var
+
+        var = (self.name or "").upper()
+        if not self.required:
+            var = f"[{var}]"
+
+        value_metavar = self.resolve_value_metavar(ctx)
+        if value_metavar:
+            var += f":{value_metavar}"
+
+        if self.nargs != 1:
+            var += "..."
+        return var
+
+    def resolve_value_metavar(self, ctx: _click.Context) -> str | None:
+        param_type = self.type
+        if isinstance(param_type, TyperChoice):
+            normalized_mapping = {
+                c: param_types.normalize_choice_value(c, param_type.case_sensitive, ctx)
+                for c in param_type.choices
+            }
+            choices_str = "|".join(normalized_mapping.values())
+            if self.required:
+                return f"{{{choices_str}}}"
+            return f"[{choices_str}]"
+        if not isinstance(param_type, TyperDatetime):
+            return None
+        return self.metavar_label()
+
+    def resolve_rich_metavar(self, ctx: _click.Context) -> str | None:
+        metavar_str = self.make_metavar(ctx)
+        if self.name and metavar_str == self.name.upper():
+            metavar_str = self.metavar_label()
+        if metavar_str == "BOOL":
+            return None
+        return metavar_str
 
 
 class TyperOption(TyperParameter):
@@ -864,6 +971,40 @@ class TyperOption(TyperParameter):
             help = f"{help}  {extra_str}" if help else f"{extra_str}"
 
         return ("; " if any_prefix_is_slash else " / ").join(rv), help
+
+    def make_metavar(self, ctx: _click.Context) -> str | None:
+        if self.metavar is not None:
+            return self.metavar
+
+        value_metavar = self.resolve_value_metavar(ctx)
+        if self.nargs != 1:
+            return str(value_metavar) + "..."
+        return value_metavar
+
+    def resolve_value_metavar(self, ctx: _click.Context) -> str | None:
+        param_type = self.type
+        if isinstance(param_type, TyperChoice):
+            if not self.show_choices:
+                metavars = [
+                    self._metavar_type_by_annotation(type(c))
+                    for c in param_type.choices
+                ]
+                choices_str = "|".join([*dict.fromkeys(metavars)])
+            else:
+                normalized_mapping = {
+                    c: param_types.normalize_choice_value(
+                        c, param_type.case_sensitive, ctx
+                    )
+                    for c in param_type.choices
+                }
+                choices_str = "|".join(normalized_mapping.values())
+
+            return f"[{choices_str}]"
+        if self.param_type_name == "argument" and not isinstance(
+            param_type, TyperDatetime
+        ):
+            return None
+        return self.metavar_label()
 
 
 def _typer_format_options(

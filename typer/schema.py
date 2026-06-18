@@ -10,6 +10,7 @@ from ._click import Context
 from ._click.exceptions import BadParameter, UsageError
 from ._click.types import ParamType
 from ._typing import get_args, get_origin, is_union
+from .display import get_error_msg
 from .models import (
     ArgumentInfo,
     NoneType,
@@ -22,7 +23,6 @@ from .models import (
 if TYPE_CHECKING:
     from .core import TyperParameter
 from .param_types import (
-    _get_error_msg,
     _open_cli_file,
     choice_coercion_annotation,
     coerce_cli_choice,
@@ -98,7 +98,7 @@ class AdapterRuntimeParam(RuntimeParam):
         try:
             return self.adapter.validate_python(value)
         except ValidationError as exc:
-            raise BadParameter(_get_error_msg(exc), ctx=ctx, param=param) from exc
+            raise BadParameter(get_error_msg(exc), ctx=ctx, param=param) from exc
         except ValueError as exc:
             raise BadParameter(str(exc), ctx=ctx, param=param) from exc
 
@@ -256,14 +256,6 @@ def declare_param(param: ParamMeta) -> DeclaredParam:
     )
 
 
-def _runtime_param_fields(declared: DeclaredParam) -> dict[str, Any]:
-    return {
-        "name": declared.name,
-        "annotation": declared.annotation,
-        "parameter_info": declared.parameter_info,
-    }
-
-
 def bool_flag_runtime_param(*, name: str, default: bool = False) -> RuntimeParam:
     """Build runtime coercion for a standalone boolean flag option."""
     declared = DeclaredParam(
@@ -296,7 +288,7 @@ def prompt_value_proc(
         try:
             return adapter.validate_python(value)
         except ValidationError as exc:
-            raise UsageError(_get_error_msg(exc)) from exc
+            raise UsageError(get_error_msg(exc)) from exc
         except ValueError as exc:
             raise UsageError(str(exc)) from exc
 
@@ -304,24 +296,28 @@ def prompt_value_proc(
 
 
 def runtime_param_from_declared(declared: DeclaredParam) -> RuntimeParam:
-    common = _runtime_param_fields(declared)
+    args = {
+        "name": declared.name,
+        "annotation": declared.annotation,
+        "parameter_info": declared.parameter_info,
+    }
     file_annotation = file_coercion_annotation(declared.annotation)
     if file_annotation is not None:
-        return FileRuntimeParam(**common, file_annotation=file_annotation)
+        return FileRuntimeParam(**args, file_annotation=file_annotation)
     if path_uses_coercion(declared.annotation, declared.parameter_info):
         return PathRuntimeParam(
-            **common,
+            **args,
             path_type=resolve_path_type(declared.annotation, declared.parameter_info),
         )
     choice = choice_coercion_annotation(declared.annotation, declared.parameter_info)
     if choice is not None:
         choices, case_sensitive = choice
         return ChoiceRuntimeParam(
-            **common,
+            **args,
             choices=choices,
             case_sensitive=case_sensitive,
         )
     return AdapterRuntimeParam(
-        **common,
+        **args,
         adapter=adapters.build_adapter(declared.annotation, declared.parameter_info),
     )

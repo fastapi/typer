@@ -15,6 +15,7 @@ from ._click.shell_completion import CompletionItem
 from ._click.types import ParamType
 from ._click.utils import LazyFile, format_filename, safecall
 from ._typing import get_args, get_origin, is_literal_type, literal_values
+from .display import get_error_msg
 from .models import (
     AnyType,
     FileBinaryRead,
@@ -33,117 +34,6 @@ DEFAULT_PARAM_TYPE = ParamType()
 
 def lenient_issubclass(cls: Any, class_or_tuple: AnyType | tuple[AnyType, ...]) -> bool:
     return isinstance(cls, type) and issubclass(cls, class_or_tuple)
-
-
-def _get_error_msg(exc: ValidationError) -> str:
-    """Get a string representation of the (first) validation error."""
-    errors = exc.errors()
-    if errors:
-        return errors[0]["msg"]
-    return str(exc)
-
-
-def _format_option_metavar(param: "TyperParameter", value_metavar: str) -> str:
-    if param.nargs != 1:
-        value_metavar += "..."
-    return value_metavar
-
-
-def _format_argument_metavar(param: "TyperParameter", value_metavar: str | None) -> str:
-    var = (param.name or "").upper()
-    if not param.required:
-        var = f"[{var}]"
-    if value_metavar:
-        var += f":{value_metavar}"
-    if param.nargs != 1:
-        var += "..."
-    return var
-
-
-def resolve_metavar(param: "TyperParameter", ctx: Context) -> str:
-    if param.metavar is not None:
-        var = param.metavar
-        if getattr(param, "param_type_name", None) == "argument":
-            if not param.required and not var.startswith("["):
-                var = f"[{var}]"
-        return var
-
-    value_metavar = resolve_value_metavar(param, ctx)
-    if getattr(param, "param_type_name", None) == "argument":
-        return _format_argument_metavar(param, value_metavar)
-    assert value_metavar is not None
-    return _format_option_metavar(param, value_metavar)
-
-
-def resolve_value_metavar(param: "TyperParameter", ctx: Context) -> str | None:
-    param_type = param.type
-    if isinstance(param_type, TyperChoice):
-        return choice_value_metavar(
-            param,
-            ctx,
-            choices=param_type.choices,
-            case_sensitive=param_type.case_sensitive,
-        )
-    if getattr(param, "param_type_name", None) == "argument" and not isinstance(
-        param_type, TyperDatetime
-    ):
-        return None
-    return param_type_metavar_label(param)
-
-
-def resolve_rich_metavar(param: "TyperParameter", ctx: Context) -> str | None:
-    metavar_str = resolve_metavar(param, ctx)
-    if (
-        getattr(param, "param_type_name", None) == "argument"
-        and param.name
-        and metavar_str == param.name.upper()
-    ):
-        metavar_str = param_type_metavar_label(param)
-    if metavar_str == "BOOL":
-        return None
-    return metavar_str
-
-
-def _annotation_metavar_label(annotation: Any) -> str:
-    display_type = str(annotation)
-    origin = get_origin(annotation)
-    if annotation is None:
-        display_type = "str"
-    elif origin is list:
-        args = get_args(annotation)
-        if len(args) == 1:
-            element_label = _annotation_metavar_label(args[0])
-            display_type = f"list[{element_label}]"
-        else:
-            display_type = "list"
-    elif origin is tuple:
-        labels = [_annotation_metavar_label(arg) for arg in get_args(annotation)]
-        display_type = ",".join(labels)
-    elif isinstance(annotation, type):
-        display_type = annotation.__name__
-    return display_type
-
-
-def param_type_metavar_label(param: "TyperParameter") -> str:
-    annotation = param.runtime_param.annotation
-    param_type = param.type
-    if get_origin(annotation) is list:
-        label = _annotation_metavar_label(annotation)
-    elif isinstance(param_type, TyperDatetime):
-        label = "|".join(param_type.formats)
-    elif isinstance(param_type, TyperRanged):
-        label = f"{param_type.annotation.__name__} range"
-    elif isinstance(param_type, TyperTuple):
-        labels = [
-            _annotation_metavar_label(element)
-            for element in param_type.element_annotations
-        ]
-        label = ",".join(labels)
-    elif isinstance(param_type, TyperPath):
-        label = path_metavar_label(param.runtime_param.parameter_info)
-    else:
-        label = _annotation_metavar_label(param.runtime_param.annotation)
-    return f"<{label}>"
 
 
 def infer_type_from_default(default: Any) -> tuple[Any | None, bool]:
@@ -167,7 +57,7 @@ def resolve_param_type(
     *,
     parameter_info: ParameterInfo | None = None,
 ) -> ParamType:
-    """Resolve a display ParamType for metavar/help."""
+    """Resolve a ParamType for this particular annotation."""
     if annotation is None and default is not None:
         annotation, _ = infer_type_from_default(default)
 
@@ -193,7 +83,7 @@ def cli_param_type(
     is_list: bool,
     is_tuple: bool,
 ) -> ParamType:
-    """Defer the "type" for metavar/help."""
+    """Defer the param type"""
     if is_tuple:
         type_args = get_args(annotation)
         return resolve_param_type(tuple(type_args), parameter_info=parameter_info)
@@ -203,10 +93,6 @@ def cli_param_type(
     return resolve_param_type(
         annotation, default=default, parameter_info=parameter_info
     )
-
-
-def get_param_type(*, annotation: Any, parameter_info: ParameterInfo) -> ParamType:
-    return resolve_param_type(annotation=annotation, parameter_info=parameter_info)
 
 
 def param_type_from_annotation(
@@ -295,28 +181,6 @@ def choice_coercion_annotation(
     if is_literal_type(annotation):
         return literal_values(annotation), parameter_info.case_sensitive
     return None
-
-
-def choice_value_metavar(
-    param: "TyperParameter",
-    ctx: Context,
-    *,
-    choices: Sequence[Any],
-    case_sensitive: bool,
-) -> str:
-    if param.param_type_name == "option" and not param.show_choices:  # type: ignore
-        metavars = [_annotation_metavar_label(type(c)) for c in choices]
-        choices_str = "|".join([*dict.fromkeys(metavars)])
-    else:
-        normalized_mapping = {
-            c: normalize_choice_value(c, case_sensitive, ctx) for c in choices
-        }
-        choices_str = "|".join(normalized_mapping.values())
-
-    if param.required and param.param_type_name == "argument":
-        return f"{{{choices_str}}}"
-
-    return f"[{choices_str}]"
 
 
 class TyperChoice(ParamType, Generic[ParamTypeValue]):
@@ -443,7 +307,7 @@ def coerce_cli_path(
             try:
                 rv = TypeAdapter(path_type).validate_python(value)
             except ValidationError as exc:
-                raise BadParameter(_get_error_msg(exc), ctx=ctx, param=param) from exc
+                raise BadParameter(get_error_msg(exc), ctx=ctx, param=param) from exc
         else:
             rv = value
     else:
