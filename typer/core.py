@@ -500,6 +500,25 @@ class TyperArgument(TyperParameter):
             help = f"{help}  {extra_str}" if help else f"{extra_str}"
         return name, help
 
+    def make_metavar(self, ctx: _click.Context) -> str:
+        if self.metavar is not None:
+            var = self.metavar
+            if not self.required and not var.startswith("["):
+                var = f"[{var}]"
+            return var
+
+        var = (self.name or "").upper()
+        if not self.required:
+            var = f"[{var}]"
+
+        value_metavar = self.resolve_value_metavar(ctx)
+        if value_metavar:
+            var += f":{value_metavar}"
+
+        if self.nargs != 1:
+            var += "..."
+        return var
+
     def _parse_decls(
         self, decls: Sequence[str], expose_value: bool
     ) -> tuple[str | None, list[str], list[str]]:
@@ -525,25 +544,6 @@ class TyperArgument(TyperParameter):
 
     def add_to_parser(self, parser: _OptionParser, ctx: _click.Context) -> None:
         parser.add_argument(dest=self.name, nargs=self.nargs, obj=self)
-
-    def make_metavar(self, ctx: _click.Context) -> str:
-        if self.metavar is not None:
-            var = self.metavar
-            if not self.required and not var.startswith("["):
-                var = f"[{var}]"
-            return var
-
-        var = (self.name or "").upper()
-        if not self.required:
-            var = f"[{var}]"
-
-        value_metavar = self.resolve_value_metavar(ctx)
-        if value_metavar:
-            var += f":{value_metavar}"
-
-        if self.nargs != 1:
-            var += "..."
-        return var
 
     def resolve_value_metavar(self, ctx: _click.Context) -> str | None:
         param_type = self.type
@@ -873,6 +873,15 @@ class TyperOption(TyperParameter):
     ) -> Any | Callable[[], Any] | None:
         return _extract_default_help_str(self, ctx=ctx)
 
+    def make_metavar(self, ctx: _click.Context) -> str | None:
+        if self.metavar is not None:
+            return self.metavar
+
+        value_metavar = self.resolve_value_metavar(ctx)
+        if self.nargs != 1:
+            return str(value_metavar) + "..."
+        return value_metavar
+
     def get_help_record(self, ctx: _click.Context) -> tuple[str, str] | None:
         # Duplicate all of Click's logic only to modify a single line, to allow boolean
         # flags with only names for False values as it's currently supported by Typer
@@ -965,15 +974,6 @@ class TyperOption(TyperParameter):
             help = f"{help}  {extra_str}" if help else f"{extra_str}"
 
         return ("; " if any_prefix_is_slash else " / ").join(rv), help
-
-    def make_metavar(self, ctx: _click.Context) -> str | None:
-        if self.metavar is not None:
-            return self.metavar
-
-        value_metavar = self.resolve_value_metavar(ctx)
-        if self.nargs != 1:
-            return str(value_metavar) + "..."
-        return value_metavar
 
     def resolve_value_metavar(self, ctx: _click.Context) -> str | None:
         param_type = self.type

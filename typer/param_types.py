@@ -47,12 +47,6 @@ def lenient_issubclass(cls: Any, class_or_tuple: AnyType | tuple[AnyType, ...]) 
     return isinstance(cls, type) and issubclass(cls, class_or_tuple)
 
 
-def _normalize_inferred_scalar_type(annotation: type) -> ParameterAnnotation:
-    if annotation in (int, float, bool):
-        return annotation
-    return str
-
-
 def infer_annotation_from_default(default: Any | None) -> ParameterAnnotation:
     """Infer a normalized annotation from a default value."""
     if default is None:
@@ -66,8 +60,8 @@ def infer_annotation_from_default(default: Any | None) -> ParameterAnnotation:
         item = default[0]
         if isinstance(item, (tuple, list)):
             return tuple.__class_getitem__(tuple(map(type, item)))
-        return _normalize_inferred_scalar_type(type(item))
-    return _normalize_inferred_scalar_type(type(default))
+        return type(item)
+    return type(default)
 
 
 def annotation_from_prompt(t: Any | None, default: Any | None) -> ParameterAnnotation:

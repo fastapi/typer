@@ -64,3 +64,66 @@ def test_coercion_tuple_files(tmp_path: Path) -> None:
     result = runner.invoke(app, [str(first), str(second)])
     assert result.exit_code == 0, result.output
     assert seen == ["first-content\n", "second-content\n"]
+
+
+def test_passthrough_runtime_param_default() -> None:
+    class Widget:
+        def __init__(self, value: int) -> None:
+            self.value = value
+
+        def __repr__(self) -> str:
+            return f"Widget({self.value})"
+
+    app = typer.Typer()
+    seen: dict[str, Widget] = {}
+
+    @app.command()
+    def main(val=Widget(42)):
+        seen["val"] = val
+
+    param = next(p for p in typer.main.get_command(app).params if p.name == "val")
+    assert param.runtime_param is not None
+    assert param.runtime_param.annotation is Widget
+
+    result = runner.invoke(app)
+    assert result.exit_code == 0
+    assert isinstance(seen["val"], Widget)
+    assert seen["val"].value == 42
+
+    result = runner.invoke(app, ["--val", "666"])
+    assert result.exit_code == 2
+    # This doesn't work because there's no parser
+    assert "is not a valid Widget" in result.output
+
+
+def test_widget_parsed_from_cli_with_parser() -> None:
+    class Widget:
+        def __init__(self, value: int) -> None:
+            self.value = value
+
+        def __repr__(self) -> str:
+            return f"Widget({self.value})"
+
+    def parse_widget(value: str) -> Widget:
+        return Widget(int(value))
+
+    app = typer.Typer()
+    seen: dict[str, Widget] = {}
+
+    @app.command()
+    def main(val: Widget = typer.Option("42", parser=parse_widget)):
+        seen["val"] = val
+
+    param = next(p for p in typer.main.get_command(app).params if p.name == "val")
+    assert param.runtime_param is not None
+    assert param.runtime_param.annotation is Widget
+
+    result = runner.invoke(app)
+    assert result.exit_code == 0
+    assert isinstance(seen["val"], Widget)
+    assert seen["val"].value == 42
+
+    result = runner.invoke(app, ["--val", "666"])
+    assert result.exit_code == 0
+    assert isinstance(seen["val"], Widget)
+    assert seen["val"].value == 666

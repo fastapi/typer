@@ -156,6 +156,29 @@ class PathRuntimeParam(RuntimeParam):
 
 
 @dataclass(frozen=True)
+class PassThroughRuntimeParam(RuntimeParam):
+    """Coercion for annotations that cannot use a Pydantic TypeAdapter."""
+
+    def _coerce_value(
+        self,
+        value: Any,
+        *,
+        param: "TyperParameter",
+        ctx: Context,
+    ) -> Any:
+        annotation = self.annotation
+        if isinstance(annotation, type):
+            if isinstance(value, annotation):
+                return value
+        label = getattr(annotation, "__name__", repr(annotation))
+        raise BadParameter(
+            f"Value {value!r} is not a valid {label}.",
+            ctx=ctx,
+            param=param,
+        )
+
+
+@dataclass(frozen=True)
 class ChoiceRuntimeParam(RuntimeParam):
     """Coercion for enum and literal choice parameters."""
 
@@ -256,24 +279,35 @@ def bool_flag_runtime_param(*, name: str, default: bool = False) -> RuntimeParam
 
 
 def prompt_value_proc(
-    type: Any | None = None,
+    param_type: Any | None = None,
     default: Any | None = None,
 ) -> Callable[[Any], Any]:
     """Coerce interactive prompt input via the runtime adapter layer."""
-    annotation = annotation_from_prompt(type, default)
+    annotation = annotation_from_prompt(param_type, default)
 
     parameter_info = OptionInfo()
-    adapter = adapters.build_adapter(annotation, parameter_info)
+    adapter = adapters.try_build_adapter(annotation, parameter_info)
 
-    def coerce(value: Any) -> Any:
-        try:
-            return adapter.validate_python(value)
-        except ValidationError as exc:
-            raise UsageError(get_error_msg(exc)) from exc
-        except ValueError as exc:
-            raise UsageError(str(exc)) from exc
+    if adapter is not None:
 
-    return coerce
+        def coerce(value: Any) -> Any:
+            try:
+                return adapter.validate_python(value)
+            except ValidationError as exc:
+                raise UsageError(get_error_msg(exc)) from exc
+            except ValueError as exc:
+                raise UsageError(str(exc)) from exc
+
+        return coerce
+
+    def coerce_pass_through(value: Any) -> Any:
+        if isinstance(annotation, type):
+            if isinstance(value, annotation):
+                return value
+        label = getattr(annotation, "__name__", repr(annotation))
+        raise UsageError(f"Value {value!r} is not a valid {label}.")
+
+    return coerce_pass_through
 
 
 def runtime_param_from_declared(declared: DeclaredParam) -> RuntimeParam:
@@ -298,7 +332,7 @@ def runtime_param_from_declared(declared: DeclaredParam) -> RuntimeParam:
             choices=choices,
             case_sensitive=case_sensitive,
         )
-    return AdapterRuntimeParam(
-        **args,
-        adapter=adapters.build_adapter(declared.annotation, declared.parameter_info),
-    )
+    adapter = adapters.try_build_adapter(declared.annotation, declared.parameter_info)
+    if adapter is not None:
+        return AdapterRuntimeParam(**args, adapter=adapter)
+    return PassThroughRuntimeParam(**args)

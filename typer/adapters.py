@@ -5,6 +5,7 @@ from enum import Enum
 from typing import Annotated, Any, get_args, get_origin
 
 from pydantic import AfterValidator, BeforeValidator, Field, TypeAdapter
+from pydantic.errors import PydanticSchemaGenerationError
 
 from ._click import _compat
 from ._typing import is_literal_type, is_number_type, literal_values
@@ -63,6 +64,17 @@ def build_adapter(
         return TypeAdapter(Annotated[tuple[Any, ...], BeforeValidator(parse_tuple)])
 
     return build_leaf_adapter(annotation, parameter_info=parameter_info)
+
+
+def try_build_adapter(
+    annotation: Any,
+    parameter_info: ParameterInfo,
+) -> TypeAdapter[Any] | None:
+    """Build a TypeAdapter when Pydantic can schema-generate the annotation."""
+    try:
+        return build_adapter(annotation, parameter_info)
+    except PydanticSchemaGenerationError:
+        return None
 
 
 def build_leaf_adapter(
