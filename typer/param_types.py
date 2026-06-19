@@ -4,7 +4,17 @@ from collections.abc import Iterable, Mapping, Sequence
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import IO, TYPE_CHECKING, Any, ClassVar, Generic, TypeGuard, TypeVar, cast
+from typing import (
+    IO,
+    TYPE_CHECKING,
+    Any,
+    ClassVar,
+    Generic,
+    TypeAlias,
+    TypeGuard,
+    TypeVar,
+    cast,
+)
 
 from pydantic import TypeAdapter, ValidationError
 
@@ -29,93 +39,91 @@ if TYPE_CHECKING:
     from .core import TyperParameter
 
 ParamTypeValue = TypeVar("ParamTypeValue")
-DEFAULT_PARAM_TYPE = ParamType()
+
+ParameterAnnotation: TypeAlias = Any
 
 
 def lenient_issubclass(cls: Any, class_or_tuple: AnyType | tuple[AnyType, ...]) -> bool:
     return isinstance(cls, type) and issubclass(cls, class_or_tuple)
 
 
-def infer_type_from_default(default: Any) -> tuple[Any | None, bool]:
-    """Infer a type from a default value. Returns (annotation, guessed)."""
-    if isinstance(default, tuple) and default:
+def _normalize_inferred_scalar_type(annotation: type) -> ParameterAnnotation:
+    if annotation in (int, float, bool):
+        return annotation
+    return str
+
+
+def infer_annotation_from_default(default: Any | None) -> ParameterAnnotation:
+    """Infer a normalized annotation from a default value."""
+    if default is None:
+        return str
+    if isinstance(default, tuple) and len(default) > 0:
         if not isinstance(default[0], (tuple, list)):
-            return tuple(map(type, default)), True
+            return tuple.__class_getitem__(tuple(map(type, default)))
     if isinstance(default, (tuple, list)):
         if not default:
-            return None, True
+            return str
         item = default[0]
         if isinstance(item, (tuple, list)):
-            return tuple(map(type, item)), True
-        return type(item), True
-    return type(default), True
+            return tuple.__class_getitem__(tuple(map(type, item)))
+        return _normalize_inferred_scalar_type(type(item))
+    return _normalize_inferred_scalar_type(type(default))
+
+
+def annotation_from_prompt(t: Any | None, default: Any | None) -> ParameterAnnotation:
+    if t is not None and not isinstance(t, ParamType):
+        return t
+    return infer_annotation_from_default(default)
 
 
 def resolve_param_type(
-    annotation: Any | None = None,
-    default: Any | None = None,
-    *,
+    annotation: ParameterAnnotation,
     parameter_info: ParameterInfo | None = None,
 ) -> ParamType:
     """Resolve a ParamType for this particular annotation."""
-    if annotation is None and default is not None:
-        annotation, _ = infer_type_from_default(default)
+    if isinstance(annotation, ParamType):
+        return annotation
 
     if isinstance(annotation, tuple):
         return TyperTuple(annotation)
 
-    if isinstance(annotation, ParamType):
-        return annotation
+    if parameter_info is not None:
+        if annotation is int or annotation is float:
+            if parameter_info.min is not None or parameter_info.max is not None:
+                return TyperRanged(annotation)
+        if annotation is datetime:
+            f = parameter_info.formats
+            formats_tuple = tuple(f) if f is not None else ("%Y-%m-%d",)
+            return TyperDatetime(formats=formats_tuple)
+        if _needs_typer_path(annotation, parameter_info):
+            return TyperPath()
+        if lenient_issubclass(annotation, Enum):
+            return TyperChoice(list(annotation), parameter_info.case_sensitive)
+        if is_literal_type(annotation):
+            return TyperChoice(
+                literal_values(annotation), parameter_info.case_sensitive
+            )
+        if lenient_issubclass(annotation, CLI_FILE_TYPES):
+            return TyperFile()
 
-    if parameter_info is not None and annotation is not None:
-        param_type = param_type_from_annotation(annotation, parameter_info)
-        if param_type is not None:
-            return param_type
-
-    return DEFAULT_PARAM_TYPE
+    return ParamType()
 
 
 def cli_param_type(
     *,
-    annotation: Any,
+    annotation: ParameterAnnotation,
     parameter_info: ParameterInfo,
-    default: Any,
     is_list: bool,
     is_tuple: bool,
 ) -> ParamType:
     """Defer the param type"""
     if is_tuple:
         type_args = get_args(annotation)
-        return resolve_param_type(tuple(type_args), parameter_info=parameter_info)
+        return resolve_param_type(tuple(type_args), parameter_info)
     if is_list:
         (element_type,) = get_args(annotation)
-        return resolve_param_type(element_type, parameter_info=parameter_info)
-    return resolve_param_type(
-        annotation, default=default, parameter_info=parameter_info
-    )
-
-
-def param_type_from_annotation(
-    annotation: Any,
-    parameter_info: ParameterInfo,
-) -> ParamType | None:
-    if annotation is int or annotation is float:
-        if parameter_info.min is not None or parameter_info.max is not None:
-            return TyperRanged(annotation)
-        return None
-    if annotation is datetime:
-        f = parameter_info.formats
-        formats_tuple = tuple(f) if f is not None else ("%Y-%m-%d",)
-        return TyperDatetime(formats=formats_tuple)
-    if _needs_typer_path(annotation, parameter_info):
-        return TyperPath()
-    if lenient_issubclass(annotation, Enum):
-        return TyperChoice(list(annotation), parameter_info.case_sensitive)
-    if is_literal_type(annotation):
-        return TyperChoice(literal_values(annotation), parameter_info.case_sensitive)
-    if lenient_issubclass(annotation, CLI_FILE_TYPES):
-        return TyperFile()
-    return None
+        return resolve_param_type(element_type, parameter_info)
+    return resolve_param_type(annotation, parameter_info)
 
 
 # DATETIME #

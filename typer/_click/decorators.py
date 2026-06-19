@@ -41,6 +41,7 @@ def option(
 def help_option(param_decls: list[str]) -> Callable[[Command], Command]:
     """Help option which prints the help page and exits the program."""
     from ..schema import bool_flag_runtime_param
+    from .types import ParamType
 
     def show_help(ctx: Context, param: Parameter, value: bool) -> None:
         """Callback that print the help page on ``<stdout>`` and exits."""
@@ -58,5 +59,6 @@ def help_option(param_decls: list[str]) -> Callable[[Command], Command]:
         help="Show this message and exit.",
         callback=show_help,
         required=False,
+        type=ParamType(),
         runtime_param=bool_flag_runtime_param(name="help", default=False),
     )

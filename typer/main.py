@@ -15,7 +15,6 @@ from annotated_doc import Doc
 
 from . import _click
 from ._click.globals import get_current_context
-from ._click.types import ParamType
 from ._typing import get_args, get_origin
 from .completion import get_completion_inspect_parameters
 from .core import (
@@ -38,7 +37,7 @@ from .models import (
     ParamMeta,
     TyperInfo,
 )
-from .param_types import cli_param_type, lenient_issubclass
+from .param_types import TyperRanged, cli_param_type, lenient_issubclass
 from .schema import declare_param, runtime_param_from_declared
 from .utils import get_params_from_function
 
@@ -1457,7 +1456,7 @@ def get_param(
     default_value = declared.default
     required = declared.required
     annotation_args = get_args(declared.annotation)
-    is_list = get_origin(declared.annotation) is list
+    is_list = lenient_issubclass(get_origin(declared.annotation), list)
     is_flag = None
     if isinstance(parameter_info, OptionInfo):
         if declared.annotation is bool:
@@ -1469,17 +1468,16 @@ def get_param(
             and any("/" in decl for decl in parameter_info.param_decls)
         ):
             is_flag = True
-    parameter_type: ParamType | None = cli_param_type(
+    parameter_type = cli_param_type(
         annotation=declared.annotation,
         parameter_info=parameter_info,
-        default=default_value,
         is_list=is_list,
-        is_tuple=get_origin(declared.annotation) is tuple,
+        is_tuple=lenient_issubclass(get_origin(declared.annotation), tuple),
     )
 
     if isinstance(parameter_info, OptionInfo):
-        if is_flag:
-            parameter_type = None
+        if parameter_info.count:
+            parameter_type = TyperRanged(int)
         default_option_name = get_command_name(param.name)
         if is_flag:
             default_option_declaration = (

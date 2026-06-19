@@ -108,11 +108,12 @@ def prompt(
             raise Abort() from None
 
     if value_proc is None:
-        from ..param_types import resolve_param_type
+        from ..param_types import annotation_from_prompt, resolve_param_type
         from ..schema import prompt_value_proc
 
+        annotation = annotation_from_prompt(type, default)
         value_proc = prompt_value_proc(type, default)
-        type = resolve_param_type(type, default)
+        type = resolve_param_type(annotation)
 
     prompt = _build_prompt(
         text, prompt_suffix, show_default, default, show_choices, type

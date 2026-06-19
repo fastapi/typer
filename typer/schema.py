@@ -8,7 +8,6 @@ from pydantic import TypeAdapter, ValidationError
 from . import adapters
 from ._click import Context
 from ._click.exceptions import BadParameter, UsageError
-from ._click.types import ParamType
 from ._typing import get_args, get_origin, is_union
 from .display import get_error_msg
 from .models import (
@@ -23,12 +22,14 @@ from .models import (
 if TYPE_CHECKING:
     from .core import TyperParameter
 from .param_types import (
+    ParameterAnnotation,
     _open_cli_file,
+    annotation_from_prompt,
     choice_coercion_annotation,
     coerce_cli_choice,
     coerce_cli_path,
     file_coercion_annotation,
-    infer_type_from_default,
+    infer_annotation_from_default,
     lenient_issubclass,
     path_uses_coercion,
     resolve_file_mode,
@@ -44,7 +45,7 @@ class DeclaredParam:
     parameter_info: ParameterInfo
     default: Any
     required: bool
-    annotation: Any
+    annotation: ParameterAnnotation
 
 
 @dataclass(frozen=True)
@@ -53,7 +54,7 @@ class RuntimeParam(ABC):
 
     name: str
     parameter_info: ParameterInfo
-    annotation: Any
+    annotation: ParameterAnnotation
 
     def coerce(
         self,
@@ -196,7 +197,7 @@ def declare_param(param: ParamMeta) -> DeclaredParam:
         default = param.default
         parameter_info = OptionInfo()
 
-    pydantic_annotation: Any
+    pydantic_annotation: ParameterAnnotation
 
     if param.annotation is not param.empty:
         main_type = param.annotation
@@ -231,21 +232,7 @@ def declare_param(param: ParamMeta) -> DeclaredParam:
         else:
             pydantic_annotation = main_type
     else:
-        if default is not None:
-            main_type, guessed = infer_type_from_default(default)
-            if main_type is None:
-                main_type = str
-            elif (
-                guessed
-                and isinstance(main_type, tuple)
-                and all(isinstance(item, type) for item in main_type)
-            ):
-                main_type = tuple.__class_getitem__(main_type)
-            elif guessed and main_type not in (int, float, bool, str):
-                main_type = str
-        else:
-            main_type = str
-        pydantic_annotation = main_type
+        pydantic_annotation = infer_annotation_from_default(default)
 
     return DeclaredParam(
         name=param.name,
@@ -273,13 +260,7 @@ def prompt_value_proc(
     default: Any | None = None,
 ) -> Callable[[Any], Any]:
     """Coerce interactive prompt input via the runtime adapter layer."""
-    annotation = type
-    if isinstance(annotation, ParamType):
-        annotation = None
-    if annotation is None and default is not None:
-        annotation, _ = infer_type_from_default(default)
-    if annotation is None:
-        annotation = str
+    annotation = annotation_from_prompt(type, default)
 
     parameter_info = OptionInfo()
     adapter = adapters.build_adapter(annotation, parameter_info)

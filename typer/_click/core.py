@@ -16,7 +16,6 @@ from typing import (
     overload,
 )
 
-from . import types
 from .exceptions import (
     Abort,
     BadParameter,
@@ -28,6 +27,7 @@ from .formatting import HelpFormatter
 from .globals import pop_context, push_context
 from .parser import _OptionParser
 from .termui import style
+from .types import ParamType
 from .utils import echo, make_default_short_help
 
 if TYPE_CHECKING:
@@ -818,7 +818,7 @@ class Parameter(ABC):
     def __init__(
         self,
         param_decls: Sequence[str] | None = None,
-        type: types.ParamType | Any | None = None,
+        type: ParamType | None = None,
         required: bool = False,
         default: Any | Callable[[], Any] | None = None,
         callback: Callable[[Context, "Parameter", Any], Any] | None = None,
@@ -839,9 +839,7 @@ class Parameter(ABC):
         self.name, self.opts, self.secondary_opts = self._parse_decls(
             param_decls or (), expose_value
         )
-        from ..param_types import resolve_param_type
-
-        self.type = resolve_param_type(type, default)
+        self.type = type if type is not None else ParamType()
 
         # Default nargs to what the type tells us if we have that
         # information available.

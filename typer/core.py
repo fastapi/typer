@@ -22,12 +22,12 @@ from ._click.types import ParamType
 from ._typing import Literal
 from .display import describe_number_range
 from .param_types import (
-    DEFAULT_PARAM_TYPE,
     TyperChoice,
     TyperDatetime,
     TyperPath,
     TyperRanged,
     TyperTuple,
+    lenient_issubclass,
 )
 from .schema import (
     RuntimeParam,
@@ -138,7 +138,7 @@ class TyperParameter(_click.core.Parameter):
     def metavar_label(self) -> str:
         annotation = self.runtime_param.annotation
         param_type = self.type
-        if get_origin(annotation) is list:
+        if lenient_issubclass(get_origin(annotation), list):
             label = self.metavar_type()
         elif isinstance(param_type, TyperDatetime):
             label = "|".join(param_type.formats)
@@ -361,7 +361,7 @@ class TyperArgument(TyperParameter):
         # Parameter
         param_decls: list[str],
         runtime_param: RuntimeParam,
-        type: Any | None = None,
+        type: ParamType,
         required: bool = False,
         default: Any | None = None,
         callback: Callable[..., Any] | None = None,
@@ -580,7 +580,7 @@ class TyperOption(TyperParameter):
         # Parameter
         param_decls: list[str],
         runtime_param: RuntimeParam,
-        type: ParamType | Any | None = None,
+        type: ParamType,
         required: bool = False,
         default: Any | None = None,
         callback: Callable[..., Any] | None = None,
@@ -656,12 +656,8 @@ class TyperOption(TyperParameter):
         self.hidden = hidden
 
         # TODO: revisit all of this flag stuff
-        inferred_bool_flag = bool(is_flag and type is None and not count)
-        if inferred_bool_flag:
-            self.type: ParamType = DEFAULT_PARAM_TYPE
-
         self.is_flag: bool = bool(is_flag)
-        self.is_bool_flag: bool = inferred_bool_flag
+        self.is_bool_flag: bool = bool(is_flag and not count)
 
         if self.is_flag:
             self._depr_flag_value = True
@@ -670,10 +666,8 @@ class TyperOption(TyperParameter):
 
         # Counting
         self.count = count
-        if count and type is None:
-            self.type = TyperRanged(int)
-            if self.min is None:
-                self.min = 0
+        if count and self.min is None:
+            self.min = 0
 
         self.allow_from_autoenv = allow_from_autoenv
         self.help = help
