@@ -25,12 +25,7 @@ from rich.traceback import Traceback
 from typer.models import DeveloperExceptionConfig
 
 from . import _click
-from .core import (
-    TyperArgument,
-    TyperGroup,
-    TyperOption,
-    get_number_range_help_str,
-)
+from .core import TyperArgument, TyperGroup, TyperOption
 
 # Default styles
 STYLE_OPTION = "bold cyan"
@@ -385,7 +380,7 @@ def _print_options_panel(
         if metavar_str is not None:
             metavar.append(metavar_str)
 
-        range_str = get_number_range_help_str(param)
+        range_str = param.get_number_range_help_str()
         if range_str:
             metavar.append(RANGE_STRING.format(range_str))
 

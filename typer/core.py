@@ -45,17 +45,6 @@ else:
     DEFAULT_MARKUP_MODE = None
 
 
-def get_number_range_help_str(param: "TyperOption | TyperArgument") -> str | None:
-    if (
-        isinstance(param, TyperOption)
-        and param.count
-        and param.min == 0
-        and param.max is None
-    ):
-        return None
-    return describe_number_range(param.min, param.max)
-
-
 # Copy from _click.parser._split_opt
 def _split_opt(opt: str) -> tuple[str, str]:
     first = opt[:1]
@@ -106,16 +95,6 @@ def _typer_param_setup_autocompletion_compat(
         self._custom_shell_complete = compat_autocompletion
 
 
-def _value_is_missing(param: _click.Parameter, value: Any) -> bool:
-    if value is None:
-        return True
-
-    if (param.nargs != 1 or param.multiple) and value == ():
-        return True
-
-    return False
-
-
 class TyperParameter(_click.core.Parameter):
     """Typer parameter with runtime coercion."""
 
@@ -130,7 +109,11 @@ class TyperParameter(_click.core.Parameter):
         return value
 
     def value_is_missing(self, value: Any) -> bool:
-        return _value_is_missing(self, value)
+        if value is None:
+            return True
+        if (self.nargs != 1 or self.multiple) and value == ():
+            return True
+        return False
 
     def make_metavar(self, ctx: _click.Context) -> str | None:
         return self.metavar
@@ -189,6 +172,9 @@ class TyperParameter(_click.core.Parameter):
         elif isinstance(annotation, type):
             display_type = annotation.__name__
         return display_type
+
+    def get_number_range_help_str(self) -> str | None:
+        return None
 
 
 def _get_default_string(
@@ -360,8 +346,8 @@ class TyperArgument(TyperParameter):
         *,
         # Parameter
         param_decls: list[str],
-        runtime_param: RuntimeParam,
         type: ParamType,
+        runtime_param: RuntimeParam,
         required: bool = False,
         default: Any | None = None,
         callback: Callable[..., Any] | None = None,
@@ -480,7 +466,7 @@ class TyperArgument(TyperParameter):
             # Typer override end
             if default_string:
                 extra.append(_("default: {default}").format(default=default_string))
-        range_str = get_number_range_help_str(self)
+        range_str = self.get_number_range_help_str()
         if range_str:
             extra.append(range_str)
         if self.required:
@@ -506,15 +492,12 @@ class TyperArgument(TyperParameter):
             if not self.required and not var.startswith("["):
                 var = f"[{var}]"
             return var
-
         var = (self.name or "").upper()
         if not self.required:
             var = f"[{var}]"
-
-        value_metavar = self.resolve_value_metavar(ctx)
-        if value_metavar:
-            var += f":{value_metavar}"
-
+        type_var = self.resolve_value_metavar(ctx)
+        if type_var:
+            var += f":{type_var}"
         if self.nargs != 1:
             var += "..."
         return var
@@ -568,6 +551,9 @@ class TyperArgument(TyperParameter):
             return None
         return metavar_str
 
+    def get_number_range_help_str(self) -> str | None:
+        return describe_number_range(self.min, self.max)
+
 
 class TyperOption(TyperParameter):
     param_type_name = "option"
@@ -579,8 +565,8 @@ class TyperOption(TyperParameter):
         *,
         # Parameter
         param_decls: list[str],
-        runtime_param: RuntimeParam,
         type: ParamType,
+        runtime_param: RuntimeParam,
         required: bool = False,
         default: Any | None = None,
         callback: Callable[..., Any] | None = None,
@@ -952,7 +938,7 @@ class TyperOption(TyperParameter):
             if default_string:
                 extra.append(_("default: {default}").format(default=default_string))
 
-        range_str = get_number_range_help_str(self)
+        range_str = self.get_number_range_help_str()
         if range_str:
             extra.append(range_str)
 
@@ -999,6 +985,11 @@ class TyperOption(TyperParameter):
         ):
             return None
         return self.metavar_label()
+
+    def get_number_range_help_str(self) -> str | None:
+        if self.count and self.min == 0 and self.max is None:
+            return None
+        return describe_number_range(self.min, self.max)
 
 
 def _typer_format_options(
