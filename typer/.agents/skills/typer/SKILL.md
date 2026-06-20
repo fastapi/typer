@@ -125,7 +125,29 @@ def main(name: str = typer.Argument(default=...)):
 
 ## CLI Options
 
-CLI options are declared in a similar fashion as arguments, but will be called on the CLI with a single dash (single letter) or 2 dashes (full name):
+CLI options are declared in a similar fashion as arguments, but will be called on the CLI with a single dash (single letter) or 2 dashes (full name).
+
+The CLI option name is automatically generated from the variable name, so `user_name` becomes `--user-name` automatically:
+
+```python
+from typing import Annotated
+
+import typer
+
+app = typer.Typer()
+
+
+@app.command()
+def main(user_name: Annotated[str, typer.Option()]):
+    # On the CLI, the required user name can be specified with --user-name
+    print(f"Hello {user_name}")
+
+
+if __name__ == "__main__":
+    app()
+```
+
+If you want to specify a different name, or want to add a short version, declare them in the `typer.Option`:
 
 ```python
 from typing import Annotated

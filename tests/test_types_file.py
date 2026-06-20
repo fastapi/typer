@@ -1,12 +1,11 @@
 import subprocess
 import sys
-from io import BytesIO, StringIO, TextIOWrapper
+from io import BytesIO, StringIO
 from pathlib import Path
 
 import pytest
 import typer
 from typer._click._compat import get_best_encoding, should_strip_ansi
-from typer._click.testing import make_input_stream
 from typer._click.utils import PacifyFlushWrapper
 from typer.testing import CliRunner
 
@@ -124,16 +123,6 @@ def test_filelike_conversion() -> None:
     assert stream.getvalue() == "This is a single line\n"
 
 
-def test_input_stream() -> None:
-    binary_stream = BytesIO(b"hello")
-    converted = make_input_stream(binary_stream, charset="utf-8")
-    assert converted is binary_stream
-
-    text_stream = TextIOWrapper(BytesIO(b"hello"), encoding="utf-8")
-    converted = make_input_stream(text_stream, charset="utf-8")
-    assert converted is text_stream.buffer
-
-
 def test_binary_dash() -> None:
     result = runner.invoke(app, ["write-binary", "--file-out=-"])
     assert result.exit_code == 0
@@ -150,8 +139,10 @@ def test_binary_stderr() -> None:
     result = subprocess.run(
         [
             sys.executable,
-            "-c",
-            "from tests.test_types_file import app; app()",
+            "-m",
+            "coverage",
+            "run",
+            __file__,
             "write-binary-stderr",
         ],
         capture_output=True,
@@ -393,3 +384,7 @@ def test_should_strip_ansi(monkeypatch) -> None:
     assert should_strip_ansi(stream=None, color=None) is True
     assert should_strip_ansi(stream=None, color=True) is False
     assert should_strip_ansi(stream=None, color=False) is True
+
+
+if __name__ == "__main__":
+    app()

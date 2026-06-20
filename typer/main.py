@@ -1963,7 +1963,6 @@ def launch(
         Doc(
             """
             Wait for the program to exit before returning. This only works if the launched program blocks.
-            In particular, `xdg-open` on Linux does not block.
             """
         ),
     ] = False,
@@ -2015,9 +2014,12 @@ def launch(
         has_xdg_open = _is_linux_or_bsd() and shutil.which("xdg-open") is not None
 
         if has_xdg_open:
-            return subprocess.Popen(
+            process = subprocess.Popen(
                 ["xdg-open", url], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT
-            ).wait()
+            )
+            if wait:
+                return process.wait()
+            return 0
 
         import webbrowser
 
