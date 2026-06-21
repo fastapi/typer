@@ -8,6 +8,7 @@
 
 ### Docs
 
+* 📝 Update docs badges: remove Publish badge, it doesn't give extra information. PR [#1850](https://github.com/fastapi/typer/pull/1850) by [@tiangolo](https://github.com/tiangolo).
 * 📝 Fix formatting for help link to support GitHub-specific overview edge-case. PR [#1826](https://github.com/fastapi/typer/pull/1826) by [@phalberg](https://github.com/phalberg).
 
 ### Internal
