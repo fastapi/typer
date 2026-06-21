@@ -13,6 +13,7 @@
 
 ### Internal
 
+* ⬆️ Group Dependabot updates. PR [#1853](https://github.com/fastapi/typer/pull/1853) by [@tiangolo](https://github.com/tiangolo).
 * ⬆️ Update Dependabot ecosystem coverage. PR [#1851](https://github.com/fastapi/typer/pull/1851) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Fix alls-green test dependency. PR [#1848](https://github.com/fastapi/typer/pull/1848) by [@tiangolo](https://github.com/tiangolo).
 * ⬆ Bump cryptography from 46.0.7 to 48.0.1. PR [#1841](https://github.com/fastapi/typer/pull/1841) by [@dependabot[bot]](https://github.com/apps/dependabot).
