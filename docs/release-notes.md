@@ -12,6 +12,7 @@
 
 ### Internal
 
+* 👷 Fix alls-green test dependency. PR [#1848](https://github.com/fastapi/typer/pull/1848) by [@tiangolo](https://github.com/tiangolo).
 * ⬆ Bump cryptography from 46.0.7 to 48.0.1. PR [#1841](https://github.com/fastapi/typer/pull/1841) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pyjwt from 2.12.0 to 2.13.0. PR [#1839](https://github.com/fastapi/typer/pull/1839) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump the github-actions group across 1 directory with 3 updates. PR [#1828](https://github.com/fastapi/typer/pull/1828) by [@dependabot[bot]](https://github.com/apps/dependabot).
