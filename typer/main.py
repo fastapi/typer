@@ -1448,9 +1448,7 @@ def get_callback(
     return wrapper
 
 
-def get_param(
-    param: ParamMeta,
-) -> TyperArgument | TyperOption:
+def get_param(param: ParamMeta) -> TyperArgument | TyperOption:
     declared = declare_param(param)
     parameter_info = declared.parameter_info
     default_value = declared.default

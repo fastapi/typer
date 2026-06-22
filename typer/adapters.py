@@ -19,6 +19,17 @@ from .param_types import (
 )
 
 
+def try_build_adapter(
+    annotation: Any,
+    parameter_info: ParameterInfo,
+) -> TypeAdapter[Any] | None:
+    """Build a TypeAdapter when Pydantic can schema-generate the annotation."""
+    try:
+        return build_adapter(annotation, parameter_info)
+    except PydanticSchemaGenerationError:
+        return None
+
+
 def build_adapter(
     annotation: Any,
     parameter_info: ParameterInfo,
@@ -64,17 +75,6 @@ def build_adapter(
         return TypeAdapter(Annotated[tuple[Any, ...], BeforeValidator(parse_tuple)])
 
     return build_leaf_adapter(annotation, parameter_info=parameter_info)
-
-
-def try_build_adapter(
-    annotation: Any,
-    parameter_info: ParameterInfo,
-) -> TypeAdapter[Any] | None:
-    """Build a TypeAdapter when Pydantic can schema-generate the annotation."""
-    try:
-        return build_adapter(annotation, parameter_info)
-    except PydanticSchemaGenerationError:
-        return None
 
 
 def build_leaf_adapter(

@@ -18,9 +18,6 @@ from .models import (
     ParamMeta,
     Required,
 )
-
-if TYPE_CHECKING:
-    from .core import TyperParameter
 from .param_types import (
     ParameterAnnotation,
     _open_cli_file,
@@ -35,6 +32,9 @@ from .param_types import (
     resolve_file_mode,
     resolve_path_type,
 )
+
+if TYPE_CHECKING:
+    from .core import TyperParameter
 
 
 @dataclass(frozen=True)
@@ -73,13 +73,7 @@ class RuntimeParam(ABC):
         return self._coerce_value(value, param=param, ctx=ctx)
 
     @abstractmethod
-    def _coerce_value(
-        self,
-        value: Any,
-        *,
-        param: "TyperParameter",
-        ctx: Context,
-    ) -> Any:
+    def _coerce_value(self, value: Any, param: "TyperParameter", ctx: Context) -> Any:
         pass
 
 
@@ -89,13 +83,7 @@ class AdapterRuntimeParam(RuntimeParam):
 
     adapter: TypeAdapter[Any]
 
-    def _coerce_value(
-        self,
-        value: Any,
-        *,
-        param: "TyperParameter",
-        ctx: Context,
-    ) -> Any:
+    def _coerce_value(self, value: Any, param: "TyperParameter", ctx: Context) -> Any:
         try:
             return self.adapter.validate_python(value)
         except ValidationError as exc:
@@ -110,13 +98,7 @@ class FileRuntimeParam(RuntimeParam):
 
     file_annotation: Any
 
-    def _coerce_value(
-        self,
-        value: Any,
-        *,
-        param: "TyperParameter",
-        ctx: Context,
-    ) -> Any:
+    def _coerce_value(self, value: Any, param: "TyperParameter", ctx: Context) -> Any:
         mode = resolve_file_mode(self.parameter_info, self.file_annotation)
 
         def open_one(item: Any) -> IO[Any]:
@@ -139,13 +121,7 @@ class PathRuntimeParam(RuntimeParam):
 
     path_type: type[Any] | None
 
-    def _coerce_value(
-        self,
-        value: Any,
-        *,
-        param: "TyperParameter",
-        ctx: Context,
-    ) -> Any:
+    def _coerce_value(self, value: Any, param: "TyperParameter", ctx: Context) -> Any:
         return coerce_cli_path(
             value,
             self.parameter_info,
@@ -159,13 +135,7 @@ class PathRuntimeParam(RuntimeParam):
 class PassThroughRuntimeParam(RuntimeParam):
     """Coercion for annotations that cannot use a Pydantic TypeAdapter."""
 
-    def _coerce_value(
-        self,
-        value: Any,
-        *,
-        param: "TyperParameter",
-        ctx: Context,
-    ) -> Any:
+    def _coerce_value(self, value: Any, param: "TyperParameter", ctx: Context) -> Any:
         annotation = self.annotation
         if isinstance(annotation, type):
             if isinstance(value, annotation):
@@ -185,13 +155,7 @@ class ChoiceRuntimeParam(RuntimeParam):
     choices: tuple[Any, ...]
     case_sensitive: bool
 
-    def _coerce_value(
-        self,
-        value: Any,
-        *,
-        param: "TyperParameter",
-        ctx: Context,
-    ) -> Any:
+    def _coerce_value(self, value: Any, param: "TyperParameter", ctx: Context) -> Any:
         try:
             return coerce_cli_choice(
                 value,
