@@ -20,16 +20,9 @@ from ._click.parser import _OptionParser
 from ._click.shell_completion import CompletionItem
 from ._click.types import ParamType
 from ._typing import Literal
+from .coercion import RuntimeParam, TypeDescriptor
 from .display import describe_number_range
-from .param_types import (
-    TyperChoice,
-    TyperDatetime,
-    TyperPath,
-    TyperRanged,
-    TyperTuple,
-    lenient_issubclass,
-)
-from .coercion import RuntimeParam
+from .param_types import choice_missing_message, choice_shell_complete
 from .utils import parse_boolean_env_var
 
 MarkupMode = Literal["markdown", "rich", None]
@@ -97,6 +90,7 @@ class TyperParameter(_click.core.Parameter):
     """Typer parameter with runtime coercion."""
 
     runtime_param: RuntimeParam
+    type_descriptor: TypeDescriptor
 
     def process_value(self, ctx: _click.Context, value: Any) -> Any:
         value = self.runtime_param.coerce(value, param=self, ctx=ctx)
@@ -113,26 +107,67 @@ class TyperParameter(_click.core.Parameter):
             return True
         return False
 
+    def get_missing_message(self, ctx: _click.Context | None) -> str | None:
+        desc = self.type_descriptor
+        if desc.is_choice and desc.choices is not None:
+            return choice_missing_message(
+                desc.choices,
+                case_sensitive=desc.case_sensitive,
+                ctx=ctx,
+            )
+        return ""
+
+    def value_from_envvar(self, ctx: _click.Context) -> str | Sequence[str] | None:
+        rv: Any | None = self.resolve_envvar_value(ctx)
+        if rv is not None and (self.nargs != 1 or self.multiple):
+            splitter = self.type_descriptor.envvar_list_splitter
+            if splitter is not None:
+                rv = (rv or "").split(splitter)
+            else:
+                rv = self.type.split_envvar_value(rv)
+        return rv
+
+    def shell_complete(
+        self, ctx: _click.Context, incomplete: str
+    ) -> list[CompletionItem]:
+        if self._custom_shell_complete is not None:
+            results = self._custom_shell_complete(ctx, self, incomplete)
+            if results and isinstance(results[0], str):
+                results = [CompletionItem(c) for c in results]
+            return cast(list[CompletionItem], results)
+
+        desc = self.type_descriptor
+        if desc.is_choice and desc.choices is not None:
+            return choice_shell_complete(
+                desc.choices,
+                case_sensitive=desc.case_sensitive,
+                incomplete=incomplete,
+            )
+        if desc.is_file:
+            return [CompletionItem(incomplete, type="file")]
+        if desc.is_path:
+            return []
+        return self.type.shell_complete(ctx, self, incomplete)
+
     def make_metavar(self, ctx: _click.Context) -> str | None:
         return self.metavar
 
     def metavar_label(self) -> str:
-        annotation = self.runtime_param.annotation
-        param_type = self.type
-        if lenient_issubclass(get_origin(annotation), list):
+        desc = self.type_descriptor
+        if desc.is_list:
             label = self.metavar_type()
-        elif isinstance(param_type, TyperDatetime):
-            label = "|".join(param_type.formats)
-        elif isinstance(param_type, TyperRanged):
-            label = f"{param_type.annotation.__name__} range"
-        elif isinstance(param_type, TyperTuple):
+        elif desc.is_tuple:
             labels = [
-                self._metavar_type_by_annotation(a)
-                for a in param_type.element_annotations
+                self._metavar_type_by_annotation(arg)
+                for arg in get_args(desc.annotation)
             ]
             label = ",".join(labels)
-        elif isinstance(param_type, TyperPath):
-            label = param_types.path_metavar_label(self.runtime_param.parameter_info)
+        elif desc.is_datetime:
+            label = "|".join(desc.datetime_formats)
+        elif desc.is_ranged:
+            label = f"{desc.ranged_type_name} range"
+        elif desc.is_path:
+            label = desc.path_label
         else:
             label = self.metavar_type()
         return f"<{label}>"
@@ -346,6 +381,7 @@ class TyperArgument(TyperParameter):
         param_decls: list[str],
         type: ParamType,
         runtime_param: RuntimeParam,
+        type_descriptor: TypeDescriptor,
         required: bool = False,
         default: Any | None = None,
         callback: Callable[..., Any] | None = None,
@@ -383,6 +419,7 @@ class TyperArgument(TyperParameter):
         self.max = max
         self.rich_help_panel = rich_help_panel
         self.runtime_param = runtime_param
+        self.type_descriptor = type_descriptor
 
         super().__init__(
             param_decls=param_decls,
@@ -527,19 +564,19 @@ class TyperArgument(TyperParameter):
         parser.add_argument(dest=self.name, nargs=self.nargs, obj=self)
 
     def resolve_value_metavar(self, ctx: _click.Context) -> str | None:
-        param_type = self.type
-        if isinstance(param_type, TyperChoice):
+        desc = self.type_descriptor
+        if desc.is_choice:
             normalized_mapping = {
-                c: param_types.normalize_choice_value(c, param_type.case_sensitive, ctx)
-                for c in param_type.choices
+                c: param_types.normalize_choice_value(c, desc.case_sensitive, ctx)
+                for c in desc.choices or ()
             }
             choices_str = "|".join(normalized_mapping.values())
             if self.required:
                 return f"{{{choices_str}}}"
             return f"[{choices_str}]"
-        if not isinstance(param_type, TyperDatetime):
-            return None
-        return self.metavar_label()
+        if desc.is_datetime:
+            return self.metavar_label()
+        return None
 
     def resolve_rich_metavar(self, ctx: _click.Context) -> str | None:
         metavar_str = self.make_metavar(ctx)
@@ -565,6 +602,7 @@ class TyperOption(TyperParameter):
         param_decls: list[str],
         type: ParamType,
         runtime_param: RuntimeParam,
+        type_descriptor: TypeDescriptor,
         required: bool = False,
         default: Any | None = None,
         callback: Callable[..., Any] | None = None,
@@ -607,6 +645,7 @@ class TyperOption(TyperParameter):
         self.min = min
         self.max = max
         self.runtime_param = runtime_param
+        self.type_descriptor = type_descriptor
 
         super().__init__(
             param_decls,
@@ -786,7 +825,7 @@ class TyperOption(TyperParameter):
             # Use ``None`` to inform the prompt() function to reiterate until a valid
             # value is provided by the user if we have no default.
             default=default,
-            type=self.type,
+            type=self.type_descriptor.annotation,
             hide_input=self.hide_input,
             show_choices=self.show_choices,
             confirmation_prompt=self.confirmation_prompt,
@@ -960,27 +999,23 @@ class TyperOption(TyperParameter):
         return ("; " if any_prefix_is_slash else " / ").join(rv), help
 
     def resolve_value_metavar(self, ctx: _click.Context) -> str | None:
-        param_type = self.type
-        if isinstance(param_type, TyperChoice):
+        desc = self.type_descriptor
+        if desc.is_choice:
             if not self.show_choices:
                 metavars = [
                     self._metavar_type_by_annotation(type(c))
-                    for c in param_type.choices
+                    for c in desc.choices or ()
                 ]
                 choices_str = "|".join([*dict.fromkeys(metavars)])
             else:
                 normalized_mapping = {
-                    c: param_types.normalize_choice_value(
-                        c, param_type.case_sensitive, ctx
-                    )
-                    for c in param_type.choices
+                    c: param_types.normalize_choice_value(c, desc.case_sensitive, ctx)
+                    for c in desc.choices or ()
                 }
                 choices_str = "|".join(normalized_mapping.values())
 
             return f"[{choices_str}]"
-        if self.param_type_name == "argument" and not isinstance(
-            param_type, TyperDatetime
-        ):
+        if self.param_type_name == "argument" and not desc.is_datetime:
             return None
         return self.metavar_label()
 

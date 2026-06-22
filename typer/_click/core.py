@@ -1048,4 +1048,4 @@ class Parameter(ABC):
         from ..core import TyperParameter
 
         param = cast(TyperParameter, self)
-        return self.type.shell_complete(ctx, param, incomplete)
+        return param.shell_complete(ctx, incomplete)

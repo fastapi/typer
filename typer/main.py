@@ -16,6 +16,7 @@ from annotated_doc import Doc
 from . import _click
 from ._click.globals import get_current_context
 from ._typing import get_args, get_origin
+from .coercion import build_runtime_param, resolve_type_descriptor
 from .completion import get_completion_inspect_parameters
 from .core import (
     DEFAULT_MARKUP_MODE,
@@ -39,9 +40,7 @@ from .models import (
     Required,
     TyperInfo,
 )
-from .param_types import TyperRanged, cli_param_type, lenient_issubclass
-from .coercion import build_runtime_param
-from .param_types import parse_param_annotation
+from .param_types import lenient_issubclass, parse_param_annotation
 from .utils import get_params_from_function
 
 _original_except_hook = sys.excepthook
@@ -1481,20 +1480,15 @@ def get_param(param: ParamMeta) -> TyperArgument | TyperOption:
             and any("/" in decl for decl in parameter_info.param_decls)
         ):
             is_flag = True
-    parameter_type = cli_param_type(
-        annotation=annotation,
-        parameter_info=parameter_info,
-        is_list=is_list,
-        is_tuple=lenient_issubclass(get_origin(annotation), tuple),
-    )
-    runtime_param = build_runtime_param(
+    descriptor = resolve_type_descriptor(
         annotation=annotation,
         parameter_info=parameter_info,
     )
+    parameter_type = descriptor.param_type
+    runtime_param = build_runtime_param(descriptor)
+    tuple_nargs = descriptor.tuple_arity
 
     if isinstance(parameter_info, OptionInfo):
-        if parameter_info.count:
-            parameter_type = TyperRanged(int)
         default_option_name = get_command_name(param.name)
         if is_flag:
             default_option_declaration = (
@@ -1536,15 +1530,19 @@ def get_param(param: ParamMeta) -> TyperArgument | TyperOption:
             autocompletion=get_param_completion(parameter_info.autocompletion),
             min=parameter_info.min,
             max=parameter_info.max,
+            nargs=tuple_nargs,
             # Rich settings
             rich_help_panel=parameter_info.rich_help_panel,
             runtime_param=runtime_param,
+            type_descriptor=descriptor,
         )
     elif isinstance(parameter_info, ArgumentInfo):
         param_decls = [param.name]
         nargs = None
         if is_list:
             nargs = -1
+        elif tuple_nargs is not None:
+            nargs = tuple_nargs
         return TyperArgument(
             # Argument
             param_decls=param_decls,
@@ -1571,6 +1569,7 @@ def get_param(param: ParamMeta) -> TyperArgument | TyperOption:
             # Rich settings
             rich_help_panel=parameter_info.rich_help_panel,
             runtime_param=runtime_param,
+            type_descriptor=descriptor,
         )
     raise AssertionError("A Parameter should be returned")  # pragma: no cover
 

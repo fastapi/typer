@@ -31,14 +31,6 @@ class ParamType:
     # Windows).
     envvar_list_splitter: ClassVar[str | None] = None
 
-    def get_missing_message(
-        self, param: "TyperParameter", ctx: Union["Context", None]
-    ) -> str | None:
-        """Optionally might return extra information about a missing
-        parameter.
-        """
-        pass  # pragma: no cover
-
     def split_envvar_value(self, rv: str) -> Sequence[str]:
         """Given a value from an environment variable this splits it up
         into small chunks depending on the defined envvar list splitter.

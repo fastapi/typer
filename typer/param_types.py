@@ -1,18 +1,14 @@
 import os
 import stat
-from collections.abc import Iterable, Mapping, Sequence
-from datetime import datetime
+from collections.abc import Sequence
 from enum import Enum
 from pathlib import Path
 from typing import (
     IO,
     TYPE_CHECKING,
     Any,
-    ClassVar,
-    Generic,
     TypeAlias,
     TypeGuard,
-    TypeVar,
     cast,
 )
 
@@ -39,8 +35,6 @@ from .models import (
 
 if TYPE_CHECKING:
     from .core import TyperParameter
-
-ParamTypeValue = TypeVar("ParamTypeValue")
 
 ParameterAnnotation: TypeAlias = Any
 
@@ -109,76 +103,6 @@ def parse_param_annotation(
     return infer_annotation_from_default(default)
 
 
-def resolve_param_type(
-    annotation: ParameterAnnotation,
-    parameter_info: ParameterInfo | None = None,
-) -> ParamType:
-    """Resolve a ParamType for this particular annotation."""
-    if isinstance(annotation, ParamType):
-        return annotation
-
-    if isinstance(annotation, tuple):
-        return TyperTuple(annotation)
-
-    if parameter_info is not None:
-        if annotation is int or annotation is float:
-            if parameter_info.min is not None or parameter_info.max is not None:
-                return TyperRanged(annotation)
-        if annotation is datetime:
-            f = parameter_info.formats
-            formats_tuple = tuple(f) if f is not None else ("%Y-%m-%d",)
-            return TyperDatetime(formats=formats_tuple)
-        if _needs_typer_path(annotation, parameter_info):
-            return TyperPath()
-        if lenient_issubclass(annotation, Enum):
-            return TyperChoice(list(annotation), parameter_info.case_sensitive)
-        if is_literal_type(annotation):
-            return TyperChoice(
-                literal_values(annotation), parameter_info.case_sensitive
-            )
-        if lenient_issubclass(annotation, CLI_FILE_TYPES):
-            return TyperFile()
-
-    return ParamType()
-
-
-def cli_param_type(
-    *,
-    annotation: ParameterAnnotation,
-    parameter_info: ParameterInfo,
-    is_list: bool,
-    is_tuple: bool,
-) -> ParamType:
-    """Defer the param type"""
-    if is_tuple:
-        type_args = get_args(annotation)
-        return resolve_param_type(tuple(type_args), parameter_info)
-    if is_list:
-        (element_type,) = get_args(annotation)
-        return resolve_param_type(element_type, parameter_info)
-    return resolve_param_type(annotation, parameter_info)
-
-
-# DATETIME #
-class TyperDatetime(ParamType):
-    def __init__(self, *, formats: tuple[str, ...]) -> None:
-        self.formats = formats
-
-
-# TUPLE #
-class TyperTuple(ParamType):
-    """Metavar and nargs information for tuple parameters."""
-
-    is_composite = True
-
-    def __init__(self, element_annotations: Sequence[Any]) -> None:
-        self.element_annotations: tuple[Any, ...] = tuple(element_annotations)
-
-    @property
-    def arity(self) -> int:
-        return len(self.element_annotations)
-
-
 # ENUM #
 def normalize_choice_value(
     choice: Any,
@@ -198,7 +122,7 @@ def coerce_cli_choice(
     *,
     choices: Sequence[Any],
     case_sensitive: bool,
-    ctx: Context | None,
+    ctx: Context | None = None,
 ) -> Any:
     if any(isinstance(choice, Enum) and value is choice for choice in choices):
         return value
@@ -224,56 +148,38 @@ def choice_coercion_annotation(
     return None
 
 
-class TyperChoice(ParamType, Generic[ParamTypeValue]):
-    name = "choice"
+def choice_as_str(choice: Any) -> str:
+    if isinstance(choice, Enum):
+        return str(choice.value)
+    return str(choice)
 
-    def __init__(
-        self, choices: Iterable[ParamTypeValue], case_sensitive: bool = True
-    ) -> None:
-        self.choices: Sequence[ParamTypeValue] = tuple(choices)
-        self.case_sensitive = case_sensitive
 
-    def _normalized_mapping(
-        self, ctx: Context | None = None
-    ) -> Mapping[ParamTypeValue, str]:
-        """
-        Returns mapping where keys are the original choices and the values are
-        the normalized values that are accepted via the command line.
-        """
-        return {
-            choice: normalize_choice_value(choice, self.case_sensitive, ctx)
-            for choice in self.choices
-        }
+def choice_shell_complete(
+    choices: Sequence[Any],
+    *,
+    case_sensitive: bool,
+    incomplete: str,
+) -> list[CompletionItem]:
+    str_choices = map(choice_as_str, choices)
+    if case_sensitive:
+        matched = (c for c in str_choices if c.startswith(incomplete))
+    else:
+        incomplete = incomplete.lower()
+        matched = (c for c in str_choices if c.lower().startswith(incomplete))
+    return [CompletionItem(c) for c in matched]
 
-    def get_missing_message(self, param: "TyperParameter", ctx: Context | None) -> str:
-        """Message shown when no choice is passed."""
-        choices = ",\n\t".join(self._normalized_mapping(ctx=ctx).values())
-        return f"Choose from:\n\t{choices}"
 
-    def get_invalid_choice_message(self, value: Any, ctx: Context | None) -> str:
-        """Get the error message when the given choice is invalid."""
-        choices_str = ", ".join(map(repr, self._normalized_mapping(ctx=ctx).values()))
-        return f"{value!r} is not one of {choices_str}."
-
-    def _choice_as_str(self, choice: ParamTypeValue) -> str:
-        if isinstance(choice, Enum):
-            return str(choice.value)
-        return str(choice)
-
-    def shell_complete(
-        self, ctx: Context, param: "TyperParameter", incomplete: str
-    ) -> list[CompletionItem]:
-        """Complete choices that start with the incomplete value."""
-
-        str_choices = map(self._choice_as_str, self.choices)
-
-        if self.case_sensitive:
-            matched = (c for c in str_choices if c.startswith(incomplete))
-        else:
-            incomplete = incomplete.lower()
-            matched = (c for c in str_choices if c.lower().startswith(incomplete))
-
-        return [CompletionItem(c) for c in matched]
+def choice_missing_message(
+    choices: Sequence[Any],
+    *,
+    case_sensitive: bool,
+    ctx: Context | None,
+) -> str:
+    normalized = [
+        normalize_choice_value(choice, case_sensitive, ctx) for choice in choices
+    ]
+    choices_str = ",\n\t".join(normalized)
+    return f"Choose from:\n\t{choices_str}"
 
 
 # PATH #
@@ -283,18 +189,6 @@ def path_metavar_label(parameter_info: ParameterInfo) -> str:
     if parameter_info.dir_okay and not parameter_info.file_okay:
         return "dir"
     return "path"
-
-
-class TyperPath(ParamType):
-    envvar_list_splitter: ClassVar[str] = os.path.pathsep
-
-    def shell_complete(
-        self, ctx: Context, param: "TyperParameter", incomplete: str
-    ) -> list[CompletionItem]:
-        """Return an empty list so that the autocompletion functionality
-        will work properly from the commandline.
-        """
-        return []
 
 
 def resolve_path_type(
@@ -398,15 +292,6 @@ def is_file_annotation(annotation: Any) -> bool:
     return lenient_issubclass(annotation, CLI_FILE_TYPES)
 
 
-class TyperFile(ParamType):
-    envvar_list_splitter = os.path.pathsep
-
-    def shell_complete(
-        self, ctx: Context, param: "TyperParameter", incomplete: str
-    ) -> list[CompletionItem]:
-        return [CompletionItem(incomplete, type="file")]
-
-
 def file_coercion_annotation(annotation: Any) -> Any | None:
     """Return the file marker type when this parameter opens files."""
     origin = get_origin(annotation)
@@ -508,9 +393,3 @@ def _open_cli_file(
     except OSError as exc:  # pragma: no cover
         message = f"'{format_filename(value)}': {exc.strerror}"
         raise BadParameter(message, ctx=ctx, param=param) from exc
-
-
-# RANGE #
-class TyperRanged(ParamType):
-    def __init__(self, annotation: type[Any]) -> None:
-        self.annotation = annotation

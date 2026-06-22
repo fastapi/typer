@@ -8,7 +8,6 @@ from typing import Annotated, Any, Literal, get_args, get_origin
 import pytest
 import typer
 from typer import _click, param_types
-from typer.param_types import TyperPath
 from typer.testing import CliRunner
 
 from tests.utils import needs_linux, needs_windows
@@ -291,7 +290,7 @@ def test_str_with_path_options() -> None:
         print(loc)
 
     param = next(p for p in typer.main.get_command(app).params if p.name == "loc")
-    assert isinstance(param.type, TyperPath)
+    assert param.type_descriptor.is_path
 
 
 @pytest.mark.parametrize(

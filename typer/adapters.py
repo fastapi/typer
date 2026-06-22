@@ -2,9 +2,9 @@ import sys
 from collections.abc import Callable, Sequence
 from datetime import datetime
 from enum import Enum
-from typing import Annotated, Any, get_args, get_origin
+from typing import TYPE_CHECKING, Annotated, Any, get_args, get_origin
 
-from pydantic import AfterValidator, BeforeValidator, Field, TypeAdapter
+from pydantic import AfterValidator, BeforeValidator, Field, TypeAdapter, ValidationInfo
 from pydantic.errors import PydanticSchemaGenerationError
 
 from ._click import _compat
@@ -17,6 +17,29 @@ from .param_types import (
     lenient_issubclass,
     resolve_path_type,
 )
+
+if TYPE_CHECKING:
+    from ._click import Context
+    from .core import TyperParameter
+
+_CTX_KEY = "ctx"
+_PARAM_KEY = "param"
+
+
+def validation_context(
+    ctx: "Context",
+    param: "TyperParameter",
+) -> dict[str, Any]:
+    return {_CTX_KEY: ctx, _PARAM_KEY: param}
+
+
+def validation_ctx_param(
+    info: ValidationInfo,
+) -> tuple["Context | None", "TyperParameter | None"]:
+    context = info.context
+    if not context:
+        return None, None
+    return context.get(_CTX_KEY), context.get(_PARAM_KEY)
 
 
 def try_build_adapter(
@@ -46,11 +69,12 @@ def build_adapter(
         list_type = args[0]
         adapter = build_adapter(list_type, parameter_info)
 
-        def parse_list(value: Any) -> list[Any]:
+        def parse_list(value: Any, info: ValidationInfo) -> list[Any]:
             if not isinstance(value, (list, tuple)):
                 value = [value]
+            context = info.context
             return [
-                None if item is None else adapter.validate_python(item)
+                None if item is None else adapter.validate_python(item, context=context)
                 for item in value
             ]
 
@@ -60,15 +84,16 @@ def build_adapter(
         types = get_args(annotation)
         adapters = [build_adapter(t, parameter_info) for t in types]
 
-        def parse_tuple(value: Any) -> tuple[Any, ...]:
+        def parse_tuple(value: Any, info: ValidationInfo) -> tuple[Any, ...]:
             if not isinstance(value, (list, tuple)):
                 raise ValueError("value is not a valid tuple")
             if len(value) != len(adapters):
                 raise ValueError(
                     f"{len(adapters)} values are required, but {len(value)} given."
                 )
+            context = info.context
             return tuple(
-                None if item is None else adapter.validate_python(item)
+                None if item is None else adapter.validate_python(item, context=context)
                 for adapter, item in zip(adapters, value, strict=False)
             )
 
@@ -215,12 +240,13 @@ def _build_choice_adapter(
     *,
     case_sensitive: bool,
 ) -> TypeAdapter[Any]:
-    def parse_choice(value: Any) -> Any:
+    def parse_choice(value: Any, info: ValidationInfo) -> Any:
+        ctx, _ = validation_ctx_param(info)
         return coerce_cli_choice(
             value,
             choices=choices,
             case_sensitive=case_sensitive,
-            ctx=None,
+            ctx=ctx,
         )
 
     return TypeAdapter(Annotated[Any, BeforeValidator(parse_choice)])
@@ -233,13 +259,14 @@ def build_path_adapter(
 ) -> TypeAdapter[Any]:
     path_type = resolve_path_type(annotation, parameter_info)
 
-    def parse_path(value: Any) -> Any:
+    def parse_path(value: Any, info: ValidationInfo) -> Any:
+        ctx, param = validation_ctx_param(info)
         return coerce_cli_path(
             value,
             parameter_info,
             path_type=path_type,
-            param=None,
-            ctx=None,
+            param=param,
+            ctx=ctx,
         )
 
     return TypeAdapter(Annotated[Any, BeforeValidator(parse_path)])

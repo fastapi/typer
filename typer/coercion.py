@@ -1,6 +1,8 @@
+import os
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 from dataclasses import dataclass
+from datetime import datetime
 from typing import IO, TYPE_CHECKING, Any
 
 from pydantic import TypeAdapter, ValidationError
@@ -8,23 +10,143 @@ from pydantic import TypeAdapter, ValidationError
 from . import adapters
 from ._click import Context
 from ._click.exceptions import BadParameter, UsageError
+from ._click.types import ParamType
+from ._typing import get_args, get_origin, is_number_type
+from .adapters import validation_context
 from .display import get_error_msg
 from .models import OptionInfo, ParameterInfo
 from .param_types import (
     ParameterAnnotation,
+    _needs_typer_path,
     _open_cli_file,
     annotation_from_prompt,
     choice_coercion_annotation,
-    coerce_cli_choice,
-    coerce_cli_path,
     file_coercion_annotation,
-    path_uses_coercion,
+    is_file_annotation,
+    lenient_issubclass,
+    path_metavar_label,
     resolve_file_mode,
-    resolve_path_type,
 )
 
 if TYPE_CHECKING:
     from .core import TyperParameter
+
+
+@dataclass(frozen=True)
+class TypeDescriptor:
+    """Resolved CLI type: metadata, coercion adapter, and deduced flags."""
+
+    annotation: ParameterAnnotation
+    parameter_info: ParameterInfo
+    param_type: ParamType
+    adapter: TypeAdapter[Any] | None
+    file_annotation: Any | None
+
+    @property
+    def is_list(self) -> bool:
+        return lenient_issubclass(get_origin(self.annotation), list)
+
+    @property
+    def is_tuple(self) -> bool:
+        return lenient_issubclass(get_origin(self.annotation), tuple)
+
+    @property
+    def is_datetime(self) -> bool:
+        return self.annotation is datetime
+
+    @property
+    def is_ranged(self) -> bool:
+        if self.is_list or self.is_tuple:
+            return False
+        return is_number_type(self.annotation) and (
+            self.parameter_info.min is not None or self.parameter_info.max is not None
+        )
+
+    @property
+    def is_path(self) -> bool:
+        return _needs_typer_path(self.annotation, self.parameter_info)
+
+    @property
+    def is_choice(self) -> bool:
+        return self.choices is not None
+
+    @property
+    def is_file(self) -> bool:
+        return self.file_annotation is not None
+
+    @property
+    def datetime_formats(self) -> tuple[str, ...]:
+        formats = self.parameter_info.formats
+        if formats is not None:
+            return tuple(formats)
+        return ("%Y-%m-%d",)
+
+    @property
+    def path_label(self) -> str:
+        return path_metavar_label(self.parameter_info)
+
+    @property
+    def choices(self) -> tuple[Any, ...] | None:
+        if self.is_list:
+            args = get_args(self.annotation)
+            if len(args) == 1:
+                choice = choice_coercion_annotation(args[0], self.parameter_info)
+                if choice is not None:
+                    return choice[0]
+        choice = choice_coercion_annotation(self.annotation, self.parameter_info)
+        if choice is not None:
+            return choice[0]
+        return None
+
+    @property
+    def case_sensitive(self) -> bool:
+        return self.parameter_info.case_sensitive
+
+    @property
+    def ranged_type_name(self) -> str:
+        if isinstance(self.annotation, type):
+            return self.annotation.__name__
+        return "number"
+
+    @property
+    def tuple_arity(self) -> int | None:
+        if not self.is_tuple:
+            return None
+        return len(get_args(self.annotation))
+
+    @property
+    def envvar_list_splitter(self) -> str | None:
+        if self.is_file:
+            return os.path.pathsep
+        if self.is_path:
+            return os.path.pathsep
+        if self.is_list:
+            args = get_args(self.annotation)
+            if len(args) == 1 and (
+                is_file_annotation(args[0])
+                or _needs_typer_path(args[0], self.parameter_info)
+            ):
+                return os.path.pathsep
+        return None
+
+
+def resolve_type_descriptor(
+    annotation: ParameterAnnotation,
+    parameter_info: ParameterInfo,
+) -> TypeDescriptor:
+    """Resolve ParamType and Pydantic adapter for one parameter annotation."""
+    param_type = ParamType()
+    file_annotation = file_coercion_annotation(annotation)
+    adapter = None
+    if file_annotation is None:
+        adapter = adapters.try_build_adapter(annotation, parameter_info)
+    return TypeDescriptor(
+        annotation=annotation,
+        parameter_info=parameter_info,
+        param_type=param_type,
+        adapter=adapter,
+        file_annotation=file_annotation,
+    )
 
 
 @dataclass(frozen=True)
@@ -57,7 +179,10 @@ class AdapterRuntimeParam(RuntimeParam):
 
     def _coerce_value(self, value: Any, param: "TyperParameter", ctx: Context) -> Any:
         try:
-            return self.adapter.validate_python(value)
+            return self.adapter.validate_python(
+                value,
+                context=validation_context(ctx, param),
+            )
         except ValidationError as exc:
             raise BadParameter(get_error_msg(exc), ctx=ctx, param=param) from exc
         except ValueError as exc:
@@ -88,22 +213,6 @@ class FileRuntimeParam(RuntimeParam):
 
 
 @dataclass(frozen=True)
-class PathRuntimeParam(RuntimeParam):
-    """Coercion for path parameters."""
-
-    path_type: type[Any] | None
-
-    def _coerce_value(self, value: Any, param: "TyperParameter", ctx: Context) -> Any:
-        return coerce_cli_path(
-            value,
-            self.parameter_info,
-            path_type=self.path_type,
-            param=param,
-            ctx=ctx,
-        )
-
-
-@dataclass(frozen=True)
 class PassThroughRuntimeParam(RuntimeParam):
     """Coercion for annotations that cannot use a Pydantic TypeAdapter."""
 
@@ -120,62 +229,30 @@ class PassThroughRuntimeParam(RuntimeParam):
         )
 
 
-@dataclass(frozen=True)
-class ChoiceRuntimeParam(RuntimeParam):
-    """Coercion for enum and literal choice parameters."""
-
-    choices: tuple[Any, ...]
-    case_sensitive: bool
-
-    def _coerce_value(self, value: Any, param: "TyperParameter", ctx: Context) -> Any:
-        try:
-            return coerce_cli_choice(
-                value,
-                choices=self.choices,
-                case_sensitive=self.case_sensitive,
-                ctx=ctx,
-            )
-        except ValueError as exc:
-            raise BadParameter(str(exc), ctx=ctx, param=param) from exc
-
-
-def build_runtime_param(
-    annotation: ParameterAnnotation,
-    parameter_info: ParameterInfo,
-) -> RuntimeParam:
-    """Build runtime coercion for a callback parameter annotation."""
+def build_runtime_param(descriptor: TypeDescriptor) -> RuntimeParam:
+    """Build runtime coercion from a resolved type descriptor."""
     args = {
-        "annotation": annotation,
-        "parameter_info": parameter_info,
+        "annotation": descriptor.annotation,
+        "parameter_info": descriptor.parameter_info,
     }
-    file_annotation = file_coercion_annotation(annotation)
-    if file_annotation is not None:
-        return FileRuntimeParam(**args, file_annotation=file_annotation)
-    if path_uses_coercion(annotation, parameter_info):
-        return PathRuntimeParam(
-            **args,
-            path_type=resolve_path_type(annotation, parameter_info),
-        )
-    choice = choice_coercion_annotation(annotation, parameter_info)
-    if choice is not None:
-        choices, case_sensitive = choice
-        return ChoiceRuntimeParam(
-            **args,
-            choices=choices,
-            case_sensitive=case_sensitive,
-        )
-    adapter = adapters.try_build_adapter(annotation, parameter_info)
-    if adapter is not None:
-        return AdapterRuntimeParam(**args, adapter=adapter)
+    if descriptor.file_annotation is not None:
+        return FileRuntimeParam(**args, file_annotation=descriptor.file_annotation)
+    if descriptor.adapter is not None:
+        return AdapterRuntimeParam(**args, adapter=descriptor.adapter)
     return PassThroughRuntimeParam(**args)
+
+
+def bool_flag_type_descriptor() -> TypeDescriptor:
+    """Resolved type for a standalone boolean flag option."""
+    return resolve_type_descriptor(
+        annotation=bool,
+        parameter_info=OptionInfo(),
+    )
 
 
 def bool_flag_runtime_param() -> RuntimeParam:
     """Build runtime coercion for a standalone boolean flag option."""
-    return build_runtime_param(
-        annotation=bool,
-        parameter_info=OptionInfo(),
-    )
+    return build_runtime_param(bool_flag_type_descriptor())
 
 
 def prompt_value_proc(

@@ -51,14 +51,18 @@ def _build_prompt(
     show_default: bool = False,
     default: Any | None = None,
     show_choices: bool = True,
-    type: ParamType | None = None,
+    annotation: Any | None = None,
 ) -> str:
     # prevent circular imports
-    from ..param_types import TyperChoice
+    from ..models import OptionInfo
+    from ..param_types import choice_as_str, choice_coercion_annotation
 
     prompt = text
-    if type is not None and show_choices and isinstance(type, TyperChoice):
-        prompt += f" ({', '.join(map(str, type.choices))})"
+    if show_choices and annotation is not None:
+        choice = choice_coercion_annotation(annotation, OptionInfo())
+        if choice is not None:
+            choices, _ = choice
+            prompt += f" ({', '.join(map(choice_as_str, choices))})"
     if default is not None and show_default:
         prompt = f"{prompt} [{_format_default(default)}]"
     return f"{prompt}{suffix}"
@@ -107,23 +111,25 @@ def prompt(
                 echo(None, err=err)
             raise Abort() from None
 
+    from ..param_types import annotation_from_prompt
+
+    annotation = annotation_from_prompt(type, default)
     if value_proc is None:
-        from ..param_types import annotation_from_prompt, resolve_param_type
         from ..coercion import prompt_value_proc
 
-        annotation = annotation_from_prompt(type, default)
         value_proc = prompt_value_proc(type, default)
-        type = resolve_param_type(annotation)
 
     prompt = _build_prompt(
-        text, prompt_suffix, show_default, default, show_choices, type
+        text, prompt_suffix, show_default, default, show_choices, annotation
     )
 
     if confirmation_prompt:
         if confirmation_prompt is True:
             confirmation_prompt = "Repeat for confirmation"
 
-        confirmation_prompt = _build_prompt(confirmation_prompt, prompt_suffix)
+        confirmation_prompt = _build_prompt(
+            confirmation_prompt, prompt_suffix, annotation=annotation
+        )
 
     while True:
         while True:
