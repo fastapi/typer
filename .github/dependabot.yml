@@ -48,3 +48,27 @@ updates:
       pre-commit:
         patterns:
           - "*"
+  - package-ecosystem: "docker"
+    directory: "/scripts/docker"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: ⬆
+    groups:
+      docker-images:
+        patterns:
+          - "*"
+  - package-ecosystem: "docker-compose"
+    directory: "/scripts/docker"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: ⬆
+    groups:
+      docker-compose:
+        patterns:
+          - "*"
