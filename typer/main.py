@@ -16,6 +16,7 @@ from annotated_doc import Doc
 from . import _click
 from ._click.globals import get_current_context
 from ._typing import get_args, get_origin
+from .coercion import build_runtime_param
 from .completion import get_completion_inspect_parameters
 from .core import (
     DEFAULT_MARKUP_MODE,
@@ -39,9 +40,12 @@ from .models import (
     Required,
     TyperInfo,
 )
-from .param_types import TyperRanged, cli_param_type, lenient_issubclass
-from .coercion import build_runtime_param
-from .param_types import parse_param_annotation
+from .param_types import (
+    TyperRanged,
+    cli_param_type,
+    lenient_issubclass,
+    parse_param_annotation,
+)
 from .utils import get_params_from_function
 
 _original_except_hook = sys.excepthook

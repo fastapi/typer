@@ -20,6 +20,7 @@ from ._click.parser import _OptionParser
 from ._click.shell_completion import CompletionItem
 from ._click.types import ParamType
 from ._typing import Literal
+from .coercion import RuntimeParam
 from .display import describe_number_range
 from .param_types import (
     TyperChoice,
@@ -29,7 +30,6 @@ from .param_types import (
     TyperTuple,
     lenient_issubclass,
 )
-from .coercion import RuntimeParam
 from .utils import parse_boolean_env_var
 
 MarkupMode = Literal["markdown", "rich", None]
