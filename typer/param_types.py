@@ -24,7 +24,7 @@ from ._click.exceptions import BadParameter
 from ._click.shell_completion import CompletionItem
 from ._click.types import ParamType
 from ._click.utils import LazyFile, format_filename, safecall
-from ._typing import get_args, get_origin, is_literal_type, literal_values
+from ._typing import get_args, get_origin, is_literal_type, is_union, literal_values
 from .display import get_error_msg
 from .models import (
     AnyType,
@@ -32,7 +32,9 @@ from .models import (
     FileBinaryWrite,
     FileText,
     FileTextWrite,
+    NoneType,
     ParameterInfo,
+    ParamMeta,
 )
 
 if TYPE_CHECKING:
@@ -67,6 +69,43 @@ def infer_annotation_from_default(default: Any | None) -> ParameterAnnotation:
 def annotation_from_prompt(t: Any | None, default: Any | None) -> ParameterAnnotation:
     if t is not None and not isinstance(t, ParamType):
         return t
+    return infer_annotation_from_default(default)
+
+
+def parse_param_annotation(
+    param: ParamMeta, default: Any | None
+) -> ParameterAnnotation:
+    """Parse the annotation for a callback parameter."""
+    if param.annotation is not param.empty:
+        main_type = param.annotation
+        origin = get_origin(main_type)
+
+        if origin is not None:
+            if is_union(origin):
+                types = []
+                for type_ in get_args(main_type):
+                    if type_ is NoneType:
+                        continue
+                    types.append(type_)
+                assert len(types) == 1, "Typer currently doesn't support Union types"
+                main_type = types[0]
+                origin = get_origin(main_type)
+
+            if lenient_issubclass(origin, list):
+                element_type = get_args(main_type)[0]
+                assert not get_origin(element_type), (
+                    "List types with complex sub-types are not currently supported"
+                )
+                return main_type
+            if lenient_issubclass(origin, tuple):
+                type_args = get_args(main_type)
+                for type_ in type_args:
+                    assert not get_origin(type_), (
+                        "Tuple types with complex sub-types are not currently supported"
+                    )
+                return main_type
+            return main_type
+        return main_type
     return infer_annotation_from_default(default)
 
 

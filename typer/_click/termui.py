@@ -109,7 +109,7 @@ def prompt(
 
     if value_proc is None:
         from ..param_types import annotation_from_prompt, resolve_param_type
-        from ..schema import prompt_value_proc
+        from ..coercion import prompt_value_proc
 
         annotation = annotation_from_prompt(type, default)
         value_proc = prompt_value_proc(type, default)

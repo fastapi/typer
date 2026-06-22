@@ -29,7 +29,7 @@ from .param_types import (
     TyperTuple,
     lenient_issubclass,
 )
-from .schema import RuntimeParam
+from .coercion import RuntimeParam
 from .utils import parse_boolean_env_var
 
 MarkupMode = Literal["markdown", "rich", None]

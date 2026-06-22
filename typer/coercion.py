@@ -8,16 +8,8 @@ from pydantic import TypeAdapter, ValidationError
 from . import adapters
 from ._click import Context
 from ._click.exceptions import BadParameter, UsageError
-from ._typing import get_args, get_origin, is_union
 from .display import get_error_msg
-from .models import (
-    ArgumentInfo,
-    NoneType,
-    OptionInfo,
-    ParameterInfo,
-    ParamMeta,
-    Required,
-)
+from .models import OptionInfo, ParameterInfo
 from .param_types import (
     ParameterAnnotation,
     _open_cli_file,
@@ -26,8 +18,6 @@ from .param_types import (
     coerce_cli_choice,
     coerce_cli_path,
     file_coercion_annotation,
-    infer_annotation_from_default,
-    lenient_issubclass,
     path_uses_coercion,
     resolve_file_mode,
     resolve_path_type,
@@ -38,31 +28,13 @@ if TYPE_CHECKING:
 
 
 @dataclass(frozen=True)
-class DeclaredParam:
-    """Parameter metadata declared on a Typer command callback."""
-
-    name: str
-    parameter_info: ParameterInfo
-    default: Any
-    required: bool
-    annotation: ParameterAnnotation
-
-
-@dataclass(frozen=True)
 class RuntimeParam(ABC):
     """Runtime coercion contract for one command parameter."""
 
-    name: str
     parameter_info: ParameterInfo
     annotation: ParameterAnnotation
 
-    def coerce(
-        self,
-        value: Any,
-        *,
-        param: "TyperParameter",
-        ctx: Context,
-    ) -> Any:
+    def coerce(self, value: Any, param: "TyperParameter", ctx: Context) -> Any:
         is_multi_value = param.multiple or param.nargs == -1
         if value is None:
             if is_multi_value:
@@ -167,79 +139,43 @@ class ChoiceRuntimeParam(RuntimeParam):
             raise BadParameter(str(exc), ctx=ctx, param=param) from exc
 
 
-def declare_param(param: ParamMeta) -> DeclaredParam:
-    """Declare metadata from a function parameter."""
-    default = None
-    required = False
-    if isinstance(param.default, ParameterInfo):
-        parameter_info = param.default
-        if parameter_info.default == Required:
-            required = True
-        else:
-            default = parameter_info.default
-    elif param.default == Required or param.default is param.empty:
-        required = True
-        parameter_info = ArgumentInfo()
-    else:
-        default = param.default
-        parameter_info = OptionInfo()
-
-    pydantic_annotation: ParameterAnnotation
-
-    if param.annotation is not param.empty:
-        main_type = param.annotation
-        origin = get_origin(main_type)
-
-        if origin is not None:
-            if is_union(origin):
-                types = []
-                for type_ in get_args(main_type):
-                    if type_ is NoneType:
-                        continue
-                    types.append(type_)
-                assert len(types) == 1, "Typer Currently doesn't support Union types"
-                main_type = types[0]
-                origin = get_origin(main_type)
-
-            if lenient_issubclass(origin, list):
-                element_type = get_args(main_type)[0]
-                assert not get_origin(element_type), (
-                    "List types with complex sub-types are not currently supported"
-                )
-                pydantic_annotation = main_type
-            elif lenient_issubclass(origin, tuple):
-                type_args = get_args(main_type)
-                for type_ in type_args:
-                    assert not get_origin(type_), (
-                        "Tuple types with complex sub-types are not currently supported"
-                    )
-                pydantic_annotation = main_type
-            else:
-                pydantic_annotation = main_type
-        else:
-            pydantic_annotation = main_type
-    else:
-        pydantic_annotation = infer_annotation_from_default(default)
-
-    return DeclaredParam(
-        name=param.name,
-        parameter_info=parameter_info,
-        default=default,
-        required=required,
-        annotation=pydantic_annotation,
-    )
+def build_runtime_param(
+    annotation: ParameterAnnotation,
+    parameter_info: ParameterInfo,
+) -> RuntimeParam:
+    """Build runtime coercion for a callback parameter annotation."""
+    args = {
+        "annotation": annotation,
+        "parameter_info": parameter_info,
+    }
+    file_annotation = file_coercion_annotation(annotation)
+    if file_annotation is not None:
+        return FileRuntimeParam(**args, file_annotation=file_annotation)
+    if path_uses_coercion(annotation, parameter_info):
+        return PathRuntimeParam(
+            **args,
+            path_type=resolve_path_type(annotation, parameter_info),
+        )
+    choice = choice_coercion_annotation(annotation, parameter_info)
+    if choice is not None:
+        choices, case_sensitive = choice
+        return ChoiceRuntimeParam(
+            **args,
+            choices=choices,
+            case_sensitive=case_sensitive,
+        )
+    adapter = adapters.try_build_adapter(annotation, parameter_info)
+    if adapter is not None:
+        return AdapterRuntimeParam(**args, adapter=adapter)
+    return PassThroughRuntimeParam(**args)
 
 
-def bool_flag_runtime_param(*, name: str, default: bool = False) -> RuntimeParam:
+def bool_flag_runtime_param() -> RuntimeParam:
     """Build runtime coercion for a standalone boolean flag option."""
-    declared = DeclaredParam(
-        name=name,
-        parameter_info=OptionInfo(),
-        default=default,
-        required=False,
+    return build_runtime_param(
         annotation=bool,
+        parameter_info=OptionInfo(),
     )
-    return runtime_param_from_declared(declared)
 
 
 def prompt_value_proc(
@@ -272,31 +208,3 @@ def prompt_value_proc(
         raise UsageError(f"Value {value!r} is not a valid {label}.")
 
     return coerce_pass_through
-
-
-def runtime_param_from_declared(declared: DeclaredParam) -> RuntimeParam:
-    args = {
-        "name": declared.name,
-        "annotation": declared.annotation,
-        "parameter_info": declared.parameter_info,
-    }
-    file_annotation = file_coercion_annotation(declared.annotation)
-    if file_annotation is not None:
-        return FileRuntimeParam(**args, file_annotation=file_annotation)
-    if path_uses_coercion(declared.annotation, declared.parameter_info):
-        return PathRuntimeParam(
-            **args,
-            path_type=resolve_path_type(declared.annotation, declared.parameter_info),
-        )
-    choice = choice_coercion_annotation(declared.annotation, declared.parameter_info)
-    if choice is not None:
-        choices, case_sensitive = choice
-        return ChoiceRuntimeParam(
-            **args,
-            choices=choices,
-            case_sensitive=case_sensitive,
-        )
-    adapter = adapters.try_build_adapter(declared.annotation, declared.parameter_info)
-    if adapter is not None:
-        return AdapterRuntimeParam(**args, adapter=adapter)
-    return PassThroughRuntimeParam(**args)

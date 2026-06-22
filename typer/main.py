@@ -34,11 +34,14 @@ from .models import (
     DefaultPlaceholder,
     DeveloperExceptionConfig,
     OptionInfo,
+    ParameterInfo,
     ParamMeta,
+    Required,
     TyperInfo,
 )
 from .param_types import TyperRanged, cli_param_type, lenient_issubclass
-from .schema import declare_param, runtime_param_from_declared
+from .coercion import build_runtime_param
+from .param_types import parse_param_annotation
 from .utils import get_params_from_function
 
 _original_except_hook = sys.excepthook
@@ -1449,15 +1452,27 @@ def get_callback(
 
 
 def get_param(param: ParamMeta) -> TyperArgument | TyperOption:
-    declared = declare_param(param)
-    parameter_info = declared.parameter_info
-    default_value = declared.default
-    required = declared.required
-    annotation_args = get_args(declared.annotation)
-    is_list = lenient_issubclass(get_origin(declared.annotation), list)
+    default_value = None
+    required = False
+    if isinstance(param.default, ParameterInfo):
+        parameter_info = param.default
+        if parameter_info.default == Required:
+            required = True
+        else:
+            default_value = parameter_info.default
+    elif param.default == Required or param.default is param.empty:
+        required = True
+        parameter_info = ArgumentInfo()
+    else:
+        default_value = param.default
+        parameter_info = OptionInfo()
+
+    annotation = parse_param_annotation(param, default_value)
+    annotation_args = get_args(annotation)
+    is_list = lenient_issubclass(get_origin(annotation), list)
     is_flag = None
     if isinstance(parameter_info, OptionInfo):
-        if declared.annotation is bool:
+        if annotation is bool:
             is_flag = True
         elif (
             is_list
@@ -1467,10 +1482,14 @@ def get_param(param: ParamMeta) -> TyperArgument | TyperOption:
         ):
             is_flag = True
     parameter_type = cli_param_type(
-        annotation=declared.annotation,
+        annotation=annotation,
         parameter_info=parameter_info,
         is_list=is_list,
-        is_tuple=lenient_issubclass(get_origin(declared.annotation), tuple),
+        is_tuple=lenient_issubclass(get_origin(annotation), tuple),
+    )
+    runtime_param = build_runtime_param(
+        annotation=annotation,
+        parameter_info=parameter_info,
     )
 
     if isinstance(parameter_info, OptionInfo):
@@ -1488,7 +1507,6 @@ def get_param(param: ParamMeta) -> TyperArgument | TyperOption:
             param_decls.extend(parameter_info.param_decls)
         else:
             param_decls.append(default_option_declaration)
-        runtime_param = runtime_param_from_declared(declared)
         return TyperOption(
             # Option
             param_decls=param_decls,
@@ -1527,7 +1545,6 @@ def get_param(param: ParamMeta) -> TyperArgument | TyperOption:
         nargs = None
         if is_list:
             nargs = -1
-        runtime_param = runtime_param_from_declared(declared)
         return TyperArgument(
             # Argument
             param_decls=param_decls,
