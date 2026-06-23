@@ -302,8 +302,7 @@ def _open_cli_file(
     param: "TyperParameter | None" = None,
     ctx: Context | None = None,
 ) -> IO[Any]:
-    if hasattr(value, "read") or hasattr(value, "write"):
-        assert isinstance(value, IO)
+    if not isinstance(value, (str, os.PathLike)):
         return value
 
     try:
