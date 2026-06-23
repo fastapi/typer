@@ -5,7 +5,6 @@ from typing import IO, TYPE_CHECKING, Any, AnyStr, TextIO, TypeVar, overload
 
 from .exceptions import Abort, UsageError
 from .globals import resolve_color_default
-from .types import ParamType
 from .utils import LazyFile, echo
 
 if TYPE_CHECKING:
@@ -80,7 +79,7 @@ def prompt(
     default: Any | None = None,
     hide_input: bool = False,
     confirmation_prompt: bool | str = False,
-    type: ParamType | Any | None = None,
+    type: Any | None = None,
     value_proc: Callable[[str], Any] | None = None,
     prompt_suffix: str = ": ",
     show_default: bool = True,

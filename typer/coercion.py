@@ -10,7 +10,6 @@ from pydantic import TypeAdapter, ValidationError
 from . import adapters
 from ._click import Context
 from ._click.exceptions import BadParameter, UsageError
-from ._click.types import ParamType
 from ._typing import get_args, get_origin, is_number_type
 from .adapters import validation_context
 from .display import get_error_msg
@@ -38,7 +37,6 @@ class TypeDescriptor:
 
     annotation: ParameterAnnotation
     parameter_info: ParameterInfo
-    param_type: ParamType
     adapter: TypeAdapter[Any] | None
     file_annotation: Any | None
 
@@ -134,8 +132,7 @@ def resolve_type_descriptor(
     annotation: ParameterAnnotation,
     parameter_info: ParameterInfo,
 ) -> TypeDescriptor:
-    """Resolve ParamType and Pydantic adapter for one parameter annotation."""
-    param_type = ParamType()
+    """Resolve Pydantic adapter for one parameter annotation."""
     file_annotation = file_coercion_annotation(annotation)
     adapter = None
     if file_annotation is None:
@@ -143,7 +140,6 @@ def resolve_type_descriptor(
     return TypeDescriptor(
         annotation=annotation,
         parameter_info=parameter_info,
-        param_type=param_type,
         adapter=adapter,
         file_annotation=file_annotation,
     )

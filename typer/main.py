@@ -1484,7 +1484,6 @@ def get_param(param: ParamMeta) -> TyperArgument | TyperOption:
         annotation=annotation,
         parameter_info=parameter_info,
     )
-    parameter_type = descriptor.param_type
     runtime_param = build_runtime_param(descriptor)
     tuple_nargs = descriptor.tuple_arity
 
@@ -1513,7 +1512,6 @@ def get_param(param: ParamMeta) -> TyperArgument | TyperOption:
             multiple=is_list,
             count=parameter_info.count,
             allow_from_autoenv=parameter_info.allow_from_autoenv,
-            type=parameter_type,
             help=parameter_info.help,
             hidden=parameter_info.hidden,
             show_choices=parameter_info.show_choices,
@@ -1546,7 +1544,6 @@ def get_param(param: ParamMeta) -> TyperArgument | TyperOption:
         return TyperArgument(
             # Argument
             param_decls=param_decls,
-            type=parameter_type,
             required=required,
             nargs=nargs,
             # TyperArgument

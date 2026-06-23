@@ -16,8 +16,6 @@ from pydantic import TypeAdapter, ValidationError
 from ._click import Context
 from ._click._compat import open_stream
 from ._click.exceptions import BadParameter
-from ._click.shell_completion import CompletionItem
-from ._click.types import ParamType
 from ._click.utils import LazyFile, format_filename, safecall
 from ._typing import get_args, get_origin, is_literal_type, is_union, literal_values
 from .display import get_error_msg
@@ -60,7 +58,7 @@ def infer_annotation_from_default(default: Any | None) -> ParameterAnnotation:
 
 
 def annotation_from_prompt(t: Any | None, default: Any | None) -> ParameterAnnotation:
-    if t is not None and not isinstance(t, ParamType):
+    if t is not None:
         return t
     return infer_annotation_from_default(default)
 
@@ -151,21 +149,6 @@ def choice_as_str(choice: Any) -> str:
     if isinstance(choice, Enum):
         return str(choice.value)
     return str(choice)
-
-
-def choice_shell_complete(
-    choices: Sequence[Any],
-    *,
-    case_sensitive: bool,
-    incomplete: str,
-) -> list[CompletionItem]:
-    str_choices = map(choice_as_str, choices)
-    if case_sensitive:
-        matched = (c for c in str_choices if c.startswith(incomplete))
-    else:
-        incomplete = incomplete.lower()
-        matched = (c for c in str_choices if c.lower().startswith(incomplete))
-    return [CompletionItem(c) for c in matched]
 
 
 # PATH #

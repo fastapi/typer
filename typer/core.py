@@ -18,7 +18,6 @@ from typing import (
 from . import _click, param_types
 from ._click.parser import _OptionParser
 from ._click.shell_completion import CompletionItem
-from ._click.types import ParamType
 from ._typing import Literal
 from .coercion import RuntimeParam, TypeDescriptor
 from .display import describe_number_range
@@ -125,7 +124,7 @@ class TyperParameter(_click.core.Parameter):
             if splitter is not None:
                 rv = (rv or "").split(splitter)
             else:
-                rv = self.type.split_envvar_value(rv)
+                rv = self.split_envvar_value(rv)
         return rv
 
     def shell_complete(
@@ -150,11 +149,8 @@ class TyperParameter(_click.core.Parameter):
         # file
         if desc.is_file:
             return [CompletionItem(incomplete, type="file")]
-        # path
-        if desc.is_path:
-            return []
-        # fall-back
-        return self.type.shell_complete(ctx, self, incomplete)
+        # fall-back, specifically also required for path's
+        return []
 
     def make_metavar(self, ctx: _click.Context) -> str | None:
         return self.metavar
@@ -386,7 +382,6 @@ class TyperArgument(TyperParameter):
         *,
         # Parameter
         param_decls: list[str],
-        type: ParamType,
         runtime_param: RuntimeParam,
         type_descriptor: TypeDescriptor,
         required: bool = False,
@@ -430,7 +425,6 @@ class TyperArgument(TyperParameter):
 
         super().__init__(
             param_decls=param_decls,
-            type=type,
             required=required,
             default=default,
             callback=callback,
@@ -607,7 +601,6 @@ class TyperOption(TyperParameter):
         *,
         # Parameter
         param_decls: list[str],
-        type: ParamType,
         runtime_param: RuntimeParam,
         type_descriptor: TypeDescriptor,
         required: bool = False,
@@ -656,7 +649,6 @@ class TyperOption(TyperParameter):
 
         super().__init__(
             param_decls,
-            type=type,
             multiple=multiple,
             required=required,
             default=default,

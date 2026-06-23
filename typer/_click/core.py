@@ -8,6 +8,7 @@ from types import TracebackType
 from typing import (
     TYPE_CHECKING,
     Any,
+    ClassVar,
     Literal,
     NoReturn,
     TypeVar,
@@ -27,7 +28,6 @@ from .formatting import HelpFormatter
 from .globals import pop_context, push_context
 from .parser import _OptionParser
 from .termui import style
-from .types import ParamType
 from .utils import echo, make_default_short_help
 
 if TYPE_CHECKING:
@@ -818,7 +818,6 @@ class Parameter(ABC):
     def __init__(
         self,
         param_decls: Sequence[str] | None = None,
-        type: ParamType | None = None,
         required: bool = False,
         default: Any | Callable[[], Any] | None = None,
         callback: Callable[[Context, "Parameter", Any], Any] | None = None,
@@ -839,15 +838,11 @@ class Parameter(ABC):
         self.name, self.opts, self.secondary_opts = self._parse_decls(
             param_decls or (), expose_value
         )
-        self.type = type if type is not None else ParamType()
 
         # Default nargs to what the type tells us if we have that
         # information available.
         if nargs is None:
-            if self.type.is_composite:
-                nargs = self.type.arity
-            else:
-                nargs = 1
+            nargs = 1
 
         self.required = required
         self.callback = callback
@@ -969,6 +964,18 @@ class Parameter(ABC):
 
         return None
 
+    envvar_list_splitter: ClassVar[str | None] = None
+
+    def split_envvar_value(self, rv: str) -> Sequence[str]:
+        """Given a value from an environment variable this splits it up
+        into small chunks depending on the defined envvar list splitter.
+
+        If the splitter is set to `None`, which means that whitespace splits,
+        then leading and trailing whitespace is ignored.  Otherwise, leading
+        and trailing splitters usually lead to empty items being included.
+        """
+        return (rv or "").split(self.envvar_list_splitter)
+
     def value_from_envvar(self, ctx: Context) -> str | Sequence[str] | None:
         """Process the value from the environment variable.
 
@@ -978,7 +985,7 @@ class Parameter(ABC):
         rv: Any | None = self.resolve_envvar_value(ctx)
 
         if rv is not None and (self.nargs != 1 or self.multiple):
-            rv = self.type.split_envvar_value(rv)
+            rv = self.split_envvar_value(rv)
 
         return rv
 
@@ -1031,7 +1038,6 @@ class Parameter(ABC):
     def shell_complete(self, ctx: Context, incomplete: str) -> list["CompletionItem"]:
         """Return a list of completions for the incomplete value. If a
         ``shell_complete`` function was given during init, it is used.
-        Otherwise, the `type` `ParamType.shell_complete` function is used.
         """
         if self._custom_shell_complete is not None:
             results = self._custom_shell_complete(ctx, self, incomplete)
