@@ -302,13 +302,18 @@ def _open_cli_file(
     param: "TyperParameter | None" = None,
     ctx: Context | None = None,
 ) -> IO[Any]:
-    if not isinstance(value, (str, os.PathLike)):
-        return value
+    if hasattr(value, "read") or hasattr(value, "write"):
+        return cast("IO[Any]", value)
+
+    if isinstance(value, str):
+        path: str | os.PathLike[str] = value
+    else:
+        path = value
 
     try:
         lazy = parameter_info.lazy
         if lazy is None:
-            if os.fspath(value) == "-":
+            if os.fspath(path) == "-":
                 lazy = False
             elif "w" in mode:
                 lazy = True
@@ -317,7 +322,7 @@ def _open_cli_file(
 
         if lazy:
             lf = LazyFile(
-                value,
+                path,
                 mode,
                 parameter_info.encoding,
                 parameter_info.errors,
@@ -330,7 +335,7 @@ def _open_cli_file(
             return cast("IO[Any]", lf)
 
         f, should_close = open_stream(
-            value,
+            path,
             mode,
             parameter_info.encoding,
             parameter_info.errors,
@@ -345,5 +350,5 @@ def _open_cli_file(
 
         return f
     except OSError as exc:  # pragma: no cover
-        message = f"'{format_filename(value)}': {exc.strerror}"
+        message = f"'{format_filename(path)}': {exc.strerror}"
         raise BadParameter(message, ctx=ctx, param=param) from exc
