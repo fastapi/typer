@@ -169,19 +169,6 @@ def choice_shell_complete(
     return [CompletionItem(c) for c in matched]
 
 
-def choice_missing_message(
-    choices: Sequence[Any],
-    *,
-    case_sensitive: bool,
-    ctx: Context | None,
-) -> str:
-    normalized = [
-        normalize_choice_value(choice, case_sensitive, ctx) for choice in choices
-    ]
-    choices_str = ",\n\t".join(normalized)
-    return f"Choose from:\n\t{choices_str}"
-
-
 # PATH #
 def path_metavar_label(parameter_info: ParameterInfo) -> str:
     if parameter_info.file_okay and not parameter_info.dir_okay:
@@ -189,20 +176,6 @@ def path_metavar_label(parameter_info: ParameterInfo) -> str:
     if parameter_info.dir_okay and not parameter_info.file_okay:
         return "dir"
     return "path"
-
-
-def resolve_path_type(
-    annotation: Any,
-    parameter_info: ParameterInfo,
-) -> type[Any] | None:
-    path_type = parameter_info.path_type
-    if path_type is None and lenient_issubclass(annotation, Path):
-        path_type = annotation
-    return path_type
-
-
-def path_uses_coercion(annotation: Any, parameter_info: ParameterInfo) -> bool:
-    return _needs_typer_path(annotation, parameter_info)
 
 
 def _needs_typer_path(annotation: Any, parameter_info: ParameterInfo) -> bool:
@@ -322,25 +295,6 @@ def resolve_file_mode(parameter_info: ParameterInfo, annotation: Any) -> str:
     return "r"
 
 
-def _is_file_like(value: Any) -> TypeGuard[IO[Any]]:
-    return hasattr(value, "read") or hasattr(value, "write")
-
-
-def _resolve_file_lazy_flag(
-    value: str | os.PathLike[str],
-    *,
-    mode: str,
-    lazy: bool | None,
-) -> bool:
-    if lazy is not None:
-        return lazy
-    if os.fspath(value) == "-":
-        return False
-    if "w" in mode:
-        return True
-    return False
-
-
 def _open_cli_file(
     value: str | os.PathLike[str] | IO[Any],
     parameter_info: ParameterInfo,
@@ -349,17 +303,20 @@ def _open_cli_file(
     param: "TyperParameter | None" = None,
     ctx: Context | None = None,
 ) -> IO[Any]:
-    if _is_file_like(value):
+    if hasattr(value, "read") or hasattr(value, "write"):
         return value
 
     value = cast("str | os.PathLike[str]", value)
 
     try:
-        lazy = _resolve_file_lazy_flag(
-            value,
-            mode=mode,
-            lazy=parameter_info.lazy,
-        )
+        lazy = parameter_info.lazy
+        if lazy is None:
+            if os.fspath(value) == "-":
+                lazy = False
+            elif "w" in mode:
+                lazy = True
+            else:
+                lazy = False
 
         if lazy:
             lf = LazyFile(

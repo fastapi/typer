@@ -1,7 +1,8 @@
 import sys
-from collections.abc import Callable, Sequence
+from collections.abc import Sequence
 from datetime import datetime
 from enum import Enum
+from pathlib import Path
 from typing import TYPE_CHECKING, Annotated, Any, get_args, get_origin
 
 from pydantic import AfterValidator, BeforeValidator, Field, TypeAdapter, ValidationInfo
@@ -15,7 +16,6 @@ from .param_types import (
     coerce_cli_choice,
     coerce_cli_path,
     lenient_issubclass,
-    resolve_path_type,
 )
 
 if TYPE_CHECKING:
@@ -136,25 +136,12 @@ def build_leaf_adapter(
         return _build_datetime_adapter(parameter_info.formats)
 
     if is_number_type(annotation):
-        clamp = parameter_info.clamp
-        min = parameter_info.min
-        max = parameter_info.max
-        if clamp:
-            # Use AfterValidator so it runs after coercion
-            return TypeAdapter(
-                Annotated[
-                    annotation,
-                    AfterValidator(_make_number_clamp_validator(annotation, min, max)),
-                ]
-            )
-        else:
-            field_kwargs: dict[str, Any] = {}
-            if min is not None:
-                field_kwargs["ge"] = min
-            if max is not None:
-                field_kwargs["le"] = max
-            if field_kwargs:
-                return TypeAdapter(Annotated[annotation, Field(**field_kwargs)])
+        return _build_number_adapter(
+            annotation,
+            min=parameter_info.min,
+            max=parameter_info.max,
+            clamp=parameter_info.clamp,
+        )
 
     if annotation is bool:
         return TypeAdapter(Annotated[bool, BeforeValidator(_parse_cli_bool)])
@@ -187,11 +174,6 @@ def _build_datetime_adapter(formats: Sequence[str] | None) -> TypeAdapter[dateti
 # STRING / BYTES #
 def _parse_cli_str(value: Any) -> str:
     """Coerce a CLI value to str"""
-    return str(_decode_cli_bytes(value))
-
-
-def _decode_cli_bytes(value: Any) -> Any:
-    """Decode bytes from argv/env; leave other values unchanged."""
     if isinstance(value, bytes):
         enc = _compat._get_argv_encoding()
         try:
@@ -204,7 +186,7 @@ def _decode_cli_bytes(value: Any) -> Any:
                 except UnicodeError:
                     return value.decode("utf-8", "replace")
             return value.decode("utf-8", "replace")
-    return value
+    return str(value)
 
 
 # BOOL #
@@ -219,19 +201,29 @@ def _parse_cli_bool(value: Any) -> Any:
 
 
 # NUMBER #
-def _make_number_clamp_validator(
-    number_class: type[Any],
-    min: float | None,
-    max: float | None,
-) -> Callable[[Any], Any]:
-    def clamp_number(value: Any) -> Any:
-        if min is not None and value < min:
-            return number_class(min)
-        if max is not None and value > max:
-            return number_class(max)
-        return value
+def _build_number_adapter(
+    number_class: type[Any], *, min: float | None, max: float | None, clamp: bool | None
+):
+    if clamp:
 
-    return clamp_number
+        def clamp_number(value: Any) -> Any:
+            if min is not None and value < min:
+                return number_class(min)
+            if max is not None and value > max:
+                return number_class(max)
+            return value
+
+        # Use AfterValidator so it runs after coercion
+        return TypeAdapter(Annotated[number_class, AfterValidator(clamp_number)])
+    else:
+        field_kwargs: dict[str, Any] = {}
+        if min is not None:
+            field_kwargs["ge"] = min
+        if max is not None:
+            field_kwargs["le"] = max
+        if field_kwargs:
+            return TypeAdapter(Annotated[number_class, Field(**field_kwargs)])
+        return TypeAdapter(number_class)
 
 
 # CHOICE #
@@ -257,7 +249,9 @@ def build_path_adapter(
     annotation: Any,
     parameter_info: ParameterInfo,
 ) -> TypeAdapter[Any]:
-    path_type = resolve_path_type(annotation, parameter_info)
+    path_type = parameter_info.path_type
+    if path_type is None and lenient_issubclass(annotation, Path):
+        path_type = annotation
 
     def parse_path(value: Any, info: ValidationInfo) -> Any:
         ctx, param = validation_ctx_param(info)

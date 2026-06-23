@@ -22,7 +22,7 @@ from ._click.types import ParamType
 from ._typing import Literal
 from .coercion import RuntimeParam, TypeDescriptor
 from .display import describe_number_range
-from .param_types import choice_missing_message, choice_shell_complete
+from .param_types import choice_as_str, normalize_choice_value
 from .utils import parse_boolean_env_var
 
 MarkupMode = Literal["markdown", "rich", None]
@@ -110,11 +110,12 @@ class TyperParameter(_click.core.Parameter):
     def get_missing_message(self, ctx: _click.Context | None) -> str | None:
         desc = self.type_descriptor
         if desc.is_choice and desc.choices is not None:
-            return choice_missing_message(
-                desc.choices,
-                case_sensitive=desc.case_sensitive,
-                ctx=ctx,
-            )
+            normalized = [
+                normalize_choice_value(choice, desc.case_sensitive, ctx)
+                for choice in desc.choices
+            ]
+            choices_str = ",\n\t".join(normalized)
+            return f"Choose from:\n\t{choices_str}"
         return ""
 
     def value_from_envvar(self, ctx: _click.Context) -> str | Sequence[str] | None:
@@ -130,23 +131,29 @@ class TyperParameter(_click.core.Parameter):
     def shell_complete(
         self, ctx: _click.Context, incomplete: str
     ) -> list[CompletionItem]:
+        # custom
         if self._custom_shell_complete is not None:
             results = self._custom_shell_complete(ctx, self, incomplete)
             if results and isinstance(results[0], str):
                 results = [CompletionItem(c) for c in results]
             return cast(list[CompletionItem], results)
-
+        # choice
         desc = self.type_descriptor
         if desc.is_choice and desc.choices is not None:
-            return choice_shell_complete(
-                desc.choices,
-                case_sensitive=desc.case_sensitive,
-                incomplete=incomplete,
-            )
+            str_choices = map(choice_as_str, desc.choices)
+            if desc.case_sensitive:
+                matched = (c for c in str_choices if c.startswith(incomplete))
+            else:
+                incomplete = incomplete.lower()
+                matched = (c for c in str_choices if c.lower().startswith(incomplete))
+            return [CompletionItem(c) for c in matched]
+        # file
         if desc.is_file:
             return [CompletionItem(incomplete, type="file")]
+        # path
         if desc.is_path:
             return []
+        # fall-back
         return self.type.shell_complete(ctx, self, incomplete)
 
     def make_metavar(self, ctx: _click.Context) -> str | None:
