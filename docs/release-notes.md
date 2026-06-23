@@ -13,6 +13,7 @@
 
 ### Internal
 
+* ⬆️ Update issue-manager to 0.7.0. PR [#1856](https://github.com/fastapi/typer/pull/1856) by [@tiangolo](https://github.com/tiangolo).
 * 🔒️ Update zizmor workflow security checks. PR [#1854](https://github.com/fastapi/typer/pull/1854) by [@tiangolo](https://github.com/tiangolo).
 * ⬆️ Group Dependabot updates. PR [#1853](https://github.com/fastapi/typer/pull/1853) by [@tiangolo](https://github.com/tiangolo).
 * ⬆️ Update Dependabot ecosystem coverage. PR [#1851](https://github.com/fastapi/typer/pull/1851) by [@tiangolo](https://github.com/tiangolo).
