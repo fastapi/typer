@@ -8,7 +8,6 @@ from typing import (
     TYPE_CHECKING,
     Any,
     TypeAlias,
-    TypeGuard,
     cast,
 )
 
@@ -304,9 +303,8 @@ def _open_cli_file(
     ctx: Context | None = None,
 ) -> IO[Any]:
     if hasattr(value, "read") or hasattr(value, "write"):
+        assert isinstance(value, IO)
         return value
-
-    value = cast("str | os.PathLike[str]", value)
 
     try:
         lazy = parameter_info.lazy

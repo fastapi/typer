@@ -203,7 +203,7 @@ def _parse_cli_bool(value: Any) -> Any:
 # NUMBER #
 def _build_number_adapter(
     number_class: type[Any], *, min: float | None, max: float | None, clamp: bool | None
-):
+) -> TypeAdapter[Any]:
     if clamp:
 
         def clamp_number(value: Any) -> Any:
