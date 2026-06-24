@@ -290,14 +290,16 @@ def test_str_path_resolves(tmp_path: Path) -> None:
     def main(loc: str = typer.Option(..., resolve_path=True)):
         seen.append(loc)
 
-    rel = tmp_path / "some_dir" / "some_file.txt"
-    rel.parent.mkdir(parents=True, exist_ok=True)
-    rel.resolve().write_text("x", encoding="utf-8")
-    result = runner.invoke(app, ["--loc", str(rel)])
+    file = tmp_path / "file.txt"
+    file.write_text("x", encoding="utf-8")
+    non_canonical = str(tmp_path / "first_dir" / "second_dir" / ".." / "file.txt")
+
+    result = runner.invoke(app, ["--loc", non_canonical])
 
     assert result.exit_code == 0
-    assert isinstance(seen[0], str)
-    assert seen[0] == os.path.realpath(str(rel))
+    assert ".." not in seen[0]
+    assert "second_dir" not in seen[0]
+    assert str(tmp_path / "first_dir" / "file.txt") in seen[0]
 
 
 @pytest.mark.parametrize(
