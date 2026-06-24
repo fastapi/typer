@@ -282,15 +282,22 @@ def test_path_coerced(path_type) -> None:
     assert "my_awesome_file" in result.output
 
 
-def test_str_with_path_options() -> None:
+def test_str_path_resolves(tmp_path: Path) -> None:
     app = typer.Typer()
+    seen: list[str] = []
 
     @app.command()
-    def warp(loc: str = typer.Option(..., resolve_path=True)):
-        print(loc)
+    def main(loc: str = typer.Option(..., resolve_path=True)):
+        seen.append(loc)
 
-    param = next(p for p in typer.main.get_command(app).params if p.name == "loc")
-    assert param.type_descriptor.is_path
+    rel = tmp_path / "some_dir" / "some_file.txt"
+    rel.parent.mkdir(parents=True, exist_ok=True)
+    rel.resolve().write_text("x", encoding="utf-8")
+    result = runner.invoke(app, ["--loc", str(rel)])
+
+    assert result.exit_code == 0
+    assert isinstance(seen[0], str)
+    assert seen[0] == os.path.realpath(str(rel))
 
 
 @pytest.mark.parametrize(
