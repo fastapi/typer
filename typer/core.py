@@ -572,9 +572,7 @@ class TyperArgument(TyperParameter):
                 for c in desc.choices or ()
             }
             choices_str = "|".join(normalized_mapping.values())
-            if self.required:
-                return f"{{{choices_str}}}"
-            return f"[{choices_str}]"
+            return f"{{{choices_str}}}"
         if desc.is_datetime:
             return self.metavar_label()
         return None
@@ -1014,8 +1012,6 @@ class TyperOption(TyperParameter):
                 choices_str = "|".join(normalized_mapping.values())
 
             return f"[{choices_str}]"
-        if self.param_type_name == "argument" and not desc.is_datetime:
-            return None
         return self.metavar_label()
 
     def get_number_range_help_str(self) -> str | None:

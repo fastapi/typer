@@ -369,6 +369,7 @@ def test_default_infers_param_type(
     ("parameter", "expected_metavar"),
     [
         pytest.param(Annotated[str, typer.Option(...)], "<str>"),
+        pytest.param(Annotated[str, typer.Argument(...)], "<str>"),
         pytest.param(Annotated[int, typer.Option(...)], "<int>"),
         pytest.param(Annotated[float, typer.Option(...)], "<float>"),
         pytest.param(
@@ -376,8 +377,8 @@ def test_default_infers_param_type(
         ),
         pytest.param(Annotated[bytes, typer.Option(...)], "<bytes>"),
         pytest.param(Annotated[list[str], typer.Option(...)], "<list[str]>"),
-        pytest.param(Annotated[tuple[str, int], typer.Option(...)], "<str,int>"),
-        pytest.param(Annotated[tuple[Path, str], typer.Option(...)], "<Path,str>"),
+        pytest.param(Annotated[tuple[str, int], typer.Option(...)], "<str,int>..."),
+        pytest.param(Annotated[tuple[Path, str], typer.Option(...)], "<Path,str>..."),
         pytest.param(Annotated[str, typer.Option(..., resolve_path=True)], "<str>"),
         pytest.param(Annotated[Path, typer.Option(...)], "<path>"),
         pytest.param(Annotated[Path, typer.Option(..., dir_okay=False)], "<file>"),
@@ -400,10 +401,19 @@ def test_param_type_help_metavar(parameter: Any, expected_metavar: str) -> None:
     app = typer.Typer()
 
     @app.command()
-    def main(value: parameter):
+    # TODO: type-specific default
+    def with_default(value: parameter = "my_default"):
         pass  # pragma: no cover
 
-    result = runner.invoke(app, ["--help"])
+    @app.command()
+    def without_default(value: parameter):
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["with-default", "--help"])
+    assert result.exit_code == 0
+    assert expected_metavar in result.output
+
+    result = runner.invoke(app, ["without-default", "--help"])
     assert result.exit_code == 0
     assert expected_metavar in result.output
 
