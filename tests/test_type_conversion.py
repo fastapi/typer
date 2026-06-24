@@ -274,32 +274,12 @@ def test_path_coerced(path_type) -> None:
     app = typer.Typer()
 
     @app.command()
-    def show(path: Any = typer.Option(..., path_type=path_type)):
+    def show(path: Path = typer.Option(..., path_type=path_type)):
         print(path)
 
     result = runner.invoke(app, ["--path", "dir/my_awesome_file.txt"])
     assert result.exit_code == 0
     assert "my_awesome_file" in result.output
-
-
-def test_str_path_resolves(tmp_path: Path) -> None:
-    app = typer.Typer()
-    seen: list[str] = []
-
-    @app.command()
-    def main(loc: str = typer.Option(..., resolve_path=True)):
-        seen.append(loc)
-
-    file = tmp_path / "file.txt"
-    file.write_text("x", encoding="utf-8")
-    non_canonical = str(tmp_path / "first_dir" / "second_dir" / ".." / "file.txt")
-
-    result = runner.invoke(app, ["--loc", non_canonical])
-
-    assert result.exit_code == 0
-    assert ".." not in seen[0]
-    assert "second_dir" not in seen[0]
-    assert str(tmp_path / "first_dir" / "file.txt") in seen[0]
 
 
 @pytest.mark.parametrize(
@@ -398,8 +378,8 @@ def test_default_infers_param_type(
         pytest.param(Annotated[list[str], typer.Option(...)], "<list[str]>"),
         pytest.param(Annotated[tuple[str, int], typer.Option(...)], "<str,int>"),
         pytest.param(Annotated[tuple[Path, str], typer.Option(...)], "<Path,str>"),
+        pytest.param(Annotated[str, typer.Option(..., resolve_path=True)], "<str>"),
         pytest.param(Annotated[Path, typer.Option(...)], "<path>"),
-        pytest.param(Annotated[str, typer.Option(..., resolve_path=True)], "<path>"),
         pytest.param(Annotated[Path, typer.Option(..., dir_okay=False)], "<file>"),
         pytest.param(Annotated[Path, typer.Option(..., file_okay=False)], "<dir>"),
         pytest.param(Annotated[SomeEnum, typer.Option(...)], "[one|two|three]"),

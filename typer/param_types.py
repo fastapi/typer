@@ -160,15 +160,6 @@ def path_metavar_label(parameter_info: ParameterInfo) -> str:
     return "path"
 
 
-def _needs_typer_path(annotation: Any, parameter_info: ParameterInfo) -> bool:
-    return (
-        annotation == Path
-        or parameter_info.allow_dash
-        or parameter_info.path_type is not None
-        or parameter_info.resolve_path
-    )
-
-
 def _coerce_path_result(
     value: str | os.PathLike[str],
     path_type: type[Any] | None,

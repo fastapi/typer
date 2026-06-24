@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime
+from pathlib import Path
 from typing import IO, TYPE_CHECKING, Any
 
 from pydantic import TypeAdapter, ValidationError
@@ -16,7 +17,6 @@ from .display import get_error_msg
 from .models import OptionInfo, ParameterInfo
 from .param_types import (
     ParameterAnnotation,
-    _needs_typer_path,
     _open_cli_file,
     annotation_from_prompt,
     choice_coercion_annotation,
@@ -62,7 +62,7 @@ class TypeDescriptor:
 
     @property
     def is_path(self) -> bool:
-        return _needs_typer_path(self.annotation, self.parameter_info)
+        return self.annotation is Path
 
     @property
     def is_choice(self) -> bool:
@@ -120,10 +120,7 @@ class TypeDescriptor:
             return os.path.pathsep
         if self.is_list:
             args = get_args(self.annotation)
-            if len(args) == 1 and (
-                is_file_annotation(args[0])
-                or _needs_typer_path(args[0], self.parameter_info)
-            ):
+            if len(args) == 1 and (is_file_annotation(args[0]) or args[0] is Path):
                 return os.path.pathsep
         return None
 
