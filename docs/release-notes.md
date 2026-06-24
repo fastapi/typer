@@ -2,6 +2,95 @@
 
 ## Latest Changes
 
+### Fixes
+
+* 🐛 Fix formatting in `NoSuchOption.format_message()`. PR [#1843](https://github.com/fastapi/typer/pull/1843) by [@foomunleong](https://github.com/foomunleong).
+
+### Docs
+
+* 📝 Update docs badges: remove Publish badge, it doesn't give extra information. PR [#1850](https://github.com/fastapi/typer/pull/1850) by [@tiangolo](https://github.com/tiangolo).
+* 📝 Fix formatting for help link to support GitHub-specific overview edge-case. PR [#1826](https://github.com/fastapi/typer/pull/1826) by [@phalberg](https://github.com/phalberg).
+
+### Internal
+
+* 👷 Update issue-manager to 0.7.1. PR [#1857](https://github.com/fastapi/typer/pull/1857) by [@tiangolo](https://github.com/tiangolo).
+* ⬆️ Update issue-manager to 0.7.0. PR [#1856](https://github.com/fastapi/typer/pull/1856) by [@tiangolo](https://github.com/tiangolo).
+* 🔒️ Update zizmor workflow security checks. PR [#1854](https://github.com/fastapi/typer/pull/1854) by [@tiangolo](https://github.com/tiangolo).
+* ⬆️ Group Dependabot updates. PR [#1853](https://github.com/fastapi/typer/pull/1853) by [@tiangolo](https://github.com/tiangolo).
+* ⬆️ Update Dependabot ecosystem coverage. PR [#1851](https://github.com/fastapi/typer/pull/1851) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Fix alls-green test dependency. PR [#1848](https://github.com/fastapi/typer/pull/1848) by [@tiangolo](https://github.com/tiangolo).
+* ⬆ Bump cryptography from 46.0.7 to 48.0.1. PR [#1841](https://github.com/fastapi/typer/pull/1841) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pyjwt from 2.12.0 to 2.13.0. PR [#1839](https://github.com/fastapi/typer/pull/1839) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump the github-actions group across 1 directory with 3 updates. PR [#1828](https://github.com/fastapi/typer/pull/1828) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump the python-packages group with 3 updates. PR [#1829](https://github.com/fastapi/typer/pull/1829) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
+## 0.26.7 (2026-06-03)
+
+### Fixes
+
+* 🐛 Respect wait=False when launching URLs with xdg-open. PR [#1820](https://github.com/fastapi/typer/pull/1820) by [@patrick91](https://github.com/patrick91).
+
+## 0.26.6 (2026-06-02)
+
+### Fixes
+
+* 🐛 Ensure that the default of a list argument is used correctly. PR [#1821](https://github.com/fastapi/typer/pull/1821) by [@svlandeg](https://github.com/svlandeg).
+
+### Internal
+
+* 👷 Speed up the CI by shuffling the test matrix. PR [#1815](https://github.com/fastapi/typer/pull/1815) by [@svlandeg](https://github.com/svlandeg).
+
+## 0.26.5 (2026-06-01)
+
+### Fixes
+
+* 🐛 Ensure that hidden commands are not shown when Rich markup is disabled. PR [#1812](https://github.com/fastapi/typer/pull/1812) by [@svlandeg](https://github.com/svlandeg).
+
+### Internal
+
+* 🔥 Remove old stub packages. PR [#1810](https://github.com/fastapi/typer/pull/1810) by [@tiangolo](https://github.com/tiangolo).
+
+## 0.26.4 (2026-05-30)
+
+### Features
+
+* 📝 Update AI Library Skill to avoid verbose code for CLI Options. PR [#1808](https://github.com/fastapi/typer/pull/1808) by [@tiangolo](https://github.com/tiangolo).
+
+### Internal
+
+* 👷 Add CI to create draft release after merging a `release` PR. PR [#1807](https://github.com/fastapi/typer/pull/1807) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Update labeler to accept label `release`. PR [#1806](https://github.com/fastapi/typer/pull/1806) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Update GitHub Action permissions for prepare-release. PR [#1804](https://github.com/fastapi/typer/pull/1804) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Add GitHub Actions prepare release workflow. PR [#1802](https://github.com/fastapi/typer/pull/1802) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Update publish action, do not use uv cache. PR [#1803](https://github.com/fastapi/typer/pull/1803) by [@tiangolo](https://github.com/tiangolo).
+* ⬆ Bump the python-packages group across 1 directory with 5 updates. PR [#1793](https://github.com/fastapi/typer/pull/1793) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
+## 0.26.3 (2026-05-28)
+
+### Refactors
+
+* ♻️ Unify the testing functionality. PR [#1792](https://github.com/fastapi/typer/pull/1792) by [@svlandeg](https://github.com/svlandeg).
+
+### Internal
+
+* 👷 Update version of latest-changes GitHub action. PR [#1798](https://github.com/fastapi/typer/pull/1798) by [@tiangolo](https://github.com/tiangolo).
+
+## 0.26.2 (2026-05-27)
+
+### Fixes
+
+* 🐛 Ensure that an envvar set for a `typer.Option` list is split on whitespace. PR [#1791](https://github.com/fastapi/typer/pull/1791) by [@svlandeg](https://github.com/svlandeg).
+
+## 0.26.1 (2026-05-26)
+
+### Fixes
+
+* 🐛 Ensure that an envvar set for `typer.Option` works as expected. PR [#1788](https://github.com/fastapi/typer/pull/1788) by [@svlandeg](https://github.com/svlandeg).
+
+### Internal
+
+* ⬆ Bump python-dotenv from 1.2.1 to 1.2.2. PR [#1714](https://github.com/fastapi/typer/pull/1714) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
 ## 0.26.0 (2026-05-26)
 
 ### Breaking Changes

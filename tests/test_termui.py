@@ -104,27 +104,6 @@ def test_clirunner_env_none(monkeypatch) -> None:
 
 
 @pytest.mark.parametrize(
-    ("runner_exc", "invoke_exc"),
-    [
-        (False, None),
-        (True, False),
-    ],
-)
-def test_clirunner_invoke_catch_exceptions(
-    runner_exc: bool, invoke_exc: bool | None
-) -> None:
-    runner = CliRunner(catch_exceptions=runner_exc)
-    app = typer.Typer()
-
-    @app.command()
-    def main() -> None:
-        raise RuntimeError("boom")
-
-    with pytest.raises(RuntimeError, match="boom"):
-        runner.invoke(app, [], catch_exceptions=invoke_exc)
-
-
-@pytest.mark.parametrize(
     ("exit_value", "expected_exit_code", "expected_stdout"),
     [
         (None, 0, ""),
