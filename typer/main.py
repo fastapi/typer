@@ -427,6 +427,23 @@ class Typer:
                 """
             ),
         ] = DEFAULT_MARKUP_MODE,
+        rich_expand: Annotated[
+            bool,
+            Doc(
+                """
+                When `True`, Rich help output panels expand to fill the terminal width.
+                Set to `False` to use compact panels instead.
+
+                **Example**
+
+                ```python
+                import typer
+
+                app = typer.Typer(rich_expand=False)
+                ```
+                """
+            ),
+        ] = True,
         rich_help_panel: Annotated[
             str | None,
             Doc(
@@ -519,6 +536,7 @@ class Typer:
     ):
         self._add_completion = add_completion
         self.rich_markup_mode: MarkupMode = rich_markup_mode
+        self.rich_expand = rich_expand
         self.rich_help_panel = rich_help_panel
         self.suggest_commands = suggest_commands
         self.pretty_exceptions_enable = pretty_exceptions_enable
@@ -1165,6 +1183,7 @@ def get_group(typer_instance: Typer) -> TyperGroup:
         TyperInfo(typer_instance),
         pretty_exceptions_short=typer_instance.pretty_exceptions_short,
         rich_markup_mode=typer_instance.rich_markup_mode,
+        rich_expand=typer_instance.rich_expand,
         suggest_commands=typer_instance.suggest_commands,
     )
     return group
@@ -1198,6 +1217,7 @@ def get_command(typer_instance: Typer) -> _click.Command:
             single_command,
             pretty_exceptions_short=typer_instance.pretty_exceptions_short,
             rich_markup_mode=typer_instance.rich_markup_mode,
+            rich_expand=typer_instance.rich_expand,
         )
         if typer_instance._add_completion:
             click_command.params.append(click_install_param)
@@ -1286,6 +1306,7 @@ def get_group_from_info(
     pretty_exceptions_short: bool,
     suggest_commands: bool,
     rich_markup_mode: MarkupMode,
+    rich_expand: bool,
 ) -> TyperGroup:
     assert group_info.typer_instance, (
         "A Typer instance is needed to generate a Click Group"
@@ -1296,6 +1317,7 @@ def get_group_from_info(
             command_info=command_info,
             pretty_exceptions_short=pretty_exceptions_short,
             rich_markup_mode=rich_markup_mode,
+            rich_expand=rich_expand,
         )
         if command.name:
             commands[command.name] = command
@@ -1304,6 +1326,7 @@ def get_group_from_info(
             sub_group_info,
             pretty_exceptions_short=pretty_exceptions_short,
             rich_markup_mode=rich_markup_mode,
+            rich_expand=rich_expand,
             suggest_commands=suggest_commands,
         )
         if sub_group.name:
@@ -1350,6 +1373,7 @@ def get_group_from_info(
         hidden=solved_info.hidden,
         deprecated=solved_info.deprecated,
         rich_markup_mode=rich_markup_mode,
+        rich_expand=rich_expand,
         # Rich settings
         rich_help_panel=solved_info.rich_help_panel,
         suggest_commands=suggest_commands,
@@ -1385,6 +1409,7 @@ def get_command_from_info(
     *,
     pretty_exceptions_short: bool,
     rich_markup_mode: MarkupMode,
+    rich_expand: bool,
 ) -> _click.Command:
     assert command_info.callback, "A command must have a callback function"
     name = command_info.name or get_command_name(command_info.callback.__name__)  # ty: ignore
@@ -1419,6 +1444,7 @@ def get_command_from_info(
         hidden=command_info.hidden,
         deprecated=command_info.deprecated,
         rich_markup_mode=rich_markup_mode,
+        rich_expand=rich_expand,
         # Rich settings
         rich_help_panel=command_info.rich_help_panel,
     )
