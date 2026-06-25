@@ -8,6 +8,16 @@ But we can customize those names.
 
 Let's say that we want a `--force` *CLI option* only, we want to discard `--no-force`.
 
+!!! note
+
+    Boolean options may behave slightly differently from other parameter types.
+    When using a single flag (for example, only `--force` without a `--no-force`
+    counterpart), the default value might not be shown in the `--help` output
+    for single boolean flags.
+
+    This behavior comes from Click and is expected, even though the actual
+    default value is still correctly applied.
+
 We can do that by specifying the exact name we want:
 
 {* docs_src/parameter_types/bool/tutorial001_an_py310.py hl[9] *}
