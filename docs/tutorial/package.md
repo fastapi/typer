@@ -20,7 +20,7 @@ If you already have a favorite way of creating Python packages, feel free to ski
 
 ## Prerequisites
 
-For this guide we'll use <a href="https://docs.astral.sh/uv/" class="external-link" target="_blank">uv</a>.
+For this guide we'll use [uv](https://docs.astral.sh/uv/).
 
 uv's docs are great, so go ahead, check them and install it.
 
@@ -60,11 +60,10 @@ $ uv add typer
 Using CPython 3.14.0 interpreter at: /location/of/python/
 Creating virtual environment at: .venv
 
-Resolved 10 packages in 21ms
+Resolved 9 packages in 21ms
       Built rick-portal-gun @ file:/home/rick-portal-gun
 Prepared 1 package in 19ms
-Installed 10 packages in 34ms
- + click==8.3.1
+Installed 9 packages in 34ms
  + colorama==0.4.6
  + markdown-it-py==4.0.0
  + mdurl==0.1.2
@@ -321,7 +320,7 @@ If you installed it in the global system (e.g. with `sudo`) you could install a 
 
 /// tip
 
-Bonus points if you use <a href="https://docs.astral.sh/uv/" class="external-link" target="_blank">uvx</a> to install it while keeping an isolated environment for your Python CLI programs 🚀
+Bonus points if you use [uvx](https://docs.astral.sh/uv/) to install it while keeping an isolated environment for your Python CLI programs 🚀
 
 ///
 
@@ -486,7 +485,7 @@ But you can still support `python -m` for the cases where it's useful.
 
 ## Publish to PyPI (optional)
 
-You can publish that new package to <a href="https://pypi.org/" class="external-link" target="_blank">PyPI</a> to make it public, so others can install it easily.
+You can publish that new package to [PyPI](https://pypi.org/) to make it public, so others can install it easily.
 
 So, go ahead and create an account there (it's free).
 
@@ -494,9 +493,9 @@ So, go ahead and create an account there (it's free).
 
 To do it, you first need to configure a PyPI auth token.
 
-Login to <a href="https://pypi.org/" class="external-link" target="_blank">PyPI</a>.
+Login to [PyPI](https://pypi.org/).
 
-And then go to <a href="https://pypi.org/manage/account/token/" class="external-link" target="_blank">https://pypi.org/manage/account/token/</a> to create a new token.
+And then go to [https://pypi.org/manage/account/token/](https://pypi.org/manage/account/token/) to create a new token.
 
 Let's say your new API token is:
 
@@ -531,7 +530,7 @@ Uploading rick_portal_gun-0.1.0.tar.gz (841.0B)
 
 </div>
 
-Now you can go to PyPI and check your projects at <a href="https://pypi.org/manage/projects/" class="external-link" target="_blank">https://pypi.org/manage/projects/</a>.
+Now you can go to PyPI and check your projects at [https://pypi.org/manage/projects/](https://pypi.org/manage/projects/).
 
 You should now see your new "rick-portal-gun" package.
 
@@ -568,7 +567,6 @@ Collecting rick-portal-gun
   Downloading rick_portal_gun-0.1.0-py3-none-any.whl.metadata (435 bytes)
 Requirement already satisfied: typer<0.13.0,>=0.12.3 in ./.local/lib/python3.10/site-packages (from rick-portal-gun==0.1.0) (0.12.3)
 Requirement already satisfied: typing-extensions>=3.7.4.3 in ./.local/lib/python3.10/site-packages (from typer<0.13.0,>=0.12.3->rick-portal-gun==0.1.0) (4.11.0)
-Requirement already satisfied: click>=8.0.0 in ./.local/lib/python3.10/site-packages (from typer<0.13.0,>=0.12.3->rick-portal-gun==0.1.0) (8.1.7)
 Requirement already satisfied: shellingham>=1.3.0 in ./.local/lib/python3.10/site-packages (from typer<0.13.0,>=0.12.3->rick-portal-gun==0.1.0) (1.5.4)
 Requirement already satisfied: rich>=10.11.0 in ./.local/lib/python3.10/site-packages (from typer<0.13.0,>=0.12.3->rick-portal-gun==0.1.0) (13.7.1)
 Requirement already satisfied: pygments<3.0.0,>=2.13.0 in ./.local/lib/python3.10/site-packages (from rich>=10.11.0->typer<0.13.0,>=0.12.3->rick-portal-gun==0.1.0) (2.17.2)
@@ -659,13 +657,13 @@ And now you can go to PyPI, to the project page, and reload it, and it will now 
 
 This is a very simple guide. You could add many more steps.
 
-For example, you should use <a href="https://git-scm.com/" class="external-link" target="_blank">Git</a>, the version control system, to save your code.
+For example, you should use [Git](https://git-scm.com/), the version control system, to save your code.
 
-You could use <a href="https://docs.astral.sh/uv/" class="external-link" target="_blank">uv</a> to manage your installed CLI Python programs in isolated environments.
+You could use [uv](https://docs.astral.sh/uv/) to manage your installed CLI Python programs in isolated environments.
 
-Maybe use automatic formatting with <a href="https://docs.astral.sh/ruff/" class="external-link" target="_blank">Ruff</a>.
+Maybe use automatic formatting with [Ruff](https://docs.astral.sh/ruff/).
 
-You'll probably want to publish your code as open source to <a href="https://github.com/" class="external-link" target="_blank">GitHub</a>.
+You'll probably want to publish your code as open source to [GitHub](https://github.com/).
 
 And then you could integrate a <abbr title="Continuous Integration">CI</abbr> tool to run your tests and deploy your package automatically.
 
