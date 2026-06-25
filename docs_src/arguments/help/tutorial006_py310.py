@@ -4,7 +4,7 @@ app = typer.Typer()
 
 
 @app.command()
-def main(name: str = typer.Argument("World", metavar="✨user✨")):
+def main(name: str = typer.Argument("World", metavar="✨username✨")):
     print(f"Hello {name}")
 
 

@@ -159,21 +159,21 @@ NAME
 
 But you can customize it with the `metavar` parameter for `typer.Argument()`.
 
-For example, let's say you don't want to have the default of `NAME`, you want to display it as `user`, in lowercase, and you really want ✨ emojis ✨ everywhere:
+For example, let's say you don't want to have the default of `NAME`, you want to have `username`, in lowercase, and you really want ✨ emojis ✨ everywhere:
 
 {* docs_src/arguments/help/tutorial006_an_py310.py hl[9] *}
 
-Now the generated help text will have `✨user✨` instead of `NAME`:
+Now the generated help text will have `✨username✨` instead of `NAME`:
 
 <div class="termy">
 
 ```console
 $ python main.py --help
 
-Usage: main.py [OPTIONS] [✨user✨]
+Usage: main.py [OPTIONS] [✨username✨]
 
 Arguments:
-  [✨user✨]  [default: World]
+  [✨username✨]  [default: World]
 
 Options:
   --help                Show this message and exit.
