@@ -370,7 +370,11 @@ def _print_options_panel(
         metavar_type = None
         metavar_str = param.make_metavar(ctx=ctx)
         if isinstance(param, TyperArgument):
-            metavar_name = metavar_str
+            # TODO: revise this legacy behaviour of keeping argument names lowercased for Rich formatting
+            if param.metavar is None and param.name:
+                metavar_name = metavar_str.replace(param.name.upper(), param.name)
+            else:
+                metavar_name = metavar_str
         if isinstance(param, TyperOption):
             metavar_type = metavar_str
 

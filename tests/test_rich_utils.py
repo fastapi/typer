@@ -76,7 +76,7 @@ def test_rich_doesnt_print_None_default():
 
     result = runner.invoke(app, ["--help"])
     assert "Usage" in result.stdout
-    assert "NAME" in result.stdout
+    assert "name" in result.stdout
     assert "option-1" in result.stdout
     assert "option-2" in result.stdout
     assert result.stdout.count("[default: None]") == 0
@@ -248,14 +248,15 @@ def test_rich_help_metavar():
     out_nospace = result.stdout.replace(" ", "")
 
     # arguments
-    assert "ARG1INTEGER" in out_nospace
-    assert "ARG3INTEGER" in out_nospace
-    assert "[ARG4]INTEGER" in out_nospace
+    assert "arg1INTEGER" in out_nospace
+    assert "arg3INTEGER" in out_nospace
+    assert "[arg4]INTEGER" in out_nospace
     assert "[meta7]INTEGER" in out_nospace
     assert "ARG8INTEGER" in out_nospace
     assert "arg9INTEGER" in out_nospace
 
     assert "arg7" not in result.stdout.lower()
+    assert "arg8" not in result.stdout
     assert "ARG9" not in result.stdout
 
     # options

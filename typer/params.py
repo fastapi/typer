@@ -1174,7 +1174,7 @@ def Argument(
 
             ```python
             @app.command()
-            def main(name: Annotated[str, typer.Argument(metavar="✨name✨")]):
+            def main(name: Annotated[str, typer.Argument(metavar="✨username✨")]):
                 print(f"Hello {name}")
             ```
             """

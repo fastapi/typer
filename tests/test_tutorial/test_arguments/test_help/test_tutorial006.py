@@ -41,6 +41,7 @@ def test_help(app):
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     assert "Usage: main [OPTIONS] [✨username✨]" in result.output
+    assert "NAME" not in result.output
     assert "Arguments" in result.output
     assert "[default: World]" in result.output
 
