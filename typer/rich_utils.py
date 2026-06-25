@@ -337,7 +337,7 @@ def _make_command_help(
     """
     paragraphs = inspect.cleandoc(help_text).split("\n\n")
     # Remove single linebreaks
-    if markup_mode != MARKUP_MODE_RICH and not paragraphs[0].startswith("\b"):
+    if markup_mode != MARKUP_MODE_MARKDOWN and not paragraphs[0].startswith("\b"):
         paragraphs[0] = paragraphs[0].replace("\n", " ")
     elif paragraphs[0].startswith("\b"):
         paragraphs[0] = paragraphs[0].replace("\b\n", "")
