@@ -258,7 +258,7 @@ class TyperArgument(_click.core.Parameter):
         metavar: str | None = None,
         expose_value: bool = True,
         is_eager: bool = False,
-        envvar: str | list[str] | None = None,
+        envvar: str | Sequence[str] | None = None,
         # Note that shell_complete is not fully supported and will be removed in future versions
         # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Callable[
@@ -446,7 +446,7 @@ class TyperOption(_click.Parameter):
         metavar: str | None = None,
         expose_value: bool = True,
         is_eager: bool = False,
-        envvar: str | list[str] | None = None,
+        envvar: str | Sequence[str] | None = None,
         # Note that shell_complete is not fully supported and will be removed in future versions
         # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Callable[
