@@ -2,8 +2,11 @@
 
 ## Latest Changes
 
+## 0.26.8 (2026-06-25)
+
 ### Fixes
 
+* 🐛 Make second column of Rich help output reflect the type consistently, even when using `metavar`. PR [#1410](https://github.com/fastapi/typer/pull/1410) by [@svlandeg](https://github.com/svlandeg).
 * 🐛 Fix formatting in `NoSuchOption.format_message()`. PR [#1843](https://github.com/fastapi/typer/pull/1843) by [@foomunleong](https://github.com/foomunleong).
 
 ### Docs
@@ -13,6 +16,8 @@
 
 ### Internal
 
+* 👷 Simplify pull request workflow triggers. PR [#1858](https://github.com/fastapi/typer/pull/1858) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Update issue-manager to 0.7.1. PR [#1857](https://github.com/fastapi/typer/pull/1857) by [@tiangolo](https://github.com/tiangolo).
 * ⬆️ Update issue-manager to 0.7.0. PR [#1856](https://github.com/fastapi/typer/pull/1856) by [@tiangolo](https://github.com/tiangolo).
 * 🔒️ Update zizmor workflow security checks. PR [#1854](https://github.com/fastapi/typer/pull/1854) by [@tiangolo](https://github.com/tiangolo).
 * ⬆️ Group Dependabot updates. PR [#1853](https://github.com/fastapi/typer/pull/1853) by [@tiangolo](https://github.com/tiangolo).

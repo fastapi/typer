@@ -32,8 +32,8 @@ STYLE_OPTION = "bold cyan"
 STYLE_SWITCH = "bold green"
 STYLE_NEGATIVE_OPTION = "bold magenta"
 STYLE_NEGATIVE_SWITCH = "bold red"
-STYLE_METAVAR = "bold yellow"
-STYLE_METAVAR_SEPARATOR = "dim"
+STYLE_TYPES = "bold yellow"
+STYLE_TYPES_SEPARATOR = "dim"
 STYLE_USAGE = "yellow"
 STYLE_USAGE_COMMAND = "bold"
 STYLE_DEPRECATED = "red"
@@ -111,7 +111,7 @@ class OptionHighlighter(RegexHighlighter):
     highlights = [
         r"(^|\W)(?P<switch>\-\w+)(?![a-zA-Z0-9])",
         r"(^|\W)(?P<option>\-\-[\w\-]+)(?![a-zA-Z0-9])",
-        r"(?P<metavar>\<[^\>]+\>)",
+        r"(?P<types>\<[^\>]+\>)",
         r"(?P<usage>Usage: )",
     ]
 
@@ -124,17 +124,17 @@ class NegativeOptionHighlighter(RegexHighlighter):
 
 
 # Highlighter to make [ | ] and <> dim
-class MetavarHighlighter(RegexHighlighter):
+class TypesHighlighter(RegexHighlighter):
     highlights = [
-        r"^(?P<metavar_sep>(\[|<))",
-        r"(?P<metavar_sep>\|)",
-        r"(?P<metavar_sep>(\]|>))(\.\.\.)?$",
+        r"^(?P<types_sep>(\[|<))",
+        r"(?P<types_sep>\|)",
+        r"(?P<types_sep>(\]|>))(\.\.\.)?$",
     ]
 
 
 highlighter = OptionHighlighter()
 negative_highlighter = NegativeOptionHighlighter()
-metavar_highlighter = MetavarHighlighter()
+types_highlighter = TypesHighlighter()
 
 
 def _has_ansi_character(text: str) -> bool:
@@ -149,8 +149,8 @@ def _get_rich_console(stderr: bool = False) -> Console:
                 "switch": STYLE_SWITCH,
                 "negative_option": STYLE_NEGATIVE_OPTION,
                 "negative_switch": STYLE_NEGATIVE_SWITCH,
-                "metavar": STYLE_METAVAR,
-                "metavar_sep": STYLE_METAVAR_SEPARATOR,
+                "types": STYLE_TYPES,
+                "types_sep": STYLE_TYPES_SEPARATOR,
                 "usage": STYLE_USAGE,
             },
         ),
@@ -363,26 +363,44 @@ def _print_options_panel(
         opt_short_strs = []
         secondary_opt_long_strs = []
         secondary_opt_short_strs = []
+
+        # check whether argument has a metavar name or type set
+        metavar_name = None
+        metavar_type = None
+        metavar_str = param.make_metavar(ctx=ctx)
+        if isinstance(param, TyperArgument):
+            # TODO: revise this legacy behaviour of keeping argument names lowercased for Rich formatting
+            if param.metavar is None and param.name:
+                metavar_name = metavar_str.replace(param.name.upper(), param.name)
+            else:
+                metavar_name = metavar_str
+        if isinstance(param, TyperOption):
+            metavar_type = metavar_str
+
         for opt_str in param.opts:
             if "--" in opt_str:
                 opt_long_strs.append(opt_str)
+            elif metavar_name:
+                opt_short_strs.append(metavar_name)
             else:
                 opt_short_strs.append(opt_str)
         for opt_str in param.secondary_opts:
             if "--" in opt_str:
                 secondary_opt_long_strs.append(opt_str)
+            elif metavar_name:  # pragma: no cover
+                secondary_opt_short_strs.append(metavar_name)
             else:
                 secondary_opt_short_strs.append(opt_str)
 
-        # Column for a metavar, if we have one
-        metavar = Text(style=STYLE_METAVAR, overflow="fold")
-        metavar_str = param.resolve_rich_metavar(ctx=ctx)
-        if metavar_str is not None:
-            metavar.append(metavar_str)
+        # Column for recording the type
+        types_data = Text(style=STYLE_TYPES, overflow="fold")
+        types_data_str = param.resolve_rich_metavar(ctx=ctx)
+        if types_data_str is not None:
+            types_data.append(metavar_str)
 
         range_str = param.get_number_range_help_str()
         if range_str:
-            metavar.append(RANGE_STRING.format(range_str))
+            types_data.append(RANGE_STRING.format(range_str))
 
         # Required asterisk
         required: str | Text = ""
@@ -396,7 +414,7 @@ def _print_options_panel(
                 highlighter(",".join(opt_short_strs)),
                 negative_highlighter(",".join(secondary_opt_long_strs)),
                 negative_highlighter(",".join(secondary_opt_short_strs)),
-                metavar_highlighter(metavar),
+                types_highlighter(types_data),
                 _get_parameter_help(
                     param=param,
                     ctx=ctx,
