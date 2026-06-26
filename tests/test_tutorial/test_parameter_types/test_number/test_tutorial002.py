@@ -25,9 +25,8 @@ def get_mod(request: pytest.FixtureRequest) -> ModuleType:
 def test_invalid_id(mod: ModuleType):
     result = runner.invoke(mod.app, ["1002"])
     assert result.exit_code != 0
-    assert (
-        "Invalid value for 'ID': 1002 is not in the range 0<=x<=1000" in result.output
-    )
+    assert "Invalid value for 'ID'" in result.output
+    assert "should be less than or equal to 1000" in result.output
 
 
 def test_clamped(mod: ModuleType):

@@ -121,7 +121,7 @@ def test_help_wrapping_long_name() -> None:
     output_lines = result.output.splitlines()
     usage_idx = output_lines.index("Usage: very-long-program-name-that-forces-wrap ")
     args_line = output_lines[usage_idx + 1]
-    assert args_line.lstrip() == "[OPTIONS] VALUE"
+    assert args_line.lstrip() == "[OPTIONS] {value}"
     assert args_line.startswith(" ")
 
 

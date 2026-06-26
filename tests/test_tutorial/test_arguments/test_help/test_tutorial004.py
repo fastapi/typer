@@ -25,10 +25,10 @@ def get_mod(request: pytest.FixtureRequest) -> ModuleType:
 def test_help(mod: ModuleType):
     result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
-    assert "[OPTIONS] [NAME]" in result.output
+    assert "[OPTIONS] [name]" in result.output
     assert "Say hi to NAME very gently, like Dirk." in result.output
     assert "Arguments" in result.output
-    assert "NAME" in result.output
+    assert "[name]" in result.output
     assert "Who to greet" in result.output
     assert "[default: World]" not in result.output
 

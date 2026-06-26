@@ -6,22 +6,17 @@ import subprocess
 import sys
 import traceback
 from collections.abc import Callable, Sequence
-from datetime import datetime
-from enum import Enum
 from functools import update_wrapper
-from pathlib import Path
 from traceback import FrameSummary, StackSummary
 from types import TracebackType
 from typing import Annotated, Any
-from uuid import UUID
 
 from annotated_doc import Doc
-from typer._types import TyperChoice
 
 from . import _click
-from ._click import types
 from ._click.globals import get_current_context
-from ._typing import get_args, get_origin, is_literal_type, is_union, literal_values
+from ._typing import get_args, get_origin
+from .coercion import build_runtime_param, resolve_type_descriptor
 from .completion import get_completion_inspect_parameters
 from .core import (
     DEFAULT_MARKUP_MODE,
@@ -33,25 +28,19 @@ from .core import (
     TyperOption,
 )
 from .models import (
-    AnyType,
     ArgumentInfo,
     CommandFunctionType,
     CommandInfo,
     Default,
     DefaultPlaceholder,
     DeveloperExceptionConfig,
-    FileBinaryRead,
-    FileBinaryWrite,
-    FileText,
-    FileTextWrite,
-    NoneType,
     OptionInfo,
     ParameterInfo,
     ParamMeta,
     Required,
     TyperInfo,
-    TyperPath,
 )
+from .param_types import lenient_issubclass, parse_param_annotation
 from .utils import get_params_from_function
 
 _original_except_hook = sys.excepthook
@@ -111,8 +100,8 @@ def except_hook(
 
 def get_install_completion_arguments() -> tuple[_click.Parameter, _click.Parameter]:
     install_param, show_param = get_completion_inspect_parameters()
-    click_install_param, _ = get_click_param(install_param)
-    click_show_param, _ = get_click_param(show_param)
+    click_install_param = get_param(install_param)
+    click_show_param = get_param(show_param)
     return click_install_param, click_show_param
 
 
@@ -1319,11 +1308,9 @@ def get_group_from_info(
             for sub_command_name, sub_command in sub_group.commands.items():
                 commands[sub_command_name] = sub_command
     solved_info = solve_typer_info_defaults(group_info)
-    (
-        params,
-        convertors,
-        context_param_name,
-    ) = get_params_convertors_ctx_param_name_from_function(solved_info.callback)
+    params, context_param_name = get_params_ctx_param_name_from_function(
+        solved_info.callback
+    )
     cls = solved_info.cls or TyperGroup
     assert issubclass(cls, TyperGroup), f"{cls} should be a subclass of {TyperGroup}"
     group = cls(
@@ -1337,7 +1324,6 @@ def get_group_from_info(
         callback=get_callback(
             callback=solved_info.callback,
             params=params,
-            convertors=convertors,
             context_param_name=context_param_name,
             pretty_exceptions_short=pretty_exceptions_short,
         ),
@@ -1361,11 +1347,26 @@ def get_command_name(name: str) -> str:
     return name.lower().replace("_", "-")
 
 
-def get_params_convertors_ctx_param_name_from_function(
+def get_option_flag_name(name: str) -> str:
+    return name.replace("_", "-")
+
+
+def get_default_option_flag_name(name: str, metavar: str | None) -> str:
+    flag_name = get_option_flag_name(name)
+    if metavar is None:
+        return flag_name
+    if (
+        get_option_flag_name(metavar).replace("-", "_").casefold()
+        == flag_name.replace("-", "_").casefold()
+    ):
+        return get_option_flag_name(metavar)
+    return flag_name
+
+
+def get_params_ctx_param_name_from_function(
     callback: Callable[..., Any] | None,
-) -> tuple[list[TyperArgument | TyperOption], dict[str, Any], str | None]:
+) -> tuple[list[TyperArgument | TyperOption], str | None]:
     params = []
-    convertors = {}
     context_param_name = None
     if callback:
         parameters = get_params_from_function(callback)
@@ -1373,11 +1374,8 @@ def get_params_convertors_ctx_param_name_from_function(
             if lenient_issubclass(param.annotation, _click.Context):
                 context_param_name = param_name
                 continue
-            click_param, convertor = get_click_param(param)
-            if convertor:
-                convertors[param_name] = convertor
-            params.append(click_param)
-    return params, convertors, context_param_name
+            params.append(get_param(param))
+    return params, context_param_name
 
 
 def get_command_from_info(
@@ -1393,11 +1391,9 @@ def get_command_from_info(
         use_help = inspect.getdoc(command_info.callback)
     else:
         use_help = inspect.cleandoc(use_help)
-    (
-        params,
-        convertors,
-        context_param_name,
-    ) = get_params_convertors_ctx_param_name_from_function(command_info.callback)
+    params, context_param_name = get_params_ctx_param_name_from_function(
+        command_info.callback
+    )
     cls = command_info.cls or TyperCommand
     command = cls(
         name=name,
@@ -1405,7 +1401,6 @@ def get_command_from_info(
         callback=get_callback(
             callback=command_info.callback,
             params=params,
-            convertors=convertors,
             context_param_name=context_param_name,
             pretty_exceptions_short=pretty_exceptions_short,
         ),
@@ -1425,89 +1420,42 @@ def get_command_from_info(
     return command
 
 
-def determine_type_convertor(type_: Any) -> Callable[[Any], Any] | None:
-    convertor: Callable[[Any], Any] | None = None
-    if lenient_issubclass(type_, Path):
-        convertor = param_path_convertor
-    if lenient_issubclass(type_, Enum):
-        convertor = generate_enum_convertor(type_)
-    return convertor
-
-
-def param_path_convertor(value: str | None = None) -> Path | None:
-    if value is not None:
-        # allow returning any subclass of Path created by an annotated parser without converting
-        # it back to a Path
-        return value if isinstance(value, Path) else Path(value)
-    return None
-
-
-def generate_enum_convertor(enum: type[Enum]) -> Callable[[Any], Any]:
-    val_map = {str(val.value): val for val in enum}
-
-    def convertor(value: Any) -> Any:
-        if value is not None:
-            val = str(value)
-            if val in val_map:
-                key = val_map[val]
-                return enum(key)
-
-    return convertor
-
-
-def generate_list_convertor(
-    convertor: Callable[[Any], Any] | None, default_value: Any | None
-) -> Callable[[Sequence[Any] | None], list[Any] | None]:
-    def internal_convertor(value: Sequence[Any] | None) -> list[Any] | None:
-        if (value is None) or (default_value is None and len(value) == 0):
-            return None
-        return [convertor(v) if convertor else v for v in value]
-
-    return internal_convertor
-
-
-def generate_tuple_convertor(
-    types: Sequence[Any],
-) -> Callable[[tuple[Any, ...] | None], tuple[Any, ...] | None]:
-    convertors = [determine_type_convertor(type_) for type_ in types]
-
-    def internal_convertor(
-        param_args: tuple[Any, ...] | None,
-    ) -> tuple[Any, ...] | None:
-        if param_args is None:
-            return None
-        return tuple(
-            convertor(arg) if convertor else arg
-            for (convertor, arg) in zip(convertors, param_args, strict=False)
-        )
-
-    return internal_convertor
+def _normalize_collection_value(param: _click.Parameter, value: Any) -> Any:
+    if value is None:
+        return None
+    is_multi = getattr(param, "multiple", False) or getattr(param, "nargs", 1) == -1
+    if not is_multi:
+        return value
+    if param.default is None and len(value) == 0:
+        return None
+    return list(value)
 
 
 def get_callback(
     *,
     callback: Callable[..., Any] | None = None,
     params: Sequence[_click.Parameter] = [],
-    convertors: dict[str, Callable[[str], Any]] | None = None,
     context_param_name: str | None = None,
     pretty_exceptions_short: bool,
 ) -> Callable[..., Any] | None:
-    use_convertors = convertors or {}
     if not callback:
         return None
     parameters = get_params_from_function(callback)
     use_params: dict[str, Any] = {}
     for param_name in parameters:
         use_params[param_name] = None
+    params_by_name: dict[str, _click.Parameter] = {}
     for param in params:
         if param.name:
             use_params[param.name] = param.default
+            params_by_name[param.name] = param
 
     def wrapper(**kwargs: Any) -> Any:
         _rich_traceback_guard = pretty_exceptions_short  # noqa: F841
         for k, v in kwargs.items():
-            if k in use_convertors:
-                use_params[k] = use_convertors[k](v)
+            matched_param = params_by_name.get(k)
+            if matched_param is not None:
+                use_params[k] = _normalize_collection_value(matched_param, v)
             else:
                 use_params[k] = v
         if context_param_name:
@@ -1518,115 +1466,7 @@ def get_callback(
     return wrapper
 
 
-def get_click_type(
-    *, annotation: Any, parameter_info: ParameterInfo
-) -> types.ParamType:
-    if parameter_info.click_type is not None:
-        return parameter_info.click_type
-
-    elif parameter_info.parser is not None:
-        return types.FuncParamType(parameter_info.parser)
-
-    elif annotation is str:
-        return types.STRING
-    elif annotation is int:
-        if parameter_info.min is not None or parameter_info.max is not None:
-            min_ = None
-            max_ = None
-            if parameter_info.min is not None:
-                min_ = int(parameter_info.min)
-            if parameter_info.max is not None:
-                max_ = int(parameter_info.max)
-            return types.IntRange(min=min_, max=max_, clamp=parameter_info.clamp)
-        else:
-            return types.INT
-    elif annotation is float:
-        if parameter_info.min is not None or parameter_info.max is not None:
-            return types.FloatRange(
-                min=parameter_info.min,
-                max=parameter_info.max,
-                clamp=parameter_info.clamp,
-            )
-        else:
-            return types.FLOAT
-    elif annotation is bool:
-        return types.BOOL
-    elif annotation == UUID:
-        return types.UUID
-    elif annotation == datetime:
-        return types.DateTime(formats=parameter_info.formats)
-    elif (
-        annotation == Path
-        or parameter_info.allow_dash
-        or parameter_info.path_type
-        or parameter_info.resolve_path
-    ):
-        return TyperPath(
-            exists=parameter_info.exists,
-            file_okay=parameter_info.file_okay,
-            dir_okay=parameter_info.dir_okay,
-            writable=parameter_info.writable,
-            readable=parameter_info.readable,
-            resolve_path=parameter_info.resolve_path,
-            allow_dash=parameter_info.allow_dash,
-            path_type=parameter_info.path_type,
-        )
-    elif lenient_issubclass(annotation, FileTextWrite):
-        return types.File(
-            mode=parameter_info.mode or "w",
-            encoding=parameter_info.encoding,
-            errors=parameter_info.errors,
-            lazy=parameter_info.lazy,
-            atomic=parameter_info.atomic,
-        )
-    elif lenient_issubclass(annotation, FileText):
-        return types.File(
-            mode=parameter_info.mode or "r",
-            encoding=parameter_info.encoding,
-            errors=parameter_info.errors,
-            lazy=parameter_info.lazy,
-            atomic=parameter_info.atomic,
-        )
-    elif lenient_issubclass(annotation, FileBinaryRead):
-        return types.File(
-            mode=parameter_info.mode or "rb",
-            encoding=parameter_info.encoding,
-            errors=parameter_info.errors,
-            lazy=parameter_info.lazy,
-            atomic=parameter_info.atomic,
-        )
-    elif lenient_issubclass(annotation, FileBinaryWrite):
-        return types.File(
-            mode=parameter_info.mode or "wb",
-            encoding=parameter_info.encoding,
-            errors=parameter_info.errors,
-            lazy=parameter_info.lazy,
-            atomic=parameter_info.atomic,
-        )
-    elif lenient_issubclass(annotation, Enum):
-        return TyperChoice(
-            [item.value for item in annotation],
-            case_sensitive=parameter_info.case_sensitive,
-        )
-    elif is_literal_type(annotation):
-        return TyperChoice(
-            literal_values(annotation),
-            case_sensitive=parameter_info.case_sensitive,
-        )
-    raise RuntimeError(f"Type not yet supported: {annotation}")  # pragma: no cover
-
-
-def lenient_issubclass(cls: Any, class_or_tuple: AnyType | tuple[AnyType, ...]) -> bool:
-    return isinstance(cls, type) and issubclass(cls, class_or_tuple)
-
-
-def get_click_param(
-    param: ParamMeta,
-) -> tuple[TyperArgument | TyperOption, Any]:
-    # First, find out what will be:
-    # * ParamInfo (ArgumentInfo or OptionInfo)
-    # * default_value
-    # * required
+def get_param(param: ParamMeta) -> TyperArgument | TyperOption:
     default_value = None
     required = False
     if isinstance(param.default, ParameterInfo):
@@ -1641,65 +1481,32 @@ def get_click_param(
     else:
         default_value = param.default
         parameter_info = OptionInfo()
-    annotation: Any
-    if param.annotation is not param.empty:
-        annotation = param.annotation
-    else:
-        annotation = str
-    main_type = annotation
-    is_list = False
-    is_tuple = False
-    parameter_type: Any = None
-    is_flag = None
-    origin = get_origin(main_type)
 
-    if origin is not None:
-        # Handle SomeType | None and Optional[SomeType]
-        if is_union(origin):
-            types = []
-            for type_ in get_args(main_type):
-                if type_ is NoneType:
-                    continue
-                types.append(type_)
-            assert len(types) == 1, "Typer Currently doesn't support Union types"
-            main_type = types[0]
-            origin = get_origin(main_type)
-        # Handle Tuples and Lists
-        if lenient_issubclass(origin, list):
-            main_type = get_args(main_type)[0]
-            assert not get_origin(main_type), (
-                "List types with complex sub-types are not currently supported"
-            )
-            is_list = True
-        elif lenient_issubclass(origin, tuple):
-            types = []
-            for type_ in get_args(main_type):
-                assert not get_origin(type_), (
-                    "Tuple types with complex sub-types are not currently supported"
-                )
-                types.append(
-                    get_click_type(annotation=type_, parameter_info=parameter_info)
-                )
-            parameter_type = tuple(types)
-            is_tuple = True
-    if parameter_type is None:
-        parameter_type = get_click_type(
-            annotation=main_type, parameter_info=parameter_info
-        )
-    convertor = determine_type_convertor(main_type)
-    if is_list:
-        convertor = generate_list_convertor(
-            convertor=convertor, default_value=default_value
-        )
-    if is_tuple:
-        convertor = generate_tuple_convertor(get_args(main_type))
+    annotation = parse_param_annotation(param, default_value)
+    annotation_args = get_args(annotation)
+    is_list = lenient_issubclass(get_origin(annotation), list)
+    is_flag = None
     if isinstance(parameter_info, OptionInfo):
-        if main_type is bool:
+        if annotation is bool:
             is_flag = True
-            # Click doesn't accept a flag of type bool, only None, and then it sets it
-            # to bool internally
-            parameter_type = None
-        default_option_name = get_command_name(param.name)
+        elif (
+            is_list
+            and annotation_args == (bool,)
+            and parameter_info.param_decls
+            and any("/" in decl for decl in parameter_info.param_decls)
+        ):
+            is_flag = True
+    descriptor = resolve_type_descriptor(
+        annotation=annotation,
+        parameter_info=parameter_info,
+    )
+    runtime_param = build_runtime_param(descriptor)
+    tuple_nargs = descriptor.tuple_arity
+
+    if isinstance(parameter_info, OptionInfo):
+        default_option_name = get_default_option_flag_name(
+            param.name, parameter_info.metavar
+        )
         if is_flag:
             default_option_declaration = (
                 f"--{default_option_name}/--no-{default_option_name}"
@@ -1711,107 +1518,105 @@ def get_click_param(
             param_decls.extend(parameter_info.param_decls)
         else:
             param_decls.append(default_option_declaration)
-        return (
-            TyperOption(
-                # Option
-                param_decls=param_decls,
-                show_default=parameter_info.show_default,
-                prompt=parameter_info.prompt,
-                confirmation_prompt=parameter_info.confirmation_prompt,
-                prompt_required=parameter_info.prompt_required,
-                hide_input=parameter_info.hide_input,
-                is_flag=is_flag,
-                multiple=is_list,
-                count=parameter_info.count,
-                allow_from_autoenv=parameter_info.allow_from_autoenv,
-                type=parameter_type,
-                help=parameter_info.help,
-                hidden=parameter_info.hidden,
-                show_choices=parameter_info.show_choices,
-                show_envvar=parameter_info.show_envvar,
-                # Parameter
-                required=required,
-                default=default_value,
-                callback=get_param_callback(
-                    callback=parameter_info.callback, convertor=convertor
-                ),
-                metavar=parameter_info.metavar,
-                expose_value=parameter_info.expose_value,
-                is_eager=parameter_info.is_eager,
-                envvar=parameter_info.envvar,
-                shell_complete=parameter_info.shell_complete,
-                autocompletion=get_param_completion(parameter_info.autocompletion),
-                # Rich settings
-                rich_help_panel=parameter_info.rich_help_panel,
-            ),
-            convertor,
+        return TyperOption(
+            # Option
+            param_decls=param_decls,
+            show_default=parameter_info.show_default,
+            prompt=parameter_info.prompt,
+            confirmation_prompt=parameter_info.confirmation_prompt,
+            prompt_required=parameter_info.prompt_required,
+            hide_input=parameter_info.hide_input,
+            is_flag=is_flag,
+            multiple=is_list,
+            count=parameter_info.count,
+            allow_from_autoenv=parameter_info.allow_from_autoenv,
+            help=parameter_info.help,
+            hidden=parameter_info.hidden,
+            show_choices=parameter_info.show_choices,
+            show_envvar=parameter_info.show_envvar,
+            # Parameter
+            required=required,
+            default=default_value,
+            callback=get_param_callback(callback=parameter_info.callback),
+            metavar=parameter_info.metavar,
+            expose_value=parameter_info.expose_value,
+            is_eager=parameter_info.is_eager,
+            envvar=parameter_info.envvar,
+            shell_complete=parameter_info.shell_complete,
+            autocompletion=get_param_completion(parameter_info.autocompletion),
+            min=parameter_info.min,
+            max=parameter_info.max,
+            nargs=tuple_nargs,
+            # Rich settings
+            rich_help_panel=parameter_info.rich_help_panel,
+            runtime_param=runtime_param,
+            type_descriptor=descriptor,
         )
     elif isinstance(parameter_info, ArgumentInfo):
         param_decls = [param.name]
         nargs = None
         if is_list:
             nargs = -1
-        return (
-            TyperArgument(
-                # Argument
-                param_decls=param_decls,
-                type=parameter_type,
-                required=required,
-                nargs=nargs,
-                # TyperArgument
-                show_default=parameter_info.show_default,
-                show_choices=parameter_info.show_choices,
-                show_envvar=parameter_info.show_envvar,
-                help=parameter_info.help,
-                hidden=parameter_info.hidden,
-                # Parameter
-                default=default_value,
-                callback=get_param_callback(
-                    callback=parameter_info.callback, convertor=convertor
-                ),
-                metavar=parameter_info.metavar,
-                expose_value=parameter_info.expose_value,
-                is_eager=parameter_info.is_eager,
-                envvar=parameter_info.envvar,
-                shell_complete=parameter_info.shell_complete,
-                autocompletion=get_param_completion(parameter_info.autocompletion),
-                # Rich settings
-                rich_help_panel=parameter_info.rich_help_panel,
-            ),
-            convertor,
+        elif tuple_nargs is not None:
+            nargs = tuple_nargs
+        return TyperArgument(
+            # Argument
+            param_decls=param_decls,
+            required=required,
+            nargs=nargs,
+            # TyperArgument
+            show_default=parameter_info.show_default,
+            show_choices=parameter_info.show_choices,
+            show_envvar=parameter_info.show_envvar,
+            help=parameter_info.help,
+            hidden=parameter_info.hidden,
+            # Parameter
+            default=default_value,
+            callback=get_param_callback(callback=parameter_info.callback),
+            metavar=parameter_info.metavar,
+            expose_value=parameter_info.expose_value,
+            is_eager=parameter_info.is_eager,
+            envvar=parameter_info.envvar,
+            shell_complete=parameter_info.shell_complete,
+            autocompletion=get_param_completion(parameter_info.autocompletion),
+            min=parameter_info.min,
+            max=parameter_info.max,
+            # Rich settings
+            rich_help_panel=parameter_info.rich_help_panel,
+            runtime_param=runtime_param,
+            type_descriptor=descriptor,
         )
-    raise AssertionError("A _click.Parameter should be returned")  # pragma: no cover
+    raise AssertionError("A Parameter should be returned")  # pragma: no cover
 
 
 def get_param_callback(
     *,
     callback: Callable[..., Any] | None = None,
-    convertor: Callable[..., Any] | None = None,
 ) -> Callable[..., Any] | None:
     if not callback:
         return None
     parameters = get_params_from_function(callback)
     ctx_name = None
-    click_param_name = None
+    param_arg_name = None
     value_name = None
     untyped_names: list[str] = []
     for param_name, param_sig in parameters.items():
         if lenient_issubclass(param_sig.annotation, _click.Context):
             ctx_name = param_name
         elif lenient_issubclass(param_sig.annotation, _click.Parameter):
-            click_param_name = param_name
+            param_arg_name = param_name
         else:
             untyped_names.append(param_name)
     # Extract value param name first
     if untyped_names:
         value_name = untyped_names.pop()
-    # If context and Click param were not typed (old/Click callback style) extract them
+    # If context and parameter were not typed, extract them by position.
     if untyped_names:
         if ctx_name is None:
             ctx_name = untyped_names.pop(0)
-        if click_param_name is None:
+        if param_arg_name is None:
             if untyped_names:
-                click_param_name = untyped_names.pop(0)
+                param_arg_name = untyped_names.pop(0)
         if untyped_names:
             raise _click.ClickException(
                 "Too many CLI parameter callback function parameters"
@@ -1821,14 +1626,10 @@ def get_param_callback(
         use_params: dict[str, Any] = {}
         if ctx_name:
             use_params[ctx_name] = ctx
-        if click_param_name:
-            use_params[click_param_name] = param
+        if param_arg_name:
+            use_params[param_arg_name] = param
         if value_name:
-            if convertor:
-                use_value = convertor(value)
-            else:
-                use_value = value
-            use_params[value_name] = use_value
+            use_params[value_name] = _normalize_collection_value(param, value)
         return callback(**use_params)
 
     update_wrapper(wrapper, callback)

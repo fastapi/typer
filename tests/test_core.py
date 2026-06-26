@@ -5,29 +5,10 @@ import typer
 import typer._completion_shared
 import typer.completion
 from typer import _click
-from typer.core import TyperArgument, TyperCommand, TyperGroup, TyperOption, _split_opt
+from typer.core import TyperCommand, TyperGroup, _split_opt
 from typer.testing import CliRunner
 
 runner = CliRunner()
-
-
-def test_human_readable_name() -> None:
-    app = typer.Typer()
-
-    @app.command()
-    def main(
-        my_arg_1: Annotated[str, typer.Argument()],
-        my_arg_2: Annotated[str, typer.Argument(metavar="META_ARG")],
-        my_opt: Annotated[str, typer.Option()],
-    ):
-        pass  # pragma: no cover
-
-    command = typer.main.get_command(app)
-    params = {param.name: param for param in command.params}
-
-    assert params["my_arg_1"].human_readable_name == "MY_ARG_1"
-    assert params["my_arg_2"].human_readable_name == "META_ARG"
-    assert params["my_opt"].human_readable_name == "my_opt"
 
 
 def test_parameter_metavar() -> None:
@@ -42,70 +23,62 @@ def test_parameter_metavar() -> None:
     assert "--name CUSTOM" in result.output
 
 
-def test_parameter_nargs_gt_1() -> None:
-    param = TyperArgument(param_decls=["value"], type=str, nargs=2)
-    ctx = _click.Context(TyperCommand(name="cmd"))
+def test_tuple_argument_wrong_arity() -> None:
+    app = typer.Typer()
 
-    assert param.type_cast_value(ctx, ("one", "two")) == ("one", "two")
+    @app.command()
+    def cmd(value: tuple[str, str]):
+        pass  # pragma: no cover
 
-    with pytest.raises(
-        _click.exceptions.BadParameter, match="Takes 2 values but 1 given."
-    ):
-        param.type_cast_value(ctx, ("one",))
+    result = runner.invoke(app, ["only-one"])
+    assert result.exit_code == 2
+    assert "takes 2 values" in result.output
 
 
-def test_parameter_constructor() -> None:
-    # no param_decl and expose_value is False: sets name to None
-    arg = TyperArgument(param_decls=[], expose_value=False)
-    assert arg.name is None
-    assert arg.opts == []
-    assert arg.secondary_opts == []
+def test_count_option() -> None:
+    app = typer.Typer()
 
-    # no param_decl and expose_value is True: raises
-    with pytest.raises(TypeError, match="does not have a name."):
-        TyperArgument(param_decls=[], expose_value=True)
+    @app.command()
+    def main(verbose: int = typer.Option(0, "--verbose", "-v", count=True)):
+        print(verbose)
 
-    # len(param_decl) > 1: raises
-    with pytest.raises(TypeError, match="take exactly one parameter declaration"):
-        TyperArgument(param_decls=["first", "second"])
+    result = runner.invoke(app, ["-vvv"])
+    assert result.exit_code == 0
+    assert "3" in result.stdout
 
-    # duplicated identifier in option declarations: raises
+
+def test_duplicate_declaration_raises() -> None:
+    app = typer.Typer()
+
+    @app.command()
+    def main(name: str = typer.Option(..., "name", "name")):
+        pass  # pragma: no cover
+
     with pytest.raises(TypeError, match="Name 'name' defined twice"):
-        TyperOption(param_decls=["name", "name"], required=False)
+        typer.main.get_command(app)
 
-    # same true/false flag in boolean option declaration: raises
+
+def test_invalid_boolean_flag_declaration_raises() -> None:
+    app = typer.Typer()
+
+    @app.command()
+    def main(flag: bool = typer.Option(False, "--flag/--flag")):
+        pass  # pragma: no cover
+
     with pytest.raises(ValueError, match="cannot use the same flag for true/false"):
-        TyperOption(param_decls=["flag", "--flag/--flag"], required=False, is_flag=True)
-
-    # inferred name is not a valid identifier: sets name to None
-    unnamed_option = TyperOption(param_decls=["--123"], required=False)
-    assert unnamed_option.name is None
-
-    # no param_decl and prompt=True: raises
-    with pytest.raises(TypeError, match="'name' is required with 'prompt=True'."):
-        TyperOption(param_decls=[], expose_value=False, prompt=True, required=False)
-
-    # count works
-    option = TyperOption(
-        param_decls=["verbose", "--verbose", "-v"],
-        type=None,
-        default=0,
-        required=False,
-        count=True,
-    )
-    assert isinstance(option.type, _click.types.IntRange)
-    assert option.type.min == 0
+        typer.main.get_command(app)
 
 
 def test_option_error_hint() -> None:
-    option = TyperOption(
-        param_decls=["name", "--name"],
-        required=False,
-        show_envvar=True,
-        envvar="APP_NAME",
-    )
-    hint = option.get_error_hint(_click.Context(TyperCommand(name="cmd")))
-    assert "(env var: 'APP_NAME')" in hint
+    app = typer.Typer()
+
+    @app.command()
+    def main(age: int = typer.Option(..., envvar="APP_NAME", show_envvar=True)):
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["--age", "not-int"])
+    assert result.exit_code == 2
+    assert "(env var: 'APP_NAME')" in result.output
 
 
 def test_group_init() -> None:
@@ -181,31 +154,41 @@ def test_option_resolve_envvar(
     set_env: bool,
     expected: str | None,
 ) -> None:
-    option = TyperOption(
-        param_decls=["name", "--name"],
-        required=False,
-        envvar=envvar,
-    )
+    context_settings = {"auto_envvar_prefix": auto_prefix} if auto_prefix else {}
+    app = typer.Typer(context_settings=context_settings)
+
+    @app.command()
+    def main(name: str = typer.Option("fallback", envvar=envvar)):
+        print(name)
+
     if set_env:
         monkeypatch.setenv("APP_NAME", "my-precious")
 
-    ctx = _click.Context(TyperCommand(name="cmd"), auto_envvar_prefix=auto_prefix)
-    assert option.resolve_envvar_value(ctx) == expected
+    result = runner.invoke(app, [])
+    assert result.exit_code == 0
+    if expected is None:
+        assert "fallback" in result.stdout
+    else:
+        assert expected in result.stdout
 
 
 def test_option_resolve_envvar_list(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    option = TyperOption(
-        param_decls=["name", "--name"],
-        required=False,
-        envvar=["APP_NAME_1", "APP_NAME_2"],
-    )
+    app = typer.Typer()
+
+    @app.command()
+    def main(
+        name: str = typer.Option("fallback", envvar=["APP_NAME_1", "APP_NAME_2"]),
+    ):
+        print(name)
+
     monkeypatch.delenv("APP_NAME_1", raising=False)
     monkeypatch.delenv("APP_NAME_2", raising=False)
-    ctx = _click.Context(TyperCommand(name="cmd"))
 
-    assert option.resolve_envvar_value(ctx) is None
+    result = runner.invoke(app, [])
+    assert result.exit_code == 0
+    assert "fallback" in result.stdout
 
 
 def test_context_auto_envvar() -> None:
@@ -377,3 +360,63 @@ def test_nargs_default_map():
     result = runner.invoke(app, [], default_map={"names": "not-a-list"})
     assert result.exit_code == 2
     assert "Invalid value" in result.output
+
+
+def test_parameter_name_casing():
+    app = typer.Typer()
+
+    @app.command()
+    def main(
+        arg1: int,
+        arg2: int = 42,
+        arg3: int = typer.Argument(...),
+        ARG4: int = typer.Argument(42),
+        ARG5: int = typer.Option(...),
+        arg6: int = typer.Option(42),
+        arg7: int = typer.Argument(42, metavar="meta7"),
+        arg8: int = typer.Argument(metavar="ARG8"),
+        arg9: int = typer.Option(metavar="ARG9"),
+    ):
+        print(
+            f"arg1={arg1} arg2={arg2} arg3={arg3} ARG4={ARG4} ARG5={ARG5} "
+            f"arg6={arg6} arg7={arg7} arg8={arg8} arg9={arg9}"
+        )
+
+    result = runner.invoke(
+        app,
+        [
+            "1",
+            "3",
+            "4",
+            "7",
+            "8",
+            "--arg2",
+            "2",
+            "--ARG5",
+            "5",
+            "--arg6",
+            "6",
+            "--ARG9",
+            "9",
+        ],
+    )
+    assert result.exit_code == 0
+    assert (
+        "arg1=1 arg2=2 arg3=3 ARG4=4 ARG5=5 arg6=6 arg7=7 arg8=8 arg9=9"
+        in result.output
+    )
+
+    result = runner.invoke(app, ["1", "3", "4", "7", "8", "--ARG5", "5", "--ARG9", "9"])
+    assert result.exit_code == 0
+    assert (
+        "arg1=1 arg2=42 arg3=3 ARG4=4 ARG5=5 arg6=42 arg7=7 arg8=8 arg9=9"
+        in result.output
+    )
+
+    result = runner.invoke(app, ["1", "3", "4", "7", "8", "--arg5", "5", "--ARG9", "9"])
+    assert result.exit_code != 0
+    assert "No such option: --arg5" in result.output
+
+    result = runner.invoke(app, ["1", "3", "4", "7", "8", "--ARG5", "5", "--arg9", "9"])
+    assert result.exit_code != 0
+    assert "No such option: --arg9" in result.output

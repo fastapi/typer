@@ -19,11 +19,11 @@ Check it:
 ```console
 $ python main.py --help
 
-// Notice the predefined values [simple|conv|lstm]
+// Notice the predefined values <simple|conv|lstm>
 Usage: main.py [OPTIONS]
 
 Options:
-  --network [simple|conv|lstm]  [default: simple]
+  --network <simple|conv|lstm>  [default: simple]
   --help                        Show this message and exit.
 
 // Try it
@@ -91,8 +91,8 @@ $ python main.py --help
 Usage: main.py [OPTIONS]
 
 Options:
-  --groceries [Eggs|Bacon|Cheese]  [default: Eggs, Cheese]
-  --help                           Show this message and exit.
+  --groceries <list[Eggs|Bacon|Cheese]>   [default: Eggs, Cheese]
+  --help                                  Show this message and exit.
 
 // Try it with the default values
 $ python main.py
@@ -123,11 +123,11 @@ You can also use `Literal` to represent a set of possible predefined choices, wi
 ```console
 $ python main.py --help
 
-// Notice the predefined values [simple|conv|lstm]
+// Notice the predefined values <simple|conv|lstm>
 Usage: main.py [OPTIONS]
 
 Options:
-  --network [simple|conv|lstm]  [default: simple]
+  --network <simple|conv|lstm>  [default: simple]
   --help                        Show this message and exit.
 
 // Try it

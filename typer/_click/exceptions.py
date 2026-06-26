@@ -6,7 +6,8 @@ from .globals import resolve_color_default
 from .utils import echo, format_filename
 
 if TYPE_CHECKING:
-    from .core import Command, Context, Parameter
+    from ..core import TyperParameter
+    from .core import Command, Context
 
 
 def _join_param_hints(param_hint: Sequence[str] | str | None) -> str | None:
@@ -90,7 +91,7 @@ class BadParameter(UsageError):
         self,
         message: str,
         ctx: Union["Context", None] = None,
-        param: Union["Parameter", None] = None,
+        param: Union["TyperParameter", None] = None,
         param_hint: Sequence[str] | str | None = None,
     ) -> None:
         super().__init__(message, ctx)
@@ -101,7 +102,7 @@ class BadParameter(UsageError):
         if self.param_hint is not None:
             param_hint = self.param_hint
         elif self.param is not None:
-            param_hint = self.param.get_error_hint(self.ctx)  # type: ignore
+            param_hint = self.param.get_error_hint()
         else:
             return f"Invalid value: {self.message}"
 
@@ -118,7 +119,7 @@ class MissingParameter(BadParameter):
         self,
         message: str | None = None,
         ctx: Union["Context", None] = None,
-        param: Union["Parameter", None] = None,
+        param: Union["TyperParameter", None] = None,
         param_hint: Sequence[str] | str | None = None,
         param_type: str | None = None,
     ) -> None:
@@ -129,7 +130,7 @@ class MissingParameter(BadParameter):
         if self.param_hint is not None:
             param_hint: Sequence[str] | str | None = self.param_hint
         elif self.param is not None:
-            param_hint = self.param.get_error_hint(self.ctx)  # type: ignore
+            param_hint = self.param.get_error_hint()
         else:
             param_hint = None
 
@@ -142,28 +143,20 @@ class MissingParameter(BadParameter):
 
         msg = self.message
         if self.param is not None:
-            msg_extra = self.param.type.get_missing_message(
-                param=self.param, ctx=self.ctx
-            )
+            from ..core import TyperParameter
+
+            assert isinstance(self.param, TyperParameter)
+            msg_extra = self.param.get_missing_message(ctx=self.ctx)
             if msg_extra:
                 if msg:
                     msg += f". {msg_extra}"
                 else:
                     msg = msg_extra
 
-        msg = f" {msg}" if msg else ""
+        if msg:
+            return f"Missing {param_type}{param_hint}. {msg}"
 
-        # Translate param_type for known types.
-        if param_type == "argument":
-            missing = "Missing argument"
-        elif param_type == "option":
-            missing = "Missing option"
-        elif param_type == "parameter":
-            missing = "Missing parameter"
-        else:
-            missing = f"Missing {param_type}"
-
-        return f"{missing}{param_hint}.{msg}"
+        return f"Missing {param_type}{param_hint}."
 
     def __str__(self) -> str:
         if not self.message:
