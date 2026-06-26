@@ -368,13 +368,13 @@ def _print_options_panel(
         metavar_name = None
         metavar_type = None
         metavar_str = param.make_metavar(ctx=ctx)
-        if isinstance(param, TyperArgument):
+        if isinstance(param, TyperArgument) and metavar_str is not None:
             # TODO: revise this legacy behaviour of keeping argument names lowercased for Rich formatting
             if param.metavar is None and param.name:
                 metavar_name = metavar_str.replace(param.name.upper(), param.name)
             else:
                 metavar_name = metavar_str
-        if isinstance(param, TyperOption):
+        if isinstance(param, TyperOption) and metavar_str is not None:
             metavar_type = metavar_str
 
         for opt_str in param.opts:
@@ -394,9 +394,18 @@ def _print_options_panel(
 
         # Column for recording the type
         types_data = Text(style=STYLE_TYPES, overflow="fold")
-        types_data_str = param.resolve_rich_metavar(ctx=ctx)
-        if types_data_str is not None:
-            types_data.append(metavar_str)
+        if isinstance(param, TyperOption) and metavar_type and metavar_type != "BOOL":
+            types_data.append(metavar_type)
+        else:
+            types_data_str = param.resolve_rich_metavar(ctx=ctx)
+            if isinstance(param, TyperArgument) and types_data_str is not None:
+                if types_data_str == metavar_name or (
+                    metavar_name is not None
+                    and types_data_str.upper() == metavar_name.upper()
+                ):
+                    types_data_str = param.metavar_label()
+            if types_data_str is not None:
+                types_data.append(types_data_str)
 
         range_str = param.get_number_range_help_str()
         if range_str:

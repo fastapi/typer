@@ -248,18 +248,18 @@ def test_rich_help_metavar():
     out_nospace = result.stdout.replace(" ", "")
 
     # arguments
-    assert "arg1INTEGER" in out_nospace
-    assert "arg3INTEGER" in out_nospace
-    assert "[arg4]INTEGER" in out_nospace
-    assert "[meta7]INTEGER" in out_nospace
-    assert "ARG8INTEGER" in out_nospace
-    assert "arg9INTEGER" in out_nospace
+    assert "arg1<int>" in out_nospace
+    assert "arg3<int>" in out_nospace
+    assert "[arg4]<int>" in out_nospace
+    assert "[meta7]<int>" in out_nospace
+    assert "ARG8<int>" in out_nospace
+    assert "arg9<int>" in out_nospace
 
     assert "arg7" not in result.stdout.lower()
     assert "arg8" not in result.stdout
     assert "ARG9" not in result.stdout
 
     # options
-    assert "arg2INTEGER" in out_nospace
-    assert "arg5INTEGER" in out_nospace
-    assert "arg6INTEGER" in out_nospace
+    assert "--arg2<int>" in out_nospace
+    assert "--arg5<int>" in out_nospace
+    assert "--arg6<int>" in out_nospace
