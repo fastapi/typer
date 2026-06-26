@@ -98,7 +98,7 @@ And then it won't show the default value:
 ```console
 $ python main.py --help
 
-// Notice the there's no [default: World] now 🔥
+// Notice there's no [default: World] now 🔥
 Usage: main.py [OPTIONS] [NAME]
 
   Say hi to NAME very gently, like Dirk.
