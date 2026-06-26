@@ -164,8 +164,9 @@ def test_custom_parse():
     assert result.exit_code == 0
 
 
-def test_custom_parse_value_error():
+def test_custom_parse_value_error(monkeypatch):
     app = typer.Typer()
+    monkeypatch.setenv("COLUMNS", "200")
 
     @app.command()
     def custom_parser(
@@ -371,6 +372,7 @@ def test_default_infers_param_type(
         pytest.param(Annotated[str, typer.Option(...)], "<str>"),
         pytest.param(Annotated[str, typer.Argument(...)], "<str>"),
         pytest.param(Annotated[int, typer.Option(...)], "<int>"),
+        pytest.param(Annotated[int, typer.Argument(...)], "<int>"),
         pytest.param(Annotated[float, typer.Option(...)], "<float>"),
         pytest.param(
             Annotated[float, typer.Option(..., min=0.666, max=3.42)], "<float range>"
@@ -383,12 +385,18 @@ def test_default_infers_param_type(
         pytest.param(Annotated[Path, typer.Option(...)], "<path>"),
         pytest.param(Annotated[Path, typer.Option(..., dir_okay=False)], "<file>"),
         pytest.param(Annotated[Path, typer.Option(..., file_okay=False)], "<dir>"),
-        pytest.param(Annotated[SomeEnum, typer.Option(...)], "[one|two|three]"),
-        pytest.param(Annotated[SomeEnum, typer.Argument()], "{one|two|three}"),
+        pytest.param(Annotated[SomeEnum, typer.Option(...)], "<one|two|three>"),
+        pytest.param(Annotated[SomeEnum, typer.Argument()], "<one|two|three>"),
         pytest.param(
-            Annotated[SomeEnum, typer.Option(..., show_choices=False)], "[SomeEnum]"
+            Annotated[SomeEnum, typer.Option(..., show_choices=False)], "<SomeEnum>"
         ),
-        pytest.param(Annotated[Literal["x", "y"], typer.Option(...)], "[x|y]"),
+        pytest.param(
+            Annotated[list[SomeEnum], typer.Option(...)], "<list[one|two|three]>"
+        ),
+        pytest.param(
+            Annotated[list[SomeEnum], typer.Option(..., show_choices=False)], "<list[SomeEnum]>"
+        ),
+        pytest.param(Annotated[Literal["x", "y"], typer.Option(...)], "<x|y>"),
         pytest.param(Annotated[typer.FileText, typer.Option(...)], "<FileText>"),
         pytest.param(Annotated[datetime, typer.Option(...)], "<%Y-%m-%d>"),
         pytest.param(

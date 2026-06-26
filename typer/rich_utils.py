@@ -364,48 +364,31 @@ def _print_options_panel(
         secondary_opt_long_strs = []
         secondary_opt_short_strs = []
 
-        # check whether argument has a metavar name or type set
-        metavar_name = None
-        metavar_type = None
-        metavar_str = param.make_metavar(ctx=ctx)
-        if isinstance(param, TyperArgument) and metavar_str is not None:
-            # TODO: revise this legacy behaviour of keeping argument names lowercased for Rich formatting
-            if param.metavar is None and param.name:
-                metavar_name = metavar_str.replace(param.name.upper(), param.name)
-            else:
-                metavar_name = metavar_str
-        if isinstance(param, TyperOption) and metavar_str is not None:
-            metavar_type = metavar_str
+        # Argument name label and option type display use separate APIs.
+        display_name: str | None = None
+        if isinstance(param, TyperArgument):
+            display_name = param.rich_display_name()
 
         for opt_str in param.opts:
             if "--" in opt_str:
                 opt_long_strs.append(opt_str)
-            elif metavar_name:
-                opt_short_strs.append(metavar_name)
+            elif display_name:
+                opt_short_strs.append(display_name)
             else:
                 opt_short_strs.append(opt_str)
         for opt_str in param.secondary_opts:
             if "--" in opt_str:
                 secondary_opt_long_strs.append(opt_str)
-            elif metavar_name:  # pragma: no cover
-                secondary_opt_short_strs.append(metavar_name)
+            elif display_name:  # pragma: no cover
+                secondary_opt_short_strs.append(display_name)
             else:
                 secondary_opt_short_strs.append(opt_str)
 
         # Column for recording the type
         types_data = Text(style=STYLE_TYPES, overflow="fold")
-        if isinstance(param, TyperOption) and metavar_type and metavar_type != "BOOL":
-            types_data.append(metavar_type)
-        else:
-            types_data_str = param.resolve_rich_metavar(ctx=ctx)
-            if isinstance(param, TyperArgument) and types_data_str is not None:
-                if types_data_str == metavar_name or (
-                    metavar_name is not None
-                    and types_data_str.upper() == metavar_name.upper()
-                ):
-                    types_data_str = param.metavar_label()
-            if types_data_str is not None:
-                types_data.append(types_data_str)
+        display_type_str = param.display_type_rich(ctx=ctx)
+        if display_type_str is not None:
+            types_data.append(display_type_str)
 
         range_str = param.get_number_range_help_str()
         if range_str:

@@ -1028,7 +1028,7 @@ class Parameter(ABC):
     def get_usage_pieces(self, ctx: Context) -> list[str]:
         return []
 
-    def get_error_hint(self, ctx: Context) -> str:
+    def get_error_hint(self) -> str:
         """Get a stringified version of the param for use in error messages to
         indicate which param caused the error.
         """

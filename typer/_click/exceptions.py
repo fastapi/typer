@@ -102,7 +102,7 @@ class BadParameter(UsageError):
         if self.param_hint is not None:
             param_hint = self.param_hint
         elif self.param is not None:
-            param_hint = self.param.get_error_hint(self.ctx)  # type: ignore
+            param_hint = self.param.get_error_hint()
         else:
             return f"Invalid value: {self.message}"
 
@@ -130,7 +130,7 @@ class MissingParameter(BadParameter):
         if self.param_hint is not None:
             param_hint: Sequence[str] | str | None = self.param_hint
         elif self.param is not None:
-            param_hint = self.param.get_error_hint(self.ctx)  # type: ignore
+            param_hint = self.param.get_error_hint()
         else:
             param_hint = None
 

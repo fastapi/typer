@@ -152,7 +152,7 @@ def choice_as_str(choice: Any) -> str:
 
 
 # PATH #
-def path_metavar_label(parameter_info: ParameterInfo) -> str:
+def path_type_name(parameter_info: ParameterInfo) -> str:
     if parameter_info.file_okay and not parameter_info.dir_okay:
         return "file"
     if parameter_info.dir_okay and not parameter_info.file_okay:
@@ -202,7 +202,7 @@ def coerce_cli_path(
         if parameter_info.resolve_path:
             rv = os.path.realpath(rv)
 
-        label = path_metavar_label(parameter_info)
+        label = path_type_name(parameter_info)
         try:
             st = os.stat(rv)
         except OSError:

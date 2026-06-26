@@ -23,10 +23,11 @@ def get_mod(request: pytest.FixtureRequest) -> ModuleType:
 
 
 def test_help(mod: ModuleType):
+    mod.app.rich_markup_mode = None
     result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
     assert "--groceries" in result.output
-    assert "[Eggs|Bacon|Cheese]" in result.output
+    assert "<list[Eggs|Bacon|Cheese]>" in result.output
     assert "default: Eggs, Cheese" in result.output
 
 

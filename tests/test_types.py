@@ -84,11 +84,11 @@ def test_enum_choice() -> None:
 def test_enum_choice_help() -> None:
     result = runner.invoke(app, ["hello-argument", "--help"])
     assert result.exit_code == 0
-    assert "{rick|morty}" in result.output
+    assert "<rick|morty>" in result.output
 
     result = runner.invoke(app, ["hello-option", "--help"])
     assert result.exit_code == 0
-    assert "[rick|morty]" in result.output
+    assert "<rick|morty>" in result.output
 
     result = runner.invoke(app, ["hello-no-choices", "--help"])
     assert result.exit_code == 0

@@ -23,7 +23,7 @@ from .param_types import (
     file_coercion_annotation,
     is_file_annotation,
     lenient_issubclass,
-    path_metavar_label,
+    path_type_name,
     resolve_file_mode,
 )
 
@@ -80,8 +80,8 @@ class TypeDescriptor:
         return ("%Y-%m-%d",)
 
     @property
-    def path_label(self) -> str:
-        return path_metavar_label(self.parameter_info)
+    def path_type(self) -> str:
+        return path_type_name(self.parameter_info)
 
     @property
     def choices(self) -> tuple[Any, ...] | None:
