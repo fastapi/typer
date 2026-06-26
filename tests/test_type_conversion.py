@@ -394,7 +394,8 @@ def test_default_infers_param_type(
             Annotated[list[SomeEnum], typer.Option(...)], "<list[one|two|three]>"
         ),
         pytest.param(
-            Annotated[list[SomeEnum], typer.Option(..., show_choices=False)], "<list[SomeEnum]>"
+            Annotated[list[SomeEnum], typer.Option(..., show_choices=False)],
+            "<list[SomeEnum]>",
         ),
         pytest.param(Annotated[Literal["x", "y"], typer.Option(...)], "<x|y>"),
         pytest.param(Annotated[typer.FileText, typer.Option(...)], "<FileText>"),
