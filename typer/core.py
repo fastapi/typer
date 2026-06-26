@@ -153,6 +153,16 @@ class TyperParameter(_click.core.Parameter):
         # fall-back, specifically also required for path's
         return []
 
+    @property
+    def display_name_raw(self) -> str:
+        if self.metavar is not None:
+            return self.metavar
+        assert self.name is not None
+        return self.name
+
+    def get_error_hint(self) -> str:
+        return f"'{self.display_name_raw}'"
+
     def display_name_type(self, ctx: _click.Context) -> str | None:
         return self.metavar
 
@@ -444,13 +454,6 @@ class TyperArgument(TyperParameter):
         )
         _typer_param_setup_autocompletion_compat(self, autocompletion=autocompletion)
 
-    @property
-    def human_readable_name(self) -> str:
-        if self.metavar is not None:
-            return self.metavar
-        assert self.name is not None, "self.name or self.metavar should be set"
-        return self.name.upper()
-
     def _get_default_string(
         self,
         *,
@@ -466,32 +469,26 @@ class TyperArgument(TyperParameter):
         )
 
     def display_name(self) -> str:
-        """Argument display name for usage/help (no type suffix)."""
-        if self.metavar is not None:
-            var = self.metavar
-            if not self.required and not var.startswith("["):
-                var = f"[{var}]"
-            return var
-        var = (self.name or "").upper()
+        """Argument display name for help listings (no type suffix)."""
         if not self.required:
-            var = f"[{var}]"
-        return var
+            return f"[{self.display_name_raw}]"
+        return self.display_name_raw
 
     def rich_display_name(self) -> str:
         """Argument display name for the Rich help name column."""
-        if self.metavar is not None:
-            return self.display_name()
-        label = self.display_name()
-        if self.name:
-            label = label.replace(self.name.upper(), self.name)
-        if self.nargs != 1:
-            label += "..."
-        return label
-
-    def usage_display_name(self) -> str:
-        """Argument name for the usage line and plain-text help records."""
         name = self.display_name()
         if self.metavar is None and self.nargs != 1:
+            name += "..."
+        return name
+
+    def usage_display_name(self) -> str:
+        """Argument name for the usage line only."""
+        name = self.display_name_raw
+        if self.required:
+            name = f"{{{name}}}"
+        else:
+            name = f"[{name}]"
+        if self.nargs != 1:
             name += "..."
         return name
 
@@ -503,7 +500,7 @@ class TyperArgument(TyperParameter):
     def get_help_record(self, ctx: _click.Context) -> tuple[str, str] | None:
         if self.hidden:
             return None
-        name = self.usage_display_name()
+        name = self.rich_display_name()
         help = self.help or ""
         extra = []
         if self.show_envvar:
@@ -575,7 +572,7 @@ class TyperArgument(TyperParameter):
             raise TypeError("Argument is marked as exposed, but does not have a name.")
         if len(decls) == 1:
             name = arg = decls[0]
-            name = name.replace("-", "_").lower()
+            name = name.replace("-", "_")
         else:
             raise TypeError(
                 "Arguments take exactly one parameter declaration, got"
@@ -585,9 +582,6 @@ class TyperArgument(TyperParameter):
 
     def get_usage_pieces(self, ctx: _click.Context) -> list[str]:
         return [self.usage_display_name()]
-
-    def get_error_hint(self) -> str:
-        return f"'{self.display_name()}'"
 
     def add_to_parser(self, parser: _OptionParser, ctx: _click.Context) -> None:
         parser.add_argument(dest=self.name, nargs=self.nargs, obj=self)
@@ -712,7 +706,8 @@ class TyperOption(TyperParameter):
         self.rich_help_panel = rich_help_panel
 
     def get_error_hint(self) -> str:
-        result = super().get_error_hint()
+        hint_list = self.opts or [self.display_name_raw]
+        result = " / ".join(f"'{x}'" for x in hint_list)
         if self.show_envvar and self.envvar is not None:
             result += f" (env var: '{self.envvar}')"
         return result
@@ -752,7 +747,7 @@ class TyperOption(TyperParameter):
 
         if name is None and possible_names:
             possible_names.sort(key=lambda x: -len(x[0]))  # group long options first
-            name = possible_names[0][1].replace("-", "_").lower()
+            name = possible_names[0][1].replace("-", "_")
             if not name.isidentifier():
                 name = None
 

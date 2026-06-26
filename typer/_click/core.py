@@ -864,14 +864,6 @@ class Parameter(ABC):
     ) -> tuple[str | None, list[str], list[str]]:
         pass  # pragma: no cover
 
-    @property
-    def human_readable_name(self) -> str:
-        """Returns the human readable name of this parameter.  This is the
-        same as the name for options, but the metavar for arguments.
-        """
-        assert self.name is not None, "self.name should be set"
-        return self.name
-
     @overload
     def get_default(self, ctx: Context, call: Literal[True] = True) -> Any | None: ...
 
@@ -1027,13 +1019,6 @@ class Parameter(ABC):
 
     def get_usage_pieces(self, ctx: Context) -> list[str]:
         return []
-
-    def get_error_hint(self) -> str:
-        """Get a stringified version of the param for use in error messages to
-        indicate which param caused the error.
-        """
-        hint_list = self.opts or [self.human_readable_name]
-        return " / ".join(f"'{x}'" for x in hint_list)
 
     def shell_complete(self, ctx: Context, incomplete: str) -> list["CompletionItem"]:
         """Return a list of completions for the incomplete value. If a

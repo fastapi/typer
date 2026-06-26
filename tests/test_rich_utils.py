@@ -101,7 +101,7 @@ def test_rich_markup_import_regression():
 
     result = runner.invoke(app, ["--help"])
     assert "Usage" in result.stdout
-    assert "BAR" in result.stdout
+    assert "{bar}" in result.stdout
 
 
 @needs_rich
@@ -233,8 +233,8 @@ def test_rich_help_metavar():
         arg1: int,
         arg2: int = 42,
         arg3: int = typer.Argument(...),
-        arg4: int = typer.Argument(42),
-        arg5: int = typer.Option(...),
+        ARG4: int = typer.Argument(42),
+        ARG5: int = typer.Option(...),
         arg6: int = typer.Option(42),
         arg7: int = typer.Argument(42, metavar="meta7"),
         arg8: int = typer.Argument(metavar="ARG8"),
@@ -243,14 +243,16 @@ def test_rich_help_metavar():
         pass  # pragma: no cover
 
     result = runner.invoke(app, ["--help"])
-    assert "Usage: main [OPTIONS] ARG1 ARG3 [ARG4] [meta7] ARG8 arg9" in result.stdout
+    assert (
+        "Usage: main [OPTIONS] {arg1} {arg3} [ARG4] [meta7] {ARG8} {arg9}" in result.stdout
+    )
 
     out_nospace = result.stdout.replace(" ", "")
 
     # arguments
     assert "arg1<int>" in out_nospace
     assert "arg3<int>" in out_nospace
-    assert "[arg4]<int>" in out_nospace
+    assert "[ARG4]<int>" in out_nospace
     assert "[meta7]<int>" in out_nospace
     assert "ARG8<int>" in out_nospace
     assert "arg9<int>" in out_nospace
@@ -261,5 +263,5 @@ def test_rich_help_metavar():
 
     # options
     assert "--arg2<int>" in out_nospace
-    assert "--arg5<int>" in out_nospace
+    assert "--ARG5<int>" in out_nospace
     assert "--arg6<int>" in out_nospace

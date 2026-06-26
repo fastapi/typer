@@ -76,12 +76,12 @@ Say Hi
 **Usage**:
 
 ```console
-$ multiapp sub hi [OPTIONS] [USER]
+$ multiapp sub hi [OPTIONS] [user]
 ```
 
 **Arguments**:
 
-* `[USER]`: The name of the user to greet  [default: World]
+* `[user]`: The name of the user to greet  [default: World]
 
 **Options**:
 

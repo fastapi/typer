@@ -28,7 +28,7 @@ def test_main_with_uuid_object():
 def test_invalid_uuid():
     result = runner.invoke(app, ["7479706572-72756c6573"])
     assert result.exit_code != 0
-    assert "Invalid value for 'USER_ID'" in result.output
+    assert "Invalid value for 'user_id'" in result.output
     assert "should be a valid UUID" in result.output
 
 

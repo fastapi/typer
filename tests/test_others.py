@@ -406,7 +406,7 @@ def test_forward_references():
 
     result = runner.invoke(app, ["Hello", "2", "invalid"])
 
-    assert "Invalid value for 'ARG3'" in result.output
+    assert "Invalid value for 'arg3'" in result.output
     assert "Input should be a valid integer" in result.output
     result = runner.invoke(app, ["Hello", "2", "3", "--arg4", "--arg5"])
     assert (

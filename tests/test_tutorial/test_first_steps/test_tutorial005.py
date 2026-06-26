@@ -16,7 +16,7 @@ def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     assert "Arguments" in result.output
-    assert "NAME" in result.output
+    assert "{name}" in result.output
     assert "[required]" in result.output
     assert "--lastname" in result.output
     assert "<str>" in result.output
