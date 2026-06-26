@@ -244,7 +244,8 @@ def test_rich_help_metavar():
 
     result = runner.invoke(app, ["--help"])
     assert (
-        "Usage: main [OPTIONS] {arg1} {arg3} [ARG4] [meta7] {ARG8} {arg9}" in result.stdout
+        "Usage: main [OPTIONS] {arg1} {arg3} [ARG4] [meta7] {ARG8} {arg9}"
+        in result.stdout
     )
 
     out_nospace = result.stdout.replace(" ", "")
