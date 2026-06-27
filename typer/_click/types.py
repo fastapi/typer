@@ -193,7 +193,7 @@ class DateTime(ParamType):
         ]
 
     def get_metavar(self, param: "Parameter", ctx: "Context") -> str | None:
-        return f"[{'|'.join(self.formats)}]"
+        return f"<{'|'.join(self.formats)}>"
 
     def _try_to_convert_date(self, value: Any, format: str) -> datetime | None:
         try:
