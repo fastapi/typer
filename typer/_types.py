@@ -50,7 +50,7 @@ class TyperChoice(types.ParamType, Generic[ParamTypeValue]):
     def get_metavar(self, param: _click.Parameter, ctx: _click.Context) -> str | None:
         if param.param_type_name == "option" and not param.show_choices:  # type: ignore
             choice_metavars = [
-                types.convert_type(type(choice)).name.upper() for choice in self.choices
+                types.convert_type(type(choice)).name for choice in self.choices
             ]
             choices_str = "|".join([*dict.fromkeys(choice_metavars)])
         else:
