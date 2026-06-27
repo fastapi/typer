@@ -885,7 +885,7 @@ class Parameter(ABC):
         metavar = self.type.get_metavar(param=self, ctx=ctx)
 
         if metavar is None:
-            metavar = self.type.name.upper()
+            metavar = f"<{self.type.name}>"
 
         if self.nargs != 1:
             metavar += "..."

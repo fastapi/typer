@@ -142,7 +142,7 @@ class FuncParamType(ParamType):
 
 
 class StringParamType(ParamType):
-    name = "text"
+    name = "str"
 
     def convert(
         self, value: Any, param: Union["Parameter", None], ctx: Union["Context", None]
@@ -193,7 +193,7 @@ class DateTime(ParamType):
         ]
 
     def get_metavar(self, param: "Parameter", ctx: "Context") -> str | None:
-        return f"[{'|'.join(self.formats)}]"
+        return f"<{'|'.join(self.formats)}>"
 
     def _try_to_convert_date(self, value: Any, format: str) -> datetime | None:
         try:
@@ -310,7 +310,7 @@ class _NumberRangeBase(_NumberParamTypeBase):
 
 
 class IntParamType(_NumberParamTypeBase):
-    name = "integer"
+    name = "int"
     _number_class = int
 
     def __repr__(self) -> str:
@@ -328,7 +328,7 @@ class IntRange(_NumberRangeBase, IntParamType):
     boundary instead of failing.
     """
 
-    name = "integer range"
+    name = "int range"
 
     def _clamp(  # type: ignore
         self, bound: int, dir: Literal[1, -1], open: bool

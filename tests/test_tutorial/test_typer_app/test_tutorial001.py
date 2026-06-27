@@ -13,7 +13,7 @@ runner = CliRunner()
 def test_no_arg():
     result = runner.invoke(app)
     assert result.exit_code != 0
-    assert "Missing argument 'NAME'." in result.output
+    assert "Missing argument 'name'." in result.output
 
 
 def test_arg():

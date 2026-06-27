@@ -370,13 +370,18 @@ def _print_options_panel(
         metavar_type = None
         metavar_str = param.make_metavar(ctx=ctx)
         if isinstance(param, TyperArgument):
-            # TODO: revise this legacy behaviour of keeping argument names lowercased for Rich formatting
-            if param.metavar is None and param.name:
-                metavar_name = metavar_str.replace(param.name.upper(), param.name)
+            if param.metavar is not None:
+                metavar_name = param.metavar
             else:
-                metavar_name = metavar_str
+                metavar_name = param.name or ""
+            if not param.required:
+                metavar_name = f"[{metavar_name}]"
         if isinstance(param, TyperOption):
             metavar_type = metavar_str
+        elif isinstance(param, TyperArgument):
+            metavar_type = param.type.get_metavar(param=param, ctx=ctx)
+            if metavar_type is None:
+                metavar_type = f"<{param.type.name}>"
 
         for opt_str in param.opts:
             if "--" in opt_str:
@@ -399,10 +404,6 @@ def _print_options_panel(
         # Fetch type
         if metavar_type and metavar_type != "BOOLEAN":
             types_data.append(metavar_type)
-        else:
-            type_str = param.type.name.upper()
-            if type_str != "BOOLEAN":
-                types_data.append(type_str)
 
         # Range - from
         # https://github.com/pallets/click/blob/c63c70dabd3f86ca68678b4f00951f78f52d0270/src/click/core.py#L2698-L2706  # noqa: E501

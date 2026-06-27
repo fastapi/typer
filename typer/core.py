@@ -303,7 +303,7 @@ class TyperArgument(_click.core.Parameter):
         if self.metavar is not None:
             return self.metavar
         assert self.name is not None, "self.name or self.metavar should be set"
-        return self.name.upper()
+        return self.name
 
     def _get_default_string(
         self,
@@ -385,12 +385,16 @@ class TyperArgument(_click.core.Parameter):
         # to include Argument name
         if self.metavar is not None:
             var = self.metavar
-            if not self.required and not var.startswith("["):
-                var = f"[{var}]"
-            return var
-        var = (self.name or "").upper()
+            if var.startswith("["):
+                return var
+            if not self.required:
+                return f"[{var}]"
+            return f"{{{var}}}"
+        var = self.name or ""
         if not self.required:
             var = f"[{var}]"
+        else:
+            var = f"{{{var}}}"
         type_var = self.type.get_metavar(self, ctx=ctx)
         if type_var:
             var += f":{type_var}"
@@ -410,7 +414,7 @@ class TyperArgument(_click.core.Parameter):
             raise TypeError("Argument is marked as exposed, but does not have a name.")
         if len(decls) == 1:
             name = arg = decls[0]
-            name = name.replace("-", "_").lower()
+            name = name.replace("-", "_")
         else:
             raise TypeError(
                 "Arguments take exactly one parameter declaration, got"
@@ -575,7 +579,7 @@ class TyperOption(_click.Parameter):
 
         if name is None and possible_names:
             possible_names.sort(key=lambda x: -len(x[0]))  # group long options first
-            name = possible_names[0][1].replace("-", "_").lower()
+            name = possible_names[0][1].replace("-", "_")
             if not name.isidentifier():
                 name = None
 
