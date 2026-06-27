@@ -387,10 +387,12 @@ class TyperArgument(_click.core.Parameter):
             var = self.metavar
             if not self.required and not var.startswith("["):
                 var = f"[{var}]"
-            return var
+            return f"{{{var}}}"
         var = self.name or ""
         if not self.required:
             var = f"[{var}]"
+        else:
+            var = f"{{{var}}}"
         type_var = self.type.get_metavar(self, ctx=ctx)
         if type_var:
             var += f":{type_var}"
