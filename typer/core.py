@@ -412,7 +412,7 @@ class TyperArgument(_click.core.Parameter):
             raise TypeError("Argument is marked as exposed, but does not have a name.")
         if len(decls) == 1:
             name = arg = decls[0]
-            name = name.replace("-", "_").lower()
+            name = name.replace("-", "_")
         else:
             raise TypeError(
                 "Arguments take exactly one parameter declaration, got"
@@ -577,7 +577,7 @@ class TyperOption(_click.Parameter):
 
         if name is None and possible_names:
             possible_names.sort(key=lambda x: -len(x[0]))  # group long options first
-            name = possible_names[0][1].replace("-", "_").lower()
+            name = possible_names[0][1].replace("-", "_")
             if not name.isidentifier():
                 name = None
 

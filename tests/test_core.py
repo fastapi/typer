@@ -25,7 +25,7 @@ def test_human_readable_name() -> None:
     command = typer.main.get_command(app)
     params = {param.name: param for param in command.params}
 
-    assert params["my_arg_1"].human_readable_name == "MY_ARG_1"
+    assert params["my_arg_1"].human_readable_name == "my_arg_1"
     assert params["my_arg_2"].human_readable_name == "META_ARG"
     assert params["my_opt"].human_readable_name == "my_opt"
 
