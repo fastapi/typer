@@ -385,8 +385,10 @@ class TyperArgument(_click.core.Parameter):
         # to include Argument name
         if self.metavar is not None:
             var = self.metavar
-            if not self.required and not var.startswith("["):
-                var = f"[{var}]"
+            if var.startswith("["):
+                return var
+            if not self.required:
+                return f"[{var}]"
             return f"{{{var}}}"
         var = self.name or ""
         if not self.required:
