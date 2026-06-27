@@ -303,7 +303,7 @@ class TyperArgument(_click.core.Parameter):
         if self.metavar is not None:
             return self.metavar
         assert self.name is not None, "self.name or self.metavar should be set"
-        return self.name.upper()
+        return self.name
 
     def _get_default_string(
         self,
@@ -388,7 +388,7 @@ class TyperArgument(_click.core.Parameter):
             if not self.required and not var.startswith("["):
                 var = f"[{var}]"
             return var
-        var = (self.name or "").upper()
+        var = self.name or ""
         if not self.required:
             var = f"[{var}]"
         type_var = self.type.get_metavar(self, ctx=ctx)
