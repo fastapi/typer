@@ -33,11 +33,11 @@ complete -o default -F %(complete_func)s %(prog_name)s
 COMPLETION_SCRIPT_ZSH = """
 #compdef %(prog_name)s
 
-%(complete_func)s() {
+%(zsh_func)s() {
   eval $(env _TYPER_COMPLETE_ARGS="${words[1,$CURRENT]}" %(autocomplete_var)s=complete_zsh %(prog_name)s)
 }
 
-compdef %(complete_func)s %(prog_name)s
+compdef %(zsh_func)s %(prog_name)s
 """
 
 COMPLETION_SCRIPT_FISH = 'complete --command %(prog_name)s --no-files --arguments "(env %(autocomplete_var)s=complete_fish _TYPER_COMPLETE_FISH_ACTION=get-args _TYPER_COMPLETE_ARGS=(commandline -cp) %(prog_name)s)" --condition "env %(autocomplete_var)s=complete_fish _TYPER_COMPLETE_FISH_ACTION=is-args _TYPER_COMPLETE_ARGS=(commandline -cp) %(prog_name)s"'
@@ -86,6 +86,11 @@ def get_completion_script(*, prog_name: str, complete_var: str, shell: str) -> s
         script
         % {
             "complete_func": f"_{cf_name}_completion",
+            # zsh autoloads a completion from a file in $fpath named after the
+            # command (e.g. `_prog`), and the function it defines must match that
+            # filename. Use `_{name}` (not `_{name}_completion`) so the packaged
+            # / autoloaded completion actually registers. See #1864.
+            "zsh_func": f"_{cf_name}",
             "prog_name": prog_name,
             "autocomplete_var": complete_var,
         }

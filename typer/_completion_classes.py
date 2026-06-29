@@ -102,6 +102,10 @@ class ZshComplete(ShellComplete):
     def source_vars(self) -> dict[str, Any]:
         return {
             "complete_func": self.func_name,
+            # zsh autoloads a completion from a file named after the command
+            # (e.g. `_prog`), and the function it defines must match that
+            # filename, so drop the `_completion` suffix here. See #1864.
+            "zsh_func": self.func_name.removesuffix("_completion"),
             "autocomplete_var": self.complete_var,
             "prog_name": self.prog_name,
         }

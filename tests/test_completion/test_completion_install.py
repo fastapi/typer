@@ -104,10 +104,10 @@ def test_completion_install_zsh():
     assert install_source_path.is_file()
     install_content = install_source_path.read_text()
     install_source_path.unlink()
-    assert (
-        "compdef _tutorial001_py310py_completion tutorial001_py310.py"
-        in install_content
-    )
+    assert "compdef _tutorial001_py310py tutorial001_py310.py" in install_content
+    # #1864: the function name must match the autoloaded filename (_<prog>), so
+    # it must not carry the old `_completion` suffix.
+    assert "_tutorial001_py310py_completion" not in install_content
 
 
 @requires_completion_permission
