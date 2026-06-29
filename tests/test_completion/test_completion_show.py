@@ -68,9 +68,10 @@ def test_completion_source_zsh():
             "_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION": "True",
         },
     )
-    assert (
-        "compdef _tutorial001_py310py_completion tutorial001_py310.py" in result.stdout
-    )
+    assert "compdef _tutorial001_py310py tutorial001_py310.py" in result.stdout
+    # #1864: the function name must match the autoloaded filename (_<prog>), so
+    # it must not carry the old `_completion` suffix.
+    assert "_tutorial001_py310py_completion" not in result.stdout
 
 
 def test_completion_source_fish():

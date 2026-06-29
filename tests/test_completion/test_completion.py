@@ -119,9 +119,10 @@ def test_completion_source_zsh():
             "_TUTORIAL001_PY310.PY_COMPLETE": "source_zsh",
         },
     )
-    assert (
-        "compdef _tutorial001_py310py_completion tutorial001_py310.py" in result.stdout
-    )
+    assert "compdef _tutorial001_py310py tutorial001_py310.py" in result.stdout
+    # #1864: the function name must match the autoloaded filename (_<prog>), so
+    # it must not carry the old `_completion` suffix.
+    assert "_tutorial001_py310py_completion" not in result.stdout
 
 
 def test_completion_source_fish():
