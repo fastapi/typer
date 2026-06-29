@@ -56,3 +56,27 @@ def test_oserror_no_epipe():
 
     result = runner.invoke(app)
     assert result.exit_code == 1
+
+
+def test_click_exception():
+    app = typer.Typer()
+
+    @app.command()
+    def main():
+        raise typer.ClickException("something broke")
+
+    result = runner.invoke(app)
+    assert result.exit_code == 1
+    assert "something broke" in result.output
+
+
+def test_usage_error():
+    app = typer.Typer()
+
+    @app.command()
+    def main():
+        raise typer.UsageError("bad usage")
+
+    result = runner.invoke(app)
+    assert result.exit_code == 2
+    assert "bad usage" in result.output
