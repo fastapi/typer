@@ -1446,6 +1446,8 @@ def generate_enum_convertor(enum: type[Enum]) -> Callable[[Any], Any]:
     val_map = {str(val.value): val for val in enum}
 
     def convertor(value: Any) -> Any:
+        if isinstance(value, enum):
+            return value
         if value is not None:
             val = str(value)
             if val in val_map:

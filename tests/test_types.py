@@ -163,3 +163,22 @@ def test_list_pair() -> None:
 def test_float_range_open_bounds_with_clamp_not_allowed():
     with pytest.raises(TypeError, match="Clamping is not supported for open bounds."):
         _click.types.FloatRange(min=0.0, min_open=True, clamp=True)
+
+
+def test_enum_with_callback() -> None:
+    app = typer.Typer()
+
+    class User(str, Enum):
+        rick = "Rick"
+        morty = "Morty"
+
+    def cb(value: User) -> User:
+        return value
+
+    @app.command()
+    def main(user: User = typer.Option(User.rick, callback=cb)) -> None:
+        print(f"Main received: {user.value}")
+
+    result = runner.invoke(app, [])
+    assert result.exit_code == 0
+    assert "Main received: Rick" in result.output
