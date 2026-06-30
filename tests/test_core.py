@@ -404,4 +404,3 @@ def test_count_option_help_no_metavar() -> None:
     result = runner.invoke(app, ["--verbose", "3"])
     assert result.exit_code == 2
     assert "unexpected extra argument" in result.output
-
