@@ -377,3 +377,31 @@ def test_nargs_default_map():
     result = runner.invoke(app, [], default_map={"names": "not-a-list"})
     assert result.exit_code == 2
     assert "Invalid value" in result.output
+
+
+def test_count_option_help_no_metavar() -> None:
+    """Regression test for https://github.com/fastapi/typer/issues/1869.
+
+    count=True options should not show INTEGER in help since they don't take a value.
+    """
+    app = typer.Typer()
+
+    @app.command()
+    def main(verbose: int = typer.Option(0, count=True)):
+        """Count verbosity."""
+        typer.echo(f"verbose={verbose}")
+
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    # The help must not show INTEGER for a count option
+    assert "INTEGER" not in result.output
+    assert "--verbose" in result.output
+
+    # Behaviour: --verbose increments
+    assert runner.invoke(app, ["--verbose"]).exit_code == 0
+
+    # Behaviour: --verbose 3 is rejected (count doesn't accept a value)
+    result = runner.invoke(app, ["--verbose", "3"])
+    assert result.exit_code == 2
+    assert "unexpected extra argument" in result.output
+
