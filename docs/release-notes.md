@@ -4,6 +4,7 @@
 
 ### Internal
 
+* ⬆ Bump https://github.com/crate-ci/typos from v1.46.0 to 1.47.2 in the pre-commit group across 1 directory. PR [#1834](https://github.com/fastapi/typer/pull/1834) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pydantic-settings from 2.14.1 to 2.14.2. PR [#1849](https://github.com/fastapi/typer/pull/1849) by [@dependabot[bot]](https://github.com/apps/dependabot).
 
 ## 0.26.8 (2026-06-25)
