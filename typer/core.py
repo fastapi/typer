@@ -302,7 +302,6 @@ class TyperArgument(_click.core.Parameter):
     def human_readable_name(self) -> str:
         if self.metavar is not None:
             return self.metavar
-        assert self.name is not None, "self.name or self.metavar should be set"
         return self.name.upper()
 
     def _get_default_string(
@@ -403,10 +402,10 @@ class TyperArgument(_click.core.Parameter):
 
     def _parse_decls(
         self, decls: Sequence[str], expose_value: bool
-    ) -> tuple[str | None, list[str], list[str]]:
+    ) -> tuple[str, list[str], list[str]]:
         if not decls:
             if not expose_value:
-                return None, [], []
+                return "", [], []
             raise TypeError("Argument is marked as exposed, but does not have a name.")
         if len(decls) == 1:
             name = arg = decls[0]
@@ -491,7 +490,7 @@ class TyperOption(_click.Parameter):
         )
 
         if prompt is True:
-            if self.name is None:
+            if not self.name:
                 raise TypeError("'name' is required with 'prompt=True'.")
 
             prompt_text: str | None = self.name.replace("_", " ").capitalize()
@@ -542,7 +541,7 @@ class TyperOption(_click.Parameter):
 
     def _parse_decls(
         self, decls: Sequence[str], expose_value: bool
-    ) -> tuple[str | None, list[str], list[str]]:
+    ) -> tuple[str, list[str], list[str]]:
         opts = []
         secondary_opts = []
         name = None
@@ -579,7 +578,7 @@ class TyperOption(_click.Parameter):
             if not name.isidentifier():
                 name = None
 
-        return name, opts, secondary_opts
+        return name or "", opts, secondary_opts
 
     def add_to_parser(self, parser: _OptionParser, ctx: _click.Context) -> None:
         if self.multiple:
@@ -685,11 +684,7 @@ class TyperOption(_click.Parameter):
         if rv is not None:
             return rv
 
-        if (
-            self.allow_from_autoenv
-            and ctx.auto_envvar_prefix is not None
-            and self.name is not None
-        ):
+        if self.allow_from_autoenv and ctx.auto_envvar_prefix is not None and self.name:
             envvar = f"{ctx.auto_envvar_prefix}_{self.name.upper()}"
             rv = os.environ.get(envvar)
 
@@ -782,7 +777,7 @@ class TyperOption(_click.Parameter):
                 if (
                     self.allow_from_autoenv
                     and ctx.auto_envvar_prefix is not None
-                    and self.name is not None
+                    and self.name
                 ):
                     envvar = f"{ctx.auto_envvar_prefix}_{self.name.upper()}"
 

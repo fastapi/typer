@@ -767,7 +767,7 @@ class Command(ABC):
                     or param.hidden
                     or (
                         not param.multiple
-                        and ctx.get_parameter_source(param.name)  # type: ignore
+                        and ctx.get_parameter_source(param.name)
                         is ParameterSource.COMMANDLINE
                     )
                 ):
@@ -834,7 +834,7 @@ class Parameter(ABC):
         ]
         | None = None,
     ) -> None:
-        self.name: str | None
+        self.name: str
         self.opts: list[str]
         self.secondary_opts: list[str]
         self.name, self.opts, self.secondary_opts = self._parse_decls(
@@ -867,7 +867,7 @@ class Parameter(ABC):
     @abstractmethod
     def _parse_decls(
         self, decls: Sequence[str], expose_value: bool
-    ) -> tuple[str | None, list[str], list[str]]:
+    ) -> tuple[str, list[str], list[str]]:
         pass  # pragma: no cover
 
     @property
@@ -875,7 +875,6 @@ class Parameter(ABC):
         """Returns the human readable name of this parameter.  This is the
         same as the name for options, but the metavar for arguments.
         """
-        assert self.name is not None, "self.name should be set"
         return self.name
 
     def make_metavar(self, ctx: Context) -> str:
@@ -904,7 +903,7 @@ class Parameter(ABC):
         self, ctx: Context, call: bool = True
     ) -> Any | Callable[[], Any] | None:
         """Get the default for the parameter"""
-        value = ctx.lookup_default(self.name, call=False)  # type: ignore
+        value = ctx.lookup_default(self.name, call=False)
 
         if value is None:
             value = self.default
@@ -921,7 +920,7 @@ class Parameter(ABC):
     def consume_value(
         self, ctx: Context, opts: Mapping[str, Any]
     ) -> tuple[Any, ParameterSource]:
-        value = opts.get(self.name)  # type: ignore
+        value = opts.get(self.name)
         source = ParameterSource.COMMANDLINE
 
         if value is None:
@@ -929,7 +928,7 @@ class Parameter(ABC):
             source = ParameterSource.ENVIRONMENT
 
         if value is None:
-            value = ctx.lookup_default(self.name)  # type: ignore
+            value = ctx.lookup_default(self.name)
             source = ParameterSource.DEFAULT_MAP
 
         if value is None:
@@ -1064,7 +1063,7 @@ class Parameter(ABC):
         with augment_usage_errors(ctx, param=self):
             value, source = self.consume_value(ctx, opts)
 
-            ctx.set_parameter_source(self.name, source)  # type: ignore
+            ctx.set_parameter_source(self.name, source)
 
             # Process the value through the parameter's type.
             try:
@@ -1075,7 +1074,7 @@ class Parameter(ABC):
                 value = None
 
         if self.expose_value:
-            ctx.params[self.name] = value  # type: ignore
+            ctx.params[self.name] = value
 
         return value, args
 

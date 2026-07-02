@@ -55,9 +55,9 @@ def test_parameter_nargs_gt_1() -> None:
 
 
 def test_parameter_constructor() -> None:
-    # no param_decl and expose_value is False: sets name to None
+    # no param_decl and expose_value is False: sets name to ""
     arg = TyperArgument(param_decls=[], expose_value=False)
-    assert arg.name is None
+    assert arg.name == ""
     assert arg.opts == []
     assert arg.secondary_opts == []
 
@@ -77,9 +77,9 @@ def test_parameter_constructor() -> None:
     with pytest.raises(ValueError, match="cannot use the same flag for true/false"):
         TyperOption(param_decls=["flag", "--flag/--flag"], required=False, is_flag=True)
 
-    # inferred name is not a valid identifier: sets name to None
+    # inferred name is not a valid identifier: sets name to ""
     unnamed_option = TyperOption(param_decls=["--123"], required=False)
-    assert unnamed_option.name is None
+    assert unnamed_option.name == ""
 
     # no param_decl and prompt=True: raises
     with pytest.raises(TypeError, match="'name' is required with 'prompt=True'."):

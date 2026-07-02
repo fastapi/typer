@@ -259,7 +259,7 @@ def _get_parameter_help(
         if (
             getattr(param, "allow_from_autoenv", None)
             and getattr(ctx, "auto_envvar_prefix", None) is not None
-            and param.name is not None
+            and param.name
         ):
             envvar = f"{ctx.auto_envvar_prefix}_{param.name.upper()}"
     if envvar is not None:
