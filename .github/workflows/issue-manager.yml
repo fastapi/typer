@@ -29,6 +29,6 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
-      - uses: tiangolo/issue-manager@48bacd85fb842cc27efee25e834edb00aad8f263 # 0.8.0
+      - uses: tiangolo/issue-manager@dc846170c36eb62fb434b3d943b36399fe240fb5 # 0.8.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
