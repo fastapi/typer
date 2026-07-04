@@ -4,6 +4,7 @@
 
 ### Internal
 
+* 👷 Fix latest-changes checkout target. PR [#1883](https://github.com/fastapi/typer/pull/1883) by [@tiangolo](https://github.com/tiangolo).
 * ⬆️ Update issue-manager to 0.8.1. PR [#1880](https://github.com/fastapi/typer/pull/1880) by [@tiangolo](https://github.com/tiangolo).
 * ⬆ Bump the github-actions group across 1 directory with 8 updates. PR [#1874](https://github.com/fastapi/typer/pull/1874) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump the python-packages group across 1 directory with 5 updates. PR [#1876](https://github.com/fastapi/typer/pull/1876) by [@dependabot[bot]](https://github.com/apps/dependabot).
