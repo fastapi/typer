@@ -124,9 +124,12 @@ def test_doc_output_non_ascii(tmp_path: Path):
         # on any platform (not only Windows).
         env={
             **os.environ,
-            "PYTHONUTF8": "0",
+            # LC_ALL forces a non-UTF-8 locale (the write path would otherwise
+            # use UTF-8 on most CI); PYTHONUTF8=0 keeps it non-UTF-8 on 3.15+
+            # where UTF-8 mode is on by default; PYTHONIOENCODING lets us capture
+            # the subprocess output cleanly when it fails.
             "LC_ALL": "C",
-            "LANG": "C",
+            "PYTHONUTF8": "0",
             "PYTHONIOENCODING": "utf-8",
         },
     )
