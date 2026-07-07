@@ -743,6 +743,8 @@ class TyperOption(_click.Parameter):
         return _extract_default_help_str(self, ctx=ctx)
 
     def make_metavar(self, ctx: _click.Context) -> str:
+        if getattr(self, "count", False):
+            return ""
         return super().make_metavar(ctx=ctx)
 
     def get_help_record(self, ctx: _click.Context) -> tuple[str, str] | None:

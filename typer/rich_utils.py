@@ -397,7 +397,10 @@ def _print_options_panel(
         types_data = Text(style=STYLE_TYPES, overflow="fold")
 
         # Fetch type
-        if metavar_type and metavar_type != "BOOLEAN":
+        is_count = getattr(param, "count", False)
+        if is_count:
+            pass
+        elif metavar_type and metavar_type != "BOOLEAN":
             types_data.append(metavar_type)
         else:
             type_str = param.type.name.upper()
