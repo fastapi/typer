@@ -27,7 +27,7 @@ def get_mod(request: pytest.FixtureRequest) -> ModuleType:
 def test_type_repr(mod: ModuleType):
     command = typer.main.get_command(mod.app)
 
-    id_param = next(param for param in command.params if param.name == "id")
+    id_param = next(param for param in command.params if param.name == "ID")
     assert repr(id_param.type) == "<IntRange 0<=x<=1000>"
 
     age_param = next(param for param in command.params if param.name == "age")
