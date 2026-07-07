@@ -428,7 +428,7 @@ class TyperArgument(_click.core.Parameter):
         return [self.make_metavar(ctx, usage=True)]
 
     def get_error_hint(self, ctx: _click.Context) -> str:
-        return f"'{self.make_metavar(ctx)}'"
+        return f"'{self.human_readable_name}'"
 
     def add_to_parser(self, parser: _OptionParser, ctx: _click.Context) -> None:
         parser.add_argument(dest=self.name, nargs=self.nargs, obj=self)
