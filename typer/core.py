@@ -380,7 +380,7 @@ class TyperArgument(_click.core.Parameter):
             help = f"{help}  {extra_str}" if help else f"{extra_str}"
         return name, help
 
-    def make_metavar(self, ctx: _click.Context) -> str:
+    def make_metavar(self, ctx: _click.Context, *, usage: bool = False) -> str:
         # Modified version of _click.core.Argument.make_metavar()
         # to include Argument name
         if self.metavar is not None:
@@ -389,11 +389,13 @@ class TyperArgument(_click.core.Parameter):
                 return var
             if not self.required:
                 return f"[{var}]"
-            return f"{{{var}}}"
+            if usage:
+                return f"{{{var}}}"
+            return var
         var = self.name or ""
         if not self.required:
             var = f"[{var}]"
-        else:
+        elif usage:
             var = f"{{{var}}}"
         type_var = self.type.get_metavar(self, ctx=ctx)
         if type_var:
@@ -423,7 +425,7 @@ class TyperArgument(_click.core.Parameter):
         return name, [arg], []
 
     def get_usage_pieces(self, ctx: _click.Context) -> list[str]:
-        return [self.make_metavar(ctx)]
+        return [self.make_metavar(ctx, usage=True)]
 
     def get_error_hint(self, ctx: _click.Context) -> str:
         return f"'{self.make_metavar(ctx)}'"
