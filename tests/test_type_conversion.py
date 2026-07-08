@@ -1,8 +1,8 @@
-from datetime import datetime
 import os
+from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Annotated, Literal
+from typing import Annotated, Any, Literal
 
 import pytest
 import typer
@@ -417,7 +417,9 @@ def test_argv_encoding(
         pytest.param(Annotated[str, typer.Option(..., resolve_path=True)], "<str>"),
         pytest.param(Annotated[Path, typer.Option(...)], "<path>"),
         pytest.param(Annotated[Path, typer.Option(..., dir_okay=False)], "<file>"),
-        pytest.param(Annotated[Path, typer.Option(..., file_okay=False)], "<directory>"),
+        pytest.param(
+            Annotated[Path, typer.Option(..., file_okay=False)], "<directory>"
+        ),
         pytest.param(Annotated[SomeEnum, typer.Option(...)], "<one|two|three>"),
         pytest.param(Annotated[SomeEnum, typer.Argument()], "<one|two|three>"),
         pytest.param(Annotated[Literal["x", "y"], typer.Option(...)], "<x|y>"),
