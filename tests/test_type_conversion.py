@@ -448,3 +448,16 @@ def test_param_type_help_metavar(parameter: Any, expected_metavar: str) -> None:
     result = runner.invoke(app, ["without-default", "--help"])
     assert result.exit_code == 0
     assert expected_metavar in result.output
+
+
+def test_metavar_preformatted_square_brackets() -> None:
+    app = typer.Typer()
+
+    @app.command()
+    def main(value: Annotated[str, typer.Argument(metavar="[VALUE]")]):
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "[VALUE]" in result.output
+    assert "[[VALUE]]" not in result.output
