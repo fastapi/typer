@@ -344,7 +344,7 @@ class TyperArgument(_click.core.Parameter):
                 extra.append(f"env var: {var_str}")
 
         # Typer override:
-        # Extracted to _extract_default_help_str() to allow re-using it in rich_utils
+        # Extracted to _extract_default_help_str() to allow reusing it in rich_utils
         default_value = self._extract_default_help_str(ctx=ctx)
         # Typer override end
 
@@ -354,7 +354,7 @@ class TyperArgument(_click.core.Parameter):
             default_value is not None and (self.show_default or ctx.show_default)
         ):
             # Typer override:
-            # Extracted to _get_default_string() to allow re-using it in rich_utils
+            # Extracted to _get_default_string() to allow reusing it in rich_utils
             default_string = self._get_default_string(
                 ctx=ctx,
                 show_default_is_str=show_default_is_str,
@@ -795,7 +795,7 @@ class TyperOption(_click.Parameter):
                 extra.append(_("env var: {var}").format(var=var_str))
 
         # Typer override:
-        # Extracted to _extract_default() to allow re-using it in rich_utils
+        # Extracted to _extract_default() to allow reusing it in rich_utils
         default_value = self._extract_default_help_str(ctx=ctx)
         # Typer override end
 
@@ -805,7 +805,7 @@ class TyperOption(_click.Parameter):
             default_value is not None and (self.show_default or ctx.show_default)
         ):
             # Typer override:
-            # Extracted to _get_default_string() to allow re-using it in rich_utils
+            # Extracted to _get_default_string() to allow reusing it in rich_utils
             default_string = self._get_default_string(
                 ctx=ctx,
                 show_default_is_str=show_default_is_str,
