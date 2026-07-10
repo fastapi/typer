@@ -224,6 +224,18 @@ def test_help_table_alignment_with_styled_text():
     )
 
 
+def test_rich_help_no_boolean_type() -> None:
+    app = typer.Typer(rich_markup_mode="rich")
+
+    @app.command()
+    def main(name: str) -> None:
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "<boolean>" not in result.output
+
+
 def test_rich_help_metavar():
     app = typer.Typer(rich_markup_mode="rich")
 

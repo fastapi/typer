@@ -402,7 +402,7 @@ def _print_options_panel(
         types_data = Text(style=STYLE_TYPES, overflow="fold")
 
         # Fetch type
-        if metavar_type and metavar_type != "BOOLEAN":
+        if metavar_type and "bool" not in metavar_type.lower():
             types_data.append(metavar_type)
 
         # Range - from
