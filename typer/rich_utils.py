@@ -705,12 +705,13 @@ def rich_format_error(self: _click.ClickException) -> None:
     console = _get_rich_console(stderr=True)
     ctx: _click.Context | None = getattr(self, "ctx", None)
     if ctx is not None:
-        console.print(ctx.get_usage())
+        console.print(highlighter(ctx.get_usage()), style=STYLE_USAGE_COMMAND)
 
     if ctx is not None and ctx.command.get_help_option(ctx) is not None:
         console.print(
             RICH_HELP.format(
-                command_path=ctx.command_path, help_option=ctx.help_option_names[0]
+                command_path=escape(ctx.command_path),
+                help_option=ctx.help_option_names[0],
             ),
             style=STYLE_ERRORS_SUGGESTION,
         )
