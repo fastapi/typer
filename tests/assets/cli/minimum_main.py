@@ -5,4 +5,4 @@ app = typer.Typer()
 
 @app.callback()
 def main(name: str) -> None:
-    pass
+    pass  # pragma: no cover
