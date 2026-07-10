@@ -1,8 +1,15 @@
-function escapeHtml(text) {
-    return text
+function escapePlainCliLine(line) {
+    return line
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;");
+}
+
+function prepareTermynalLines(lines, isRichHtml) {
+    if (isRichHtml) {
+        return lines.join("<br>");
+    }
+    return lines.map(escapePlainCliLine).join("<br>");
 }
 
 function setupTermynal() {
@@ -24,6 +31,11 @@ function setupTermynal() {
             .forEach(node => {
                 const text = node.textContent;
                 const lines = text.split("\n");
+                // If it's a type in brackets like <str>, it doesn't have a space
+                // and won't have a closing tag, while Rich HTML tags do.
+                const hasOpeningTagWithSpace = /<[a-zA-Z0-9]+\s/.test(text);
+                const hasClosingTag = /<\/[a-zA-Z0-9]+>/.test(text);
+                const isRichHtml = hasOpeningTagWithSpace || hasClosingTag;
                 const useLines = [];
                 let buffer = [];
                 function saveBuffer() {
@@ -43,7 +55,7 @@ function setupTermynal() {
                             // so put an additional one
                             buffer.push("");
                         }
-                        const bufferValue = buffer.map(escapeHtml).join("<br>");
+                        const bufferValue = prepareTermynalLines(buffer, isRichHtml);
                         dataValue["value"] = bufferValue;
                         useLines.push(dataValue);
                         buffer = [];
@@ -60,13 +72,13 @@ function setupTermynal() {
                         const value = line.replace(promptLiteralStart, "").trimEnd();
                         useLines.push({
                             type: "input",
-                            value: escapeHtml(value)
+                            value: value
                         });
                     } else if (line.startsWith("// ")) {
                         saveBuffer();
                         const value = "💬 " + line.replace("// ", "").trimEnd();
                         useLines.push({
-                            value: escapeHtml(value),
+                            value: value,
                             class: "termynal-comment",
                             delay: 0
                         });
@@ -80,8 +92,8 @@ function setupTermynal() {
                         let value = line.slice(promptStart + promptLiteralStart.length);
                         useLines.push({
                             type: "input",
-                            value: escapeHtml(value),
-                            prompt: escapeHtml(prompt)
+                            value: value,
+                            prompt: prompt
                         });
                     } else {
                         buffer.push(line);
