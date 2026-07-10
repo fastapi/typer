@@ -244,8 +244,8 @@ $ python main.py --help
 │                               and exit.           │
 ╰───────────────────────────────────────────────────╯
 ╭─ Commands ────────────────────────────────────────╮
-│ goodbye                                           │
 │ hello                                             │
+│ goodbye                                           │
 ╰───────────────────────────────────────────────────╯
 
 // When you create a package you get ✨ auto-completion ✨ for free, installed with --install-completion
