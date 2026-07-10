@@ -114,8 +114,8 @@ $ python main.py --help
 <b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] {name} {lastname}                            </b>
 <b>                                                                   </b>
 <font color="#A5A5A1">╭─ Arguments ─────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    name          <font color="#F4BF75"><b><str></b></font>  <font color="#A6194C">[required]</font>                            │
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    lastname      <font color="#F4BF75"><b><str></b></font>  <font color="#A6194C">[required]</font>                            │
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    name          <font color="#F4BF75"><b>&lt;str&gt;</b></font>  <font color="#A6194C">[required]</font>                            │
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    lastname      <font color="#F4BF75"><b>&lt;str&gt;</b></font>  <font color="#A6194C">[required]</font>                            │
 <font color="#A5A5A1">╰─────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ───────────────────────────────────────────────────────╮</font>
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                                   Show this message and  │
@@ -238,8 +238,8 @@ $ python main.py --help
 <b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] {name} {lastname}                            </b>
 <b>                                                                   </b>
 <font color="#A5A5A1">╭─ Arguments ─────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    name          <font color="#F4BF75"><b><str></b></font>  <font color="#A6194C">[required]</font>                            │
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    lastname      <font color="#F4BF75"><b><str></b></font>  <font color="#A6194C">[required]</font>                            │
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    name          <font color="#F4BF75"><b>&lt;str&gt;</b></font>  <font color="#A6194C">[required]</font>                            │
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    lastname      <font color="#F4BF75"><b>&lt;str&gt;</b></font>  <font color="#A6194C">[required]</font>                            │
 <font color="#A5A5A1">╰─────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ───────────────────────────────────────────────────────╮</font>
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--formal</b></font>                <font color="#AE81FF"><b>--no-formal</b></font>      [default: no-formal]   │
@@ -298,10 +298,10 @@ $ python main.py --help
 <b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] {name}                                       </b>
 <b>                                                                     </b>
 <font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    name      <font color="#F4BF75"><b><str></b></font>  <font color="#A6194C">[required]</font>                                  │
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    name      <font color="#F4BF75"><b>&lt;str&gt;</b></font>  <font color="#A6194C">[required]</font>                                  │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--lastname</b></font>                             <font color="#F4BF75"><b><str></b></font>                      │
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--lastname</b></font>                             <font color="#F4BF75"><b>&lt;str&gt;</b></font>                      │
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--formal</b></font>                <font color="#AE81FF"><b>--no-formal</b></font>    <font color="#F4BF75"><b>    </b></font>  [default: no-formal] │
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                                 <font color="#F4BF75"><b>    </b></font>  Show this message    │
 <font color="#A5A5A1">│                                              and exit.            │</font>
@@ -372,10 +372,10 @@ $ python main.py --help
  If <font color="#6B9F98"><b>--formal</b></font><font color="#A5A5A1"> is used, say hi very formally.                          </font>
 
 <font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    name      <font color="#F4BF75"><b><str></b></font>  <font color="#A6194C">[required]</font>                                  │
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    name      <font color="#F4BF75"><b>&lt;str&gt;</b></font>  <font color="#A6194C">[required]</font>                                  │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--lastname</b></font>                             <font color="#F4BF75"><b><str></b></font>                      │
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--lastname</b></font>                             <font color="#F4BF75"><b>&lt;str&gt;</b></font>                      │
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--formal</b></font>                <font color="#AE81FF"><b>--no-formal</b></font>    <font color="#F4BF75"><b>    </b></font>  [default: no-formal] │
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                                 <font color="#F4BF75"><b>    </b></font>  Show this message    │
 <font color="#A5A5A1">│                                              and exit.            │</font>

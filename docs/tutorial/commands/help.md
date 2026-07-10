@@ -167,7 +167,7 @@ $ python main.py delete --help
  This is deprecated and will stop being supported soon.
 
 <font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b><str></b></font>  <font color="#A6194C">[required]</font>                              │
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>&lt;str&gt;</b></font>  <font color="#A6194C">[required]</font>                              │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>          Show this message and exit.                       │
@@ -238,7 +238,7 @@ $ python main.py create --help
  This requires a <font color="#A5A5A1"><u style="text-decoration-style:single">username</u></font><font color="#A5A5A1">.                                           </font>
 
 <font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b><str></b></font>  The username to be <font color="#A6E22E">created</font>              │
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>&lt;str&gt;</b></font>  The username to be <font color="#A6E22E">created</font>              │
 <font color="#A5A5A1">│                          </font><font color="#A6194C">[required]                </font>               │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
@@ -260,7 +260,7 @@ $ python main.py delete --help
  <font color="#F92672"><b>Delete</b></font> a user with <i>'username'</i>.
 
 <font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b><str></b></font>  The username to be <font color="#F92672">deleted</font>              │
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>&lt;str&gt;</b></font>  The username to be <font color="#F92672">deleted</font>              │
 <font color="#A5A5A1">│                          </font><font color="#A6194C">[required]                </font>               │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
@@ -300,7 +300,7 @@ $ python main.py create --help
  Learn more at the <font color="#44919F">Typer docs website</font>
 
 <font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b><str></b></font>  The username to be <b>created</b>              │
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>&lt;str&gt;</b></font>  The username to be <b>created</b>              │
 <font color="#A5A5A1">│                          </font><font color="#A6194C">[required]                              </font> │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
@@ -322,7 +322,7 @@ $ python main.py delete --help
  <b>Delete</b> a user with <i>'username'</i>.
 
 <font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b><str></b></font>  The username to be <b>deleted</b>              │
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>&lt;str&gt;</b></font>  The username to be <b>deleted</b>              │
 <font color="#A5A5A1">│                          </font><font color="#A6194C">[required]                              </font> │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
@@ -412,7 +412,7 @@ $ python main.py create --help
  <font color="#A6E22E">Create</font> a new user. ✨
 
 <font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b><str></b></font>  The username to create                  │
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>&lt;str&gt;</b></font>  The username to create                  │
 <font color="#A5A5A1">│                          </font><font color="#A6194C">[required]            </font>                   │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Secondary Arguments ─────────────────────────────────────────────╮</font>
@@ -425,7 +425,7 @@ $ python main.py create --help
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Additional Data ─────────────────────────────────────────────────╮</font>
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--age</b></font>                   <font color="#F4BF75"><b>INTEGER</b></font>  The age of the new user          │
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--favorite-color</b></font>        <font color="#F4BF75"><b><str>   </b></font>  The favorite color of the new   │
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--favorite-color</b></font>        <font color="#F4BF75"><b>&lt;str&gt;   </b></font>  The favorite color of the new   │
 <font color="#A5A5A1">│                                  user                             │</font>
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 ```
@@ -481,7 +481,7 @@ $ python main.py --help
  <font color="#A6E22E">Create</font> a new user. ✨
 
 <font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b><str></b></font>                  <font color="#A6194C">[required]</font>              │
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>&lt;str&gt;</b></font>                  <font color="#A6194C">[required]</font>              │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--install-completion</b></font>          Install completion for the current  │
