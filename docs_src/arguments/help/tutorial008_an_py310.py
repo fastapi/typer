@@ -8,7 +8,7 @@ app = typer.Typer()
 @app.command()
 def main(name: Annotated[str, typer.Argument(hidden=True)] = "World"):
     """
-    Say hi to NAME very gently, like Dirk.
+    Say hi to 'name' very gently, like Dirk.
     """
     print(f"Hello {name}")
 

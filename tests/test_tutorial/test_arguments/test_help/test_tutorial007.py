@@ -25,7 +25,7 @@ def get_mod(request: pytest.FixtureRequest) -> ModuleType:
 def test_help(mod: ModuleType):
     result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
-    assert "Say hi to NAME very gently, like Dirk." in result.output
+    assert "Say hi to 'name' very gently, like Dirk." in result.output
     assert "Arguments" in result.output
     assert "Secondary Arguments" in result.output
 
