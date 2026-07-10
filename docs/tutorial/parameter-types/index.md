@@ -10,7 +10,7 @@ For example:
 
 {* docs_src/parameter_types/index/tutorial001_py310.py hl[7] *}
 
-In this example, the value received for the *CLI argument* `NAME` will be treated as `str`.
+In this example, the value received for the *CLI argument* `name` will be treated as `str`.
 
 The value for the *CLI option* `--age` will be converted to an `int` and `--height-meters` will be converted to a `float`.
 
@@ -27,7 +27,7 @@ $ python main.py --help
 Usage: main.py [OPTIONS] {name}
 
 Arguments:
-  NAME  [required]
+  name  [required]
 
 Options:
   --age INTEGER           [default: 20]
@@ -39,7 +39,7 @@ Options:
 $ python main.py Camila --age 15 --height-meters 1.70 --female
 
 // All the data has the correct Python type
-NAME is Camila, of type: class 'str'
+name is Camila, of type: class 'str'
 --age is 15, of type: class 'int'
 --height-meters is 1.7, of type: class 'float'
 --female is True, of type: class 'bool'

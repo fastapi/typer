@@ -67,7 +67,7 @@ Just created a user
 // Notice that --verbose belongs to the callback, it has to go before create or delete ⛔️
 $ python main.py create --verbose Camila
 
-Usage: main.py create [OPTIONS] USERNAME
+Usage: main.py create [OPTIONS] username
 Try "main.py create --help" for help.
 
 Error: No such option: --verbose
@@ -142,7 +142,7 @@ Usage: main.py [OPTIONS] COMMAND [ARGS]...
 
   Use it with the create command.
 
-  A new user with the given NAME will be created.
+  A new user with the given 'name' will be created.
 
 Options:
   --install-completion  Install completion for the current shell.

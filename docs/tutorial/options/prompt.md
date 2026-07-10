@@ -9,7 +9,7 @@ And then your program will ask the user for it in the terminal:
 <div class="termy">
 
 ```console
-// Call it with the NAME CLI argument
+// Call it with the 'name' CLI argument
 $ python main.py Camila
 
 // It asks for the missing CLI option --lastname
@@ -31,7 +31,7 @@ And then your program will ask for it using with your custom prompt:
 <div class="termy">
 
 ```console
-// Call it with the NAME CLI argument
+// Call it with the 'name' CLI argument
 $ python main.py Camila
 
 // It uses the custom prompt

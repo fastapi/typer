@@ -132,10 +132,10 @@ Check the help:
 // First check the help
 $ python main.py --help
 
-Usage: main.py [OPTIONS] [NAME]
+Usage: main.py [OPTIONS] [name]
 
 Arguments:
-  [NAME]
+  [name]
 
 Options:
   --help                Show this message and exit.
@@ -145,9 +145,9 @@ Options:
 
 /// tip
 
-Notice that `NAME` is still a *CLI argument*, it's shown up there in the "`Usage: main.py` ...".
+Notice that `name` is still a *CLI argument*, it's shown up there in the "`Usage: main.py` ...".
 
-Also notice that now `[NAME]` has brackets ("`[`" and "`]`") around (before it was just `NAME`) to denote that it's **optional**, not **required**.
+Also notice that now `[name]` has rectangular brackets ("`[`" and "`]`") around it to denote that it's **optional**, not **required**.
 
 ///
 

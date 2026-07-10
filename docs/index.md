@@ -108,7 +108,7 @@ Run the provided Typer app.
 │ --help          Show this message and exit.       │
 ╰───────────────────────────────────────────────────╯
 
-// Now pass the NAME argument
+// Now pass the 'name' argument
 $ typer main.py run Camila
 
 Hello Camila
@@ -166,7 +166,7 @@ Usage: main.py [OPTIONS] {name}
 │ --help          Show this message and exit.       │
 ╰───────────────────────────────────────────────────╯
 
-// Now pass the NAME argument
+// Now pass the 'name' argument
 $ python main.py Camila
 
 Hello Camila

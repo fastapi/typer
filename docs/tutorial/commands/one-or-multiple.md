@@ -17,7 +17,7 @@ Try "main.py --help" for help.
 
 Error: Missing argument 'name'.
 
-// With the NAME CLI argument
+// With the 'name' CLI argument
 $ python main.py Camila
 
 Hello Camila

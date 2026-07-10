@@ -42,7 +42,7 @@ And test it:
 <div class="termy">
 
 ```console
-// Pass the NAME CLI argument
+// Pass the 'name' CLI argument
 $ python main.py Camila
 
 // We didn't pass the now required --lastname CLI option

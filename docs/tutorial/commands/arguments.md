@@ -10,7 +10,7 @@ The same way as with a CLI application with a single command, subcommands (or ju
 // Check the help for create
 $ python main.py create --help
 
-Usage: main.py create [OPTIONS] USERNAME
+Usage: main.py create [OPTIONS] username
 
 Options:
   --help  Show this message and exit.

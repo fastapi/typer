@@ -20,10 +20,10 @@ In this case, the *CLI argument* `name` will have a default value of `"World"`, 
 // Check the help
 $ python main.py --help
 
-Usage: main.py [OPTIONS] [NAME]
+Usage: main.py [OPTIONS] [name]
 
 Arguments:
-  [NAME]  [env var: AWESOME_NAME;default: World]
+  [name]  [env var: AWESOME_NAME;default: World]
 
 Options:
   --help                Show this message and exit.
@@ -65,10 +65,10 @@ Check it:
 // Check the help
 $ python main.py --help
 
-Usage: main.py [OPTIONS] [NAME]
+Usage: main.py [OPTIONS] [name]
 
 Arguments:
-  [NAME]  [env var: AWESOME_NAME, GOD_NAME;default: World]
+  [name]  [env var: AWESOME_NAME, GOD_NAME;default: World]
 
 Options:
   --help                Show this message and exit.
@@ -101,10 +101,10 @@ Check it:
 $ python main.py --help
 
 // It won't show the env var
-Usage: main.py [OPTIONS] [NAME]
+Usage: main.py [OPTIONS] [name]
 
 Arguments:
-  [NAME]  [default: World]
+  [name]  [default: World]
 
 Options:
   --help                Show this message and exit.
