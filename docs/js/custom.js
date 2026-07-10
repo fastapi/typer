@@ -1,3 +1,10 @@
+function escapeHtml(text) {
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
 function setupTermynal() {
     document.querySelectorAll(".use-termynal").forEach(node => {
         node.style.display = "block";
@@ -36,7 +43,7 @@ function setupTermynal() {
                             // so put an additional one
                             buffer.push("");
                         }
-                        const bufferValue = buffer.join("<br>");
+                        const bufferValue = buffer.map(escapeHtml).join("<br>");
                         dataValue["value"] = bufferValue;
                         useLines.push(dataValue);
                         buffer = [];
@@ -53,13 +60,13 @@ function setupTermynal() {
                         const value = line.replace(promptLiteralStart, "").trimEnd();
                         useLines.push({
                             type: "input",
-                            value: value
+                            value: escapeHtml(value)
                         });
                     } else if (line.startsWith("// ")) {
                         saveBuffer();
                         const value = "💬 " + line.replace("// ", "").trimEnd();
                         useLines.push({
-                            value: value,
+                            value: escapeHtml(value),
                             class: "termynal-comment",
                             delay: 0
                         });
@@ -73,8 +80,8 @@ function setupTermynal() {
                         let value = line.slice(promptStart + promptLiteralStart.length);
                         useLines.push({
                             type: "input",
-                            value: value,
-                            prompt: prompt
+                            value: escapeHtml(value),
+                            prompt: escapeHtml(prompt)
                         });
                     } else {
                         buffer.push(line);

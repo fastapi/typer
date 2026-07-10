@@ -94,7 +94,7 @@ Usage: typer [PATH_OR_MODULE] run [OPTIONS] {name}
 Run the provided Typer app.
 
 ╭─ Arguments ───────────────────────────────────────╮
-│ *    name      <str>  [required]                  |
+│ *    name      <str>  [required]                  │
 ╰───────────────────────────────────────────────────╯
 ╭─ Options ─────────────────────────────────────────╮
 │ --help          Show this message and exit.       │
@@ -152,7 +152,7 @@ $ python main.py --help
 Usage: main.py [OPTIONS] {name}
 
 ╭─ Arguments ───────────────────────────────────────╮
-│ *    name      <str>  [required]                  |
+│ *    name      <str>  [required]                  │
 ╰───────────────────────────────────────────────────╯
 ╭─ Options ─────────────────────────────────────────╮
 │ --help          Show this message and exit.       │
