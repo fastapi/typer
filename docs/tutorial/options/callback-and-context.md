@@ -66,7 +66,7 @@ Usage: typer run [OPTIONS]
   Run the provided Typer app.
 
 Options:
-  --name TEXT  [required]
+  --name <str> [required]
   --help       Show this message and exit.
 
 // Then try completion with your program

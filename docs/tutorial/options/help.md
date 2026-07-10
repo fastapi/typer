@@ -31,7 +31,7 @@ Test it:
 ```console
 $ python main.py --help
 
-Usage: main.py [OPTIONS] NAME
+Usage: main.py [OPTIONS] {name}
 
   Say hi to NAME, optionally with a --lastname.
 
@@ -41,7 +41,7 @@ Arguments:
   NAME  [required]
 
 Options:
-  --lastname TEXT         Last name of person to greet. [default: ]
+  --lastname <str>        Last name of person to greet. [default: ]
   --formal / --no-formal  Say hi formally.  [default: False]
   --help                  Show this message and exit.
 
@@ -73,7 +73,7 @@ $ python main.py --help
  If <font color="#6B9F98"><b>--formal</b></font><font color="#A5A5A1"> is used, say hi very formally.                          </font>
 
 <font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    name      <font color="#F4BF75"><b>TEXT</b></font>  [default: None] <font color="#A6194C">[required]</font>                   │
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    name      <font color="#F4BF75"><b>TEXT</b></font>  <font color="#A6194C">[required]</font>                                   │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--lastname</b></font>                  <font color="#F4BF75"><b>TEXT</b></font>  Last name of person to greet.   │
@@ -119,7 +119,7 @@ $ python main.py --help
 Usage: main.py [OPTIONS]
 
 Options:
-  --fullname TEXT
+  --fullname <str>
   --help                Show this message and exit.
 
 // Notice there's no [default: Wade Wilson] 🔥
@@ -148,7 +148,7 @@ $ python main.py --help
 Usage: main.py [OPTIONS]
 
 Options:
-  --fullname TEXT       [default: (Deadpoolio the amazing's name)]
+  --fullname <str>      [default: (Deadpoolio the amazing's name)]
   --help                Show this message and exit.
 
 // Notice how it shows "(Deadpoolio the amazing's name)" instead of the actual default of "Wade Wilson"

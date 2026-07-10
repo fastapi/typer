@@ -22,7 +22,7 @@ And it will be used in the automatic `--help` option:
 $ python main.py --help
 
 // Check the section with Arguments below 🚀
-Usage: main.py [OPTIONS] NAME
+Usage: main.py [OPTIONS] {name}
 
 Arguments:
   NAME  The name of the user to greet  [required]
@@ -47,7 +47,7 @@ And the `--help` option will combine all the information:
 $ python main.py --help
 
 // Notice that we have the help text from the docstring and also the Arguments 📝
-Usage: main.py [OPTIONS] NAME
+Usage: main.py [OPTIONS] {name}
 
   Say hi to NAME very gently, like Dirk.
 
@@ -198,7 +198,7 @@ And next you will see other panels for the *CLI arguments* that have a custom pa
 ```console
 $ python main.py --help
 
-<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] NAME [LASTNAME] [AGE]               </b>
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] {name} [LASTNAME] [age]               </b>
 <b>                                                                     </b>
  Say hi to NAME very gently, like Dirk.
 

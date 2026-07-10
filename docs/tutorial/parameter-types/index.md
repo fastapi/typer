@@ -24,7 +24,7 @@ And here's how it looks like:
 $ python main.py --help
 
 // Notice how --age is an INTEGER and --height-meters is a FLOAT
-Usage: main.py [OPTIONS] NAME
+Usage: main.py [OPTIONS] {name}
 
 Arguments:
   NAME  [required]
@@ -47,7 +47,7 @@ NAME is Camila, of type: class 'str'
 // And if you pass an incorrect type
 $ python main.py Camila --age 15.3
 
-Usage: main.py [OPTIONS] NAME
+Usage: main.py [OPTIONS] {name}
 Try "main.py --help" for help.
 
 Error: Invalid value for '--age': '15.3' is not a valid integer

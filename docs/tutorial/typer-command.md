@@ -174,7 +174,7 @@ Usage: typer run [OPTIONS]
   Say hi to someone, by default to the World.
 
 Options:
-  --name TEXT
+  --name <str>
   --help       Show this message and exit.
 
 $ typer main.py run --name Camila
@@ -199,7 +199,7 @@ $ typer my_package.main run --help
 Usage: typer run [OPTIONS]
 
 Options:
-  --name TEXT
+  --name <str>
   --help       Show this message and exit.
 
 $ typer my_package.main run --name Camila

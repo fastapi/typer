@@ -78,23 +78,23 @@ Run your application with the `typer` command:
 // Run your application
 $ typer main.py run
 
-// You get a nice error, you are missing NAME
-Usage: typer [PATH_OR_MODULE] run [OPTIONS] NAME
+// You get a nice error, you are missing 'name'
+Usage: typer [PATH_OR_MODULE] run [OPTIONS] {name}
 Try 'typer [PATH_OR_MODULE] run --help' for help.
 ╭─ Error ───────────────────────────────────────────╮
-│ Missing argument 'NAME'.                          │
+│ Missing argument 'name'.                          │
 ╰───────────────────────────────────────────────────╯
 
 
 // You get a --help for free
 $ typer main.py run --help
 
-Usage: typer [PATH_OR_MODULE] run [OPTIONS] NAME
+Usage: typer [PATH_OR_MODULE] run [OPTIONS] {name}
 
 Run the provided Typer app.
 
 ╭─ Arguments ───────────────────────────────────────╮
-│ *    name      TEXT  [default: None] [required]   |
+│ *    name      <str>  [required]                  |
 ╰───────────────────────────────────────────────────╯
 ╭─ Options ─────────────────────────────────────────╮
 │ --help          Show this message and exit.       │
@@ -138,21 +138,21 @@ Now you could run it with Python directly:
 // Run your application
 $ python main.py
 
-// You get a nice error, you are missing NAME
-Usage: main.py [OPTIONS] NAME
+// You get a nice error, you are missing 'name'
+Usage: main.py [OPTIONS] {name}
 Try 'main.py --help' for help.
 ╭─ Error ───────────────────────────────────────────╮
-│ Missing argument 'NAME'.                          │
+│ Missing argument 'name'.                          │
 ╰───────────────────────────────────────────────────╯
 
 
 // You get a --help for free
 $ python main.py --help
 
-Usage: main.py [OPTIONS] NAME
+Usage: main.py [OPTIONS] {name}
 
 ╭─ Arguments ───────────────────────────────────────╮
-│ *    name      TEXT  [default: None] [required]   |
+│ *    name      <str>  [required]                  |
 ╰───────────────────────────────────────────────────╯
 ╭─ Options ─────────────────────────────────────────╮
 │ --help          Show this message and exit.       │
@@ -254,10 +254,10 @@ Now check the help for the `hello` command:
 ```console
 $ python main.py hello --help
 
- Usage: main.py hello [OPTIONS] NAME
+ Usage: main.py hello [OPTIONS] {name}
 
 ╭─ Arguments ───────────────────────────────────────╮
-│ *    name      TEXT  [default: None] [required]   │
+│ *    name      <str>  [required]                  │
 ╰───────────────────────────────────────────────────╯
 ╭─ Options ─────────────────────────────────────────╮
 │ --help          Show this message and exit.       │
@@ -273,10 +273,10 @@ And now check the help for the `goodbye` command:
 ```console
 $ python main.py goodbye --help
 
- Usage: main.py goodbye [OPTIONS] NAME
+ Usage: main.py goodbye [OPTIONS] {name}
 
 ╭─ Arguments ───────────────────────────────────────╮
-│ *    name      TEXT  [default: None] [required]   │
+│ *    name      <str>  [required]                  │
 ╰───────────────────────────────────────────────────╯
 ╭─ Options ─────────────────────────────────────────╮
 │ --formal    --no-formal      [default: no-formal] │

@@ -84,10 +84,10 @@ All we did there achieves the same thing as before, a **required** *CLI argument
 ```console
 $ python main.py
 
-Usage: main.py [OPTIONS] NAME
+Usage: main.py [OPTIONS] {name}
 Try "main.py --help" for help.
 
-Error: Missing argument 'NAME'.
+Error: Missing argument 'name'.
 ```
 
 </div>
