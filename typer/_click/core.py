@@ -893,7 +893,7 @@ class Parameter(ABC):
     def consume_value(
         self, ctx: Context, opts: Mapping[str, Any]
     ) -> tuple[Any, ParameterSource]:
-        value = opts.get(self.name)  # type: ignore
+        value = opts.get(self.name)  # type: ignore  # ty: ignore[unused-ignore-comment]
         source = ParameterSource.COMMANDLINE
 
         if value is None:
