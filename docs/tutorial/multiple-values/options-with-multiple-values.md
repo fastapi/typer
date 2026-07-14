@@ -62,7 +62,7 @@ $ python main.py --help
 Usage: main.py [OPTIONS]
 
 Options:
-  --user <str int boolean>...  [default: None, None, None]
+  --user <str int boolean>...
   --help                       Show this message and exit.
 
 // Now try it
