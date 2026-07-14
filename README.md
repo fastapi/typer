@@ -242,7 +242,7 @@ $ python main.py --help
 
 // When you create a package you get ✨ auto-completion ✨ for free, installed with --install-completion
 
-// You have 2 subcommands (the 2 functions): hello and goodbye 
+// You have 2 subcommands (the 2 functions): hello and goodbye
 ```
 
 </div>
