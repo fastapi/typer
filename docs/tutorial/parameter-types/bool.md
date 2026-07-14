@@ -24,7 +24,7 @@ $ python main.py --help
 Usage: main.py [OPTIONS]
 
 Options:
-  --force               
+  --force
   --help                Show this message and exit.
 
 // Try it:
