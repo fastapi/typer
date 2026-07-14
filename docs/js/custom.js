@@ -76,7 +76,11 @@ function setupTermynal() {
                         });
                     } else if (line.startsWith("// ")) {
                         saveBuffer();
-                        const value = "💬 " + line.replace("// ", "").trimEnd();
+                        let comment = line.replace("// ", "").trimEnd();
+                        if (!isRichHtml) {
+                            comment = escapePlainCliLine(comment);
+                        }
+                        const value = "💬 " + comment;
                         useLines.push({
                             value: value,
                             class: "termynal-comment",
