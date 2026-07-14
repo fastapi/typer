@@ -37,7 +37,7 @@ $ python main.py create --help
 Usage: main.py create [OPTIONS] {username}
 
   Create a new user with username.
- 
+
 Arguments:
   username  [required]
 
@@ -52,7 +52,7 @@ Usage: main.py delete [OPTIONS] {username}
   Delete a user with username.
 
   If --force is not used, will ask for confirmation.
-  
+
 Arguments:
   username  [required]
 
