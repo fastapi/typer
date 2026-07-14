@@ -147,7 +147,7 @@ Options:
 
 Notice that `name` is still a *CLI argument*, it's shown up there in the "`Usage: main.py` ...".
 
-Also notice that now `[name]` has rectangular brackets ("`[`" and "`]`") around it to denote that it's **optional**, not **required**.
+Also notice that now `[name]` has rectangular brackets ("`[`" and "`]`") around it to denote that it's **optional**, not **required**. If it would have been required, curly brackets ("`{`" and "`}`") would be used instead.
 
 ///
 

@@ -173,7 +173,7 @@ $ python main.py --help
 Usage: main.py [OPTIONS] [✨username✨]
 
 Arguments:
-  [✨username✨]  [default: World]
+  ✨username✨  [default: World]
 
 Options:
   --help                Show this message and exit.
