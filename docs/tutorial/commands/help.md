@@ -37,6 +37,9 @@ $ python main.py create --help
 Usage: main.py create [OPTIONS] {username}
 
   Create a new user with username.
+ 
+Arguments:
+  username  [required]
 
 Options:
   --help  Show this message and exit.
@@ -49,6 +52,9 @@ Usage: main.py delete [OPTIONS] {username}
   Delete a user with username.
 
   If --force is not used, will ask for confirmation.
+  
+Arguments:
+  username  [required]
 
 Options:
   --force / --no-force  Force deletion without confirmation.  [required]
@@ -374,8 +380,8 @@ $ python main.py --help
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>delete          </b></font> <font color="#F92672">Delete</font> a user. ❌                                │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Utils and Configs ───────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>config  </b></font> <font color="#66D9EF">Configure</font> the system. ⚙                                  │
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>sync    </b></font> <font color="#66D9EF">Synchronize</font> the system or something fancy like that. ♻   │
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>config  </b></font> <font color="#66D9EF">Configure</font> the system. ⚙                                 │
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>sync    </b></font> <font color="#66D9EF">Synchronize</font> the system or something fancy like that. ♻  │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Help and Others ─────────────────────────────────────────────────╮</font>
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>help         </b></font> Get <font color="#F4BF75">help</font> with the system. ❓                        │
@@ -416,7 +422,7 @@ $ python main.py create --help
 <font color="#A5A5A1">│                          </font><font color="#A6194C">[required]            </font>                   │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Secondary Arguments ─────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│   lastname      </font><font color="#A37F4E"><b>lastname</b></font>  The last name of the new user         │
+<font color="#A5A5A1">│   lastname      </font><font color="#A37F4E"><b>lastname</b></font>  The last name of the new user           │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--force</b></font>    <font color="#AE81FF"><b>--no-force</b></font>      Force the creation of the user         │
@@ -424,7 +430,7 @@ $ python main.py create --help
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                     Show this message and exit.            │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Additional Data ─────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--age</b></font>                   <font color="#F4BF75"><b>&lt;int&gt;   </b></font>  The age of the new user          │
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--age</b></font>                   <font color="#F4BF75"><b>&lt;int&gt;   </b></font>  The age of the new user         │
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--favorite-color</b></font>        <font color="#F4BF75"><b>&lt;str&gt;   </b></font>  The favorite color of the new   │
 <font color="#A5A5A1">│                                  user                             │</font>
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
@@ -455,7 +461,7 @@ $ python main.py --help
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>create          </b></font> <font color="#A6E22E">Create</font> a new user. ✨                            │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Utils and Configs ───────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>config         </b></font> <font color="#66D9EF">Configure</font> the system. ⚙                           │
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>config         </b></font> <font color="#66D9EF">Configure</font> the system. ⚙                          │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 ```
 
