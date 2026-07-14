@@ -34,16 +34,16 @@ Check it:
 // Pass a valid UUID v4
 $ python main.py d48edaa6-871a-4082-a196-4daab372d4a1
 
-USER_ID is d48edaa6-871a-4082-a196-4daab372d4a1
+User ID is d48edaa6-871a-4082-a196-4daab372d4a1
 UUID version is: 4
 
 // An invalid value
 $ python main.py 7479706572-72756c6573
 
-Usage: main.py [OPTIONS] USER_ID
+Usage: main.py [OPTIONS] {user_id}
 Try "main.py --help" for help.
 
-Error: Invalid value for 'USER_ID': 7479706572-72756c6573 is not a valid UUID.
+Error: Invalid value for 'user_id': 7479706572-72756c6573 is not a valid UUID.
 ```
 
 </div>

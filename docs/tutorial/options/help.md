@@ -67,7 +67,7 @@ And below you will see other panels for the *CLI options* that have a custom pan
 ```console
 $ python main.py --help
 
-<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] name                                </b>
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] {name}                                </b>
 <b>                                                                     </b>
  Say hi to 'name', optionally with a <font color="#A1EFE4"><b>--lastname</b></font>.
  If <font color="#6B9F98"><b>--formal</b></font><font color="#A5A5A1"> is used, say hi very formally.                          </font>

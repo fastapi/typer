@@ -20,7 +20,7 @@ def test_type_repr():
 def test_main():
     result = runner.invoke(app, ["d48edaa6-871a-4082-a196-4daab372d4a1"])
     assert result.exit_code == 0
-    assert "USER_ID is d48edaa6-871a-4082-a196-4daab372d4a1" in result.output
+    assert "User ID is d48edaa6-871a-4082-a196-4daab372d4a1" in result.output
     assert "UUID version is: 4" in result.output
 
 
@@ -28,7 +28,7 @@ def test_main_with_uuid_object():
     user_id = uuid.UUID("d48edaa6-871a-4082-a196-4daab372d4a1")
     result = runner.invoke(app, [], default_map={"user_id": user_id})
     assert result.exit_code == 0
-    assert "USER_ID is d48edaa6-871a-4082-a196-4daab372d4a1" in result.output
+    assert "User ID is d48edaa6-871a-4082-a196-4daab372d4a1" in result.output
     assert "UUID version is: 4" in result.output
 
 

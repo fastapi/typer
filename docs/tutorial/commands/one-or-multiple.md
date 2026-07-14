@@ -23,7 +23,7 @@ $ python main.py Camila
 Hello Camila
 
 // Asking for help
-$ python main.py
+$ python main.py --help
 
 Usage: main.py [OPTIONS] {name}
 

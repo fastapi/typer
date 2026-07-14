@@ -59,10 +59,10 @@ Hello Camila Gutiérrez
 // And if you check the help
 $ python main.py --help
 
+Usage: main.py [OPTIONS] {name}
+
 Arguments:
   name  [required]
-
-Usage: main.py [OPTIONS] {name}
 
 Options:
   --lastname <str>      [required]
