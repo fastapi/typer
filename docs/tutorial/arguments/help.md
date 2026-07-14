@@ -207,7 +207,7 @@ $ python main.py --help
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Secondary Arguments ─────────────────────────────────────────────╮</font>
 <font color="#A5A5A1">│   lastname      </font><font color="#A37F4E"><b>lastname</b></font>  The last name                           │
-<font color="#A5A5A1">│   age           </font><font color="#A37F4E"><b>age       </b></font>  The user&apos;s age                        │
+<font color="#A5A5A1">│   age           </font><font color="#A37F4E"><b>age     </b></font>  The user&apos;s age                          │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                        Show this message and exit.         │

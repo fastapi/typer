@@ -424,7 +424,7 @@ $ python main.py create --help
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                     Show this message and exit.            │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Additional Data ─────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--age</b></font>                   <font color="#F4BF75"><b>INTEGER</b></font>  The age of the new user          │
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--age</b></font>                   <font color="#F4BF75"><b>&lt;int&gt;   </b></font>  The age of the new user          │
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--favorite-color</b></font>        <font color="#F4BF75"><b>&lt;str&gt;   </b></font>  The favorite color of the new   │
 <font color="#A5A5A1">│                                  user                             │</font>
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>

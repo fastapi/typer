@@ -23,17 +23,17 @@ And here's how it looks like:
 ```console
 $ python main.py --help
 
-// Notice how --age is an INTEGER and --height-meters is a FLOAT
+// Notice how --age is an 'int' (integer) and --height-meters is a 'float'
 Usage: main.py [OPTIONS] {name}
 
 Arguments:
   name  [required]
 
 Options:
-  --age INTEGER           [default: 20]
-  --height-meters FLOAT   [default: 1.89]
-  --female / --no-female  [default: True]
-  --help                  Show this message and exit.
+  --age <int>               [default: 20]
+  --height-meters <float>   [default: 1.89]
+  --female / --no-female    [default: female]
+  --help                    Show this message and exit.
 
 // Call it with CLI parameters
 $ python main.py Camila --age 15 --height-meters 1.70 --female
@@ -52,7 +52,7 @@ Try "main.py --help" for help.
 
 Error: Invalid value for '--age': '15.3' is not a valid integer
 
-// Because 15.3 is not an INTEGER (it's a float)
+// Because 15.3 is not an integer (it's a float)
 ```
 
 </div>

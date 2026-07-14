@@ -15,16 +15,16 @@ Check it:
 ```console
 $ python main.py --help
 
-// Notice the extra RANGE in the help text for --age and --score
+// Notice the extra range information in the help text for --age and --score
 Usage: main.py [OPTIONS] ID
 
 Arguments:
   ID  [required]
 
 Options:
-  --age INTEGER RANGE   [default: 20]
-  --score FLOAT RANGE   [default: 0]
-  --help                Show this message and exit.
+  --age <int range>       [default: 20; x>=18]
+  --score <float range>   [default: 0; x<=100]
+  --help                  Show this message and exit.
 
 // Pass all the CLI parameters
 $ python main.py 5 --age 20 --score 90

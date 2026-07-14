@@ -41,8 +41,8 @@ Arguments:
   name  [required]
 
 Options:
-  --lastname <str>        Last name of person to greet. [default: ]
-  --formal / --no-formal  Say hi formally.  [default: False]
+  --lastname <str>        Last name of person to greet.
+  --formal / --no-formal  Say hi formally.  [default: no-formal]
   --help                  Show this message and exit.
 
 // Now you have a help text for the --lastname and --formal CLI options 🎉

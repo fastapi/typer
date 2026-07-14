@@ -24,7 +24,7 @@ $ python main.py --help
 Usage: main.py [OPTIONS]
 
 Options:
-  --force               [default: False]
+  --force               
   --help                Show this message and exit.
 
 // Try it:
@@ -113,7 +113,7 @@ $ python main.py --help
 Usage: main.py [OPTIONS]
 
 Options:
-  -f, --force / -F, --no-force  [default: False]
+  -f, --force / -F, --no-force  [default: no-force]
   --help                        Show this message and exit.
 
 // Try with the short name -f
