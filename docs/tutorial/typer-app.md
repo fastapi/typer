@@ -66,6 +66,9 @@ $ python main.py  --help
 
 Usage: main.py [OPTIONS] {name}
 
+Arguments:
+  name  [required]
+
 Options:
   --install-completion  Install completion for the current shell.
   --show-completion     Show completion for the current shell, to copy it or customize the installation.
