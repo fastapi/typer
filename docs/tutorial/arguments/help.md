@@ -203,10 +203,10 @@ $ python main.py --help
  Say hi to 'name' very gently, like Dirk.
 
 <font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    name      <font color="#F4BF75"><b>str</b></font>  Who to greet [default: None] <font color="#A6194C">[required]</font>      │
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    name      <font color="#F4BF75"><b>str</b></font>  Who to greet [default: None] <font color="#A6194C">[required]</font>       │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Secondary Arguments ─────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│   lastname      </font><font color="#A37F4E"><b>lastname</b></font>  The last name                         │
+<font color="#A5A5A1">│   lastname      </font><font color="#A37F4E"><b>lastname</b></font>  The last name                           │
 <font color="#A5A5A1">│   age           </font><font color="#A37F4E"><b>age       </b></font>  The user&apos;s age                        │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
