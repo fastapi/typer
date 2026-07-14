@@ -66,7 +66,7 @@ Usage: typer [PATH_OR_MODULE] run [OPTIONS]
   Run the provided Typer app.
 
 Options:
-  --name <str> 
+  --name <str>
   --help       Show this message and exit.
 
 // Then try completion with your program
