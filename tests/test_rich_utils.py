@@ -265,8 +265,8 @@ def test_rich_help_metavar():
     # arguments
     assert "arg1<int>" in out_nospace
     assert "arg3<int>" in out_nospace
-    assert "[ARG4]<int>" in out_nospace
-    assert "[meta7]<int>" in out_nospace
+    assert "ARG4<int>" in out_nospace
+    assert "meta7<int>" in out_nospace
     assert "ARG8<int>" in out_nospace
     assert "arg9<int>" in out_nospace
 

@@ -416,7 +416,7 @@ $ python main.py create --help
 <font color="#A5A5A1">│                          </font><font color="#A6194C">[required]            </font>                   │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Secondary Arguments ─────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│   lastname      </font><font color="#A37F4E"><b>[lastname]</b></font>  The last name of the new user         │
+<font color="#A5A5A1">│   lastname      </font><font color="#A37F4E"><b>lastname</b></font>  The last name of the new user         │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--force</b></font>    <font color="#AE81FF"><b>--no-force</b></font>      Force the creation of the user         │

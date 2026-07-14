@@ -135,7 +135,7 @@ $ python main.py --help
 Usage: main.py [OPTIONS] [name]
 
 Arguments:
-  [name]  [default: World]
+  name  [default: World]
 
 Options:
   --help                Show this message and exit.

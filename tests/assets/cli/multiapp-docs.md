@@ -81,7 +81,7 @@ $ multiapp sub hi [OPTIONS] [user]
 
 **Arguments**:
 
-* `[user]`: The name of the user to greet  [default: World]
+* `user`: The name of the user to greet  [default: World]
 
 **Options**:
 

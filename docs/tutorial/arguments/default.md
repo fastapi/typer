@@ -30,7 +30,7 @@ $ python main.py --help
 Usage: main.py [OPTIONS] [name]
 
 Arguments:
-  [name]  [default: Wade Wilson]
+  name  [default: Wade Wilson]
 
 Options:
   --help                Show this message and exit.
@@ -75,7 +75,7 @@ $ python main.py --help
 Usage: main.py [OPTIONS] [name]
 
 Arguments:
-  [name]  [default: (dynamic)]
+  name  [default: (dynamic)]
 
 Options:
   --help                Show this message and exit.

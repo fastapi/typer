@@ -374,8 +374,6 @@ def _print_options_panel(
                 metavar_name = param.metavar
             else:
                 metavar_name = param.name or ""
-            if not param.required:
-                metavar_name = f"[{metavar_name}]"
         if isinstance(param, TyperOption):
             metavar_type = metavar_str
         elif isinstance(param, TyperArgument):

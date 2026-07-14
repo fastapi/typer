@@ -23,7 +23,7 @@ $ python main.py --help
 Usage: main.py [OPTIONS] [name]
 
 Arguments:
-  [name]  [env var: AWESOME_NAME;default: World]
+  name  [env var: AWESOME_NAME;default: World]
 
 Options:
   --help                Show this message and exit.
@@ -68,7 +68,7 @@ $ python main.py --help
 Usage: main.py [OPTIONS] [name]
 
 Arguments:
-  [name]  [env var: AWESOME_NAME, GOD_NAME;default: World]
+  name  [env var: AWESOME_NAME, GOD_NAME;default: World]
 
 Options:
   --help                Show this message and exit.
@@ -104,7 +104,7 @@ $ python main.py --help
 Usage: main.py [OPTIONS] [name]
 
 Arguments:
-  [name]  [default: World]
+  name  [default: World]
 
 Options:
   --help                Show this message and exit.
