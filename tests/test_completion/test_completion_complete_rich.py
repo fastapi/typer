@@ -58,7 +58,7 @@ def test_completion_complete_subcommand_zsh():
         },
     )
     assert (
-        """_arguments '*: :(("delete":"Delete a user with USERNAME."\n"""
+        """_arguments '*: :(("delete":"Delete a user with username."\n"""
         """\"delete-all":"Delete ALL users in the database."))'"""
     ) in result.stdout
 
@@ -76,7 +76,7 @@ def test_completion_complete_subcommand_fish():
         },
     )
     assert (
-        "delete\tDelete a user with USERNAME.\ndelete-all\tDelete ALL users in the database."
+        "delete\tDelete a user with username.\ndelete-all\tDelete ALL users in the database."
         in result.stdout
     )
 
@@ -93,7 +93,7 @@ def test_completion_complete_subcommand_powershell():
         },
     )
     assert (
-        "delete:::Delete a user with USERNAME.\ndelete-all:::Delete ALL users in the database."
+        "delete:::Delete a user with username.\ndelete-all:::Delete ALL users in the database."
     ) in result.stdout
 
 
@@ -109,5 +109,5 @@ def test_completion_complete_subcommand_pwsh():
         },
     )
     assert (
-        "delete:::Delete a user with USERNAME.\ndelete-all:::Delete ALL users in the database."
+        "delete:::Delete a user with username.\ndelete-all:::Delete ALL users in the database."
     ) in result.stdout

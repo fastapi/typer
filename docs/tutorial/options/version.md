@@ -34,7 +34,7 @@ Usage: main.py [OPTIONS]
 
 Options:
   --version
-  --name <str>
+  --name <str>          [default: World]
   --help                Show this message and exit.
 
 

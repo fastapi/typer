@@ -19,7 +19,7 @@ def create(username: str = typer.Argument(..., help="The username to be **create
     print(f"Creating user: {username}")
 
 
-@app.command(help="**Delete** a user with *USERNAME*.")
+@app.command(help="**Delete** a user with *username*.")
 def delete(
     username: str = typer.Argument(..., help="The username to be **deleted**"),
     force: bool = typer.Option(False, help="Force the **deletion** :boom:"),

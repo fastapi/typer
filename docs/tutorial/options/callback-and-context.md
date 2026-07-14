@@ -61,12 +61,12 @@ utils  -- Extra utility commands for Typer apps.
 $ typer ./main.py run --help
 
 // You get a help text with your CLI options as you normally would
-Usage: typer run [OPTIONS]
+Usage: typer [PATH_OR_MODULE] run [OPTIONS]
 
   Run the provided Typer app.
 
 Options:
-  --name <str> [required]
+  --name <str> 
   --help       Show this message and exit.
 
 // Then try completion with your program

@@ -169,7 +169,7 @@ Then you can call it with:
 
 ```console
 $ typer main.py run --help
-Usage: typer run [OPTIONS]
+Usage: typer [PATH_OR_MODULE] run [OPTIONS]
 
   Say hi to someone, by default to the World.
 
@@ -196,7 +196,7 @@ For example:
 
 ```console
 $ typer my_package.main run --help
-Usage: typer run [OPTIONS]
+Usage: typer [PATH_OR_MODULE] run [OPTIONS]
 
 Options:
   --name <str>
@@ -305,14 +305,14 @@ $ awesome-cli [OPTIONS] COMMAND [ARGS]...
 
 **Commands**:
 
-* `create`: Create a new user with 'username'.
-* `delete`: Delete a user with 'username'.
+* `create`: Create a new user with username.
+* `delete`: Delete a user with username.
 * `delete-all`: Delete ALL users in the database.
 * `init`: Initialize the users database.
 
 ## `awesome-cli create`
 
-Create a new user with 'username'.
+Create a new user with username.
 
 **Usage**:
 

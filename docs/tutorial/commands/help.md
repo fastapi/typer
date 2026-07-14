@@ -24,8 +24,8 @@ Options:
   --help                Show this message and exit.
 
 Commands:
-  create      Create a new user with 'username'.
-  delete      Delete a user with 'username'.
+  create      Create a new user with username.
+  delete      Delete a user with username.
   delete-all  Delete ALL users in the database.
   init        Initialize the users database.
 
@@ -36,7 +36,7 @@ $ python main.py create --help
 
 Usage: main.py create [OPTIONS] {username}
 
-  Create a new user with 'username'.
+  Create a new user with username.
 
 Options:
   --help  Show this message and exit.
@@ -46,7 +46,7 @@ $ python main.py delete --help
 
 Usage: main.py delete [OPTIONS] {username}
 
-  Delete a user with 'username'.
+  Delete a user with username.
 
   If --force is not used, will ask for confirmation.
 
@@ -112,10 +112,10 @@ Options:
   --help                Show this message and exit.
 
 Commands:
-  create  Create a new user with 'username'.
-  delete  Delete a user with 'username'.
+  create  Create a new user with username.
+  delete  Delete a user with username.
 
-// It uses "Create a new user with 'username'." instead of "Some internal utility function to create."
+// It uses "Create a new user with username." instead of "Some internal utility function to create."
 ```
 
 </div>
@@ -257,7 +257,7 @@ $ python main.py delete --help
 
 <b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py delete [OPTIONS] {username}                     </b>
 <b>                                                                     </b>
- <font color="#F92672"><b>Delete</b></font> a user with <i>'username'</i>.
+ <font color="#F92672"><b>Delete</b></font> a user with <i>username</i>.
 
 <font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
 <font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>&lt;str&gt;</b></font>  The username to be <font color="#F92672">deleted</font>              │
@@ -319,7 +319,7 @@ $ python main.py delete --help
 
 <b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py delete [OPTIONS] {username}                     </b>
 <b>                                                                     </b>
- <b>Delete</b> a user with <i>'username'</i>.
+ <b>Delete</b> a user with <i>username</i>.
 
 <font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
 <font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>&lt;str&gt;</b></font>  The username to be <b>deleted</b>              │

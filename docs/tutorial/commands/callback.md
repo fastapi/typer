@@ -67,7 +67,7 @@ Just created a user
 // Notice that --verbose belongs to the callback, it has to go before create or delete ⛔️
 $ python main.py create --verbose Camila
 
-Usage: main.py create [OPTIONS] username
+Usage: main.py create [OPTIONS] {username}
 Try "main.py create --help" for help.
 
 Error: No such option: --verbose

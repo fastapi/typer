@@ -59,6 +59,9 @@ Hello Camila Gutiérrez
 // And if you check the help
 $ python main.py --help
 
+Arguments:
+  name  [required]
+
 Usage: main.py [OPTIONS] {name}
 
 Options:
