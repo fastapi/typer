@@ -31,7 +31,7 @@ function setupTermynal() {
             .forEach(node => {
                 const text = node.textContent;
                 const lines = text.split("\n");
-                // If it's a type in brackets like <str>, it doesn't have a space
+                // If it is a type in brackets like <str>, it doesn't have a space
                 // and won't have a closing tag, while Rich HTML tags do.
                 const hasOpeningTagWithSpace = /<[a-zA-Z0-9]+\s/.test(text);
                 const hasClosingTag = /<\/[a-zA-Z0-9]+>/.test(text);
