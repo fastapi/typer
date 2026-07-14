@@ -174,8 +174,8 @@ Usage: typer [PATH_OR_MODULE] run [OPTIONS]
   Say hi to someone, by default to the World.
 
 Options:
-  --name <str>
-  --help       Show this message and exit.
+  --name <str>  [default: World]
+  --help        Show this message and exit.
 
 $ typer main.py run --name Camila
 
