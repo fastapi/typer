@@ -58,12 +58,12 @@ Now let's see how this works in the terminal:
 // check the help
 $ python main.py --help
 
-// Notice the &lt;str int boolean&gt;
+// Notice the <str int boolean>
 Usage: main.py [OPTIONS]
 
 Options:
-  --user &lt;str int boolean&gt;...
-  --help                          Show this message and exit.
+  --user <str int boolean>...  [default: None, None, None]
+  --help                       Show this message and exit.
 
 // Now try it
 $ python main.py --user Camila 50 yes

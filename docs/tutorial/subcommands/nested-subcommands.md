@@ -67,8 +67,8 @@ Options:
   --help                Show this message and exit.
 
 Commands:
-  burn
   found
+  burn
 
 // Try it
 $ python towns.py found "New Asgard"
@@ -130,8 +130,8 @@ Options:
   --help  Show this message and exit.
 
 Commands:
-  burn
   found
+  burn
 ```
 
 </div>
@@ -205,9 +205,9 @@ Options:
   --help                Show this message and exit.
 
 Commands:
+  users
   items
   lands
-  users
 
 // Try some users commands
 $ python main.py users create Camila

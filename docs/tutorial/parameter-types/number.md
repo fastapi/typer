@@ -22,9 +22,9 @@ Arguments:
   ID  [required]
 
 Options:
-  --age <int range>       [default: 20; x>=18]
-  --score <float range>   [default: 0; x<=100]
-  --help                  Show this message and exit.
+  --age <int range>      [default: 20; x>=18]
+  --score <float range>  [default: 0; x<=100]
+  --help                 Show this message and exit.
 
 // Pass all the CLI parameters
 $ python main.py 5 --age 20 --score 90
