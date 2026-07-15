@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.27.0 (2026-07-15)
+
 ### Breaking Changes
 
 * 💥 Update metavar printing. PR [#1863](https://github.com/fastapi/typer/pull/1863) by [@svlandeg](https://github.com/svlandeg).
