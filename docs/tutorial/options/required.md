@@ -42,11 +42,11 @@ And test it:
 <div class="termy">
 
 ```console
-// Pass the NAME CLI argument
+// Pass the 'name' CLI argument
 $ python main.py Camila
 
 // We didn't pass the now required --lastname CLI option
-Usage: main.py [OPTIONS] NAME
+Usage: main.py [OPTIONS] {name}
 Try "main.py --help" for help.
 
 Error: Missing option '--lastname'.
@@ -59,10 +59,13 @@ Hello Camila Gutiérrez
 // And if you check the help
 $ python main.py --help
 
-Usage: main.py [OPTIONS] NAME
+Usage: main.py [OPTIONS] {name}
+
+Arguments:
+  name  [required]
 
 Options:
-  --lastname TEXT       [required]
+  --lastname <str>      [required]
   --help                Show this message and exit.
 
 // It now tells you that --lastname is required 🎉

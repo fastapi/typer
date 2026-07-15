@@ -101,7 +101,7 @@ def test_rich_markup_import_regression():
 
     result = runner.invoke(app, ["--help"])
     assert "Usage" in result.stdout
-    assert "BAR" in result.stdout
+    assert "{bar}" in result.stdout
 
 
 @needs_rich
@@ -224,6 +224,18 @@ def test_help_table_alignment_with_styled_text():
     )
 
 
+def test_rich_help_no_boolean_type() -> None:
+    app = typer.Typer(rich_markup_mode="rich")
+
+    @app.command()
+    def main(name: str) -> None:
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "<boolean>" not in result.output
+
+
 def test_rich_help_metavar():
     app = typer.Typer(rich_markup_mode="rich")
 
@@ -233,8 +245,8 @@ def test_rich_help_metavar():
         arg1: int,
         arg2: int = 42,
         arg3: int = typer.Argument(...),
-        arg4: int = typer.Argument(42),
-        arg5: int = typer.Option(...),
+        ARG4: int = typer.Argument(42),
+        ARG5: int = typer.Option(...),
         arg6: int = typer.Option(42),
         arg7: int = typer.Argument(42, metavar="meta7"),
         arg8: int = typer.Argument(metavar="ARG8"),
@@ -243,23 +255,46 @@ def test_rich_help_metavar():
         pass  # pragma: no cover
 
     result = runner.invoke(app, ["--help"])
-    assert "Usage: main [OPTIONS] ARG1 ARG3 [ARG4] [meta7] ARG8 arg9" in result.stdout
+    assert (
+        "Usage: main [OPTIONS] {arg1} {arg3} [ARG4] [meta7] {ARG8} {arg9}"
+        in result.stdout
+    )
 
     out_nospace = result.stdout.replace(" ", "")
 
     # arguments
-    assert "arg1INTEGER" in out_nospace
-    assert "arg3INTEGER" in out_nospace
-    assert "[arg4]INTEGER" in out_nospace
-    assert "[meta7]INTEGER" in out_nospace
-    assert "ARG8INTEGER" in out_nospace
-    assert "arg9INTEGER" in out_nospace
+    assert "arg1<int>" in out_nospace
+    assert "arg3<int>" in out_nospace
+    assert "ARG4<int>" in out_nospace
+    assert "meta7<int>" in out_nospace
+    assert "ARG8<int>" in out_nospace
+    assert "arg9<int>" in out_nospace
 
     assert "arg7" not in result.stdout.lower()
     assert "arg8" not in result.stdout
     assert "ARG9" not in result.stdout
 
     # options
-    assert "arg2INTEGER" in out_nospace
-    assert "arg5INTEGER" in out_nospace
-    assert "arg6INTEGER" in out_nospace
+    assert "--arg2<int>" in out_nospace
+    assert "--ARG5<int>" in out_nospace
+    assert "--arg6<int>" in out_nospace
+
+
+def test_rich_lowercase_bracketed_metavar() -> None:
+    # Make sure Rich doesn't "swallow" a lowercased [path] (thinking it's a Rich annotation)
+    app = typer.Typer(rich_markup_mode="rich")
+
+    @app.callback()
+    def main(path_or_module: str = typer.Argument(None)) -> None:
+        pass  # pragma: no cover
+
+    @app.command()
+    def run(name: str) -> None:
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["my-module.py", "run"], prog_name="typer")
+
+    assert result.exit_code == 2
+    usage_line = result.output.splitlines()[0]
+    assert usage_line.startswith("Usage: typer [path_or_module] run [OPTIONS] {name}")
+    assert "Try 'typer [path_or_module] run --help' for help." in result.output

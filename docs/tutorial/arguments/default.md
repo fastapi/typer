@@ -27,10 +27,10 @@ Check it:
 $ python main.py --help
 
 // Notice the [default: Wade Wilson] ✨
-Usage: main.py [OPTIONS] [NAME]
+Usage: main.py [OPTIONS] [name]
 
 Arguments:
-  [NAME]  [default: Wade Wilson]
+  name  [default: Wade Wilson]
 
 Options:
   --help                Show this message and exit.
@@ -72,10 +72,10 @@ Check it:
 // Check the help
 $ python main.py --help
 
-Usage: main.py [OPTIONS] [NAME]
+Usage: main.py [OPTIONS] [name]
 
 Arguments:
-  [NAME]  [default: (dynamic)]
+  name  [default: (dynamic)]
 
 Options:
   --help                Show this message and exit.

@@ -27,9 +27,9 @@ def test_help(mod: ModuleType):
     assert result.exit_code == 0
     assert "Awesome CLI user manager." in result.output
     assert "create" in result.output
-    assert "Create a new user with USERNAME." in result.output
+    assert "Create a new user with username." in result.output
     assert "delete" in result.output
-    assert "Delete a user with USERNAME." in result.output
+    assert "Delete a user with username." in result.output
     assert "delete-all" in result.output
     assert "Delete ALL users in the database." in result.output
     assert "init" in result.output
@@ -39,15 +39,15 @@ def test_help(mod: ModuleType):
 def test_help_create(mod: ModuleType):
     result = runner.invoke(mod.app, ["create", "--help"])
     assert result.exit_code == 0
-    assert "create [OPTIONS] USERNAME" in result.output
-    assert "Create a new user with USERNAME." in result.output
+    assert "create [OPTIONS] {username}" in result.output
+    assert "Create a new user with username." in result.output
 
 
 def test_help_delete(mod: ModuleType):
     result = runner.invoke(mod.app, ["delete", "--help"])
     assert result.exit_code == 0
-    assert "delete [OPTIONS] USERNAME" in result.output
-    assert "Delete a user with USERNAME." in result.output
+    assert "delete [OPTIONS] {username}" in result.output
+    assert "Delete a user with username." in result.output
     assert "--force" in result.output
     assert "--no-force" in result.output
     assert "Force deletion without confirmation." in result.output

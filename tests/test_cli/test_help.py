@@ -121,7 +121,7 @@ def test_help_wrapping_long_name() -> None:
     output_lines = result.output.splitlines()
     usage_idx = output_lines.index("Usage: very-long-program-name-that-forces-wrap ")
     args_line = output_lines[usage_idx + 1]
-    assert args_line.lstrip() == "[OPTIONS] VALUE"
+    assert args_line.lstrip() == "[OPTIONS] {value}"
     assert args_line.startswith(" ")
 
 
@@ -157,3 +157,18 @@ def test_format_long_help_option() -> None:
         "Description is rendered in the next line for long option labels."
         in continuation_block
     )
+
+
+def test_typer_run_usage() -> None:
+    from typer.cli import app as typer_cli_app
+
+    result = runner.invoke(
+        typer_cli_app,
+        ["tests/assets/cli/minimum_main.py", "run"],
+        prog_name="typer",
+    )
+
+    assert result.exit_code == 2
+    usage_line = result.output.splitlines()[0]
+    assert usage_line.startswith("Usage: typer [PATH_OR_MODULE] run [OPTIONS] {name}")
+    assert "Try 'typer [PATH_OR_MODULE] run --help' for help." in result.output

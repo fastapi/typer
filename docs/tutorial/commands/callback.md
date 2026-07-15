@@ -40,7 +40,7 @@ Usage: main.py [OPTIONS] COMMAND [ARGS]...
   Manage users in the awesome CLI app.
 
 Options:
-  --verbose / --no-verbose  [default: False]
+  --verbose / --no-verbose  [default: no-verbose]
   --install-completion      Install completion for the current shell.
   --show-completion         Show completion for the current shell, to copy it or customize the installation.
   --help                    Show this message and exit.
@@ -67,7 +67,7 @@ Just created a user
 // Notice that --verbose belongs to the callback, it has to go before create or delete ⛔️
 $ python main.py create --verbose Camila
 
-Usage: main.py create [OPTIONS] USERNAME
+Usage: main.py create [OPTIONS] {username}
 Try "main.py create --help" for help.
 
 Error: No such option: --verbose
@@ -142,7 +142,7 @@ Usage: main.py [OPTIONS] COMMAND [ARGS]...
 
   Use it with the create command.
 
-  A new user with the given NAME will be created.
+  A new user with the given 'name' will be created.
 
 Options:
   --install-completion  Install completion for the current shell.
