@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Breaking Changes
+
+* 💥 Update metavar printing. PR [#1863](https://github.com/fastapi/typer/pull/1863) by [@svlandeg](https://github.com/svlandeg).
+
 ### Internal
 
 * ⬆ Bump the python-packages group across 1 directory with 5 updates. PR [#1896](https://github.com/fastapi/typer/pull/1896) by [@dependabot[bot]](https://github.com/apps/dependabot).
