@@ -15,16 +15,16 @@ Check it:
 ```console
 $ python main.py --help
 
-// Notice the extra RANGE in the help text for --age and --score
-Usage: main.py [OPTIONS] ID
+// Notice the extra range information in the help text for --age and --score
+Usage: main.py [OPTIONS] {ID}
 
 Arguments:
   ID  [required]
 
 Options:
-  --age INTEGER RANGE   [default: 20]
-  --score FLOAT RANGE   [default: 0]
-  --help                Show this message and exit.
+  --age <int range>      [default: 20; x>=18]
+  --score <float range>  [default: 0; x<=100]
+  --help                 Show this message and exit.
 
 // Pass all the CLI parameters
 $ python main.py 5 --age 20 --score 90
@@ -36,7 +36,7 @@ ID is 5
 // Pass an invalid ID
 $ python main.py 1002
 
-Usage: main.py [OPTIONS] ID
+Usage: main.py [OPTIONS] {ID}
 Try "main.py --help" for help.
 
 Error: Invalid value for 'ID': 1002 is not in the range 0<=x<=1000.
@@ -44,7 +44,7 @@ Error: Invalid value for 'ID': 1002 is not in the range 0<=x<=1000.
 // Pass an invalid age
 $ python main.py 5 --age 15
 
-Usage: main.py [OPTIONS] ID
+Usage: main.py [OPTIONS] {ID}
 Try "main.py --help" for help.
 
 Error: Invalid value for '--age': 15 is not in the range x>=18.
@@ -52,7 +52,7 @@ Error: Invalid value for '--age': 15 is not in the range x>=18.
 // Pass an invalid score
 $ python main.py 5 --age 20 --score 100.5
 
-Usage: main.py [OPTIONS] ID
+Usage: main.py [OPTIONS] {ID}
 Try "main.py --help" for help.
 
 Error: Invalid value for '--score': 100.5 is not in the range x<=100.
@@ -83,7 +83,7 @@ And then, when you pass data that is out of the valid range, it will be "clamped
 // ID doesn't have clamp, so it shows an error
 $ python main.py 1002
 
-Usage: main.py [OPTIONS] ID
+Usage: main.py [OPTIONS] {ID}
 Try "main.py --help" for help.
 
 Error: Invalid value for 'ID': 1002 is not in the range 0<=x<=1000.

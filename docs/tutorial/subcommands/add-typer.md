@@ -84,8 +84,8 @@ Options:
   --help                Show this message and exit.
 
 Commands:
-  items
   users
+  items
 ```
 
 </div>

@@ -17,9 +17,6 @@
 <a href="https://github.com/fastapi/typer/actions?query=workflow%3ATest+event%3Apush+branch%3Amaster">
     <img src="https://github.com/fastapi/typer/actions/workflows/test.yml/badge.svg?event=push&branch=master" alt="Test">
 </a>
-<a href="https://github.com/fastapi/typer/actions?query=workflow%3APublish">
-    <img src="https://github.com/fastapi/typer/workflows/Publish/badge.svg" alt="Publish">
-</a>
 <a href="https://coverage-badge.samuelcolvin.workers.dev/redirect/fastapi/typer">
     <img src="https://coverage-badge.samuelcolvin.workers.dev/fastapi/typer.svg" alt="Coverage">
 <a href="https://pypi.org/project/typer">
@@ -89,29 +86,29 @@ Run your application with the `typer` command:
 // Run your application
 $ typer main.py run
 
-// You get a nice error, you are missing NAME
-Usage: typer [PATH_OR_MODULE] run [OPTIONS] NAME
+// You get a nice error, you are missing 'name'
+Usage: typer [PATH_OR_MODULE] run [OPTIONS] {name}
 Try 'typer [PATH_OR_MODULE] run --help' for help.
 ╭─ Error ───────────────────────────────────────────╮
-│ Missing argument 'NAME'.                          │
+│ Missing argument 'name'.                          │
 ╰───────────────────────────────────────────────────╯
 
 
 // You get a --help for free
 $ typer main.py run --help
 
-Usage: typer [PATH_OR_MODULE] run [OPTIONS] NAME
+Usage: typer [PATH_OR_MODULE] run [OPTIONS] {name}
 
 Run the provided Typer app.
 
 ╭─ Arguments ───────────────────────────────────────╮
-│ *    name      TEXT  [default: None] [required]   |
+│ *    name      <str>  [required]                  │
 ╰───────────────────────────────────────────────────╯
 ╭─ Options ─────────────────────────────────────────╮
 │ --help          Show this message and exit.       │
 ╰───────────────────────────────────────────────────╯
 
-// Now pass the NAME argument
+// Now pass the 'name' argument
 $ typer main.py run Camila
 
 Hello Camila
@@ -149,27 +146,27 @@ Now you could run it with Python directly:
 // Run your application
 $ python main.py
 
-// You get a nice error, you are missing NAME
-Usage: main.py [OPTIONS] NAME
+// You get a nice error, you are missing 'name'
+Usage: main.py [OPTIONS] {name}
 Try 'main.py --help' for help.
 ╭─ Error ───────────────────────────────────────────╮
-│ Missing argument 'NAME'.                          │
+│ Missing argument 'name'.                          │
 ╰───────────────────────────────────────────────────╯
 
 
 // You get a --help for free
 $ python main.py --help
 
-Usage: main.py [OPTIONS] NAME
+Usage: main.py [OPTIONS] {name}
 
 ╭─ Arguments ───────────────────────────────────────╮
-│ *    name      TEXT  [default: None] [required]   |
+│ *    name      <str>  [required]                  │
 ╰───────────────────────────────────────────────────╯
 ╭─ Options ─────────────────────────────────────────╮
 │ --help          Show this message and exit.       │
 ╰───────────────────────────────────────────────────╯
 
-// Now pass the NAME argument
+// Now pass the 'name' argument
 $ python main.py Camila
 
 Hello Camila
@@ -247,13 +244,13 @@ $ python main.py --help
 │                               and exit.           │
 ╰───────────────────────────────────────────────────╯
 ╭─ Commands ────────────────────────────────────────╮
-│ goodbye                                           │
 │ hello                                             │
+│ goodbye                                           │
 ╰───────────────────────────────────────────────────╯
 
 // When you create a package you get ✨ auto-completion ✨ for free, installed with --install-completion
 
-// You have 2 subcommands (the 2 functions): goodbye and hello
+// You have 2 subcommands (the 2 functions): hello and goodbye
 ```
 
 </div>
@@ -265,10 +262,10 @@ Now check the help for the `hello` command:
 ```console
 $ python main.py hello --help
 
- Usage: main.py hello [OPTIONS] NAME
+ Usage: main.py hello [OPTIONS] {name}
 
 ╭─ Arguments ───────────────────────────────────────╮
-│ *    name      TEXT  [default: None] [required]   │
+│ *    name      <str>  [required]                  │
 ╰───────────────────────────────────────────────────╯
 ╭─ Options ─────────────────────────────────────────╮
 │ --help          Show this message and exit.       │
@@ -284,10 +281,10 @@ And now check the help for the `goodbye` command:
 ```console
 $ python main.py goodbye --help
 
- Usage: main.py goodbye [OPTIONS] NAME
+ Usage: main.py goodbye [OPTIONS] {name}
 
 ╭─ Arguments ───────────────────────────────────────╮
-│ *    name      TEXT  [default: None] [required]   │
+│ *    name      <str>  [required]                  │
 ╰───────────────────────────────────────────────────╯
 ╭─ Options ─────────────────────────────────────────╮
 │ --formal    --no-formal      [default: no-formal] │

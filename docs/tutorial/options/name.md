@@ -53,7 +53,7 @@ $ python main.py --help
 Usage: main.py [OPTIONS]
 
 Options:
-  --name TEXT           [required]
+  --name <str>          [required]
   --help                Show this message and exit.
 
 // Try it
@@ -201,7 +201,7 @@ $ python main.py --help
 Usage: main.py [OPTIONS]
 
 Options:
-  -n, --name TEXT       [required]
+  -n, --name <str>      [required]
   --help                Show this message and exit.
 
 // Try the short version
@@ -229,7 +229,7 @@ $ python main.py --help
 Usage: main.py [OPTIONS]
 
 Options:
-  -n TEXT               [required]
+  -n <str>              [required]
   --help                Show this message and exit.
 
 // Try it
@@ -258,7 +258,7 @@ $ python main.py --help
 Usage: main.py [OPTIONS]
 
 Options:
-  -n, --user-name TEXT  [required]
+  -n, --user-name <str> [required]
   --help                Show this message and exit.
 
 // Try it
@@ -298,7 +298,7 @@ $ python main.py --help
 Usage: main.py [OPTIONS]
 
 Options:
-  -n, --name TEXT       [required]
+  -n, --name <str>      [required]
   -f, --formal
   --help                Show this message and exit.
 

@@ -58,12 +58,12 @@ Now let's see how this works in the terminal:
 // check the help
 $ python main.py --help
 
-// Notice the &lt;TEXT INTEGER BOOLEAN&gt;
+// Notice the <str int boolean>
 Usage: main.py [OPTIONS]
 
 Options:
-  --user &lt;TEXT INTEGER BOOLEAN&gt;...
-  --help                          Show this message and exit.
+  --user <str int boolean>...
+  --help                       Show this message and exit.
 
 // Now try it
 $ python main.py --user Camila 50 yes

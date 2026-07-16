@@ -47,10 +47,10 @@ Check it:
 // Check the help
 $ python main.py --help
 
-Usage: main.py [OPTIONS] [NAMES]...
+Usage: main.py [OPTIONS] [names]...
 
 Arguments:
-  [NAMES]...  Select 3 characters to play with  [default: Harry, Hermione, Ron]
+  names...  Select 3 characters to play with  [default: Harry, Hermione, Ron]
 
 Options:
   --help                Show this message and exit.

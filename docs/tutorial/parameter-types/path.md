@@ -16,8 +16,8 @@ Check it:
 // No config
 $ python main.py
 
+Aborted.
 No config file
-Aborted!
 
 // Pass a config that doesn't exist
 $ python main.py --config config.txt

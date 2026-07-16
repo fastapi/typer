@@ -27,7 +27,7 @@ def get_mod(request: pytest.FixtureRequest) -> ModuleType:
 def test_type_repr(mod: ModuleType):
     command = typer.main.get_command(mod.app)
 
-    id_param = next(param for param in command.params if param.name == "id")
+    id_param = next(param for param in command.params if param.name == "ID")
     assert repr(id_param.type) == "<IntRange 0<=x<=1000>"
 
     age_param = next(param for param in command.params if param.name == "age")
@@ -41,9 +41,9 @@ def test_help(mod: ModuleType):
     result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
     assert "--age" in result.output
-    assert "INTEGER RANGE" in result.output
+    assert "int range" in result.output
     assert "--score" in result.output
-    assert "FLOAT RANGE" in result.output
+    assert "float range" in result.output
 
 
 def test_help_no_rich(monkeypatch: pytest.MonkeyPatch, mod: ModuleType):
@@ -51,9 +51,9 @@ def test_help_no_rich(monkeypatch: pytest.MonkeyPatch, mod: ModuleType):
     result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
     assert "--age" in result.output
-    assert "INTEGER RANGE" in result.output
+    assert "int range" in result.output
     assert "--score" in result.output
-    assert "FLOAT RANGE" in result.output
+    assert "float range" in result.output
 
 
 def test_params(mod: ModuleType):

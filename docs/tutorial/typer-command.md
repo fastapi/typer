@@ -169,13 +169,13 @@ Then you can call it with:
 
 ```console
 $ typer main.py run --help
-Usage: typer run [OPTIONS]
+Usage: typer [PATH_OR_MODULE] run [OPTIONS]
 
   Say hi to someone, by default to the World.
 
 Options:
-  --name TEXT
-  --help       Show this message and exit.
+  --name <str>  [default: World]
+  --help        Show this message and exit.
 
 $ typer main.py run --name Camila
 
@@ -196,10 +196,10 @@ For example:
 
 ```console
 $ typer my_package.main run --help
-Usage: typer run [OPTIONS]
+Usage: typer [PATH_OR_MODULE] run [OPTIONS]
 
 Options:
-  --name TEXT
+  --name <str>
   --help       Show this message and exit.
 
 $ typer my_package.main run --name Camila
@@ -265,9 +265,9 @@ $ python -m typer some_script.py utils docs
 
 **Options**:
 
-* `--name TEXT`: The name of the CLI program to use in docs.
-* `--output FILE`: An output file to write docs to, like README.md.
-* `--title TEXT`: A title to use in the docs, by default the name of the command.
+* `--name <str>`: The name of the CLI program to use in docs.
+* `--output <file>`: An output file to write docs to, like README.md.
+* `--title <str>`: A title to use in the docs, by default the name of the command.
 
 For example:
 
@@ -305,19 +305,19 @@ $ awesome-cli [OPTIONS] COMMAND [ARGS]...
 
 **Commands**:
 
-* `create`: Create a new user with USERNAME.
-* `delete`: Delete a user with USERNAME.
+* `create`: Create a new user with username.
+* `delete`: Delete a user with username.
 * `delete-all`: Delete ALL users in the database.
 * `init`: Initialize the users database.
 
 ## `awesome-cli create`
 
-Create a new user with USERNAME.
+Create a new user with username.
 
 **Usage**:
 
 ```console
-$ awesome-cli create [OPTIONS] USERNAME
+$ awesome-cli create [OPTIONS] {username}
 ```
 
 **Options**:
@@ -326,14 +326,14 @@ $ awesome-cli create [OPTIONS] USERNAME
 
 ## `awesome-cli delete`
 
-Delete a user with USERNAME.
+Delete a user with 'username'.
 
 If --force is not used, will ask for confirmation.
 
 **Usage**:
 
 ```console
-$ awesome-cli delete [OPTIONS] USERNAME
+$ awesome-cli delete [OPTIONS] {username}
 ```
 
 **Options**:

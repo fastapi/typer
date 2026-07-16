@@ -7,8 +7,8 @@ This tutorial will show you how to use `add_typer` to create sub commands and or
 We will create a simple CLI with the following commands:
 
 - `version`
-- `users add NAME`
-- `users delete NAME`
+- `users add 'name'`
+- `users delete 'name'`
 
 ## CLI structure
 

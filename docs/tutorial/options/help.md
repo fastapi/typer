@@ -31,18 +31,18 @@ Test it:
 ```console
 $ python main.py --help
 
-Usage: main.py [OPTIONS] NAME
+Usage: main.py [OPTIONS] {name}
 
-  Say hi to NAME, optionally with a --lastname.
+  Say hi to 'name', optionally with a --lastname.
 
   If --formal is used, say hi very formally.
 
 Arguments:
-  NAME  [required]
+  name  [required]
 
 Options:
-  --lastname TEXT         Last name of person to greet. [default: ]
-  --formal / --no-formal  Say hi formally.  [default: False]
+  --lastname <str>        Last name of person to greet.
+  --formal / --no-formal  Say hi formally.  [default: no-formal]
   --help                  Show this message and exit.
 
 // Now you have a help text for the --lastname and --formal CLI options 🎉
@@ -67,16 +67,16 @@ And below you will see other panels for the *CLI options* that have a custom pan
 ```console
 $ python main.py --help
 
-<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] NAME                                </b>
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] {name}                                </b>
 <b>                                                                     </b>
- Say hi to NAME, optionally with a <font color="#A1EFE4"><b>--lastname</b></font>.
+ Say hi to 'name', optionally with a <font color="#A1EFE4"><b>--lastname</b></font>.
  If <font color="#6B9F98"><b>--formal</b></font><font color="#A5A5A1"> is used, say hi very formally.                          </font>
 
 <font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    name      <font color="#F4BF75"><b>TEXT</b></font>  [default: None] <font color="#A6194C">[required]</font>                   │
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    name      <font color="#F4BF75"><b>&lt;str&gt;</b></font>  <font color="#A6194C">[required]</font>                                  │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--lastname</b></font>                  <font color="#F4BF75"><b>TEXT</b></font>  Last name of person to greet.   │
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--lastname</b></font>                  <font color="#F4BF75"><b>&lt;str&gt;</b></font>  Last name of person to greet.  │
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                      <font color="#F4BF75"><b>    </b></font>  Show this message and exit.     │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Customization and Utils ─────────────────────────────────────────╮</font>
@@ -119,7 +119,7 @@ $ python main.py --help
 Usage: main.py [OPTIONS]
 
 Options:
-  --fullname TEXT
+  --fullname <str>
   --help                Show this message and exit.
 
 // Notice there's no [default: Wade Wilson] 🔥
@@ -148,7 +148,7 @@ $ python main.py --help
 Usage: main.py [OPTIONS]
 
 Options:
-  --fullname TEXT       [default: (Deadpoolio the amazing's name)]
+  --fullname <str>      [default: (Deadpoolio the amazing's name)]
   --help                Show this message and exit.
 
 // Notice how it shows "(Deadpoolio the amazing's name)" instead of the actual default of "Wade Wilson"
