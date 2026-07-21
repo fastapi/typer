@@ -82,7 +82,7 @@ All we did there achieves the same thing as before, a **required** *CLI argument
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 Usage: main.py [OPTIONS] {name}
 Try "main.py --help" for help.
@@ -130,7 +130,7 @@ Check the help:
 
 ```console
 // First check the help
-$ python main.py --help
+$ uv run python main.py --help
 
 Usage: main.py [OPTIONS] [name]
 
@@ -157,12 +157,12 @@ Now run it and test it:
 
 ```console
 // With no CLI argument
-$ python main.py
+$ uv run python main.py
 
 Hello World!
 
 // With one optional CLI argument
-$ python main.py Camila
+$ uv run python main.py Camila
 
 Hello Camila
 ```

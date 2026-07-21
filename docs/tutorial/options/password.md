@@ -9,7 +9,7 @@ And the CLI program will ask for confirmation:
 <div class="termy">
 
 ```console
-$ python main.py Camila
+$ uv run python main.py Camila
 
 // It prompts for the email
 # Email: $ camila@example.com
@@ -37,7 +37,7 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py Camila
+$ uv run python main.py Camila
 
 // It prompts for the password, but doesn't show anything when you type
 # Password: $

@@ -108,11 +108,11 @@ To run the application, you can execute it as a Python module:
 <div class="termy">
 
 ```console
-$ python -m mycli.main version
+$ uv run python -m mycli.main version
 
 My CLI Version 1.0
 
-$ python -m mycli.main users add Camila
+$ uv run python -m mycli.main users add Camila
 
 Adding user: Camila
 ```

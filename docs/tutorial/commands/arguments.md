@@ -8,7 +8,7 @@ The same way as with a CLI application with a single command, subcommands (or ju
 
 ```console
 // Check the help for create
-$ python main.py create --help
+$ uv run python main.py create --help
 
 Usage: main.py create [OPTIONS] {username}
 
@@ -19,12 +19,12 @@ Options:
   --help  Show this message and exit.
 
 // Call it with a CLI argument
-$ python main.py create Camila
+$ uv run python main.py create Camila
 
 Creating user: Camila
 
 // The same for delete
-$ python main.py delete Camila
+$ uv run python main.py delete Camila
 
 Deleting user: Camila
 ```

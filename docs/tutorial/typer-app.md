@@ -49,7 +49,7 @@ If you run the second example, with the explicit `app`, it works exactly the sam
 
 ```console
 // Without a CLI argument
-$ python main.py
+$ uv run python main.py
 
 Usage: main.py [OPTIONS] {name}
 Try "main.py --help" for help.
@@ -57,12 +57,12 @@ Try "main.py --help" for help.
 Error: Missing argument 'name'.
 
 // With the 'name' CLI argument
-$ python main.py Camila
+$ uv run python main.py Camila
 
 Hello Camila
 
 // Asking for help
-$ python main.py  --help
+$ uv run python main.py  --help
 
 Usage: main.py [OPTIONS] {name}
 
@@ -93,7 +93,7 @@ So instead of running a Python script like:
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 ✨ Some magic here ✨
 ```

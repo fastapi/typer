@@ -43,17 +43,20 @@ The key features are:
 
 ## Installation
 
-Create and activate a [virtual environment](https://typer.tiangolo.com/virtual-environments/) and then install **Typer**:
+First, [install `uv`](https://docs.astral.sh/uv/getting-started/installation/), and then add **Typer** to your project:
 
 <div class="termy">
 
 ```console
-$ pip install typer
+$ uv add typer
 ---> 100%
-Successfully installed typer rich shellingham
 ```
 
 </div>
+
+This installs both the Typer library and the `typer` command in the project's virtual environment. To use `typer` directly with shell completion, [activate the project environment and install completion](tutorial/install.md#activate-the-virtual-environment).
+
+If you prefer to use `pip`, install `typer` inside a virtual environment. See the [installation guide](tutorial/install.md) for the alternative steps.
 
 ## Example
 
@@ -136,7 +139,7 @@ Now you could run it with Python directly:
 
 ```console
 // Run your application
-$ python main.py
+$ uv run python main.py
 
 // You get a nice error, you are missing 'name'
 Usage: main.py [OPTIONS] {name}
@@ -147,7 +150,7 @@ Try 'main.py --help' for help.
 
 
 // You get a --help for free
-$ python main.py --help
+$ uv run python main.py --help
 
 Usage: main.py [OPTIONS] {name}
 
@@ -159,7 +162,7 @@ Usage: main.py [OPTIONS] {name}
 ╰───────────────────────────────────────────────────╯
 
 // Now pass the 'name' argument
-$ python main.py Camila
+$ uv run python main.py Camila
 
 Hello Camila
 
@@ -219,7 +222,7 @@ Check the new help:
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
  Usage: main.py [OPTIONS] COMMAND [ARGS]...
 
@@ -252,7 +255,7 @@ Now check the help for the `hello` command:
 <div class="termy">
 
 ```console
-$ python main.py hello --help
+$ uv run python main.py hello --help
 
  Usage: main.py hello [OPTIONS] {name}
 
@@ -271,7 +274,7 @@ And now check the help for the `goodbye` command:
 <div class="termy">
 
 ```console
-$ python main.py goodbye --help
+$ uv run python main.py goodbye --help
 
  Usage: main.py goodbye [OPTIONS] {name}
 
@@ -296,19 +299,19 @@ Now you can try out the new command line application:
 ```console
 // Use it with the hello command
 
-$ python main.py hello Camila
+$ uv run python main.py hello Camila
 
 Hello Camila
 
 // And with the goodbye command
 
-$ python main.py goodbye Camila
+$ uv run python main.py goodbye Camila
 
 Bye Camila!
 
 // And with --formal
 
-$ python main.py goodbye --formal Camila
+$ uv run python main.py goodbye --formal Camila
 
 Goodbye Ms. Camila. Have a good day.
 ```

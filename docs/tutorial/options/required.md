@@ -43,7 +43,7 @@ And test it:
 
 ```console
 // Pass the 'name' CLI argument
-$ python main.py Camila
+$ uv run python main.py Camila
 
 // We didn't pass the now required --lastname CLI option
 Usage: main.py [OPTIONS] {name}
@@ -52,12 +52,12 @@ Try "main.py --help" for help.
 Error: Missing option '--lastname'.
 
 // Now update it to pass the required --lastname CLI option
-$ python main.py Camila --lastname Gutiérrez
+$ uv run python main.py Camila --lastname Gutiérrez
 
 Hello Camila Gutiérrez
 
 // And if you check the help
-$ python main.py --help
+$ uv run python main.py --help
 
 Usage: main.py [OPTIONS] {name}
 

@@ -10,7 +10,7 @@ And then your program will ask the user for it in the terminal:
 
 ```console
 // Call it with the 'name' CLI argument
-$ python main.py Camila
+$ uv run python main.py Camila
 
 // It asks for the missing CLI option --lastname
 # Lastname: $ Gutiérrez
@@ -32,7 +32,7 @@ And then your program will ask for it using with your custom prompt:
 
 ```console
 // Call it with the 'name' CLI argument
-$ python main.py Camila
+$ uv run python main.py Camila
 
 // It uses the custom prompt
 # Please tell me your last name: $ Gutiérrez
@@ -57,7 +57,7 @@ And it will prompt the user for a value and then for the confirmation:
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 // Your app will first prompt for the project name, and then for the confirmation
 # Project name: $ Old Project
@@ -66,7 +66,7 @@ $ python main.py
 Deleting project Old Project
 
 // If the user doesn't type the same, receives an error and a new prompt
-$ python main.py
+$ uv run python main.py
 
 # Project name: $ Old Project
 # Repeat for confirmation: $ New Spice

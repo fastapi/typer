@@ -16,18 +16,18 @@ Check it:
 
 ```console
 // The default value is 'None'
-$ python main.py
+$ uv run python main.py
 
 No provided users (raw input = None)
 Aborted!
 
 // Now pass a user
-$ python main.py --user Camila
+$ uv run python main.py --user Camila
 
 Processing user: Camila
 
 // And now try with several users
-$ python main.py --user Camila --user Rick --user Morty
+$ uv run python main.py --user Camila --user Rick --user Morty
 
 Processing user: Camila
 Processing user: Rick
@@ -47,17 +47,17 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 The sum is 0
 
 // Try with some numbers
-$ python main.py --number 2
+$ uv run python main.py --number 2
 
 The sum is 2.0
 
 // Try with some numbers
-$ python main.py --number 2 --number 3 --number 4.5
+$ uv run python main.py --number 2 --number 3 --number 4.5
 
 The sum is 9.5
 ```

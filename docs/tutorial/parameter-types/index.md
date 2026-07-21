@@ -21,7 +21,7 @@ And here's how it looks like:
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice how --age is an 'int' (integer) and --height-meters is a 'float'
 Usage: main.py [OPTIONS] {name}
@@ -36,7 +36,7 @@ Options:
   --help                    Show this message and exit.
 
 // Call it with CLI parameters
-$ python main.py Camila --age 15 --height-meters 1.70 --female
+$ uv run python main.py Camila --age 15 --height-meters 1.70 --female
 
 // All the data has the correct Python type
 name is Camila, of type: class 'str'
@@ -45,7 +45,7 @@ name is Camila, of type: class 'str'
 --female is True, of type: class 'bool'
 
 // And if you pass an incorrect type
-$ python main.py Camila --age 15.3
+$ uv run python main.py Camila --age 15.3
 
 Usage: main.py [OPTIONS] {name}
 Try "main.py --help" for help.

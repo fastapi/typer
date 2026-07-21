@@ -9,7 +9,7 @@ It will show the output normally:
 <div class="termy">
 
 ```console
-$ python main.py World
+$ uv run python main.py World
 
 Hello World
 ```
@@ -31,7 +31,7 @@ Just with that, **Rich** will be able to print your data with nice colors and st
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 Here's the data
 <b>{</b>
@@ -57,7 +57,7 @@ Rich also supports a [custom markup syntax](https://rich.readthedocs.io/en/stabl
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 <font color="#F92672"><b>Alert!</b></font> <font color="#A6E22E">Portal gun</font> shooting! 💥
 ```
@@ -85,7 +85,7 @@ If you run it, you will see a nicely formatted table:
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 ┏━━━━━━━┳━━━━━━━━━━━━┓
 ┃<b> Name  </b>┃<b> Item       </b>┃
@@ -159,7 +159,7 @@ When you try it in the terminal, it will probably just look the same:
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 Here is something written to standard error
 ```
