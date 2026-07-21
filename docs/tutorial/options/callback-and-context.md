@@ -23,11 +23,11 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py --name Camila
+$ uv run python main.py --name Camila
 
 Hello Camila
 
-$ python main.py --name Rick
+$ uv run python main.py --name Rick
 
 Usage: main.py [OPTIONS]
 
@@ -170,7 +170,7 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py --name Camila
+$ uv run python main.py --name Camila
 
 Validating param: name
 Hello Camila

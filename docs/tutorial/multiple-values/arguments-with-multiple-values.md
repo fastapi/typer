@@ -11,7 +11,7 @@ And then you can pass it as many *CLI arguments* of that type as you want:
 <div class="termy">
 
 ```console
-$ python main.py ./index.md ./first-steps.md woohoo!
+$ uv run python main.py ./index.md ./first-steps.md woohoo!
 
 This file exists: index.md
 woohoo!
@@ -45,7 +45,7 @@ Check it:
 
 ```console
 // Check the help
-$ python main.py --help
+$ uv run python main.py --help
 
 Usage: main.py [OPTIONS] [names]...
 
@@ -56,19 +56,19 @@ Options:
   --help                Show this message and exit.
 
 // Use it with its defaults
-$ python main.py
+$ uv run python main.py
 
 Hello Harry
 Hello Hermione
 Hello Ron
 
 // If you pass an invalid number of arguments you will get an error
-$ python main.py Draco Hagrid
+$ uv run python main.py Draco Hagrid
 
 Error: Argument 'names' takes 3 values
 
 // And if you pass the exact number of values it will work correctly
-$ python main.py Draco Hagrid Dobby
+$ uv run python main.py Draco Hagrid Dobby
 
 Hello Draco
 Hello Hagrid

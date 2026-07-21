@@ -19,7 +19,7 @@ And it will be used in the automatic `--help` option:
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 // Check the section with Arguments below 🚀
 Usage: main.py [OPTIONS] {name}
@@ -44,7 +44,7 @@ And the `--help` option will combine all the information:
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice that we have the help text from the docstring and also the Arguments 📝
 Usage: main.py [OPTIONS] {name}
@@ -71,7 +71,7 @@ It will show that default value in the help text:
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice the [default: World] 🔍
 Usage: main.py [OPTIONS] [name]
@@ -96,7 +96,7 @@ And then it won't show the default value:
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice the there's no [default: World] now 🔥
 Usage: main.py [OPTIONS] [name]
@@ -123,7 +123,7 @@ And it will be used in the help text:
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 Usage: main.py [OPTIONS] [name]
 
@@ -168,7 +168,7 @@ Now the generated help text will have `✨username✨` instead of `name`:
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 Usage: main.py [OPTIONS] [✨username✨]
 
@@ -196,7 +196,7 @@ And next you will see other panels for the *CLI arguments* that have a custom pa
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 <b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] {name} [lastname] [age]               </b>
 <b>                                                                     </b>
@@ -237,7 +237,7 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice there's no Arguments section at all 🔥
 Usage: main.py [OPTIONS] [name]

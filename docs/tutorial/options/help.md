@@ -29,7 +29,7 @@ Test it:
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 Usage: main.py [OPTIONS] {name}
 
@@ -65,7 +65,7 @@ And below you will see other panels for the *CLI options* that have a custom pan
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 <b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] {name}                                </b>
 <b>                                                                     </b>
@@ -109,12 +109,12 @@ And it will no longer show the default value in the help text:
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 Hello Wade Wilson
 
 // Show the help
-$ python main.py --help
+$ uv run python main.py --help
 
 Usage: main.py [OPTIONS]
 
@@ -138,12 +138,12 @@ And it will be used in the help text:
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 Hello Wade Wilson
 
 // Show the help
-$ python main.py --help
+$ uv run python main.py --help
 
 Usage: main.py [OPTIONS]
 

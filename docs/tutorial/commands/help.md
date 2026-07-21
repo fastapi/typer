@@ -12,7 +12,7 @@ Check it:
 
 ```console
 // Check the new help
-$ python main.py --help
+$ uv run python main.py --help
 
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
 
@@ -32,7 +32,7 @@ Commands:
 // Now the commands have inline help 🎉
 
 // Check the help for create
-$ python main.py create --help
+$ uv run python main.py create --help
 
 Usage: main.py create [OPTIONS] {username}
 
@@ -45,7 +45,7 @@ Options:
   --help  Show this message and exit.
 
 // Check the help for delete
-$ python main.py delete --help
+$ uv run python main.py delete --help
 
 Usage: main.py delete [OPTIONS] {username}
 
@@ -61,7 +61,7 @@ Options:
   --help                Show this message and exit.
 
 // Check the help for delete-all
-$ python main.py delete-all --help
+$ uv run python main.py delete-all --help
 
 Usage: main.py delete-all [OPTIONS]
 
@@ -74,7 +74,7 @@ Options:
   --help                Show this message and exit.
 
 // Check the help for init
-$ python main.py init --help
+$ uv run python main.py init --help
 
 Usage: main.py init [OPTIONS]
 
@@ -106,7 +106,7 @@ Check it:
 
 ```console
 // Check the help
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice it uses the help passed to @app.command()
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
@@ -139,7 +139,7 @@ And when you show the `--help` option you will see it's marked as "`deprecated`"
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 <b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] COMMAND [ARGS]...                  </b>
 <b>                                                                     </b>
@@ -164,7 +164,7 @@ And if you check the `--help` for the deprecated command (in this example, the c
 <div class="termy">
 
 ```console
-$ python main.py delete --help
+$ uv run python main.py delete --help
 
 <b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py delete [OPTIONS] {username}                  </b>
 <b>                                                                     </b>
@@ -193,7 +193,7 @@ If a user mistypes a command, they'll see a helpful suggestion:
 <div class="termy">
 
 ```console
-$ python main.py crate
+$ uv run python main.py crate
 
 <font color="#C4A000">Usage: </font>main.py [OPTIONS] COMMAND [ARGS]...
 <font color="#AAAAAA">Try </font><font color="#22436D">&apos;main.py </font><font color="#4C6A8A"><b>--help</b></font><font color="#22436D">&apos;</font><font color="#AAAAAA"> for help.</font>
@@ -236,7 +236,7 @@ Check the help for the `create` command:
 <div class="termy">
 
 ```console
-$ python main.py create --help
+$ uv run python main.py create --help
 
 <b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py create [OPTIONS] {username}                   </b>
 <b>                                                                     </b>
@@ -259,7 +259,7 @@ And check the help for the `delete` command:
 <div class="termy">
 
 ```console
-$ python main.py delete --help
+$ uv run python main.py delete --help
 
 <b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py delete [OPTIONS] {username}                     </b>
 <b>                                                                     </b>
@@ -293,7 +293,7 @@ Check the help for the `create` command:
 <div class="termy">
 
 ```console
-$ python main.py create --help
+$ uv run python main.py create --help
 
 <b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py create [OPTIONS] {username}                     </b>
 <b>                                                                     </b>
@@ -321,7 +321,7 @@ And the same for the `delete` command:
 <div class="termy">
 
 ```console
-$ python main.py delete --help
+$ uv run python main.py delete --help
 
 <b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py delete [OPTIONS] {username}                     </b>
 <b>                                                                     </b>
@@ -363,7 +363,7 @@ Commands without a panel will be shown in the default panel `Commands`, and the 
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 <b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] COMMAND [ARGS]...                   </b>
 <b>                                                                     </b>
@@ -411,7 +411,7 @@ You can check the `--help` option for the command `create`:
 <div class="termy">
 
 ```console
-$ python main.py create --help
+$ uv run python main.py create --help
 
 <b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py create [OPTIONS] {username} [lastname]          </b>
 <b>                                                                     </b>
@@ -445,7 +445,7 @@ And those panels will be shown when you use the main `--help` option.
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 <b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] COMMAND [ARGS]...                   </b>
 <b>                                                                     </b>
@@ -480,7 +480,7 @@ And when you check the `--help` option it will look like:
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 <b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] {username}                            </b>
 <b>                                                                     </b>

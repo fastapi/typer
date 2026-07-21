@@ -32,13 +32,13 @@ Check it:
 
 ```console
 // Pass a valid UUID v4
-$ python main.py d48edaa6-871a-4082-a196-4daab372d4a1
+$ uv run python main.py d48edaa6-871a-4082-a196-4daab372d4a1
 
 User ID is d48edaa6-871a-4082-a196-4daab372d4a1
 UUID version is: 4
 
 // An invalid value
-$ python main.py 7479706572-72756c6573
+$ uv run python main.py 7479706572-72756c6573
 
 Usage: main.py [OPTIONS] {user_id}
 Try "main.py --help" for help.

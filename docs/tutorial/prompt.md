@@ -11,7 +11,7 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 # What's your name?:$ Camila
 
@@ -31,14 +31,14 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 # Are you sure you want to delete it? [y/N]:$ y
 
 Deleting it!
 
 // This time cancel it
-$ python main.py
+$ uv run python main.py
 
 # Are you sure you want to delete it? [y/N]:$ n
 
@@ -57,14 +57,14 @@ As it's very common to abort if the user doesn't confirm, there's an integrated 
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 # Are you sure you want to delete it? [y/N]:$ y
 
 Deleting it!
 
 // This time cancel it
-$ python main.py
+$ uv run python main.py
 
 # Are you sure you want to delete it? [y/N]:$ n
 
@@ -84,7 +84,7 @@ And when you run it, it will look like:
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 # Enter your name 😎:$ Morty
 
