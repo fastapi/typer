@@ -367,7 +367,9 @@ def _print_options_panel(
         # Argument name label and option type display use separate APIs.
         display_name: str | None = None
         if isinstance(param, TyperArgument):
-            display_name = param.rich_display_name()
+            display_name = param.display_name_raw
+            if param.metavar is None and param.nargs != 1:
+                display_name += "..."
 
         for opt_str in param.opts:
             if "--" in opt_str:
