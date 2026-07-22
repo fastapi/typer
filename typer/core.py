@@ -242,12 +242,16 @@ def _get_default_string(
     if show_default_is_str:
         default_string = f"({obj.show_default})"
     elif isinstance(default_value, (list, tuple)):
-        default_string = ", ".join(
+        parts = [
             _get_default_string(
                 obj, ctx=ctx, show_default_is_str=show_default_is_str, default_value=d
             )
             for d in default_value
-        )
+        ]
+        if all(not part for part in parts):
+            default_string = ""
+        else:
+            default_string = ", ".join(parts)
     elif isinstance(default_value, Enum):
         default_string = str(default_value.value)
     elif inspect.isfunction(default_value):
@@ -273,6 +277,8 @@ def _get_default_string(
         and not obj.secondary_opts
         and not default_value
     ):
+        default_string = ""
+    elif default_value is None:
         default_string = ""
     else:
         default_string = str(default_value)
@@ -476,7 +482,7 @@ class TyperArgument(TyperParameter):
 
     def rich_display_name(self) -> str:
         """Argument display name for the Rich help name column."""
-        name = self.display_name()
+        name = self.display_name_raw
         if self.metavar is None and self.nargs != 1:
             name += "..."
         return name
