@@ -29,7 +29,7 @@ def test_help(mod: ModuleType):
     assert "create" in result.output
     assert "Create a new shiny user. ✨" in result.output
     assert "delete" in result.output
-    assert "Delete a user with USERNAME." in result.output
+    assert "Delete a user with username." in result.output
     assert "Some internal utility function to create." not in result.output
     assert "Some internal utility function to delete." not in result.output
 
@@ -45,7 +45,7 @@ def test_help_create(mod: ModuleType):
 def test_help_delete(mod: ModuleType):
     result = runner.invoke(mod.app, ["delete", "--help"])
     assert result.exit_code == 0
-    assert "Delete a user with USERNAME." in result.output
+    assert "Delete a user with username." in result.output
     assert "The username to be deleted" in result.output
     assert "Force the deletion 💥" in result.output
     assert "Some internal utility function to delete." not in result.output

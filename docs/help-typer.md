@@ -45,18 +45,6 @@ You can follow [me (Sebastián Ramírez / `tiangolo`)](https://tiangolo.com), th
 * [@tiangolo.com on **Bluesky**](https://bsky.app/profile/tiangolo.com)
 * [@tiangolo on **LinkedIn**](https://www.linkedin.com/in/tiangolo/).
 
-## Help others with questions in GitHub
-
-You can try and help others with their questions in [GitHub Discussions](https://github.com/fastapi/typer/discussions/categories/questions?discussions_q=category%3AQuestions+is%3Aunanswered).
-
-In many cases you might already know the answer for those questions. 🤓
-
-Just remember, the most important point is: try to be kind. 🤗
-
-### How to Help
-
-Follow the [guide on how to help](https://tiangolo.com/open-source/help/#help-others-with-questions-in-github) here.
-
 ## Ask Questions
 
 You can [create a new question](https://github.com/fastapi/typer/discussions/new?category=questions) in the GitHub repository, for example to:

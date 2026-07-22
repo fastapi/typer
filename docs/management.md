@@ -13,7 +13,3 @@ I normally give the final review to each PR before merging them. I make the fina
 There's a team of people that help manage and maintain the project. 😎
 
 Learn more about it in [tiangolo.com - GitHub FastAPI](https://tiangolo.com/github-fastapi/).
-
-## External Help
-
-External help is very much appreciated. There are many ways to [help](./help-typer.md). ☕️

@@ -48,7 +48,7 @@ To run any of the examples, copy the code to a file `main.py`, and run it:
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 ✨ The magic happens here ✨
 ```

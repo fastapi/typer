@@ -2,9 +2,11 @@
 
 You can also configure a *CLI argument* to read a value from an environment variable if it is not provided in the command line as a *CLI argument*.
 
+An **environment variable** (also known as an **env var**) is a value that lives outside of your Python code, in the operating system, and can be read by your application and other programs.
+
 /// tip
 
-You can learn more about environment variables in the [Environment Variables](../../environment-variables.md) page.
+Read the [Environment Variables guide](https://tiangolo.com/guides/environment-variables/) for a detailed, cross-platform explanation.
 
 ///
 
@@ -18,38 +20,49 @@ In this case, the *CLI argument* `name` will have a default value of `"World"`, 
 
 ```console
 // Check the help
-$ python main.py --help
+$ uv run python main.py --help
 
-Usage: main.py [OPTIONS] [NAME]
+Usage: main.py [OPTIONS] [name]
 
 Arguments:
-  [NAME]  [env var: AWESOME_NAME;default: World]
+  name  [env var: AWESOME_NAME; default: World]
 
 Options:
   --help                Show this message and exit.
 
 // Call it without a CLI argument
-$ python main.py
+$ uv run python main.py
 
 Hello Mr. World
 
 // Now pass a value for the CLI argument
-$ python main.py Czernobog
+$ uv run python main.py Czernobog
 
 Hello Mr. Czernobog
 
 // And now use the environment variable
-$ AWESOME_NAME=Wednesday python main.py
+$ AWESOME_NAME=Wednesday uv run python main.py
 
 Hello Mr. Wednesday
 
 // CLI arguments take precedence over env vars
-$ AWESOME_NAME=Wednesday python main.py Czernobog
+$ AWESOME_NAME=Wednesday uv run python main.py Czernobog
 
 Hello Mr. Czernobog
 ```
 
 </div>
+
+/// tip | Windows PowerShell
+
+In PowerShell, set the environment variable first and then run the command:
+
+```console
+$ $Env:AWESOME_NAME = "Wednesday"
+$ uv run python main.py
+```
+
+///
 
 ## Multiple environment variables
 
@@ -63,23 +76,23 @@ Check it:
 
 ```console
 // Check the help
-$ python main.py --help
+$ uv run python main.py --help
 
-Usage: main.py [OPTIONS] [NAME]
+Usage: main.py [OPTIONS] [name]
 
 Arguments:
-  [NAME]  [env var: AWESOME_NAME, GOD_NAME;default: World]
+  name  [env var: AWESOME_NAME, GOD_NAME; default: World]
 
 Options:
   --help                Show this message and exit.
 
 // Try the first env var
-$ AWESOME_NAME=Wednesday python main.py
+$ AWESOME_NAME=Wednesday uv run python main.py
 
 Hello Mr. Wednesday
 
 // Try the second env var
-$ GOD_NAME=Anubis python main.py
+$ GOD_NAME=Anubis uv run python main.py
 
 Hello Mr. Anubis
 ```
@@ -98,19 +111,19 @@ Check it:
 
 ```console
 //Check the help
-$ python main.py --help
+$ uv run python main.py --help
 
 // It won't show the env var
-Usage: main.py [OPTIONS] [NAME]
+Usage: main.py [OPTIONS] [name]
 
 Arguments:
-  [NAME]  [default: World]
+  name  [default: World]
 
 Options:
   --help                Show this message and exit.
 
 // But it will still be able to use it
-$ AWESOME_NAME=Wednesday python main.py
+$ AWESOME_NAME=Wednesday uv run python main.py
 
 Hello Mr. Wednesday
 ```

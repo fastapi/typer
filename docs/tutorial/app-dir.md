@@ -11,7 +11,7 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 Config file doesn't exist yet
 ```

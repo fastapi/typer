@@ -13,14 +13,14 @@ Test it:
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 Hello World
 
 // It just prints "Hello World".
 
 // Now check the --help
-$ python main.py --help
+$ uv run python main.py --help
 
 <b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS]                            </b>
 <b>                                                     </b>
@@ -67,24 +67,24 @@ Update the previous example with an argument `name`:
 
 ```console
 
-$ python main.py
+$ uv run python main.py
 
 // If you run it without the argument, it shows a nice error
-<font color="#F4BF75">Usage: </font>main.py [OPTIONS] NAME
+<font color="#F4BF75">Usage: </font>main.py [OPTIONS] {name}
 <font color="#A5A5A1">Try </font><font color="#44919F">&apos;main.py </font><font color="#44919F"><b>--help</b></font><font color="#44919F">&apos;</font><font color="#A5A5A1"> for help.</font>
 <font color="#F92672">╭─ Error ───────────────────────────────────────────╮</font>
-<font color="#F92672">│</font> Missing argument &apos;NAME&apos;.                          <font color="#F92672">│</font>
+<font color="#F92672">│</font> Missing argument &apos;name&apos;.                          <font color="#F92672">│</font>
 <font color="#F92672">╰───────────────────────────────────────────────────╯</font>
 
-// Now pass that NAME CLI argument
-$ python main.py Camila
+// Now pass that 'name' CLI argument
+$ uv run python main.py Camila
 
 Hello Camila
 
 // Here "Camila" is the CLI argument
 
 // To pass a name with spaces for the same CLI argument, use quotes
-$ python main.py "Camila Gutiérrez"
+$ uv run python main.py "Camila Gutiérrez"
 
 Hello Camila Gutiérrez
 ```
@@ -109,35 +109,32 @@ So, extend that to have 2 arguments, `name` and `lastname`:
 
 ```console
 // Check the main --help
-$ python main.py --help
+$ uv run python main.py --help
 
-<font color="#F4BF75">Usage: </font>main.py [OPTIONS] NAME
-<font color="#A5A5A1">Try </font><font color="#44919F">&apos;main.py </font><font color="#44919F"><b>--help</b></font><font color="#44919F">&apos;</font><font color="#A5A5A1"> for help.</font>
-<font color="#F92672">╭─ Error ───────────────────────────────────────────╮</font>
-<font color="#F92672">│</font> Missing argument &apos;NAME&apos;.                          <font color="#F92672">│</font>
-<font color="#F92672">╰───────────────────────────────────────────────────╯</font>
-
-<font color="#A1EFE4"><b>typer</b></font> on <font color="#AE81FF"><b> richify</b></font> <font color="#F92672"><b>[»!?] </b></font>via <font color="#F4BF75"><b>🐍 v3.7.5 (env3.7)</b></font>
-<font color="#F92672"><b>❯</b></font> <font color="#A6E22E">python</font> <u style="text-decoration-style:single">main.py</u>
-<font color="#F4BF75">Usage: </font>main.py [OPTIONS] NAME LASTNAME
-<font color="#A5A5A1">Try </font><font color="#44919F">&apos;main.py </font><font color="#44919F"><b>--help</b></font><font color="#44919F">&apos;</font><font color="#A5A5A1"> for help.</font>
-<font color="#F92672">╭─ Error ───────────────────────────────────────────╮</font>
-<font color="#F92672">│</font> Missing argument &apos;NAME&apos;.                          <font color="#F92672">│</font>
-<font color="#F92672">╰───────────────────────────────────────────────────╯</font>
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] {name} {lastname}                            </b>
+<b>                                                                   </b>
+<font color="#A5A5A1">╭─ Arguments ─────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    name          <font color="#F4BF75"><b>&lt;str&gt;</b></font>  <font color="#A6194C">[required]</font>                            │
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    lastname      <font color="#F4BF75"><b>&lt;str&gt;</b></font>  <font color="#A6194C">[required]</font>                            │
+<font color="#A5A5A1">╰─────────────────────────────────────────────────────────────────╯</font>
+<font color="#A5A5A1">╭─ Options ───────────────────────────────────────────────────────╮</font>
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                                   Show this message and  │
+<font color="#A5A5A1">│                                          exit.                  │</font>
+<font color="#A5A5A1">╰─────────────────────────────────────────────────────────────────╯</font>
 
 // There are now 2 CLI arguments, name and lastname
 
 // Now pass a single name argument
-$ python main.py Camila
+$ uv run python main.py Camila
 
-<font color="#F4BF75">Usage: </font>main.py [OPTIONS] NAME LASTNAME
+<font color="#F4BF75">Usage: </font>main.py [OPTIONS] {name} {lastname}
 <font color="#A5A5A1">Try </font><font color="#44919F">&apos;main.py </font><font color="#44919F"><b>--help</b></font><font color="#44919F">&apos;</font><font color="#A5A5A1"> for help.</font>
 <font color="#F92672">╭─ Error ───────────────────────────────────────────╮</font>
-<font color="#F92672">│</font> Missing argument &apos;LASTNAME&apos;.                      <font color="#F92672">│</font>
+<font color="#F92672">│</font> Missing argument &apos;lastname&apos;.                      <font color="#F92672">│</font>
 <font color="#F92672">╰───────────────────────────────────────────────────╯</font>
 
 // These 2 arguments are required, so, pass both:
-$ python main.py Camila Gutiérrez
+$ uv run python main.py Camila Gutiérrez
 
 Hello Camila Gutiérrez
 ```
@@ -151,7 +148,7 @@ Notice that the order is important. The last name has to go after the first name
 If you called it with:
 
 ```
-$ python main.py Gutiérrez Camila
+$ uv run python main.py Gutiérrez Camila
 ```
 
 your app wouldn't have a way to know which is the `name` and which the `lastname`. It expects the first *CLI argument* to be the `name` and the second *CLI argument* to be the `lastname`.
@@ -236,13 +233,13 @@ Here `formal` is a `bool` that is `False` by default.
 
 ```console
 // Get the help
-$ python main.py --help
+$ uv run python main.py --help
 
-<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] NAME LASTNAME                            </b>
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] {name} {lastname}                            </b>
 <b>                                                                   </b>
 <font color="#A5A5A1">╭─ Arguments ─────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    name          <font color="#F4BF75"><b>TEXT</b></font>  [default: None] <font color="#A6194C">[required]</font>             │
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    lastname      <font color="#F4BF75"><b>TEXT</b></font>  [default: None] <font color="#A6194C">[required]</font>             │
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    name          <font color="#F4BF75"><b>&lt;str&gt;</b></font>  <font color="#A6194C">[required]</font>                            │
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    lastname      <font color="#F4BF75"><b>&lt;str&gt;</b></font>  <font color="#A6194C">[required]</font>                            │
 <font color="#A5A5A1">╰─────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ───────────────────────────────────────────────────────╮</font>
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--formal</b></font>                <font color="#AE81FF"><b>--no-formal</b></font>      [default: no-formal]   │
@@ -264,21 +261,21 @@ Now call it normally:
 <div class="termy">
 
 ```console
-$ python main.py Camila Gutiérrez
+$ uv run python main.py Camila Gutiérrez
 
 Hello Camila Gutiérrez
 
 // But if you pass --formal
-$ python main.py Camila Gutiérrez --formal
+$ uv run python main.py Camila Gutiérrez --formal
 
 Good day Ms. Camila Gutiérrez.
 
 // And as --formal is a CLI option you can put it anywhere in this command
-$ python main.py Camila --formal Gutiérrez
+$ uv run python main.py Camila --formal Gutiérrez
 
 Good day Ms. Camila Gutiérrez.
 
-$ python main.py --formal Camila Gutiérrez
+$ uv run python main.py --formal Camila Gutiérrez
 
 Good day Ms. Camila Gutiérrez.
 ```
@@ -296,15 +293,15 @@ As `lastname` now has a default value of `""` (an empty string) it is no longer 
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
-<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] NAME                                       </b>
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] {name}                                       </b>
 <b>                                                                     </b>
 <font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    name      <font color="#F4BF75"><b>TEXT</b></font>  [default: None] <font color="#A6194C">[required]</font>                   │
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    name      <font color="#F4BF75"><b>&lt;str&gt;</b></font>  <font color="#A6194C">[required]</font>                                  │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--lastname</b></font>                             <font color="#F4BF75"><b>TEXT</b></font>                       │
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--lastname</b></font>                             <font color="#F4BF75"><b>&lt;str&gt;</b></font>                      │
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--formal</b></font>                <font color="#AE81FF"><b>--no-formal</b></font>    <font color="#F4BF75"><b>    </b></font>  [default: no-formal] │
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                                 <font color="#F4BF75"><b>    </b></font>  Show this message    │
 <font color="#A5A5A1">│                                              and exit.            │</font>
@@ -325,12 +322,12 @@ A *CLI option* with a value like `--lastname` (contrary to a *CLI option* withou
 
 ```console
 // Call it without a --lastname
-$ python main.py Camila
+$ uv run python main.py Camila
 
 Hello Camila
 
 // Pass the --lastname
-$ python main.py Camila --lastname Gutiérrez
+$ uv run python main.py Camila --lastname Gutiérrez
 
 Hello Camila Gutiérrez
 ```
@@ -348,7 +345,7 @@ And as `--lastname` is now a *CLI option* that doesn't depend on the order, you 
 <div class="termy">
 
 ```console
-$ python main.py --lastname Gutiérrez Camila
+$ uv run python main.py --lastname Gutiérrez Camila
 
 // and it will still work normally
 Hello Camila Gutiérrez
@@ -367,18 +364,18 @@ Now see it with the `--help` option:
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
-<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] NAME                                       </b>
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] {name}                                       </b>
 <b>                                                                     </b>
- Say hi to NAME, optionally with a <font color="#A1EFE4"><b>--lastname</b></font>.
+ Say hi to 'name', optionally with a <font color="#A1EFE4"><b>--lastname</b></font>.
  If <font color="#6B9F98"><b>--formal</b></font><font color="#A5A5A1"> is used, say hi very formally.                          </font>
 
 <font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    name      <font color="#F4BF75"><b>TEXT</b></font>  [default: None] <font color="#A6194C">[required]</font>                   │
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    name      <font color="#F4BF75"><b>&lt;str&gt;</b></font>  <font color="#A6194C">[required]</font>                                  │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--lastname</b></font>                             <font color="#F4BF75"><b>TEXT</b></font>                       │
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--lastname</b></font>                             <font color="#F4BF75"><b>&lt;str&gt;</b></font>                      │
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--formal</b></font>                <font color="#AE81FF"><b>--no-formal</b></font>    <font color="#F4BF75"><b>    </b></font>  [default: no-formal] │
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                                 <font color="#F4BF75"><b>    </b></font>  Show this message    │
 <font color="#A5A5A1">│                                              and exit.            │</font>
@@ -468,16 +465,16 @@ We will use ***CLI parameter*** to refer to both, *CLI arguments* and *CLI optio
 
 ## The `typer` Command
 
-When you install `typer`, by default it adds a `typer` command to your shell.
+When you [activate the project's virtual environment](install.md#activate-the-virtual-environment), the `typer` command installed in that project becomes available directly in your shell.
 
-This `typer` command allows you to run your scripts with ✨ auto completion ✨ in your terminal.
+After you install completion for it, this `typer` command allows you to run your scripts with ✨ auto completion ✨ in your terminal.
 
 As an alternative to running with Python:
 
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 Hello World
 ```

@@ -161,7 +161,7 @@ def print_version(ctx: _click.Context, param: TyperOption, value: bool) -> None:
 def callback(
     ctx: typer.Context,
     *,
-    path_or_module: str = typer.Argument(None),
+    path_or_module: str = typer.Argument(None, metavar="PATH_OR_MODULE"),
     app: str = typer.Option(None, help="The typer app object/variable to use."),
     func: str = typer.Option(None, help="The function to convert to Typer."),
     version: bool = typer.Option(

@@ -224,6 +224,18 @@ def test_help_table_alignment_with_styled_text():
     )
 
 
+def test_rich_help_no_boolean_type() -> None:
+    app = typer.Typer(rich_markup_mode="rich")
+
+    @app.command()
+    def main(name: str) -> None:
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "<boolean>" not in result.output
+
+
 def test_rich_help_metavar():
     app = typer.Typer(rich_markup_mode="rich")
 
@@ -253,8 +265,8 @@ def test_rich_help_metavar():
     # arguments
     assert "arg1<int>" in out_nospace
     assert "arg3<int>" in out_nospace
-    assert "[ARG4]<int>" in out_nospace
-    assert "[meta7]<int>" in out_nospace
+    assert "ARG4<int>" in out_nospace
+    assert "meta7<int>" in out_nospace
     assert "ARG8<int>" in out_nospace
     assert "arg9<int>" in out_nospace
 
@@ -266,3 +278,23 @@ def test_rich_help_metavar():
     assert "--arg2<int>" in out_nospace
     assert "--ARG5<int>" in out_nospace
     assert "--arg6<int>" in out_nospace
+
+
+def test_rich_lowercase_bracketed_metavar() -> None:
+    # Make sure Rich doesn't "swallow" a lowercased [path] (thinking it's a Rich annotation)
+    app = typer.Typer(rich_markup_mode="rich")
+
+    @app.callback()
+    def main(path_or_module: str = typer.Argument(None)) -> None:
+        pass  # pragma: no cover
+
+    @app.command()
+    def run(name: str) -> None:
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["my-module.py", "run"], prog_name="typer")
+
+    assert result.exit_code == 2
+    usage_line = result.output.splitlines()[0]
+    assert usage_line.startswith("Usage: typer [path_or_module] run [OPTIONS] {name}")
+    assert "Try 'typer [path_or_module] run --help' for help." in result.output

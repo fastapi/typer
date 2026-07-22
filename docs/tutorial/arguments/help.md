@@ -19,13 +19,13 @@ And it will be used in the automatic `--help` option:
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 // Check the section with Arguments below 🚀
-Usage: main.py [OPTIONS] NAME
+Usage: main.py [OPTIONS] {name}
 
 Arguments:
-  NAME  The name of the user to greet  [required]
+  name  The name of the user to greet  [required]
 
 Options:
   --help                Show this message and exit.
@@ -44,15 +44,15 @@ And the `--help` option will combine all the information:
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice that we have the help text from the docstring and also the Arguments 📝
-Usage: main.py [OPTIONS] NAME
+Usage: main.py [OPTIONS] {name}
 
-  Say hi to NAME very gently, like Dirk.
+  Say hi to 'name' very gently, like Dirk.
 
 Arguments:
-  NAME  The name of the user to greet  [required]
+  name  The name of the user to greet  [required]
 
 Options:
   --help                Show this message and exit.
@@ -71,15 +71,15 @@ It will show that default value in the help text:
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice the [default: World] 🔍
-Usage: main.py [OPTIONS] [NAME]
+Usage: main.py [OPTIONS] [name]
 
-  Say hi to NAME very gently, like Dirk.
+  Say hi to 'name' very gently, like Dirk.
 
 Arguments:
-  [NAME]  Who to greet  [default: World]
+  name  Who to greet  [default: World]
 
 Options:
   --help                Show this message and exit.
@@ -96,15 +96,15 @@ And then it won't show the default value:
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice the there's no [default: World] now 🔥
-Usage: main.py [OPTIONS] [NAME]
+Usage: main.py [OPTIONS] [name]
 
-  Say hi to NAME very gently, like Dirk.
+  Say hi to 'name' very gently, like Dirk.
 
 Arguments:
-  [NAME]  Who to greet
+  name  Who to greet
 
 Options:
   --help                Show this message and exit.
@@ -123,12 +123,12 @@ And it will be used in the help text:
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
-Usage: main.py [OPTIONS] [NAME]
+Usage: main.py [OPTIONS] [name]
 
 Arguments:
-  [NAME]  Who to greet  [default: (Deadpoolio the amazing's name)]
+  name  Who to greet  [default: (Deadpoolio the amazing's name)]
 
 
 Options:
@@ -143,7 +143,7 @@ Options:
 
 You can also customize the text used in the generated help text to represent a *CLI argument*.
 
-By default, it will be the same name you declared, in uppercase letters.
+By default, it will be the same name you declared, with casing preserved.
 
 So, if you declare it as:
 
@@ -154,26 +154,26 @@ name: str
 It will be shown as:
 
 ```
-NAME
+name
 ```
 
 But you can customize it with the `metavar` parameter for `typer.Argument()`.
 
-For example, let's say you don't want to have the default of `NAME`, you want to have `username`, in lowercase, and you really want ✨ emojis ✨ everywhere:
+For example, let's say you don't want to have the default of `name`, you want to have `username`, and you really want ✨ emojis ✨ everywhere:
 
 {* docs_src/arguments/help/tutorial006_an_py310.py hl[9] *}
 
-Now the generated help text will have `✨username✨` instead of `NAME`:
+Now the generated help text will have `✨username✨` instead of `name`:
 
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 Usage: main.py [OPTIONS] [✨username✨]
 
 Arguments:
-  [✨username✨]  [default: World]
+  ✨username✨  [default: World]
 
 Options:
   --help                Show this message and exit.
@@ -196,18 +196,18 @@ And next you will see other panels for the *CLI arguments* that have a custom pa
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
-<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] NAME [LASTNAME] [AGE]               </b>
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] {name} [lastname] [age]               </b>
 <b>                                                                     </b>
- Say hi to NAME very gently, like Dirk.
+ Say hi to 'name' very gently, like Dirk.
 
 <font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    name      <font color="#F4BF75"><b>TEXT</b></font>  Who to greet [default: None] <font color="#A6194C">[required]</font>      │
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    name      <font color="#F4BF75"><b>str</b></font>  Who to greet [default: None] <font color="#A6194C">[required]</font>       │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Secondary Arguments ─────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│   lastname      </font><font color="#A37F4E"><b>[LASTNAME]</b></font>  The last name                         │
-<font color="#A5A5A1">│   age           </font><font color="#A37F4E"><b>[AGE]     </b></font>  The user&apos;s age                        │
+<font color="#A5A5A1">│   lastname      </font><font color="#A37F4E"><b>lastname</b></font>  The last name                           │
+<font color="#A5A5A1">│   age           </font><font color="#A37F4E"><b>age     </b></font>  The user&apos;s age                          │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                        Show this message and exit.         │
@@ -237,12 +237,12 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice there's no Arguments section at all 🔥
-Usage: main.py [OPTIONS] [NAME]
+Usage: main.py [OPTIONS] [name]
 
-  Say hi to NAME very gently, like Dirk.
+  Say hi to 'name' very gently, like Dirk.
 
 Options:
   --help                Show this message and exit.

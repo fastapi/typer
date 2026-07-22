@@ -21,13 +21,13 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py create Camila
+$ uv run python main.py create Camila
 
 // We get the message from the callback
 About to execute command: create
 Creating user: Camila
 
-$ python main.py delete Camila
+$ uv run python main.py delete Camila
 
 // We get the message from the callback, this time with delete
 About to execute command: delete
@@ -51,13 +51,13 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 // The callback is executed, we don't get the default help message
 Initializing database
 
 // Try with a command
-$ python main.py create Camila
+$ uv run python main.py create Camila
 
 // The callback is still executed
 Initializing database
@@ -81,13 +81,13 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 // The callback is executed
 Initializing database
 
 // Check it with a subcommand
-$ python main.py create Camila
+$ uv run python main.py create Camila
 
 // This time the callback is not executed
 Creating user: Camila
@@ -108,7 +108,7 @@ Then you can access those extra raw *CLI parameters* as a `list` of `str` in `ct
 <div class="termy">
 
 ```console
-$ python main.py --name Camila --city Berlin
+$ uv run python main.py --name Camila --city Berlin
 
 Got extra arg: --name
 Got extra arg: Camila

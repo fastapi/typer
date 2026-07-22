@@ -17,7 +17,7 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice the predefined values <simple|conv|lstm>
 Usage: main.py [OPTIONS]
@@ -27,12 +27,12 @@ Options:
   --help                        Show this message and exit.
 
 // Try it
-$ python main.py --network conv
+$ uv run python main.py --network conv
 
 Training neural network of type: conv
 
 // Invalid value
-$ python main.py --network capsule
+$ uv run python main.py --network capsule
 
 Usage: main.py [OPTIONS]
 Try "main.py --help" for help.
@@ -40,7 +40,7 @@ Try "main.py --help" for help.
 Error: Invalid value for '--network': 'capsule' is not one of 'simple', 'conv', 'lstm'.
 
 // Note that enums are case sensitive by default
-$ python main.py --network CONV
+$ uv run python main.py --network CONV
 
 Usage: main.py [OPTIONS]
 Try "main.py --help" for help.
@@ -62,12 +62,12 @@ And then the values of the `Enum` will be checked no matter if lower case, upper
 
 ```console
 // Notice the upper case CONV
-$ python main.py --network CONV
+$ uv run python main.py --network CONV
 
 Training neural network of type: conv
 
 // A mix also works
-$ python main.py --network LsTm
+$ uv run python main.py --network LsTm
 
 Training neural network of type: lstm
 ```
@@ -85,7 +85,7 @@ This works just like any other parameter value taking a list of things:
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice the default values being shown
 Usage: main.py [OPTIONS]
@@ -95,17 +95,17 @@ Options:
   --help                                  Show this message and exit.
 
 // Try it with the default values
-$ python main.py
+$ uv run python main.py
 
 Buying groceries: Eggs, Cheese
 
 // Try it with a single value
-$ python main.py --groceries "Eggs"
+$ uv run python main.py --groceries "Eggs"
 
 Buying groceries: Eggs
 
 // Try it with multiple values
-$ python main.py --groceries "Eggs" --groceries "Bacon"
+$ uv run python main.py --groceries "Eggs" --groceries "Bacon"
 
 Buying groceries: Eggs, Bacon
 ```
@@ -121,7 +121,7 @@ You can also use `Literal` to represent a set of possible predefined choices, wi
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice the predefined values <simple|conv|lstm>
 Usage: main.py [OPTIONS]
@@ -131,12 +131,12 @@ Options:
   --help                        Show this message and exit.
 
 // Try it
-$ python main.py --network conv
+$ uv run python main.py --network conv
 
 Training neural network of type: conv
 
 // Invalid value
-$ python main.py --network capsule
+$ uv run python main.py --network capsule
 
 Usage: main.py [OPTIONS]
 Try "main.py --help" for help.

@@ -23,11 +23,11 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py --name Camila
+$ uv run python main.py --name Camila
 
 Hello Camila
 
-$ python main.py --name Rick
+$ uv run python main.py --name Rick
 
 Usage: main.py [OPTIONS]
 
@@ -61,12 +61,12 @@ utils  -- Extra utility commands for Typer apps.
 $ typer ./main.py run --help
 
 // You get a help text with your CLI options as you normally would
-Usage: typer run [OPTIONS]
+Usage: typer [PATH_OR_MODULE] run [OPTIONS]
 
   Run the provided Typer app.
 
 Options:
-  --name TEXT  [required]
+  --name <str>
   --help       Show this message and exit.
 
 // Then try completion with your program
@@ -170,7 +170,7 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py --name Camila
+$ uv run python main.py --name Camila
 
 Validating param: name
 Hello Camila

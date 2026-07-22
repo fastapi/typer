@@ -27,7 +27,7 @@ def test_help(mod: ModuleType):
     result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
     assert "[OPTIONS] [name]" in result.output
-    assert "Say hi to NAME very gently, like Dirk." in result.output
+    assert "Say hi to 'name' very gently, like Dirk." in result.output
     assert "Arguments" not in result.output
     assert "[default: World]" not in result.output
 
@@ -37,7 +37,7 @@ def test_help_no_rich(monkeypatch: pytest.MonkeyPatch, mod: ModuleType):
     result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
     assert "[OPTIONS] [name]" in result.output
-    assert "Say hi to NAME very gently, like Dirk." in result.output
+    assert "Say hi to 'name' very gently, like Dirk." in result.output
     assert "Arguments" not in result.output
     assert "[default: World]" not in result.output
 

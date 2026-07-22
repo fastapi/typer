@@ -26,7 +26,7 @@ def test_help(mod: ModuleType, monkeypatch):
     monkeypatch.setenv("COLUMNS", "200")
     result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
-    assert "Say hi to NAME, optionally with a --lastname." in result.output
+    assert "Say hi to 'name', optionally with a --lastname." in result.output
     assert "If --formal is used, say hi very formally." in result.output
     assert "Last name of person to greet." in result.output
     assert "Say hi formally." in result.output

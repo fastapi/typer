@@ -2,6 +2,17 @@
 
 ## Latest Changes
 
+### Docs
+
+* 📝 Recommend uv projects by default in docs. PR [#1903](https://github.com/fastapi/typer/pull/1903) by [@tiangolo](https://github.com/tiangolo).
+* 📝 Update help docs. PR [#1902](https://github.com/fastapi/typer/pull/1902) by [@tiangolo](https://github.com/tiangolo).
+
+## 0.27.0 (2026-07-15)
+
+### Breaking Changes
+
+* 💥 Update metavar printing. PR [#1863](https://github.com/fastapi/typer/pull/1863) by [@svlandeg](https://github.com/svlandeg).
+
 ### Internal
 
 * ⬆ Bump the python-packages group across 1 directory with 5 updates. PR [#1896](https://github.com/fastapi/typer/pull/1896) by [@dependabot[bot]](https://github.com/apps/dependabot).
