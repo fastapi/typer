@@ -488,13 +488,13 @@ def test_argv_encoding(
         pytest.param(
             Annotated[float, typer.Option(..., min=0.666, max=3.42)], "<float range>"
         ),
-        pytest.param(Annotated[tuple[str, int], typer.Option(...)], "<str int>..."),
-        pytest.param(Annotated[tuple[Path, str], typer.Option(...)], "<path str>..."),
+        pytest.param(Annotated[tuple[str, int], typer.Option(...)], "<str,int>..."),
+        pytest.param(Annotated[tuple[Path, str], typer.Option(...)], "<Path,str>..."),
         pytest.param(Annotated[str, typer.Option(..., resolve_path=True)], "<str>"),
         pytest.param(Annotated[Path, typer.Option(...)], "<path>"),
         pytest.param(Annotated[Path, typer.Option(..., dir_okay=False)], "<file>"),
         pytest.param(
-            Annotated[Path, typer.Option(..., file_okay=False)], "<directory>"
+            Annotated[Path, typer.Option(..., file_okay=False)], "<dir>"
         ),
         pytest.param(Annotated[SomeEnum, typer.Option(...)], "<one|two|three>"),
         pytest.param(Annotated[SomeEnum, typer.Argument()], "<one|two|three>"),
