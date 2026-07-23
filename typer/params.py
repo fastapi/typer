@@ -162,7 +162,7 @@ def Option(
             ```
             @app.command()
             def main(network: Annotated[str, typer.Option()] = "CNN"):
-                print(f"Hello {name}!")
+                print(f"Training neural network of type: {network}")
             ```
 
             You can also use `...` ([Ellipsis](https://docs.python.org/3/library/constants.html#Ellipsis)) as the "default" value to clarify that this is a required CLI option.
