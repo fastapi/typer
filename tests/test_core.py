@@ -25,7 +25,7 @@ def test_human_readable_name() -> None:
     command = typer.main.get_command(app)
     params = {param.name: param for param in command.params}
 
-    assert params["my_arg_1"].human_readable_name == "MY_ARG_1"
+    assert params["my_arg_1"].human_readable_name == "my_arg_1"
     assert params["my_arg_2"].human_readable_name == "META_ARG"
     assert params["my_opt"].human_readable_name == "my_opt"
 
@@ -377,3 +377,63 @@ def test_nargs_default_map():
     result = runner.invoke(app, [], default_map={"names": "not-a-list"})
     assert result.exit_code == 2
     assert "Invalid value" in result.output
+
+
+def test_parameter_name_casing():
+    app = typer.Typer()
+
+    @app.command()
+    def main(
+        arg1: int,
+        arg2: int = 42,
+        arg3: int = typer.Argument(...),
+        ARG4: int = typer.Argument(42),
+        ARG5: int = typer.Option(...),
+        arg6: int = typer.Option(42),
+        arg7: int = typer.Argument(42, metavar="meta7"),
+        arg8: int = typer.Argument(metavar="ARG8"),
+        arg9: int = typer.Option(metavar="ARG9"),
+    ):
+        print(
+            f"arg1={arg1} arg2={arg2} arg3={arg3} ARG4={ARG4} ARG5={ARG5} "
+            f"arg6={arg6} arg7={arg7} arg8={arg8} arg9={arg9}"
+        )
+
+    result = runner.invoke(
+        app,
+        [
+            "1",
+            "3",
+            "4",
+            "7",
+            "8",
+            "--arg2",
+            "2",
+            "--ARG5",
+            "5",
+            "--arg6",
+            "6",
+            "--ARG9",
+            "9",
+        ],
+    )
+    assert result.exit_code == 0
+    assert (
+        "arg1=1 arg2=2 arg3=3 ARG4=4 ARG5=5 arg6=6 arg7=7 arg8=8 arg9=9"
+        in result.output
+    )
+
+    result = runner.invoke(app, ["1", "3", "4", "7", "8", "--ARG5", "5", "--ARG9", "9"])
+    assert result.exit_code == 0
+    assert (
+        "arg1=1 arg2=42 arg3=3 ARG4=4 ARG5=5 arg6=42 arg7=7 arg8=8 arg9=9"
+        in result.output
+    )
+
+    result = runner.invoke(app, ["1", "3", "4", "7", "8", "--arg5", "5", "--ARG9", "9"])
+    assert result.exit_code != 0
+    assert "No such option: --arg5" in result.output
+
+    result = runner.invoke(app, ["1", "3", "4", "7", "8", "--ARG5", "5", "--arg9", "9"])
+    assert result.exit_code != 0
+    assert "No such option: --arg9" in result.output

@@ -17,28 +17,29 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
-Usage: main.py [OPTIONS] BIRTH:[%Y-%m-%d|%Y-%m-%dT%H:%M:%S|%Y-%m-%d %H:%M:%S]
+Usage: main.py [OPTIONS] {birth}:<%Y-%m-%d|%Y-%m-%dT%H:%M:%S|%Y-%m-%d %H:%M:%S>
 
 Arguments:
-  BIRTH:[%Y-%m-%d|%Y-%m-%dT%H:%M:%S|%Y-%m-%d %H:%M:%S][required]
+  birth:<%Y-%m-%d|%Y-%m-%dT%H:%M:%S|%Y-%m-%d %H:%M:%S> [required]
 
 Options:
   --help                Show this message and exit.
 
 // Pass a datetime
-$ python main.py 1956-01-31T10:00:00
+$ uv run python main.py 1956-01-31T10:00:00
 
 Interesting day to be born: 1956-01-31 10:00:00
 Birth hour: 10
 
 // An invalid date
-$ python main.py july-19-1989
+$ uv run python main.py july-19-1989
 
-Usage: main.py [OPTIONS] [%Y-%m-%d|%Y-%m-%dT%H:%M:%S|%Y-%m-%d%H:%M:%S]
+Usage: main.py [OPTIONS] {birth}:<%Y-%m-%d|%Y-%m-%dT%H:%M:%S|%Y-%m-%d %H:%M:%S>
+Try 'main.py --help' for help.
 
-Error: Invalid value for 'BIRTH:[%Y-%m-%d|%Y-%m-%dT%H:%M:%S|%Y-%m-%d %H:%M:%S]': 'july-19-1989' does not match the formats '%Y-%m-%d', '%Y-%m-%dT%H:%M:%S', '%Y-%m-%d %H:%M:%S'.
+Error: Invalid value for 'birth': 'july-19-1989' does not match the formats '%Y-%m-%d', '%Y-%m-%dT%H:%M:%S', '%Y-%m-%d %H:%M:%S'.
 ```
 
 </div>
@@ -72,12 +73,12 @@ Check it:
 
 ```console
 // ISO dates work
-$ python main.py 1969-10-29
+$ uv run python main.py 1969-10-29
 
 Launch will be at: 1969-10-29 00:00:00
 
 // But the strange custom format also works
-$ python main.py 10/29/1969
+$ uv run python main.py 10/29/1969
 
 Launch will be at: 1969-10-29 00:00:00
 ```

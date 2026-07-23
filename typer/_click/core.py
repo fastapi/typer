@@ -885,7 +885,11 @@ class Parameter(ABC):
         metavar = self.type.get_metavar(param=self, ctx=ctx)
 
         if metavar is None:
-            metavar = self.type.name.upper()
+            type_name = self.type.name
+            if type_name.startswith("<") and type_name.endswith(">"):
+                metavar = type_name
+            else:
+                metavar = f"<{type_name}>"
 
         if self.nargs != 1:
             metavar += "..."
@@ -921,7 +925,7 @@ class Parameter(ABC):
     def consume_value(
         self, ctx: Context, opts: Mapping[str, Any]
     ) -> tuple[Any, ParameterSource]:
-        value = opts.get(self.name)  # type: ignore
+        value = opts.get(self.name)  # type: ignore  # ty: ignore[unused-ignore-comment]
         source = ParameterSource.COMMANDLINE
 
         if value is None:

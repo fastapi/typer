@@ -11,7 +11,7 @@ So, you would use it like:
 <div class="termy">
 
 ```console
-$ python main.py Camila --city Berlin
+$ uv run python main.py Camila --city Berlin
 
 Hello Camila
 Let's have a coffee in Berlin
@@ -88,7 +88,7 @@ Then you can call `pytest` in your directory and it will run your tests:
 <div class="termy">
 
 ```console
-$ pytest
+$ uv run pytest
 
 ================ test session starts ================
 platform linux -- Python 3.10, pytest-5.3.5, py-1.8.1, pluggy-0.13.1
@@ -116,7 +116,7 @@ That you would use like:
 <div class="termy">
 
 ```console
-$ python main.py Camila
+$ uv run python main.py Camila
 
 # Email: $ camila@example.com
 

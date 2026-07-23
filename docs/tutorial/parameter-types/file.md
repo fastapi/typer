@@ -61,7 +61,7 @@ $ echo "some settings" > config.txt
 $ echo "some more settings" >> config.txt
 
 // Now run your program
-$ python main.py --config config.txt
+$ uv run python main.py --config config.txt
 
 Config line: some settings
 
@@ -90,7 +90,7 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py --config text.txt
+$ uv run python main.py --config text.txt
 
 Config written
 
@@ -125,7 +125,7 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py --file lena.jpg
+$ uv run python main.py --file lena.jpg
 
 Processed bytes total: 512
 Processed bytes total: 1024
@@ -152,7 +152,7 @@ If you have a `str`, you have to encode it first to get `bytes`.
 <div class="termy">
 
 ```console
-$ python main.py --file binary.dat
+$ uv run python main.py --file binary.dat
 
 Binary file written
 
@@ -210,16 +210,16 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py --config config.txt
+$ uv run python main.py --config config.txt
 
 Config line written
 
 // Run your program a couple more times to see how it appends instead of overwriting
-$ python main.py --config config.txt
+$ uv run python main.py --config config.txt
 
 Config line written
 
-$ python main.py --config config.txt
+$ uv run python main.py --config config.txt
 
 Config line written
 

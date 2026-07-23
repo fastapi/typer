@@ -1,7 +1,8 @@
 import os
+from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any
+from typing import Annotated, Any, Literal
 
 import pytest
 import typer
@@ -398,3 +399,65 @@ def test_argv_encoding(
 
     converted = _click.types.STRING.convert(b"\xff", None, None)
     assert converted == "ÿ"
+
+
+@pytest.mark.parametrize(
+    ("parameter", "expected_metavar"),
+    [
+        pytest.param(Annotated[str, typer.Option(...)], "<str>"),
+        pytest.param(Annotated[str, typer.Argument(...)], "<str>"),
+        pytest.param(Annotated[int, typer.Option(...)], "<int>"),
+        pytest.param(Annotated[int, typer.Argument(...)], "<int>"),
+        pytest.param(Annotated[float, typer.Option(...)], "<float>"),
+        pytest.param(
+            Annotated[float, typer.Option(..., min=0.666, max=3.42)], "<float range>"
+        ),
+        pytest.param(Annotated[tuple[str, int], typer.Option(...)], "<str int>..."),
+        pytest.param(Annotated[tuple[Path, str], typer.Option(...)], "<path str>..."),
+        pytest.param(Annotated[str, typer.Option(..., resolve_path=True)], "<str>"),
+        pytest.param(Annotated[Path, typer.Option(...)], "<path>"),
+        pytest.param(Annotated[Path, typer.Option(..., dir_okay=False)], "<file>"),
+        pytest.param(
+            Annotated[Path, typer.Option(..., file_okay=False)], "<directory>"
+        ),
+        pytest.param(Annotated[SomeEnum, typer.Option(...)], "<one|two|three>"),
+        pytest.param(Annotated[SomeEnum, typer.Argument()], "<one|two|three>"),
+        pytest.param(Annotated[Literal["x", "y"], typer.Option(...)], "<x|y>"),
+        pytest.param(
+            Annotated[datetime, typer.Option(..., formats=["%Y-%m-%d", "%d/%m/%Y"])],
+            "<%Y-%m-%d|%d/%m/%Y>",
+        ),
+    ],
+)
+def test_param_type_help_metavar(parameter: Any, expected_metavar: str) -> None:
+    app = typer.Typer()
+
+    @app.command()
+    # TODO: type-specific default
+    def with_default(value: parameter = "my_default"):
+        pass  # pragma: no cover
+
+    @app.command()
+    def without_default(value: parameter):
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["with-default", "--help"])
+    assert result.exit_code == 0
+    assert expected_metavar in result.output
+
+    result = runner.invoke(app, ["without-default", "--help"])
+    assert result.exit_code == 0
+    assert expected_metavar in result.output
+
+
+def test_metavar_preformatted_square_brackets() -> None:
+    app = typer.Typer()
+
+    @app.command()
+    def main(value: Annotated[str, typer.Argument(metavar="[VALUE]")]):
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "[VALUE]" in result.output
+    assert "[[VALUE]]" not in result.output

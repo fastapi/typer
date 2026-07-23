@@ -14,13 +14,13 @@ Check it:
 
 ```console
 // No config
-$ python main.py
+$ uv run python main.py
 
+Aborted.
 No config file
-Aborted!
 
 // Pass a config that doesn't exist
-$ python main.py --config config.txt
+$ uv run python main.py --config config.txt
 
 The config doesn't exist
 
@@ -28,12 +28,12 @@ The config doesn't exist
 $ echo "some settings" > config.txt
 
 // And try again
-$ python main.py --config config.txt
+$ uv run python main.py --config config.txt
 
 Config file contents: some settings
 
 // And with a directory
-$ python main.py --config ./
+$ uv run python main.py --config ./
 
 Config is a directory, will use all its config files
 ```
@@ -66,7 +66,7 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py --config config.txt
+$ uv run python main.py --config config.txt
 
 Usage: main.py [OPTIONS]
 Try "main.py --help" for help.
@@ -77,12 +77,12 @@ Error: Invalid value for '--config': File 'config.txt' does not exist.
 $ echo "some settings" > config.txt
 
 // And try again
-$ python main.py --config config.txt
+$ uv run python main.py --config config.txt
 
 Config file contents: some settings
 
 // And with a directory
-$ python main.py --config ./
+$ uv run python main.py --config ./
 
 Usage: main.py [OPTIONS]
 Try "main.py --help" for help.

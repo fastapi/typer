@@ -50,7 +50,7 @@ class TyperChoice(types.ParamType, Generic[ParamTypeValue]):
     def get_metavar(self, param: _click.Parameter, ctx: _click.Context) -> str | None:
         if param.param_type_name == "option" and not param.show_choices:  # type: ignore
             choice_metavars = [
-                types.convert_type(type(choice)).name.upper() for choice in self.choices
+                types.convert_type(type(choice)).name for choice in self.choices
             ]
             choices_str = "|".join([*dict.fromkeys(choice_metavars)])
         else:
@@ -58,12 +58,8 @@ class TyperChoice(types.ParamType, Generic[ParamTypeValue]):
                 [str(i) for i in self._normalized_mapping(ctx=ctx).values()]
             )
 
-        # Use curly braces to indicate a required argument.
-        if param.required and param.param_type_name == "argument":
-            return f"{{{choices_str}}}"
-
-        # Use square braces to indicate an option or optional argument.
-        return f"[{choices_str}]"
+        # Use square braces as it's a type.
+        return f"<{choices_str}>"
 
     def get_missing_message(
         self, param: _click.Parameter, ctx: _click.Context | None

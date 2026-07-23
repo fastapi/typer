@@ -23,7 +23,7 @@ So, the error you see will be **much clearer** and simpler, to help you detect t
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 <font color="#F92672">╭──────────────── </font><font color="#F92672"><b>Traceback (most recent call last)</b></font><font color="#F92672"> ────────────────╮</font>
 <font color="#F92672">│</font> <font color="#A37F4E">/home/user/code/superapp/</font><font color="#F4BF75"><b>main.py</b></font>:<font color="#66D9EF">8</font> in <font color="#A6E22E">main</font>                        <font color="#F92672">│</font>
@@ -50,7 +50,7 @@ In this case, Typer will still do some tricks to show you the information **as c
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 Traceback (most recent call last):
 
@@ -84,7 +84,7 @@ Now, when using Rich, you will see the error with the local variables:
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 <font color="#F92672">╭──────────────── </font><font color="#F92672"><b>Traceback (most recent call last)</b></font><font color="#F92672"> ────────────────╮</font>
 <font color="#F92672">│</font> <font color="#A37F4E">/home/user/code/superapp/</font><font color="#F4BF75"><b>main.py</b></font>:<font color="#66D9EF">5</font> in <font color="#A6E22E">main</font>                        <font color="#F92672">│</font>
@@ -121,7 +121,7 @@ Now when you run it, you will see the whole output:
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 <font color="#F92672">╭──────────────── </font><font color="#F92672"><b>Traceback (most recent call last)</b></font><font color="#F92672"> ────────────────╮</font>
 <font color="#F92672">│</font> <font color="#A37F4E">/home/user/code/superapp/</font><font color="#F4BF75"><b>main.py</b></font>:<font color="#66D9EF">12</font> in <font color="#A6E22E">&lt;module&gt;</font>                   <font color="#F92672">│</font>
@@ -203,7 +203,7 @@ And now you will see the full standard exception as with any other Python progra
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 Traceback (most recent call last):
   File "main.py", line 12, in <module>
@@ -239,7 +239,7 @@ This will work for any other Typer program too, in case you need to debug a prob
 
 ```console
 export TYPER_STANDARD_TRACEBACK=1
-$ python main.py
+$ uv run python main.py
 
 
 Traceback (most recent call last):

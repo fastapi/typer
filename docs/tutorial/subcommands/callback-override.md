@@ -15,7 +15,7 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py users create Camila
+$ uv run python main.py users create Camila
 
 // Notice the first message is not created by the command function but by the callback
 Running a users command
@@ -37,7 +37,7 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py users create Camila
+$ uv run python main.py users create Camila
 
 Running a users command
 Creating user: Camila
@@ -62,7 +62,7 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py users create Camila
+$ uv run python main.py users create Camila
 
 // Notice the message from the new callback
 Callback override, running users command
@@ -88,7 +88,7 @@ Check it:
 <div class="termy">
 
 ```console
-$ python users create Camila
+$ uv run python users create Camila
 
 // Notice the message from the callback added in add_typer()
 I have the high land! Running users command

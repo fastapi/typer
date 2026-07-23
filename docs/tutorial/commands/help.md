@@ -12,7 +12,7 @@ Check it:
 
 ```console
 // Check the new help
-$ python main.py --help
+$ uv run python main.py --help
 
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
 
@@ -24,38 +24,44 @@ Options:
   --help                Show this message and exit.
 
 Commands:
-  create      Create a new user with USERNAME.
-  delete      Delete a user with USERNAME.
+  create      Create a new user with username.
+  delete      Delete a user with username.
   delete-all  Delete ALL users in the database.
   init        Initialize the users database.
 
 // Now the commands have inline help 🎉
 
 // Check the help for create
-$ python main.py create --help
+$ uv run python main.py create --help
 
-Usage: main.py create [OPTIONS] USERNAME
+Usage: main.py create [OPTIONS] {username}
 
-  Create a new user with USERNAME.
+  Create a new user with username.
+
+Arguments:
+  username  [required]
 
 Options:
   --help  Show this message and exit.
 
 // Check the help for delete
-$ python main.py delete --help
+$ uv run python main.py delete --help
 
-Usage: main.py delete [OPTIONS] USERNAME
+Usage: main.py delete [OPTIONS] {username}
 
-  Delete a user with USERNAME.
+  Delete a user with username.
 
   If --force is not used, will ask for confirmation.
+
+Arguments:
+  username  [required]
 
 Options:
   --force / --no-force  Force deletion without confirmation.  [required]
   --help                Show this message and exit.
 
 // Check the help for delete-all
-$ python main.py delete-all --help
+$ uv run python main.py delete-all --help
 
 Usage: main.py delete-all [OPTIONS]
 
@@ -68,7 +74,7 @@ Options:
   --help                Show this message and exit.
 
 // Check the help for init
-$ python main.py init --help
+$ uv run python main.py init --help
 
 Usage: main.py init [OPTIONS]
 
@@ -100,7 +106,7 @@ Check it:
 
 ```console
 // Check the help
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice it uses the help passed to @app.command()
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
@@ -112,10 +118,10 @@ Options:
   --help                Show this message and exit.
 
 Commands:
-  create  Create a new user with USERNAME.
-  delete  Delete a user with USERNAME.
+  create  Create a new user with username.
+  delete  Delete a user with username.
 
-// It uses "Create a new user with USERNAME." instead of "Some internal utility function to create."
+// It uses "Create a new user with username." instead of "Some internal utility function to create."
 ```
 
 </div>
@@ -133,7 +139,7 @@ And when you show the `--help` option you will see it's marked as "`deprecated`"
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 <b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] COMMAND [ARGS]...                  </b>
 <b>                                                                     </b>
@@ -158,16 +164,16 @@ And if you check the `--help` for the deprecated command (in this example, the c
 <div class="termy">
 
 ```console
-$ python main.py delete --help
+$ uv run python main.py delete --help
 
-<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py delete [OPTIONS] USERNAME                    </b>
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py delete [OPTIONS] {username}                  </b>
 <b>                                                                     </b>
  <font color="#F92672">(deprecated) </font>
  Delete a user.
  This is deprecated and will stop being supported soon.
 
 <font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>TEXT</b></font>  [default: None] <font color="#A6194C">[required]</font>               │
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>&lt;str&gt;</b></font>  <font color="#A6194C">[required]</font>                              │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>          Show this message and exit.                       │
@@ -187,7 +193,7 @@ If a user mistypes a command, they'll see a helpful suggestion:
 <div class="termy">
 
 ```console
-$ python main.py crate
+$ uv run python main.py crate
 
 <font color="#C4A000">Usage: </font>main.py [OPTIONS] COMMAND [ARGS]...
 <font color="#AAAAAA">Try </font><font color="#22436D">&apos;main.py </font><font color="#4C6A8A"><b>--help</b></font><font color="#22436D">&apos;</font><font color="#AAAAAA"> for help.</font>
@@ -230,16 +236,15 @@ Check the help for the `create` command:
 <div class="termy">
 
 ```console
-$ python main.py create --help
+$ uv run python main.py create --help
 
-<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py create [OPTIONS] USERNAME                     </b>
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py create [OPTIONS] {username}                   </b>
 <b>                                                                     </b>
  <font color="#A6E22E"><b>Create</b></font> a new <i>shiny</i> user. ✨
  This requires a <font color="#A5A5A1"><u style="text-decoration-style:single">username</u></font><font color="#A5A5A1">.                                           </font>
 
 <font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>TEXT</b></font>  The username to be <font color="#A6E22E">created</font>               │
-<font color="#A5A5A1">│                          [default: None]                          │</font>
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>&lt;str&gt;</b></font>  The username to be <font color="#A6E22E">created</font>              │
 <font color="#A5A5A1">│                          </font><font color="#A6194C">[required]                </font>               │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
@@ -254,15 +259,14 @@ And check the help for the `delete` command:
 <div class="termy">
 
 ```console
-$ python main.py delete --help
+$ uv run python main.py delete --help
 
-<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py delete [OPTIONS] USERNAME                     </b>
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py delete [OPTIONS] {username}                     </b>
 <b>                                                                     </b>
- <font color="#F92672"><b>Delete</b></font> a user with <i>USERNAME</i>.
+ <font color="#F92672"><b>Delete</b></font> a user with <i>username</i>.
 
 <font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>TEXT</b></font>  The username to be <font color="#F92672">deleted</font>               │
-<font color="#A5A5A1">│                          [default: None]                          │</font>
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>&lt;str&gt;</b></font>  The username to be <font color="#F92672">deleted</font>              │
 <font color="#A5A5A1">│                          </font><font color="#A6194C">[required]                </font>               │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
@@ -289,9 +293,9 @@ Check the help for the `create` command:
 <div class="termy">
 
 ```console
-$ python main.py create --help
+$ uv run python main.py create --help
 
-<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py create [OPTIONS] USERNAME                     </b>
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py create [OPTIONS] {username}                     </b>
 <b>                                                                     </b>
  <b>Create</b> a new <i>shiny</i> user. ✨
 
@@ -302,8 +306,7 @@ $ python main.py create --help
  Learn more at the <font color="#44919F">Typer docs website</font>
 
 <font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>TEXT</b></font>  The username to be <b>created</b>               │
-<font color="#A5A5A1">│                          [default: None]                          │</font>
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>&lt;str&gt;</b></font>  The username to be <b>created</b>              │
 <font color="#A5A5A1">│                          </font><font color="#A6194C">[required]                              </font> │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
@@ -318,15 +321,14 @@ And the same for the `delete` command:
 <div class="termy">
 
 ```console
-$ python main.py delete --help
+$ uv run python main.py delete --help
 
-<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py delete [OPTIONS] USERNAME                     </b>
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py delete [OPTIONS] {username}                     </b>
 <b>                                                                     </b>
- <b>Delete</b> a user with <i>USERNAME</i>.
+ <b>Delete</b> a user with <i>username</i>.
 
 <font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>TEXT</b></font>  The username to be <b>deleted</b>               │
-<font color="#A5A5A1">│                          [default: None]                          │</font>
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>&lt;str&gt;</b></font>  The username to be <b>deleted</b>              │
 <font color="#A5A5A1">│                          </font><font color="#A6194C">[required]                              </font> │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
@@ -361,7 +363,7 @@ Commands without a panel will be shown in the default panel `Commands`, and the 
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 <b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] COMMAND [ARGS]...                   </b>
 <b>                                                                     </b>
@@ -378,8 +380,8 @@ $ python main.py --help
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>delete          </b></font> <font color="#F92672">Delete</font> a user. ❌                                │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Utils and Configs ───────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>config  </b></font> <font color="#66D9EF">Configure</font> the system. ⚙                                  │
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>sync    </b></font> <font color="#66D9EF">Synchronize</font> the system or something fancy like that. ♻   │
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>config  </b></font> <font color="#66D9EF">Configure</font> the system. ⚙                                 │
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>sync    </b></font> <font color="#66D9EF">Synchronize</font> the system or something fancy like that. ♻  │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Help and Others ─────────────────────────────────────────────────╮</font>
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>help         </b></font> Get <font color="#F4BF75">help</font> with the system. ❓                        │
@@ -409,18 +411,18 @@ You can check the `--help` option for the command `create`:
 <div class="termy">
 
 ```console
-$ python main.py create --help
+$ uv run python main.py create --help
 
-<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py create [OPTIONS] USERNAME [LASTNAME]          </b>
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py create [OPTIONS] {username} [lastname]          </b>
 <b>                                                                     </b>
  <font color="#A6E22E">Create</font> a new user. ✨
 
 <font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>TEXT</b></font>  The username to create [default: None]   │
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>&lt;str&gt;</b></font>  The username to create                  │
 <font color="#A5A5A1">│                          </font><font color="#A6194C">[required]            </font>                   │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Secondary Arguments ─────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│   lastname      </font><font color="#A37F4E"><b>[LASTNAME]</b></font>  The last name of the new user         │
+<font color="#A5A5A1">│   lastname      </font><font color="#A37F4E"><b>lastname</b></font>  The last name of the new user           │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--force</b></font>    <font color="#AE81FF"><b>--no-force</b></font>      Force the creation of the user         │
@@ -428,11 +430,9 @@ $ python main.py create --help
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--help</b></font>                     Show this message and exit.            │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Additional Data ─────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--age</b></font>                   <font color="#F4BF75"><b>INTEGER</b></font>  The age of the new user          │
-<font color="#A5A5A1">│                                  [default: None]                  │</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--favorite-color</b></font>        <font color="#F4BF75"><b>TEXT   </b></font>  The favorite color of the new    │
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--age</b></font>                   <font color="#F4BF75"><b>&lt;int&gt;   </b></font>  The age of the new user         │
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--favorite-color</b></font>        <font color="#F4BF75"><b>&lt;str&gt;   </b></font>  The favorite color of the new   │
 <font color="#A5A5A1">│                                  user                             │</font>
-<font color="#A5A5A1">│                                  [default: None]                  │</font>
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 ```
 
@@ -445,7 +445,7 @@ And those panels will be shown when you use the main `--help` option.
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 <b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] COMMAND [ARGS]...                   </b>
 <b>                                                                     </b>
@@ -461,7 +461,7 @@ $ python main.py --help
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>create          </b></font> <font color="#A6E22E">Create</font> a new user. ✨                            │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Utils and Configs ───────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>config         </b></font> <font color="#66D9EF">Configure</font> the system. ⚙                           │
+<font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>config         </b></font> <font color="#66D9EF">Configure</font> the system. ⚙                          │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 ```
 
@@ -480,14 +480,14 @@ And when you check the `--help` option it will look like:
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
-<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] USERNAME                            </b>
+<b> </b><font color="#F4BF75"><b>Usage: </b></font><b>main.py [OPTIONS] {username}                            </b>
 <b>                                                                     </b>
  <font color="#A6E22E">Create</font> a new user. ✨
 
 <font color="#A5A5A1">╭─ Arguments ───────────────────────────────────────────────────────╮</font>
-<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>TEXT</b></font>  [default: None] <font color="#A6194C">[required]</font>               │
+<font color="#A5A5A1">│ </font><font color="#F92672">*</font>    username      <font color="#F4BF75"><b>&lt;str&gt;</b></font>                  <font color="#A6194C">[required]</font>              │
 <font color="#A5A5A1">╰───────────────────────────────────────────────────────────────────╯</font>
 <font color="#A5A5A1">╭─ Options ─────────────────────────────────────────────────────────╮</font>
 <font color="#A5A5A1">│ </font><font color="#A1EFE4"><b>--install-completion</b></font>          Install completion for the current  │

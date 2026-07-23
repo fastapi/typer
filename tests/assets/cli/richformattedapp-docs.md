@@ -5,13 +5,13 @@ Say <span style="color: #800000; text-decoration-color: #800000; font-weight: bo
 **Usage**:
 
 ```console
-$ hello [OPTIONS] USER_1 [USER_2]
+$ hello [OPTIONS] {user_1} [user_2]
 ```
 
 **Arguments**:
 
-* `USER_1`: The <span style="font-weight: bold">cool</span> name of the <span style="color: #008000; text-decoration-color: #008000">user</span>  [required]
-* `[USER_2]`: The world  [default: The World]
+* `user_1`: The <span style="font-weight: bold">cool</span> name of the <span style="color: #008000; text-decoration-color: #008000">user</span>  [required]
+* `user_2`: The world  [default: The World]
 
 **Options**:
 

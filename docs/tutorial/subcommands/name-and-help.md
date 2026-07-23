@@ -20,7 +20,7 @@ And then we get that help text for that command in the *CLI program*:
 
 ```console
 // Check the main help
-$ python main.py --help
+$ uv run python main.py --help
 
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
 
@@ -33,7 +33,7 @@ Commands:
   users  Manage users in the app.
 
 // Check the help for the users command
-$ python main.py users --help
+$ uv run python main.py users --help
 
 Usage: main.py users [OPTIONS] COMMAND [ARGS]...
 
@@ -97,7 +97,7 @@ Check it:
 
 ```console
 // Check the main help
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice the help text "Manage users in the app."
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
@@ -111,7 +111,7 @@ Commands:
   users  Manage users in the app.
 
 // Check the help for the users command
-$ python main.py users --help
+$ uv run python main.py users --help
 
 // Notice the main description: "Manage users in the app."
 Usage: main.py users [OPTIONS] COMMAND [ARGS]...
@@ -151,7 +151,7 @@ Check it:
 
 ```console
 // Check the main help
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice the help text "Manage users in the app."
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
@@ -165,7 +165,7 @@ Commands:
   users  Manage users in the app.
 
 // Check the help for the users command
-$ python main.py users --help
+$ uv run python main.py users --help
 
 // Notice the main description: "Manage users in the app."
 Usage: main.py users [OPTIONS] COMMAND [ARGS]...
@@ -195,7 +195,7 @@ Check it:
 
 ```console
 // Check the main help
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice the help text "Manage users in the app."
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
@@ -209,7 +209,7 @@ Commands:
   users  Manage users in the app.
 
 // Check the help for the users command
-$ python main.py users --help
+$ uv run python main.py users --help
 
 // Notice the main description: "Manage users in the app."
 Usage: main.py users [OPTIONS] COMMAND [ARGS]...
@@ -243,7 +243,7 @@ Check it:
 
 ```console
 // Check the main help
-$ python main.py --help
+$ uv run python main.py --help
 
 // Check the command new-users and its help text
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
@@ -257,7 +257,7 @@ Commands:
   new-users  I have the highland! Create some users.
 
 // Now check the help for the new-users command
-$ python main.py new-users --help
+$ uv run python main.py new-users --help
 
 // Notice the help text
 Usage: main.py new-users [OPTIONS] COMMAND [ARGS]...
@@ -321,7 +321,7 @@ Check it:
 
 ```console
 // Check the main help
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice the command name is exp-users and the help text is "Explicit help."
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
@@ -335,7 +335,7 @@ Commands:
   exp-users  Explicit help.
 
 // Check the help for the exp-users command
-$ python main.py exp-users --help
+$ uv run python main.py exp-users --help
 
 // Notice the main help text
 Usage: main.py exp-users [OPTIONS] COMMAND [ARGS]...
@@ -367,7 +367,7 @@ Check it:
 
 ```console
 // Check the help
-$ python main.py --help
+$ uv run python main.py --help
 
 // The help text is now "Help from callback for users.".
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
@@ -381,7 +381,7 @@ Commands:
   users  Help from callback for users.
 
 // Check the users command help
-$ python main.py users --help
+$ uv run python main.py users --help
 
 // Notice the main help text
 Usage: main.py users [OPTIONS] COMMAND [ARGS]...
@@ -411,7 +411,7 @@ Check it:
 
 ```console
 // Check the help
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice the command name cake-sith-users and the new help text "Unlimited powder! Eh, users."
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
@@ -425,7 +425,7 @@ Commands:
   cake-sith-users  Unlimited powder! Eh, users.
 
 // And check the help for the command cake-sith-users
-$ python main.py cake-sith-users --help
+$ uv run python main.py cake-sith-users --help
 
 // Notice the main help text
 Usage: main.py cake-sith-users [OPTIONS] COMMAND [ARGS]...

@@ -1391,6 +1391,15 @@ def get_command_name(name: str) -> str:
     return name.lower().replace("_", "-")
 
 
+def get_default_option_flag_name(name: str, metavar: str | None) -> str:
+    flag_name = name.replace("_", "-")
+    if metavar is not None:
+        meta_flag = metavar.replace("_", "-")
+        if meta_flag.lower() == flag_name.lower():
+            return meta_flag
+    return flag_name
+
+
 def get_params_convertors_ctx_param_name_from_function(
     callback: Callable[..., Any] | None,
 ) -> tuple[
@@ -1732,7 +1741,9 @@ def get_click_param(
             # Click doesn't accept a flag of type bool, only None, and then it sets it
             # to bool internally
             parameter_type = None
-        default_option_name = get_command_name(param.name)
+        default_option_name = get_default_option_flag_name(
+            param.name, parameter_info.metavar
+        )
         if is_flag:
             default_option_declaration = (
                 f"--{default_option_name}/--no-{default_option_name}"
@@ -1976,7 +1987,6 @@ def launch(
         Doc(
             """
             Wait for the program to exit before returning. This only works if the launched program blocks.
-            In particular, `xdg-open` on Linux does not block.
             """
         ),
     ] = False,
@@ -2028,9 +2038,12 @@ def launch(
         has_xdg_open = _is_linux_or_bsd() and shutil.which("xdg-open") is not None
 
         if has_xdg_open:
-            return subprocess.Popen(
+            process = subprocess.Popen(
                 ["xdg-open", url], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT
-            ).wait()
+            )
+            if wait:
+                return process.wait()
+            return 0
 
         import webbrowser
 

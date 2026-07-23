@@ -197,7 +197,7 @@ class NoSuchOption(UsageError):
             return self.message
 
         possibility_str = ", ".join(sorted(self.possibilities))
-        suggest = (f"(Possible options: {possibility_str})",)
+        suggest = f"(Possible options: {possibility_str})"
         return f"{self.message} {suggest}"
 
 

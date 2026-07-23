@@ -20,7 +20,7 @@ This is already a simple *CLI program* to manage reigns:
 
 ```console
 // Check the help
-$ python reigns.py --help
+$ uv run python reigns.py --help
 
 Usage: reigns.py [OPTIONS] COMMAND [ARGS]...
 
@@ -34,11 +34,11 @@ Commands:
   destroy
 
 // Try it
-$ python reigns.py conquer Cintra
+$ uv run python reigns.py conquer Cintra
 
 Conquering reign: Cintra
 
-$ python reigns.py destroy Mordor
+$ uv run python reigns.py destroy Mordor
 
 Destroying reign: Mordor
 ```
@@ -57,7 +57,7 @@ With it, you can manage towns:
 
 ```console
 // Check the help
-$ python towns.py --help
+$ uv run python towns.py --help
 
 Usage: towns.py [OPTIONS] COMMAND [ARGS]...
 
@@ -67,15 +67,15 @@ Options:
   --help                Show this message and exit.
 
 Commands:
-  burn
   found
+  burn
 
 // Try it
-$ python towns.py found "New Asgard"
+$ uv run python towns.py found "New Asgard"
 
 Founding town: New Asgard
 
-$ python towns.py burn Vizima
+$ uv run python towns.py burn Vizima
 
 Burning town: Vizima
 ```
@@ -96,7 +96,7 @@ Check it:
 
 ```console
 // Check the help
-$ python lands.py --help
+$ uv run python lands.py --help
 
 Usage: lands.py [OPTIONS] COMMAND [ARGS]...
 
@@ -110,7 +110,7 @@ Commands:
   towns
 
 // We still have the help for reigns
-$ python lands.py reigns --help
+$ uv run python lands.py reigns --help
 
 Usage: lands.py reigns [OPTIONS] COMMAND [ARGS]...
 
@@ -122,7 +122,7 @@ Commands:
   destroy
 
 // And the help for towns
-$ python lands.py towns --help
+$ uv run python lands.py towns --help
 
 Usage: lands.py towns [OPTIONS] COMMAND [ARGS]...
 
@@ -130,8 +130,8 @@ Options:
   --help  Show this message and exit.
 
 Commands:
-  burn
   found
+  burn
 ```
 
 </div>
@@ -142,20 +142,20 @@ Now try it, manage the lands through the CLI:
 
 ```console
 // Try the reigns command
-$ python lands.py reigns conquer Gondor
+$ uv run python lands.py reigns conquer Gondor
 
 Conquering reign: Gondor
 
-$ python lands.py reigns destroy Nilfgaard
+$ uv run python lands.py reigns destroy Nilfgaard
 
 Destroying reign: Nilfgaard
 
 // Try the towns command
-$ python lands.py towns found Springfield
+$ uv run python lands.py towns found Springfield
 
 Founding town: Springfield
 
-$ python lands.py towns burn Atlantis
+$ uv run python lands.py towns burn Atlantis
 
 Burning town: Atlantis
 ```
@@ -195,7 +195,7 @@ And now we have everything in a single *CLI program*:
 
 ```console
 // Check the main help
-$ python main.py --help
+$ uv run python main.py --help
 
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
 
@@ -205,27 +205,27 @@ Options:
   --help                Show this message and exit.
 
 Commands:
+  users
   items
   lands
-  users
 
 // Try some users commands
-$ python main.py users create Camila
+$ uv run python main.py users create Camila
 
 Creating user: Camila
 
 // Now try some items commands
-$ python main.py items create Sword
+$ uv run python main.py items create Sword
 
 Creating item: Sword
 
 // And now some lands commands for reigns
-$ python main.py lands reigns conquer Gondor
+$ uv run python main.py lands reigns conquer Gondor
 
 Conquering reign: Gondor
 
 // And for towns
-$ python main.py lands towns found Cartagena
+$ uv run python main.py lands towns found Cartagena
 
 Founding town: Cartagena
 ```

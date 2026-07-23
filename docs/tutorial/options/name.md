@@ -47,17 +47,17 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice the --name instead of --user-name
 Usage: main.py [OPTIONS]
 
 Options:
-  --name TEXT           [required]
+  --name <str>          [required]
   --help                Show this message and exit.
 
 // Try it
-$ python main.py --name Camila
+$ uv run python main.py --name Camila
 
 Hello Camila
 ```
@@ -195,17 +195,17 @@ Check it:
 
 ```console
 // Check the help
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice the two CLI option names -n and --name
 Usage: main.py [OPTIONS]
 
 Options:
-  -n, --name TEXT       [required]
+  -n, --name <str>      [required]
   --help                Show this message and exit.
 
 // Try the short version
-$ python main.py -n Camila
+$ uv run python main.py -n Camila
 
 Hello Camila
 ```
@@ -223,17 +223,17 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice there's no --name nor --user-name, only -n
 Usage: main.py [OPTIONS]
 
 Options:
-  -n TEXT               [required]
+  -n <str>              [required]
   --help                Show this message and exit.
 
 // Try it
-$ python main.py -n Camila
+$ uv run python main.py -n Camila
 
 Hello Camila
 ```
@@ -251,23 +251,23 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice that we have the long version --user-name back
 // and we also have the short version -n
 Usage: main.py [OPTIONS]
 
 Options:
-  -n, --user-name TEXT  [required]
+  -n, --user-name <str> [required]
   --help                Show this message and exit.
 
 // Try it
-$ python main.py --user-name Camila
+$ uv run python main.py --user-name Camila
 
 Hello Camila
 
 // And try the short version
-$ python main.py -n Camila
+$ uv run python main.py -n Camila
 ```
 
 </div>
@@ -291,25 +291,25 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 // We now have short versions -n and -f
 // And also long versions --name and --formal
 Usage: main.py [OPTIONS]
 
 Options:
-  -n, --name TEXT       [required]
+  -n, --name <str>      [required]
   -f, --formal
   --help                Show this message and exit.
 
 // Try the short versions
-$ python main.py -n Camila -f
+$ uv run python main.py -n Camila -f
 
 Good day Ms. Camila.
 
 // And try the 2 short versions together
 // See how -n has to go last, to be able to get the value
-$ python main.py -fn Camila
+$ uv run python main.py -fn Camila
 
 Good day Ms. Camila.
 ```

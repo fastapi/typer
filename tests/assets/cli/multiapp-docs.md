@@ -65,8 +65,8 @@ $ multiapp sub hello [OPTIONS]
 
 **Options**:
 
-* `--name TEXT`: [default: World]
-* `--age INTEGER`: The age of the user  [default: 0]
+* `--name <str>`: [default: World]
+* `--age <int>`: The age of the user  [default: 0]
 * `--help`: Show this message and exit.
 
 ### `multiapp sub hi`
@@ -76,12 +76,12 @@ Say Hi
 **Usage**:
 
 ```console
-$ multiapp sub hi [OPTIONS] [USER]
+$ multiapp sub hi [OPTIONS] [user]
 ```
 
 **Arguments**:
 
-* `[USER]`: The name of the user to greet  [default: World]
+* `user`: The name of the user to greet  [default: World]
 
 **Options**:
 

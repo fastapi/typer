@@ -2,8 +2,96 @@
 
 ## Latest Changes
 
+### Docs
+
+* 📝 Add Library Skills documentation. PR [#1906](https://github.com/fastapi/typer/pull/1906) by [@tiangolo](https://github.com/tiangolo).
+* 🐛 Prevent scroll-to-top on restart/fast buttons in the documentation. PR [#1904](https://github.com/fastapi/typer/pull/1904) by [@phalberg](https://github.com/phalberg).
+* 📝 Recommend uv projects by default in docs. PR [#1903](https://github.com/fastapi/typer/pull/1903) by [@tiangolo](https://github.com/tiangolo).
+* 📝 Update help docs. PR [#1902](https://github.com/fastapi/typer/pull/1902) by [@tiangolo](https://github.com/tiangolo).
+
+## 0.27.0 (2026-07-15)
+
+### Breaking Changes
+
+* 💥 Update metavar printing. PR [#1863](https://github.com/fastapi/typer/pull/1863) by [@svlandeg](https://github.com/svlandeg).
+
 ### Internal
 
+* ⬆ Bump the python-packages group across 1 directory with 5 updates. PR [#1896](https://github.com/fastapi/typer/pull/1896) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆️ Bump ty to 0.0.53. PR [#1877](https://github.com/fastapi/typer/pull/1877) by [@YuriiMotov](https://github.com/YuriiMotov).
+* ⬆ Bump the github-actions group across 1 directory with 4 updates. PR [#1897](https://github.com/fastapi/typer/pull/1897) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* 🔧 Set Dependabot schedule interval to "monthly". PR [#1873](https://github.com/fastapi/typer/pull/1873) by [@YuriiMotov](https://github.com/YuriiMotov).
+* ⬆ Bump pre-commit hooks. PR [#1895](https://github.com/fastapi/typer/pull/1895) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Add GH workflow to bump pre-commit hook versions. PR [#1872](https://github.com/fastapi/typer/pull/1872) by [@YuriiMotov](https://github.com/YuriiMotov).
+* 👷 Fix latest-changes checkout target. PR [#1883](https://github.com/fastapi/typer/pull/1883) by [@tiangolo](https://github.com/tiangolo).
+* ⬆️ Update issue-manager to 0.8.1. PR [#1880](https://github.com/fastapi/typer/pull/1880) by [@tiangolo](https://github.com/tiangolo).
+* ⬆ Bump the github-actions group across 1 directory with 8 updates. PR [#1874](https://github.com/fastapi/typer/pull/1874) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump the python-packages group across 1 directory with 5 updates. PR [#1876](https://github.com/fastapi/typer/pull/1876) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆️ Update latest-changes to 0.6.1. PR [#1879](https://github.com/fastapi/typer/pull/1879) by [@tiangolo](https://github.com/tiangolo).
+* ⬆ Bump https://github.com/crate-ci/typos from v1.46.0 to 1.47.2 in the pre-commit group across 1 directory. PR [#1834](https://github.com/fastapi/typer/pull/1834) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pydantic-settings from 2.14.1 to 2.14.2. PR [#1849](https://github.com/fastapi/typer/pull/1849) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
+## 0.26.8 (2026-06-25)
+
+### Fixes
+
+* 🐛 Make second column of Rich help output reflect the type consistently, even when using `metavar`. PR [#1410](https://github.com/fastapi/typer/pull/1410) by [@svlandeg](https://github.com/svlandeg).
+* 🐛 Fix formatting in `NoSuchOption.format_message()`. PR [#1843](https://github.com/fastapi/typer/pull/1843) by [@foomunleong](https://github.com/foomunleong).
+
+### Docs
+
+* 📝 Update docs badges: remove Publish badge, it doesn't give extra information. PR [#1850](https://github.com/fastapi/typer/pull/1850) by [@tiangolo](https://github.com/tiangolo).
+* 📝 Fix formatting for help link to support GitHub-specific overview edge-case. PR [#1826](https://github.com/fastapi/typer/pull/1826) by [@phalberg](https://github.com/phalberg).
+
+### Internal
+
+* 👷 Simplify pull request workflow triggers. PR [#1858](https://github.com/fastapi/typer/pull/1858) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Update issue-manager to 0.7.1. PR [#1857](https://github.com/fastapi/typer/pull/1857) by [@tiangolo](https://github.com/tiangolo).
+* ⬆️ Update issue-manager to 0.7.0. PR [#1856](https://github.com/fastapi/typer/pull/1856) by [@tiangolo](https://github.com/tiangolo).
+* 🔒️ Update zizmor workflow security checks. PR [#1854](https://github.com/fastapi/typer/pull/1854) by [@tiangolo](https://github.com/tiangolo).
+* ⬆️ Group Dependabot updates. PR [#1853](https://github.com/fastapi/typer/pull/1853) by [@tiangolo](https://github.com/tiangolo).
+* ⬆️ Update Dependabot ecosystem coverage. PR [#1851](https://github.com/fastapi/typer/pull/1851) by [@tiangolo](https://github.com/tiangolo).
+* 👷 Fix alls-green test dependency. PR [#1848](https://github.com/fastapi/typer/pull/1848) by [@tiangolo](https://github.com/tiangolo).
+* ⬆ Bump cryptography from 46.0.7 to 48.0.1. PR [#1841](https://github.com/fastapi/typer/pull/1841) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pyjwt from 2.12.0 to 2.13.0. PR [#1839](https://github.com/fastapi/typer/pull/1839) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump the github-actions group across 1 directory with 3 updates. PR [#1828](https://github.com/fastapi/typer/pull/1828) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump the python-packages group with 3 updates. PR [#1829](https://github.com/fastapi/typer/pull/1829) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
+## 0.26.7 (2026-06-03)
+
+### Fixes
+
+* 🐛 Respect wait=False when launching URLs with xdg-open. PR [#1820](https://github.com/fastapi/typer/pull/1820) by [@patrick91](https://github.com/patrick91).
+
+## 0.26.6 (2026-06-02)
+
+### Fixes
+
+* 🐛 Ensure that the default of a list argument is used correctly. PR [#1821](https://github.com/fastapi/typer/pull/1821) by [@svlandeg](https://github.com/svlandeg).
+
+### Internal
+
+* 👷 Speed up the CI by shuffling the test matrix. PR [#1815](https://github.com/fastapi/typer/pull/1815) by [@svlandeg](https://github.com/svlandeg).
+
+## 0.26.5 (2026-06-01)
+
+### Fixes
+
+* 🐛 Ensure that hidden commands are not shown when Rich markup is disabled. PR [#1812](https://github.com/fastapi/typer/pull/1812) by [@svlandeg](https://github.com/svlandeg).
+
+### Internal
+
+* 🔥 Remove old stub packages. PR [#1810](https://github.com/fastapi/typer/pull/1810) by [@tiangolo](https://github.com/tiangolo).
+
+## 0.26.4 (2026-05-30)
+
+### Features
+
+* 📝 Update AI Library Skill to avoid verbose code for CLI Options. PR [#1808](https://github.com/fastapi/typer/pull/1808) by [@tiangolo](https://github.com/tiangolo).
+
+### Internal
+
+* 👷 Add CI to create draft release after merging a `release` PR. PR [#1807](https://github.com/fastapi/typer/pull/1807) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Update labeler to accept label `release`. PR [#1806](https://github.com/fastapi/typer/pull/1806) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Update GitHub Action permissions for prepare-release. PR [#1804](https://github.com/fastapi/typer/pull/1804) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Add GitHub Actions prepare release workflow. PR [#1802](https://github.com/fastapi/typer/pull/1802) by [@tiangolo](https://github.com/tiangolo).

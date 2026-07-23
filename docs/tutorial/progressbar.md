@@ -15,7 +15,7 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 ---> 100%
 
@@ -31,7 +31,7 @@ The colors and information will look something like this:
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 Processing... <font color="#F92672">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸</font><font color="#3A3A3A">━━━━━━━━━━</font> <font color="#AE81FF"> 74%</font> <font color="#A1EFE4">0:00:01</font>
 ```
@@ -55,7 +55,7 @@ But at some point in time it will look like this (imagine it's spinning). 🤓
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 <font color="#A6E22E">⠹</font> Processing...
 <font color="#A6E22E">⠹</font> Preparing...
@@ -136,7 +136,7 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 ---> 100%
 
@@ -164,7 +164,7 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 ---> 100%
 
