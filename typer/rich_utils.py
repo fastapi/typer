@@ -25,7 +25,6 @@ from rich.traceback import Traceback
 from typer.models import DeveloperExceptionConfig
 
 from . import _click
-from ._click import types
 from .core import TyperArgument, TyperGroup, TyperOption
 
 # Default styles
@@ -365,55 +364,37 @@ def _print_options_panel(
         secondary_opt_long_strs = []
         secondary_opt_short_strs = []
 
-        # check whether argument has a metavar name or type set
-        metavar_name = None
-        metavar_type = None
-        metavar_str = param.make_metavar(ctx=ctx)
+        # Argument name label and option type display use separate APIs.
+        display_name: str | None = None
         if isinstance(param, TyperArgument):
-            if param.metavar is not None:
-                metavar_name = param.metavar
-            else:
-                metavar_name = param.name or ""
-        if isinstance(param, TyperOption):
-            metavar_type = metavar_str
-        elif isinstance(param, TyperArgument):
-            metavar_type = param.type.get_metavar(param=param, ctx=ctx)
-            if metavar_type is None:
-                metavar_type = f"<{param.type.name}>"
+            display_name = param.display_name_raw
+            if param.metavar is None and param.nargs != 1:
+                display_name += "..."
 
         for opt_str in param.opts:
             if "--" in opt_str:
                 opt_long_strs.append(opt_str)
-            elif metavar_name:
-                opt_short_strs.append(metavar_name)
+            elif display_name:
+                opt_short_strs.append(display_name)
             else:
                 opt_short_strs.append(opt_str)
         for opt_str in param.secondary_opts:
             if "--" in opt_str:
                 secondary_opt_long_strs.append(opt_str)
-            elif metavar_name:  # pragma: no cover
-                secondary_opt_short_strs.append(metavar_name)
+            elif display_name:  # pragma: no cover
+                secondary_opt_short_strs.append(display_name)
             else:
                 secondary_opt_short_strs.append(opt_str)
 
         # Column for recording the type
         types_data = Text(style=STYLE_TYPES, overflow="fold")
+        display_type_str = param.display_type_rich(ctx=ctx)
+        if display_type_str is not None:
+            types_data.append(display_type_str)
 
-        # Fetch type
-        if metavar_type and "bool" not in metavar_type.lower():
-            types_data.append(metavar_type)
-
-        # Range - from
-        # https://github.com/pallets/click/blob/c63c70dabd3f86ca68678b4f00951f78f52d0270/src/click/core.py#L2698-L2706  # noqa: E501
-        # skip count with default range type
-        if (
-            isinstance(param.type, types._NumberRangeBase)
-            and isinstance(param, TyperOption)
-            and not (param.count and param.type.min == 0 and param.type.max is None)
-        ):
-            range_str = param.type._describe_range()
-            if range_str:
-                types_data.append(RANGE_STRING.format(range_str))
+        range_str = param.get_number_range_help_str()
+        if range_str:
+            types_data.append(RANGE_STRING.format(range_str))
 
         # Required asterisk
         required: str | Text = ""
@@ -703,6 +684,7 @@ def rich_format_error(self: _click.ClickException) -> None:
     console = _get_rich_console(stderr=True)
     ctx: _click.Context | None = getattr(self, "ctx", None)
     if ctx is not None:
+        # make sure that Rich won't treat [path] as markup
         console.print(highlighter(ctx.get_usage()), style=STYLE_USAGE_COMMAND)
 
     if ctx is not None and ctx.command.get_help_option(ctx) is not None:

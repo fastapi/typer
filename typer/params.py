@@ -1,145 +1,14 @@
 from collections.abc import Callable
-from typing import TYPE_CHECKING, Annotated, Any, overload
+from typing import TYPE_CHECKING, Annotated, Any
 
 from annotated_doc import Doc
 
 from . import _click
-from ._click import types
 from ._click.shell_completion import CompletionItem
 from .models import ArgumentInfo, OptionInfo
 
 if TYPE_CHECKING:  # pragma: no cover
     pass
-
-
-# Overload for Option created with custom type 'parser'
-@overload
-def Option(
-    # Parameter
-    default: Any | None = ...,
-    *param_decls: str,
-    callback: Callable[..., Any] | None = None,
-    metavar: str | None = None,
-    expose_value: bool = True,
-    is_eager: bool = False,
-    envvar: str | list[str] | None = None,
-    # Note that shell_complete is not fully supported and will be removed in future versions
-    # TODO: Remove shell_complete in a future version (after 0.16.0)
-    shell_complete: Callable[
-        [_click.Context, _click.Parameter, str],
-        list["CompletionItem"] | list[str],
-    ]
-    | None = None,
-    autocompletion: Callable[..., Any] | None = None,
-    default_factory: Callable[[], Any] | None = None,
-    # Custom type
-    parser: Callable[[str], Any] | None = None,
-    # Option
-    show_default: bool | str = True,
-    prompt: bool | str = False,
-    confirmation_prompt: bool = False,
-    prompt_required: bool = True,
-    hide_input: bool = False,
-    # TODO: remove is_flag and flag_value in a future release
-    is_flag: bool | None = None,
-    flag_value: Any | None = None,
-    count: bool = False,
-    allow_from_autoenv: bool = True,
-    help: str | None = None,
-    hidden: bool = False,
-    show_choices: bool = True,
-    show_envvar: bool = True,
-    # Choice
-    case_sensitive: bool = True,
-    # Numbers
-    min: int | float | None = None,
-    max: int | float | None = None,
-    clamp: bool = False,
-    # DateTime
-    formats: list[str] | None = None,
-    # File
-    mode: str | None = None,
-    encoding: str | None = None,
-    errors: str | None = "strict",
-    lazy: bool | None = None,
-    atomic: bool = False,
-    # Path
-    exists: bool = False,
-    file_okay: bool = True,
-    dir_okay: bool = True,
-    writable: bool = False,
-    readable: bool = True,
-    resolve_path: bool = False,
-    allow_dash: bool = False,
-    path_type: None | type[str] | type[bytes] = None,
-    # Rich settings
-    rich_help_panel: str | None = None,
-) -> Any: ...
-
-
-# Overload for Option created with custom type 'click_type'
-@overload
-def Option(
-    # Parameter
-    default: Any | None = ...,
-    *param_decls: str,
-    callback: Callable[..., Any] | None = None,
-    metavar: str | None = None,
-    expose_value: bool = True,
-    is_eager: bool = False,
-    envvar: str | list[str] | None = None,
-    # Note that shell_complete is not fully supported and will be removed in future versions
-    # TODO: Remove shell_complete in a future version (after 0.16.0)
-    shell_complete: Callable[
-        [_click.Context, _click.Parameter, str],
-        list["CompletionItem"] | list[str],
-    ]
-    | None = None,
-    autocompletion: Callable[..., Any] | None = None,
-    default_factory: Callable[[], Any] | None = None,
-    # Custom type
-    click_type: types.ParamType | None = None,
-    # Option
-    show_default: bool | str = True,
-    prompt: bool | str = False,
-    confirmation_prompt: bool = False,
-    prompt_required: bool = True,
-    hide_input: bool = False,
-    # TODO: remove is_flag and flag_value in a future release
-    is_flag: bool | None = None,
-    flag_value: Any | None = None,
-    count: bool = False,
-    allow_from_autoenv: bool = True,
-    help: str | None = None,
-    hidden: bool = False,
-    show_choices: bool = True,
-    show_envvar: bool = True,
-    # Choice
-    case_sensitive: bool = True,
-    # Numbers
-    min: int | float | None = None,
-    max: int | float | None = None,
-    clamp: bool = False,
-    # DateTime
-    formats: list[str] | None = None,
-    # File
-    mode: str | None = None,
-    encoding: str | None = None,
-    errors: str | None = "strict",
-    lazy: bool | None = None,
-    atomic: bool = False,
-    # Path
-    exists: bool = False,
-    file_okay: bool = True,
-    dir_okay: bool = True,
-    writable: bool = False,
-    readable: bool = True,
-    resolve_path: bool = False,
-    allow_dash: bool = False,
-    path_type: None | type[str] | type[bytes] = None,
-    # Rich settings
-    rich_help_panel: str | None = None,
-) -> Any: ...
 
 
 def Option(
@@ -339,35 +208,6 @@ def Option(
 
             @app.command()
             def main(opt: Annotated[CustomClass, typer.Option(parser=my_parser)] = "Foo"):
-                print(f"--opt is {opt}")
-            ```
-            """
-        ),
-    ] = None,
-    click_type: Annotated[
-        types.ParamType | None,
-        Doc(
-            """
-            Define this parameter to use a [custom Click type](https://click.palletsprojects.com/en/stable/parameters/#implementing-custom-types) in your Typer applications.
-
-            **Example**
-
-            ```python
-            class MyClass:
-                def __init__(self, value: str):
-                    self.value = value
-
-                def __str__(self):
-                    return f"<MyClass: value={self.value}>"
-
-            class MyParser(click.ParamType):
-                name = "MyClass"
-
-                def convert(self, value, param, ctx):
-                    return MyClass(value * 3)
-
-            @app.command()
-            def main(opt: Annotated[MyClass, typer.Option(click_type=MyParser())] = "Foo"):
                 print(f"--opt is {opt}")
             ```
             """
@@ -959,7 +799,6 @@ def Option(
         default_factory=default_factory,
         # Custom type
         parser=parser,
-        click_type=click_type,
         # Option
         show_default=show_default,
         prompt=prompt,
@@ -1000,118 +839,6 @@ def Option(
         # Rich settings
         rich_help_panel=rich_help_panel,
     )
-
-
-# Overload for Argument created with custom type 'parser'
-@overload
-def Argument(
-    # Parameter
-    default: Any | None = ...,
-    *,
-    callback: Callable[..., Any] | None = None,
-    metavar: str | None = None,
-    expose_value: bool = True,
-    is_eager: bool = False,
-    envvar: str | list[str] | None = None,
-    # Note that shell_complete is not fully supported and will be removed in future versions
-    # TODO: Remove shell_complete in a future version (after 0.16.0)
-    shell_complete: Callable[
-        [_click.Context, _click.Parameter, str],
-        list["CompletionItem"] | list[str],
-    ]
-    | None = None,
-    autocompletion: Callable[..., Any] | None = None,
-    default_factory: Callable[[], Any] | None = None,
-    # Custom type
-    parser: Callable[[str], Any] | None = None,
-    # TyperArgument
-    show_default: bool | str = True,
-    show_choices: bool = True,
-    show_envvar: bool = True,
-    help: str | None = None,
-    hidden: bool = False,
-    # Choice
-    case_sensitive: bool = True,
-    # Numbers
-    min: int | float | None = None,
-    max: int | float | None = None,
-    clamp: bool = False,
-    # DateTime
-    formats: list[str] | None = None,
-    # File
-    mode: str | None = None,
-    encoding: str | None = None,
-    errors: str | None = "strict",
-    lazy: bool | None = None,
-    atomic: bool = False,
-    # Path
-    exists: bool = False,
-    file_okay: bool = True,
-    dir_okay: bool = True,
-    writable: bool = False,
-    readable: bool = True,
-    resolve_path: bool = False,
-    allow_dash: bool = False,
-    path_type: None | type[str] | type[bytes] = None,
-    # Rich settings
-    rich_help_panel: str | None = None,
-) -> Any: ...
-
-
-# Overload for Argument created with custom type 'click_type'
-@overload
-def Argument(
-    # Parameter
-    default: Any | None = ...,
-    *,
-    callback: Callable[..., Any] | None = None,
-    metavar: str | None = None,
-    expose_value: bool = True,
-    is_eager: bool = False,
-    envvar: str | list[str] | None = None,
-    # Note that shell_complete is not fully supported and will be removed in future versions
-    # TODO: Remove shell_complete in a future version (after 0.16.0)
-    shell_complete: Callable[
-        [_click.Context, _click.Parameter, str],
-        list["CompletionItem"] | list[str],
-    ]
-    | None = None,
-    autocompletion: Callable[..., Any] | None = None,
-    default_factory: Callable[[], Any] | None = None,
-    # Custom type
-    click_type: types.ParamType | None = None,
-    # TyperArgument
-    show_default: bool | str = True,
-    show_choices: bool = True,
-    show_envvar: bool = True,
-    help: str | None = None,
-    hidden: bool = False,
-    # Choice
-    case_sensitive: bool = True,
-    # Numbers
-    min: int | float | None = None,
-    max: int | float | None = None,
-    clamp: bool = False,
-    # DateTime
-    formats: list[str] | None = None,
-    # File
-    mode: str | None = None,
-    encoding: str | None = None,
-    errors: str | None = "strict",
-    lazy: bool | None = None,
-    atomic: bool = False,
-    # Path
-    exists: bool = False,
-    file_okay: bool = True,
-    dir_okay: bool = True,
-    writable: bool = False,
-    readable: bool = True,
-    resolve_path: bool = False,
-    allow_dash: bool = False,
-    path_type: None | type[str] | type[bytes] = None,
-    # Rich settings
-    rich_help_panel: str | None = None,
-) -> Any: ...
 
 
 def Argument(
@@ -1293,35 +1020,6 @@ def Argument(
 
             @app.command()
             def main(arg: Annotated[CustomClass, typer.Argument(parser=my_parser):
-                print(f"arg is {arg}")
-            ```
-            """
-        ),
-    ] = None,
-    click_type: Annotated[
-        types.ParamType | None,
-        Doc(
-            """
-            Define this parameter to use a [custom Click type](https://click.palletsprojects.com/en/stable/parameters/#implementing-custom-types) in your Typer applications.
-
-            **Example**
-
-            ```python
-            class MyClass:
-                def __init__(self, value: str):
-                    self.value = value
-
-                def __str__(self):
-                    return f"<MyClass: value={self.value}>"
-
-            class MyParser(click.ParamType):
-                name = "MyClass"
-
-                def convert(self, value, param, ctx):
-                    return MyClass(value * 3)
-
-            @app.command()
-            def main(arg: Annotated[MyClass, typer.Argument(click_type=MyParser())]):
                 print(f"arg is {arg}")
             ```
             """
@@ -1798,7 +1496,6 @@ def Argument(
         default_factory=default_factory,
         # Custom type
         parser=parser,
-        click_type=click_type,
         # TyperArgument
         show_default=show_default,
         show_choices=show_choices,

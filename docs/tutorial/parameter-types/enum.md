@@ -91,7 +91,7 @@ $ uv run python main.py --help
 Usage: main.py [OPTIONS]
 
 Options:
-  --groceries <Eggs|Bacon|Cheese>         [default: Eggs, Cheese]
+  --groceries <list[Eggs|Bacon|Cheese]>   [default: Eggs, Cheese]
   --help                                  Show this message and exit.
 
 // Try it with the default values

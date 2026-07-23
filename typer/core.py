@@ -11,13 +11,17 @@ from typing import (
     TextIO,
     Union,
     cast,
+    get_args,
+    get_origin,
 )
 
-from . import _click
-from ._click import types
+from . import _click, param_types
 from ._click.parser import _OptionParser
 from ._click.shell_completion import CompletionItem
 from ._typing import Literal
+from .coercion import RuntimeParam, TypeDescriptor
+from .display import describe_number_range
+from .param_types import choice_as_str, normalize_choice_value
 from .utils import parse_boolean_env_var
 
 MarkupMode = Literal["markdown", "rich", None]
@@ -79,6 +83,151 @@ def _typer_param_setup_autocompletion_compat(
             return out
 
         self._custom_shell_complete = compat_autocompletion
+
+
+class TyperParameter(_click.core.Parameter):
+    """Typer parameter with runtime coercion."""
+
+    runtime_param: RuntimeParam
+    type_descriptor: TypeDescriptor
+    show_choices: bool
+
+    def process_value(self, ctx: _click.Context, value: Any) -> Any:
+        value = self.runtime_param.coerce(value, param=self, ctx=ctx)
+        if self.required and self.value_is_missing(value):
+            raise _click.exceptions.MissingParameter(ctx=ctx, param=self)
+        if self.callback is not None:
+            value = self.callback(ctx, self, value)
+        return value
+
+    def value_is_missing(self, value: Any) -> bool:
+        if value is None:
+            return True
+        if (self.nargs != 1 or self.multiple) and value == ():
+            return True
+        return False
+
+    def get_missing_message(self, ctx: _click.Context | None) -> str | None:
+        desc = self.type_descriptor
+        if desc.is_choice and desc.choices is not None:
+            normalized = [
+                normalize_choice_value(choice, desc.case_sensitive, ctx)
+                for choice in desc.choices
+            ]
+            choices_str = ",\n\t".join(normalized)
+            return f"Choose from:\n\t{choices_str}"
+        return ""
+
+    def value_from_envvar(self, ctx: _click.Context) -> str | Sequence[str] | None:
+        rv: Any | None = self.resolve_envvar_value(ctx)
+        if rv is not None and (self.nargs != 1 or self.multiple):
+            splitter = self.type_descriptor.envvar_list_splitter
+            if splitter is not None:
+                rv = (rv or "").split(splitter)
+            else:
+                rv = self.split_envvar_value(rv)
+        return rv
+
+    def shell_complete(
+        self, ctx: _click.Context, incomplete: str
+    ) -> list[CompletionItem]:
+        # custom
+        if self._custom_shell_complete is not None:
+            results = self._custom_shell_complete(ctx, self, incomplete)
+            if results and isinstance(results[0], str):
+                results = [CompletionItem(c) for c in results]
+            return cast(list[CompletionItem], results)
+        # choice
+        desc = self.type_descriptor
+        if desc.is_choice and desc.choices is not None:
+            str_choices = map(choice_as_str, desc.choices)
+            if desc.case_sensitive:
+                matched = (c for c in str_choices if c.startswith(incomplete))
+            else:
+                incomplete = incomplete.lower()
+                matched = (c for c in str_choices if c.lower().startswith(incomplete))
+            return [CompletionItem(c) for c in matched]
+        # file
+        if desc.is_file:
+            return [CompletionItem(incomplete, type="file")]
+        # fall-back, specifically also required for path's
+        return []
+
+    @property
+    def display_name_raw(self) -> str:
+        if self.metavar is not None:
+            return self.metavar
+        assert self.name is not None
+        return self.name
+
+    def get_error_hint(self) -> str:
+        return f"'{self.display_name_raw}'"
+
+    def display_name_type(self, ctx: _click.Context) -> str | None:
+        return self.metavar
+
+    def display_type(self, ctx: _click.Context) -> str:
+        """Formatted type string for help, e.g. ``<int>``"""
+        desc = self.type_descriptor
+        if desc.is_choice:
+            if not self.show_choices:
+                type_names = [self._bare_type(type(c)) for c in desc.choices or ()]
+                label = "|".join([*dict.fromkeys(type_names)])
+            else:
+                normalized_mapping = {
+                    c: param_types.normalize_choice_value(c, desc.case_sensitive, ctx)
+                    for c in desc.choices or ()
+                }
+                label = "|".join(normalized_mapping.values())
+            if desc.is_list:
+                label = f"list[{label}]"
+        elif desc.is_list:
+            label = self.bare_type()
+        elif desc.is_tuple:
+            labels = [self._bare_type(arg) for arg in get_args(desc.annotation)]
+            label = ",".join(labels)
+        elif desc.is_datetime:
+            label = "|".join(desc.datetime_formats)
+        elif desc.is_ranged:
+            label = f"{desc.ranged_type_name} range"
+        elif desc.is_path:
+            label = desc.path_type
+        else:
+            label = self.bare_type()
+        return f"<{label}>"
+
+    def display_type_rich(self, ctx: _click.Context) -> str | None:
+        """Type string for the Rich help types column."""
+        display = self.display_type(ctx)
+        if display == "BOOL":
+            return None
+        return display
+
+    def bare_type(self) -> str:
+        annotation = self.runtime_param.annotation
+        return self._bare_type(annotation)
+
+    def _bare_type(self, annotation: type) -> str:
+        display_type = str(annotation)
+        origin = get_origin(annotation)
+        if annotation is None:
+            display_type = "str"
+        elif origin is list:
+            args = get_args(annotation)
+            if len(args) == 1:
+                element_label = self._bare_type(args[0])
+                display_type = f"list[{element_label}]"
+            else:
+                display_type = "list"
+        elif origin is tuple:
+            labels = [self._bare_type(arg) for arg in get_args(annotation)]
+            display_type = ",".join(labels)
+        elif isinstance(annotation, type):
+            display_type = annotation.__name__
+        return display_type
+
+    def get_number_range_help_str(self) -> str | None:
+        return None
 
 
 def _get_default_string(
@@ -248,7 +397,7 @@ def _main(
         sys.exit(1)
 
 
-class TyperArgument(_click.core.Parameter):
+class TyperArgument(TyperParameter):
     param_type_name = "argument"
 
     def __init__(
@@ -256,7 +405,8 @@ class TyperArgument(_click.core.Parameter):
         *,
         # Parameter
         param_decls: list[str],
-        type: Any | None = None,
+        runtime_param: RuntimeParam,
+        type_descriptor: TypeDescriptor,
         required: bool = False,
         default: Any | None = None,
         callback: Callable[..., Any] | None = None,
@@ -279,6 +429,9 @@ class TyperArgument(_click.core.Parameter):
         show_envvar: bool = True,
         help: str | None = None,
         hidden: bool = False,
+        # Numbers
+        min: int | float | None = None,
+        max: int | float | None = None,
         # Rich settings
         rich_help_panel: str | None = None,
     ):
@@ -287,11 +440,14 @@ class TyperArgument(_click.core.Parameter):
         self.show_choices = show_choices
         self.show_envvar = show_envvar
         self.hidden = hidden
+        self.min = min
+        self.max = max
         self.rich_help_panel = rich_help_panel
+        self.runtime_param = runtime_param
+        self.type_descriptor = type_descriptor
 
         super().__init__(
             param_decls=param_decls,
-            type=type,
             required=required,
             default=default,
             callback=callback,
@@ -303,13 +459,6 @@ class TyperArgument(_click.core.Parameter):
             shell_complete=shell_complete,
         )
         _typer_param_setup_autocompletion_compat(self, autocompletion=autocompletion)
-
-    @property
-    def human_readable_name(self) -> str:
-        if self.metavar is not None:
-            return self.metavar
-        assert self.name is not None, "self.name or self.metavar should be set"
-        return self.name
 
     def _get_default_string(
         self,
@@ -325,17 +474,39 @@ class TyperArgument(_click.core.Parameter):
             default_value=default_value,
         )
 
+    def display_name(self) -> str:
+        """Argument display name for help listings (no type suffix)."""
+        if not self.required:
+            return f"[{self.display_name_raw}]"
+        return self.display_name_raw
+
+    def rich_display_name(self) -> str:
+        """Argument display name for the Rich help name column."""
+        name = self.display_name_raw
+        if self.metavar is None and self.nargs != 1:
+            name += "..."
+        return name
+
+    def usage_display_name(self) -> str:
+        """Argument name for the usage line only."""
+        name = self.display_name_raw
+        if self.required:
+            name = f"{{{name}}}"
+        else:
+            name = f"[{name}]"
+        if self.nargs != 1:
+            name += "..."
+        return name
+
     def _extract_default_help_str(
         self, *, ctx: _click.Context
     ) -> Any | Callable[[], Any] | None:
         return _extract_default_help_str(self, ctx=ctx)
 
     def get_help_record(self, ctx: _click.Context) -> tuple[str, str] | None:
-        # Modified version of _click.core.Option.get_help_record()
-        # to support Arguments
         if self.hidden:
             return None
-        name = self.make_metavar(ctx=ctx)
+        name = self.rich_display_name()
         help = self.help or ""
         extra = []
         if self.show_envvar:
@@ -369,6 +540,9 @@ class TyperArgument(_click.core.Parameter):
             # Typer override end
             if default_string:
                 extra.append(_("default: {default}").format(default=default_string))
+        range_str = self.get_number_range_help_str()
+        if range_str:
+            extra.append(range_str)
         if self.required:
             extra.append(_("required"))
         if extra:
@@ -386,30 +560,14 @@ class TyperArgument(_click.core.Parameter):
             help = f"{help}  {extra_str}" if help else f"{extra_str}"
         return name, help
 
-    def make_metavar(self, ctx: _click.Context, *, usage: bool = False) -> str:
-        # Modified version of _click.core.Argument.make_metavar()
-        # to include Argument name
-        if self.metavar is not None:
-            var = self.metavar
-            if var.startswith("[") or not usage:
-                return var
-            if not self.required:
-                return f"[{var}]"
-            return f"{{{var}}}"
-        var = self.name or ""
-        if usage and not self.required:
-            var = f"[{var}]"
-        elif usage and self.required:
-            var = f"{{{var}}}"
-        type_var = self.type.get_metavar(self, ctx=ctx)
+    def display_name_type(self, ctx: _click.Context) -> str:
+        var = self.display_name()
+        type_var = self.display_type(ctx)
         if type_var:
             var += f":{type_var}"
-        if self.nargs != 1:
+        if self.metavar is None and self.nargs != 1:
             var += "..."
         return var
-
-    def value_is_missing(self, value: Any) -> bool:
-        return _value_is_missing(self, value)
 
     def _parse_decls(
         self, decls: Sequence[str], expose_value: bool
@@ -429,16 +587,22 @@ class TyperArgument(_click.core.Parameter):
         return name, [arg], []
 
     def get_usage_pieces(self, ctx: _click.Context) -> list[str]:
-        return [self.make_metavar(ctx, usage=True)]
-
-    def get_error_hint(self, ctx: _click.Context) -> str:
-        return f"'{self.human_readable_name}'"
+        return [self.usage_display_name()]
 
     def add_to_parser(self, parser: _OptionParser, ctx: _click.Context) -> None:
         parser.add_argument(dest=self.name, nargs=self.nargs, obj=self)
 
+    def display_type_rich(self, ctx: _click.Context) -> str | None:
+        suffix = self.display_type(ctx)
+        if suffix is not None:
+            return suffix
+        return self.display_type(ctx)
 
-class TyperOption(_click.Parameter):
+    def get_number_range_help_str(self) -> str | None:
+        return describe_number_range(self.min, self.max)
+
+
+class TyperOption(TyperParameter):
     param_type_name = "option"
 
     _depr_flag_value: bool | None
@@ -448,7 +612,8 @@ class TyperOption(_click.Parameter):
         *,
         # Parameter
         param_decls: list[str],
-        type: types.ParamType | Any | None = None,
+        runtime_param: RuntimeParam,
+        type_descriptor: TypeDescriptor,
         required: bool = False,
         default: Any | None = None,
         callback: Callable[..., Any] | None = None,
@@ -479,15 +644,22 @@ class TyperOption(_click.Parameter):
         hidden: bool = False,
         show_choices: bool = True,
         show_envvar: bool = False,
+        # Numbers
+        min: int | float | None = None,
+        max: int | float | None = None,
         # Rich settings
         rich_help_panel: str | None = None,
     ):
         if help:
             help = inspect.cleandoc(help)
 
+        self.min = min
+        self.max = max
+        self.runtime_param = runtime_param
+        self.type_descriptor = type_descriptor
+
         super().__init__(
             param_decls,
-            type=type,
             multiple=multiple,
             required=required,
             default=default,
@@ -517,23 +689,18 @@ class TyperOption(_click.Parameter):
         self.hidden = hidden
 
         # TODO: revisit all of this flag stuff
-        if is_flag and type is None:
-            self.type: types.ParamType = types.BoolParamType()
-
         self.is_flag: bool = bool(is_flag)
-        self.is_bool_flag: bool = bool(
-            is_flag and isinstance(self.type, types.BoolParamType)
-        )
+        self.is_bool_flag: bool = bool(is_flag and not count)
 
         if self.is_flag:
             self._depr_flag_value = True
         else:
             self._depr_flag_value = None
 
-        # Counting. TODO: test or remove? Not currently in coverage.
+        # Counting
         self.count = count
-        if count and type is None:
-            self.type = types.IntRange(min=0)
+        if count and self.min is None:
+            self.min = 0
 
         self.allow_from_autoenv = allow_from_autoenv
         self.help = help
@@ -544,8 +711,9 @@ class TyperOption(_click.Parameter):
         _typer_param_setup_autocompletion_compat(self, autocompletion=autocompletion)
         self.rich_help_panel = rich_help_panel
 
-    def get_error_hint(self, ctx: _click.Context) -> str:
-        result = super().get_error_hint(ctx)
+    def get_error_hint(self) -> str:
+        hint_list = self.opts or [self.display_name_raw]
+        result = " / ".join(f"'{x}'" for x in hint_list)
         if self.show_envvar and self.envvar is not None:
             result += f" (env var: '{self.envvar}')"
         return result
@@ -668,26 +836,13 @@ class TyperOption(_click.Parameter):
             # Use ``None`` to inform the prompt() function to reiterate until a valid
             # value is provided by the user if we have no default.
             default=default,
-            type=self.type,
+            type=self.type_descriptor.annotation,
             hide_input=self.hide_input,
             show_choices=self.show_choices,
             confirmation_prompt=self.confirmation_prompt,
             value_proc=lambda x: self.process_value(ctx, x),
             **prompt_kwargs,
         )
-
-    def value_from_envvar(self, ctx: _click.Context) -> Any:
-        # TODO: clean up
-        rv = self.resolve_envvar_value(ctx)
-
-        # Absent environment variable or an empty string is interpreted as unset.
-        if rv is None:
-            return None
-
-        if self.nargs != 1 or self.multiple:
-            return self.type.split_envvar_value(rv)
-
-        return rv
 
     def resolve_envvar_value(self, ctx: _click.Context) -> str | None:
         rv = super().resolve_envvar_value(ctx)
@@ -752,13 +907,19 @@ class TyperOption(_click.Parameter):
     ) -> Any | Callable[[], Any] | None:
         return _extract_default_help_str(self, ctx=ctx)
 
-    def make_metavar(self, ctx: _click.Context) -> str:
-        return super().make_metavar(ctx=ctx)
+    def value_label(self, ctx: _click.Context) -> str | None:
+        if self.metavar is not None:
+            return self.metavar
+
+        value_display = self.display_type(ctx)
+        if self.nargs != 1 and value_display is not None:
+            return str(value_display) + "..."
+        return value_display
+
+    def display_name_type(self, ctx: _click.Context) -> str | None:
+        return self.value_label(ctx)
 
     def get_help_record(self, ctx: _click.Context) -> tuple[str, str] | None:
-        # Duplicate all of Click's logic only to modify a single line, to allow boolean
-        # flags with only names for False values as it's currently supported by Typer
-        # Ref: https://typer.tiangolo.com/tutorial/parameter-types/bool/#only-names-for-false
         if self.hidden:
             return None
 
@@ -773,7 +934,7 @@ class TyperOption(_click.Parameter):
                 any_prefix_is_slash = True
 
             if not self.is_flag and not self.count:
-                rv += f" {self.make_metavar(ctx=ctx)}"
+                rv += f" {self.display_name_type(ctx=ctx)}"
 
             return rv
 
@@ -804,32 +965,24 @@ class TyperOption(_click.Parameter):
                 )
                 extra.append(_("env var: {var}").format(var=var_str))
 
-        # Typer override:
-        # Extracted to _extract_default() to allow re-using it in rich_utils
         default_value = self._extract_default_help_str(ctx=ctx)
-        # Typer override end
 
         show_default_is_str = isinstance(self.show_default, str)
 
         if show_default_is_str or (
             default_value is not None and (self.show_default or ctx.show_default)
         ):
-            # Typer override:
-            # Extracted to _get_default_string() to allow re-using it in rich_utils
             default_string = self._get_default_string(
                 ctx=ctx,
                 show_default_is_str=show_default_is_str,
                 default_value=default_value,
             )
-            # Typer override end
             if default_string:
                 extra.append(_("default: {default}").format(default=default_string))
 
-        if isinstance(self.type, types._NumberRangeBase):
-            range_str = self.type._describe_range()
-
-            if range_str:
-                extra.append(range_str)
+        range_str = self.get_number_range_help_str()
+        if range_str:
+            extra.append(range_str)
 
         if self.required:
             extra.append(_("required"))
@@ -850,18 +1003,13 @@ class TyperOption(_click.Parameter):
 
         return ("; " if any_prefix_is_slash else " / ").join(rv), help
 
-    def value_is_missing(self, value: Any) -> bool:
-        return _value_is_missing(self, value)
+    def display_type_rich(self, ctx: _click.Context) -> str | None:
+        return self.value_label(ctx)
 
-
-def _value_is_missing(param: _click.Parameter, value: Any) -> bool:
-    if value is None:
-        return True
-
-    if (param.nargs != 1 or param.multiple) and value == ():
-        return True  # pragma: no cover
-
-    return False
+    def get_number_range_help_str(self) -> str | None:
+        if self.count and self.min == 0 and self.max is None:
+            return None
+        return describe_number_range(self.min, self.max)
 
 
 def _typer_format_options(

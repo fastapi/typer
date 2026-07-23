@@ -12,7 +12,7 @@ import typer._completion_shared
 import typer.completion
 from typer import _click
 from typer.main import solve_typer_info_defaults, solve_typer_info_help
-from typer.models import ParameterInfo, TyperInfo
+from typer.models import TyperInfo
 from typer.testing import CliRunner
 
 from .utils import requires_completion_permission
@@ -30,50 +30,6 @@ def test_defaults_from_info():
     # Mainly for coverage/completeness
     value = solve_typer_info_defaults(TyperInfo())
     assert value
-
-
-def test_too_many_parsers():
-    def custom_parser(value: str) -> int:
-        return int(value)  # pragma: no cover
-
-    class CustomClickParser(_click.types.ParamType):
-        name = "custom_parser"
-
-        def convert(
-            self,
-            value: str,
-            param: _click.Parameter | None,
-            ctx: _click.Context | None,
-        ) -> typing.Any:
-            return int(value)  # pragma: no cover
-
-    expected_error = (
-        "Multiple custom type parsers provided. "
-        "`parser` and `click_type` may not both be provided."
-    )
-
-    with pytest.raises(ValueError, match=expected_error):
-        ParameterInfo(parser=custom_parser, click_type=CustomClickParser())
-
-
-def test_valid_parser_permutations():
-    def custom_parser(value: str) -> int:
-        return int(value)  # pragma: no cover
-
-    class CustomClickParser(_click.types.ParamType):
-        name = "custom_parser"
-
-        def convert(
-            self,
-            value: str,
-            param: _click.Parameter | None,
-            ctx: _click.Context | None,
-        ) -> typing.Any:
-            return int(value)  # pragma: no cover
-
-    ParameterInfo()
-    ParameterInfo(parser=custom_parser)
-    ParameterInfo(click_type=CustomClickParser())
 
 
 @requires_completion_permission
@@ -451,7 +407,7 @@ def test_forward_references():
     result = runner.invoke(app, ["Hello", "2", "invalid"])
 
     assert "Invalid value for 'arg3'" in result.output
-    assert "'invalid' is not a valid int" in result.output
+    assert "Input should be a valid integer" in result.output
     result = runner.invoke(app, ["Hello", "2", "3", "--arg4", "--arg5"])
     assert (
         "arg1: <class 'str'> Hello\narg2: <class 'int'> 2\narg3: <class 'int'> 3\narg4: <class 'bool'> True\narg5: <class 'bool'> True\n"
