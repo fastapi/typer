@@ -1,5 +1,9 @@
+import pytest
 import typer
+import typer.core
 from typer.testing import CliRunner
+
+from tests.utils import needs_rich
 
 runner = CliRunner()
 
@@ -96,3 +100,35 @@ def test_typo_suggestion_disabled():
     assert result.exit_code != 0
     assert "No such command" in result.output
     assert "Did you mean" not in result.output
+
+
+@pytest.mark.parametrize(
+    "use_rich",
+    [
+        pytest.param(False),
+        pytest.param(True, marks=needs_rich),
+    ],
+)
+def test_typo_suggestion_excludes_hidden_commands(
+    monkeypatch: pytest.MonkeyPatch, use_rich: bool
+) -> None:
+    monkeypatch.setattr(typer.core, "HAS_RICH", use_rich)
+    app = typer.Typer()
+
+    @app.command()
+    def secret_agent():  # pragma: no cover
+        typer.echo("Visible command")
+
+    @app.command(hidden=True)
+    def secret_admin():
+        typer.echo("Hidden command")
+
+    result = runner.invoke(app, ["secret-admi"])
+    assert result.exit_code != 0
+    assert "No such command" in result.output
+    assert "'secret-agent'" in result.output
+    assert "'secret-admin'" not in result.output
+
+    result = runner.invoke(app, ["secret-admin"])
+    assert result.exit_code == 0
+    assert "Hidden command" in result.output
