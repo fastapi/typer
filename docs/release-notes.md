@@ -4,6 +4,7 @@
 
 ### Docs
 
+* 📝 Add Library Skills documentation. PR [#1906](https://github.com/fastapi/typer/pull/1906) by [@tiangolo](https://github.com/tiangolo).
 * 🐛 Prevent scroll-to-top on restart/fast buttons in the documentation. PR [#1904](https://github.com/fastapi/typer/pull/1904) by [@phalberg](https://github.com/phalberg).
 * 📝 Recommend uv projects by default in docs. PR [#1903](https://github.com/fastapi/typer/pull/1903) by [@tiangolo](https://github.com/tiangolo).
 * 📝 Update help docs. PR [#1902](https://github.com/fastapi/typer/pull/1902) by [@tiangolo](https://github.com/tiangolo).
