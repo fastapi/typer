@@ -111,6 +111,47 @@ def test_completion_install_zsh():
 
 
 @requires_completion_permission
+def test_completion_install_zsh_zdotdir(tmp_path: Path):
+    """Test that ZDOTDIR is respected for zsh completion installation."""
+    zdotdir = tmp_path / "custom_zsh"
+    zdotdir.mkdir()
+    zshrc_path = zdotdir / ".zshrc"
+    zshrc_path.write_text('echo "custom .zshrc"\n')
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "coverage",
+            "run",
+            mod.__file__,
+            "--install-completion",
+            "zsh",
+        ],
+        capture_output=True,
+        encoding="utf-8",
+        env={
+            **os.environ,
+            "_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION": "True",
+            "ZDOTDIR": str(zdotdir),
+        },
+    )
+    assert "completion installed in" in result.stdout
+    assert "Completion will take effect once you restart the terminal" in result.stdout
+    # .zshrc should be modified in ZDOTDIR, not HOME
+    new_text = zshrc_path.read_text()
+    assert "compinit" in new_text
+    assert "$ZDOTDIR/.zfunc" in new_text
+    # Completion file should be installed under ZDOTDIR/.zfunc/
+    install_source_path = zdotdir / ".zfunc/_tutorial001_py310.py"
+    assert install_source_path.is_file()
+    install_content = install_source_path.read_text()
+    assert (
+        "compdef _tutorial001_py310py_completion tutorial001_py310.py"
+        in install_content
+    )
+
+
+@requires_completion_permission
 def test_completion_install_fish():
     script_path = Path(mod.__file__)
     completion_path: Path = (
