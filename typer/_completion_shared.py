@@ -29,8 +29,8 @@ COMPLETION_SCRIPT_BASH = """
 
     local IFS=$'\n'
     local -a __raw
-    __raw=( $( env COMP_WORDS="${__words[*]}" \\
-                   COMP_CWORD=$__cword \\
+    __raw=( $( env COMP_WORDS="${__words[*]}" \
+                   COMP_CWORD=$__cword \
                    %(autocomplete_var)s=complete_bash $1 ) ) || true
 
     local __wordbreaks="$COMP_WORDBREAKS"
