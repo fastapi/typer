@@ -31,9 +31,13 @@ COMPLETION_SCRIPT_BASH = """
     local -a __raw
     __raw=( $( env COMP_WORDS="${__words[*]}" \\
                    COMP_CWORD=$__cword \\
-                   %(autocomplete_var)s=complete_bash $1 ) )
+                   %(autocomplete_var)s=complete_bash $1 ) ) || true
 
-    local __cur=${__full##*[$COMP_WORDBREAKS]}
+    local __wordbreaks="$COMP_WORDBREAKS"
+    if [[ -z "$__wordbreaks" ]]; then
+        __wordbreaks=$' \t\n"\'><=;|&(:'
+    fi
+    local __cur=${__full##*[$__wordbreaks]}
     local __strip=$(( ${#__full} - ${#__cur} ))
     COMPREPLY=()
     local __c
