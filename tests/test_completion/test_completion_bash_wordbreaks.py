@@ -6,7 +6,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from ..utils import needs_bash
+from ..utils import needs_bash, skip_if_windows
 from . import colon_example as mod
 
 
@@ -77,6 +77,7 @@ printf '%s\\n' "${{COMPREPLY[@]}}"
     return result.stdout
 
 
+@skip_if_windows
 @needs_bash
 def test_bash_completion_script_handles_comp_wordbreaks_colon() -> None:
     show = subprocess.run(
