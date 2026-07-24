@@ -20,10 +20,26 @@ class Shells(str, Enum):
 
 COMPLETION_SCRIPT_BASH = """
 %(complete_func)s() {
+    local __line=${COMP_LINE:0:COMP_POINT}
+    local -a __words
+    read -ra __words <<< "$__line"
+    local __cword=${#__words[@]}
+    [[ $__line != *[[:space:]] ]] && __cword=$((__cword - 1))
+    local __full=${__words[__cword]-}
+
     local IFS=$'\n'
-    COMPREPLY=( $( env COMP_WORDS="${COMP_WORDS[*]}" \\
-                   COMP_CWORD=$COMP_CWORD \\
+    local -a __raw
+    __raw=( $( env COMP_WORDS="${__words[*]}" \\
+                   COMP_CWORD=$__cword \\
                    %(autocomplete_var)s=complete_bash $1 ) )
+
+    local __cur=${__full##*[$COMP_WORDBREAKS]}
+    local __strip=$(( ${#__full} - ${#__cur} ))
+    COMPREPLY=()
+    local __c
+    for __c in "${__raw[@]}"; do
+        COMPREPLY+=( "${__c:__strip}" )
+    done
     return 0
 }
 
