@@ -26,8 +26,6 @@ def _bash_completion_reply(
     if bash is None:
         raise RuntimeError("bash not found")
 
-    # Call Python the same way other completion tests do, so the autocomplete
-    # env var matches --show-completion. Avoid PATH wrappers that change argv[0].
     with tempfile.NamedTemporaryFile("w", suffix=".sh", delete=False) as handle:
         handle.write(
             f"""
@@ -107,7 +105,6 @@ def test_bash_completion_script_handles_comp_wordbreaks_colon() -> None:
     reply = _bash_completion_reply(
         python_cmd=python_cmd,
         complete_var=complete_var,
-        # COMP_LINE keeps the full token; bash would have split on ':' in COMP_WORDS.
         comp_line="colon_example.py --name alpine:l",
     )
     assert "latest" in reply.splitlines()
