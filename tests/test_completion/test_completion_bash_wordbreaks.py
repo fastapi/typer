@@ -6,6 +6,8 @@ import sys
 import tempfile
 from pathlib import Path
 
+import pytest
+
 from ..utils import needs_bash, skip_if_windows
 from . import colon_example as mod
 
@@ -75,6 +77,19 @@ printf '%s\\n' "${{COMPREPLY[@]}}"
         Path(path).unlink(missing_ok=True)
     assert result.returncode == 0, result.stderr
     return result.stdout
+
+
+def test_bash_completion_reply_requires_bash(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(shutil, "which", lambda _: None)
+
+    with pytest.raises(RuntimeError, match="bash not found"):
+        _bash_completion_reply(
+            python_cmd=sys.executable,
+            complete_var="_COLON_EXAMPLEPY_COMPLETE",
+            comp_line="colon_example.py --name alpine:l",
+        )
 
 
 @skip_if_windows
