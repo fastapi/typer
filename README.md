@@ -3,7 +3,7 @@
 
 </p>
 <p align="center">
-    <em>Typer, build great CLIs. Easy to code. Based on Python type hints.</em>
+    <em>Typer helps build great CLIs. Easy to code. Based on Python type hints.</em>
 </p>
 <p align="center">
 <a href="https://github.com/fastapi/typer/actions?query=workflow%3ATest+event%3Apush+branch%3Amaster">
