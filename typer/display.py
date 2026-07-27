@@ -19,4 +19,4 @@ def get_error_msg(exc: ValidationError) -> str:
     errors = exc.errors()
     if errors:
         return errors[0]["msg"]
-    return str(exc)
+    return str(exc)  # pragma: no cover

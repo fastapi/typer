@@ -164,7 +164,8 @@ class TyperParameter(_click.core.Parameter):
         return f"'{self.display_name_raw}'"
 
     def display_name_type(self, ctx: _click.Context) -> str | None:
-        return self.metavar
+        # Is overridden in practice by TyperOption and TyperArgument
+        return self.metavar  # pragma: no cover
 
     def display_type(self, ctx: _click.Context) -> str:
         """Formatted type string for help, e.g. ``<int>``"""

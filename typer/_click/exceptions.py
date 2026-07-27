@@ -33,7 +33,7 @@ class ClickException(Exception):
         return self.message
 
     def __str__(self) -> str:
-        return self.message
+        return self.message  # pragma: no cover
 
     def show(self, file: IO[Any] | None = None) -> None:
         if file is None:
