@@ -37,6 +37,14 @@ def test_clamped(mod: ModuleType):
     assert "--score is 0" in result.output
 
 
+def test_clamped_within_range(mod: ModuleType):
+    result = runner.invoke(mod.app, ["5", "--rank", "5", "--score", "50"])
+    assert result.exit_code == 0
+    assert "ID is 5" in result.output
+    assert "--rank is 5" in result.output
+    assert "--score is 50.0" in result.output
+
+
 def test_script(mod: ModuleType):
     result = subprocess.run(
         [sys.executable, "-m", "coverage", "run", mod.__file__, "--help"],

@@ -312,6 +312,11 @@ def test_prompt():
     assert "[demo.txt]: " in result.stdout
 
 
+def test_standalone_prompt(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(termui, "visible_prompt_func", lambda prompt: "a")
+    assert typer.prompt("flavor", type=Literal["a", "b"]) == "a"
+
+
 def test_hidden_prompt_func(monkeypatch):
     monkeypatch.setattr("getpass.getpass", lambda prompt: "secret")
     assert termui.hidden_prompt_func("Password: ") == "secret"

@@ -111,6 +111,29 @@ def test_list_parameters_convert_to_lists(type_annotation):
     assert result.exit_code == 0
 
 
+def test_list_scalar_default_map() -> None:
+    app = typer.Typer(context_settings={"default_map": {"nums": 7}})
+
+    @app.command()
+    def main(nums: list[int] = typer.Option([])):
+        print(nums)
+
+    result = runner.invoke(app, [])
+    assert result.exit_code == 0, result.output
+    assert result.output.strip() == "[7]"
+
+
+def test_list_requires_single_type() -> None:
+    app = typer.Typer()
+
+    @app.command()
+    def main(items: list[str, int]):
+        print(items)  # pragma: no cover
+
+    with pytest.raises(ValueError, match="Expected one list item type"):
+        runner.invoke(app, ["hello", "342"])
+
+
 @pytest.mark.parametrize(
     "type_annotation",
     [
@@ -150,6 +173,18 @@ def test_tuple_wrong_arity(monkeypatch):
     result = runner.invoke(app, [], default_map={"value": ("only-one",)})
     assert result.exit_code == 2
     assert "2 values are required, but 1 given." in result.output
+
+
+def test_tuple_rejects_non_sequence(monkeypatch):
+    app = typer.Typer(context_settings={"default_map": {"pair": "not_a_tuple"}})
+
+    @app.command()
+    def main(pair: tuple[str, str] = ("a", "b")):
+        print(pair)  # pragma: no cover
+
+    result = runner.invoke(app, [])
+    assert result.exit_code == 2
+    assert "value is not a valid tuple" in result.output
 
 
 def test_custom_parse():
