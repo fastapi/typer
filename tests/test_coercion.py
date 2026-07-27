@@ -71,9 +71,6 @@ def test_passthrough_runtime_param_default() -> None:
         def __init__(self, value: int) -> None:
             self.value = value
 
-        def __repr__(self) -> str:
-            return f"Widget({self.value})"
-
     app = typer.Typer()
     seen: dict[str, Widget] = {}
 
@@ -100,9 +97,6 @@ def test_widget_parsed_from_cli_with_parser() -> None:
     class Widget:
         def __init__(self, value: int) -> None:
             self.value = value
-
-        def __repr__(self) -> str:
-            return f"Widget({self.value})"
 
     def parse_widget(value: str) -> Widget:
         return Widget(int(value))
