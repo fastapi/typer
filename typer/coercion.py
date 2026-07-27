@@ -54,7 +54,9 @@ class TypeDescriptor:
 
     @property
     def is_ranged(self) -> bool:
-        has_min_or_max = self.parameter_info.min is not None or self.parameter_info.max is not None
+        has_min_or_max = (
+            self.parameter_info.min is not None or self.parameter_info.max is not None
+        )
         return is_number_type(self.annotation) and has_min_or_max
 
     @property
