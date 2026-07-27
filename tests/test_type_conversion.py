@@ -3,6 +3,7 @@ import sys
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Annotated, Any, Literal, get_args, get_origin
 
 import pytest
@@ -407,9 +408,16 @@ def test_argv_encoding(
 
         monkeypatch.setattr(locale, "getpreferredencoding", lambda: "latin-1")
     else:
-        argv_encoding = stdin_encoding or filesystem_encoding
-        monkeypatch.setattr(_click._compat, "_get_argv_encoding", lambda: argv_encoding)
-        monkeypatch.setattr(sys, "getfilesystemencoding", lambda: filesystem_encoding)
+        monkeypatch.setattr(
+            _click._compat.sys,
+            "stdin",
+            SimpleNamespace(encoding=stdin_encoding),
+        )
+        monkeypatch.setattr(
+            _click._compat.sys,
+            "getfilesystemencoding",
+            lambda: filesystem_encoding,
+        )
 
     result = runner.invoke(app, [], default_map={"name": b"\xff"})
     assert result.exit_code == 0

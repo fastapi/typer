@@ -26,7 +26,7 @@ def test_coercion_invalid() -> None:
 
     @app.command()
     def main(age: int):
-        pass
+        pass  # pragma: no cover
 
     result = runner.invoke(app, ["not-an-int"])
     assert "Input should be a valid integer" in result.stderr
