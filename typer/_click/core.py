@@ -968,18 +968,10 @@ class Parameter(ABC):
         """
         return (rv or "").split(self.envvar_list_splitter)
 
+    @abstractmethod
     def value_from_envvar(self, ctx: Context) -> str | Sequence[str] | None:
-        """Process the value from the environment variable.
-
-        Returns the string as-is or splits it into a sequence of strings if the
-        parameter is expecting multiple values.
-        """
-        rv: Any | None = self.resolve_envvar_value(ctx)
-
-        if rv is not None and (self.nargs != 1 or self.multiple):
-            rv = self.split_envvar_value(rv)
-
-        return rv
+        """Process the value from the environment variable."""
+        pass  # pragma: no cover
 
     def handle_parse_result(
         self, ctx: Context, opts: Mapping[str, Any], args: list[str]
@@ -1020,23 +1012,7 @@ class Parameter(ABC):
     def get_usage_pieces(self, ctx: Context) -> list[str]:
         return []
 
+    @abstractmethod
     def shell_complete(self, ctx: Context, incomplete: str) -> list["CompletionItem"]:
-        """Return a list of completions for the incomplete value. If a
-        ``shell_complete`` function was given during init, it is used.
-        """
-        if self._custom_shell_complete is not None:
-            results = self._custom_shell_complete(ctx, self, incomplete)
-
-            if results and isinstance(results[0], str):
-                from .shell_completion import CompletionItem
-
-                results = [CompletionItem(c) for c in results]
-
-            return cast("list[CompletionItem]", results)
-
-        # All Parameter objects will in fact be TyperParameter objects
-        # This will be cleaned up in later iterations
-        from ..core import TyperParameter
-
-        param = cast(TyperParameter, self)
-        return param.shell_complete(ctx, incomplete)
+        """Return a list of completions for the incomplete value."""
+        pass  # pragma: no cover
