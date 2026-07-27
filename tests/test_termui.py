@@ -317,6 +317,43 @@ def test_standalone_prompt(monkeypatch: pytest.MonkeyPatch) -> None:
     assert typer.prompt("flavor", type=Literal["a", "b"]) == "a"
 
 
+def test_standalone_prompt_invalid(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    answers = iter(["nope", "a"])
+    monkeypatch.setattr(termui, "visible_prompt_func", lambda prompt: next(answers))
+
+    assert typer.prompt("flavor", type=Literal["a", "b"]) == "a"
+    assert "is not one of" in capsys.readouterr().out
+
+
+def test_standalone_prompt_passthrough_default(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class Widget:
+        def __init__(self, value: int = 0) -> None:
+            self.value = value
+
+    default = Widget(42)
+    monkeypatch.setattr(termui, "visible_prompt_func", lambda prompt: "")
+    assert typer.prompt("widget", type=Widget, default=default) is default
+
+
+def test_standalone_prompt_passthrough_invalid(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    class Widget:
+        def __init__(self, value: int = 0) -> None:
+            self.value = value
+
+    default = Widget(42)
+    answers = iter(["nope", ""])
+    monkeypatch.setattr(termui, "visible_prompt_func", lambda prompt: next(answers))
+
+    assert typer.prompt("widget", type=Widget, default=default) is default
+    assert "is not a valid Widget" in capsys.readouterr().out
+
+
 def test_hidden_prompt_func(monkeypatch):
     monkeypatch.setattr("getpass.getpass", lambda prompt: "secret")
     assert termui.hidden_prompt_func("Password: ") == "secret"

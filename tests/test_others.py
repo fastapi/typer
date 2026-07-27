@@ -307,6 +307,38 @@ def test_option_envvar_list():
     assert "Hello morty" in result.output
 
 
+def test_option_envvar_list_path(tmp_path: Path) -> None:
+    first = tmp_path / "a.txt"
+    second = tmp_path / "b.txt"
+    first.write_text("a", encoding="utf-8")
+    second.write_text("b", encoding="utf-8")
+    app = typer.Typer()
+
+    @app.command()
+    def main(configs: Annotated[list[Path], typer.Option(envvar="MYFILES")]):
+        print([path.name for path in configs])
+
+    result = runner.invoke(app, env={"MYFILES": f"{first}{os.path.pathsep}{second}"})
+    assert result.exit_code == 0, result.output
+    assert result.output.strip() == "['a.txt', 'b.txt']"
+
+
+def test_option_envvar_list_file(tmp_path: Path) -> None:
+    first = tmp_path / "a.txt"
+    second = tmp_path / "b.txt"
+    first.write_text("one", encoding="utf-8")
+    second.write_text("two", encoding="utf-8")
+    app = typer.Typer()
+
+    @app.command()
+    def main(files: Annotated[list[typer.FileText], typer.Option(envvar="FILES")]):
+        print([file.read() for file in files])
+
+    result = runner.invoke(app, env={"FILES": f"{first}{os.path.pathsep}{second}"})
+    assert result.exit_code == 0, result.output
+    assert result.output.strip() == "['one', 'two']"
+
+
 def test_completion_argument():
     file_path = Path(__file__).parent / "assets/completion_argument.py"
     result = subprocess.run(

@@ -54,11 +54,8 @@ class TypeDescriptor:
 
     @property
     def is_ranged(self) -> bool:
-        if self.is_list or self.is_tuple:
-            return False
-        return is_number_type(self.annotation) and (
-            self.parameter_info.min is not None or self.parameter_info.max is not None
-        )
+        has_min_or_max = self.parameter_info.min is not None or self.parameter_info.max is not None
+        return is_number_type(self.annotation) and has_min_or_max
 
     @property
     def is_path(self) -> bool:
@@ -102,9 +99,8 @@ class TypeDescriptor:
 
     @property
     def ranged_type_name(self) -> str:
-        if isinstance(self.annotation, type):
-            return self.annotation.__name__
-        return "number"
+        assert isinstance(self.annotation, type)
+        return self.annotation.__name__
 
     @property
     def tuple_arity(self) -> int | None:
@@ -114,9 +110,7 @@ class TypeDescriptor:
 
     @property
     def envvar_list_splitter(self) -> str | None:
-        if self.is_file:
-            return os.path.pathsep
-        if self.is_path:
+        if self.is_file or self.is_path:
             return os.path.pathsep
         if self.is_list:
             args = get_args(self.annotation)
@@ -161,7 +155,7 @@ class RuntimeParam(ABC):
 
     @abstractmethod
     def _coerce_value(self, value: Any, param: "TyperParameter", ctx: Context) -> Any:
-        pass
+        pass  # pragma: no cover
 
 
 @dataclass(frozen=True)
@@ -178,8 +172,6 @@ class AdapterRuntimeParam(RuntimeParam):
             )
         except ValidationError as exc:
             raise BadParameter(get_error_msg(exc), ctx=ctx, param=param) from exc
-        except ValueError as exc:
-            raise BadParameter(str(exc), ctx=ctx, param=param) from exc
 
 
 @dataclass(frozen=True)
@@ -265,16 +257,13 @@ def prompt_value_proc(
                 return adapter.validate_python(value)
             except ValidationError as exc:
                 raise UsageError(get_error_msg(exc)) from exc
-            except ValueError as exc:
-                raise UsageError(str(exc)) from exc
 
         return coerce
 
     def coerce_pass_through(value: Any) -> Any:
-        if isinstance(annotation, type):
-            if isinstance(value, annotation):
-                return value
-        label = getattr(annotation, "__name__", repr(annotation))
-        raise UsageError(f"Value {value!r} is not a valid {label}.")
+        assert isinstance(annotation, type)
+        if isinstance(value, annotation):
+            return value
+        raise UsageError(f"Value {value!r} is not a valid {annotation.__name__}.")
 
     return coerce_pass_through
