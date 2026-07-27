@@ -408,20 +408,39 @@ def test_argv_encoding(
 
         monkeypatch.setattr(locale, "getpreferredencoding", lambda: "latin-1")
     else:
-        monkeypatch.setattr(
-            _click._compat.sys,
-            "stdin",
-            SimpleNamespace(encoding=stdin_encoding),
-        )
-        monkeypatch.setattr(
-            _click._compat.sys,
-            "getfilesystemencoding",
-            lambda: filesystem_encoding,
-        )
+        argv_encoding = stdin_encoding or filesystem_encoding
+        monkeypatch.setattr(_click._compat, "_get_argv_encoding", lambda: argv_encoding)
+        monkeypatch.setattr(sys, "getfilesystemencoding", lambda: filesystem_encoding)
 
     result = runner.invoke(app, [], default_map={"name": b"\xff"})
     assert result.exit_code == 0
     assert "ÿ" in result.output
+
+
+@pytest.mark.parametrize(
+    ("stdin_encoding", "filesystem_encoding", "expected_encoding"),
+    [
+        pytest.param("latin-1", "utf-8", "latin-1", marks=needs_linux),
+        pytest.param(None, "latin-1", "latin-1", marks=needs_linux),
+    ],
+)
+def test_argv_encoding_fallback(
+    monkeypatch: pytest.MonkeyPatch,
+    stdin_encoding: str | None,
+    filesystem_encoding: str,
+    expected_encoding: str,
+) -> None:
+    monkeypatch.setattr(
+        _click._compat.sys,
+        "stdin",
+        SimpleNamespace(encoding=stdin_encoding),
+    )
+    monkeypatch.setattr(
+        _click._compat.sys,
+        "getfilesystemencoding",
+        lambda: filesystem_encoding,
+    )
+    assert _click._compat._get_argv_encoding() == expected_encoding
 
 
 @pytest.mark.parametrize(
