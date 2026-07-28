@@ -19,7 +19,7 @@ $ uv run python main.py --help
 Usage: main.py [OPTIONS] {ID}
 
 Arguments:
-  ID  [required]
+  ID  [0<=x<=1000; required]
 
 Options:
   --age <int range>      [default: 20; x>=18]
@@ -39,7 +39,7 @@ $ uv run python main.py 1002
 Usage: main.py [OPTIONS] {ID}
 Try "main.py --help" for help.
 
-Error: Invalid value for 'ID': 1002 is not in the range 0<=x<=1000.
+Error: Invalid value for 'ID': Input should be less than or equal to 1000
 
 // Pass an invalid age
 $ uv run python main.py 5 --age 15
@@ -47,7 +47,7 @@ $ uv run python main.py 5 --age 15
 Usage: main.py [OPTIONS] {ID}
 Try "main.py --help" for help.
 
-Error: Invalid value for '--age': 15 is not in the range x>=18.
+Error: Invalid value for '--age':  Input should be greater than or equal to 18
 
 // Pass an invalid score
 $ uv run python main.py 5 --age 20 --score 100.5
@@ -55,7 +55,7 @@ $ uv run python main.py 5 --age 20 --score 100.5
 Usage: main.py [OPTIONS] {ID}
 Try "main.py --help" for help.
 
-Error: Invalid value for '--score': 100.5 is not in the range x<=100.
+Error: Invalid value for '--score': Input should be less than or equal to 100
 
 // But as we didn't specify a minimum score, this is accepted
 $ uv run python main.py 5 --age 20 --score -5
@@ -86,14 +86,14 @@ $ uv run python main.py 1002
 Usage: main.py [OPTIONS] {ID}
 Try "main.py --help" for help.
 
-Error: Invalid value for 'ID': 1002 is not in the range 0<=x<=1000.
+Error: Invalid value for 'ID': Input should be less than or equal to 1000
 
 // But --rank and --score use clamp
 $ uv run python main.py 5 --rank 11 --score -5
 
 ID is 5
 --rank is 10
---score is 0
+--score is 0.0
 ```
 
 </div>
