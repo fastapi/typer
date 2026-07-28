@@ -86,6 +86,9 @@ a[data-internal-link][target="_blank"]:not(:has(img)):not(.no-link-icon):not(.an
 a[data-internal-link][target="_blank"]:not(:has(img)):not(.no-link-icon):not(.announce-link):hover::after {
   opacity: 0.85;
 }
+a[data-terminal-control] {
+    cursor: pointer;
+}
 
 /* Disable link icons in footer and header nav */
 .md-footer a::after,
