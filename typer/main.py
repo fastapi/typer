@@ -1454,10 +1454,8 @@ def get_callback(
         _rich_traceback_guard = pretty_exceptions_short  # noqa: F841
         for k, v in kwargs.items():
             matched_param = params_by_name.get(k)
-            if matched_param is not None:
-                use_params[k] = _normalize_collection_value(matched_param, v)
-            else:
-                use_params[k] = v
+            assert matched_param is not None
+            use_params[k] = _normalize_collection_value(matched_param, v)
         if context_param_name:
             use_params[context_param_name] = get_current_context()
         return callback(**use_params)

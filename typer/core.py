@@ -212,9 +212,6 @@ class TyperParameter(_click.core.Parameter):
             display_type = annotation.__name__
         return display_type
 
-    def get_number_range_help_str(self) -> str | None:
-        return describe_number_range(self.min, self.max)
-
 
 def _get_default_string(
     obj: Union["TyperArgument", "TyperOption"],
@@ -554,6 +551,9 @@ class TyperArgument(TyperParameter):
 
     def add_to_parser(self, parser: _OptionParser, ctx: _click.Context) -> None:
         parser.add_argument(dest=self.name, nargs=self.nargs, obj=self)
+
+    def get_number_range_help_str(self) -> str | None:
+        return describe_number_range(self.min, self.max)
 
 
 class TyperOption(TyperParameter):
