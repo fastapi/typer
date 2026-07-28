@@ -3,13 +3,7 @@ import stat
 from collections.abc import Sequence
 from enum import Enum
 from pathlib import Path
-from typing import (
-    IO,
-    TYPE_CHECKING,
-    Any,
-    TypeAlias,
-    cast,
-)
+from typing import IO, TYPE_CHECKING, Any, TypeAlias, cast
 
 from pydantic import TypeAdapter, ValidationError
 
@@ -57,9 +51,11 @@ def infer_annotation_from_default(default: Any | None) -> ParameterAnnotation:
     return type(default)
 
 
-def annotation_from_prompt(t: Any | None, default: Any | None) -> ParameterAnnotation:
-    if t is not None:
-        return t
+def annotation_from_prompt(
+    param_type: Any | None, default: Any | None
+) -> ParameterAnnotation:
+    if param_type is not None:
+        return param_type
     return infer_annotation_from_default(default)
 
 
@@ -106,7 +102,7 @@ def normalize_choice_value(
     case_sensitive: bool,
     ctx: Context | None,
 ) -> str:
-    normed_value = str(choice.value) if isinstance(choice, Enum) else str(choice)
+    normed_value = choice_as_str(choice)
     if ctx is not None and ctx.token_normalize_func is not None:
         normed_value = ctx.token_normalize_func(normed_value)
     if not case_sensitive:
@@ -182,7 +178,7 @@ def coerce_cli_path(
     if path_type is None or path_type is str or path_type is bytes:
         rv: Any = value
     else:
-        assert isinstance(path_type, type) and issubclass(path_type, Path)
+        assert lenient_issubclass(path_type, Path)
         if isinstance(value, path_type):
             rv = value
         else:

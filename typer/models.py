@@ -1,12 +1,7 @@
 import inspect
 import io
 from collections.abc import Callable, Sequence
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Optional,
-    TypeVar,
-)
+from typing import TYPE_CHECKING, Any, Optional, TypeVar
 
 from . import _click
 from ._click.shell_completion import CompletionItem
