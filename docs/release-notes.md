@@ -9,6 +9,10 @@
 * 📝 Recommend uv projects by default in docs. PR [#1903](https://github.com/fastapi/typer/pull/1903) by [@tiangolo](https://github.com/tiangolo).
 * 📝 Update help docs. PR [#1902](https://github.com/fastapi/typer/pull/1902) by [@tiangolo](https://github.com/tiangolo).
 
+### Internal
+
+* ⬆️ Upgrade latest-changes to 0.7.1. PR [#1909](https://github.com/fastapi/typer/pull/1909) by [@tiangolo](https://github.com/tiangolo).
+
 ## 0.27.0 (2026-07-15)
 
 ### Breaking Changes
