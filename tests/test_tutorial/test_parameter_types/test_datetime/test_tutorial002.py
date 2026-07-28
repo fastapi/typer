@@ -47,7 +47,7 @@ def test_invalid(mod: ModuleType):
     assert result.exit_code != 0
     assert "Invalid value for 'launch_date'" in result.output
     assert "does not match" in result.output
-    assert "%Y-%m-%d" in result.output
+    assert "'%Y-%m-%d', '%m/%d/%Y'" in result.output
 
 
 def test_script(mod: ModuleType):
