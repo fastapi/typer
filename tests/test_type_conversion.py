@@ -335,7 +335,7 @@ def test_path_coerced_from_default_map_path_object() -> None:
 def test_path_coerce_invalid_pathlike_default_map() -> None:
     class BadPathLike:
         def __fspath__(self) -> object:
-            return 123
+            return 123  # pragma: no cover
 
     app = typer.Typer()
 
