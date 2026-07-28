@@ -157,7 +157,6 @@ class TyperParameter(_click.core.Parameter):
     def display_name_raw(self) -> str:
         if self.metavar is not None:
             return self.metavar
-        assert self.name is not None
         return self.name
 
     def get_error_hint(self) -> str:
@@ -539,7 +538,7 @@ class TyperArgument(TyperParameter):
 
     def _parse_decls(
         self, decls: Sequence[str], expose_value: bool
-    ) -> tuple[str | None, list[str], list[str]]:
+    ) -> tuple[str, list[str], list[str]]:
         assert decls
         assert len(decls) == 1
         name = arg = decls[0]
@@ -627,7 +626,6 @@ class TyperOption(TyperParameter):
         )
 
         if prompt is True:
-            assert self.name is not None
             prompt_text: str | None = self.name.replace("_", " ").capitalize()
         elif prompt is False:
             prompt_text = None
@@ -672,7 +670,7 @@ class TyperOption(TyperParameter):
 
     def _parse_decls(
         self, decls: Sequence[str], expose_value: bool
-    ) -> tuple[str | None, list[str], list[str]]:
+    ) -> tuple[str, list[str], list[str]]:
         opts = []
         secondary_opts = []
         name = None
@@ -680,7 +678,7 @@ class TyperOption(TyperParameter):
 
         for decl in decls:
             if decl.isidentifier():
-                if name is not None:
+                if name:
                     raise TypeError(f"Name '{name}' defined twice")
                 name = decl
             else:
@@ -703,7 +701,7 @@ class TyperOption(TyperParameter):
                     possible_names.append(_split_opt(decl))
                     opts.append(decl)
 
-        if name is None and possible_names:
+        if not name and possible_names:
             possible_names.sort(key=lambda x: -len(x[0]))  # group long options first
             name = possible_names[0][1].replace("-", "_")
             assert name.isidentifier()
@@ -894,7 +892,7 @@ class TyperOption(TyperParameter):
                 if (
                     self.allow_from_autoenv
                     and ctx.auto_envvar_prefix is not None
-                    and self.name is not None
+                    and self.name
                 ):
                     envvar = f"{ctx.auto_envvar_prefix}_{self.name.upper()}"
 
