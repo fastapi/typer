@@ -181,18 +181,15 @@ def coerce_cli_path(
 ) -> str | bytes | os.PathLike[str] | Path:
     if path_type is None or path_type is str or path_type is bytes:
         rv: Any = value
-    elif isinstance(path_type, type) and issubclass(path_type, Path):
+    else:
+        assert isinstance(path_type, type) and issubclass(path_type, Path)
         if isinstance(value, path_type):
             rv = value
-        elif isinstance(value, (str, os.PathLike)):
+        else:
             try:
                 rv = TypeAdapter(path_type).validate_python(value)
             except ValidationError as exc:
                 raise BadParameter(get_error_msg(exc), ctx=ctx, param=param) from exc
-        else:
-            rv = value
-    else:
-        rv = value
 
     is_dash = (
         parameter_info.file_okay and parameter_info.allow_dash and rv in (b"-", "-")
@@ -279,10 +276,7 @@ def _open_cli_file(
     if hasattr(value, "read") or hasattr(value, "write"):
         return cast("IO[Any]", value)
 
-    if isinstance(value, str):
-        path: str | os.PathLike[str] = value
-    else:
-        path = value
+    path: str | os.PathLike[str] = value
 
     try:
         lazy = parameter_info.lazy

@@ -319,6 +319,35 @@ def test_path_coerced(path_type) -> None:
     assert "my_awesome_file" in result.output
 
 
+def test_path_coerced_from_default_map_path_object() -> None:
+    app = typer.Typer()
+
+    @app.command()
+    def show(path: Path = typer.Option(..., path_type=Path)):
+        print(path)
+
+    path_obj = Path("dir/my_awesome_file.txt")
+    result = runner.invoke(app, [], default_map={"path": path_obj})
+    assert result.exit_code == 0, result.output
+    assert "my_awesome_file" in result.output
+
+
+def test_path_coerce_invalid_pathlike_default_map() -> None:
+    class BadPathLike:
+        def __fspath__(self) -> object:
+            return 123
+
+    app = typer.Typer()
+
+    @app.command()
+    def show(path: Path = typer.Option(..., path_type=Path)):
+        print(path)  # pragma: no cover
+
+    result = runner.invoke(app, [], default_map={"path": BadPathLike()})
+    assert result.exit_code == 2
+    assert "Invalid value for '--path'" in result.output
+
+
 @pytest.mark.parametrize(
     ("create_file", "option_kwargs", "deny_mode", "expected_error"),
     [
@@ -372,9 +401,41 @@ def test_path_convert_failures(
         (False, bool),
         ("False", str),
         ((1, "x"), tuple[int, str]),
+        ([], str),
+        ([1], int),
+        ([[1, "x"]], tuple[int, str]),
     ],
 )
 def test_default_infers_param_type(
+    default: Any,
+    expected_annotation: Any,
+) -> None:
+    app = typer.Typer()
+
+    @app.command()
+    def cmd(val=default):
+        pass  # pragma: no cover
+
+    param = next(p for p in typer.main.get_command(app).params if p.name == "val")
+    assert param.runtime_param is not None
+    if get_origin(expected_annotation) is tuple:
+        assert get_origin(param.runtime_param.annotation) is tuple
+        assert get_args(param.runtime_param.annotation) == get_args(expected_annotation)
+    else:
+        assert param.runtime_param.annotation is expected_annotation
+
+
+@pytest.mark.parametrize(
+    ("default", "expected_annotation"),
+    [
+        (42, int),
+        (0.5, float),
+        ("morty", str),
+        (False, bool),
+        ("False", str),
+    ],
+)
+def test_default_infers_param_type_invoke(
     default: Any,
     expected_annotation: Any,
 ) -> None:
@@ -385,21 +446,10 @@ def test_default_infers_param_type(
     def cmd(val=default):
         seen["val"] = val
 
-    param = next(p for p in typer.main.get_command(app).params if p.name == "val")
-    assert param.runtime_param is not None
-    if get_origin(expected_annotation) is tuple:
-        assert get_origin(param.runtime_param.annotation) is tuple
-        assert get_args(param.runtime_param.annotation) == get_args(expected_annotation)
-    else:
-        assert param.runtime_param.annotation is expected_annotation
-
     result = runner.invoke(app)
     assert result.exit_code == 0, result.output
     assert seen["val"] == default
-    if expected_annotation in (int, float, bool, str):
-        assert type(seen["val"]) is expected_annotation
-    elif get_origin(expected_annotation) is tuple:
-        assert isinstance(seen["val"], tuple)
+    assert type(seen["val"]) is expected_annotation
 
 
 def test_int_rejects_float_default() -> None:
