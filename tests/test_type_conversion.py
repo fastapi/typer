@@ -559,6 +559,7 @@ def test_argv_encoding_fallback(
 @pytest.mark.parametrize(
     ("parameter", "expected_metavar"),
     [
+        pytest.param(Annotated[Any, typer.Argument(...)], "<typing.Any>"),
         pytest.param(Annotated[str, typer.Option(...)], "<str>"),
         pytest.param(Annotated[str, typer.Argument(...)], "<str>"),
         pytest.param(Annotated[int, typer.Option(...)], "<int>"),
