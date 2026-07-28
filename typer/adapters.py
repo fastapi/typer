@@ -38,8 +38,7 @@ def validation_ctx_param(
 
 
 def try_build_adapter(
-    annotation: Any,
-    parameter_info: ParameterInfo,
+    annotation: Any, parameter_info: ParameterInfo
 ) -> TypeAdapter[Any] | None:
     """Build a TypeAdapter when Pydantic can schema-generate the annotation."""
     try:
@@ -48,10 +47,7 @@ def try_build_adapter(
         return None
 
 
-def build_adapter(
-    annotation: Any,
-    parameter_info: ParameterInfo,
-) -> TypeAdapter[Any]:
+def build_adapter(annotation: Any, parameter_info: ParameterInfo) -> TypeAdapter[Any]:
     """Build a Pydantic TypeAdapter for a parameter annotation and metadata.
     Check for list/tuple and call this function recursively.
     Otherwise, delegate to build_leaf_adapter.
@@ -98,9 +94,7 @@ def build_adapter(
 
 
 def build_leaf_adapter(
-    annotation: Any,
-    *,
-    parameter_info: ParameterInfo,
+    annotation: Any, parameter_info: ParameterInfo
 ) -> TypeAdapter[Any]:
     """Build a Pydantic TypeAdapter for a leaf CLI annotation and constraints."""
     if parameter_info.parser is not None:
@@ -118,14 +112,16 @@ def build_leaf_adapter(
             list(annotation),
             case_sensitive=case_sensitive,
         )
+
     if is_literal_type(annotation):
         case_sensitive = parameter_info.case_sensitive
         return _build_choice_adapter(
             literal_values(annotation),
             case_sensitive=case_sensitive,
         )
+
     if annotation is Path:
-        return build_path_adapter(annotation, parameter_info)
+        return _build_path_adapter(annotation, parameter_info)
 
     if annotation is datetime:
         return _build_datetime_adapter(parameter_info.formats)
@@ -240,7 +236,7 @@ def _build_choice_adapter(
 
 
 # PATH #
-def build_path_adapter(
+def _build_path_adapter(
     annotation: Any,
     parameter_info: ParameterInfo,
 ) -> TypeAdapter[Any]:

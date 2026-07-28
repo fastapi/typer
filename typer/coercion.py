@@ -33,8 +33,6 @@ if TYPE_CHECKING:
 
 @dataclass(frozen=True)
 class TypeDescriptor:
-    """Resolved CLI type: metadata, coercion adapter, and deduced flags."""
-
     annotation: ParameterAnnotation
     parameter_info: ParameterInfo
     adapter: TypeAdapter[Any] | None
