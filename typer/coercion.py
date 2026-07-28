@@ -65,7 +65,9 @@ class TypeDescriptor:
     @property
     def uses_path_options(self) -> bool:
         """Defined as such to be bwd-compatible"""
-        return self.annotation is not str and path_options_requested(self.parameter_info)
+        return self.annotation is not str and path_options_requested(
+            self.parameter_info
+        )
 
     @property
     def is_choice(self) -> bool:
