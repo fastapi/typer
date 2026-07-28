@@ -163,10 +163,6 @@ class TyperParameter(_click.core.Parameter):
     def get_error_hint(self) -> str:
         return f"'{self.display_name_raw}'"
 
-    def display_name_type(self, ctx: _click.Context) -> str | None:
-        # Is overridden in practice by TyperOption and TyperArgument
-        return self.metavar  # pragma: no cover
-
     def display_type(self, ctx: _click.Context) -> str:
         """Formatted type string for help, e.g. ``<int>``"""
         desc = self.type_descriptor
@@ -198,11 +194,7 @@ class TyperParameter(_click.core.Parameter):
         return f"<{label}>"
 
     def display_type_rich(self, ctx: _click.Context) -> str | None:
-        """Type string for the Rich help types column."""
-        display = self.display_type(ctx)
-        if display == "BOOL":
-            return None
-        return display
+        return self.display_type(ctx)
 
     def bare_type(self) -> str:
         annotation = self.runtime_param.annotation
@@ -211,24 +203,17 @@ class TyperParameter(_click.core.Parameter):
     def _bare_type(self, annotation: type) -> str:
         display_type = str(annotation)
         origin = get_origin(annotation)
-        if annotation is None:
-            display_type = "str"
-        elif origin is list:
+        if origin is list:
             args = get_args(annotation)
-            if len(args) == 1:
-                element_label = self._bare_type(args[0])
-                display_type = f"list[{element_label}]"
-            else:
-                display_type = "list"
-        elif origin is tuple:
-            labels = [self._bare_type(arg) for arg in get_args(annotation)]
-            display_type = ",".join(labels)
+            assert len(args) == 1
+            element_label = self._bare_type(args[0])
+            display_type = f"list[{element_label}]"
         elif isinstance(annotation, type):
             display_type = annotation.__name__
         return display_type
 
     def get_number_range_help_str(self) -> str | None:
-        return None
+        return describe_number_range(self.min, self.max)
 
 
 def _get_default_string(
@@ -475,12 +460,6 @@ class TyperArgument(TyperParameter):
             default_value=default_value,
         )
 
-    def display_name(self) -> str:
-        """Argument display name for help listings (no type suffix)."""
-        if not self.required:
-            return f"[{self.display_name_raw}]"
-        return self.display_name_raw
-
     def rich_display_name(self) -> str:
         """Argument display name for the Rich help name column."""
         name = self.display_name_raw
@@ -561,30 +540,13 @@ class TyperArgument(TyperParameter):
             help = f"{help}  {extra_str}" if help else f"{extra_str}"
         return name, help
 
-    def display_name_type(self, ctx: _click.Context) -> str:
-        var = self.display_name()
-        type_var = self.display_type(ctx)
-        if type_var:
-            var += f":{type_var}"
-        if self.metavar is None and self.nargs != 1:
-            var += "..."
-        return var
-
     def _parse_decls(
         self, decls: Sequence[str], expose_value: bool
     ) -> tuple[str | None, list[str], list[str]]:
-        if not decls:
-            if not expose_value:
-                return None, [], []
-            raise TypeError("Argument is marked as exposed, but does not have a name.")
-        if len(decls) == 1:
-            name = arg = decls[0]
-            name = name.replace("-", "_")
-        else:
-            raise TypeError(
-                "Arguments take exactly one parameter declaration, got"
-                f" {len(decls)}: {decls}."
-            )
+        assert decls
+        assert len(decls) == 1
+        name = arg = decls[0]
+        name = name.replace("-", "_")
         return name, [arg], []
 
     def get_usage_pieces(self, ctx: _click.Context) -> list[str]:
@@ -592,15 +554,6 @@ class TyperArgument(TyperParameter):
 
     def add_to_parser(self, parser: _OptionParser, ctx: _click.Context) -> None:
         parser.add_argument(dest=self.name, nargs=self.nargs, obj=self)
-
-    def display_type_rich(self, ctx: _click.Context) -> str | None:
-        suffix = self.display_type(ctx)
-        if suffix is not None:
-            return suffix
-        return self.display_type(ctx)
-
-    def get_number_range_help_str(self) -> str | None:
-        return describe_number_range(self.min, self.max)
 
 
 class TyperOption(TyperParameter):
@@ -674,9 +627,7 @@ class TyperOption(TyperParameter):
         )
 
         if prompt is True:
-            if self.name is None:
-                raise TypeError("'name' is required with 'prompt=True'.")
-
+            assert self.name is not None
             prompt_text: str | None = self.name.replace("_", " ").capitalize()
         elif prompt is False:
             prompt_text = None
@@ -755,8 +706,9 @@ class TyperOption(TyperParameter):
         if name is None and possible_names:
             possible_names.sort(key=lambda x: -len(x[0]))  # group long options first
             name = possible_names[0][1].replace("-", "_")
-            if not name.isidentifier():
-                name = None
+            assert name.isidentifier()
+
+        assert name is not None
 
         return name, opts, secondary_opts
 
@@ -908,18 +860,6 @@ class TyperOption(TyperParameter):
     ) -> Any | Callable[[], Any] | None:
         return _extract_default_help_str(self, ctx=ctx)
 
-    def value_label(self, ctx: _click.Context) -> str | None:
-        if self.metavar is not None:
-            return self.metavar
-
-        value_display = self.display_type(ctx)
-        if self.nargs != 1 and value_display is not None:
-            return str(value_display) + "..."
-        return value_display
-
-    def display_name_type(self, ctx: _click.Context) -> str | None:
-        return self.value_label(ctx)
-
     def get_help_record(self, ctx: _click.Context) -> tuple[str, str] | None:
         if self.hidden:
             return None
@@ -935,7 +875,7 @@ class TyperOption(TyperParameter):
                 any_prefix_is_slash = True
 
             if not self.is_flag and not self.count:
-                rv += f" {self.display_name_type(ctx=ctx)}"
+                rv += f" {self.display_type_rich(ctx=ctx)}"
 
             return rv
 
@@ -1005,7 +945,13 @@ class TyperOption(TyperParameter):
         return ("; " if any_prefix_is_slash else " / ").join(rv), help
 
     def display_type_rich(self, ctx: _click.Context) -> str | None:
-        return self.value_label(ctx)
+        if self.metavar is not None:
+            return self.metavar
+
+        value_display = self.display_type(ctx)
+        if self.nargs != 1 and value_display is not None:
+            return str(value_display) + "..."
+        return value_display
 
     def get_number_range_help_str(self) -> str | None:
         if self.count and self.min == 0 and self.max is None:

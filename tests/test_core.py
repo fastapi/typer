@@ -35,6 +35,31 @@ def test_tuple_argument_wrong_arity() -> None:
     assert "takes 2 values" in result.output
 
 
+def test_tuple_argument_help() -> None:
+    app = typer.Typer(rich_markup_mode=None)
+
+    @app.command()
+    def cmd(value: tuple[str, str]) -> None:
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "Arguments:" in result.output
+    assert "value..." in result.output
+
+
+def test_required_list_option_missing() -> None:
+    app = typer.Typer()
+
+    @app.command()
+    def cmd(names: list[str] = typer.Option(...)) -> None:
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, [])
+    assert result.exit_code == 2
+    assert "Missing option '--names'" in result.output
+
+
 def test_count_option() -> None:
     app = typer.Typer()
 
