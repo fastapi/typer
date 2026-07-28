@@ -156,6 +156,15 @@ def path_type_name(parameter_info: ParameterInfo) -> str:
     return "path"
 
 
+def path_options_requested(parameter_info: ParameterInfo) -> bool:
+    """Defined as such to be bwd-compatible"""
+    return (
+        parameter_info.allow_dash
+        or parameter_info.path_type is not None
+        or parameter_info.resolve_path
+    )
+
+
 def _coerce_path_result(
     value: str | os.PathLike[str],
     path_type: type[Any] | None,

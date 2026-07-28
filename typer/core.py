@@ -186,7 +186,7 @@ class TyperParameter(_click.core.Parameter):
             label = "|".join(desc.datetime_formats)
         elif desc.is_ranged:
             label = f"{desc.ranged_type_name} range"
-        elif desc.is_path:
+        elif desc.is_path or desc.uses_path_options:
             label = desc.path_type
         else:
             label = self.bare_type()

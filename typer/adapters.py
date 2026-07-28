@@ -11,7 +11,12 @@ from pydantic.errors import PydanticSchemaGenerationError
 from ._click import _compat
 from ._typing import is_literal_type, is_number_type, literal_values
 from .models import ParameterInfo
-from .param_types import coerce_cli_choice, coerce_cli_path, lenient_issubclass
+from .param_types import (
+    coerce_cli_choice,
+    coerce_cli_path,
+    lenient_issubclass,
+    path_options_requested,
+)
 
 if TYPE_CHECKING:
     from ._click import Context
@@ -120,9 +125,6 @@ def build_leaf_adapter(
             case_sensitive=case_sensitive,
         )
 
-    if annotation is Path:
-        return _build_path_adapter(annotation, parameter_info)
-
     if annotation is datetime:
         return _build_datetime_adapter(parameter_info.formats)
 
@@ -139,6 +141,10 @@ def build_leaf_adapter(
 
     if annotation is str:
         return TypeAdapter(Annotated[str, BeforeValidator(_parse_cli_str)])
+
+    # After concrete types: Path, or any fall-through type with path flags
+    if annotation is Path or path_options_requested(parameter_info):
+        return _build_path_adapter(annotation, parameter_info)
 
     return TypeAdapter(annotation)
 

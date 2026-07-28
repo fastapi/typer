@@ -23,6 +23,7 @@ from .param_types import (
     file_coercion_annotation,
     is_file_annotation,
     lenient_issubclass,
+    path_options_requested,
     path_type_name,
     resolve_file_mode,
 )
@@ -60,6 +61,11 @@ class TypeDescriptor:
     @property
     def is_path(self) -> bool:
         return self.annotation is Path
+
+    @property
+    def uses_path_options(self) -> bool:
+        """Defined as such to be bwd-compatible"""
+        return self.annotation is not str and path_options_requested(self.parameter_info)
 
     @property
     def is_choice(self) -> bool:
@@ -110,7 +116,7 @@ class TypeDescriptor:
 
     @property
     def envvar_list_splitter(self) -> str | None:
-        if self.is_file or self.is_path:
+        if self.is_file or self.is_path or self.uses_path_options:
             return os.path.pathsep
         if self.is_list:
             args = get_args(self.annotation)

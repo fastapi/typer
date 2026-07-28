@@ -310,12 +310,41 @@ def test_path_coerced(path_type) -> None:
     app = typer.Typer()
 
     @app.command()
-    def show(path: Path = typer.Option(..., path_type=path_type)):
+    def show(path: Any = typer.Option(..., path_type=path_type)):
         print(path)
 
     result = runner.invoke(app, ["--path", "dir/my_awesome_file.txt"])
     assert result.exit_code == 0
     assert "my_awesome_file" in result.output
+
+
+@pytest.mark.parametrize(
+    "annotation",
+    [
+        Path,
+        Any,
+        pytest.param(str, marks=pytest.mark.xfail(strict=True)),
+    ],
+)
+def test_path_resolves(tmp_path: Path, annotation: Any) -> None:
+    app = typer.Typer()
+    values: list[Any] = []
+
+    @app.command()
+    def main(loc: annotation = typer.Option(..., resolve_path=True)):
+        values.append(loc)
+
+    file = tmp_path / "file.txt"
+    file.write_text("x", encoding="utf-8")
+    non_canonical = str(tmp_path / "first_dir" / "second_dir" / ".." / "file.txt")
+
+    result = runner.invoke(app, ["--loc", non_canonical])
+
+    assert result.exit_code == 0
+    value = str(values[0])
+    assert ".." not in value
+    assert "second_dir" not in value
+    assert str(tmp_path / "first_dir" / "file.txt") in value
 
 
 def test_path_coerced_from_default_map_path_object() -> None:
@@ -543,6 +572,7 @@ def test_argv_encoding_fallback(
         pytest.param(Annotated[tuple[str, int], typer.Option(...)], "<str,int>..."),
         pytest.param(Annotated[tuple[Path, str], typer.Option(...)], "<Path,str>..."),
         pytest.param(Annotated[str, typer.Option(..., resolve_path=True)], "<str>"),
+        pytest.param(Annotated[Any, typer.Option(..., resolve_path=True)], "<path>"),
         pytest.param(Annotated[Path, typer.Option(...)], "<path>"),
         pytest.param(Annotated[Path, typer.Option(..., dir_okay=False)], "<file>"),
         pytest.param(Annotated[Path, typer.Option(..., file_okay=False)], "<dir>"),
