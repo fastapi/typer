@@ -200,9 +200,8 @@ def test_custom_parse():
     assert result.exit_code == 0
 
 
-def test_custom_parse_value_error(monkeypatch):
+def test_custom_parse_value_error():
     app = typer.Typer()
-    monkeypatch.setenv("COLUMNS", "200")
 
     @app.command()
     def custom_parser(
