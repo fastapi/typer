@@ -7,7 +7,7 @@ Your function will receive a standard Python `datetime` object, and again, your 
 {* docs_src/parameter_types/datetime/tutorial001_py310.py hl[1,9,10,11] *}
 
 Typer will accept any string from datetime formats [supported by Pydantic](https://pydantic.dev/docs/validation/latest/api/pydantic/standard_library_types/#validation-9),
-including Unix timestamps as seconds or milliseconds sinch the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time),
+including Unix timestamps as seconds or milliseconds since the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time),
 and several 'standard' options such as
 * `%Y-%m-%d`
 * `%Y-%m-%dT%H:%M:%S`
