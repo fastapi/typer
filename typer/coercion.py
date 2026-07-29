@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime
-from typing import IO, TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any
 
 from pydantic import TypeAdapter, ValidationError
 
@@ -184,20 +184,26 @@ class FileRuntimeParam(RuntimeParam):
     file_annotation: Any
 
     def _coerce_value(self, value: Any, param: "TyperParameter", ctx: Context) -> Any:
-        mode = resolve_file_mode(self.parameter_info, self.file_annotation)
-
-        def open_one(item: Any) -> IO[Any]:
+        def open_one(item: Any, annotation: Any) -> Any:
+            if not is_file_annotation(annotation):
+                return item
+            mode = resolve_file_mode(self.parameter_info, annotation)
             return _open_cli_file(
-                item,
-                self.parameter_info,
-                mode=mode,
-                param=param,
-                ctx=ctx,
+                item, self.parameter_info, mode=mode, param=param, ctx=ctx
             )
 
         if isinstance(value, (list, tuple)):
-            return type(value)(open_one(item) for item in value)
-        return open_one(value)
+            # tuple may be heterogeneous,
+            # lists should have a single type which will be duplicated
+            annotations: Any = (
+                self.file_annotation
+                if isinstance(self.file_annotation, tuple)
+                else (self.file_annotation,) * len(value)
+            )
+            zipped = zip(value, annotations, strict=True)
+            return type(value)(open_one(item, ann) for item, ann in zipped)
+
+        return open_one(value, self.file_annotation)
 
 
 @dataclass(frozen=True)

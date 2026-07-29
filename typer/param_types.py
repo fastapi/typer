@@ -272,8 +272,8 @@ def file_coercion_annotation(annotation: Any) -> Any | None:
         return None
     if origin is tuple:
         args = get_args(annotation)
-        if args and all(is_file_annotation(arg) for arg in args):
-            return args[0]
+        if args and any(is_file_annotation(arg) for arg in args):
+            return args
         return None
     if is_file_annotation(annotation):
         return annotation
