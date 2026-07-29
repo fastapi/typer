@@ -104,6 +104,32 @@ def test_coercion_tuple_file_and_str(tmp_path: Path) -> None:
     assert seen["label"] == "hello"
 
 
+def test_list_rejects_none() -> None:
+    app = typer.Typer()
+
+    @app.command()
+    def main(items: list[int] = typer.Option([1, None])):
+        pass  # pragma: no cover
+
+    result = runner.invoke(app)
+    assert "Invalid value for '--items'" in result.stderr
+    assert "Input should be a valid integer" in result.stderr
+    assert result.exit_code == 2
+
+
+def test_tuple_rejects_none() -> None:
+    app = typer.Typer()
+
+    @app.command()
+    def main(pair: tuple[int, str] = (1, None)):
+        pass  # pragma: no cover
+
+    result = runner.invoke(app)
+    assert "Invalid value for '--pair'" in result.stderr
+    assert "None is not a valid string" in result.stderr
+    assert result.exit_code == 2
+
+
 def test_passthrough_runtime_param_default() -> None:
     class Widget:
         def __init__(self, value: int) -> None:

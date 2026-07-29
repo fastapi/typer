@@ -70,8 +70,7 @@ def build_adapter(annotation: Any, parameter_info: ParameterInfo) -> TypeAdapter
                 value = [value]
             context = info.context
             return [
-                None if item is None else adapter.validate_python(item, context=context)
-                for item in value
+                adapter.validate_python(item, context=context) for item in value
             ]
 
         return TypeAdapter(Annotated[list[Any], BeforeValidator(parse_list)])
@@ -89,7 +88,7 @@ def build_adapter(annotation: Any, parameter_info: ParameterInfo) -> TypeAdapter
                 )
             context = info.context
             return tuple(
-                None if item is None else adapter.validate_python(item, context=context)
+                adapter.validate_python(item, context=context)
                 for adapter, item in zip(adapters, value, strict=False)
             )
 
@@ -171,6 +170,8 @@ def _build_datetime_adapter(formats: Sequence[str] | None) -> TypeAdapter[dateti
 # STRING / BYTES #
 def _parse_cli_str(value: Any) -> str:
     """Coerce a CLI value to str"""
+    if value is None:
+        raise ValueError("None is not a valid string")
     if isinstance(value, bytes):
         enc = _compat._get_argv_encoding()
         try:
