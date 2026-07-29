@@ -3,7 +3,6 @@ from abc import ABC, abstractmethod
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime
-from pathlib import Path
 from typing import IO, TYPE_CHECKING, Any
 
 from pydantic import TypeAdapter, ValidationError

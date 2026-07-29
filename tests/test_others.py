@@ -349,7 +349,11 @@ def test_option_envvar_list_path_options(tmp_path: Path) -> None:
     app = typer.Typer()
 
     @app.command()
-    def main(configs: Annotated[list[Any], typer.Option(envvar="MYFILES", resolve_path=True)]):
+    def main(
+        configs: Annotated[
+            list[Any], typer.Option(envvar="MYFILES", resolve_path=True)
+        ],
+    ):
         print([Path(str(path)).name for path in configs])
 
     result = runner.invoke(app, env={"MYFILES": f"{first}{os.path.pathsep}{second}"})
