@@ -69,9 +69,7 @@ def build_adapter(annotation: Any, parameter_info: ParameterInfo) -> TypeAdapter
             if not isinstance(value, (list, tuple)):
                 value = [value]
             context = info.context
-            return [
-                adapter.validate_python(item, context=context) for item in value
-            ]
+            return [adapter.validate_python(item, context=context) for item in value]
 
         return TypeAdapter(Annotated[list[Any], BeforeValidator(parse_list)])
 
