@@ -1,7 +1,7 @@
-import datetime
 import os
 import stat
 from collections.abc import Sequence
+from datetime import datetime
 from enum import Enum
 from pathlib import Path
 from typing import IO, TYPE_CHECKING, Any, TypeAlias, cast
@@ -160,6 +160,8 @@ def choice_as_str(choice: Any) -> str:
 def routes_to_path(annotation: Any, parameter_info: ParameterInfo) -> bool:
     """Defined as such for bwd-compat behaviour"""
     if parameter_info.parser is not None:
+        return False
+    if get_origin(annotation) is not None:
         return False
     if lenient_issubclass(annotation, Path):
         return True

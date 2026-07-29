@@ -3,7 +3,7 @@ import subprocess
 import sys
 import typing
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, Any
 from unittest import mock
 
 import pytest
@@ -337,6 +337,24 @@ def test_option_envvar_list_file(tmp_path: Path) -> None:
     result = runner.invoke(app, env={"FILES": f"{first}{os.path.pathsep}{second}"})
     assert result.exit_code == 0, result.output
     assert result.output.strip() == "['one', 'two']"
+
+
+def test_option_envvar_list_path_options(tmp_path: Path) -> None:
+    first = tmp_path / "first dir" / "a.txt"
+    second = tmp_path / "second dir" / "b.txt"
+    first.parent.mkdir(parents=True, exist_ok=True)
+    second.parent.mkdir(parents=True, exist_ok=True)
+    first.write_text("a", encoding="utf-8")
+    second.write_text("b", encoding="utf-8")
+    app = typer.Typer()
+
+    @app.command()
+    def main(configs: Annotated[list[Any], typer.Option(envvar="MYFILES", resolve_path=True)]):
+        print([Path(str(path)).name for path in configs])
+
+    result = runner.invoke(app, env={"MYFILES": f"{first}{os.path.pathsep}{second}"})
+    assert result.exit_code == 0, result.output
+    assert result.output.strip() == "['a.txt', 'b.txt']"
 
 
 def test_completion_argument():

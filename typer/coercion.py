@@ -111,12 +111,13 @@ class TypeDescriptor:
 
     @property
     def envvar_list_splitter(self) -> str | None:
-        if self.is_file or self.is_path or self.uses_path_options:
+        if self.is_file or self.is_path:
             return os.path.pathsep
         if self.is_list:
             args = get_args(self.annotation)
             if len(args) == 1 and (
-                is_file_annotation(args[0]) or lenient_issubclass(args[0], Path)
+                is_file_annotation(args[0])
+                or routes_to_path(args[0], self.parameter_info)
             ):
                 return os.path.pathsep
         return None
