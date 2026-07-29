@@ -1,9 +1,11 @@
+import datetime
 import os
 import stat
 from collections.abc import Sequence
 from enum import Enum
 from pathlib import Path
 from typing import IO, TYPE_CHECKING, Any, TypeAlias, cast
+from uuid import UUID
 
 from pydantic import TypeAdapter, ValidationError
 
@@ -11,7 +13,7 @@ from ._click import Context
 from ._click._compat import open_stream
 from ._click.exceptions import BadParameter
 from ._click.utils import LazyFile, format_filename, safecall
-from ._typing import get_args, get_origin, is_literal_type, is_union, literal_values
+from ._typing import get_args, get_origin, is_literal_type, is_union, literal_values, is_number_type
 from .display import get_error_msg
 from .models import (
     AnyType,
@@ -148,21 +150,32 @@ def choice_as_str(choice: Any) -> str:
 
 
 # PATH #
+def routes_to_path(annotation: Any, parameter_info: ParameterInfo) -> bool:
+    """Defined as such for bwd-compat behaviour"""
+    if parameter_info.parser is not None:
+        return False
+    if lenient_issubclass(annotation, Path):
+        return True
+    if annotation in (str, bool, datetime, UUID) or is_number_type(annotation):
+        return False
+    return _path_options_requested(parameter_info)
+
+
+def _path_options_requested(parameter_info: ParameterInfo) -> bool:
+    """Defined as such for bwd-compat behaviour"""
+    return (
+        parameter_info.allow_dash
+        or parameter_info.path_type is not None
+        or parameter_info.resolve_path
+    )
+
+
 def path_type_name(parameter_info: ParameterInfo) -> str:
     if parameter_info.file_okay and not parameter_info.dir_okay:
         return "file"
     if parameter_info.dir_okay and not parameter_info.file_okay:
         return "dir"
     return "path"
-
-
-def path_options_requested(parameter_info: ParameterInfo) -> bool:
-    """Defined as such to be bwd-compatible"""
-    return (
-        parameter_info.allow_dash
-        or parameter_info.path_type is not None
-        or parameter_info.resolve_path
-    )
 
 
 def _coerce_path_result(

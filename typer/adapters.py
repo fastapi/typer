@@ -15,7 +15,7 @@ from .param_types import (
     coerce_cli_choice,
     coerce_cli_path,
     lenient_issubclass,
-    path_options_requested,
+    routes_to_path,
 )
 
 if TYPE_CHECKING:
@@ -143,7 +143,7 @@ def build_leaf_adapter(
         return TypeAdapter(Annotated[str, BeforeValidator(_parse_cli_str)])
 
     # After concrete types: Path, or any fall-through type with path flags
-    if annotation is Path or path_options_requested(parameter_info):
+    if routes_to_path(annotation, parameter_info):
         return _build_path_adapter(annotation, parameter_info)
 
     return TypeAdapter(annotation)

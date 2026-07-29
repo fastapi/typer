@@ -23,9 +23,9 @@ from .param_types import (
     file_coercion_annotation,
     is_file_annotation,
     lenient_issubclass,
-    path_options_requested,
     path_type_name,
     resolve_file_mode,
+    routes_to_path,
 )
 
 if TYPE_CHECKING:
@@ -60,14 +60,7 @@ class TypeDescriptor:
 
     @property
     def is_path(self) -> bool:
-        return self.annotation is Path
-
-    @property
-    def uses_path_options(self) -> bool:
-        """Defined as such to be bwd-compatible"""
-        return self.annotation is not str and path_options_requested(
-            self.parameter_info
-        )
+        return routes_to_path(self.annotation, self.parameter_info)
 
     @property
     def is_choice(self) -> bool:
@@ -122,7 +115,7 @@ class TypeDescriptor:
             return os.path.pathsep
         if self.is_list:
             args = get_args(self.annotation)
-            if len(args) == 1 and (is_file_annotation(args[0]) or args[0] is Path):
+            if len(args) == 1 and (is_file_annotation(args[0]) or lenient_issubclass(args[0], Path)):
                 return os.path.pathsep
         return None
 
