@@ -13,7 +13,14 @@ from ._click import Context
 from ._click._compat import open_stream
 from ._click.exceptions import BadParameter
 from ._click.utils import LazyFile, format_filename, safecall
-from ._typing import get_args, get_origin, is_literal_type, is_union, literal_values, is_number_type
+from ._typing import (
+    get_args,
+    get_origin,
+    is_literal_type,
+    is_number_type,
+    is_union,
+    literal_values,
+)
 from .display import get_error_msg
 from .models import (
     AnyType,

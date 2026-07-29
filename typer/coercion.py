@@ -115,7 +115,9 @@ class TypeDescriptor:
             return os.path.pathsep
         if self.is_list:
             args = get_args(self.annotation)
-            if len(args) == 1 and (is_file_annotation(args[0]) or lenient_issubclass(args[0], Path)):
+            if len(args) == 1 and (
+                is_file_annotation(args[0]) or lenient_issubclass(args[0], Path)
+            ):
                 return os.path.pathsep
         return None
 
