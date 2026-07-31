@@ -66,6 +66,10 @@ button[data-terminal-control] {
     font: inherit;
 }
 
+button[data-terminal-control]:hover {
+    color: var(--color-text);
+}
+
 [data-ty] {
     display: block;
     line-height: 2;
