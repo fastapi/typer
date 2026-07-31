@@ -130,8 +130,7 @@ class Termynal {
         const restart = document.createElement('button')
         restart.type = 'button'
 
-        restart.onclick = (e) => {
-            e.preventDefault()
+        restart.onclick = () => {
             this.container.innerHTML = ''
             this.init()
         }
@@ -145,8 +144,7 @@ class Termynal {
         const finish = document.createElement('button')
         finish.type = 'button'
 
-        finish.onclick = (e) => {
-            e.preventDefault()
+        finish.onclick = () => {
             this.lineDelay = 0
             this.typeDelay = 0
             this.startDelay = 0
