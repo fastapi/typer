@@ -52,6 +52,19 @@ def try_build_adapter(
         return None
 
 
+def validate_annotation_structure(annotation: Any) -> None:
+    """Raise on invalid nested CLI annotations (developer errors)."""
+    origin = get_origin(annotation)
+    if origin is list:
+        args = get_args(annotation)
+        if len(args) != 1:
+            raise ValueError(f"Expected one list item type, got: {args!r}")
+        validate_annotation_structure(args[0])
+    elif origin is tuple:
+        for item_type in get_args(annotation):
+            validate_annotation_structure(item_type)
+
+
 def build_adapter(annotation: Any, parameter_info: ParameterInfo) -> TypeAdapter[Any]:
     """Build a Pydantic TypeAdapter for a parameter annotation and metadata.
     Check for list/tuple and call this function recursively.
@@ -59,10 +72,8 @@ def build_adapter(annotation: Any, parameter_info: ParameterInfo) -> TypeAdapter
     """
     origin = get_origin(annotation)
     if origin is list:
-        args = get_args(annotation)
-        if len(args) != 1:
-            raise ValueError(f"Expected one list item type, got: {args!r}")
-        list_type = args[0]
+        validate_annotation_structure(annotation)
+        list_type = get_args(annotation)[0]
         adapter = build_adapter(list_type, parameter_info)
 
         def parse_list(value: Any, info: ValidationInfo) -> list[Any]:

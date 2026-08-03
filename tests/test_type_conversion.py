@@ -9,6 +9,7 @@ from typing import Annotated, Any, Literal, get_args, get_origin
 import pytest
 import typer
 from typer import _click, param_types
+from typer.core import TyperParameter
 from typer.testing import CliRunner
 
 from tests.utils import needs_linux, needs_windows
@@ -445,12 +446,15 @@ def test_default_infers_param_type(
         pass  # pragma: no cover
 
     param = next(p for p in typer.main.get_command(app).params if p.name == "val")
-    assert param.runtime_param is not None
+    assert isinstance(param, TyperParameter)
+    assert param.get_runtime_param() is not None
     if get_origin(expected_annotation) is tuple:
-        assert get_origin(param.runtime_param.annotation) is tuple
-        assert get_args(param.runtime_param.annotation) == get_args(expected_annotation)
+        assert get_origin(param.get_runtime_param().annotation) is tuple
+        assert get_args(param.get_runtime_param().annotation) == get_args(
+            expected_annotation
+        )
     else:
-        assert param.runtime_param.annotation is expected_annotation
+        assert param.get_runtime_param().annotation is expected_annotation
 
 
 @pytest.mark.parametrize(

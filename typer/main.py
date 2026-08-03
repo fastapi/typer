@@ -16,7 +16,7 @@ from annotated_doc import Doc
 from . import _click
 from ._click.globals import get_current_context
 from ._typing import get_args, get_origin
-from .coercion import build_runtime_param, resolve_type_descriptor
+from .coercion import resolve_type_descriptor
 from .completion import get_completion_inspect_parameters
 from .core import (
     DEFAULT_MARKUP_MODE,
@@ -1498,7 +1498,6 @@ def get_param(param: ParamMeta) -> TyperArgument | TyperOption:
         annotation=annotation,
         parameter_info=parameter_info,
     )
-    runtime_param = build_runtime_param(descriptor)
     tuple_nargs = descriptor.tuple_arity
 
     if isinstance(parameter_info, OptionInfo):
@@ -1547,7 +1546,6 @@ def get_param(param: ParamMeta) -> TyperArgument | TyperOption:
             nargs=tuple_nargs,
             # Rich settings
             rich_help_panel=parameter_info.rich_help_panel,
-            runtime_param=runtime_param,
             type_descriptor=descriptor,
         )
     elif isinstance(parameter_info, ArgumentInfo):
@@ -1581,7 +1579,6 @@ def get_param(param: ParamMeta) -> TyperArgument | TyperOption:
             max=parameter_info.max,
             # Rich settings
             rich_help_panel=parameter_info.rich_help_panel,
-            runtime_param=runtime_param,
             type_descriptor=descriptor,
         )
     raise AssertionError("A Parameter should be returned")  # pragma: no cover

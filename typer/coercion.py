@@ -35,7 +35,6 @@ if TYPE_CHECKING:
 class TypeDescriptor:
     annotation: ParameterAnnotation
     parameter_info: ParameterInfo
-    adapter: TypeAdapter[Any] | None
     file_annotation: Any | None
 
     @property
@@ -119,15 +118,12 @@ def resolve_type_descriptor(
     annotation: ParameterAnnotation,
     parameter_info: ParameterInfo,
 ) -> TypeDescriptor:
-    """Resolve Pydantic adapter for one parameter annotation."""
+    """Create type descriptor for one parameter annotation."""
+    adapters.validate_annotation_structure(annotation)
     file_annotation = file_coercion_annotation(annotation)
-    adapter = None
-    if file_annotation is None:
-        adapter = adapters.try_build_adapter(annotation, parameter_info)
     return TypeDescriptor(
         annotation=annotation,
         parameter_info=parameter_info,
-        adapter=adapter,
         file_annotation=file_annotation,
     )
 
@@ -224,8 +220,9 @@ def build_runtime_param(descriptor: TypeDescriptor) -> RuntimeParam:
     }
     if descriptor.file_annotation is not None:
         return FileRuntimeParam(**args, file_annotation=descriptor.file_annotation)
-    if descriptor.adapter is not None:
-        return AdapterRuntimeParam(**args, adapter=descriptor.adapter)
+    adapter = adapters.try_build_adapter(**args)
+    if adapter is not None:
+        return AdapterRuntimeParam(**args, adapter=adapter)
     return PassThroughRuntimeParam(**args)
 
 
@@ -235,11 +232,6 @@ def bool_flag_type_descriptor() -> TypeDescriptor:
         annotation=bool,
         parameter_info=OptionInfo(),
     )
-
-
-def bool_flag_runtime_param() -> RuntimeParam:
-    """Build runtime coercion for a standalone boolean flag option."""
-    return build_runtime_param(bool_flag_type_descriptor())
 
 
 def prompt_value_proc(
