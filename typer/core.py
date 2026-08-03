@@ -260,8 +260,6 @@ def _get_default_string(
         and not default_value
     ):
         default_string = ""
-    elif default_value is None:
-        default_string = ""
     else:
         default_string = str(default_value)
     return default_string

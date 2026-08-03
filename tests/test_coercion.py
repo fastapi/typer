@@ -124,6 +124,10 @@ def test_tuple_rejects_none() -> None:
     def main(pair: tuple[int, str] = (1, None)):
         pass  # pragma: no cover
 
+    help_result = runner.invoke(app, ["--help"])
+    assert help_result.exit_code == 0
+    assert "[default: 1, None]" in help_result.output
+
     result = runner.invoke(app)
     assert "Invalid value for '--pair'" in result.stderr
     assert "None is not a valid string" in result.stderr
