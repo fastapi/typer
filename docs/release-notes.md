@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.27.1 (2026-08-03)
+
 ### Features
 
 * ✨ Make `epilog` formatting consistent with other parts of the help string. PR [#1405](https://github.com/fastapi/typer/pull/1405) by [@svlandeg](https://github.com/svlandeg).
