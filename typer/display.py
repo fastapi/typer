@@ -1,4 +1,4 @@
-from pydantic import ValidationError
+from typing import Any
 
 
 def describe_number_range(
@@ -14,9 +14,9 @@ def describe_number_range(
     return f"{min}<=x<={max}"
 
 
-def get_error_msg(exc: ValidationError) -> str:
+def get_error_msg(exc: Any) -> str:
     """Get a string representation of the (first) validation error."""
     errors = exc.errors()
     if errors:
-        return errors[0]["msg"]
+        return str(errors[0]["msg"])
     return str(exc)  # pragma: no cover

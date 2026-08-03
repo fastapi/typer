@@ -16,6 +16,7 @@ from .param_types import (
     coerce_cli_path,
     lenient_issubclass,
     routes_to_path,
+    validate_annotation_structure,
 )
 
 if TYPE_CHECKING:
@@ -50,19 +51,6 @@ def try_build_adapter(
         return build_adapter(annotation, parameter_info)
     except PydanticSchemaGenerationError:
         return None
-
-
-def validate_annotation_structure(annotation: Any) -> None:
-    """Raise on invalid nested CLI annotations (developer errors)."""
-    origin = get_origin(annotation)
-    if origin is list:
-        args = get_args(annotation)
-        if len(args) != 1:
-            raise ValueError(f"Expected one list item type, got: {args!r}")
-        validate_annotation_structure(args[0])
-    elif origin is tuple:
-        for item_type in get_args(annotation):
-            validate_annotation_structure(item_type)
 
 
 def build_adapter(annotation: Any, parameter_info: ParameterInfo) -> TypeAdapter[Any]:

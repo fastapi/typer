@@ -5,13 +5,9 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from pydantic import TypeAdapter, ValidationError
-
-from . import adapters
 from ._click import Context
 from ._click.exceptions import BadParameter, UsageError
 from ._typing import get_args, get_origin, is_number_type
-from .adapters import validation_context
 from .display import get_error_msg
 from .models import OptionInfo, ParameterInfo
 from .param_types import (
@@ -25,9 +21,12 @@ from .param_types import (
     path_type_name,
     resolve_file_mode,
     routes_to_path,
+    validate_annotation_structure,
 )
 
 if TYPE_CHECKING:
+    from pydantic import TypeAdapter
+
     from .core import TyperParameter
 
 
@@ -119,7 +118,7 @@ def resolve_type_descriptor(
     parameter_info: ParameterInfo,
 ) -> TypeDescriptor:
     """Create type descriptor for one parameter annotation."""
-    adapters.validate_annotation_structure(annotation)
+    validate_annotation_structure(annotation)
     file_annotation = file_coercion_annotation(annotation)
     return TypeDescriptor(
         annotation=annotation,
@@ -154,9 +153,13 @@ class RuntimeParam(ABC):
 class AdapterRuntimeParam(RuntimeParam):
     """Coercion via a Pydantic TypeAdapter."""
 
-    adapter: TypeAdapter[Any]
+    adapter: "TypeAdapter[Any]"
 
     def _coerce_value(self, value: Any, param: "TyperParameter", ctx: Context) -> Any:
+        from pydantic import ValidationError
+
+        from .adapters import validation_context
+
         try:
             return self.adapter.validate_python(
                 value,
@@ -214,6 +217,8 @@ class PassThroughRuntimeParam(RuntimeParam):
 
 def build_runtime_param(descriptor: TypeDescriptor) -> RuntimeParam:
     """Build runtime coercion from a resolved type descriptor."""
+    from . import adapters
+
     args = {
         "annotation": descriptor.annotation,
         "parameter_info": descriptor.parameter_info,
@@ -239,6 +244,10 @@ def prompt_value_proc(
     default: Any | None = None,
 ) -> Callable[[Any], Any]:
     """Coerce interactive prompt input via the runtime adapter layer."""
+    from pydantic import ValidationError
+
+    from . import adapters
+
     annotation = annotation_from_prompt(param_type, default)
 
     parameter_info = OptionInfo()

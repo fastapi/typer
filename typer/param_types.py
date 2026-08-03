@@ -7,8 +7,6 @@ from pathlib import Path
 from typing import IO, TYPE_CHECKING, Any, TypeAlias, cast
 from uuid import UUID
 
-from pydantic import TypeAdapter, ValidationError
-
 from ._click import Context
 from ._click._compat import open_stream
 from ._click.exceptions import BadParameter
@@ -41,6 +39,19 @@ ParameterAnnotation: TypeAlias = Any
 
 def lenient_issubclass(cls: Any, class_or_tuple: AnyType | tuple[AnyType, ...]) -> bool:
     return isinstance(cls, type) and issubclass(cls, class_or_tuple)
+
+
+def validate_annotation_structure(annotation: Any) -> None:
+    """Raise on invalid nested CLI annotations (developer errors)."""
+    origin = get_origin(annotation)
+    if origin is list:
+        args = get_args(annotation)
+        if len(args) != 1:
+            raise ValueError(f"Expected one list item type, got: {args!r}")
+        validate_annotation_structure(args[0])
+    elif origin is tuple:
+        for item_type in get_args(annotation):
+            validate_annotation_structure(item_type)
 
 
 def infer_annotation_from_default(default: Any | None) -> ParameterAnnotation:
@@ -213,6 +224,8 @@ def coerce_cli_path(
         if isinstance(value, path_type):
             rv = value
         else:
+            from pydantic import TypeAdapter, ValidationError
+
             try:
                 rv = TypeAdapter(path_type).validate_python(value)
             except ValidationError as exc:
