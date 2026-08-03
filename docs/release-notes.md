@@ -4,6 +4,7 @@
 
 ### Internal
 
+* ⬆ Bump pymdown-extensions from 10.21.3 to 11.0. PR [#1910](https://github.com/fastapi/typer/pull/1910) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump the github-actions group with 5 updates. PR [#1916](https://github.com/fastapi/typer/pull/1916) by [@dependabot[bot]](https://github.com/apps/dependabot).
 
 ## 0.27.1 (2026-08-03)
