@@ -170,6 +170,8 @@ ignore = [
 # "__init__.py" = ["F401"]
 # rich_utils is allowed to use rich imports
 "typer/rich_utils.py" = ["TID251"]
+# adapters is allowed to import pydantic at module level
+"typer/adapters.py" = ["TID253"]
 # This file is more readable without yield from
 "docs_src/progressbar/tutorial004_py310.py" = ["UP028", "B007"]
 # Default mutable data structure
@@ -186,8 +188,9 @@ ignore = [
 "docs_src/progressbar/tutorial006_py310.py" = ["B007"]
 # Local variable `delete` is assigned to but never used
 "docs_src/prompt/tutorial003_py310.py" = ["F841"]
-# No need to worry about rich imports in docs
+# No need to worry about lazy imports in docs or scripts
 "docs_src/*" = ["TID"]
+"scripts/*" = ["TID253"]
 
 [tool.ruff.lint.isort]
 known-third-party = ["typer"]
@@ -199,8 +202,8 @@ known-first-party = ["reigns", "towns", "lands", "items", "users"]
 keep-runtime-typing = true
 
 [tool.ruff.lint.flake8-tidy-imports]
-# Import rich_utils from within functions (lazy), not at the module level (TID253)
-banned-module-level-imports = ["typer.rich_utils"]
+# Import these from within functions (lazy), not at the module level (TID253)
+banned-module-level-imports = ["typer.rich_utils", "typer.adapters", "pydantic"]
 
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
 "rich".msg = "Use 'typer.rich_utils' instead of importing from 'rich' directly."
