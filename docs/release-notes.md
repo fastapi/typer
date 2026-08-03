@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Features
+
+* ✨ Make `epilog` formatting consistent with other parts of the help string. PR [#1405](https://github.com/fastapi/typer/pull/1405) by [@svlandeg](https://github.com/svlandeg).
+
 ### Docs
 
 * 📝 Add Library Skills documentation. PR [#1906](https://github.com/fastapi/typer/pull/1906) by [@tiangolo](https://github.com/tiangolo).
