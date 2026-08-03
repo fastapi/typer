@@ -45,7 +45,7 @@ def test_tuple_argument_help() -> None:
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     assert "Arguments:" in result.output
-    assert "value..." in result.output
+    assert "value... <str,str>" in result.output
 
 
 def test_required_list_option_missing() -> None:

@@ -24,7 +24,7 @@ $ uv run python main.py --help
 Usage: main.py [OPTIONS] {birth}
 
 Arguments:
-  birth  [required]
+  birth <datetime>  [required]
 
 Options:
   --help                Show this message and exit.

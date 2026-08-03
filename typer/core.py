@@ -485,6 +485,9 @@ class TyperArgument(TyperParameter):
         if self.hidden:
             return None
         name = self.rich_display_name()
+        type_str = self.display_type_rich(ctx=ctx)
+        if type_str:
+            name = f"{name} {type_str}"
         help = self.help or ""
         extra = []
         if self.show_envvar:

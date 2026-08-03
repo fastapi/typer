@@ -19,7 +19,7 @@ $ uv run python main.py --help
 Usage: main.py [OPTIONS] {ID}
 
 Arguments:
-  ID  [0<=x<=1000; required]
+  ID <int range>  [0<=x<=1000; required]
 
 Options:
   --age <int range>      [default: 20; x>=18]
