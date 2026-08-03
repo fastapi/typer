@@ -183,7 +183,11 @@ class TyperParameter(_click.core.Parameter):
             labels = [self._bare_type(arg) for arg in get_args(desc.annotation)]
             label = ",".join(labels)
         elif desc.is_datetime:
-            label = "|".join(desc.datetime_formats)
+            formats = desc.parameter_info.formats
+            if formats is not None:
+                label = "|".join(tuple(formats))
+            else:
+                label = "datetime"
         elif desc.is_ranged:
             label = f"{desc.ranged_type_name} range"
         elif desc.is_path:

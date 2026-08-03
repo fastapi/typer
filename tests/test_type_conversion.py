@@ -590,7 +590,7 @@ def test_argv_encoding_fallback(
         ),
         pytest.param(Annotated[Literal["x", "y"], typer.Option(...)], "<x|y>"),
         pytest.param(Annotated[typer.FileText, typer.Option(...)], "<FileText>"),
-        pytest.param(Annotated[datetime, typer.Option(...)], "<%Y-%m-%d>"),
+        pytest.param(Annotated[datetime, typer.Option(...)], "<datetime>"),
         pytest.param(
             Annotated[datetime, typer.Option(..., formats=["%Y-%m-%d", "%d/%m/%Y"])],
             "<%Y-%m-%d|%d/%m/%Y>",

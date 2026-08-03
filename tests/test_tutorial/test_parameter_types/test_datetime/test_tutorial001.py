@@ -13,7 +13,7 @@ app = mod.app
 def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "<%Y-%m-%d>" in result.output
+    assert "<datetime>" in result.output
 
 
 def test_main():

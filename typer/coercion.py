@@ -70,13 +70,6 @@ class TypeDescriptor:
         return self.file_annotation is not None
 
     @property
-    def datetime_formats(self) -> tuple[str, ...]:
-        formats = self.parameter_info.formats
-        if formats is not None:
-            return tuple(formats)
-        return ("%Y-%m-%d",)
-
-    @property
     def path_type(self) -> str:
         return path_type_name(self.parameter_info)
 
