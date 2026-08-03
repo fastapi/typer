@@ -19,7 +19,12 @@ from . import _click, param_types
 from ._click.parser import _OptionParser
 from ._click.shell_completion import CompletionItem
 from ._typing import Literal
-from .coercion import RuntimeParam, TypeDescriptor, build_runtime_param
+from .coercion import (
+    RuntimeParam,
+    TypeDescriptor,
+    bool_flag_runtime_param,
+    build_runtime_param,
+)
 from .display import describe_number_range
 from .param_types import choice_as_str, normalize_choice_value
 from .utils import parse_boolean_env_var
@@ -94,8 +99,13 @@ class TyperParameter(_click.core.Parameter):
 
     def get_runtime_param(self) -> RuntimeParam:
         """lazy definition to avoid up-front costs"""
+        desc = self.type_descriptor
         if self._runtime_param is None:
-            self._runtime_param = build_runtime_param(self.type_descriptor)
+            # Bool flags are already parsed to bool by Click; skip pydantic/adapters
+            if getattr(self, "is_bool_flag", False) and desc.annotation is bool:
+                self._runtime_param = bool_flag_runtime_param(desc.parameter_info)
+            else:
+                self._runtime_param = build_runtime_param(desc)
         assert self._runtime_param is not None
         return self._runtime_param
 

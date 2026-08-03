@@ -231,6 +231,16 @@ def build_runtime_param(descriptor: TypeDescriptor) -> RuntimeParam:
     return PassThroughRuntimeParam(**args)
 
 
+def bool_flag_runtime_param(
+    parameter_info: ParameterInfo | None = None,
+) -> RuntimeParam:
+    """Runtime coercion for bool flags without importing pydantic"""
+    return PassThroughRuntimeParam(
+        annotation=bool,
+        parameter_info=parameter_info if parameter_info is not None else OptionInfo(),
+    )
+
+
 def bool_flag_type_descriptor() -> TypeDescriptor:
     """Resolved type for a standalone boolean flag option."""
     return resolve_type_descriptor(
