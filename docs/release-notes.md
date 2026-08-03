@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Docs
+
+* 🐛 Fix showing `fast` button as external link in animated terminals in docs. PR [#1912](https://github.com/fastapi/typer/pull/1912) by [@phalberg](https://github.com/phalberg).
+
 ### Internal
 
 * ⬆ Bump pymdown-extensions from 10.21.3 to 11.0. PR [#1910](https://github.com/fastapi/typer/pull/1910) by [@dependabot[bot]](https://github.com/apps/dependabot).
