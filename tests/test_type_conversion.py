@@ -163,9 +163,8 @@ def test_tuple_parameter_elements_are_converted_recursively(type_annotation):
     assert result.exit_code == 0
 
 
-def test_tuple_wrong_arity(monkeypatch):
+def test_tuple_wrong_arity():
     app = typer.Typer()
-    monkeypatch.setenv("COLUMNS", "200")
 
     @app.command()
     def tuple_arity(value: tuple[str, str] = typer.Option(...)):
@@ -491,7 +490,7 @@ def test_int_rejects_float_default() -> None:
     def main(age: int = typer.Option(15.3)):
         typer.echo(age)
 
-    result = runner.invoke(app, ["--age", 42])
+    result = runner.invoke(app, ["--age", "42"])
     assert "42" in result.stdout
 
     # Pydantic validation rejects floats as int instead of converting int(15.3) to 15

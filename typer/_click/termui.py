@@ -115,7 +115,6 @@ def prompt(
     annotation = annotation_from_prompt(type, default)
     if value_proc is None:
         from ..coercion import prompt_value_proc
-        from ..param_types import annotation_from_prompt
 
         value_proc = prompt_value_proc(type, default)
 

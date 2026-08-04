@@ -22,8 +22,7 @@ def get_mod(request: pytest.FixtureRequest) -> ModuleType:
     return mod
 
 
-def test_help(mod: ModuleType, monkeypatch):
-    monkeypatch.setenv("COLUMNS", "200")
+def test_help(mod: ModuleType):
     result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
     assert "Say hi to 'name', optionally with a --lastname." in result.output
