@@ -4,6 +4,21 @@
 
 ### Docs
 
+* 🐛 Fix showing `fast` button as external link in animated terminals in docs. PR [#1912](https://github.com/fastapi/typer/pull/1912) by [@phalberg](https://github.com/phalberg).
+
+### Internal
+
+* ⬆ Bump pymdown-extensions from 10.21.3 to 11.0. PR [#1910](https://github.com/fastapi/typer/pull/1910) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump the github-actions group with 5 updates. PR [#1916](https://github.com/fastapi/typer/pull/1916) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
+## 0.27.1 (2026-08-03)
+
+### Features
+
+* ✨ Make `epilog` formatting consistent with other parts of the help string. PR [#1405](https://github.com/fastapi/typer/pull/1405) by [@svlandeg](https://github.com/svlandeg).
+
+### Docs
+
 * 📝 Add Library Skills documentation. PR [#1906](https://github.com/fastapi/typer/pull/1906) by [@tiangolo](https://github.com/tiangolo).
 * 🐛 Prevent scroll-to-top on restart/fast buttons in the documentation. PR [#1904](https://github.com/fastapi/typer/pull/1904) by [@phalberg](https://github.com/phalberg).
 * 📝 Recommend uv projects by default in docs. PR [#1903](https://github.com/fastapi/typer/pull/1903) by [@tiangolo](https://github.com/tiangolo).
