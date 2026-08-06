@@ -8,6 +8,7 @@
 
 ### Internal
 
+* 🔥 Remove the old Latest Changes workflow. PR [#1921](https://github.com/fastapi/typer/pull/1921) by [@tiangolo](https://github.com/tiangolo).
 * ⬆ Bump the python-packages group with 6 updates. PR [#1917](https://github.com/fastapi/typer/pull/1917) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pymdown-extensions from 10.21.3 to 11.0. PR [#1910](https://github.com/fastapi/typer/pull/1910) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump the github-actions group with 5 updates. PR [#1916](https://github.com/fastapi/typer/pull/1916) by [@dependabot[bot]](https://github.com/apps/dependabot).
