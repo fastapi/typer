@@ -8,6 +8,7 @@
 
 ### Internal
 
+* 🔐 Use PR Submit for pull requests. PR [#1928](https://github.com/fastapi/typer/pull/1928) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Use GitHub CLI for Git authentication. PR [#1927](https://github.com/fastapi/typer/pull/1927) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Use PR Push commit identity. PR [#1926](https://github.com/fastapi/typer/pull/1926) by [@tiangolo](https://github.com/tiangolo).
 * 🔒 Replace pre-commit PAT with PR Push. PR [#1923](https://github.com/fastapi/typer/pull/1923) by [@tiangolo](https://github.com/tiangolo).
