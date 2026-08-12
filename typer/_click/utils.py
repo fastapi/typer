@@ -182,7 +182,10 @@ class LazyFile:
         exc_value: BaseException | None,
         tb: TracebackType | None,
     ) -> None:
-        self.close_intelligently()
+        if self.atomic and self.should_close and self._f is not None:
+            self._f.__exit__(exc_type, exc_value, tb)
+        else:
+            self.close_intelligently()
 
     def __iter__(self) -> Iterator[AnyStr]:
         self.open()
