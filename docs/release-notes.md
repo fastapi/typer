@@ -8,6 +8,7 @@
 
 ### Internal
 
+* 👷 Migrate automatic labels to Latest Changes. PR [#1931](https://github.com/fastapi/typer/pull/1931) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Remove legacy label check. PR [#1930](https://github.com/fastapi/typer/pull/1930) by [@tiangolo](https://github.com/tiangolo).
 * 🔐 Use PR Submit for pull requests. PR [#1928](https://github.com/fastapi/typer/pull/1928) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Use GitHub CLI for Git authentication. PR [#1927](https://github.com/fastapi/typer/pull/1927) by [@tiangolo](https://github.com/tiangolo).
