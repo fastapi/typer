@@ -1181,7 +1181,11 @@ class TyperGroup(_click.Command):
             return self._click_resolve_command(ctx, args)
         except _click.exceptions.UsageError as e:
             if self.suggest_commands:
-                available_commands = list(self.commands.keys())
+                available_commands = [
+                    name
+                    for name, command in self.commands.items()
+                    if not command.hidden
+                ]
                 if available_commands and args:
                     typo = args[0]
                     matches = get_close_matches(typo, available_commands)
