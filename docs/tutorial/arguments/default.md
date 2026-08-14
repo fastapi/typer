@@ -30,7 +30,7 @@ $ uv run python main.py --help
 Usage: main.py [OPTIONS] [name]
 
 Arguments:
-  name  [default: Wade Wilson]
+  name <str>  [default: Wade Wilson]
 
 Options:
   --help                Show this message and exit.
@@ -75,7 +75,7 @@ $ uv run python main.py --help
 Usage: main.py [OPTIONS] [name]
 
 Arguments:
-  name  [default: (dynamic)]
+  name <str>  [default: (dynamic)]
 
 Options:
   --help                Show this message and exit.

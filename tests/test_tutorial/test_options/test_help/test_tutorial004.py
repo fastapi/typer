@@ -28,9 +28,7 @@ def test_call(mod: ModuleType):
     assert "Hello Wade Wilson" in result.output
 
 
-def test_help(monkeypatch, mod: ModuleType):
-    # avoid default width of 80 for non-attached consoles during testing
-    monkeypatch.setenv("COLUMNS", "200")
+def test_help(mod: ModuleType):
     result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
     assert "--fullname" in result.output

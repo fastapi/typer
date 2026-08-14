@@ -1,12 +1,15 @@
 import os
+import sys
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Annotated, Any, Literal
+from types import SimpleNamespace
+from typing import Annotated, Any, Literal, get_args, get_origin
 
 import pytest
 import typer
-from typer import _click, models
+from typer import _click, param_types
+from typer.core import TyperParameter
 from typer.testing import CliRunner
 
 from tests.utils import needs_linux, needs_windows
@@ -109,6 +112,29 @@ def test_list_parameters_convert_to_lists(type_annotation):
     assert result.exit_code == 0
 
 
+def test_list_scalar_default_map() -> None:
+    app = typer.Typer(context_settings={"default_map": {"nums": 7}})
+
+    @app.command()
+    def main(nums: list[int] = typer.Option([])):
+        print(nums)
+
+    result = runner.invoke(app, [])
+    assert result.exit_code == 0, result.output
+    assert result.output.strip() == "[7]"
+
+
+def test_list_requires_single_type() -> None:
+    app = typer.Typer()
+
+    @app.command()
+    def main(items: list[str, int]):
+        print(items)  # pragma: no cover
+
+    with pytest.raises(ValueError, match="Expected one list item type"):
+        runner.invoke(app, ["hello", "342"])
+
+
 @pytest.mark.parametrize(
     "type_annotation",
     [
@@ -149,6 +175,18 @@ def test_tuple_wrong_arity():
     assert "2 values are required, but 1 given." in result.output
 
 
+def test_tuple_rejects_non_sequence(monkeypatch):
+    app = typer.Typer(context_settings={"default_map": {"pair": "not_a_tuple"}})
+
+    @app.command()
+    def main(pair: tuple[str, str] = ("a", "b")):
+        print(pair)  # pragma: no cover
+
+    result = runner.invoke(app, [])
+    assert result.exit_code == 2
+    assert "value is not a valid tuple" in result.output
+
+
 def test_custom_parse():
     app = typer.Typer()
 
@@ -174,25 +212,15 @@ def test_custom_parse_value_error():
     result = runner.invoke(app, ["not-a-hex"])
     assert result.exit_code == 2
     assert "Invalid value" in result.output
+    assert "invalid literal for int()" in result.output
 
 
-def test_custom_click_type():
-    class BaseNumberParamType(_click.types.ParamType):
-        name = "base_integer"
-
-        def convert(
-            self,
-            value: Any,
-            param: _click.Parameter | None,
-            ctx: _click.Context | None,
-        ) -> Any:
-            return int(value, 0)
-
+def test_custom_parser_hex():
     app = typer.Typer()
 
     @app.command()
-    def custom_click_type(
-        hex_value: int = typer.Argument(None, click_type=BaseNumberParamType()),
+    def custom_parser_hex(
+        hex_value: int = typer.Argument(None, parser=lambda x: int(x, 0)),
     ):
         assert hex_value == 0x56
 
@@ -200,21 +228,38 @@ def test_custom_click_type():
     assert result.exit_code == 0
 
 
-def test_int_range_open_bound_clamp():
+@pytest.mark.parametrize(
+    ("cli_value", "expected"),
+    [
+        ("true", True),
+        ("false", False),
+        ("yes", True),
+        ("no", False),
+        ("1", True),
+        ("0", False),
+        ("on", True),
+        ("off", False),
+        ("t", True),
+        ("f", False),
+        ("y", True),
+        ("n", False),
+        ("", False),
+        (" true ", True),
+        (" FALSE ", False),
+        ("TRUE", True),
+        ("No", False),
+    ],
+)
+def test_bool_convert_valid(cli_value: str, expected: bool) -> None:
     app = typer.Typer()
 
     @app.command()
-    def custom_click_type(
-        value: int = typer.Argument(
-            ...,
-            click_type=_click.types.IntRange(min=1, min_open=True, clamp=True),
-        ),
-    ):
+    def main(value: bool):
         print(value)
 
-    result = runner.invoke(app, ["1"])
+    result = runner.invoke(app, [cli_value])
     assert result.exit_code == 0
-    assert "2" in result.output
+    assert str(expected) in result.output
 
 
 def test_bool_convert_invalid():
@@ -226,9 +271,7 @@ def test_bool_convert_invalid():
 
     result = runner.invoke(app, ["maybe"])
     assert result.exit_code == 2
-    assert "is not a valid boolean" in result.output
-    assert "yes" in result.output
-    assert "false" in result.output
+    assert "Input should be a valid boolean" in result.output
 
 
 @pytest.mark.parametrize(
@@ -253,12 +296,8 @@ def test_string_param_type_converts_bytes(
     def show(name: str = typer.Option(...)):
         print(name)
 
-    command = typer.main.get_command(app)
-    name_param = next(param for param in command.params if param.name == "name")
-    assert repr(name_param.type) == "STRING"
-
-    monkeypatch.setattr(_click.types, "_get_argv_encoding", lambda: arg_enc)
-    monkeypatch.setattr(_click.types.sys, "getfilesystemencoding", lambda: system_enc)
+    monkeypatch.setattr(_click._compat, "_get_argv_encoding", lambda: arg_enc)
+    monkeypatch.setattr(sys, "getfilesystemencoding", lambda: system_enc)
 
     result = runner.invoke(app, [], default_map={"name": raw_value})
     assert result.exit_code == 0
@@ -277,6 +316,64 @@ def test_path_coerced(path_type) -> None:
     result = runner.invoke(app, ["--path", "dir/my_awesome_file.txt"])
     assert result.exit_code == 0
     assert "my_awesome_file" in result.output
+
+
+@pytest.mark.parametrize(
+    "annotation",
+    [
+        Path,
+        Any,
+        pytest.param(str, marks=pytest.mark.xfail(strict=True)),
+    ],
+)
+def test_path_resolves(tmp_path: Path, annotation: Any) -> None:
+    app = typer.Typer()
+    values: list[Any] = []
+
+    @app.command()
+    def main(loc: annotation = typer.Option(..., resolve_path=True)):
+        values.append(loc)
+
+    file = tmp_path / "file.txt"
+    file.write_text("x", encoding="utf-8")
+    non_canonical = str(tmp_path / "first_dir" / "second_dir" / ".." / "file.txt")
+
+    result = runner.invoke(app, ["--loc", non_canonical])
+
+    assert result.exit_code == 0
+    value = str(values[0])
+    assert ".." not in value
+    assert "second_dir" not in value
+    assert str(tmp_path / "first_dir" / "file.txt") in value
+
+
+def test_path_coerced_from_default_map_path_object() -> None:
+    app = typer.Typer()
+
+    @app.command()
+    def show(path: Path = typer.Option(..., path_type=Path)):
+        print(path)
+
+    path_obj = Path("dir/my_awesome_file.txt")
+    result = runner.invoke(app, [], default_map={"path": path_obj})
+    assert result.exit_code == 0, result.output
+    assert "my_awesome_file" in result.output
+
+
+def test_path_coerce_invalid_pathlike_default_map() -> None:
+    class BadPathLike:
+        def __fspath__(self) -> object:
+            return 123  # pragma: no cover
+
+    app = typer.Typer()
+
+    @app.command()
+    def show(path: Path = typer.Option(..., path_type=Path)):
+        print(path)  # pragma: no cover
+
+    result = runner.invoke(app, [], default_map={"path": BadPathLike()})
+    assert result.exit_code == 2
+    assert "Invalid value for '--path'" in result.output
 
 
 @pytest.mark.parametrize(
@@ -310,7 +407,7 @@ def test_path_convert_failures(
                 return False
             return original_access(path, mode)  # pragma: no cover
 
-        monkeypatch.setattr(models.os, "access", fake_access)
+        monkeypatch.setattr(param_types.os, "access", fake_access)
 
     path = tmp_path / "some_path"
     if create_file:
@@ -323,50 +420,83 @@ def test_path_convert_failures(
     assert expected_error in result.output
 
 
-def test_convert_type():
-    from typer._click.types import convert_type
+@pytest.mark.parametrize(
+    ("default", "expected_annotation"),
+    [
+        (42, int),
+        (0.5, float),
+        ("morty", str),
+        (False, bool),
+        ("False", str),
+        ((1, "x"), tuple[int, str]),
+        ([], str),
+        ([1], int),
+        ([[1, "x"]], tuple[int, str]),
+    ],
+)
+def test_default_infers_param_type(
+    default: Any,
+    expected_annotation: Any,
+) -> None:
+    app = typer.Typer()
 
-    # str
-    assert convert_type(str) is _click.types.STRING
-    assert convert_type(None) is _click.types.STRING
-    assert convert_type(None, default=["a"]) is _click.types.STRING
+    @app.command()
+    def cmd(val=default):
+        pass  # pragma: no cover
 
-    # tuples
-    tuple_type = convert_type((str, int))
-    assert isinstance(tuple_type, _click.types.Tuple)
-    assert [type(item) for item in tuple_type.types] == [
-        type(_click.types.STRING),
-        type(_click.types.INT),
-    ]
+    param = next(p for p in typer.main.get_command(app).params if p.name == "val")
+    assert isinstance(param, TyperParameter)
+    assert param.get_runtime_param() is not None
+    if get_origin(expected_annotation) is tuple:
+        assert get_origin(param.get_runtime_param().annotation) is tuple
+        assert get_args(param.get_runtime_param().annotation) == get_args(
+            expected_annotation
+        )
+    else:
+        assert param.get_runtime_param().annotation is expected_annotation
 
-    guessed_tuple = convert_type(None, default=[(1, "x")])
-    assert isinstance(guessed_tuple, _click.types.Tuple)
-    assert [type(item) for item in guessed_tuple.types] == [
-        type(_click.types.INT),
-        type(_click.types.STRING),
-    ]
 
-    # numbers
-    assert convert_type(int) is _click.types.INT
-    assert convert_type(float) is _click.types.FLOAT
-    assert convert_type(bool) is _click.types.BOOL
+@pytest.mark.parametrize(
+    ("default", "expected_annotation"),
+    [
+        (42, int),
+        (0.5, float),
+        ("morty", str),
+        (False, bool),
+        ("False", str),
+    ],
+)
+def test_default_infers_param_type_invoke(
+    default: Any,
+    expected_annotation: Any,
+) -> None:
+    app = typer.Typer()
+    seen: dict[str, Any] = {}
 
-    param_type = _click.types.IntRange(min=0, max=10)
-    assert convert_type(param_type) is param_type
+    @app.command()
+    def cmd(val=default):
+        seen["val"] = val
 
-    guessed_int = convert_type(None, default=42)
-    assert guessed_int is _click.types.INT
+    result = runner.invoke(app)
+    assert result.exit_code == 0, result.output
+    assert seen["val"] == default
+    assert type(seen["val"]) is expected_annotation
 
-    # custom type
-    class CustomType:
-        pass
 
-    guessed_unknown = convert_type(None, default=CustomType())
-    assert guessed_unknown is _click.types.STRING
+def test_int_rejects_float_default() -> None:
+    app = typer.Typer()
 
-    func_type = convert_type(CustomType)
-    assert isinstance(func_type, _click.types.FuncParamType)
-    assert func_type.name == "CustomType"
+    @app.command()
+    def main(age: int = typer.Option(15.3)):
+        typer.echo(age)
+
+    result = runner.invoke(app, ["--age", "42"])
+    assert "42" in result.stdout
+
+    # Pydantic validation rejects floats as int instead of converting int(15.3) to 15
+    result = runner.invoke(app)
+    assert result.exit_code != 0
+    assert "Input should be a valid integer" in result.stderr
 
 
 @pytest.mark.parametrize(
@@ -383,22 +513,50 @@ def test_argv_encoding(
     stdin_encoding: str | None,
     filesystem_encoding: str,
 ) -> None:
-    sys = _click._compat.sys
+    app = typer.Typer()
+
+    @app.command()
+    def show(name: str = typer.Option(...)):
+        print(name)
+
     if platform_case == "windows":
         import locale
 
         monkeypatch.setattr(locale, "getpreferredencoding", lambda: "latin-1")
     else:
-
-        class FakeStdin:
-            def __init__(self, encoding: str | None) -> None:
-                self.encoding = encoding
-
-        monkeypatch.setattr(sys, "stdin", FakeStdin(stdin_encoding))
+        argv_encoding = stdin_encoding or filesystem_encoding
+        monkeypatch.setattr(_click._compat, "_get_argv_encoding", lambda: argv_encoding)
         monkeypatch.setattr(sys, "getfilesystemencoding", lambda: filesystem_encoding)
 
-    converted = _click.types.STRING.convert(b"\xff", None, None)
-    assert converted == "ÿ"
+    result = runner.invoke(app, [], default_map={"name": b"\xff"})
+    assert result.exit_code == 0
+    assert "ÿ" in result.output
+
+
+@pytest.mark.parametrize(
+    ("stdin_encoding", "filesystem_encoding", "expected_encoding"),
+    [
+        pytest.param("latin-1", "utf-8", "latin-1", marks=needs_linux),
+        pytest.param(None, "latin-1", "latin-1", marks=needs_linux),
+    ],
+)
+def test_argv_encoding_fallback(
+    monkeypatch: pytest.MonkeyPatch,
+    stdin_encoding: str | None,
+    filesystem_encoding: str,
+    expected_encoding: str,
+) -> None:
+    monkeypatch.setattr(
+        _click._compat.sys,
+        "stdin",
+        SimpleNamespace(encoding=stdin_encoding),
+    )
+    monkeypatch.setattr(
+        _click._compat.sys,
+        "getfilesystemencoding",
+        lambda: filesystem_encoding,
+    )
+    assert _click._compat._get_argv_encoding() == expected_encoding
 
 
 @pytest.mark.parametrize(
@@ -412,17 +570,30 @@ def test_argv_encoding(
         pytest.param(
             Annotated[float, typer.Option(..., min=0.666, max=3.42)], "<float range>"
         ),
-        pytest.param(Annotated[tuple[str, int], typer.Option(...)], "<str int>..."),
-        pytest.param(Annotated[tuple[Path, str], typer.Option(...)], "<path str>..."),
+        pytest.param(Annotated[bytes, typer.Option(...)], "<bytes>"),
+        pytest.param(Annotated[list[str], typer.Option(...)], "<list[str]>"),
+        pytest.param(Annotated[tuple[str, int], typer.Option(...)], "<str,int>..."),
+        pytest.param(Annotated[tuple[Path, str], typer.Option(...)], "<Path,str>..."),
         pytest.param(Annotated[str, typer.Option(..., resolve_path=True)], "<str>"),
+        pytest.param(Annotated[Any, typer.Option(..., resolve_path=True)], "<path>"),
         pytest.param(Annotated[Path, typer.Option(...)], "<path>"),
         pytest.param(Annotated[Path, typer.Option(..., dir_okay=False)], "<file>"),
-        pytest.param(
-            Annotated[Path, typer.Option(..., file_okay=False)], "<directory>"
-        ),
+        pytest.param(Annotated[Path, typer.Option(..., file_okay=False)], "<dir>"),
         pytest.param(Annotated[SomeEnum, typer.Option(...)], "<one|two|three>"),
         pytest.param(Annotated[SomeEnum, typer.Argument()], "<one|two|three>"),
+        pytest.param(
+            Annotated[SomeEnum, typer.Option(..., show_choices=False)], "<SomeEnum>"
+        ),
+        pytest.param(
+            Annotated[list[SomeEnum], typer.Option(...)], "<list[one|two|three]>"
+        ),
+        pytest.param(
+            Annotated[list[SomeEnum], typer.Option(..., show_choices=False)],
+            "<list[SomeEnum]>",
+        ),
         pytest.param(Annotated[Literal["x", "y"], typer.Option(...)], "<x|y>"),
+        pytest.param(Annotated[typer.FileText, typer.Option(...)], "<FileText>"),
+        pytest.param(Annotated[datetime, typer.Option(...)], "<datetime>"),
         pytest.param(
             Annotated[datetime, typer.Option(..., formats=["%Y-%m-%d", "%d/%m/%Y"])],
             "<%Y-%m-%d|%d/%m/%Y>",
@@ -433,7 +604,6 @@ def test_param_type_help_metavar(parameter: Any, expected_metavar: str) -> None:
     app = typer.Typer()
 
     @app.command()
-    # TODO: type-specific default
     def with_default(value: parameter = "my_default"):
         pass  # pragma: no cover
 

@@ -8,6 +8,7 @@ from types import TracebackType
 from typing import (
     TYPE_CHECKING,
     Any,
+    ClassVar,
     Literal,
     NoReturn,
     TypeVar,
@@ -16,12 +17,10 @@ from typing import (
     overload,
 )
 
-from . import types
 from .exceptions import (
     Abort,
     BadParameter,
     Exit,
-    MissingParameter,
     NoArgsIsHelpError,
     UsageError,
 )
@@ -32,7 +31,7 @@ from .termui import style
 from .utils import echo, make_default_short_help
 
 if TYPE_CHECKING:
-    from ..core import TyperOption
+    from ..core import TyperOption, TyperParameter
     from .shell_completion import CompletionItem
 
 F = TypeVar("F", bound="Callable[..., Any]")
@@ -60,7 +59,7 @@ def _complete_visible_commands(
 
 @contextmanager
 def augment_usage_errors(
-    ctx: "Context", param: Union["Parameter", None] = None
+    ctx: "Context", param: Union["TyperParameter", None] = None
 ) -> Iterator[None]:
     """Context manager that attaches extra information to exceptions."""
     try:
@@ -767,7 +766,7 @@ class Command(ABC):
                     or param.hidden
                     or (
                         not param.multiple
-                        and ctx.get_parameter_source(param.name)  # type: ignore
+                        and ctx.get_parameter_source(param.name)
                         is ParameterSource.COMMANDLINE
                     )
                 ):
@@ -819,7 +818,6 @@ class Parameter(ABC):
     def __init__(
         self,
         param_decls: Sequence[str] | None = None,
-        type: types.ParamType | Any | None = None,
         required: bool = False,
         default: Any | Callable[[], Any] | None = None,
         callback: Callable[[Context, "Parameter", Any], Any] | None = None,
@@ -834,21 +832,17 @@ class Parameter(ABC):
         ]
         | None = None,
     ) -> None:
-        self.name: str | None
+        self.name: str
         self.opts: list[str]
         self.secondary_opts: list[str]
         self.name, self.opts, self.secondary_opts = self._parse_decls(
             param_decls or (), expose_value
         )
-        self.type: types.ParamType = types.convert_type(type, default)
 
         # Default nargs to what the type tells us if we have that
         # information available.
         if nargs is None:
-            if self.type.is_composite:
-                nargs = self.type.arity
-            else:
-                nargs = 1
+            nargs = 1
 
         self.required = required
         self.callback = callback
@@ -867,34 +861,8 @@ class Parameter(ABC):
     @abstractmethod
     def _parse_decls(
         self, decls: Sequence[str], expose_value: bool
-    ) -> tuple[str | None, list[str], list[str]]:
+    ) -> tuple[str, list[str], list[str]]:
         pass  # pragma: no cover
-
-    @property
-    def human_readable_name(self) -> str:
-        """Returns the human readable name of this parameter.  This is the
-        same as the name for options, but the metavar for arguments.
-        """
-        assert self.name is not None, "self.name should be set"
-        return self.name
-
-    def make_metavar(self, ctx: Context) -> str:
-        if self.metavar is not None:
-            return self.metavar
-
-        metavar = self.type.get_metavar(param=self, ctx=ctx)
-
-        if metavar is None:
-            type_name = self.type.name
-            if type_name.startswith("<") and type_name.endswith(">"):
-                metavar = type_name
-            else:
-                metavar = f"<{type_name}>"
-
-        if self.nargs != 1:
-            metavar += "..."
-
-        return metavar
 
     @overload
     def get_default(self, ctx: Context, call: Literal[True] = True) -> Any | None: ...
@@ -908,7 +876,7 @@ class Parameter(ABC):
         self, ctx: Context, call: bool = True
     ) -> Any | Callable[[], Any] | None:
         """Get the default for the parameter"""
-        value = ctx.lookup_default(self.name, call=False)  # type: ignore
+        value = ctx.lookup_default(self.name, call=False)
 
         if value is None:
             value = self.default
@@ -925,7 +893,7 @@ class Parameter(ABC):
     def consume_value(
         self, ctx: Context, opts: Mapping[str, Any]
     ) -> tuple[Any, ParameterSource]:
-        value = opts.get(self.name)  # type: ignore  # ty: ignore[unused-ignore-comment]
+        value = opts.get(self.name)
         source = ParameterSource.COMMANDLINE
 
         if value is None:
@@ -933,7 +901,7 @@ class Parameter(ABC):
             source = ParameterSource.ENVIRONMENT
 
         if value is None:
-            value = ctx.lookup_default(self.name)  # type: ignore
+            value = ctx.lookup_default(self.name)
             source = ParameterSource.DEFAULT_MAP
 
         if value is None:
@@ -942,65 +910,14 @@ class Parameter(ABC):
 
         return value, source
 
-    def type_cast_value(self, ctx: Context, value: Any) -> Any:
-        """Convert and validate a value against the parameter's
-        `type`, `multiple`, and `nargs`.
-        """
-        if value is None:
-            return () if self.multiple or self.nargs == -1 else None
-
-        def check_iter(value: Any) -> Iterator[Any]:
-            if isinstance(value, str):
-                raise BadParameter("Value must be an iterable.", ctx=ctx, param=self)
-            else:
-                return iter(value)
-
-        # Define the conversion function based on nargs and type.
-        if self.nargs == 1 or self.type.is_composite:
-
-            def convert(value: Any) -> Any:
-                return self.type(value, param=self, ctx=ctx)
-
-        elif self.nargs == -1:
-
-            def convert(value: Any) -> Any:  # tuple[t.Any, ...]
-                return tuple(self.type(x, self, ctx) for x in check_iter(value))
-
-        # TODO: evaluate whether we need to keep this in Typer
-        else:  # nargs > 1
-
-            def convert(value: Any) -> Any:  # tuple[t.Any, ...]
-                value = tuple(check_iter(value))
-
-                if len(value) != self.nargs:
-                    raise BadParameter(
-                        f"Takes {self.nargs} values but {len(value)} given.",
-                        ctx=ctx,
-                        param=self,
-                    )
-
-                return tuple(self.type(x, self, ctx) for x in value)
-
-        if self.multiple:
-            return tuple(convert(x) for x in check_iter(value))
-
-        return convert(value)
-
     @abstractmethod
     def value_is_missing(self, value: Any) -> bool:
         pass  # pragma: no cover
 
+    @abstractmethod
     def process_value(self, ctx: Context, value: Any) -> Any:
-        """Process the value of this parameter"""
-        value = self.type_cast_value(ctx, value)
-
-        if self.required and self.value_is_missing(value):
-            raise MissingParameter(ctx=ctx, param=self)
-
-        if self.callback is not None:
-            value = self.callback(ctx, self, value)
-
-        return value
+        """Process the value of this parameter."""
+        pass  # pragma: no cover
 
     def resolve_envvar_value(self, ctx: Context) -> str | None:
         """Returns the value found in the environment variable(s) attached to this
@@ -1039,19 +956,22 @@ class Parameter(ABC):
 
         return None
 
-    def value_from_envvar(self, ctx: Context) -> str | Sequence[str] | None:
-        """Process the raw environment variable string for this parameter.
+    envvar_list_splitter: ClassVar[str | None] = None
 
-        Returns the string as-is or splits it into a sequence of strings if the
-        parameter is expecting multiple values (i.e. its `nargs` property is set
-        to a value other than ``1``).
+    def split_envvar_value(self, rv: str) -> Sequence[str]:
+        """Given a value from an environment variable this splits it up
+        into small chunks depending on the defined envvar list splitter.
+
+        If the splitter is set to `None`, which means that whitespace splits,
+        then leading and trailing whitespace is ignored.  Otherwise, leading
+        and trailing splitters usually lead to empty items being included.
         """
-        rv: Any | None = self.resolve_envvar_value(ctx)
+        return (rv or "").split(self.envvar_list_splitter)
 
-        if rv is not None and self.nargs != 1:
-            rv = self.type.split_envvar_value(rv)
-
-        return rv
+    @abstractmethod
+    def value_from_envvar(self, ctx: Context) -> str | Sequence[str] | None:
+        """Process the value from the environment variable."""
+        pass  # pragma: no cover
 
     def handle_parse_result(
         self, ctx: Context, opts: Mapping[str, Any], args: list[str]
@@ -1065,10 +985,12 @@ class Parameter(ABC):
         the value has been explicitly set by the user (and as such, is not coming from
         a default).
         """
-        with augment_usage_errors(ctx, param=self):
+        from ..core import TyperParameter
+
+        with augment_usage_errors(ctx, param=cast(TyperParameter, self)):
             value, source = self.consume_value(ctx, opts)
 
-            ctx.set_parameter_source(self.name, source)  # type: ignore
+            ctx.set_parameter_source(self.name, source)
 
             # Process the value through the parameter's type.
             try:
@@ -1079,7 +1001,7 @@ class Parameter(ABC):
                 value = None
 
         if self.expose_value:
-            ctx.params[self.name] = value  # type: ignore
+            ctx.params[self.name] = value
 
         return value, args
 
@@ -1090,26 +1012,7 @@ class Parameter(ABC):
     def get_usage_pieces(self, ctx: Context) -> list[str]:
         return []
 
-    def get_error_hint(self, ctx: Context) -> str:
-        """Get a stringified version of the param for use in error messages to
-        indicate which param caused the error.
-        """
-        hint_list = self.opts or [self.human_readable_name]
-        return " / ".join(f"'{x}'" for x in hint_list)
-
+    @abstractmethod
     def shell_complete(self, ctx: Context, incomplete: str) -> list["CompletionItem"]:
-        """Return a list of completions for the incomplete value. If a
-        ``shell_complete`` function was given during init, it is used.
-        Otherwise, the `type` `ParamType.shell_complete` function is used.
-        """
-        if self._custom_shell_complete is not None:
-            results = self._custom_shell_complete(ctx, self, incomplete)
-
-            if results and isinstance(results[0], str):
-                from .shell_completion import CompletionItem
-
-                results = [CompletionItem(c) for c in results]
-
-            return cast("list[CompletionItem]", results)
-
-        return self.type.shell_complete(ctx, self, incomplete)
+        """Return a list of completions for the incomplete value."""
+        pass  # pragma: no cover
