@@ -100,7 +100,7 @@ def _install_completion_no_auto_placeholder_function(
 # Re-implement Click's shell_complete to add error message with:
 # Invalid completion instruction
 # To use 7.x instruction style for compatibility
-# And to add extra error messages, for compatibility with Typer in previous versions
+# To add extra error messages, for compatibility with Typer in previous versions
 # This is only called in new Command method, only used by Click 8.x+
 def shell_complete(
     cli: _click.Command,
