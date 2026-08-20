@@ -307,7 +307,9 @@ def _align_panels_app(align: bool, required: bool = False):
     def _required_opt():
         if required:
             return typer.Option(..., help="required", rich_help_panel="Selection")
-        return typer.Option(None, "--optional-opt", help="optional", rich_help_panel="Selection")
+        return typer.Option(
+            None, "--optional-opt", help="optional", rich_help_panel="Selection"
+        )
 
     @app.command()
     def run(
