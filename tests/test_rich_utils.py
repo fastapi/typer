@@ -301,8 +301,13 @@ def test_rich_lowercase_bracketed_metavar() -> None:
     assert "Try 'typer [path_or_module] run --help' for help." in result.output
 
 
-def _align_panels_app(align: bool):
+def _align_panels_app(align: bool, required: bool = False):
     app = typer.Typer(align_panel_columns=align, add_completion=False)
+
+    def _required_opt():
+        if required:
+            return typer.Option(..., help="required", rich_help_panel="Selection")
+        return typer.Option(None, "--optional-opt", help="optional", rich_help_panel="Selection")
 
     @app.command()
     def run(
@@ -315,6 +320,10 @@ def _align_panels_app(align: bool):
         years: str = typer.Option(
             None, "--years", "-Y", help="year range", rich_help_panel="Selection"
         ),
+        limit: int = typer.Option(
+            5, "--limit", min=1, max=10, help="limit", rich_help_panel="Selection"
+        ),
+        opt: str = _required_opt(),
         human: bool = typer.Option(
             False, "--human", "-H", help="human", rich_help_panel="Output"
         ),
@@ -340,8 +349,9 @@ def _option_type_columns(output: str) -> list[int]:
     return columns
 
 
-def test_align_panel_columns_true_aligns_columns() -> None:
-    app = _align_panels_app(True)
+@pytest.mark.parametrize("required", [False, True])
+def test_align_panel_columns_true_aligns_columns(required: bool) -> None:
+    app = _align_panels_app(True, required)
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     columns = _option_type_columns(result.output)
