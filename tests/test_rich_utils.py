@@ -325,19 +325,15 @@ def _align_panels_app(align: bool):
 
 
 def _option_type_columns(output: str) -> list[int]:
-    """Column index of the `<type>` metavar in every option row, across panels."""
-    lines = output.split("\n")
+    """Column index of the `<type>` metavar in every option row, across panels.
+
+    Box-drawing detection is style-agnostic: Windows CI renders Rich panels with
+    ASCII borders (``|``) instead of the rounded Unicode borders (``│``), so rows
+    are matched by stripping any leading border char + spaces, not by border style.
+    """
     columns: list[int] = []
-    in_panel = False
-    for line in lines:
-        stripped = line.strip()
-        if stripped.startswith("╭"):
-            in_panel = True
-            continue
-        if stripped.startswith("╰"):
-            in_panel = False
-            continue
-        if in_panel and line.startswith("│") and line[1:].strip().startswith("-"):
+    for line in output.splitlines():
+        if line.lstrip(" │|").startswith("-"):
             match = re.search(r"<int>|<str>", line)
             if match:
                 columns.append(match.start())
