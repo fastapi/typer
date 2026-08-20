@@ -54,7 +54,7 @@ class StreamMixer:
         self.stderr: io.BytesIO = BytesIOCopy(copy_to=self.output)
 
     def __del__(self) -> None:
-        """Guarantee that file-like objects are closed in a predictable order"""
+        """Guarantee that file-like objects are closed in a predictable order."""
         self.stderr.close()
         self.stdout.close()
         self.output.close()

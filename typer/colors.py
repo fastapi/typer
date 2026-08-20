@@ -1,4 +1,5 @@
-# Variable names to colors, just for completion
+"""Color constants for terminal styling and completion."""
+
 BLACK = "black"
 RED = "red"
 GREEN = "green"
