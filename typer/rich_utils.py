@@ -416,7 +416,7 @@ def _print_options_panel(
     ctx: _click.Context,
     markup_mode: MarkupModeStrict,
     console: Console,
-    align_option_panels: bool = False,
+    align_panel_columns: bool = False,
 ) -> None:
     options_rows: list[list[RenderableType]] = []
     required_rows: list[str | Text] = []
@@ -522,7 +522,7 @@ def _print_options_panel(
             box=box_style,
             **t_styles,
         )
-        if align_option_panels:
+        if align_panel_columns:
             has_required, long_w, short_w, sec_long_w, sec_short_w, metavar_w = (
                 _get_align_option_panel_widths(ctx)
             )
@@ -636,7 +636,7 @@ def rich_format_help(
     obj: _click.Command | TyperGroup,
     ctx: _click.Context,
     markup_mode: MarkupModeStrict,
-    align_option_panels: bool = False,
+    align_panel_columns: bool = False,
 ) -> None:
     """Print nicely formatted help text using rich.
 
@@ -691,7 +691,7 @@ def rich_format_help(
         ctx=ctx,
         markup_mode=markup_mode,
         console=console,
-        align_option_panels=align_option_panels,
+        align_panel_columns=align_panel_columns,
     )
     for panel_name, arguments in panel_to_arguments.items():
         if panel_name == ARGUMENTS_PANEL_TITLE:
@@ -703,7 +703,7 @@ def rich_format_help(
             ctx=ctx,
             markup_mode=markup_mode,
             console=console,
-            align_option_panels=align_option_panels,
+            align_panel_columns=align_panel_columns,
         )
     default_options = panel_to_options.get(OPTIONS_PANEL_TITLE, [])
     _print_options_panel(
@@ -712,7 +712,7 @@ def rich_format_help(
         ctx=ctx,
         markup_mode=markup_mode,
         console=console,
-        align_option_panels=align_option_panels,
+        align_panel_columns=align_panel_columns,
     )
     for panel_name, options in panel_to_options.items():
         if panel_name == OPTIONS_PANEL_TITLE:
@@ -724,7 +724,7 @@ def rich_format_help(
             ctx=ctx,
             markup_mode=markup_mode,
             console=console,
-            align_option_panels=align_option_panels,
+            align_panel_columns=align_panel_columns,
         )
 
     if isinstance(obj, TyperGroup):

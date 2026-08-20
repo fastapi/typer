@@ -302,7 +302,7 @@ def test_rich_lowercase_bracketed_metavar() -> None:
 
 
 def _align_panels_app(align: bool):
-    app = typer.Typer(align_option_panels=align, add_completion=False)
+    app = typer.Typer(align_panel_columns=align, add_completion=False)
 
     @app.command()
     def run(
@@ -344,7 +344,7 @@ def _option_type_columns(output: str) -> list[int]:
     return columns
 
 
-def test_align_option_panels_true_aligns_columns() -> None:
+def test_align_panel_columns_true_aligns_columns() -> None:
     app = _align_panels_app(True)
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
@@ -353,7 +353,7 @@ def test_align_option_panels_true_aligns_columns() -> None:
     assert len(set(columns)) == 1, f"type columns not aligned: {columns}"
 
 
-def test_align_option_panels_false_is_default_unaligned() -> None:
+def test_align_panel_columns_false_is_default_unaligned() -> None:
     app = _align_panels_app(False)
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
