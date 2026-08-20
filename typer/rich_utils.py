@@ -352,6 +352,63 @@ def _make_command_help(
     )
 
 
+def _option_columns(
+    param: TyperOption, ctx: _click.Context
+) -> tuple[str, str, str, str, str]:
+    """Return the rendered option columns (long, short, secondary, type)."""
+    long_strs = ",".join(opt for opt in param.opts if "--" in opt)
+    short_strs = ",".join(opt for opt in param.opts if "--" not in opt)
+    sec_long_strs = ",".join(opt for opt in param.secondary_opts if "--" in opt)
+    sec_short_strs = ",".join(opt for opt in param.secondary_opts if "--" not in opt)
+
+    metavar = param.make_metavar(ctx=ctx)
+    type_text = ""
+    if metavar and "bool" not in metavar.lower():
+        type_text = metavar
+    if isinstance(param.type, types._NumberRangeBase) and not (
+        param.count and param.type.min == 0 and param.type.max is None
+    ):
+        range_str = param.type._describe_range()
+        if range_str:
+            type_text += RANGE_STRING.format(range_str)
+    return long_strs, short_strs, sec_long_strs, sec_short_strs, type_text
+
+
+def _get_align_option_panel_widths(
+    ctx: _click.Context,
+) -> tuple[bool, int, int, int, int, int]:
+    """Compute fixed column widths shared across option panels.
+
+    Widths are derived from every visible option in the command so each panel
+    renders with the same column geometry and rows line up across panels.
+    Returns ``(has_required, long, short, secondary_long, secondary_short,
+    metavar)``.
+    """
+    options = [
+        param
+        for param in ctx.command.get_params(ctx)
+        if isinstance(param, TyperOption) and not getattr(param, "hidden", False)
+    ]
+    long_w = short_w = sec_long_w = sec_short_w = metavar_w = 0
+    for param in options:
+        long_strs, short_strs, sec_long_strs, sec_short_strs, type_text = (
+            _option_columns(param, ctx)
+        )
+        long_w = max(long_w, len(long_strs))
+        short_w = max(short_w, len(short_strs))
+        sec_long_w = max(sec_long_w, len(sec_long_strs))
+        sec_short_w = max(sec_short_w, len(sec_short_strs))
+        metavar_w = max(metavar_w, len(type_text))
+    return (
+        any(param.required for param in options),
+        long_w,
+        short_w,
+        sec_long_w,
+        sec_short_w,
+        metavar_w,
+    )
+
+
 def _print_options_panel(
     *,
     name: str,
@@ -359,6 +416,7 @@ def _print_options_panel(
     ctx: _click.Context,
     markup_mode: MarkupModeStrict,
     console: Console,
+    align_option_panels: bool = False,
 ) -> None:
     options_rows: list[list[RenderableType]] = []
     required_rows: list[str | Text] = []
@@ -464,7 +522,28 @@ def _print_options_panel(
             box=box_style,
             **t_styles,
         )
-        for row in rows_with_required:
+        if align_option_panels:
+            has_required, long_w, short_w, sec_long_w, sec_short_w, metavar_w = (
+                _get_align_option_panel_widths(ctx)
+            )
+            if has_required:
+                options_table.add_column(width=1, no_wrap=True)
+            options_table.add_column(width=long_w, no_wrap=True)
+            options_table.add_column(width=short_w, no_wrap=True)
+            options_table.add_column(width=sec_long_w, no_wrap=True)
+            options_table.add_column(width=sec_short_w, no_wrap=True)
+            options_table.add_column(width=metavar_w, no_wrap=True)
+            options_table.add_column(justify="left", no_wrap=False, ratio=10)
+            if has_required:
+                rows_to_print = [
+                    [required if required else "", *row]
+                    for required, row in zip(required_rows, options_rows, strict=True)
+                ]
+            else:
+                rows_to_print = options_rows
+        else:
+            rows_to_print = rows_with_required
+        for row in rows_to_print:
             options_table.add_row(*row)
         console.print(
             Panel(
@@ -557,6 +636,7 @@ def rich_format_help(
     obj: _click.Command | TyperGroup,
     ctx: _click.Context,
     markup_mode: MarkupModeStrict,
+    align_option_panels: bool = False,
 ) -> None:
     """Print nicely formatted help text using rich.
 
@@ -611,6 +691,7 @@ def rich_format_help(
         ctx=ctx,
         markup_mode=markup_mode,
         console=console,
+        align_option_panels=align_option_panels,
     )
     for panel_name, arguments in panel_to_arguments.items():
         if panel_name == ARGUMENTS_PANEL_TITLE:
@@ -622,6 +703,7 @@ def rich_format_help(
             ctx=ctx,
             markup_mode=markup_mode,
             console=console,
+            align_option_panels=align_option_panels,
         )
     default_options = panel_to_options.get(OPTIONS_PANEL_TITLE, [])
     _print_options_panel(
@@ -630,6 +712,7 @@ def rich_format_help(
         ctx=ctx,
         markup_mode=markup_mode,
         console=console,
+        align_option_panels=align_option_panels,
     )
     for panel_name, options in panel_to_options.items():
         if panel_name == OPTIONS_PANEL_TITLE:
@@ -641,6 +724,7 @@ def rich_format_help(
             ctx=ctx,
             markup_mode=markup_mode,
             console=console,
+            align_option_panels=align_option_panels,
         )
 
     if isinstance(obj, TyperGroup):

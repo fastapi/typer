@@ -1,3 +1,4 @@
+import re
 import sys
 
 import pytest
@@ -298,3 +299,64 @@ def test_rich_lowercase_bracketed_metavar() -> None:
     usage_line = result.output.splitlines()[0]
     assert usage_line.startswith("Usage: typer [path_or_module] run [OPTIONS] {name}")
     assert "Try 'typer [path_or_module] run --help' for help." in result.output
+
+
+def _align_panels_app(align: bool):
+    app = typer.Typer(align_option_panels=align, add_completion=False)
+
+    @app.command()
+    def run(
+        verbose: int = typer.Option(
+            0, "-v", count=True, help="verbosity", rich_help_panel="Logging"
+        ),
+        log_path: str = typer.Option(
+            None, "--log-path", help="log file", rich_help_panel="Logging"
+        ),
+        years: str = typer.Option(
+            None, "--years", "-Y", help="year range", rich_help_panel="Selection"
+        ),
+        human: bool = typer.Option(
+            False, "--human", "-H", help="human", rich_help_panel="Output"
+        ),
+    ) -> None:
+        pass  # pragma: no cover
+
+    return app
+
+
+def _option_type_columns(output: str) -> list[int]:
+    """Column index of the `<type>` metavar in every option row, across panels."""
+    lines = output.split("\n")
+    columns: list[int] = []
+    in_panel = False
+    for line in lines:
+        stripped = line.strip()
+        if stripped.startswith("╭"):
+            in_panel = True
+            continue
+        if stripped.startswith("╰"):
+            in_panel = False
+            continue
+        if in_panel and line.startswith("│") and line[1:].strip().startswith("-"):
+            match = re.search(r"<int>|<str>", line)
+            if match:
+                columns.append(match.start())
+    return columns
+
+
+def test_align_option_panels_true_aligns_columns() -> None:
+    app = _align_panels_app(True)
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    columns = _option_type_columns(result.output)
+    assert columns, "no option type columns found"
+    assert len(set(columns)) == 1, f"type columns not aligned: {columns}"
+
+
+def test_align_option_panels_false_is_default_unaligned() -> None:
+    app = _align_panels_app(False)
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    columns = _option_type_columns(result.output)
+    assert columns, "no option type columns found"
+    assert len(set(columns)) > 1, f"expected unaligned type columns: {columns}"
