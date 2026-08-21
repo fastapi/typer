@@ -9,7 +9,6 @@ from typing import (
     ClassVar,
     Literal,
     NoReturn,
-    TypedDict,
     TypeGuard,
     TypeVar,
     Union,
@@ -686,10 +685,3 @@ BOOL = BoolParamType()
 
 # A UUID parameter.
 UUID = UUIDParameterType()
-
-
-class OptionHelpExtra(TypedDict, total=False):
-    envvars: tuple[str, ...]
-    default: str
-    range: str
-    required: str
