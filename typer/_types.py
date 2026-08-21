@@ -23,7 +23,7 @@ class TyperChoice(types.ParamType, Generic[ParamTypeValue]):
         self, ctx: _click.Context | None = None
     ) -> Mapping[ParamTypeValue, str]:
         """
-        Returns mapping where keys are the original choices and the values are
+        Return a mapping where keys are the original choices and the values are
         the normalized values that are accepted via the command line.
         """
         return {
