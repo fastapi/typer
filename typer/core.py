@@ -18,6 +18,7 @@ from ._click import types
 from ._click.parser import _OptionParser
 from ._click.shell_completion import CompletionItem
 from ._typing import Literal
+from .exceptions import Abort, Exit
 from .utils import parse_boolean_env_var
 
 MarkupMode = Literal["markdown", "rich", None]
@@ -165,13 +166,10 @@ def _main(
     rich_markup_mode: MarkupMode = DEFAULT_MARKUP_MODE,
     **extra: Any,
 ) -> Any:
-    # Typer override, duplicated from _click.main() to handle custom rich exceptions
-    # Verify that the environment is configured correctly, or reject
-    # further execution to avoid a broken script.
+    # Originally copied from _click.main(), adopted to handle custom rich exceptions etc
     if args is None:
         args = sys.argv[1:]
 
-        # Covered in Click tests
         if os.name == "nt" and windows_expand_args:  # pragma: no cover
             args = _click.utils._expand_args(args)
     else:
@@ -199,20 +197,18 @@ def _main(
                 ctx.exit()
         except EOFError as e:
             _click.echo(file=sys.stderr)
-            raise _click.exceptions.Abort() from e
+            raise Abort() from e
         except KeyboardInterrupt as e:
-            raise _click.exceptions.Exit(130) from e
+            raise Exit(130) from e
         except _click.exceptions.ClickException as e:
             if not standalone_mode:
                 raise
-            # Typer override
             if HAS_RICH and rich_markup_mode is not None:
                 from . import rich_utils
 
                 rich_utils.rich_format_error(e)
             else:
                 e.show()
-            # Typer override end
             sys.exit(e.exit_code)
         except OSError as e:
             if e.errno == errno.EPIPE:
@@ -221,7 +217,7 @@ def _main(
                 sys.exit(1)
             else:
                 raise
-    except _click.exceptions.Exit as e:
+    except Exit as e:
         if standalone_mode:
             sys.exit(e.exit_code)
         else:
@@ -234,17 +230,15 @@ def _main(
             # `ctx.exit(1)` and to `return 1`, the caller won't be able to
             # tell the difference between the two
             return e.exit_code
-    except _click.exceptions.Abort:
+    except Abort:
         if not standalone_mode:
             raise
-        # Typer override
         if HAS_RICH and rich_markup_mode is not None:
             from . import rich_utils
 
             rich_utils.rich_abort_error()
         else:
             _click.echo(_("Aborted!"), file=sys.stderr)
-        # Typer override end
         sys.exit(1)
 
 
