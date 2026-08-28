@@ -7,6 +7,9 @@ class TyperException(Exception):
         super().__init__(message)
         self.message = message
 
+    def __str__(self) -> str:
+        return self.message
+
     def format_message(self) -> str:
         return self.message
 

@@ -26,9 +26,6 @@ class ClickException(TyperException):
         # the color settings here to be used later on (in `show`)
         self.show_color: bool | None = resolve_color_default()
 
-    def __str__(self) -> str:
-        return self.message
-
     def show(self, file: IO[Any] | None = None) -> None:
         if file is None:
             file = get_text_stderr()
