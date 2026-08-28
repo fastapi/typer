@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.27.2 (2026-08-28)
+
 ### Refactors
 
 * ♻️ Create `exceptions` module and `TyperException` base class. PR [#1942](https://github.com/fastapi/typer/pull/1942) by [@svlandeg](https://github.com/svlandeg).
