@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Refactors
+
+* ♻️ Create `exceptions` module and `TyperException` base class. PR [#1942](https://github.com/fastapi/typer/pull/1942) by [@svlandeg](https://github.com/svlandeg).
+
 ### Docs
 
 * 🐛 Fix showing `fast` button as external link in animated terminals in docs. PR [#1912](https://github.com/fastapi/typer/pull/1912) by [@phalberg](https://github.com/phalberg).
