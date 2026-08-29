@@ -142,7 +142,10 @@ def _has_ansi_character(text: str) -> bool:
     return ANSI_PREFIX in text
 
 
-def _get_rich_console(stderr: bool = False) -> Console:
+def _get_rich_console(
+    stderr: bool = False,
+    width: int | None = None,
+) -> Console:
     return Console(
         theme=Theme(
             {
@@ -158,11 +161,9 @@ def _get_rich_console(stderr: bool = False) -> Console:
         highlighter=highlighter,
         color_system=COLOR_SYSTEM,
         force_terminal=FORCE_TERMINAL,
-        width=MAX_WIDTH,
+        width=width if width is not None else MAX_WIDTH,
         stderr=stderr,
     )
-
-
 def _make_rich_text(
     *, text: str, style: str = "", markup_mode: MarkupModeStrict
 ) -> Markdown | Text:
@@ -566,7 +567,7 @@ def rich_format_help(
     Replacement for the click function format_help().
     Takes a command or group and builds the help text output.
     """
-    console = _get_rich_console()
+    console = _get_rich_console(width=ctx.terminal_width)
 
     # Print usage
     console.print(

@@ -172,3 +172,31 @@ def test_typer_run_usage() -> None:
     usage_line = result.output.splitlines()[0]
     assert usage_line.startswith("Usage: typer [PATH_OR_MODULE] run [OPTIONS] {name}")
     assert "Try 'typer [PATH_OR_MODULE] run --help' for help." in result.output
+
+
+
+def test_terminal_width_with_rich() -> None:
+    app = typer.Typer()
+
+    @app.command()
+    def cmd(
+        name: str = typer.Option(
+            help=(
+                "A very long help message that should wrap when "
+                "the terminal is narrow."
+            ),
+        ),
+    ) -> None:
+        pass
+
+    result = runner.invoke(
+        app,
+        ["cmd", "--help"],
+        terminal_width=40,
+    )
+
+    assert result.exit_code == 0
+
+    output_lines = result.output.splitlines()
+
+    assert all(len(line) <= 40 for line in output_lines)
