@@ -164,6 +164,8 @@ def _get_rich_console(
         width=width if width is not None else MAX_WIDTH,
         stderr=stderr,
     )
+
+
 def _make_rich_text(
     *, text: str, style: str = "", markup_mode: MarkupModeStrict
 ) -> Markdown | Text:

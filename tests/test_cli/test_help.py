@@ -174,7 +174,6 @@ def test_typer_run_usage() -> None:
     assert "Try 'typer [PATH_OR_MODULE] run --help' for help." in result.output
 
 
-
 def test_terminal_width_with_rich() -> None:
     app = typer.Typer()
 
@@ -182,8 +181,7 @@ def test_terminal_width_with_rich() -> None:
     def cmd(
         name: str = typer.Option(
             help=(
-                "A very long help message that should wrap when "
-                "the terminal is narrow."
+                "A very long help message that should wrap when the terminal is narrow."
             ),
         ),
     ) -> None:
