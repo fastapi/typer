@@ -8,6 +8,7 @@ import shellingham
 
 from . import _click
 from ._click.globals import get_current_context
+from .exceptions import Exit
 
 
 class Shells(str, Enum):
@@ -81,7 +82,7 @@ def get_completion_script(*, prog_name: str, complete_var: str, shell: str) -> s
     script = _completion_scripts.get(shell)
     if script is None:
         _click.echo(f"Shell {shell} not supported.", err=True)
-        raise _click.exceptions.Exit(1)
+        raise Exit(1)
     return (
         script
         % {
@@ -175,7 +176,7 @@ def install_powershell(*, prog_name: str, complete_var: str, shell: str) -> Path
     )
     if result.returncode != 0:  # pragma: no cover
         _click.echo("Couldn't get PowerShell user profile", err=True)
-        raise _click.exceptions.Exit(result.returncode)
+        raise Exit(result.returncode)
     path_str = ""
     if isinstance(result.stdout, str):  # pragma: no cover
         path_str = result.stdout
@@ -188,7 +189,7 @@ def install_powershell(*, prog_name: str, complete_var: str, shell: str) -> Path
                 pass
         if not path_str:  # pragma: no cover
             _click.echo("Couldn't decode the path automatically", err=True)
-            raise _click.exceptions.Exit(1)
+            raise Exit(1)
     path_obj = Path(path_str.strip())
     parent_dir: Path = path_obj.parent
     parent_dir.mkdir(parents=True, exist_ok=True)
@@ -234,7 +235,7 @@ def install(
         return shell, installed_path
     else:
         _click.echo(f"Shell {shell} is not supported.")
-        raise _click.exceptions.Exit(1)
+        raise Exit(1)
 
 
 def _get_shell_name() -> str | None:

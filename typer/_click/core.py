@@ -17,13 +17,8 @@ from typing import (
     overload,
 )
 
-from .exceptions import (
-    Abort,
-    BadParameter,
-    Exit,
-    NoArgsIsHelpError,
-    UsageError,
-)
+from ..exceptions import Abort, Exit
+from .exceptions import BadParameter, NoArgsIsHelpError, UsageError
 from .formatting import HelpFormatter
 from .globals import pop_context, push_context
 from .parser import _OptionParser

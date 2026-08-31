@@ -2,12 +2,19 @@
 
 ## Latest Changes
 
+## 0.27.2 (2026-08-28)
+
+### Refactors
+
+* ♻️ Create `exceptions` module and `TyperException` base class. PR [#1942](https://github.com/fastapi/typer/pull/1942) by [@svlandeg](https://github.com/svlandeg).
+
 ### Docs
 
 * 🐛 Fix showing `fast` button as external link in animated terminals in docs. PR [#1912](https://github.com/fastapi/typer/pull/1912) by [@phalberg](https://github.com/phalberg).
 
 ### Internal
 
+* ⬆️ Bump setup-uv action to 10.0.1. PR [#1940](https://github.com/fastapi/typer/pull/1940) by [@YuriiMotov](https://github.com/YuriiMotov).
 * 👷 Migrate automatic labels to Latest Changes. PR [#1931](https://github.com/fastapi/typer/pull/1931) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Remove legacy label check. PR [#1930](https://github.com/fastapi/typer/pull/1930) by [@tiangolo](https://github.com/tiangolo).
 * 🔐 Use PR Submit for pull requests. PR [#1928](https://github.com/fastapi/typer/pull/1928) by [@tiangolo](https://github.com/tiangolo).
