@@ -15,7 +15,7 @@ app = mod.app
 def test_call_no_arg():
     result = runner.invoke(app)
     assert result.exit_code != 0
-    assert "Missing argument 'NAME'." in result.output
+    assert "Missing argument 'name'." in result.output
 
 
 def test_call_no_arg_standalone():
@@ -29,7 +29,7 @@ def test_call_no_arg_no_rich(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr(typer.core, "HAS_RICH", False)
     result = runner.invoke(app)
     assert result.exit_code != 0
-    assert "Error: Missing argument 'NAME'" in result.output
+    assert "Error: Missing argument 'name'" in result.output
 
 
 def test_call_arg():

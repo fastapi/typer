@@ -6,7 +6,7 @@ app = typer.Typer()
 @app.command()
 def create(username: str):
     """
-    Create a [green]new[green/] user with USERNAME.
+    Create a [green]new[green/] user with username.
     """
     print(f"Creating user: {username}")
 
@@ -14,7 +14,7 @@ def create(username: str):
 @app.command()
 def delete(username: str):
     """
-    Delete a user with [bold]USERNAME[/].
+    Delete a user with [bold]username[/].
     """
     print(f"Deleting user: {username}")
 

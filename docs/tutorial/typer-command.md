@@ -2,7 +2,7 @@
 
 The `typer` command provides ✨ completion ✨ in the Terminal for your own small scripts. Even if they don't use Typer internally. Of course, it works better if you use **Typer** in your script.
 
-It's probably most useful if you have a small custom Python script using **Typer** (maybe as part of some project), for some small tasks, and it's not complex/important enough to create a whole installable Python package for it (something to be installed with `pip`).
+It's probably most useful if you have a small custom Python script using **Typer** (maybe as part of some project), for some small tasks, and it's not complex/important enough to create a whole installable Python package.
 
 In that case, you can run your program with the `typer` command in your Terminal, and it will provide completion for your script.
 
@@ -10,18 +10,46 @@ The `typer` command also has functionality to generate Markdown documentation fo
 
 ## Install
 
-When you install **Typer** with:
+Add Typer to your project:
 
-```bash
-pip install typer
+```console
+$ uv add typer
 ```
 
-...it includes the `typer` command.
+This installs both the Typer library and the `typer` command in the project's `.venv`.
+
+Activate that environment to make `typer` available as a first-class command in your terminal:
+
+//// tab | Linux, macOS
+
+```console
+$ source .venv/bin/activate
+```
+
+////
+
+//// tab | Windows PowerShell
+
+```console
+$ .venv\Scripts\Activate.ps1
+```
+
+////
+
+//// tab | Windows Bash
+
+```console
+$ source .venv/Scripts/activate
+```
+
+////
+
+Using the `typer` command from the project environment ensures it uses the same Typer version and dependencies as the project.
 
 If you don't want to use the `typer` command, you can call the Typer library as a module with:
 
-```bash
-python -m typer
+```console
+$ uv run python -m typer
 ```
 
 ## Install completion
@@ -76,9 +104,8 @@ For it to work, you would also install **Typer**:
 <div class="termy">
 
 ```console
-$ python -m pip install typer
+$ uv add typer
 ---> 100%
-Successfully installed typer
 ```
 
 </div>
@@ -90,15 +117,15 @@ Then you could run your script with normal Python:
 <div class="termy">
 
 ```console
-$ python my_custom_script.py hello
+$ uv run python my_custom_script.py hello
 
 Hello World!
 
-$ python my_custom_script.py hello --name Camila
+$ uv run python my_custom_script.py hello --name Camila
 
 Hello Camila!
 
-$ python my_custom_script.py bye --name Camila
+$ uv run python my_custom_script.py bye --name Camila
 
 Bye Camila
 ```
@@ -169,13 +196,13 @@ Then you can call it with:
 
 ```console
 $ typer main.py run --help
-Usage: typer run [OPTIONS]
+Usage: typer [PATH_OR_MODULE] run [OPTIONS]
 
   Say hi to someone, by default to the World.
 
 Options:
-  --name TEXT
-  --help       Show this message and exit.
+  --name <str>  [default: World]
+  --help        Show this message and exit.
 
 $ typer main.py run --name Camila
 
@@ -196,10 +223,10 @@ For example:
 
 ```console
 $ typer my_package.main run --help
-Usage: typer run [OPTIONS]
+Usage: typer [PATH_OR_MODULE] run [OPTIONS]
 
 Options:
-  --name TEXT
+  --name <str>
   --help       Show this message and exit.
 
 $ typer my_package.main run --name Camila
@@ -258,16 +285,16 @@ $ typer some_script.py utils docs
 If you don't want to use the `typer` command, you can still generate docs with:
 
 ```console
-$ python -m typer some_script.py utils docs
+$ uv run python -m typer some_script.py utils docs
 ```
 
 ///
 
 **Options**:
 
-* `--name TEXT`: The name of the CLI program to use in docs.
-* `--output FILE`: An output file to write docs to, like README.md.
-* `--title TEXT`: A title to use in the docs, by default the name of the command.
+* `--name <str>`: The name of the CLI program to use in docs.
+* `--output <file>`: An output file to write docs to, like README.md.
+* `--title <str>`: A title to use in the docs, by default the name of the command.
 
 For example:
 
@@ -305,19 +332,19 @@ $ awesome-cli [OPTIONS] COMMAND [ARGS]...
 
 **Commands**:
 
-* `create`: Create a new user with USERNAME.
-* `delete`: Delete a user with USERNAME.
+* `create`: Create a new user with username.
+* `delete`: Delete a user with username.
 * `delete-all`: Delete ALL users in the database.
 * `init`: Initialize the users database.
 
 ## `awesome-cli create`
 
-Create a new user with USERNAME.
+Create a new user with username.
 
 **Usage**:
 
 ```console
-$ awesome-cli create [OPTIONS] USERNAME
+$ awesome-cli create [OPTIONS] {username}
 ```
 
 **Options**:
@@ -326,14 +353,14 @@ $ awesome-cli create [OPTIONS] USERNAME
 
 ## `awesome-cli delete`
 
-Delete a user with USERNAME.
+Delete a user with 'username'.
 
 If --force is not used, will ask for confirmation.
 
 **Usage**:
 
 ```console
-$ awesome-cli delete [OPTIONS] USERNAME
+$ awesome-cli delete [OPTIONS] {username}
 ```
 
 **Options**:

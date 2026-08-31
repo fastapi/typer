@@ -58,3 +58,6 @@ def test_script(mod: ModuleType):
         encoding="utf-8",
     )
     assert "Usage" in result.stdout
+
+    # ensure that also tuple of None's isn't displayed
+    assert "[default: None, None, None]" not in result.stdout

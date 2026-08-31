@@ -32,7 +32,7 @@ Check it:
 
 ```console
 // Check the help
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice the main help text, extracted from the callback function: "Manage users in the awesome CLI app."
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
@@ -40,7 +40,7 @@ Usage: main.py [OPTIONS] COMMAND [ARGS]...
   Manage users in the awesome CLI app.
 
 Options:
-  --verbose / --no-verbose  [default: False]
+  --verbose / --no-verbose  [default: no-verbose]
   --install-completion      Install completion for the current shell.
   --show-completion         Show completion for the current shell, to copy it or customize the installation.
   --help                    Show this message and exit.
@@ -52,12 +52,12 @@ Commands:
 // Check the new top level CLI option --verbose
 
 // Try it normally
-$ python main.py create Camila
+$ uv run python main.py create Camila
 
 Creating user: Camila
 
 // And now with --verbose
-$ python main.py --verbose create Camila
+$ uv run python main.py --verbose create Camila
 
 Will write verbose output
 About to create a user
@@ -65,9 +65,9 @@ Creating user: Camila
 Just created a user
 
 // Notice that --verbose belongs to the callback, it has to go before create or delete ⛔️
-$ python main.py create --verbose Camila
+$ uv run python main.py create --verbose Camila
 
-Usage: main.py create [OPTIONS] USERNAME
+Usage: main.py create [OPTIONS] {username}
 Try "main.py create --help" for help.
 
 Error: No such option: --verbose
@@ -88,7 +88,7 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py create Camila
+$ uv run python main.py create Camila
 
 Running a command
 Creating user: Camila
@@ -109,7 +109,7 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py create Camila
+$ uv run python main.py create Camila
 
 // Notice that the message is the one from new_callback()
 Override callback, running a command
@@ -133,7 +133,7 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice all the help text extracted from the callback docstring
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
@@ -142,7 +142,7 @@ Usage: main.py [OPTIONS] COMMAND [ARGS]...
 
   Use it with the create command.
 
-  A new user with the given NAME will be created.
+  A new user with the given 'name' will be created.
 
 Options:
   --install-completion  Install completion for the current shell.
@@ -153,7 +153,7 @@ Commands:
   create
 
 // And it just works as normally
-$ python main.py create Camila
+$ uv run python main.py create Camila
 
 Creating user: Camila
 ```

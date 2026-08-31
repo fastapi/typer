@@ -1,10 +1,10 @@
-import click
 import typer
+from typer import _click
 
 app = typer.Typer()
 
 
-def shell_complete(ctx: click.Context, param: click.Parameter, incomplete: str):
+def shell_complete(ctx: _click.Context, param: _click.Parameter, incomplete: str):
     typer.echo(f"ctx: {ctx.info_name}", err=True)
     typer.echo(f"arg is: {param.name}", err=True)
     typer.echo(f"incomplete is: {incomplete}", err=True)

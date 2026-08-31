@@ -27,7 +27,7 @@ def get_mod(request: pytest.FixtureRequest) -> ModuleType:
 def test_help(mod: ModuleType):
     result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
-    assert "[OPTIONS] [NAME]" in result.output
+    assert "[OPTIONS] [name]" in result.output
     assert "Arguments" in result.output
     assert "env var: AWESOME_NAME" in result.output
     assert "default: World" in result.output
@@ -37,7 +37,7 @@ def test_help_no_rich(monkeypatch: pytest.MonkeyPatch, mod: ModuleType):
     monkeypatch.setattr(typer.core, "HAS_RICH", False)
     result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
-    assert "[OPTIONS] [NAME]" in result.output
+    assert "[OPTIONS] [name]" in result.output
     assert "Arguments" in result.output
     assert "env var: AWESOME_NAME" in result.output
     assert "default: World" in result.output

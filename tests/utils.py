@@ -9,6 +9,16 @@ from typer.core import HAS_RICH
 needs_linux = pytest.mark.skipif(
     not sys.platform.startswith("linux"), reason="Test requires Linux"
 )
+needs_macos = pytest.mark.skipif(
+    not sys.platform.startswith("darwin"), reason="Test requires macOS"
+)
+needs_windows = pytest.mark.skipif(
+    not sys.platform.startswith("win"), reason="Test requires Windows"
+)
+skip_if_windows = pytest.mark.skipif(
+    sys.platform == "win32",
+    reason="Test should not be run on Windows",
+)
 
 needs_rich = pytest.mark.skipif(not HAS_RICH, reason="Test requires Rich")
 

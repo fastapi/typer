@@ -23,9 +23,9 @@ Or you can explicitly pass `...` to `typer.Option(default=...)`:
 
 {* docs_src/options/required/tutorial002_py310.py hl[7] *}
 
-/// info
+/// note
 
-If you hadn't seen that `...` before: it is a special single value, it is <a href="https://docs.python.org/3/library/constants.html#Ellipsis" class="external-link" target="_blank">part of Python and is called "Ellipsis"</a>.
+If you hadn't seen that `...` before: it is a special single value, it is [part of Python and is called "Ellipsis"](https://docs.python.org/3/library/constants.html#Ellipsis).
 
 ///
 
@@ -42,27 +42,30 @@ And test it:
 <div class="termy">
 
 ```console
-// Pass the NAME CLI argument
-$ python main.py Camila
+// Pass the 'name' CLI argument
+$ uv run python main.py Camila
 
 // We didn't pass the now required --lastname CLI option
-Usage: main.py [OPTIONS] NAME
+Usage: main.py [OPTIONS] {name}
 Try "main.py --help" for help.
 
 Error: Missing option '--lastname'.
 
 // Now update it to pass the required --lastname CLI option
-$ python main.py Camila --lastname Gutiérrez
+$ uv run python main.py Camila --lastname Gutiérrez
 
 Hello Camila Gutiérrez
 
 // And if you check the help
-$ python main.py --help
+$ uv run python main.py --help
 
-Usage: main.py [OPTIONS] NAME
+Usage: main.py [OPTIONS] {name}
+
+Arguments:
+  name  [required]
 
 Options:
-  --lastname TEXT       [required]
+  --lastname <str>      [required]
   --help                Show this message and exit.
 
 // It now tells you that --lastname is required 🎉

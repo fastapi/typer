@@ -7,8 +7,8 @@ This tutorial will show you how to use `add_typer` to create sub commands and or
 We will create a simple CLI with the following commands:
 
 - `version`
-- `users add NAME`
-- `users delete NAME`
+- `users add 'name'`
+- `users delete 'name'`
 
 ## CLI structure
 
@@ -108,11 +108,11 @@ To run the application, you can execute it as a Python module:
 <div class="termy">
 
 ```console
-$ python -m mycli.main version
+$ uv run python -m mycli.main version
 
 My CLI Version 1.0
 
-$ python -m mycli.main users add Camila
+$ uv run python -m mycli.main users add Camila
 
 Adding user: Camila
 ```

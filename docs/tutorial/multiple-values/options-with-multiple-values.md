@@ -56,28 +56,28 @@ Now let's see how this works in the terminal:
 
 ```console
 // check the help
-$ python main.py --help
+$ uv run python main.py --help
 
-// Notice the &lt;TEXT INTEGER BOOLEAN&gt;
+// Notice the <str int boolean>
 Usage: main.py [OPTIONS]
 
 Options:
-  --user &lt;TEXT INTEGER BOOLEAN&gt;...
-  --help                          Show this message and exit.
+  --user <str int boolean>...
+  --help                       Show this message and exit.
 
 // Now try it
-$ python main.py --user Camila 50 yes
+$ uv run python main.py --user Camila 50 yes
 
 The username Camila has 50 coins
 And this user is a wizard!
 
 // With other values
-$ python main.py --user Morty 3 no
+$ uv run python main.py --user Morty 3 no
 
 The username Morty has 3 coins
 
 // Try with invalid values (not enough)
-$ python main.py --user Camila 50
+$ uv run python main.py --user Camila 50
 
 Error: Option '--user' requires 3 arguments
 ```

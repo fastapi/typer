@@ -24,7 +24,7 @@ Now, even though the functions are named `cli_create_user()` and `cli_delete_use
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
 
@@ -38,7 +38,7 @@ Commands:
   delete
 
 // Test it
-$ python main.py create Camila
+$ uv run python main.py create Camila
 
 Creating user: Camila
 ```

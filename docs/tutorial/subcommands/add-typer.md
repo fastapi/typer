@@ -17,7 +17,7 @@ And you would use it like:
 <div class="termy">
 
 ```console
-$ python items.py create Wand
+$ uv run python items.py create Wand
 
 Creating item: Wand
 ```
@@ -37,7 +37,7 @@ And you would use it like:
 <div class="termy">
 
 ```console
-$ python users.py create Camila
+$ uv run python users.py create Camila
 
 Creating user: Camila
 ```
@@ -74,7 +74,7 @@ Check it:
 
 ```console
 // Check the help
-$ python main.py --help
+$ uv run python main.py --help
 
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
 
@@ -84,8 +84,8 @@ Options:
   --help                Show this message and exit.
 
 Commands:
-  items
   users
+  items
 ```
 
 </div>
@@ -98,7 +98,7 @@ Let's check the `items` command:
 
 ```console
 // Check the help for items
-$ python main.py items --help
+$ uv run python main.py items --help
 
 // It shows its own commands (subcommands): create, delete, sell
 Usage: main.py items [OPTIONS] COMMAND [ARGS]...
@@ -112,11 +112,11 @@ Commands:
   sell
 
 // Try it
-$ python main.py items create Wand
+$ uv run python main.py items create Wand
 
 Creating item: Wand
 
-$ python main.py items sell Vase
+$ uv run python main.py items sell Vase
 
 Selling item: Vase
 ```
@@ -134,7 +134,7 @@ And now check the command `users`, with all its subcommands:
 <div class="termy">
 
 ```console
-$ python main.py users --help
+$ uv run python main.py users --help
 
 Usage: main.py users [OPTIONS] COMMAND [ARGS]...
 
@@ -146,7 +146,7 @@ Commands:
   delete
 
 // Try it
-$ python main.py users create Camila
+$ uv run python main.py users create Camila
 
 Creating user: Camila
 ```

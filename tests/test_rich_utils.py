@@ -101,38 +101,38 @@ def test_rich_markup_import_regression():
 
     result = runner.invoke(app, ["--help"])
     assert "Usage" in result.stdout
-    assert "BAR" in result.stdout
+    assert "{bar}" in result.stdout
 
 
 @needs_rich
 @pytest.mark.parametrize("input_text", ["[ARGS]", "[ARGS]..."])
 def test_metavar_highlighter(input_text: str):
     """
-    Test that the MetavarHighlighter works correctly.
+    Test that the TypesHighlighter (used to be the MetavarHighlighter) works correctly.
     cf PR 1508
     """
     from typer.rich_utils import (
-        STYLE_METAVAR_SEPARATOR,
+        STYLE_TYPES_SEPARATOR,
         Text,
         _get_rich_console,
-        metavar_highlighter,
+        types_highlighter,
     )
 
     console = _get_rich_console()
 
     text = Text(input_text)
-    highlighted = metavar_highlighter(text)
+    highlighted = types_highlighter(text)
     console.print(highlighted)
 
     # Get the style for each bracket
     opening_bracket_style = highlighted.get_style_at_offset(console, 0)
     closing_bracket_style = highlighted.get_style_at_offset(console, 5)
 
-    # The opening bracket should have metavar_sep style
-    assert str(opening_bracket_style) == STYLE_METAVAR_SEPARATOR
+    # The opening bracket should have types_sep style
+    assert str(opening_bracket_style) == STYLE_TYPES_SEPARATOR
 
-    # The closing bracket should have metavar_sep style (fails before PR 1508 when there are 3 dots)
-    assert str(closing_bracket_style) == STYLE_METAVAR_SEPARATOR
+    # The closing bracket should have types_sep style (fails before PR 1508 when there are 3 dots)
+    assert str(closing_bracket_style) == STYLE_TYPES_SEPARATOR
 
 
 def test_make_rich_text_with_ansi_escape_sequences():
@@ -222,3 +222,79 @@ def test_help_table_alignment_with_styled_text():
     assert pos_a == pos_b == pos_c, (
         f"Right boundaries not aligned: A={pos_a}, B={pos_b}, C={pos_c}"
     )
+
+
+def test_rich_help_no_boolean_type() -> None:
+    app = typer.Typer(rich_markup_mode="rich")
+
+    @app.command()
+    def main(name: str) -> None:
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "<boolean>" not in result.output
+
+
+def test_rich_help_metavar():
+    app = typer.Typer(rich_markup_mode="rich")
+
+    @app.command()
+    def main(
+        *,
+        arg1: int,
+        arg2: int = 42,
+        arg3: int = typer.Argument(...),
+        ARG4: int = typer.Argument(42),
+        ARG5: int = typer.Option(...),
+        arg6: int = typer.Option(42),
+        arg7: int = typer.Argument(42, metavar="meta7"),
+        arg8: int = typer.Argument(metavar="ARG8"),
+        arg9: int = typer.Argument(metavar="arg9"),
+    ):
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["--help"])
+    assert (
+        "Usage: main [OPTIONS] {arg1} {arg3} [ARG4] [meta7] {ARG8} {arg9}"
+        in result.stdout
+    )
+
+    out_nospace = result.stdout.replace(" ", "")
+
+    # arguments
+    assert "arg1<int>" in out_nospace
+    assert "arg3<int>" in out_nospace
+    assert "ARG4<int>" in out_nospace
+    assert "meta7<int>" in out_nospace
+    assert "ARG8<int>" in out_nospace
+    assert "arg9<int>" in out_nospace
+
+    assert "arg7" not in result.stdout.lower()
+    assert "arg8" not in result.stdout
+    assert "ARG9" not in result.stdout
+
+    # options
+    assert "--arg2<int>" in out_nospace
+    assert "--ARG5<int>" in out_nospace
+    assert "--arg6<int>" in out_nospace
+
+
+def test_rich_lowercase_bracketed_metavar() -> None:
+    # Make sure Rich doesn't "swallow" a lowercased [path] (thinking it's a Rich annotation)
+    app = typer.Typer(rich_markup_mode="rich")
+
+    @app.callback()
+    def main(path_or_module: str = typer.Argument(None)) -> None:
+        pass  # pragma: no cover
+
+    @app.command()
+    def run(name: str) -> None:
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["my-module.py", "run"], prog_name="typer")
+
+    assert result.exit_code == 2
+    usage_line = result.output.splitlines()[0]
+    assert usage_line.startswith("Usage: typer [path_or_module] run [OPTIONS] {name}")
+    assert "Try 'typer [path_or_module] run --help' for help." in result.output

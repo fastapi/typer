@@ -5,6 +5,8 @@ on:
     - cron: "0 0 * * *"
   workflow_dispatch:
 
+permissions: {}
+
 env:
   UV_NO_SYNC: true
 
@@ -12,11 +14,15 @@ jobs:
   test-latest-python:
     runs-on: ubuntu-latest
     continue-on-error: true
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v6
-      - name: Checkout CPython main
-        uses: actions/checkout@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
+      - name: Checkout CPython main
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
           repository: python/cpython
           ref: main
           path: ./.cpython
@@ -27,8 +33,9 @@ jobs:
           cd ./.cpython
           ./configure && make -j $(nproc)
       - name: Setup uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
         with:
+          version: "latest-known"
           enable-cache: true
           cache-dependency-glob: |
             pyproject.toml
@@ -45,7 +52,7 @@ jobs:
           COVERAGE_FILE: coverage/.coverage.ubuntu-cpython-main
           CONTEXT: ubuntu-cpython-main
       - name: Store coverage files
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: coverage-ubuntu-cpython-main
           path: coverage

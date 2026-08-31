@@ -32,7 +32,7 @@ def test_help(mod: ModuleType):
     result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
     assert "--fullname" in result.output
-    assert "TEXT" in result.output
+    assert "<str>" in result.output
     assert "[default: Wade Wilson]" not in result.output
 
 

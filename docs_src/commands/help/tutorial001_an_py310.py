@@ -8,7 +8,7 @@ app = typer.Typer(help="Awesome CLI user manager.")
 @app.command()
 def create(username: str):
     """
-    Create a new user with USERNAME.
+    Create a new user with username.
     """
     print(f"Creating user: {username}")
 
@@ -25,7 +25,7 @@ def delete(
     ],
 ):
     """
-    Delete a user with USERNAME.
+    Delete a user with username.
 
     If --force is not used, will ask for confirmation.
     """

@@ -36,6 +36,7 @@ def test_main_help(mod: ModuleType):
 def test_create_help(mod: ModuleType):
     result = runner.invoke(mod.app, ["create", "--help"])
     assert result.exit_code == 0
+    assert "create [OPTIONS] {username} [lastname]" in result.output
     assert "username" in result.output
     assert "The username to create" in result.output
     assert "Secondary Arguments" in result.output

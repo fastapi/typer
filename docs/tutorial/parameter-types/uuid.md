@@ -1,8 +1,8 @@
 # UUID
 
-/// info
+/// note
 
-A UUID is a <a href="https://en.wikipedia.org/wiki/Universally_unique_identifier" class="external-link" target="_blank">"Universally Unique Identifier"</a>.
+A UUID is a ["Universally Unique Identifier"](https://en.wikipedia.org/wiki/Universally_unique_identifier).
 
 It's a standard format for identifiers, like passport numbers, but for anything, not just people in countries.
 
@@ -24,7 +24,7 @@ You can declare a *CLI parameter* as a UUID:
 
 {* docs_src/parameter_types/uuid/tutorial001_py310.py hl[1,9:11] *}
 
-Your Python code will receive a standard Python <a href="https://docs.python.org/3.8/library/uuid.html" class="external-link" target="_blank">`UUID`</a> object with all its attributes and methods, and as you are annotating your function parameter with that type, you will have type checks, autocompletion in your editor, etc.
+Your Python code will receive a standard Python [`UUID`](https://docs.python.org/3.8/library/uuid.html) object with all its attributes and methods, and as you are annotating your function parameter with that type, you will have type checks, autocompletion in your editor, etc.
 
 Check it:
 
@@ -32,18 +32,18 @@ Check it:
 
 ```console
 // Pass a valid UUID v4
-$ python main.py d48edaa6-871a-4082-a196-4daab372d4a1
+$ uv run python main.py d48edaa6-871a-4082-a196-4daab372d4a1
 
-USER_ID is d48edaa6-871a-4082-a196-4daab372d4a1
+User ID is d48edaa6-871a-4082-a196-4daab372d4a1
 UUID version is: 4
 
 // An invalid value
-$ python main.py 7479706572-72756c6573
+$ uv run python main.py 7479706572-72756c6573
 
-Usage: main.py [OPTIONS] USER_ID
+Usage: main.py [OPTIONS] {user_id}
 Try "main.py --help" for help.
 
-Error: Invalid value for 'USER_ID': 7479706572-72756c6573 is not a valid UUID.
+Error: Invalid value for 'user_id': 7479706572-72756c6573 is not a valid UUID.
 ```
 
 </div>

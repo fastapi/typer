@@ -11,7 +11,7 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 Opening Typer docs
 
@@ -39,7 +39,7 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py
+$ uv run python main.py
 
 Opening config directory
 

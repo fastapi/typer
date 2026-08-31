@@ -14,9 +14,9 @@ def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     assert "create" in result.output
-    assert "Create a new user with USERNAME." in result.output
+    assert "Create a new user with username." in result.output
     assert "delete" in result.output
-    assert "Delete a user with USERNAME." in result.output
+    assert "Delete a user with username." in result.output
     assert "Some internal utility function to create." not in result.output
     assert "Some internal utility function to delete." not in result.output
 
@@ -24,14 +24,14 @@ def test_help():
 def test_help_create():
     result = runner.invoke(app, ["create", "--help"])
     assert result.exit_code == 0
-    assert "Create a new user with USERNAME." in result.output
+    assert "Create a new user with username." in result.output
     assert "Some internal utility function to create." not in result.output
 
 
 def test_help_delete():
     result = runner.invoke(app, ["delete", "--help"])
     assert result.exit_code == 0
-    assert "Delete a user with USERNAME." in result.output
+    assert "Delete a user with username." in result.output
     assert "Some internal utility function to delete." not in result.output
 
 

@@ -18,27 +18,27 @@ Now there's only a `--force` *CLI option*:
 
 ```console
 // Check the help
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice there's only --force, we no longer have --no-force
 Usage: main.py [OPTIONS]
 
 Options:
-  --force               [default: False]
+  --force
   --help                Show this message and exit.
 
 // Try it:
-$ python main.py
+$ uv run python main.py
 
 Not forcing
 
 // Now add --force
-$ python main.py --force
+$ uv run python main.py --force
 
 Forcing operation
 
 // And --no-force no longer exists ⛔️
-$ python main.py --no-force
+$ uv run python main.py --no-force
 
 Usage: main.py [OPTIONS]
 Try "main.py --help" for help.
@@ -66,7 +66,7 @@ Check it:
 
 ```console
 // Check the help
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice the --accept / --reject
 Usage: main.py [OPTIONS]
@@ -76,17 +76,17 @@ Options:
   --help                Show this message and exit.
 
 // Try it
-$ python main.py
+$ uv run python main.py
 
 I don't know what you want yet
 
 // Now pass --accept
-$ python main.py --accept
+$ uv run python main.py --accept
 
 Accepting!
 
 // And --reject
-$ python main.py --reject
+$ uv run python main.py --reject
 
 Rejecting!
 ```
@@ -107,22 +107,22 @@ Check it:
 
 ```console
 // Check the help
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice the -f, --force / -F, --no-force
 Usage: main.py [OPTIONS]
 
 Options:
-  -f, --force / -F, --no-force  [default: False]
+  -f, --force / -F, --no-force  [default: no-force]
   --help                        Show this message and exit.
 
 // Try with the short name -f
-$ python main.py -f
+$ uv run python main.py -f
 
 Forcing operation
 
 // Try with the short name -F
-$ python main.py -F
+$ uv run python main.py -F
 
 Not forcing
 ```
@@ -151,7 +151,7 @@ Check it:
 
 ```console
 // Check the help
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice the / -d, --demo
 Usage: main.py [OPTIONS]
@@ -161,17 +161,17 @@ Options:
   --help                Show this message and exit.
 
 // Try it
-$ python main.py
+$ uv run python main.py
 
 Running in production
 
 // Now pass --demo
-$ python main.py --demo
+$ uv run python main.py --demo
 
 Running demo
 
 // And the short version
-$ python main.py -d
+$ uv run python main.py -d
 
 Running demo
 ```

@@ -23,7 +23,7 @@ def create(
     print(f"Creating user: {username}")
 
 
-@app.command(help="**Delete** a user with *USERNAME*.")
+@app.command(help="**Delete** a user with *username*.")
 def delete(
     username: Annotated[str, typer.Argument(help="The username to be **deleted**")],
     force: Annotated[bool, typer.Option(help="Force the **deletion** :boom:")] = False,

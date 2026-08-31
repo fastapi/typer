@@ -27,24 +27,24 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 // We get a --version, and don't get an awkward --no-version 🎉
 Usage: main.py [OPTIONS]
 
 Options:
   --version
-  --name TEXT
+  --name <str>          [default: World]
   --help                Show this message and exit.
 
 
 // We can call it normally
-$ python main.py --name Camila
+$ uv run python main.py --name Camila
 
 Hello Camila
 
 // And we can get the version
-$ python main.py --version
+$ uv run python main.py --version
 
 Awesome CLI Version: 0.1.0
 
@@ -64,7 +64,7 @@ Then our CLI program could not work as expected in some cases as it is *right no
 <div class="termy">
 
 ```console
-$ python main.py --name Rick --version
+$ uv run python main.py --name Rick --version
 
 Only Camila is allowed
 Aborted!
@@ -84,9 +84,9 @@ We don't have to check for `ctx.resilient_parsing` in the `name_callback()` for 
 
 ///
 
-/// info
+/// note
 
-If you need a refresher about what is "standard output" and "standard error" check the section in [Printing and Colors: "Standard Output" and "Standard Error"](../printing.md#standard-output-and-standard-error){.internal-link target=_blank}.
+If you need a refresher about what is "standard output" and "standard error" check the section in [Printing and Colors: "Standard Output" and "Standard Error"](../printing.md#standard-output-and-standard-error).
 
 ///
 
@@ -103,7 +103,7 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py --name Rick --version
+$ uv run python main.py --name Rick --version
 
 // Now we only get the version, and the name is not used
 Awesome CLI Version: 0.1.0
