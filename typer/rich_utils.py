@@ -112,7 +112,7 @@ class OptionHighlighter(RegexHighlighter):
     highlights = [
         r"(^|\W)(?P<switch>\-\w+)(?![a-zA-Z0-9])",
         r"(^|\W)(?P<option>\-\-[\w\-]+)(?![a-zA-Z0-9])",
-        r"(?P<types>\<[^\>]+\>)",
+        r"(?P<types>\<\S(?:[^\>]*\S)?\>)",
         r"(?P<usage>Usage: )",
     ]
 
