@@ -1,8 +1,6 @@
 from enum import Enum
 
-import pytest
 import typer
-from typer import _click
 from typer.testing import CliRunner
 
 app = typer.Typer(context_settings={"token_normalize_func": str.lower})
@@ -83,13 +81,6 @@ def test_enum_choice() -> None:
     assert "Hello Rick!" in result.output
 
 
-def test_enum_choice_repr() -> None:
-    root_command = typer.main.get_command(app)
-    command = root_command.commands["hello-option"]
-    name_param = next(param for param in command.params if param.name == "name")
-    assert repr(name_param.type).startswith("Choice([")
-
-
 def test_enum_choice_help() -> None:
     result = runner.invoke(app, ["hello-argument", "--help"])
     assert result.exit_code == 0
@@ -158,8 +149,3 @@ def test_list_pair() -> None:
     assert result.exit_code == 0
     assert "items=['a', 'b', 'c']" in result.output
     assert "pair=('x', 'y')" in result.output
-
-
-def test_float_range_open_bounds_with_clamp_not_allowed():
-    with pytest.raises(TypeError, match="Clamping is not supported for open bounds."):
-        _click.types.FloatRange(min=0.0, min_open=True, clamp=True)

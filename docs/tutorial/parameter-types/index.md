@@ -27,7 +27,7 @@ $ uv run python main.py --help
 Usage: main.py [OPTIONS] {name}
 
 Arguments:
-  name  [required]
+  name <str>  [required]
 
 Options:
   --age <int>               [default: 20]
@@ -39,10 +39,10 @@ Options:
 $ uv run python main.py Camila --age 15 --height-meters 1.70 --female
 
 // All the data has the correct Python type
-name is Camila, of type: class 'str'
---age is 15, of type: class 'int'
---height-meters is 1.7, of type: class 'float'
---female is True, of type: class 'bool'
+name is Camila, of type: <class 'str'>
+--age is 15, of type: <class 'int'>
+--height-meters is 1.7, of type: <class 'float'>
+--female is True, of type: <class 'bool'>
 
 // And if you pass an incorrect type
 $ uv run python main.py Camila --age 15.3
@@ -50,9 +50,9 @@ $ uv run python main.py Camila --age 15.3
 Usage: main.py [OPTIONS] {name}
 Try "main.py --help" for help.
 
-Error: Invalid value for '--age': '15.3' is not a valid int.
+Error: Invalid value for '--age': Input should be a valid integer, unable to parse string as an integer
 
-// Because 15.3 is not an integer (it's a float)
+// Because 15.3 is not an integer.
 ```
 
 </div>

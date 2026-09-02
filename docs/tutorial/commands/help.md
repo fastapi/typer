@@ -39,7 +39,7 @@ Usage: main.py create [OPTIONS] {username}
   Create a new user with username.
 
 Arguments:
-  username  [required]
+  username <str>  [required]
 
 Options:
   --help  Show this message and exit.
@@ -54,7 +54,7 @@ Usage: main.py delete [OPTIONS] {username}
   If --force is not used, will ask for confirmation.
 
 Arguments:
-  username  [required]
+  username <str>  [required]
 
 Options:
   --force / --no-force  Force deletion without confirmation.  [required]

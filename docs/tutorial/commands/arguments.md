@@ -13,7 +13,7 @@ $ uv run python main.py create --help
 Usage: main.py create [OPTIONS] {username}
 
 Arguments:
-  username  [required]
+  username <str>  [required]
 
 Options:
   --help  Show this message and exit.
