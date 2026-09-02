@@ -1,4 +1,4 @@
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from typing import TYPE_CHECKING, Annotated, Any, overload
 
 from annotated_doc import Doc
@@ -22,7 +22,7 @@ def Option(
     metavar: str | None = None,
     expose_value: bool = True,
     is_eager: bool = False,
-    envvar: str | list[str] | None = None,
+    envvar: str | Sequence[str] | None = None,
     # Note that shell_complete is not fully supported and will be removed in future versions
     # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Callable[
@@ -87,7 +87,7 @@ def Option(
     metavar: str | None = None,
     expose_value: bool = True,
     is_eager: bool = False,
-    envvar: str | list[str] | None = None,
+    envvar: str | Sequence[str] | None = None,
     # Note that shell_complete is not fully supported and will be removed in future versions
     # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Callable[
@@ -248,7 +248,7 @@ def Option(
         ),
     ] = False,
     envvar: Annotated[
-        str | list[str] | None,
+        str | Sequence[str] | None,
         Doc(
             """
             Configure a CLI Option to read its value from an environment variable if it is not provided in the command line.
@@ -1012,7 +1012,7 @@ def Argument(
     metavar: str | None = None,
     expose_value: bool = True,
     is_eager: bool = False,
-    envvar: str | list[str] | None = None,
+    envvar: str | Sequence[str] | None = None,
     # Note that shell_complete is not fully supported and will be removed in future versions
     # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Callable[
@@ -1068,7 +1068,7 @@ def Argument(
     metavar: str | None = None,
     expose_value: bool = True,
     is_eager: bool = False,
-    envvar: str | list[str] | None = None,
+    envvar: str | Sequence[str] | None = None,
     # Note that shell_complete is not fully supported and will be removed in future versions
     # TODO: Remove shell_complete in a future version (after 0.16.0)
     shell_complete: Callable[
@@ -1202,7 +1202,7 @@ def Argument(
         ),
     ] = False,
     envvar: Annotated[
-        str | list[str] | None,
+        str | Sequence[str] | None,
         Doc(
             """
             Configure an argument to read a value from an environment variable if it is not provided in the command line as a CLI argument.
