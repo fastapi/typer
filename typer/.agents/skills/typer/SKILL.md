@@ -106,6 +106,7 @@ An older way of setting a default value is this:
 ```python
 # DO NOT DO THIS: old style. Use Annotated instead.
 
+
 @app.command()
 def main(name: str = typer.Argument(default="World")):
     # Note that name is an optional Argument, as a default is provided
@@ -116,6 +117,7 @@ Similarly, the old style could use ellipsis (...) to explicitly mark an argument
 
 ```python
 # DO NOT DO THIS: old style. Use Annotated without a default value instead.
+
 
 @app.command()
 def main(name: str = typer.Argument(default=...)):
@@ -269,11 +271,15 @@ import typer
 
 app = typer.Typer(rich_markup_mode="markdown")
 
+
 @app.command(help="**Delete** a user with *username*.")
 def delete(
-    username: Annotated[str, typer.Argument(help="The username to be **deleted** :boom:")]
+    username: Annotated[
+        str, typer.Argument(help="The username to be **deleted** :boom:")
+    ],
 ):
     print(f"Deleting user: {username}")
+
 
 if __name__ == "__main__":
     app()
