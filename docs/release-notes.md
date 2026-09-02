@@ -4,6 +4,7 @@
 
 ### Internal
 
+* ⬆ Bump the python-packages group across 1 directory with 8 updates. PR [#1948](https://github.com/fastapi/typer/pull/1948) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump annotated-doc from 0.0.4 to 0.0.5. PR [#1949](https://github.com/fastapi/typer/pull/1949) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pre-commit hooks. PR [#1950](https://github.com/fastapi/typer/pull/1950) by [@pr-submit[bot]](https://github.com/apps/pr-submit).
 * ⬆ Bump the github-actions group with 4 updates. PR [#1947](https://github.com/fastapi/typer/pull/1947) by [@dependabot[bot]](https://github.com/apps/dependabot).
