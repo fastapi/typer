@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Internal
+
+* ⬆ Bump the github-actions group with 4 updates. PR [#1947](https://github.com/fastapi/typer/pull/1947) by [@dependabot[bot]](https://github.com/apps/dependabot).
+
 ## 0.27.2 (2026-08-28)
 
 ### Refactors
