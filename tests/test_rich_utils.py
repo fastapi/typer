@@ -1,3 +1,4 @@
+import re
 import sys
 
 import pytest
@@ -298,3 +299,72 @@ def test_rich_lowercase_bracketed_metavar() -> None:
     usage_line = result.output.splitlines()[0]
     assert usage_line.startswith("Usage: typer [path_or_module] run [OPTIONS] {name}")
     assert "Try 'typer [path_or_module] run --help' for help." in result.output
+
+
+def _align_panels_app(align: bool, required: bool = False):
+    app = typer.Typer(align_panel_columns=align, add_completion=False)
+
+    def _required_opt():
+        if required:
+            return typer.Option(..., help="required", rich_help_panel="Selection")
+        return typer.Option(
+            None, "--optional-opt", help="optional", rich_help_panel="Selection"
+        )
+
+    @app.command()
+    def run(
+        verbose: int = typer.Option(
+            0, "-v", count=True, help="verbosity", rich_help_panel="Logging"
+        ),
+        log_path: str = typer.Option(
+            None, "--log-path", help="log file", rich_help_panel="Logging"
+        ),
+        years: str = typer.Option(
+            None, "--years", "-Y", help="year range", rich_help_panel="Selection"
+        ),
+        limit: int = typer.Option(
+            5, "--limit", min=1, max=10, help="limit", rich_help_panel="Selection"
+        ),
+        opt: str = _required_opt(),
+        human: bool = typer.Option(
+            False, "--human", "-H", help="human", rich_help_panel="Output"
+        ),
+    ) -> None:
+        pass  # pragma: no cover
+
+    return app
+
+
+def _option_type_columns(output: str) -> list[int]:
+    """Column index of the `<type>` metavar in every option row, across panels.
+
+    Box-drawing detection is style-agnostic: Windows CI renders Rich panels with
+    ASCII borders (``|``) instead of the rounded Unicode borders (``│``), so rows
+    are matched by stripping any leading border char + spaces, not by border style.
+    """
+    columns: list[int] = []
+    for line in output.splitlines():
+        if line.lstrip(" │|").startswith("-"):
+            match = re.search(r"<int>|<str>", line)
+            if match:
+                columns.append(match.start())
+    return columns
+
+
+@pytest.mark.parametrize("required", [False, True])
+def test_align_panel_columns_true_aligns_columns(required: bool) -> None:
+    app = _align_panels_app(True, required)
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    columns = _option_type_columns(result.output)
+    assert columns, "no option type columns found"
+    assert len(set(columns)) == 1, f"type columns not aligned: {columns}"
+
+
+def test_align_panel_columns_false_is_default_unaligned() -> None:
+    app = _align_panels_app(False)
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    columns = _option_type_columns(result.output)
+    assert columns, "no option type columns found"
+    assert len(set(columns)) > 1, f"expected unaligned type columns: {columns}"
