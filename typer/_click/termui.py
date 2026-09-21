@@ -3,7 +3,8 @@ from collections.abc import Callable, Iterable
 from contextlib import AbstractContextManager
 from typing import IO, TYPE_CHECKING, Any, AnyStr, TextIO, TypeVar, overload
 
-from .exceptions import Abort, UsageError
+from ..exceptions import Abort
+from .exceptions import UsageError
 from .globals import resolve_color_default
 from .types import ParamType, convert_type
 from .utils import LazyFile, echo

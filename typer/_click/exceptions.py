@@ -1,6 +1,7 @@
 from collections.abc import Sequence
 from typing import IO, TYPE_CHECKING, Any, Union
 
+from ..exceptions import TyperException
 from ._compat import get_text_stderr
 from .globals import resolve_color_default
 from .utils import echo, format_filename
@@ -16,23 +17,14 @@ def _join_param_hints(param_hint: Sequence[str] | str | None) -> str | None:
     return param_hint
 
 
-class ClickException(Exception):
+class ClickException(TyperException):
     """An exception that Click can handle and show to the user."""
-
-    exit_code = 1
 
     def __init__(self, message: str) -> None:
         super().__init__(message)
         # The context will be removed by the time we print the message, so cache
         # the color settings here to be used later on (in `show`)
         self.show_color: bool | None = resolve_color_default()
-        self.message = message
-
-    def format_message(self) -> str:
-        return self.message
-
-    def __str__(self) -> str:
-        return self.message
 
     def show(self, file: IO[Any] | None = None) -> None:
         if file is None:
@@ -243,18 +235,3 @@ class FileError(ClickException):
 
     def format_message(self) -> str:
         return f"Could not open file {self.ui_filename!r}: {self.message}"
-
-
-class Abort(RuntimeError):
-    """An internal signalling exception that signals Click to abort."""
-
-
-class Exit(RuntimeError):
-    """An exception that indicates that the application should exit with some
-    status code.
-    """
-
-    __slots__ = ("exit_code",)
-
-    def __init__(self, code: int = 0) -> None:
-        self.exit_code: int = code

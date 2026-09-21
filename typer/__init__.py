@@ -1,13 +1,11 @@
 """Typer, build great CLIs. Easy to code. Based on Python type hints."""
 
-__version__ = "0.27.1"
+__version__ = "0.27.2"
 
 from shutil import get_terminal_size as get_terminal_size
 
 from . import colors as colors
-from ._click.exceptions import Abort as Abort
 from ._click.exceptions import BadParameter as BadParameter
-from ._click.exceptions import Exit as Exit
 from ._click.termui import confirm as confirm
 from ._click.termui import getchar as getchar
 from ._click.termui import progressbar as progressbar
@@ -19,6 +17,9 @@ from ._click.utils import format_filename as format_filename
 from ._click.utils import get_app_dir as get_app_dir
 from ._click.utils import get_binary_stream as get_binary_stream
 from ._click.utils import get_text_stream as get_text_stream
+from .exceptions import Abort as Abort
+from .exceptions import Exit as Exit
+from .exceptions import TyperException as TyperException
 from .main import Typer as Typer
 from .main import launch as launch
 from .main import run as run
