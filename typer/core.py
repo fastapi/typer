@@ -1027,6 +1027,7 @@ class TyperCommand(_click.core.Command):
         # Rich settings
         rich_markup_mode: MarkupMode = DEFAULT_MARKUP_MODE,
         rich_help_panel: str | None = None,
+        align_panel_columns: bool = False,
     ) -> None:
         super().__init__(
             name=name,
@@ -1044,6 +1045,7 @@ class TyperCommand(_click.core.Command):
         )
         self.rich_markup_mode: MarkupMode = rich_markup_mode
         self.rich_help_panel = rich_help_panel
+        self.align_panel_columns: bool = align_panel_columns
 
     def format_options(
         self, ctx: _click.Context, formatter: _click.HelpFormatter
@@ -1093,6 +1095,7 @@ class TyperCommand(_click.core.Command):
             obj=self,
             ctx=ctx,
             markup_mode=self.rich_markup_mode,
+            align_panel_columns=self.align_panel_columns,
         )
 
 
@@ -1111,6 +1114,7 @@ class TyperGroup(_click.Command):
         rich_markup_mode: MarkupMode = DEFAULT_MARKUP_MODE,
         rich_help_panel: str | None = None,
         suggest_commands: bool = True,
+        align_panel_columns: bool = False,
         # Click settings
         invoke_without_command: bool = False,
         no_args_is_help: bool = False,
@@ -1122,6 +1126,7 @@ class TyperGroup(_click.Command):
         self.rich_markup_mode: MarkupMode = rich_markup_mode
         self.rich_help_panel = rich_help_panel
         self.suggest_commands = suggest_commands
+        self.align_panel_columns: bool = align_panel_columns
 
         # copied from Click's init
         if commands is None:
@@ -1322,6 +1327,7 @@ class TyperGroup(_click.Command):
             obj=self,
             ctx=ctx,
             markup_mode=self.rich_markup_mode,
+            align_panel_columns=self.align_panel_columns,
         )
 
     def list_commands(self, ctx: _click.Context) -> list[str]:
