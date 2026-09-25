@@ -427,6 +427,26 @@ class Typer:
                 """
             ),
         ] = DEFAULT_MARKUP_MODE,
+        align_panel_columns: Annotated[
+            bool,
+            Doc(
+                """
+                Align option, argument and command columns across all Rich help
+                panels by giving every panel the same fixed column widths. When
+                `False` (the default), each panel sizes its columns
+                independently, matching prior behaviour. See [the tutorial on
+                help panels](https://typer.tiangolo.com/tutorial/options/help/#align-option-and-argument-columns-across-panels).
+
+                **Example**
+
+                ```python
+                import typer
+
+                app = typer.Typer(align_panel_columns=True)
+                ```
+                """
+            ),
+        ] = False,
         rich_help_panel: Annotated[
             str | None,
             Doc(
@@ -519,6 +539,7 @@ class Typer:
     ):
         self._add_completion = add_completion
         self.rich_markup_mode: MarkupMode = rich_markup_mode
+        self.align_panel_columns: bool = align_panel_columns
         self.rich_help_panel = rich_help_panel
         self.suggest_commands = suggest_commands
         self.pretty_exceptions_enable = pretty_exceptions_enable
@@ -1166,6 +1187,7 @@ def get_group(typer_instance: Typer) -> TyperGroup:
         pretty_exceptions_short=typer_instance.pretty_exceptions_short,
         rich_markup_mode=typer_instance.rich_markup_mode,
         suggest_commands=typer_instance.suggest_commands,
+        align_panel_columns=typer_instance.align_panel_columns,
     )
     return group
 
@@ -1198,6 +1220,7 @@ def get_command(typer_instance: Typer) -> _click.Command:
             single_command,
             pretty_exceptions_short=typer_instance.pretty_exceptions_short,
             rich_markup_mode=typer_instance.rich_markup_mode,
+            align_panel_columns=typer_instance.align_panel_columns,
         )
         if typer_instance._add_completion:
             click_command.params.append(click_install_param)
@@ -1286,6 +1309,7 @@ def get_group_from_info(
     pretty_exceptions_short: bool,
     suggest_commands: bool,
     rich_markup_mode: MarkupMode,
+    align_panel_columns: bool = False,
 ) -> TyperGroup:
     assert group_info.typer_instance, (
         "A Typer instance is needed to generate a Click Group"
@@ -1296,6 +1320,7 @@ def get_group_from_info(
             command_info=command_info,
             pretty_exceptions_short=pretty_exceptions_short,
             rich_markup_mode=rich_markup_mode,
+            align_panel_columns=align_panel_columns,
         )
         if command.name:
             commands[command.name] = command
@@ -1305,6 +1330,7 @@ def get_group_from_info(
             pretty_exceptions_short=pretty_exceptions_short,
             rich_markup_mode=rich_markup_mode,
             suggest_commands=suggest_commands,
+            align_panel_columns=align_panel_columns,
         )
         if sub_group.name:
             commands[sub_group.name] = sub_group
@@ -1353,6 +1379,7 @@ def get_group_from_info(
         # Rich settings
         rich_help_panel=solved_info.rich_help_panel,
         suggest_commands=suggest_commands,
+        align_panel_columns=align_panel_columns,
     )
     return group
 
@@ -1394,6 +1421,7 @@ def get_command_from_info(
     *,
     pretty_exceptions_short: bool,
     rich_markup_mode: MarkupMode,
+    align_panel_columns: bool = False,
 ) -> _click.Command:
     assert command_info.callback, "A command must have a callback function"
     name = command_info.name or get_command_name(command_info.callback.__name__)  # ty: ignore
@@ -1430,6 +1458,7 @@ def get_command_from_info(
         rich_markup_mode=rich_markup_mode,
         # Rich settings
         rich_help_panel=command_info.rich_help_panel,
+        align_panel_columns=align_panel_columns,
     )
     return command
 
