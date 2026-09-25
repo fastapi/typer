@@ -1,3 +1,4 @@
+import re
 import sys
 
 import pytest
@@ -298,3 +299,267 @@ def test_rich_lowercase_bracketed_metavar() -> None:
     usage_line = result.output.splitlines()[0]
     assert usage_line.startswith("Usage: typer [path_or_module] run [OPTIONS] {name}")
     assert "Try 'typer [path_or_module] run --help' for help." in result.output
+
+
+def _align_panels_app(align: bool, required: bool = False):
+    app = typer.Typer(align_panel_columns=align, add_completion=False)
+
+    def _required_opt():
+        if required:
+            return typer.Option(..., help="required", rich_help_panel="Selection")
+        return typer.Option(
+            None, "--optional-opt", help="optional", rich_help_panel="Selection"
+        )
+
+    @app.command()
+    def run(
+        verbose: int = typer.Option(
+            0, "-v", count=True, help="verbosity", rich_help_panel="Logging"
+        ),
+        log_path: str = typer.Option(
+            None, "--log-path", help="log file", rich_help_panel="Logging"
+        ),
+        years: str = typer.Option(
+            None, "--years", "-Y", help="year range", rich_help_panel="Selection"
+        ),
+        limit: int = typer.Option(
+            5, "--limit", min=1, max=10, help="limit", rich_help_panel="Selection"
+        ),
+        opt: str = _required_opt(),
+        human: bool = typer.Option(
+            False, "--human", "-H", help="human", rich_help_panel="Output"
+        ),
+    ) -> None:
+        pass  # pragma: no cover
+
+    return app
+
+
+def _flag_columns(output: str, pattern: str) -> list[int]:
+    """Column index of the first `pattern` match in every option row, across panels.
+
+    Box-drawing detection is style-agnostic: Windows CI renders Rich panels with
+    ASCII borders (``|``) instead of the rounded Unicode borders (``│``), so rows
+    are matched by stripping any leading border char + spaces, not by border style.
+    """
+    columns: list[int] = []
+    for line in output.splitlines():
+        if not line.lstrip(" │|").startswith("-"):
+            continue
+        match = re.search(pattern, line)
+        if match:
+            columns.append(match.start())
+    return columns
+
+
+def _option_type_columns(output: str) -> list[int]:
+    """Column index of the `<type>` metavar in every option row, across panels."""
+    return _flag_columns(output, r"<int>|<str>")
+
+
+@pytest.mark.parametrize("required", [False, True])
+def test_align_panel_columns_true_aligns_columns(required: bool) -> None:
+    app = _align_panels_app(True, required)
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    columns = _option_type_columns(result.output)
+    assert columns, "no option type columns found"
+    assert len(set(columns)) == 1, f"type columns not aligned: {columns}"
+
+
+def test_align_panel_columns_false_is_default_unaligned() -> None:
+    app = _align_panels_app(False)
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    columns = _option_type_columns(result.output)
+    assert columns, "no option type columns found"
+    assert len(set(columns)) > 1, f"expected unaligned type columns: {columns}"
+
+
+def test_align_panel_columns_true_aligns_arguments_with_options() -> None:
+    app = typer.Typer(align_panel_columns=True, add_completion=False)
+
+    @app.command()
+    def run(
+        job_id: str = typer.Argument(..., help="job id", rich_help_panel="Inputs"),
+        profile: str = typer.Argument(
+            "default", help="profile", rich_help_panel="Inputs"
+        ),
+        alpha: str = typer.Option("", "--alpha", help="alpha", rich_help_panel="Long"),
+        mixed: str = typer.Option(
+            "", "--mixed-long", "-m", help="mixed", rich_help_panel="Mixed"
+        ),
+        short: bool = typer.Option(False, "-s", help="short", rich_help_panel="Mixed"),
+    ) -> None:
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    long_col = _single_column(
+        result.output, ["job_id", "profile", "--alpha", "--mixed-long"]
+    )
+    short_col = _single_column(result.output, ["-m", "-s"])
+    metavar_col = _single_column(result.output, ["<str>"])
+    assert long_col < short_col < metavar_col
+    required_line = next(
+        line for line in _panel_lines(result.output) if "job_id" in line
+    )
+    assert "*" in required_line
+    assert "[required]" in required_line
+
+
+def test_align_panel_columns_true_aligns_command_panels() -> None:
+    app = typer.Typer(align_panel_columns=True, add_completion=False)
+
+    @app.callback()
+    def main(
+        verbose: bool = typer.Option(
+            False, "--verbose", "-V", help="Verbose output.", rich_help_panel="Global"
+        ),
+        token: str = typer.Option(
+            ..., "--token", help="token", rich_help_panel="Global"
+        ),
+    ) -> None:
+        pass  # pragma: no cover
+
+    @app.command(rich_help_panel="Core")
+    def run() -> None:
+        """Run it."""
+
+    @app.command(rich_help_panel="Core")
+    def generate_docs() -> None:
+        """Generate docs."""
+
+    @app.command(rich_help_panel="Utils")
+    def clean() -> None:
+        """Clean up."""
+
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    long_col = _single_column(
+        result.output,
+        ["--verbose", "--token", "--help", "run", "generate-docs", "clean"],
+    )
+    assert long_col > 0
+    # Command descriptions share the help column with option help text.
+    assert _single_column(result.output, ["Run it."]) == _single_column(
+        result.output, ["Verbose output."]
+    )
+
+
+def _align_all_shapes_app():
+    app = typer.Typer(align_panel_columns=True, add_completion=False)
+
+    @app.command()
+    def run(
+        a: bool = typer.Option(False, "-a", help="short flag", rich_help_panel="Short"),
+        b: str = typer.Option("", "-b", help="short value", rich_help_panel="Short"),
+        alpha: str = typer.Option(
+            "", "--alpha", help="long value", rich_help_panel="Long"
+        ),
+        beta: bool = typer.Option(
+            False, "--beta", help="long flag", rich_help_panel="Long"
+        ),
+        mixed_long: str = typer.Option(
+            "", "--mixed-long", "-m", help="mixed value", rich_help_panel="Mixed"
+        ),
+        mixed_flag: bool = typer.Option(
+            False, "--mixed-flag", "-x", help="mixed flag", rich_help_panel="Mixed"
+        ),
+        formal: bool = typer.Option(False, help="formal", rich_help_panel="Neg long"),
+        debug: bool = typer.Option(False, help="debug", rich_help_panel="Neg long"),
+        force: bool = typer.Option(
+            False,
+            "--force/--no-force",
+            "-f",
+            help="force",
+            rich_help_panel="Neg long+short",
+        ),
+        dry: bool = typer.Option(
+            False,
+            "--dry/--no-dry",
+            "-d",
+            help="dry",
+            rich_help_panel="Neg long+short",
+        ),
+        pretty: bool = typer.Option(
+            False, "-p/-P", help="pretty", rich_help_panel="Neg short"
+        ),
+        quiet: bool = typer.Option(
+            False, "-q/-Q", help="quiet", rich_help_panel="Neg short"
+        ),
+    ) -> None:
+        pass  # pragma: no cover
+
+    return app
+
+
+def _panel_lines(output: str) -> list[str]:
+    """Lines that belong to a Rich panel (any border style)."""
+    return [
+        line for line in output.splitlines() if line.lstrip(" ").startswith(("│", "|"))
+    ]
+
+
+def _single_column(output: str, tokens: list[str]) -> int:
+    columns: list[int] = []
+    for token in tokens:
+        pattern = rf"(?<![-\w]){re.escape(token)}(?![-\w])"
+        found = [
+            match.start()
+            for line in _panel_lines(output)
+            if (match := re.search(pattern, line))
+        ]
+        assert found, f"token {token!r} not found"
+        assert len(set(found)) == 1, f"{token!r} not aligned: {found}"
+        columns.append(found[0])
+    unique = set(columns)
+    assert len(unique) == 1, f"tokens not in one column: {columns}"
+    return columns[0]
+
+
+def test_align_panel_columns_aligns_every_flag_shape() -> None:
+    result = runner.invoke(_align_all_shapes_app(), ["--help"])
+    assert result.exit_code == 0
+    long_col = _single_column(
+        result.output,
+        [
+            "--alpha",
+            "--beta",
+            "--mixed-long",
+            "--mixed-flag",
+            "--formal",
+            "--debug",
+            "--force",
+            "--dry",
+            "--help",
+        ],
+    )
+    short_col = _single_column(
+        result.output, ["-a", "-b", "-m", "-x", "-f", "-d", "-p", "-q"]
+    )
+    secondary_long_col = _single_column(
+        result.output, ["--no-formal", "--no-debug", "--no-force", "--no-dry"]
+    )
+    secondary_short_col = _single_column(result.output, ["-P", "-Q"])
+    metavar_col = _single_column(result.output, ["<str>"])
+    assert long_col < short_col < secondary_long_col < secondary_short_col < metavar_col
+
+
+def test_align_panel_columns_aligns_aliases_and_variadic() -> None:
+    app = typer.Typer(align_panel_columns=True, add_completion=False)
+
+    @app.command()
+    def run(
+        files: list[str] = typer.Argument(..., help="files"),
+        output: str = typer.Option("", "--output", "--out", help="output"),
+        level: int = typer.Option(1, "--level", min=0, max=5, help="level"),
+    ) -> None:
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "--output,--out" in result.output
+    long_col = _single_column(result.output, ["files", "--output,--out", "--level"])
+    metavar_col = _single_column(result.output, ["<str>", "<int range>"])
+    assert long_col < metavar_col
