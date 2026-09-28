@@ -9,7 +9,7 @@ from typer._click._compat import get_best_encoding, should_strip_ansi
 from typer._click.utils import PacifyFlushWrapper
 from typer.testing import CliRunner
 
-from tests.utils import needs_linux, needs_windows
+from tests.utils import needs_linux, needs_macos, needs_windows
 
 app = typer.Typer()
 
@@ -300,6 +300,33 @@ def test_app_dir_force_posix(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr("os.path.expanduser", lambda _path: "/home/tester/.my-app")
 
     assert typer.get_app_dir("My App", force_posix=True) == "/home/tester/.my-app"
+
+
+@needs_linux
+def test_app_dir_linux_xdg_config_home(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("XDG_CONFIG_HOME", "/home/tester/config")
+
+    assert typer.get_app_dir("My App") == "/home/tester/config/my-app"
+
+
+@needs_linux
+def test_app_dir_linux_default(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("XDG_CONFIG_HOME", raising=False)
+    monkeypatch.setattr("os.path.expanduser", lambda _path: "/home/tester/.config")
+
+    assert typer.get_app_dir("My App") == "/home/tester/.config/my-app"
+
+
+@needs_macos
+def test_app_dir_macos(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(
+        "os.path.expanduser", lambda _path: "/Users/tester/Library/Application Support"
+    )
+
+    assert (
+        typer.get_app_dir("My App")
+        == "/Users/tester/Library/Application Support/My App"
+    )
 
 
 def test_text_stream_binary_buffer(monkeypatch) -> None:
