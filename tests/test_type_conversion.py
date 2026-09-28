@@ -254,15 +254,22 @@ def test_bool_convert_valid(cli_value: str, expected: bool) -> None:
     app = typer.Typer()
 
     @app.command()
-    def main(value_1: bool, value_2: bool = typer.Option(False, envvar="MY_TYPER_BOOL")):
+    def main(
+        value_1: bool,
+        value_2: bool = typer.Option(not expected, envvar="MY_TYPER_BOOL"),
+    ):
         print(f"value 1 {value_1}")
         print(f"value 2 {value_2}")
+
+    expected_2 = expected
+    # An empty env var counts as unset, so value_2 falls back to its default (True)
+    if cli_value == "":
+        expected_2 = True
 
     result = runner.invoke(app, [cli_value], env={"MY_TYPER_BOOL": cli_value})
     assert result.exit_code == 0, result.output
     assert f"value 1 {expected}" in result.output
-    assert f"value 2 {expected}" in result.output
-
+    assert f"value 2 {expected_2}" in result.output
 
 
 def test_bool_convert_invalid():
