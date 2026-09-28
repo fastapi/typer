@@ -78,7 +78,9 @@ def test_completion_colon_zsh_all():
         },
     )
     assert "alpine\\\\:hello" in result.stdout
+    assert "fake image\\\\: for testing" in result.stdout
     assert "alpine\\\\:latest" in result.stdout
+    assert "latest alpine image" in result.stdout
     assert "nvidia/cuda\\\\:10.0-devel-ubuntu18.04" in result.stdout
 
 
@@ -94,7 +96,9 @@ def test_completion_colon_zsh_partial():
         },
     )
     assert "alpine\\\\:hello" in result.stdout
+    assert "fake image\\\\: for testing" in result.stdout
     assert "alpine\\\\:latest" in result.stdout
+    assert "latest alpine image" in result.stdout
     assert "nvidia/cuda\\\\:10.0-devel-ubuntu18.04" not in result.stdout
 
 
@@ -110,7 +114,9 @@ def test_completion_colon_zsh_single():
         },
     )
     assert "alpine\\\\:hello" in result.stdout
+    assert "fake image\\\\: for testing" in result.stdout
     assert "alpine\\\\:latest" not in result.stdout
+    assert "latest alpine image" not in result.stdout
     assert "nvidia/cuda\\\\:10.0-devel-ubuntu18.04" not in result.stdout
 
 
@@ -127,7 +133,9 @@ def test_completion_colon_powershell_all():
         },
     )
     assert "alpine:hello" in result.stdout
+    assert "fake image: for testing" in result.stdout
     assert "alpine:latest" in result.stdout
+    assert "latest alpine image" in result.stdout
     assert "nvidia/cuda:10.0-devel-ubuntu18.04" in result.stdout
 
 
@@ -144,7 +152,9 @@ def test_completion_colon_powershell_partial():
         },
     )
     assert "alpine:hello" in result.stdout
+    assert "fake image: for testing" in result.stdout
     assert "alpine:latest" in result.stdout
+    assert "latest alpine image" in result.stdout
     assert "nvidia/cuda:10.0-devel-ubuntu18.04" not in result.stdout
 
 
@@ -161,8 +171,43 @@ def test_completion_colon_powershell_single():
         },
     )
     assert "alpine:hello" in result.stdout
+    assert "fake image: for testing" in result.stdout
     assert "alpine:latest" not in result.stdout
+    assert "latest alpine image" not in result.stdout
     assert "nvidia/cuda:10.0-devel-ubuntu18.04" not in result.stdout
+
+
+def test_completion_powershell_option_equals_value() -> None:
+    result = subprocess.run(
+        [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
+        capture_output=True,
+        encoding="utf-8",
+        env={
+            **os.environ,
+            "_COLON_EXAMPLE.PY_COMPLETE": "complete_powershell",
+            "_TYPER_COMPLETE_ARGS": "colon_example.py --name=alpine",
+            "_TYPER_COMPLETE_WORD_TO_COMPLETE": "--name=alpine",
+        },
+    )
+    assert "alpine:hello" in result.stdout
+    assert "alpine:latest" in result.stdout
+    assert "nvidia/cuda:10.0-devel-ubuntu18.04" not in result.stdout
+
+
+def test_completion_powershell_option_equals_only() -> None:
+    result = subprocess.run(
+        [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
+        capture_output=True,
+        encoding="utf-8",
+        env={
+            **os.environ,
+            "_COLON_EXAMPLE.PY_COMPLETE": "complete_powershell",
+            "_TYPER_COMPLETE_ARGS": "colon_example.py --name=",
+            "_TYPER_COMPLETE_WORD_TO_COMPLETE": "=",
+        },
+    )
+    assert result.returncode == 0
+    assert result.stdout.strip() == ""
 
 
 def test_completion_colon_pwsh_all():
@@ -178,7 +223,9 @@ def test_completion_colon_pwsh_all():
     )
 
     assert "alpine:hello" in result.stdout
+    assert "fake image: for testing" in result.stdout
     assert "alpine:latest" in result.stdout
+    assert "latest alpine image" in result.stdout
     assert "nvidia/cuda:10.0-devel-ubuntu18.04" in result.stdout
 
 
@@ -195,7 +242,9 @@ def test_completion_colon_pwsh_partial():
         },
     )
     assert "alpine:hello" in result.stdout
+    assert "fake image: for testing" in result.stdout
     assert "alpine:latest" in result.stdout
+    assert "latest alpine image" in result.stdout
     assert "nvidia/cuda:10.0-devel-ubuntu18.04" not in result.stdout
 
 
@@ -212,8 +261,64 @@ def test_completion_colon_pwsh_single():
         },
     )
     assert "alpine:hello" in result.stdout
+    assert "fake image: for testing" in result.stdout
     assert "alpine:latest" not in result.stdout
+    assert "latest alpine image" not in result.stdout
     assert "nvidia/cuda:10.0-devel-ubuntu18.04" not in result.stdout
 
 
-# TODO: tests for complete_fish
+def test_completion_colon_fish_all():
+    result = subprocess.run(
+        [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
+        capture_output=True,
+        encoding="utf-8",
+        env={
+            **os.environ,
+            "_COLON_EXAMPLE.PY_COMPLETE": "complete_fish",
+            "_TYPER_COMPLETE_ARGS": "colon_example.py --name ",
+            "_TYPER_COMPLETE_FISH_ACTION": "get-args",
+        },
+    )
+    assert "alpine:hello" in result.stdout
+    assert "fake image: for testing" in result.stdout
+    assert "alpine:latest" in result.stdout
+    assert "latest alpine image" in result.stdout
+    assert "nvidia/cuda:10.0-devel-ubuntu18.04" in result.stdout
+
+
+def test_completion_colon_fish_partial():
+    result = subprocess.run(
+        [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
+        capture_output=True,
+        encoding="utf-8",
+        env={
+            **os.environ,
+            "_COLON_EXAMPLE.PY_COMPLETE": "complete_fish",
+            "_TYPER_COMPLETE_ARGS": "colon_example.py --name alpine",
+            "_TYPER_COMPLETE_FISH_ACTION": "get-args",
+        },
+    )
+    assert "alpine:hello" in result.stdout
+    assert "fake image: for testing" in result.stdout
+    assert "alpine:latest" in result.stdout
+    assert "latest alpine image" in result.stdout
+    assert "nvidia/cuda:10.0-devel-ubuntu18.04" not in result.stdout
+
+
+def test_completion_colon_fish_single():
+    result = subprocess.run(
+        [sys.executable, "-m", "coverage", "run", mod.__file__, " "],
+        capture_output=True,
+        encoding="utf-8",
+        env={
+            **os.environ,
+            "_COLON_EXAMPLE.PY_COMPLETE": "complete_fish",
+            "_TYPER_COMPLETE_ARGS": "colon_example.py --name alpine:hell",
+            "_TYPER_COMPLETE_FISH_ACTION": "get-args",
+        },
+    )
+    assert "alpine:hello" in result.stdout
+    assert "fake image: for testing" in result.stdout
+    assert "alpine:latest" not in result.stdout
+    assert "latest alpine image" not in result.stdout
+    assert "nvidia/cuda:10.0-devel-ubuntu18.04" not in result.stdout

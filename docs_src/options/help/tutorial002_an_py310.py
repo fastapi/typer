@@ -23,7 +23,7 @@ def main(
     ] = False,
 ):
     """
-    Say hi to NAME, optionally with a --lastname.
+    Say hi to 'name', optionally with a --lastname.
 
     If --formal is used, say hi very formally.
     """

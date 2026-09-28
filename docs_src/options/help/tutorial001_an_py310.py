@@ -12,7 +12,7 @@ def main(
     formal: Annotated[bool, typer.Option(help="Say hi formally.")] = False,
 ):
     """
-    Say hi to NAME, optionally with a --lastname.
+    Say hi to 'name', optionally with a --lastname.
 
     If --formal is used, say hi very formally.
     """

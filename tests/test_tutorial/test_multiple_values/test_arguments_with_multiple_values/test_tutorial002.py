@@ -27,7 +27,7 @@ def get_mod(request: pytest.FixtureRequest) -> ModuleType:
 def test_help(mod: ModuleType):
     result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
-    assert "[OPTIONS] [NAMES]..." in result.output
+    assert "[OPTIONS] [names]..." in result.output
     assert "Arguments" in result.output
     assert "[default: Harry, Hermione, Ron]" in result.output
 

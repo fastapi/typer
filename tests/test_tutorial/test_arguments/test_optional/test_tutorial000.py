@@ -39,7 +39,7 @@ def test_cli(app: typer.Typer):
 def test_cli_missing_argument(app: typer.Typer):
     result = runner.invoke(app)
     assert result.exit_code == 2
-    assert "Missing argument 'NAME'" in result.output
+    assert "Missing argument 'name'" in result.output
 
 
 def test_script(mod: ModuleType):

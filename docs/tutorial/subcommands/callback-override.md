@@ -15,7 +15,7 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py users create Camila
+$ uv run python main.py users create Camila
 
 // Notice the first message is not created by the command function but by the callback
 Running a users command
@@ -37,7 +37,7 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py users create Camila
+$ uv run python main.py users create Camila
 
 Running a users command
 Creating user: Camila
@@ -49,7 +49,7 @@ Creating user: Camila
 
 If a callback was added when creating the `typer.Typer()` app, it's possible to override it with a new one using `@app.callback()`.
 
-This is the same information you saw on the section about [Commands - Typer Callback](../commands/callback.md){.internal-link target=_blank}, and it applies the same for sub-Typer apps:
+This is the same information you saw on the section about [Commands - Typer Callback](../commands/callback.md), and it applies the same for sub-Typer apps:
 
 {* docs_src/subcommands/callback_override/tutorial003_py310.py hl[6,7,10,14,15,16] *}
 
@@ -62,7 +62,7 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py users create Camila
+$ uv run python main.py users create Camila
 
 // Notice the message from the new callback
 Callback override, running users command
@@ -88,7 +88,7 @@ Check it:
 <div class="termy">
 
 ```console
-$ python users create Camila
+$ uv run python users create Camila
 
 // Notice the message from the callback added in add_typer()
 I have the high land! Running users command

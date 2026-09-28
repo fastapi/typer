@@ -18,5 +18,6 @@ abstract: >-
   Typer, build great CLIs. Easy to code. Based on Python type hints.
 keywords:
   - typer
-  - click
+  - cli
+  - python
 license: MIT

@@ -1,15 +1,20 @@
 import inspect
 import io
+import os
+import stat
 from collections.abc import Callable, Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
+    ClassVar,
     Optional,
     TypeVar,
+    cast,
 )
 
-import click
-import click.shell_completion
+from . import _click
+from ._click import types
+from ._click.shell_completion import CompletionItem
 
 if TYPE_CHECKING:  # pragma: no cover
     from .core import TyperCommand, TyperGroup
@@ -23,7 +28,7 @@ AnyType = type[Any]
 Required = ...
 
 
-class Context(click.Context):
+class Context(_click.Context):
     """
     The [`Context`](https://click.palletsprojects.com/en/stable/api/#click.Context) has some additional data about the current execution of your program.
     When declaring it in a [callback](https://typer.tiangolo.com/tutorial/options/callback-and-context/) function,
@@ -153,7 +158,7 @@ class FileBinaryWrite(io.BufferedWriter):
     pass
 
 
-class CallbackParam(click.Parameter):
+class CallbackParam(_click.Parameter):
     """
     In a callback function, you can declare a function parameter with type `CallbackParam`
     to access the specific Click [`Parameter`](https://click.palletsprojects.com/en/stable/api/#click.Parameter) object.
@@ -286,15 +291,15 @@ class ParameterInfo:
         # Note that shell_complete is not fully supported and will be removed in future versions
         # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Callable[
-            [click.Context, click.Parameter, str],
-            list["click.shell_completion.CompletionItem"] | list[str],
+            [_click.Context, _click.Parameter, str],
+            list["CompletionItem"] | list[str],
         ]
         | None = None,
         autocompletion: Callable[..., Any] | None = None,
         default_factory: Callable[[], Any] | None = None,
         # Custom type
         parser: Callable[[str], Any] | None = None,
-        click_type: click.ParamType | None = None,
+        click_type: types.ParamType | None = None,
         # TyperArgument
         show_default: bool | str = True,
         show_choices: bool = True,
@@ -395,15 +400,15 @@ class OptionInfo(ParameterInfo):
         # Note that shell_complete is not fully supported and will be removed in future versions
         # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Callable[
-            [click.Context, click.Parameter, str],
-            list["click.shell_completion.CompletionItem"] | list[str],
+            [_click.Context, _click.Parameter, str],
+            list["CompletionItem"] | list[str],
         ]
         | None = None,
         autocompletion: Callable[..., Any] | None = None,
         default_factory: Callable[[], Any] | None = None,
         # Custom type
         parser: Callable[[str], Any] | None = None,
-        click_type: click.ParamType | None = None,
+        click_type: types.ParamType | None = None,
         # Option
         show_default: bool | str = True,
         prompt: bool | str = False,
@@ -523,15 +528,15 @@ class ArgumentInfo(ParameterInfo):
         # Note that shell_complete is not fully supported and will be removed in future versions
         # TODO: Remove shell_complete in a future version (after 0.16.0)
         shell_complete: Callable[
-            [click.Context, click.Parameter, str],
-            list["click.shell_completion.CompletionItem"] | list[str],
+            [_click.Context, _click.Parameter, str],
+            list["CompletionItem"] | list[str],
         ]
         | None = None,
         autocompletion: Callable[..., Any] | None = None,
         default_factory: Callable[[], Any] | None = None,
         # Custom type
         parser: Callable[[str], Any] | None = None,
-        click_type: click.ParamType | None = None,
+        click_type: types.ParamType | None = None,
         # TyperArgument
         show_default: bool | str = True,
         show_choices: bool = True,
@@ -640,11 +645,98 @@ class DeveloperExceptionConfig:
         self.pretty_exceptions_short = pretty_exceptions_short
 
 
-class TyperPath(click.Path):
-    # Overwrite Click's behaviour to be compatible with Typer's autocompletion system
+class TyperPath(types.ParamType):
+    # Based originally on code from Click 8.3.1
+    # Partly rewritten and added an override for shell_complete
+
+    envvar_list_splitter: ClassVar[str] = os.path.pathsep
+
+    def __init__(
+        self,
+        exists: bool = False,
+        file_okay: bool = True,
+        dir_okay: bool = True,
+        writable: bool = False,
+        readable: bool = True,
+        resolve_path: bool = False,
+        allow_dash: bool = False,
+        path_type: type[Any] | None = None,
+    ):
+        self.exists = exists
+        self.file_okay = file_okay
+        self.dir_okay = dir_okay
+        self.readable = readable
+        self.writable = writable
+        self.resolve_path = resolve_path
+        self.allow_dash = allow_dash
+        self.type = path_type
+
+        if self.file_okay and not self.dir_okay:
+            self.name = "file"
+        elif self.dir_okay and not self.file_okay:
+            self.name = "directory"
+        else:
+            self.name = "path"
+
+    def coerce_path_result(
+        self, value: str | os.PathLike[str]
+    ) -> str | bytes | os.PathLike[str]:
+        if self.type is not None and not isinstance(value, self.type):
+            if (
+                self.type is str
+            ):  # pragma: no cover  # TODO: perhaps this branch can't be hit and should be removed
+                return os.fsdecode(value)
+            elif self.type is bytes:
+                return os.fsencode(value)
+            else:
+                return cast("os.PathLike[str]", self.type(value))
+
+        return value
+
+    def convert(  # ty: ignore[invalid-method-override]
+        self,
+        value: str | os.PathLike[str],
+        param: _click.Parameter | None,
+        ctx: Context | None,  # type: ignore[override]
+    ) -> str | bytes | os.PathLike[str]:
+        rv = value
+
+        is_dash = self.file_okay and self.allow_dash and rv in (b"-", "-")
+
+        if not is_dash:
+            if self.resolve_path:
+                rv = os.path.realpath(rv)
+
+            try:
+                st = os.stat(rv)
+            except OSError:
+                if not self.exists:
+                    return self.coerce_path_result(rv)
+                self.fail(
+                    f"{self.name.title()} {_click.utils.format_filename(value)!r} does not exist.",
+                    param,
+                    ctx,
+                )
+
+            name = self.name.title()
+            loc = repr(_click.utils.format_filename(value))
+            if not self.file_okay and stat.S_ISREG(st.st_mode):
+                self.fail(f"{name} {loc} is a file.", param, ctx)
+
+            if not self.dir_okay and stat.S_ISDIR(st.st_mode):
+                self.fail(f"{name} {loc} is a directory.", param, ctx)
+
+            if self.readable and not os.access(rv, os.R_OK):
+                self.fail(f"{name} {loc} is not readable.", param, ctx)
+
+            if self.writable and not os.access(rv, os.W_OK):
+                self.fail(f"{name} {loc} is not writable.", param, ctx)
+
+        return self.coerce_path_result(rv)
+
     def shell_complete(
-        self, ctx: click.Context, param: click.Parameter, incomplete: str
-    ) -> list[click.shell_completion.CompletionItem]:
+        self, ctx: _click.Context, param: _click.Parameter, incomplete: str
+    ) -> list[CompletionItem]:
         """Return an empty list so that the autocompletion functionality
         will work properly from the commandline.
         """

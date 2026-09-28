@@ -27,7 +27,7 @@ def test_option_help(mod: ModuleType):
     assert result.exit_code == 0
     assert "-n" in result.output
     assert "--user-name" in result.output
-    assert "TEXT" in result.output
+    assert "<str>" in result.output
     assert "--name" not in result.output
 
 

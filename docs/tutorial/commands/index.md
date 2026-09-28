@@ -66,7 +66,7 @@ Now we have a CLI application with 2 commands, `create` and `delete`:
 
 ```console
 // Check the help
-$ python main.py --help
+$ uv run python main.py --help
 
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
 
@@ -80,11 +80,11 @@ Commands:
   delete
 
 // Test them
-$ python main.py create
+$ uv run python main.py create
 
 Creating user: Hiro Hamada
 
-$ python main.py delete
+$ uv run python main.py delete
 
 Deleting user: Hiro Hamada
 
@@ -115,7 +115,7 @@ Now we can run this:
 
 ```console
 // Check the help without having to type --help
-$ python main.py
+$ uv run python main.py
 
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
 
@@ -146,7 +146,7 @@ Then we will see the `delete` command first in the help output:
 
 ```console
 // Check the help
-$ python main.py --help
+$ uv run python main.py --help
 
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
 

@@ -26,7 +26,7 @@ def get_mod(request: pytest.FixtureRequest) -> ModuleType:
 def test_call_no_arg(mod: ModuleType):
     result = runner.invoke(mod.app)
     assert result.exit_code != 0
-    assert "Missing argument 'NAME'." in result.output
+    assert "Missing argument 'name'." in result.output
 
 
 def test_call_no_arg_standalone(mod: ModuleType):
@@ -40,7 +40,7 @@ def test_call_no_arg_no_rich(monkeypatch: pytest.MonkeyPatch, mod: ModuleType):
     monkeypatch.setattr(typer.core, "HAS_RICH", False)
     result = runner.invoke(mod.app)
     assert result.exit_code != 0
-    assert "Error: Missing argument 'NAME'" in result.output
+    assert "Error: Missing argument 'name'" in result.output
 
 
 def test_call_arg(mod: ModuleType):

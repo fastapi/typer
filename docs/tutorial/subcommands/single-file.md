@@ -38,7 +38,7 @@ To call them like:
 
 ```console
 // We want this ✔️
-$ python main.py items create
+$ uv run python main.py items create
 ```
 
 </div>
@@ -49,7 +49,7 @@ instead of:
 
 ```console
 // We don't want this ⛔️
-$ python main.py items items-create
+$ uv run python main.py items items-create
 ```
 
 </div>
@@ -67,7 +67,7 @@ It still works the same:
 
 ```console
 // Check the help
-$ python main.py --help
+$ uv run python main.py --help
 
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
 
@@ -91,7 +91,7 @@ Check the `items` command:
 
 ```console
 // Check the help for items
-$ python main.py items --help
+$ uv run python main.py items --help
 
 // It shows its own commands (subcommands): create, delete, sell
 Usage: main.py items [OPTIONS] COMMAND [ARGS]...
@@ -105,11 +105,11 @@ Commands:
   sell
 
 // Try it
-$ python main.py items create Wand
+$ uv run python main.py items create Wand
 
 Creating item: Wand
 
-$ python main.py items sell Vase
+$ uv run python main.py items sell Vase
 
 Selling item: Vase
 ```
@@ -122,7 +122,7 @@ And the same for the `users` command:
 <div class="termy">
 
 ```console
-$ python main.py users --help
+$ uv run python main.py users --help
 
 Usage: main.py users [OPTIONS] COMMAND [ARGS]...
 
@@ -134,7 +134,7 @@ Commands:
   delete
 
 // Try it
-$ python main.py users create Camila
+$ uv run python main.py users create Camila
 
 Creating user: Camila
 ```

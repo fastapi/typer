@@ -10,4 +10,4 @@ def test_custom_prog_name():
         capture_output=True,
         encoding="utf-8",
     )
-    assert "Usage: custom-name [OPTIONS] I" in result.stdout
+    assert "Usage: custom-name [OPTIONS] {i}" in result.stdout

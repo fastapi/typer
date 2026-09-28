@@ -1,3 +1,17 @@
+function escapePlainCliLine(line) {
+    return line
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+function prepareTermynalLines(lines, isRichHtml) {
+    if (isRichHtml) {
+        return lines.join("<br>");
+    }
+    return lines.map(escapePlainCliLine).join("<br>");
+}
+
 function setupTermynal() {
     document.querySelectorAll(".use-termynal").forEach(node => {
         node.style.display = "block";
@@ -17,6 +31,11 @@ function setupTermynal() {
             .forEach(node => {
                 const text = node.textContent;
                 const lines = text.split("\n");
+                // If it is a type in brackets like <str> or <str int boolean>, it won't have
+                // HTML attributes (=) or a closing tag, while Rich HTML tags do.
+                const hasHtmlAttribute = /<[A-Za-z][^>]*=/.test(text);
+                const hasClosingTag = /<\/[a-zA-Z0-9]/.test(text);
+                const isRichHtml = hasHtmlAttribute || hasClosingTag;
                 const useLines = [];
                 let buffer = [];
                 function saveBuffer() {
@@ -36,7 +55,7 @@ function setupTermynal() {
                             // so put an additional one
                             buffer.push("");
                         }
-                        const bufferValue = buffer.join("<br>");
+                        const bufferValue = prepareTermynalLines(buffer, isRichHtml);
                         dataValue["value"] = bufferValue;
                         useLines.push(dataValue);
                         buffer = [];
@@ -57,7 +76,11 @@ function setupTermynal() {
                         });
                     } else if (line.startsWith("// ")) {
                         saveBuffer();
-                        const value = "💬 " + line.replace("// ", "").trimEnd();
+                        let comment = line.replace("// ", "").trimEnd();
+                        if (!isRichHtml) {
+                            comment = escapePlainCliLine(comment);
+                        }
+                        const value = "💬 " + comment;
                         useLines.push({
                             value: value,
                             class: "termynal-comment",

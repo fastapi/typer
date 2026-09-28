@@ -41,7 +41,7 @@ def test_help(mod: ModuleType):
     result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
     assert "--lastname" in result.output
-    assert "TEXT" in result.output
+    assert "<str>" in result.output
     assert "[required]" in result.output
 
 
@@ -50,7 +50,7 @@ def test_help_no_rich(monkeypatch: pytest.MonkeyPatch, mod: ModuleType):
     result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
     assert "--lastname" in result.output
-    assert "TEXT" in result.output
+    assert "<str>" in result.output
     assert "[required]" in result.output
 
 

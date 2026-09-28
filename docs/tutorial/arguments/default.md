@@ -24,24 +24,24 @@ Check it:
 
 ```console
 // Check the help
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice the [default: Wade Wilson] ✨
-Usage: main.py [OPTIONS] [NAME]
+Usage: main.py [OPTIONS] [name]
 
 Arguments:
-  [NAME]  [default: Wade Wilson]
+  name  [default: Wade Wilson]
 
 Options:
   --help                Show this message and exit.
 
 // With no optional CLI argument
-$ python main.py
+$ uv run python main.py
 
 Hello Wade Wilson
 
 // With one CLI argument
-$ python main.py Camila
+$ uv run python main.py Camila
 
 Hello Camila
 ```
@@ -70,31 +70,31 @@ Check it:
 
 ```console
 // Check the help
-$ python main.py --help
+$ uv run python main.py --help
 
-Usage: main.py [OPTIONS] [NAME]
+Usage: main.py [OPTIONS] [name]
 
 Arguments:
-  [NAME]  [default: (dynamic)]
+  name  [default: (dynamic)]
 
 Options:
   --help                Show this message and exit.
 
 // Try it several times, it will use a random default each time
-$ python main.py
+$ uv run python main.py
 
 Hello Deadpool
 
-$ python main.py
+$ uv run python main.py
 
 Hello Hiro
 
-$ python main.py
+$ uv run python main.py
 
 Hello Rick
 
 // Now pass a value for the CLI argument
-$ python main.py Camila
+$ uv run python main.py Camila
 
 Hello Camila
 ```

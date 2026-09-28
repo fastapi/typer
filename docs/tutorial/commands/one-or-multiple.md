@@ -10,22 +10,22 @@ You might have noticed that if you create a single command, as in the following 
 
 ```console
 // Without a CLI argument
-$ python main.py
+$ uv run python main.py
 
-Usage: main.py [OPTIONS] NAME
+Usage: main.py [OPTIONS] {name}
 Try "main.py --help" for help.
 
-Error: Missing argument 'NAME'.
+Error: Missing argument 'name'.
 
-// With the NAME CLI argument
-$ python main.py Camila
+// With the 'name' CLI argument
+$ uv run python main.py Camila
 
 Hello Camila
 
 // Asking for help
-$ python main.py
+$ uv run python main.py --help
 
-Usage: main.py [OPTIONS] NAME
+Usage: main.py [OPTIONS] {name}
 
 Options:
   --install-completion  Install completion for the current shell.
@@ -51,7 +51,7 @@ Here we have 2 commands `create` and `delete`:
 
 ```console
 // Check the help
-$ python main.py --help
+$ uv run python main.py --help
 
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
 
@@ -65,11 +65,11 @@ Commands:
   delete
 
 // Test the commands
-$ python main.py create
+$ uv run python main.py create
 
 Creating user: Hiro Hamada
 
-$ python main.py delete
+$ uv run python main.py delete
 
 Deleting user: Hiro Hamada
 ```
@@ -90,7 +90,7 @@ Check it:
 
 ```console
 // Check the help
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice the single command create
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
@@ -104,7 +104,7 @@ Commands:
   create
 
 // Try it
-$ python main.py create
+$ uv run python main.py create
 
 Creating user: Hiro Hamada
 ```
@@ -122,7 +122,7 @@ And now the docstring from the callback will be used as the help text:
 <div class="termy">
 
 ```console
-$ python main.py --help
+$ uv run python main.py --help
 
 // Notice the help text from the docstring
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
@@ -140,7 +140,7 @@ Commands:
   create
 
 // And it still works the same, the callback does nothing
-$ python main.py create
+$ uv run python main.py create
 
 Creating user: Hiro Hamada
 ```

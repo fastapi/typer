@@ -15,7 +15,7 @@ app.command()(mod.main)
 def test_help():
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "Say hi to NAME, optionally with a --lastname." in result.output
+    assert "Say hi to 'name', optionally with a --lastname." in result.output
     assert "If --formal is used, say hi very formally." in result.output
 
 

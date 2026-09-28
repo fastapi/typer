@@ -12,7 +12,7 @@ def main(
     ] = "World",
 ):
     """
-    Say hi to NAME very gently, like Dirk.
+    Say hi to 'name' very gently, like Dirk.
     """
     print(f"Hello {name}")
 

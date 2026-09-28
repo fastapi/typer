@@ -25,13 +25,13 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py Camila
+$ uv run python main.py Camila
 
 User created: Camila
 Notification sent for new user: Camila
 
 // Try with an existing user
-$ python main.py rick
+$ uv run python main.py rick
 
 The user already exists
 
@@ -63,7 +63,7 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py Camila
+$ uv run python main.py Camila
 
 New user created: Camila
 
@@ -73,7 +73,7 @@ $ echo $?
 0
 
 // Now make it exit with an error
-$ python main.py root
+$ uv run python main.py root
 
 The root user is reserved
 
@@ -106,12 +106,12 @@ Check it:
 <div class="termy">
 
 ```console
-$ python main.py Camila
+$ uv run python main.py Camila
 
 New user created: Camila
 
 // Now make it exit with an error
-$ python main.py root
+$ uv run python main.py root
 
 The root user is reserved
 Aborted!

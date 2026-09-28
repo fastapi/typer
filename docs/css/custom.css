@@ -136,3 +136,9 @@ a[data-internal-link][target="_blank"]:not(:has(img)):not(.no-link-icon):not(.an
     font-size: 80%;
     text-align: center;
 }
+
+.doc-param-details .highlight {
+  overflow-x: auto;
+  width: 0;
+  min-width: 100%;
+}

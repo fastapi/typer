@@ -25,7 +25,7 @@ def get_mod(request: pytest.FixtureRequest) -> ModuleType:
 def test_help(mod: ModuleType):
     result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
-    assert "--network [simple|conv|lstm]" in result.output.replace("  ", "")
+    assert "--network <simple|conv|lstm>" in result.output.replace("  ", "")
 
 
 def test_main(mod):
