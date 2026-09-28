@@ -254,12 +254,15 @@ def test_bool_convert_valid(cli_value: str, expected: bool) -> None:
     app = typer.Typer()
 
     @app.command()
-    def main(value: bool):
-        print(value)
+    def main(value_1: bool, value_2: bool = typer.Option(False, envvar="MY_TYPER_BOOL")):
+        print(f"value 1 {value_1}")
+        print(f"value 2 {value_2}")
 
-    result = runner.invoke(app, [cli_value])
-    assert result.exit_code == 0
-    assert str(expected) in result.output
+    result = runner.invoke(app, [cli_value], env={"MY_TYPER_BOOL": cli_value})
+    assert result.exit_code == 0, result.output
+    assert f"value 1 {expected}" in result.output
+    assert f"value 2 {expected}" in result.output
+
 
 
 def test_bool_convert_invalid():
