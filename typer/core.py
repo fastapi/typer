@@ -22,7 +22,6 @@ from ._typing import Literal
 from .coercion import (
     RuntimeParam,
     TypeDescriptor,
-    bool_flag_runtime_param,
     build_runtime_param,
 )
 from .display import describe_number_range
@@ -100,18 +99,14 @@ class TyperParameter(_click.core.Parameter):
 
     def get_runtime_param(self) -> RuntimeParam:
         """lazy definition to avoid up-front costs"""
-        desc = self.type_descriptor
         if self._runtime_param is None:
-            # Bool flags are already parsed to bool by Click; skip pydantic/adapters
-            if getattr(self, "is_bool_flag", False) and desc.annotation is bool:
-                self._runtime_param = bool_flag_runtime_param(desc.parameter_info)
-            else:
-                self._runtime_param = build_runtime_param(desc)
-        assert self._runtime_param is not None
+            self._runtime_param = build_runtime_param(self.type_descriptor)
         return self._runtime_param
 
     def process_value(self, ctx: _click.Context, value: Any) -> Any:
-        value = self.get_runtime_param().coerce(value, param=self, ctx=ctx)
+        # Skip coercion for bool flags that already yield bools
+        if not (self.type_descriptor.annotation is bool and isinstance(value, bool)):
+            value = self.get_runtime_param().coerce(value, param=self, ctx=ctx)
         if self.required and self.value_is_missing(value):
             raise _click.exceptions.MissingParameter(ctx=ctx, param=self)
         if self.callback is not None:
