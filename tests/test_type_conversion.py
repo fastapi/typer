@@ -284,6 +284,34 @@ def test_bool_convert_invalid():
     assert "Input should be a valid boolean" in result.output
 
 
+def test_bool_convert_invalid_envvar():
+    app = typer.Typer()
+
+    @app.command()
+    def main(value: bool = typer.Option(False, envvar="MY_TYPER_BOOL")):
+        print(value)  # pragma: no cover
+
+    result = runner.invoke(app, [], env={"MY_TYPER_BOOL": "maybe"})
+    assert result.exit_code == 2
+    assert "valid boolean, unable to interpret input" in result.output
+
+
+@pytest.mark.parametrize(
+    ("default_value", "expected"),
+    [("yes", True), ("off", False)],
+)
+def test_bool_option_default_map_string(default_value: str, expected: bool) -> None:
+    app = typer.Typer()
+
+    @app.command()
+    def main(value: bool = not expected):
+        print(f"value {value}")
+
+    result = runner.invoke(app, [], default_map={"value": default_value})
+    assert result.exit_code == 0, result.output
+    assert f"value {expected}" in result.output
+
+
 @pytest.mark.parametrize(
     ("arg_enc", "system_enc", "raw_value", "expected_output"),
     [
