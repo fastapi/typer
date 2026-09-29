@@ -43,6 +43,8 @@ def test_argument_help_accepts_lazy_str_proxy() -> None:
     ) -> None:
         raise NotImplementedError  # pragma: no cover
 
+    assert str(LazyStr("Lazy argument help")) == "Lazy argument help"
+
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0, result.exception
     assert "Lazy argument help" in result.output
