@@ -276,6 +276,10 @@ class TyperArgument(_click.core.Parameter):
         # Rich settings
         rich_help_panel: str | None = None,
     ):
+        # Match TyperOption: coerce/dedent help early so non-str proxies
+        # (e.g. Django gettext_lazy) become real strings before help formatting.
+        if help:
+            help = inspect.cleandoc(help)
         self.help = help
         self.show_default = show_default
         self.show_choices = show_choices
