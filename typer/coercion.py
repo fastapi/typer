@@ -176,11 +176,6 @@ class FileRuntimeParam(RuntimeParam):
     file_annotation: Any
 
     def _coerce_value(self, value: Any, param: "TyperParameter", ctx: Context) -> Any:
-        def open_one(item: Any, annotation: Any) -> Any:
-            if not is_file_annotation(annotation):
-                return coerce_non_file(item, annotation)
-            return open_file(item, annotation)
-
         def coerce_non_file(item: Any, annotation: Any) -> Any:
             # Ensure non-file annotations (e.g. in mixed tuples) are also dealt with
             type_desc = resolve_type_descriptor(annotation, self.parameter_info)
@@ -215,7 +210,8 @@ class FileRuntimeParam(RuntimeParam):
                 for item, ann in zipped
             )
 
-        return open_one(value, self.file_annotation)
+        assert is_file_annotation(self.file_annotation)
+        return open_file(value, self.file_annotation)
 
 
 @dataclass(frozen=True)
