@@ -48,14 +48,26 @@ def test_tuple_argument_help() -> None:
     assert "value... <str,str>" in result.output
 
 
-def test_required_list_option_missing() -> None:
+@pytest.mark.parametrize(
+    ("default_map", "env"),
+    [
+        (None, None),
+        ({"names": []}, None),
+        ({"names": ()}, None),
+        (None, {"NAMES": "   "}),
+    ],
+)
+def test_required_list_option_missing(
+    default_map: dict[str, object] | None,
+    env: dict[str, str] | None,
+) -> None:
     app = typer.Typer()
 
     @app.command()
-    def cmd(names: list[str] = typer.Option(...)) -> None:
+    def cmd(names: list[str] = typer.Option(..., envvar="NAMES")) -> None:
         pass  # pragma: no cover
 
-    result = runner.invoke(app, [])
+    result = runner.invoke(app, [], default_map=default_map, env=env or {})
     assert result.exit_code == 2
     assert "Missing option '--names'" in result.output
 

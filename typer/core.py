@@ -116,7 +116,7 @@ class TyperParameter(_click.core.Parameter):
     def value_is_missing(self, value: Any) -> bool:
         if value is None:
             return True
-        if (self.nargs != 1 or self.multiple) and value == ():
+        if (self.nargs != 1 or self.multiple) and value in ((), []):
             return True
         return False
 
