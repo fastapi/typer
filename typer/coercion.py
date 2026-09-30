@@ -178,11 +178,16 @@ class FileRuntimeParam(RuntimeParam):
     def _coerce_value(self, value: Any, param: "TyperParameter", ctx: Context) -> Any:
         def open_one(item: Any, annotation: Any) -> Any:
             if not is_file_annotation(annotation):
-                return item
-            mode = resolve_file_mode(self.parameter_info, annotation)
-            return _open_cli_file(
-                item, self.parameter_info, mode=mode, param=param, ctx=ctx
-            )
+                # Ensure non-file annotations (e.g. in mixed tuples) are also dealt with
+                type_desc = resolve_type_descriptor(annotation, self.parameter_info)
+                return build_runtime_param(type_desc)._coerce_value(
+                    item, param=param, ctx=ctx
+                )
+            else:
+                mode = resolve_file_mode(self.parameter_info, annotation)
+                return _open_cli_file(
+                    item, self.parameter_info, mode=mode, param=param, ctx=ctx
+                )
 
         if isinstance(value, (list, tuple)):
             # tuple may be heterogeneous,

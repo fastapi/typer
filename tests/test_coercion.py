@@ -87,7 +87,7 @@ def test_coercion_tuple_file_modes(tmp_path: Path) -> None:
     assert write_file.read_bytes() == b"world"
 
 
-def test_coercion_tuple_file_and_str(tmp_path: Path) -> None:
+def test_coercion_tuple_file_and_int(tmp_path: Path) -> None:
     """Ensure that each tuple element is parsed correctly (edge case for bwd-compat)"""
     some_file = tmp_path / "f.txt"
     some_file.write_text("content\n", encoding="utf-8")
@@ -95,14 +95,18 @@ def test_coercion_tuple_file_and_str(tmp_path: Path) -> None:
     seen: dict[str, object] = {}
 
     @app.command()
-    def main(files: tuple[typer.FileText, str]):
-        seen["text"] = files[0].read()
-        seen["label"] = files[1]
+    def main(files: tuple[int, typer.FileText]):
+        seen["count"] = files[0]
+        seen["text"] = files[1].read()
 
-    result = runner.invoke(app, [str(some_file), "hello"])
+    result = runner.invoke(app, ["42", str(some_file)])
     assert result.exit_code == 0, result.output
+    assert seen["count"] == 42
     assert seen["text"] == "content\n"
-    assert seen["label"] == "hello"
+
+    result = runner.invoke(app, ["nope", str(some_file)])
+    assert result.exit_code == 2
+    assert "Input should be a valid integer" in result.output
 
 
 def test_list_rejects_none() -> None:
