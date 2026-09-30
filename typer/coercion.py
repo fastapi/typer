@@ -178,16 +178,21 @@ class FileRuntimeParam(RuntimeParam):
     def _coerce_value(self, value: Any, param: "TyperParameter", ctx: Context) -> Any:
         def open_one(item: Any, annotation: Any) -> Any:
             if not is_file_annotation(annotation):
-                # Ensure non-file annotations (e.g. in mixed tuples) are also dealt with
-                type_desc = resolve_type_descriptor(annotation, self.parameter_info)
-                return build_runtime_param(type_desc)._coerce_value(
-                    item, param=param, ctx=ctx
-                )
-            else:
-                mode = resolve_file_mode(self.parameter_info, annotation)
-                return _open_cli_file(
-                    item, self.parameter_info, mode=mode, param=param, ctx=ctx
-                )
+                return coerce_non_file(item, annotation)
+            return open_file(item, annotation)
+
+        def coerce_non_file(item: Any, annotation: Any) -> Any:
+            # Ensure non-file annotations (e.g. in mixed tuples) are also dealt with
+            type_desc = resolve_type_descriptor(annotation, self.parameter_info)
+            return build_runtime_param(type_desc)._coerce_value(
+                item, param=param, ctx=ctx
+            )
+
+        def open_file(item: Any, annotation: Any) -> Any:
+            mode = resolve_file_mode(self.parameter_info, annotation)
+            return _open_cli_file(
+                item, self.parameter_info, mode=mode, param=param, ctx=ctx
+            )
 
         if isinstance(value, (list, tuple)):
             # tuple may be heterogeneous,
@@ -197,8 +202,18 @@ class FileRuntimeParam(RuntimeParam):
                 if isinstance(self.file_annotation, tuple)
                 else (self.file_annotation,) * len(value)
             )
-            zipped = zip(value, annotations, strict=True)
-            return type(value)(open_one(item, ann) for item, ann in zipped)
+            pairs = list(zip(value, annotations, strict=True))
+            # Validate non-file elements before opening files, so a bad
+            # sibling value does not leave an unclosed file handle.
+            coerced = [
+                item if is_file_annotation(ann) else coerce_non_file(item, ann)
+                for item, ann in pairs
+            ]
+            zipped = zip(coerced, annotations, strict=True)
+            return type(value)(
+                open_file(item, ann) if is_file_annotation(ann) else item
+                for item, ann in zipped
+            )
 
         return open_one(value, self.file_annotation)
 
