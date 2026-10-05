@@ -243,7 +243,13 @@ def get_docs_for_click(
         docs += f"{obj.epilog}\n\n"
     if isinstance(obj, TyperGroup):
         group = obj
-        commands = group.list_commands(ctx)
+        # Skip hidden commands, the same way the help output does
+        commands = [
+            command
+            for command in group.list_commands(ctx)
+            if (command_obj := group.get_command(ctx, command)) is not None
+            and not command_obj.hidden
+        ]
         if commands:
             docs += "**Commands**:\n\n"
             for command in commands:
