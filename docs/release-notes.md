@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Fixes
+
+* 🐛 Escape terminal control characters in error messages. PR [#1972](https://github.com/fastapi/typer/pull/1972) by [@tiangolo](https://github.com/tiangolo).
+
 ### Internal
 
 * ⬆ Bump pyjwt from 2.13.0 to 2.15.0. PR [#1969](https://github.com/fastapi/typer/pull/1969) by [@dependabot[bot]](https://github.com/apps/dependabot).
