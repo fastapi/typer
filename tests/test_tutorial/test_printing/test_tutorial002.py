@@ -14,7 +14,7 @@ runner = CliRunner()
 
 
 def test_cli():
-    console = Console(force_terminal=True, width=100)
+    console = Console(force_terminal=True, width=100, color_system="standard")
     with patch("rich.get_console", return_value=console):
         result = runner.invoke(app)
 
