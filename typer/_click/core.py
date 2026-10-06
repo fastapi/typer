@@ -23,7 +23,7 @@ from .formatting import HelpFormatter
 from .globals import pop_context, push_context
 from .parser import _OptionParser
 from .termui import style
-from .utils import echo, make_default_short_help
+from .utils import _escape_control_characters, echo, make_default_short_help
 
 if TYPE_CHECKING:
     from ..core import TyperOption
@@ -719,7 +719,8 @@ class Command(ABC):
             _, args = param.handle_parse_result(ctx, opts, args)
 
         if args and not ctx.allow_extra_args and not ctx.resilient_parsing:
-            ctx.fail(f"Got unexpected extra argument(s) ({' '.join(map(str, args))})")
+            extra_args = " ".join(_escape_control_characters(str(arg)) for arg in args)
+            ctx.fail(f"Got unexpected extra argument(s) ({extra_args})")
 
         ctx.args = args
         ctx._opt_prefixes.update(parser._opt_prefixes)
