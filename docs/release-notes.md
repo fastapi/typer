@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.27.3 (2026-10-06)
+
 ### Fixes
 
 * 🐛 Escape terminal control characters in error messages. PR [#1972](https://github.com/fastapi/typer/pull/1972) by [@tiangolo](https://github.com/tiangolo).
