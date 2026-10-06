@@ -524,7 +524,7 @@ class TyperOption(_click.Parameter):
         else:
             self._depr_flag_value = None
 
-        # Counting. TODO: test or remove? Not currently in coverage.
+        # Counting.
         self.count = count
         if count and type is None:
             self.type = types.IntRange(min=0)
