@@ -25,6 +25,15 @@ def _sanitize_help_text(text: str) -> str:
     return rich_utils.rich_render_text(text)
 
 
+def _is_path_completion(
+    completions: list[CompletionItem],
+) -> bool:
+    """Check if completions are all file/dir type (Click's Path type)."""
+    return bool(completions) and all(
+        item.type in ("file", "dir") for item in completions
+    )
+
+
 class BashComplete(ShellComplete):
     name = Shells.bash.value
     source_template = COMPLETION_SCRIPT_BASH
@@ -57,6 +66,12 @@ class BashComplete(ShellComplete):
     def complete(self) -> str:
         args, incomplete = self.get_completion_args()
         completions = self.get_completions(args, incomplete)
+
+        # Return empty so bash falls back to native file completion
+        # via the "complete -o default" registration.
+        if _is_path_completion(completions):
+            return ""
+
         out = [self.format_completion(item) for item in completions]
         return "\n".join(out)
 
@@ -138,6 +153,13 @@ class ZshComplete(ShellComplete):
     def complete(self) -> str:
         args, incomplete = self.get_completion_args()
         completions = self.get_completions(args, incomplete)
+
+        # Emit native zsh path completion instead of wrapping in _arguments.
+        if _is_path_completion(completions):
+            if any(item.type == "dir" for item in completions):
+                return "_path_files -/"
+            return "_path_files -f"
+
         res = [self.format_completion(item) for item in completions]
         if res:
             args_str = "\n".join(res)
@@ -185,6 +207,12 @@ class FishComplete(ShellComplete):
         complete_action = os.getenv("_TYPER_COMPLETE_FISH_ACTION", "")
         args, incomplete = self.get_completion_args()
         completions = self.get_completions(args, incomplete)
+
+        # Treat path completions as empty so fish falls back to native
+        # file completion (is-args exits 1, get-args returns nothing).
+        if _is_path_completion(completions):
+            completions = []
+
         show_args = [self.format_completion(item) for item in completions]
         if complete_action == "get-args":
             if show_args:
@@ -219,6 +247,17 @@ class PowerShellComplete(ShellComplete):
 
     def format_completion(self, item: CompletionItem) -> str:
         return f"{item.value}:::{_sanitize_help_text(item.help) if item.help else ' '}"
+
+    def complete(self) -> str:
+        args, incomplete = self.get_completion_args()
+        completions = self.get_completions(args, incomplete)
+
+        # Return empty so PowerShell falls back to native file completion.
+        if _is_path_completion(completions):
+            return ""
+
+        out = [self.format_completion(item) for item in completions]
+        return "\n".join(out)
 
 
 def completion_init() -> None:
