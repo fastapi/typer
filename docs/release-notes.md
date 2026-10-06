@@ -4,6 +4,7 @@
 
 ### Internal
 
+* ⬆ Bump pyjwt from 2.13.0 to 2.15.0. PR [#1969](https://github.com/fastapi/typer/pull/1969) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump urllib3 from 2.7.0 to 2.8.0. PR [#1968](https://github.com/fastapi/typer/pull/1968) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pymdown-extensions from 11.0 to 11.0.1. PR [#1924](https://github.com/fastapi/typer/pull/1924) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump the python-packages group across 1 directory with 7 updates. PR [#1966](https://github.com/fastapi/typer/pull/1966) by [@dependabot[bot]](https://github.com/apps/dependabot).
