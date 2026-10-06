@@ -32,6 +32,7 @@ from .core import (
     TyperGroup,
     TyperOption,
 )
+from .exceptions import TyperException
 from .models import (
     AnyType,
     ArgumentInfo,
@@ -1370,6 +1371,31 @@ def get_default_option_flag_name(name: str, metavar: str | None) -> str:
     return flag_name
 
 
+def _ensure_unique_cli_option_names(
+    params: list[TyperArgument | TyperOption],
+) -> None:
+    """Raise if auto-generated (or declared) option strings collide.
+
+    Click silently lets the last registration win when two options share a flag
+    like ``--no-force``. That makes paired bools such as ``force`` + ``no_force``
+    drop one of the parameters with no error. Fail loudly instead.
+    """
+    seen: dict[str, str] = {}
+    for param in params:
+        if not isinstance(param, TyperOption):
+            continue
+        owner = param.name or "<option>"
+        for opt in (*param.opts, *param.secondary_opts):
+            previous = seen.get(opt)
+            if previous is not None and previous != owner:
+                raise TyperException(
+                    f"Duplicate CLI option {opt!r} for parameters "
+                    f"{previous!r} and {owner!r}. Rename a parameter or pass "
+                    f"explicit typer.Option() declarations with distinct flags."
+                )
+            seen[opt] = owner
+
+
 def get_params_convertors_ctx_param_name_from_function(
     callback: Callable[..., Any] | None,
 ) -> tuple[list[TyperArgument | TyperOption], dict[str, Any], str | None]:
@@ -1386,6 +1412,7 @@ def get_params_convertors_ctx_param_name_from_function(
             if convertor:
                 convertors[param_name] = convertor
             params.append(click_param)
+        _ensure_unique_cli_option_names(params)
     return params, convertors, context_param_name
 
 
@@ -1712,9 +1739,17 @@ def get_click_param(
             param.name, parameter_info.metavar
         )
         if is_flag:
-            default_option_declaration = (
-                f"--{default_option_name}/--no-{default_option_name}"
-            )
+            # Params named no_* would otherwise become --no-X/--no-no-X, which is
+            # unreadable and collides with a sibling --X/--no-X pair. Prefer
+            # --no-X/--X when the name already starts with "no-".
+            if default_option_name.startswith("no-") and default_option_name != "no-":
+                positive = f"--{default_option_name}"
+                negative = f"--{default_option_name[len('no-') :]}"
+                default_option_declaration = f"{positive}/{negative}"
+            else:
+                default_option_declaration = (
+                    f"--{default_option_name}/--no-{default_option_name}"
+                )
         else:
             default_option_declaration = f"--{default_option_name}"
         param_decls = [param.name]
