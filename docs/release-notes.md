@@ -4,6 +4,7 @@
 
 ### Internal
 
+* ⬆ Bump pymdown-extensions from 11.0 to 11.0.1. PR [#1924](https://github.com/fastapi/typer/pull/1924) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump the python-packages group across 1 directory with 7 updates. PR [#1966](https://github.com/fastapi/typer/pull/1966) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump cryptography from 48.0.1 to 50.0.2. PR [#1920](https://github.com/fastapi/typer/pull/1920) by [@dependabot[bot]](https://github.com/apps/dependabot).
 * ⬆ Bump pre-commit hooks. PR [#1967](https://github.com/fastapi/typer/pull/1967) by [@pr-submit[bot]](https://github.com/apps/pr-submit).
