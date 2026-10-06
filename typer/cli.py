@@ -1,4 +1,5 @@
 import importlib.util
+import inspect
 import re
 import sys
 from pathlib import Path
@@ -86,18 +87,19 @@ def get_typer_from_module(module: Any) -> typer.Typer | None:
         sub_app = typer.Typer()
         sub_app.command()(func_obj)
         return sub_app
-    # Iterate and get a default object to use as CLI
-    local_names = dir(module)
-    local_names_set = set(local_names)
+    # Iterate and get a default object to use as CLI, in the order the names
+    # were defined in the file
+    local_names = [name for name in vars(module) if not name.startswith("__")]
     # Try to get a default Typer app
     for name in default_app_names:
-        if name in local_names_set:
-            obj = getattr(module, name, None)
-            if isinstance(obj, typer.Typer):
-                return obj
-    # Try to get any Typer app
-    for name in local_names_set - set(default_app_names):
-        obj = getattr(module, name)
+        obj = getattr(module, name, None)
+        if isinstance(obj, typer.Typer):
+            return obj
+    # Try to get the first Typer app
+    for name in local_names:
+        if name in default_app_names:
+            continue
+        obj = getattr(module, name, None)
         if isinstance(obj, typer.Typer):
             return obj
     # Try to get a default function
@@ -107,10 +109,12 @@ def get_typer_from_module(module: Any) -> typer.Typer | None:
             sub_app = typer.Typer()
             sub_app.command()(func_obj)
             return sub_app
-    # Try to get any func app
-    for func_name in local_names_set - set(default_func_names):
-        func_obj = getattr(module, func_name)
-        if callable(func_obj):
+    # Try to get the first function defined in the file
+    for func_name in local_names:
+        if func_name in default_func_names:
+            continue
+        func_obj = getattr(module, func_name, None)
+        if inspect.isfunction(func_obj) and func_obj.__module__ == module.__name__:
             sub_app = typer.Typer()
             sub_app.command()(func_obj)
             return sub_app
