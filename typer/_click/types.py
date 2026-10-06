@@ -539,7 +539,10 @@ class File(ParamType):
                 )
 
                 if ctx is not None:
-                    ctx.call_on_close(lf.close_intelligently)
+                    if self.atomic:
+                        ctx.with_resource(lf)
+                    else:
+                        ctx.call_on_close(lf.close_intelligently)
 
                 return cast("IO[Any]", lf)
 
@@ -554,7 +557,10 @@ class File(ParamType):
             # type is used with prompts.
             if ctx is not None:
                 if should_close:
-                    ctx.call_on_close(safecall(f.close))
+                    if self.atomic:
+                        ctx.with_resource(f)
+                    else:
+                        ctx.call_on_close(safecall(f.close))
                 else:
                     ctx.call_on_close(safecall(f.flush))
 
