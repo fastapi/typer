@@ -110,9 +110,9 @@ def test_echo_preserves_terminal_sequences() -> None:
 
     @app.command()
     def main() -> None:
-        typer.echo(value)
+        typer.echo(value, nl=False)
 
     result = runner.invoke(app, color=True)
 
     assert result.exit_code == 0
-    assert result.stdout_bytes == value.encode() + b"\n"
+    assert result.stdout_bytes == value.encode()
