@@ -109,8 +109,6 @@ def shell_complete(
     complete_var: str,
     instruction: str,
 ) -> int:
-    from . import _click
-
     if "_" not in instruction:
         _click.echo("Invalid completion instruction.", err=True)
         return 1

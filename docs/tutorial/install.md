@@ -33,7 +33,7 @@ Creating or updating this file is called [**locking** the project dependencies](
 
 ///
 
-By default, `typer` comes with `rich` and `shellingham`.
+By default, `typer` comes with `rich`, `pydantic` and `shellingham`.
 
 ## Activate the Virtual Environment
 

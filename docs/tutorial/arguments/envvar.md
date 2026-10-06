@@ -25,7 +25,7 @@ $ uv run python main.py --help
 Usage: main.py [OPTIONS] [name]
 
 Arguments:
-  name  [env var: AWESOME_NAME; default: World]
+  name <str>  [env var: AWESOME_NAME; default: World]
 
 Options:
   --help                Show this message and exit.
@@ -81,7 +81,7 @@ $ uv run python main.py --help
 Usage: main.py [OPTIONS] [name]
 
 Arguments:
-  name  [env var: AWESOME_NAME, GOD_NAME; default: World]
+  name <str>  [env var: AWESOME_NAME, GOD_NAME; default: World]
 
 Options:
   --help                Show this message and exit.
@@ -117,7 +117,7 @@ $ uv run python main.py --help
 Usage: main.py [OPTIONS] [name]
 
 Arguments:
-  name  [default: World]
+  name <str>  [default: World]
 
 Options:
   --help                Show this message and exit.

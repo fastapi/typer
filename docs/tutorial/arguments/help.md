@@ -25,7 +25,7 @@ $ uv run python main.py --help
 Usage: main.py [OPTIONS] {name}
 
 Arguments:
-  name  The name of the user to greet  [required]
+  name <str>  The name of the user to greet  [required]
 
 Options:
   --help                Show this message and exit.
@@ -52,7 +52,7 @@ Usage: main.py [OPTIONS] {name}
   Say hi to 'name' very gently, like Dirk.
 
 Arguments:
-  name  The name of the user to greet  [required]
+  name <str>  The name of the user to greet  [required]
 
 Options:
   --help                Show this message and exit.
@@ -79,7 +79,7 @@ Usage: main.py [OPTIONS] [name]
   Say hi to 'name' very gently, like Dirk.
 
 Arguments:
-  name  Who to greet  [default: World]
+  name <str>  Who to greet  [default: World]
 
 Options:
   --help                Show this message and exit.
@@ -104,7 +104,7 @@ Usage: main.py [OPTIONS] [name]
   Say hi to 'name' very gently, like Dirk.
 
 Arguments:
-  name  Who to greet
+  name <str>  Who to greet
 
 Options:
   --help                Show this message and exit.
@@ -128,7 +128,7 @@ $ uv run python main.py --help
 Usage: main.py [OPTIONS] [name]
 
 Arguments:
-  name  Who to greet  [default: (Deadpoolio the amazing's name)]
+  name <str>  Who to greet  [default: (Deadpoolio the amazing's name)]
 
 
 Options:
@@ -173,7 +173,7 @@ $ uv run python main.py --help
 Usage: main.py [OPTIONS] [✨username✨]
 
 Arguments:
-  ✨username✨  [default: World]
+  ✨username✨ <str>  [default: World]
 
 Options:
   --help                Show this message and exit.

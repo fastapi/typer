@@ -24,19 +24,6 @@ def get_mod(request: pytest.FixtureRequest) -> ModuleType:
     return mod
 
 
-def test_type_repr(mod: ModuleType):
-    command = typer.main.get_command(mod.app)
-
-    id_param = next(param for param in command.params if param.name == "ID")
-    assert repr(id_param.type) == "<IntRange 0<=x<=1000>"
-
-    age_param = next(param for param in command.params if param.name == "age")
-    assert repr(age_param.type) == "<IntRange x>=18>"
-
-    score_param = next(param for param in command.params if param.name == "score")
-    assert repr(score_param.type) == "<FloatRange x<=100>"
-
-
 def test_help(mod: ModuleType):
     result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
@@ -67,16 +54,15 @@ def test_params(mod: ModuleType):
 def test_invalid_id(mod: ModuleType):
     result = runner.invoke(mod.app, ["1002"])
     assert result.exit_code != 0
-    assert (
-        "Invalid value for 'ID': 1002 is not in the range 0<=x<=1000." in result.output
-    )
+    assert "Invalid value for 'ID'" in result.output
+    assert "should be less than or equal to 1000" in result.output
 
 
 def test_invalid_age(mod: ModuleType):
     result = runner.invoke(mod.app, ["5", "--age", "15"])
     assert result.exit_code != 0
     assert "Invalid value for '--age'" in result.output
-    assert "15 is not in the range x>=18" in result.output
+    assert "should be greater than or equal to 18" in result.output
 
 
 def test_invalid_score(monkeypatch: pytest.MonkeyPatch, mod: ModuleType):
@@ -84,7 +70,7 @@ def test_invalid_score(monkeypatch: pytest.MonkeyPatch, mod: ModuleType):
     result = runner.invoke(mod.app, ["5", "--age", "20", "--score", "100.5"])
     assert result.exit_code != 0
     assert "Invalid value for '--score'" in result.output
-    assert "100.5 is not in the range x<=100." in result.output
+    assert "should be less than or equal to 100" in result.output
 
 
 def test_negative_score(mod: ModuleType):

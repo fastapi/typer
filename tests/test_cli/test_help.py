@@ -159,6 +159,22 @@ def test_format_long_help_option() -> None:
     )
 
 
+def test_wrap_text_splits_long_word() -> None:
+    app = typer.Typer(
+        rich_markup_mode=None,
+        context_settings={"max_content_width": 10},
+    )
+
+    @app.command(help="supercalifragilisticexpialidocious")
+    def cmd() -> None:
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["cmd", "--help"], terminal_width=20)
+    assert result.exit_code == 0
+    assert "supercalifragilist" in result.output
+    assert "icexpialidocious" in result.output
+
+
 def test_typer_run_usage() -> None:
     from typer.cli import app as typer_cli_app
 

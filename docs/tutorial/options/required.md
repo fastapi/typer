@@ -62,7 +62,7 @@ $ uv run python main.py --help
 Usage: main.py [OPTIONS] {name}
 
 Arguments:
-  name  [required]
+  name <str>  [required]
 
 Options:
   --lastname <str>      [required]

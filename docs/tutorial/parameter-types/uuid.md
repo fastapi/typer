@@ -43,7 +43,7 @@ $ uv run python main.py 7479706572-72756c6573
 Usage: main.py [OPTIONS] {user_id}
 Try "main.py --help" for help.
 
-Error: Invalid value for 'user_id': 7479706572-72756c6573 is not a valid UUID.
+Error: Invalid value for 'user_id': Input should be a valid UUID, invalid group count: expected 5, found 2
 ```
 
 </div>

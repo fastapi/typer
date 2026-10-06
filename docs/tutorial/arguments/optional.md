@@ -135,7 +135,7 @@ $ uv run python main.py --help
 Usage: main.py [OPTIONS] [name]
 
 Arguments:
-  name  [default: World]
+  name <str>  [default: World]
 
 Options:
   --help                Show this message and exit.
