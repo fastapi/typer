@@ -135,6 +135,45 @@ def test_metavar_highlighter(input_text: str):
     assert str(closing_bracket_style) == STYLE_TYPES_SEPARATOR
 
 
+@needs_rich
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        # Metavars keep their highlighting.
+        ("<int>", ["<int>"]),
+        ("<TEXT>", ["<TEXT>"]),
+        ("x <int> y", ["<int>"]),
+        ("[default: <none>]", ["<none>"]),
+        ("<a b>", ["<a b>"]),
+        # Comparison operators in help text are not metavars.
+        ("Use only if x < 5 and y > 2", []),
+        ("compare a < b or c > d", []),
+        ("if x <= 5 then y >= 2", []),
+        # Nothing to highlight without any content between the brackets.
+        ("<>", []),
+        ("< >", []),
+        ("< int>", []),
+        ("<int >", []),
+    ],
+)
+def test_option_highlighter_types_ignores_comparison_operators(
+    text: str, expected: list
+):
+    """
+    `<...>` is only a metavar when it has no padding inside the brackets, so help
+    text such as `x < 5 and y > 2` is left alone instead of being highlighted.
+    """
+    from typer.rich_utils import Text, highlighter
+
+    highlighted = highlighter(Text(text))
+    matched = [
+        text[span.start : span.end]
+        for span in highlighted.spans
+        if span.style == "types"
+    ]
+    assert matched == expected
+
+
 def test_make_rich_text_with_ansi_escape_sequences():
     from typer.rich_utils import Text, _make_rich_text
 
