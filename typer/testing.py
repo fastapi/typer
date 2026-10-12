@@ -53,18 +53,17 @@ class StreamMixer:
         self.stdout: io.BytesIO = BytesIOCopy(copy_to=self.output)
         self.stderr: io.BytesIO = BytesIOCopy(copy_to=self.output)
 
-    def __del__(self) -> None:
-        """Guarantee that file-like objects are closed in a predictable order"""
-        self.stderr.close()
-        self.stdout.close()
-        self.output.close()
-
 
 class _NamedTextIOWrapper(io.TextIOWrapper):
     def __init__(self, buffer: BinaryIO, name: str, mode: str, **kwargs: Any) -> None:
         super().__init__(buffer, **kwargs)
         self._name = name
         self._mode = mode
+
+    def close(self) -> None:
+        """The buffer belongs to `StreamMixer`, so keep it open when the
+        wrapper is closed or garbage collected.
+        """
 
     @property
     def name(self) -> str:
