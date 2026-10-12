@@ -4,7 +4,7 @@ from typing import IO, TYPE_CHECKING, Any, Union
 from ..exceptions import TyperException
 from ._compat import get_text_stderr
 from .globals import resolve_color_default
-from .utils import echo, format_filename
+from .utils import _escape_control_characters, echo, format_filename
 
 if TYPE_CHECKING:
     from .core import Command, Context, Parameter
@@ -178,7 +178,7 @@ class NoSuchOption(UsageError):
         ctx: Union["Context", None] = None,
     ) -> None:
         if message is None:
-            message = f"No such option: {option_name}"
+            message = f"No such option: {_escape_control_characters(option_name)}"
 
         super().__init__(message, ctx)
         self.option_name = option_name

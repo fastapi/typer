@@ -34,6 +34,13 @@ P = ParamSpec("P")
 R = TypeVar("R")
 
 
+def _escape_control_characters(value: str) -> str:
+    """Display untrusted diagnostic values without terminal control characters."""
+    return re.sub(
+        r"[\x00-\x1f\x7f-\x9f]", lambda match: f"\\x{ord(match[0]):02x}", value
+    )
+
+
 def _posixify(name: str) -> str:
     return "-".join(name.split()).lower()
 
