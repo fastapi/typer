@@ -352,6 +352,87 @@ def _make_command_help(
     )
 
 
+def _option_columns(
+    param: TyperOption, ctx: _click.Context
+) -> tuple[str, str, str, str, str]:
+    """Return the rendered option columns (long, short, secondary, type)."""
+    long_strs = ",".join(opt for opt in param.opts if "--" in opt)
+    short_strs = ",".join(opt for opt in param.opts if "--" not in opt)
+    sec_long_strs = ",".join(opt for opt in param.secondary_opts if "--" in opt)
+    sec_short_strs = ",".join(opt for opt in param.secondary_opts if "--" not in opt)
+
+    metavar = param.make_metavar(ctx=ctx)
+    type_text = ""
+    if metavar and "bool" not in metavar.lower():
+        type_text = metavar
+    if isinstance(param.type, types._NumberRangeBase) and not (
+        param.count and param.type.min == 0 and param.type.max is None
+    ):
+        range_str = param.type._describe_range()
+        if range_str:
+            type_text += RANGE_STRING.format(range_str)
+    return long_strs, short_strs, sec_long_strs, sec_short_strs, type_text
+
+
+def _argument_columns(
+    param: TyperArgument, ctx: _click.Context
+) -> tuple[str, str, str, str, str]:
+    """Return the rendered argument columns mapped onto the option grid.
+
+    Arguments have no flags, so the name (or custom metavar) takes the long
+    column and the type takes the metavar column, leaving the short and
+    secondary columns empty. This keeps argument rows aligned with option rows.
+    """
+    metavar_name = param.metavar if param.metavar is not None else (param.name or "")
+    type_text = param.type.get_metavar(param=param, ctx=ctx)
+    if type_text is None:
+        type_text = f"<{param.type.name}>"
+    if "bool" in type_text.lower():
+        type_text = ""
+    return metavar_name, "", "", "", type_text
+
+
+def _get_align_panel_widths(
+    ctx: _click.Context,
+) -> tuple[bool, int, int, int, int, int]:
+    """Compute fixed column widths shared across every help panel.
+
+    Widths are derived from every visible option and argument, plus (for
+    groups) every visible command name, so option, argument and command panels
+    all render with the same column geometry and rows line up across panels.
+    Returns ``(has_required, long, short, secondary_long, secondary_short,
+    metavar)``.
+    """
+    params = [
+        param
+        for param in ctx.command.get_params(ctx)
+        if isinstance(param, (TyperOption, TyperArgument))
+        and not getattr(param, "hidden", False)
+    ]
+    long_w = short_w = sec_long_w = sec_short_w = metavar_w = 0
+    for param in params:
+        if isinstance(param, TyperOption):
+            long_strs, short_strs, sec_long_strs, sec_short_strs, type_text = (
+                _option_columns(param, ctx)
+            )
+        else:
+            long_strs, short_strs, sec_long_strs, sec_short_strs, type_text = (
+                _argument_columns(param, ctx)
+            )
+        long_w = max(long_w, len(long_strs))
+        short_w = max(short_w, len(short_strs))
+        sec_long_w = max(sec_long_w, len(sec_long_strs))
+        sec_short_w = max(sec_short_w, len(sec_short_strs))
+        metavar_w = max(metavar_w, len(type_text))
+    has_required = any(param.required for param in params)
+    if isinstance(ctx.command, TyperGroup):
+        for command_name in ctx.command.list_commands(ctx):
+            command = ctx.command.get_command(ctx, command_name)
+            if command is not None and not command.hidden:
+                long_w = max(long_w, len(command.name or ""))
+    return has_required, long_w, short_w, sec_long_w, sec_short_w, metavar_w
+
+
 def _print_options_panel(
     *,
     name: str,
@@ -359,6 +440,7 @@ def _print_options_panel(
     ctx: _click.Context,
     markup_mode: MarkupModeStrict,
     console: Console,
+    align_widths: tuple[bool, int, int, int, int, int] | None = None,
 ) -> None:
     options_rows: list[list[RenderableType]] = []
     required_rows: list[str | Text] = []
@@ -389,7 +471,7 @@ def _print_options_panel(
             if "--" in opt_str:
                 opt_long_strs.append(opt_str)
             elif metavar_name:
-                opt_short_strs.append(metavar_name)
+                opt_long_strs.append(metavar_name)
             else:
                 opt_short_strs.append(opt_str)
         for opt_str in param.secondary_opts:
@@ -464,7 +546,32 @@ def _print_options_panel(
             box=box_style,
             **t_styles,
         )
-        for row in rows_with_required:
+        # When alignment is enabled every panel (option, argument and command)
+        # shares the same fixed column widths, including the required-marker
+        # column. Argument rows place the name in the long column, so they line
+        # up with option long flags.
+        if align_widths is not None:
+            has_required, long_w, short_w, sec_long_w, sec_short_w, metavar_w = (
+                align_widths
+            )
+            if has_required:
+                options_table.add_column(width=1, no_wrap=True)
+            options_table.add_column(width=long_w, no_wrap=True)
+            options_table.add_column(width=short_w, no_wrap=True)
+            options_table.add_column(width=sec_long_w, no_wrap=True)
+            options_table.add_column(width=sec_short_w, no_wrap=True)
+            options_table.add_column(width=metavar_w, no_wrap=True)
+            options_table.add_column(justify="left", no_wrap=False, ratio=10)
+            if has_required:
+                rows_to_print = [
+                    [required if required else "", *row]
+                    for required, row in zip(required_rows, options_rows, strict=True)
+                ]
+            else:
+                rows_to_print = options_rows
+        else:
+            rows_to_print = rows_with_required
+        for row in rows_to_print:
             options_table.add_row(*row)
         console.print(
             Panel(
@@ -483,6 +590,7 @@ def _print_commands_panel(
     markup_mode: MarkupModeStrict,
     console: Console,
     cmd_len: int,
+    align_widths: tuple[bool, int, int, int, int, int] | None = None,
 ) -> None:
     t_styles: dict[str, Any] = {
         "show_lines": STYLE_COMMANDS_TABLE_SHOW_LINES,
@@ -502,18 +610,6 @@ def _print_commands_panel(
         box=box_style,
         **t_styles,
     )
-    # Define formatting in first column, as commands don't match highlighter
-    # regex
-    commands_table.add_column(
-        style=STYLE_COMMANDS_TABLE_FIRST_COLUMN,
-        no_wrap=True,
-        width=cmd_len,
-    )
-
-    # A big ratio makes the description column be greedy and take all the space
-    # available instead of allowing the command column to grow and misalign with
-    # other panels.
-    commands_table.add_column("Description", justify="left", no_wrap=False, ratio=10)
     rows: list[list[RenderableType | None]] = []
     deprecated_rows: list[RenderableType | None] = []
     for command in commands:
@@ -534,13 +630,61 @@ def _print_commands_panel(
                 ),
             ]
         )
-    rows_with_deprecated = rows
-    if any(deprecated_rows):
-        rows_with_deprecated = []
+    if align_widths is not None:
+        # Commands join the shared grid: the command name takes the long column
+        # (like option long flags and argument names) and the description takes
+        # the help column, leaving the flag columns empty.
+        has_required, long_w, short_w, sec_long_w, sec_short_w, metavar_w = align_widths
+        has_deprecated = any(deprecated_rows)
+        if has_required:
+            commands_table.add_column(width=1, no_wrap=True)
+        commands_table.add_column(width=long_w, no_wrap=True)
+        commands_table.add_column(width=short_w, no_wrap=True)
+        commands_table.add_column(width=sec_long_w, no_wrap=True)
+        commands_table.add_column(width=sec_short_w, no_wrap=True)
+        commands_table.add_column(width=metavar_w, no_wrap=True)
+        commands_table.add_column(
+            "Description", justify="left", no_wrap=False, ratio=10
+        )
+        if has_deprecated:
+            commands_table.add_column(justify="left", no_wrap=True)
         for row, deprecated_text in zip(rows, deprecated_rows, strict=True):
-            rows_with_deprecated.append([*row, deprecated_text])
-    for row in rows_with_deprecated:
-        commands_table.add_row(*row)
+            name_cell, help_cell = row
+            aligned_row: list[RenderableType | None] = [
+                name_cell,
+                "",
+                "",
+                "",
+                "",
+                help_cell,
+            ]
+            if has_required:
+                aligned_row = ["", *aligned_row]
+            if has_deprecated:
+                aligned_row.append(deprecated_text if deprecated_text else "")
+            commands_table.add_row(*aligned_row)
+    else:
+        # Define formatting in first column, as commands don't match highlighter
+        # regex
+        commands_table.add_column(
+            style=STYLE_COMMANDS_TABLE_FIRST_COLUMN,
+            no_wrap=True,
+            width=cmd_len,
+        )
+
+        # A big ratio makes the description column be greedy and take all the
+        # space available instead of allowing the command column to grow and
+        # misalign with other panels.
+        commands_table.add_column(
+            "Description", justify="left", no_wrap=False, ratio=10
+        )
+        rows_with_deprecated = rows
+        if any(deprecated_rows):
+            rows_with_deprecated = []
+            for row, deprecated_text in zip(rows, deprecated_rows, strict=True):
+                rows_with_deprecated.append([*row, deprecated_text])
+        for row in rows_with_deprecated:
+            commands_table.add_row(*row)
     if commands_table.row_count:
         console.print(
             Panel(
@@ -557,6 +701,7 @@ def rich_format_help(
     obj: _click.Command | TyperGroup,
     ctx: _click.Context,
     markup_mode: MarkupModeStrict,
+    align_panel_columns: bool = False,
 ) -> None:
     """Print nicely formatted help text using rich.
 
@@ -567,6 +712,10 @@ def rich_format_help(
     Takes a command or group and builds the help text output.
     """
     console = _get_rich_console()
+
+    # Compute the shared column widths once so option, argument and command
+    # panels all line up with each other.
+    align_widths = _get_align_panel_widths(ctx) if align_panel_columns else None
 
     # Print usage
     console.print(
@@ -611,6 +760,7 @@ def rich_format_help(
         ctx=ctx,
         markup_mode=markup_mode,
         console=console,
+        align_widths=align_widths,
     )
     for panel_name, arguments in panel_to_arguments.items():
         if panel_name == ARGUMENTS_PANEL_TITLE:
@@ -622,6 +772,7 @@ def rich_format_help(
             ctx=ctx,
             markup_mode=markup_mode,
             console=console,
+            align_widths=align_widths,
         )
     default_options = panel_to_options.get(OPTIONS_PANEL_TITLE, [])
     _print_options_panel(
@@ -630,6 +781,7 @@ def rich_format_help(
         ctx=ctx,
         markup_mode=markup_mode,
         console=console,
+        align_widths=align_widths,
     )
     for panel_name, options in panel_to_options.items():
         if panel_name == OPTIONS_PANEL_TITLE:
@@ -641,6 +793,7 @@ def rich_format_help(
             ctx=ctx,
             markup_mode=markup_mode,
             console=console,
+            align_widths=align_widths,
         )
 
     if isinstance(obj, TyperGroup):
@@ -672,6 +825,7 @@ def rich_format_help(
             markup_mode=markup_mode,
             console=console,
             cmd_len=max_cmd_len,
+            align_widths=align_widths,
         )
         for panel_name, commands in panel_to_commands.items():
             if panel_name == COMMANDS_PANEL_TITLE:
@@ -683,6 +837,7 @@ def rich_format_help(
                 markup_mode=markup_mode,
                 console=console,
                 cmd_len=max_cmd_len,
+                align_widths=align_widths,
             )
 
     # Epilogue if we have it

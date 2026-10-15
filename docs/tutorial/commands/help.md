@@ -469,6 +469,45 @@ $ uv run python main.py --help
 
 You can see the custom panel for the commands for "`Utils and Configs`".
 
+### Align columns across panels
+
+By default, each panel sizes its own columns. You can make `typer.Typer()` give every panel the same fixed column widths with `align_panel_columns=True`.
+
+With that, *CLI arguments*, *CLI options* and command panels all share one grid, so command names line up with the long names of the *CLI options*, and command descriptions line up with the option help text:
+
+{* docs_src/commands/help/tutorial009_an_py310.py hl[5] *}
+
+<div class="termy">
+
+```console
+$ uv run python main.py --help
+
+ Usage: main.py [OPTIONS] COMMAND [ARGS]...
+
+ Manage the project.
+
+╭─ Options ──────────────────────────────────────────────────────────────────────────────╮
+│ --install-completion                 Install completion for the current shell.         │
+│ --show-completion                    Show completion for the current shell, to copy it │
+│                                      or customize the installation.                    │
+│ --help                               Show this message and exit.                       │
+╰────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Global options ───────────────────────────────────────────────────────────────────────╮
+│ --verbose             -V             Verbose output.                                   │
+│ --config              -c      <str>  Config file.                                      │
+╰────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Core ─────────────────────────────────────────────────────────────────────────────────╮
+│ run                                  Run the project.                                  │
+│ build                                Build the project.                                │
+╰────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Utilities ────────────────────────────────────────────────────────────────────────────╮
+│ clean                                Clean build artifacts.                            │
+│ prune                                Prune old artifacts.                              │
+╰────────────────────────────────────────────────────────────────────────────────────────╯
+```
+
+</div>
+
 ## Epilog
 
 If you need, you can also add an epilog section to the help of your commands:
