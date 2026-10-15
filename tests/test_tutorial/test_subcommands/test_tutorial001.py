@@ -87,7 +87,10 @@ def test_scripts(mod):
     from docs_src.subcommands.tutorial001_py310 import items, users
 
     env = os.environ.copy()
-    env["PYTHONPATH"] = ":".join(list(tutorial001_py310.__path__))
+    env["PYTHONPATH"] = ":".join(
+        list(tutorial001_py310.__path__)
+        + ([env["PYTHONPATH"]] if "PYTHONPATH" in env else [])
+    )
 
     for module in [mod, items, users]:
         result = subprocess.run(
