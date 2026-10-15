@@ -1073,7 +1073,7 @@ class Typer:
                 Mark this command as deprecated in the help outputs. `False` by default.
                 """
             ),
-        ] = False,
+        ] = Default(False),
         # Rich settings
         rich_help_panel: Annotated[
             str | None,
