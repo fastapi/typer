@@ -85,6 +85,26 @@ def test_script_func_not_function():
     assert "Not a function:" in result.stderr
 
 
+def test_script_colon_not_function():
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "coverage",
+            "run",
+            "-m",
+            "typer",
+            "tests/assets/cli/multi_func.py:message",
+            "run",
+            "--name",
+            "Camila",
+        ],
+        capture_output=True,
+        encoding="utf-8",
+    )
+    assert "Not a function:" in result.stderr
+
+
 def test_script_func():
     result = subprocess.run(
         [
@@ -97,6 +117,44 @@ def test_script_func():
             "--func",
             "say_stuff",
             "tests/assets/cli/multi_func.py",
+            "run",
+        ],
+        capture_output=True,
+        encoding="utf-8",
+    )
+    assert "Hello" not in result.stdout
+    assert "Stuff" in result.stdout
+
+
+def test_script_module_colon_func():
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "coverage",
+            "run",
+            "-m",
+            "typer",
+            "tests.assets.cli.multi_func:say_stuff",
+            "run",
+        ],
+        capture_output=True,
+        encoding="utf-8",
+    )
+    assert "Hello" not in result.stdout
+    assert "Stuff" in result.stdout
+
+
+def test_script_file_colon_func():
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "coverage",
+            "run",
+            "-m",
+            "typer",
+            "tests/assets/cli/multi_func.py:say_stuff",
             "run",
         ],
         capture_output=True,
