@@ -15,7 +15,7 @@ The difference is that these types will give you a Python [file-like object](htt
 A "file-like object" is the same type of object returned by `open()` as in:
 
 ```Python
-with open('file.txt') as f:
+with open("file.txt") as f:
     # Here f is the file-like object
     read_data = f.read()
     print(read_data)

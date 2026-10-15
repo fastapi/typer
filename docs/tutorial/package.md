@@ -200,6 +200,7 @@ The `app` in `"rick_portal_gun.main:app"` is the thing to import from the module
 
 ```Python
 from rick_portal_gun.main import app
+
 app()
 ```
 
@@ -422,6 +423,7 @@ Then in that file you can execute your **Typer** program:
 
 ```Python
 from .main import app
+
 app()
 ```
 
