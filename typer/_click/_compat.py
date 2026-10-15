@@ -416,7 +416,13 @@ class _AtomicFile:
         if self.closed:
             return  # pragma: no cover
         self._f.close()
-        os.replace(self._tmp_filename, self._real_filename)
+        if delete:
+            try:
+                os.unlink(self._tmp_filename)
+            except OSError:  # pragma: no cover
+                pass
+        else:
+            os.replace(self._tmp_filename, self._real_filename)
         self.closed = True
 
     def __getattr__(self, name: str) -> Any:
