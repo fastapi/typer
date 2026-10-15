@@ -17,6 +17,7 @@ In short (very short), you can declare a function with parameters like:
 ```Python
 from typing import Optional
 
+
 def type_example(name: str, formal: bool = False, intro: Optional[str] = None):
     pass
 ```

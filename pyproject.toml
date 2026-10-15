@@ -84,7 +84,7 @@ tests = [
     "pytest-sugar >=1.0.0",
     "pytest-xdist >=3.6.1",
     "rich >=12.3.0",
-    "ruff >=0.15.0",
+    "ruff >=0.16.0",
     "shellingham >=1.3.0",
 ]
 

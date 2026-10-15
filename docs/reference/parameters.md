@@ -8,6 +8,7 @@ import typer
 
 app = typer.Typer()
 
+
 @app.command()
 def register(
     user: Annotated[str, typer.Argument()],
@@ -17,6 +18,7 @@ def register(
     print(f"User is {user}")
     print(f"--age is {age}")
     print(f"--score is {score}")
+
 
 if __name__ == "__main__":
     app()

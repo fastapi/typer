@@ -5,8 +5,7 @@ By default, the command names are generated from the function name.
 So, if your function is something like:
 
 ```Python
-def create(username: str):
-    ...
+def create(username: str): ...
 ```
 
 Then the command name will be `create`.
@@ -50,7 +49,6 @@ Note that any underscores in the function name will be replaced with dashes.
 So if your function is something like:
 
 ```Python
-def create_user(username: str):
-    ...
+def create_user(username: str): ...
 ```
 Then the command name will be `create-user`.
