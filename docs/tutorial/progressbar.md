@@ -189,6 +189,7 @@ def iterate_user_ids():
     for i in range(100):
         yield i
 
+
 for i in iterate_user_ids():
     print(i)
 ```

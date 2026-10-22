@@ -204,6 +204,12 @@ If you have some `bytes` objects, you would probably want to decode them intenti
 
 And if you want to print data with colors and other features, you are much better off with the more advanced tools in **Rich**.
 
+### Untrusted Text
+
+`typer.echo()` preserves terminal control sequences, including those used for colors. When displaying text from an untrusted source, escape control characters first. For a diagnostic representation of a string, you can use `typer.echo(repr(value))`.
+
+Setting `color=False` disables styling, but does not sanitize all terminal control sequences.
+
 ### Color
 
 /// note | Technical Details

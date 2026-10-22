@@ -18,7 +18,7 @@ from typing import (
 
 from ._compat import _get_argv_encoding, open_stream
 from .exceptions import BadParameter
-from .utils import LazyFile, format_filename, safecall
+from .utils import LazyFile, _escape_control_characters, format_filename, safecall
 
 if TYPE_CHECKING:
     from .core import Context, Parameter
@@ -138,7 +138,7 @@ class FuncParamType(ParamType):
                 assert isinstance(value, bytes)
                 value = value.decode("utf-8", "replace")
 
-            self.fail(value, param, ctx)
+            self.fail(_escape_control_characters(value), param, ctx)
 
 
 class StringParamType(ParamType):
@@ -559,8 +559,9 @@ class File(ParamType):
                     ctx.call_on_close(safecall(f.flush))
 
             return f
-        except OSError as e:  # pragma: no cover
-            self.fail(f"'{format_filename(value)}': {e.strerror}", param, ctx)
+        except OSError as e:
+            filename = _escape_control_characters(format_filename(value))
+            self.fail(f"'{filename}': {e.strerror}", param, ctx)
 
     def shell_complete(
         self, ctx: "Context", param: "Parameter", incomplete: str
