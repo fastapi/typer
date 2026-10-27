@@ -2,7 +2,8 @@ from importlib.machinery import ModuleSpec
 from unittest.mock import patch
 
 import pytest
-from typer._completion_classes import _sanitize_help_text
+from typer._click.shell_completion import CompletionItem
+from typer._completion_classes import ZshComplete, _sanitize_help_text
 
 
 @pytest.mark.parametrize(
@@ -36,3 +37,18 @@ def test_sanitize_help_text(
     with patch("importlib.util.find_spec", return_value=find_spec) as mock_find_spec:
         assert _sanitize_help_text(help_text) == expected
     mock_find_spec.assert_called_once_with("rich")
+
+
+@pytest.mark.parametrize(
+    "help_text, expected",
+    [
+        (":warning: Spin up [bold]now[/bold]", '"up":"⚠ Spin up now"'),
+        ("Note: careful", '"up":"Note\\\\: careful"'),
+    ],
+)
+def test_zsh_format_completion_renders_help_before_escaping(
+    help_text: str, expected: str
+):
+    zsh_complete = ZshComplete(None, {}, "prog", "_PROG_COMPLETE")  # type: ignore[arg-type]
+    item = CompletionItem("up", help=help_text)
+    assert zsh_complete.format_completion(item) == expected
