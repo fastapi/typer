@@ -44,6 +44,7 @@ def test_sanitize_help_text(
     [
         (":warning: Spin up [bold]now[/bold]", '"up":"⚠ Spin up now"'),
         ("Note: careful", '"up":"Note\\\\: careful"'),
+        ("Cost $5 and `x`", '"up":"Cost \\$5 and \\`x\\`"'),
     ],
 )
 def test_zsh_format_completion_renders_help_before_escaping(
