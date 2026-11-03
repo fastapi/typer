@@ -45,7 +45,7 @@ def _validate_envvar(envvar: Any) -> None:
         return
     raise TypeError(
         f"Invalid envvar: {envvar!r}. envvar must be a string or a list of "
-        "strings, as in typer.Option(envvar=\"MY_VAR\")."
+        'strings, as in typer.Option(envvar="MY_VAR").'
     )
 
 
