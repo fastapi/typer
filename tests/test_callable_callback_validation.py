@@ -1,8 +1,7 @@
 import pytest
-
 import typer
-from typer.testing import CliRunner
 from typer.models import CommandInfo
+from typer.testing import CliRunner
 
 
 def test_a_command_registered_with_a_non_callable_is_named():

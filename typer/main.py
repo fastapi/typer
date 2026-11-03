@@ -1321,8 +1321,7 @@ def get_group_from_info(
     solved_info = solve_typer_info_defaults(group_info)
     if solved_info.callback is not None and not callable(solved_info.callback):
         raise TypeError(
-            "The `callback` must be callable, received: "
-            f"{solved_info.callback!r}"
+            f"The `callback` must be callable, received: {solved_info.callback!r}"
         )
     (
         params,
