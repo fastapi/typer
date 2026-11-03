@@ -1319,6 +1319,11 @@ def get_group_from_info(
             for sub_command_name, sub_command in sub_group.commands.items():
                 commands[sub_command_name] = sub_command
     solved_info = solve_typer_info_defaults(group_info)
+    if solved_info.callback is not None and not callable(solved_info.callback):
+        raise TypeError(
+            "The `callback` must be callable, received: "
+            f"{solved_info.callback!r}"
+        )
     (
         params,
         convertors,
@@ -1395,8 +1400,12 @@ def get_command_from_info(
     pretty_exceptions_short: bool,
     rich_markup_mode: MarkupMode,
 ) -> _click.Command:
-    assert command_info.callback, "A command must have a callback function"
-    name = command_info.name or get_command_name(command_info.callback.__name__)  # ty: ignore
+    if not callable(command_info.callback):
+        raise TypeError(
+            "The command callback must be callable, received: "
+            f"{command_info.callback!r}"
+        )
+    name = command_info.name or get_command_name(command_info.callback.__name__)
     use_help = command_info.help
     if use_help is None:
         use_help = inspect.getdoc(command_info.callback)
