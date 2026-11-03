@@ -28,6 +28,27 @@ AnyType = type[Any]
 Required = ...
 
 
+def _validate_envvar(envvar: Any) -> None:
+    """Reject an envvar that click cannot read when resolving the parameter.
+
+    ``envvar`` is a name or a list of names, but it is only read when the command
+    runs: an int there failed later as ``TypeError: int object is not iterable``
+    inside click, and under a test runner the traceback was swallowed entirely.
+    """
+    if envvar is None or isinstance(envvar, str):
+        return
+    if (
+        isinstance(envvar, Sequence)
+        and not isinstance(envvar, (bytes, bytearray))
+        and all(isinstance(item, str) for item in envvar)
+    ):
+        return
+    raise TypeError(
+        f"Invalid envvar: {envvar!r}. envvar must be a string or a list of "
+        "strings, as in typer.Option(envvar=\"MY_VAR\")."
+    )
+
+
 class Context(_click.Context):
     """
     The [`Context`](https://click.palletsprojects.com/en/stable/api/#click.Context) has some additional data about the current execution of your program.
@@ -345,6 +366,7 @@ class ParameterInfo:
         self.metavar = metavar
         self.expose_value = expose_value
         self.is_eager = is_eager
+        _validate_envvar(envvar)
         self.envvar = envvar
         self.shell_complete = shell_complete
         self.autocompletion = autocompletion
