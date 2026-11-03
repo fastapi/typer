@@ -339,6 +339,16 @@ class ParameterInfo:
                 "`parser` and `click_type` may not both be provided."
             )
 
+        # Validate `click_type` here: an invalid value (a string, say) would
+        # otherwise reach Click and only crash at invocation time with an
+        # obscure error, far from the declaration that caused it.
+        if click_type is not None and not isinstance(click_type, types.ParamType):
+            raise TypeError(
+                "`click_type` must be a `click.types.ParamType` (or `None`), "
+                f"received: {click_type!r}. To declare the type of the parameter, "
+                "use a type annotation instead of `click_type`."
+            )
+
         self.default = default
         self.param_decls = param_decls
         self.callback = callback
