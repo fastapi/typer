@@ -383,7 +383,13 @@ def _print_options_panel(
         elif isinstance(param, TyperArgument):
             metavar_type = param.type.get_metavar(param=param, ctx=ctx)
             if metavar_type is None:
-                metavar_type = f"<{param.type.name}>"
+                type_name = param.type.name
+                if type_name.startswith("<") and type_name.endswith(">"):
+                    # Some types, e.g. Tuple, already include angle brackets
+                    # in their name, e.g. "<int int>", don't wrap them again
+                    metavar_type = type_name
+                else:
+                    metavar_type = f"<{type_name}>"
 
         for opt_str in param.opts:
             if "--" in opt_str:

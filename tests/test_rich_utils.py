@@ -1,4 +1,5 @@
 import sys
+from typing import Annotated, Optional, Tuple
 
 import pytest
 import typer
@@ -298,3 +299,17 @@ def test_rich_lowercase_bracketed_metavar() -> None:
     usage_line = result.output.splitlines()[0]
     assert usage_line.startswith("Usage: typer [path_or_module] run [OPTIONS] {name}")
     assert "Try 'typer [path_or_module] run --help' for help." in result.output
+
+def test_rich_help_tuple_argument_metavar() -> None:
+    # Tuple type names already include angle brackets, e.g. "<int int>",
+    # they shouldn't be wrapped again producing "<<int int>>"
+    app = typer.Typer(rich_markup_mode="rich")
+
+    @app.command()
+    def main(pair: Annotated[Optional[Tuple[int, int]], typer.Argument()] = None) -> None:
+        pass  # pragma: no cover
+
+    result = runner.invoke(app, ["--help"])
+    assert result.exit_code == 0
+    assert "<int int>" in result.stdout
+    assert "<<int int>>" not in result.stdout
