@@ -38,7 +38,7 @@ Usage: main.py [OPTIONS] {name}
   If --formal is used, say hi very formally.
 
 Arguments:
-  name  [required]
+  name <str>  [required]
 
 Options:
   --lastname <str>        Last name of person to greet.

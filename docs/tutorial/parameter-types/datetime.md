@@ -6,11 +6,13 @@ Your function will receive a standard Python `datetime` object, and again, your 
 
 {* docs_src/parameter_types/datetime/tutorial001_py310.py hl[1,9,10,11] *}
 
-Typer will accept any string from the following formats:
-
+Typer will accept any string from datetime formats [supported by Pydantic](https://pydantic.dev/docs/validation/latest/api/pydantic/standard_library_types/#validation-9),
+including Unix timestamps as seconds or milliseconds since the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time),
+and several 'standard' options such as
 * `%Y-%m-%d`
 * `%Y-%m-%dT%H:%M:%S`
 * `%Y-%m-%d %H:%M:%S`
+* ...
 
 Check it:
 
@@ -19,10 +21,10 @@ Check it:
 ```console
 $ uv run python main.py --help
 
-Usage: main.py [OPTIONS] {birth}:<%Y-%m-%d|%Y-%m-%dT%H:%M:%S|%Y-%m-%d %H:%M:%S>
+Usage: main.py [OPTIONS] {birth}
 
 Arguments:
-  birth:<%Y-%m-%d|%Y-%m-%dT%H:%M:%S|%Y-%m-%d %H:%M:%S> [required]
+  birth <datetime>  [required]
 
 Options:
   --help                Show this message and exit.
@@ -36,10 +38,10 @@ Birth hour: 10
 // An invalid date
 $ uv run python main.py july-19-1989
 
-Usage: main.py [OPTIONS] {birth}:<%Y-%m-%d|%Y-%m-%dT%H:%M:%S|%Y-%m-%d %H:%M:%S>
+Usage: main.py [OPTIONS] {birth}
 Try 'main.py --help' for help.
 
-Error: Invalid value for 'birth': 'july-19-1989' does not match the formats '%Y-%m-%d', '%Y-%m-%dT%H:%M:%S', '%Y-%m-%d %H:%M:%S'.
+Error: Invalid value for 'birth': Input should be a valid datetime or date, invalid character in year
 ```
 
 </div>
@@ -59,7 +61,7 @@ For example, let's imagine that you want to accept an ISO formatted datetime, bu
 
 ...It's a crazy example, but let's say you also needed that strange format:
 
-{* docs_src/parameter_types/datetime/tutorial002_an_py310.py hl[14] *}
+{* docs_src/parameter_types/datetime/tutorial002_an_py310.py hl[13] *}
 
 /// tip
 
@@ -72,15 +74,24 @@ Check it:
 <div class="termy">
 
 ```console
-// ISO dates work
+// ISO dates work (first pattern)
 $ uv run python main.py 1969-10-29
 
 Launch will be at: 1969-10-29 00:00:00
 
-// But the strange custom format also works
+// The strange custom format also works (second pattern)
 $ uv run python main.py 10/29/1969
 
 Launch will be at: 1969-10-29 00:00:00
+
+// But notice that a 'standard' date format now doesn't work anymore, as it's not included in 'formats':
+$ uv run python main.py 1969-10-29T10:00:00
+
+Usage: main.py [OPTIONS] {launch_date}
+Try 'main.py --help' for help.
+
+Error: Invalid value for 'launch_date': Value error, '1969-10-29T10:00:00' does not match the formats '%Y-%m-%d', '%m/%d/%Y'.
+
 ```
 
 </div>

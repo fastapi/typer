@@ -8,7 +8,7 @@ class TyperException(Exception):
         self.message = message
 
     def __str__(self) -> str:
-        return self.message
+        return self.message  # pragma: no cover
 
     def format_message(self) -> str:
         return self.message

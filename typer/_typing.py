@@ -1,8 +1,7 @@
-# Copied from pydantic 1.9.2 (the latest version to support python 3.6.)
-# https://github.com/pydantic/pydantic/blob/v1.9.2/pydantic/typing.py
-# Reduced drastically to only include Typer-specific 3.9+ functionality
+# Adapted from pydantic 1.9.2
 # mypy: ignore-errors
 
+import numbers
 import types
 from collections.abc import Callable
 from typing import (
@@ -26,6 +25,7 @@ __all__ = (
     "is_callable_type",
     "is_literal_type",
     "all_literal_values",
+    "is_number_type",
     "is_union",
     "Annotated",
     "Literal",
@@ -50,6 +50,15 @@ def is_none_type(type_: Any) -> bool:
 
 def is_callable_type(type_: type[Any]) -> bool:
     return type_ is Callable or get_origin(type_) is Callable
+
+
+def is_number_type(type_: Any) -> bool:
+    return (
+        isinstance(type_, type)
+        and type_ is not bool
+        and type_ is not complex
+        and issubclass(type_, numbers.Number)
+    )
 
 
 def is_literal_type(type_: type[Any]) -> bool:

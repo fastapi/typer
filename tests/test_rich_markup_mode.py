@@ -25,7 +25,7 @@ def test_rich_markup_mode_none():
     assert "Hello World" in result.stdout
 
     result = runner.invoke(app, ["--help"])
-    assert "arg  [required]" in result.stdout
+    assert "arg <str>  [required]" in result.stdout
     assert all(c not in result.stdout for c in rounded)
 
 

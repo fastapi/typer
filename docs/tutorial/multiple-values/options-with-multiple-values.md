@@ -58,11 +58,11 @@ Now let's see how this works in the terminal:
 // check the help
 $ uv run python main.py --help
 
-// Notice the <str int boolean>
+// Notice the <str,int,bool>
 Usage: main.py [OPTIONS]
 
 Options:
-  --user <str int boolean>...
+  --user <str,int,bool>...
   --help                       Show this message and exit.
 
 // Now try it
