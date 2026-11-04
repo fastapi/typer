@@ -6,6 +6,10 @@
 
 * 🎨 Enable Ruff formatting for Python in Markdown. PR [#1978](https://github.com/fastapi/typer/pull/1978) by [@tiangolo](https://github.com/tiangolo).
 
+### Internal
+
+* ⬆ Bump pre-commit hooks. PR [#1995](https://github.com/fastapi/typer/pull/1995) by [@pr-submit[bot]](https://github.com/apps/pr-submit).
+
 ## 0.27.3 (2026-10-06)
 
 ### Fixes
