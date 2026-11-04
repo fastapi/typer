@@ -2,7 +2,14 @@ import enum
 import inspect
 import os
 from abc import ABC, abstractmethod
-from collections.abc import Callable, Iterator, Mapping, MutableMapping, Sequence
+from collections.abc import (
+    Callable,
+    Generator,
+    Iterator,
+    Mapping,
+    MutableMapping,
+    Sequence,
+)
 from contextlib import AbstractContextManager, ExitStack, contextmanager
 from types import TracebackType
 from typing import (
@@ -55,7 +62,7 @@ def _complete_visible_commands(
 @contextmanager
 def augment_usage_errors(
     ctx: "Context", param: Union["Parameter", None] = None
-) -> Iterator[None]:
+) -> Generator[None]:
     """Context manager that attaches extra information to exceptions."""
     try:
         yield
@@ -281,7 +288,7 @@ class Context:
         return exit_result
 
     @contextmanager
-    def scope(self, cleanup: bool = True) -> Iterator["Context"]:
+    def scope(self, cleanup: bool = True) -> Generator["Context"]:
         """This helper method can be used with the context object to promote
         it to the current thread local (see `get_current_context`).
         The default behavior of this is to invoke the cleanup functions which

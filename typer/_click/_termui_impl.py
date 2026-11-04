@@ -8,7 +8,7 @@ import math
 import os
 import sys
 import time
-from collections.abc import Callable, Iterable, Iterator
+from collections.abc import Callable, Generator, Iterable, Iterator
 from io import StringIO
 from types import TracebackType
 from typing import Generic, TextIO, TypeVar, cast
@@ -485,7 +485,7 @@ else:
     import tty
 
     @contextlib.contextmanager
-    def raw_terminal() -> Iterator[int]:
+    def raw_terminal() -> Generator[int]:
         f: TextIO | None
         fd: int
 

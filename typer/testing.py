@@ -3,7 +3,7 @@ import io
 import os
 import shlex
 import sys
-from collections.abc import Iterator, Mapping, Sequence
+from collections.abc import Generator, Mapping, Sequence
 from types import TracebackType
 from typing import IO, TYPE_CHECKING, Any, BinaryIO, cast
 
@@ -161,7 +161,7 @@ class CliRunner:
         input: str | bytes | None = None,
         env: Mapping[str, str | None] | None = None,
         color: bool = False,
-    ) -> Iterator[tuple[io.BytesIO, io.BytesIO, io.BytesIO]]:
+    ) -> Generator[tuple[io.BytesIO, io.BytesIO, io.BytesIO]]:
         """A context manager that sets up the isolation for invoking of a
         command line tool.  This sets up `<stdin>` with the given input data
         and `os.environ` with the overrides from the given dictionary.

@@ -1,4 +1,4 @@
-from collections.abc import Iterable, Iterator, Sequence
+from collections.abc import Generator, Iterable, Iterator, Sequence
 from contextlib import contextmanager
 
 from ._compat import term_len
@@ -225,7 +225,7 @@ class HelpFormatter:
                 self.write("\n")
 
     @contextmanager
-    def section(self, name: str) -> Iterator[None]:
+    def section(self, name: str) -> Generator[None]:
         """Helpful context manager that writes a paragraph, a heading,
         and the indents.
         """
@@ -238,7 +238,7 @@ class HelpFormatter:
             self.dedent()
 
     @contextmanager
-    def indentation(self) -> Iterator[None]:
+    def indentation(self) -> Generator[None]:
         """A context manager that increases the indentation."""
         self.indent()
         try:
