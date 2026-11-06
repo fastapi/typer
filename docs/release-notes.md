@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Fixes
+
+* 🐛 Ensure that the default option name is not changed by setting a metavar. PR [#1957](https://github.com/fastapi/typer/pull/1957) by [@svlandeg](https://github.com/svlandeg).
+
 ### Docs
 
 * 🎨 Enable Ruff formatting for Python in Markdown. PR [#1978](https://github.com/fastapi/typer/pull/1978) by [@tiangolo](https://github.com/tiangolo).
