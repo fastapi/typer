@@ -3,8 +3,12 @@ import sys
 from pathlib import Path
 
 import pytest
+import typer
+from typer.testing import CliRunner
 
 from . import atomic_write_example as mod
+
+runner = CliRunner()
 
 
 def test_atomic_write(tmp_path: Path) -> None:
@@ -87,6 +91,41 @@ def test_atomic_api(tmp_path: Path) -> None:
     assert "repr=<_io.TextIOWrapper" in result.stdout
     assert "entered=True" in result.stdout
     assert output_file.read_text(encoding="utf-8") == "atomic-api-done\n"
+
+
+@pytest.mark.parametrize("lazy", [True, False], ids=["lazy", "eager"])
+@pytest.mark.parametrize(
+    "destination_exists", [True, False], ids=["existing", "missing"]
+)
+def test_atomic_write_callback_failure(
+    tmp_path: Path, lazy: bool, destination_exists: bool
+) -> None:
+    original_content = "existing-content\n"
+    output_file = tmp_path / "atomic-failure-target.txt"
+    if destination_exists:
+        output_file.write_text(original_content, encoding="utf-8")
+    initial_entries = set(tmp_path.iterdir())
+
+    app = typer.Typer()
+
+    @app.command()
+    def write_atomic_failure(
+        config: typer.FileTextWrite = typer.Option(..., atomic=True, lazy=lazy),
+    ) -> None:
+        config.write("partial-content\n")
+        config.flush()
+        raise RuntimeError("callback failed")
+
+    result = runner.invoke(app, [f"--config={output_file}"])
+
+    assert result.exit_code == 1
+    assert isinstance(result.exception, RuntimeError)
+    assert str(result.exception) == "callback failed"
+    if destination_exists:
+        assert output_file.read_text(encoding="utf-8") == original_content
+    else:
+        assert not output_file.exists()
+    assert set(tmp_path.iterdir()) == initial_entries
 
 
 @pytest.mark.parametrize(
