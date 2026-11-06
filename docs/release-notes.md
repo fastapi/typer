@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.28.0 (2026-11-06)
+
 ### Fixes
 
 * 🐛 Ensure that the default option name is not changed by setting a metavar. PR [#1957](https://github.com/fastapi/typer/pull/1957) by [@svlandeg](https://github.com/svlandeg).
