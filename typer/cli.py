@@ -243,21 +243,22 @@ def get_docs_for_click(
         docs += f"{obj.epilog}\n\n"
     if isinstance(obj, TyperGroup):
         group = obj
-        commands = group.list_commands(ctx)
+        commands = []
+        for command in group.list_commands(ctx):
+            command_obj = group.get_command(ctx, command)
+            assert command_obj
+            if not command_obj.hidden:
+                commands.append(command_obj)
         if commands:
             docs += "**Commands**:\n\n"
-            for command in commands:
-                command_obj = group.get_command(ctx, command)
-                assert command_obj
+            for command_obj in commands:
                 docs += f"* `{command_obj.name}`"
                 command_help = command_obj.get_short_help_str()
                 if command_help:
                     docs += f": {_parse_html(to_parse, command_help)}"
                 docs += "\n"
             docs += "\n"
-        for command in commands:
-            command_obj = group.get_command(ctx, command)
-            assert command_obj
+        for command_obj in commands:
             use_prefix = ""
             if command_name:
                 use_prefix += f"{command_name}"
