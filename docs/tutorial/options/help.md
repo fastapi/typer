@@ -91,6 +91,102 @@ $ uv run python main.py --help
 
 Here we have a custom *CLI options* panel named "`Customization and Utils`".
 
+## Align option and argument columns across panels
+
+By default, each panel sizes its own columns, so the columns don't line up between panels.
+
+You can make `typer.Typer()` give every panel the same fixed column widths with `align_panel_columns=True`:
+
+{* docs_src/options/help/tutorial005_an_py310.py hl[5] *}
+
+Now *CLI arguments*, *CLI options* and every *CLI options* panel share the same grid. The names of the *CLI arguments* line up with the long names of the *CLI options*, and the required marker (`*`) column is shared too, reserved whenever any *CLI argument* or *CLI option* is required.
+
+Here the command has a required *CLI argument* and an optional one, one panel has only short options, another mixes short and long options, and the last has only long options:
+
+<div class="termy">
+
+```console
+$ uv run python main.py --help
+
+ Usage: main.py [OPTIONS] {source} [dest]
+
+╭─ Arguments ──────────────────────────────────────────────────────────────────╮
+│ *  source                <str>  Source path. [required]                      │
+│    dest                  <str>  Destination path.                            │
+╰──────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────╮
+│    --help                       Show this message and exit.                  │
+╰──────────────────────────────────────────────────────────────────────────────╯
+╭─ Short ──────────────────────────────────────────────────────────────────────╮
+│                  -a             Short flag.                                  │
+│                  -b      <str>  Short value.                                 │
+╰──────────────────────────────────────────────────────────────────────────────╯
+╭─ Mixed ──────────────────────────────────────────────────────────────────────╮
+│    --mixed-long  -m      <str>  Mixed value.                                 │
+│    --mixed-flag  -f             Mixed flag.                                  │
+╰──────────────────────────────────────────────────────────────────────────────╯
+╭─ Long ───────────────────────────────────────────────────────────────────────╮
+│    --alpha               <str>  Long value.                                  │
+│    --beta                       Long flag.                                   │
+╰──────────────────────────────────────────────────────────────────────────────╯
+```
+
+</div>
+
+## A complete alignment example
+
+The following example puts it all together. It has a required *CLI argument*, an optional one and a variadic one, plus *CLI options* covering every shape that changes the help layout: short-only, long-only, an alias, mixed, negative long-only, negative short-only, negative long and short, a custom `metavar`, an enum, a numeric range, a count option, a default, a custom default string, an environment variable, and a hidden option:
+
+{* docs_src/options/help/tutorial006_an_py310.py hl[7] *}
+
+Even with all of those, every panel shares one grid, so the argument names, option long names, short names, negative names and metavars all line up, and the hidden option does not appear:
+
+<div class="termy">
+
+```console
+$ uv run python main.py --help
+
+ Usage: main.py [OPTIONS] {source} [dest] [extras]...
+
+ Build the project.
+
+╭─ Arguments ──────────────────────────────────────────────────────────────────────────────────────╮
+│ *  source                                <str>                  Source directory. [required]     │
+│    dest                                  <str>                  Destination directory.           │
+│                                                                 [default: dist]                  │
+│    extras                                <str>                  Extra files.                     │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────╮
+│    --help                                                       Show this message and exit.      │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Required ───────────────────────────────────────────────────────────────────────────────────────╮
+│ *  --token                               <str>                  API token. [required]            │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Basic flags ────────────────────────────────────────────────────────────────────────────────────╮
+│                     -v                                          Verbose.                         │
+│    --alpha,--aleph                       <str>                  Long value with an alias.        │
+│    --mixed-long     -m                   <str>                  Mixed value.                     │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Negative flags ─────────────────────────────────────────────────────────────────────────────────╮
+│    --force          -f  --no-force                              Force. [default: no-force]       │
+│                     -p               -P                         Pretty. [default: P]             │
+│    --formal             --no-formal                             Formal. [default: no-formal]     │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Values ─────────────────────────────────────────────────────────────────────────────────────────╮
+│    --path                                PATH                   Output path. [default: .]        │
+│    --color                               <red|green>            Color. [default: red]            │
+│    --level                               <int range> [0<=x<=5]  Level. [default: 1]              │
+│    --count          -c                   <int>                  Count. [default: 0]              │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Defaults ───────────────────────────────────────────────────────────────────────────────────────╮
+│    --timeout                             <int>                  Timeout. [default: 30]           │
+│    --mode                                <str>                  Mode. [default: (auto)]          │
+│    --home                                <str>                  Home. [env var: HOME]            │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+
+</div>
+
 ## Help with style using Rich
 
 In a future section you will see how to use custom markup in the `help` for *CLI options* when reading about [Commands - Command Help](../commands/help.md#rich-markdown-and-markup).
