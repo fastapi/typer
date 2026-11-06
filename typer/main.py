@@ -1361,13 +1361,8 @@ def get_command_name(name: str) -> str:
     return name.lower().replace("_", "-")
 
 
-def get_default_option_flag_name(name: str, metavar: str | None) -> str:
-    flag_name = name.replace("_", "-")
-    if metavar is not None:
-        meta_flag = metavar.replace("_", "-")
-        if meta_flag.lower() == flag_name.lower():
-            return meta_flag
-    return flag_name
+def get_default_option_flag_name(name: str) -> str:
+    return name.replace("_", "-")
 
 
 def get_params_convertors_ctx_param_name_from_function(
@@ -1708,9 +1703,7 @@ def get_click_param(
             # Click doesn't accept a flag of type bool, only None, and then it sets it
             # to bool internally
             parameter_type = None
-        default_option_name = get_default_option_flag_name(
-            param.name, parameter_info.metavar
-        )
+        default_option_name = get_default_option_flag_name(param.name)
         if is_flag:
             default_option_declaration = (
                 f"--{default_option_name}/--no-{default_option_name}"

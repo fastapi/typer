@@ -413,7 +413,7 @@ def test_parameter_name_casing():
             "5",
             "--arg6",
             "6",
-            "--ARG9",
+            "--arg9",
             "9",
         ],
     )
@@ -423,17 +423,17 @@ def test_parameter_name_casing():
         in result.output
     )
 
-    result = runner.invoke(app, ["1", "3", "4", "7", "8", "--ARG5", "5", "--ARG9", "9"])
+    result = runner.invoke(app, ["1", "3", "4", "7", "8", "--ARG5", "5", "--arg9", "9"])
     assert result.exit_code == 0
     assert (
         "arg1=1 arg2=42 arg3=3 ARG4=4 ARG5=5 arg6=42 arg7=7 arg8=8 arg9=9"
         in result.output
     )
 
-    result = runner.invoke(app, ["1", "3", "4", "7", "8", "--arg5", "5", "--ARG9", "9"])
+    result = runner.invoke(app, ["1", "3", "4", "7", "8", "--arg5", "5", "--arg9", "9"])
     assert result.exit_code != 0
     assert "No such option: --arg5" in result.output
 
-    result = runner.invoke(app, ["1", "3", "4", "7", "8", "--ARG5", "5", "--arg9", "9"])
+    result = runner.invoke(app, ["1", "3", "4", "7", "8", "--ARG5", "5", "--ARG9", "9"])
     assert result.exit_code != 0
-    assert "No such option: --arg9" in result.output
+    assert "No such option: --ARG9" in result.output
