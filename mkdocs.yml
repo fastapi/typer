@@ -83,6 +83,7 @@ nav:
   - "":
       - tutorial/index.md
       - tutorial/install.md
+      - ai-development.md
       - tutorial/first-steps.md
       - tutorial/typer-app.md
       - tutorial/printing.md
@@ -153,7 +154,6 @@ nav:
     - reference/file_objects.md
     - reference/context.md
   - "":
-    - ai-development.md
     - resources/index.md
     - help-typer.md
     - contributing.md
