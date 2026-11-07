@@ -153,6 +153,7 @@ nav:
     - reference/file_objects.md
     - reference/context.md
   - "":
+    - ai-development.md
     - resources/index.md
     - help-typer.md
     - contributing.md
@@ -162,7 +163,12 @@ nav:
     - management.md
   - release-notes.md
 
+watch:
+  - scripts/agent_banner.py
+  - includes/agent-banner.md
+
 markdown_extensions:
+  scripts.agent_banner:
   # Material for MkDocs Extensions
   material.extensions.preview:
     targets:
