@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Docs
+
+* 📝 Add AI development guidance and coding agent notices. PR [#2003](https://github.com/fastapi/typer/pull/2003) by [@tiangolo](https://github.com/tiangolo).
+
 ## 0.28.0 (2026-11-06)
 
 ### Fixes
