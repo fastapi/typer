@@ -6,6 +6,6 @@ Use the official Typer skill for your installed version. Install it from your pr
 uvx library-skills
 ```
 
-See [Develop with AI](https://typer.tiangolo.com/ai-development/).
+See [Develop with AI](ai-development.md).
 
 ///

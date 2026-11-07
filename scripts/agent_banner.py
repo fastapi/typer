@@ -1,4 +1,5 @@
 from pathlib import Path
+from posixpath import relpath
 
 from markdown import Markdown
 from markdown.extensions import Extension
@@ -24,6 +25,10 @@ class AgentBannerPreprocessor(Preprocessor):
             Path(__file__).resolve().parent.parent / "includes/agent-banner.md"
         )
         banner = banner_path.read_text(encoding="utf-8").strip()
+        guide_path = relpath(
+            "ai-development.md", Path(context.page.path).parent.as_posix()
+        )
+        banner = banner.replace("(ai-development.md)", f"({guide_path})")
         content = "\n".join(lines)
         marker = "<!-- agent-banner -->"
         if marker in content:
