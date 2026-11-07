@@ -4,6 +4,7 @@
 
 ### Docs
 
+* 🎨 Use the Zensical modern theme for docs. PR [#2004](https://github.com/fastapi/typer/pull/2004) by [@tiangolo](https://github.com/tiangolo).
 * 📝 Add AI development guidance and coding agent notices. PR [#2003](https://github.com/fastapi/typer/pull/2003) by [@tiangolo](https://github.com/tiangolo).
 
 ## 0.28.0 (2026-11-06)
