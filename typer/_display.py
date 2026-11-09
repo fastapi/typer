@@ -1,5 +1,7 @@
 from typing import Any
 
+from ._click.utils import _escape_control_characters
+
 
 def describe_number_range(
     min: int | float | None,
@@ -15,8 +17,8 @@ def describe_number_range(
 
 
 def get_error_msg(exc: Any) -> str:
-    """Get a string representation of the (first) validation error."""
+    """Get the first validation error message with terminal controls escaped."""
     errors = exc.errors()
     if errors:
-        return str(errors[0]["msg"])
-    return str(exc)  # pragma: no cover
+        return _escape_control_characters(str(errors[0]["msg"]))
+    return _escape_control_characters(str(exc))  # pragma: no cover

@@ -3,7 +3,6 @@ from pathlib import Path
 
 import pytest
 import typer
-from typer._adapters import disabled_pydantic_plugins
 from typer.core import _TyperParameter
 from typer.testing import CliRunner
 
@@ -204,6 +203,8 @@ def test_widget_parsed_from_cli_with_parser() -> None:
 def test_plugin_when_previously_unset(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    from typer._adapters import disabled_pydantic_plugins
+
     monkeypatch.delenv("PYDANTIC_DISABLE_PLUGINS", raising=False)
     with disabled_pydantic_plugins():
         assert os.environ["PYDANTIC_DISABLE_PLUGINS"] == "1"
@@ -213,6 +214,8 @@ def test_plugin_when_previously_unset(
 def test_plugin_when_previously_set(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    from typer._adapters import disabled_pydantic_plugins
+
     monkeypatch.setenv("PYDANTIC_DISABLE_PLUGINS", "0")
     with disabled_pydantic_plugins():
         assert os.environ["PYDANTIC_DISABLE_PLUGINS"] == "1"
