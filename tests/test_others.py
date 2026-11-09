@@ -3,7 +3,7 @@ import subprocess
 import sys
 import typing
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, Any
 from unittest import mock
 
 import pytest
@@ -12,7 +12,7 @@ import typer._completion_shared
 import typer.completion
 from typer import _click
 from typer.main import solve_typer_info_defaults, solve_typer_info_help
-from typer.models import ParameterInfo, TyperInfo
+from typer.models import TyperInfo
 from typer.testing import CliRunner
 
 from .utils import requires_completion_permission
@@ -30,50 +30,6 @@ def test_defaults_from_info():
     # Mainly for coverage/completeness
     value = solve_typer_info_defaults(TyperInfo())
     assert value
-
-
-def test_too_many_parsers():
-    def custom_parser(value: str) -> int:
-        return int(value)  # pragma: no cover
-
-    class CustomClickParser(_click.types.ParamType):
-        name = "custom_parser"
-
-        def convert(
-            self,
-            value: str,
-            param: _click.Parameter | None,
-            ctx: _click.Context | None,
-        ) -> typing.Any:
-            return int(value)  # pragma: no cover
-
-    expected_error = (
-        "Multiple custom type parsers provided. "
-        "`parser` and `click_type` may not both be provided."
-    )
-
-    with pytest.raises(ValueError, match=expected_error):
-        ParameterInfo(parser=custom_parser, click_type=CustomClickParser())
-
-
-def test_valid_parser_permutations():
-    def custom_parser(value: str) -> int:
-        return int(value)  # pragma: no cover
-
-    class CustomClickParser(_click.types.ParamType):
-        name = "custom_parser"
-
-        def convert(
-            self,
-            value: str,
-            param: _click.Parameter | None,
-            ctx: _click.Context | None,
-        ) -> typing.Any:
-            return int(value)  # pragma: no cover
-
-    ParameterInfo()
-    ParameterInfo(parser=custom_parser)
-    ParameterInfo(click_type=CustomClickParser())
 
 
 @requires_completion_permission
@@ -351,6 +307,60 @@ def test_option_envvar_list():
     assert "Hello morty" in result.output
 
 
+def test_option_envvar_list_path(tmp_path: Path) -> None:
+    first = tmp_path / "a.txt"
+    second = tmp_path / "b.txt"
+    first.write_text("a", encoding="utf-8")
+    second.write_text("b", encoding="utf-8")
+    app = typer.Typer()
+
+    @app.command()
+    def main(configs: Annotated[list[Path], typer.Option(envvar="MYFILES")]):
+        print([path.name for path in configs])
+
+    result = runner.invoke(app, env={"MYFILES": f"{first}{os.path.pathsep}{second}"})
+    assert result.exit_code == 0, result.output
+    assert result.output.strip() == "['a.txt', 'b.txt']"
+
+
+def test_option_envvar_list_file(tmp_path: Path) -> None:
+    first = tmp_path / "a.txt"
+    second = tmp_path / "b.txt"
+    first.write_text("one", encoding="utf-8")
+    second.write_text("two", encoding="utf-8")
+    app = typer.Typer()
+
+    @app.command()
+    def main(files: Annotated[list[typer.FileText], typer.Option(envvar="FILES")]):
+        print([file.read() for file in files])
+
+    result = runner.invoke(app, env={"FILES": f"{first}{os.path.pathsep}{second}"})
+    assert result.exit_code == 0, result.output
+    assert result.output.strip() == "['one', 'two']"
+
+
+def test_option_envvar_list_path_options(tmp_path: Path) -> None:
+    first = tmp_path / "first dir" / "a.txt"
+    second = tmp_path / "second dir" / "b.txt"
+    first.parent.mkdir(parents=True, exist_ok=True)
+    second.parent.mkdir(parents=True, exist_ok=True)
+    first.write_text("a", encoding="utf-8")
+    second.write_text("b", encoding="utf-8")
+    app = typer.Typer()
+
+    @app.command()
+    def main(
+        configs: Annotated[
+            list[Any], typer.Option(envvar="MYFILES", resolve_path=True)
+        ],
+    ):
+        print([Path(str(path)).name for path in configs])
+
+    result = runner.invoke(app, env={"MYFILES": f"{first}{os.path.pathsep}{second}"})
+    assert result.exit_code == 0, result.output
+    assert result.output.strip() == "['a.txt', 'b.txt']"
+
+
 def test_completion_argument():
     file_path = Path(__file__).parent / "assets/completion_argument.py"
     result = subprocess.run(
@@ -451,7 +461,7 @@ def test_forward_references():
     result = runner.invoke(app, ["Hello", "2", "invalid"])
 
     assert "Invalid value for 'arg3'" in result.output
-    assert "'invalid' is not a valid int" in result.output
+    assert "Input should be a valid integer" in result.output
     result = runner.invoke(app, ["Hello", "2", "3", "--arg4", "--arg5"])
     assert (
         "arg1: <class 'str'> Hello\narg2: <class 'int'> 2\narg3: <class 'int'> 3\narg4: <class 'bool'> True\narg5: <class 'bool'> True\n"

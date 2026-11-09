@@ -71,7 +71,7 @@ $ uv run python main.py --config config.txt
 Usage: main.py [OPTIONS]
 Try "main.py --help" for help.
 
-Error: Invalid value for '--config': File 'config.txt' does not exist.
+Error: Invalid value for '--config': file 'config.txt' does not exist.
 
 // Now create a quick config
 $ echo "some settings" > config.txt
@@ -87,7 +87,7 @@ $ uv run python main.py --config ./
 Usage: main.py [OPTIONS]
 Try "main.py --help" for help.
 
-Error: Invalid value for '--config': File './' is a directory.
+Error: Invalid value for '--config': file './' is a directory.
 ```
 
 </div>

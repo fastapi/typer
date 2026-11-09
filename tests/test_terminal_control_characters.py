@@ -78,7 +78,11 @@ def test_error_values(
     # Remove only generated color styles so other terminal controls cannot hide.
     output = re.sub(r"\x1b\[[0-9;]*m", "", result.stderr)
     assert message in output
-    assert prefix + "input-" + escaped in output
+    if command == "parse":
+        # Custom parsers fail via Pydantic; the value shows up via repr()
+        assert repr(prefix + "input-" + value) in output
+    else:
+        assert prefix + "input-" + escaped in output
     assert re.search(r"[\x00-\x09\x0b-\x1f\x7f-\x9f]", output) is None
 
 
