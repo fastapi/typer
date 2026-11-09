@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Docs
+
+* 📝 Adopt unversioned documentation snippets. PR [#2010](https://github.com/fastapi/typer/pull/2010) by [@tiangolo](https://github.com/tiangolo).
+
 ### Internal
 
 * 🔧 Preserve snippet variants in documentation cleanup. PR [#2011](https://github.com/fastapi/typer/pull/2011) by [@tiangolo](https://github.com/tiangolo).
