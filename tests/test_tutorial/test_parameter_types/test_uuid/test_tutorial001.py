@@ -4,7 +4,7 @@ import uuid
 
 from typer.testing import CliRunner
 
-from docs_src.parameter_types.uuid import tutorial001_py310 as mod
+from docs_src.parameter_types.uuid import tutorial001 as mod
 
 runner = CliRunner()
 app = mod.app

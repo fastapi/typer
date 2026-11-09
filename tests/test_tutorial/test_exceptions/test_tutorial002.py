@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 from typer.testing import CliRunner
 
-from docs_src.exceptions import tutorial002_py310 as mod
+from docs_src.exceptions import tutorial002 as mod
 
 runner = CliRunner()
 

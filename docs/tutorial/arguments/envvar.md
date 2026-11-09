@@ -12,7 +12,7 @@ Read the [Environment Variables guide](https://tiangolo.com/guides/environment-v
 
 To do that, use the `envvar` parameter for `typer.Argument()`:
 
-{* docs_src/arguments/envvar/tutorial001_an_py310.py hl[9] *}
+{* docs_src/arguments/envvar/tutorial001.py hl[9] *}
 
 In this case, the *CLI argument* `name` will have a default value of `"World"`, but will also read any value passed to the environment variable `AWESOME_NAME` if no value is provided in the command line:
 
@@ -68,7 +68,7 @@ $ uv run python main.py
 
 You are not restricted to a single environment variable, you can declare a list of environment variables that could be used to get a value if it was not passed in the command line:
 
-{* docs_src/arguments/envvar/tutorial002_an_py310.py hl[10] *}
+{* docs_src/arguments/envvar/tutorial002.py hl[10] *}
 
 Check it:
 
@@ -103,7 +103,7 @@ Hello Mr. Anubis
 
 By default, environment variables used will be shown in the help text, but you can disable them with `show_envvar=False`:
 
-{* docs_src/arguments/envvar/tutorial003_an_py310.py hl[11] *}
+{* docs_src/arguments/envvar/tutorial003.py hl[11] *}
 
 Check it:
 

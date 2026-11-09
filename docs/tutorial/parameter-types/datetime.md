@@ -4,7 +4,7 @@ You can specify a *CLI parameter* as a Python [`datetime`](https://docs.python.o
 
 Your function will receive a standard Python `datetime` object, and again, your editor will give you completion, etc.
 
-{* docs_src/parameter_types/datetime/tutorial001_py310.py hl[1,9,10,11] *}
+{* docs_src/parameter_types/datetime/tutorial001.py hl[1,9,10,11] *}
 
 Typer will accept any string from datetime formats [supported by Pydantic](https://pydantic.dev/docs/validation/latest/api/pydantic/standard_library_types/#validation-9),
 including Unix timestamps as seconds or milliseconds since the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time),
@@ -61,7 +61,7 @@ For example, let's imagine that you want to accept an ISO formatted datetime, bu
 
 ...It's a crazy example, but let's say you also needed that strange format:
 
-{* docs_src/parameter_types/datetime/tutorial002_an_py310.py hl[13] *}
+{* docs_src/parameter_types/datetime/tutorial002.py hl[13] *}
 
 /// tip
 
