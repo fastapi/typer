@@ -11,6 +11,8 @@ VERSION_PATTERN = re.compile(r'(?m)^__version__ = "(\d+\.\d+\.\d+)"$')
 VERSION_HEADING_PATTERN = re.compile(r"(?m)^## (\d+\.\d+\.\d+)(?: \([^)]+\))?$")
 RELEASE_NOTES_HEADER = "# Release Notes\n\n"
 LATEST_CHANGES_HEADER = "## Latest Changes"
+AGENT_SKILLS_NOTE = """> Typer includes an official skill that helps coding agents use new features and recommended patterns for your installed version. Install it with `uvx library-skills` in your project. See [Develop with AI](https://typer.tiangolo.com/ai-development/).
+"""
 BumpType = Literal["major", "minor", "patch"]
 
 app = typer.Typer()
@@ -197,12 +199,10 @@ def release_notes(
     ],
 ) -> None:
     version = get_current_version(version_file.read_text(), version_file)
-    typer.echo(
-        get_release_notes_body(
-            release_notes_file.read_text(), version, release_notes_file
-        ),
-        nl=False,
+    body = get_release_notes_body(
+        release_notes_file.read_text(), version, release_notes_file
     )
+    typer.echo(f"{AGENT_SKILLS_NOTE}\n{body}", nl=False)
 
 
 if __name__ == "__main__":
