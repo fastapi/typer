@@ -209,7 +209,8 @@ def _build_number_adapter(
             return value
 
         # Use AfterValidator so it runs after coercion
-        return TypeAdapter(Annotated[number_class, AfterValidator(clamp_number)])  # ty: ignore[invalid-type-form]
+        clamped_type: Any = Annotated[number_class, AfterValidator(clamp_number)]  # ty: ignore[invalid-type-form]
+        return TypeAdapter(clamped_type)
     else:
         field_kwargs: dict[str, Any] = {}
         if min is not None:
@@ -217,7 +218,8 @@ def _build_number_adapter(
         if max is not None:
             field_kwargs["le"] = max
         if field_kwargs:
-            return TypeAdapter(Annotated[number_class, Field(**field_kwargs)])  # ty: ignore[invalid-type-form]
+            constrained_type: Any = Annotated[number_class, Field(**field_kwargs)]  # ty: ignore[invalid-type-form]
+            return TypeAdapter(constrained_type)
         return TypeAdapter(number_class)
 
 
