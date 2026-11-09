@@ -262,7 +262,7 @@ You can also use the `typer` command to generate Markdown documentation for your
 
 For example, you could have a script like:
 
-{* docs_src/commands/help/tutorial001_an_py310.py *}
+{* docs_src/commands/help/tutorial001.py *}
 
 ### Generate docs with the `typer` command
 
