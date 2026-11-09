@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.29.0 (2026-11-09)
+
 ### Features
 
 * ✨ Use Pydantic for parameter validation. PR [#1831](https://github.com/fastapi/typer/pull/1831) by [@svlandeg](https://github.com/svlandeg).
