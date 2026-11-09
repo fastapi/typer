@@ -203,7 +203,7 @@ keep-runtime-typing = true
 
 [tool.ruff.lint.flake8-tidy-imports]
 # Import these from within functions (lazy), not at the module level (TID253)
-banned-module-level-imports = ["typer.rich_utils", "typer.adapters", "pydantic"]
+banned-module-level-imports = ["typer.rich_utils", "typer._adapters", "pydantic"]
 
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
 "rich".msg = "Use 'typer.rich_utils' instead of importing from 'rich' directly."

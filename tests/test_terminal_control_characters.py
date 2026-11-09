@@ -27,6 +27,15 @@ def app(request: pytest.FixtureRequest) -> typer.Typer:
     ) -> None:
         pass  # pragma: no cover
 
+    def parse_value(value: str) -> str:
+        raise ValueError(f"Invalid item: {value}")
+
+    @app.command()
+    def parse_custom(
+        value: Annotated[str, typer.Argument(parser=parse_value)],
+    ) -> None:
+        pass  # pragma: no cover
+
     return app
 
 
@@ -38,8 +47,15 @@ def app(request: pytest.FixtureRequest) -> typer.Typer:
         ("no-args", "--", "No such option"),
         ("read-file", "", "Invalid value"),
         ("parse", "", "Invalid value"),
+        ("parse-custom", "", "Value error, Invalid item:"),
     ],
-    ids=["extra-argument", "unknown-option", "file-open", "custom-parser"],
+    ids=[
+        "extra-argument",
+        "unknown-option",
+        "file-open",
+        "custom-parser",
+        "custom-parser-message",
+    ],
 )
 @pytest.mark.parametrize(
     ("value", "escaped"),
@@ -79,7 +95,7 @@ def test_error_values(
     output = re.sub(r"\x1b\[[0-9;]*m", "", result.stderr)
     assert message in output
     if command == "parse":
-        # Custom parsers fail via Pydantic; the value shows up via repr()
+        # int() already uses repr() for the input in its error message.
         assert repr(prefix + "input-" + value) in output
     else:
         assert prefix + "input-" + escaped in output
