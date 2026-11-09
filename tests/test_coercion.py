@@ -1,6 +1,9 @@
+import os
 from pathlib import Path
 
+import pytest
 import typer
+from typer._adapters import disabled_pydantic_plugins
 from typer.core import _TyperParameter
 from typer.testing import CliRunner
 
@@ -196,3 +199,21 @@ def test_widget_parsed_from_cli_with_parser() -> None:
     assert result.exit_code == 0
     assert isinstance(seen["val"], Widget)
     assert seen["val"].value == 666
+
+
+def test_env_var_removed_afterwards_when_previously_unset(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv("PYDANTIC_DISABLE_PLUGINS", raising=False)
+    with disabled_pydantic_plugins():
+        assert os.environ["PYDANTIC_DISABLE_PLUGINS"] == "1"
+    assert "PYDANTIC_DISABLE_PLUGINS" not in os.environ
+
+
+def test_env_var_restored_afterwards_when_previously_set(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("PYDANTIC_DISABLE_PLUGINS", "0")
+    with disabled_pydantic_plugins():
+        assert os.environ["PYDANTIC_DISABLE_PLUGINS"] == "1"
+    assert os.environ["PYDANTIC_DISABLE_PLUGINS"] == "0"
