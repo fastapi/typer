@@ -231,8 +231,12 @@ def coerce_cli_path(
         else:
             from pydantic import TypeAdapter, ValidationError
 
+            from ._adapters import disabled_pydantic_plugins
+
             try:
-                rv = TypeAdapter(path_type).validate_python(value)
+                with disabled_pydantic_plugins():
+                    adapter = TypeAdapter(path_type)
+                rv = adapter.validate_python(value)
             except ValidationError as exc:
                 raise BadParameter(get_error_msg(exc), ctx=ctx, param=param) from exc
 

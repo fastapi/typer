@@ -1,5 +1,7 @@
+import os
 import sys
-from collections.abc import Sequence
+from collections.abc import Generator, Sequence
+from contextlib import contextmanager
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
@@ -43,14 +45,29 @@ def validation_ctx_param(
     return context.get(_CTX_KEY), context.get(_PARAM_KEY)
 
 
+@contextmanager
+def disabled_pydantic_plugins() -> Generator[None, None, None]:
+    """Disable Pydantic plugin loading while building TypeAdapters."""
+    previous = os.environ.get("PYDANTIC_DISABLE_PLUGINS")
+    os.environ["PYDANTIC_DISABLE_PLUGINS"] = "1"
+    try:
+        yield
+    finally:
+        if previous is None:
+            del os.environ["PYDANTIC_DISABLE_PLUGINS"]
+        else:
+            os.environ["PYDANTIC_DISABLE_PLUGINS"] = previous
+
+
 def try_build_adapter(
     annotation: Any, parameter_info: ParameterInfo
 ) -> TypeAdapter[Any] | None:
     """Build a TypeAdapter when Pydantic can schema-generate the annotation."""
-    try:
-        return build_adapter(annotation, parameter_info)
-    except PydanticSchemaGenerationError:
-        return None
+    with disabled_pydantic_plugins():
+        try:
+            return build_adapter(annotation, parameter_info)
+        except PydanticSchemaGenerationError:
+            return None
 
 
 def build_adapter(annotation: Any, parameter_info: ParameterInfo) -> TypeAdapter[Any]:
