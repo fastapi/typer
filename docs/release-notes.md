@@ -4,6 +4,7 @@
 
 ### Internal
 
+* ⬆️ Upgrade markdown-include-variants to 0.0.10. PR [#2009](https://github.com/fastapi/typer/pull/2009) by [@tiangolo](https://github.com/tiangolo).
 * 🔧 Add an agent skills note to GitHub releases. PR [#2008](https://github.com/fastapi/typer/pull/2008) by [@tiangolo](https://github.com/tiangolo).
 
 ## 0.29.0 (2026-11-09)
