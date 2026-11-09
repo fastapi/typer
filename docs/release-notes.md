@@ -4,7 +4,25 @@
 
 ### Docs
 
+* 🎨 Use the Zensical modern theme for docs. PR [#2004](https://github.com/fastapi/typer/pull/2004) by [@tiangolo](https://github.com/tiangolo).
+* 📝 Add AI development guidance and coding agent notices. PR [#2003](https://github.com/fastapi/typer/pull/2003) by [@tiangolo](https://github.com/tiangolo).
+
+## 0.28.0 (2026-11-06)
+
+### Fixes
+
+* 🐛 Ensure that the default option name is not changed by setting a metavar. PR [#1957](https://github.com/fastapi/typer/pull/1957) by [@svlandeg](https://github.com/svlandeg).
+
+### Docs
+
 * 🎨 Enable Ruff formatting for Python in Markdown. PR [#1978](https://github.com/fastapi/typer/pull/1978) by [@tiangolo](https://github.com/tiangolo).
+
+### Internal
+
+* ⬆ Bump certifi from 2025.11.12 to 2026.10.18. PR [#1990](https://github.com/fastapi/typer/pull/1990) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump the python-packages group with 6 updates. PR [#1994](https://github.com/fastapi/typer/pull/1994) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump the github-actions group with 6 updates. PR [#1993](https://github.com/fastapi/typer/pull/1993) by [@dependabot[bot]](https://github.com/apps/dependabot).
+* ⬆ Bump pre-commit hooks. PR [#1995](https://github.com/fastapi/typer/pull/1995) by [@pr-submit[bot]](https://github.com/apps/pr-submit).
 
 ## 0.27.3 (2026-10-06)
 

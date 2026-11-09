@@ -1345,20 +1345,8 @@ def get_command_name(name: str) -> str:
     return name.lower().replace("_", "-")
 
 
-def _get_option_flag_name(name: str) -> str:
+def get_default_option_flag_name(name: str) -> str:
     return name.replace("_", "-")
-
-
-def get_default_option_flag_name(name: str, metavar: str | None) -> str:
-    flag_name = _get_option_flag_name(name)
-    if metavar is None:
-        return flag_name
-    if (
-        _get_option_flag_name(metavar).replace("-", "_").casefold()
-        == flag_name.replace("-", "_").casefold()
-    ):
-        return _get_option_flag_name(metavar)
-    return flag_name
 
 
 def _get_params_name_from_function(
@@ -1497,9 +1485,7 @@ def _get_param(param: ParamMeta) -> TyperArgument | TyperOption:
     tuple_nargs = descriptor.tuple_arity
 
     if isinstance(parameter_info, OptionInfo):
-        default_option_name = get_default_option_flag_name(
-            param.name, parameter_info.metavar
-        )
+        default_option_name = get_default_option_flag_name(param.name)
         if is_flag:
             default_option_declaration = (
                 f"--{default_option_name}/--no-{default_option_name}"

@@ -39,6 +39,7 @@ def generate_readme_content() -> str:
         new_content,
         flags=re.DOTALL,
     )
+    new_content = new_content.replace("<!-- agent-banner -->\n\n", "")
     return new_content
 
 
