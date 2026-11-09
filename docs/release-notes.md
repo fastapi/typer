@@ -6,6 +6,8 @@
 
 * ✨ Use Pydantic for parameter validation. PR [#1831](https://github.com/fastapi/typer/pull/1831) by [@svlandeg](https://github.com/svlandeg).
 
+    Typer now uses Pydantic internally to validate command-line parameters. This is a gradual migration focused on preserving compatibility with existing Typer applications. Some validation error messages have changed.
+
 ### Fixes
 
 * 🐛 Escape terminal controls in Pydantic validation errors. PR [#2005](https://github.com/fastapi/typer/pull/2005) by [@tiangolo](https://github.com/tiangolo).
