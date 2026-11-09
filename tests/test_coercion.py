@@ -201,7 +201,7 @@ def test_widget_parsed_from_cli_with_parser() -> None:
     assert seen["val"].value == 666
 
 
-def test_env_var_removed_afterwards_when_previously_unset(
+def test_plugin_when_previously_unset(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.delenv("PYDANTIC_DISABLE_PLUGINS", raising=False)
@@ -210,7 +210,7 @@ def test_env_var_removed_afterwards_when_previously_unset(
     assert "PYDANTIC_DISABLE_PLUGINS" not in os.environ
 
 
-def test_env_var_restored_afterwards_when_previously_set(
+def test_plugin_when_previously_set(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setenv("PYDANTIC_DISABLE_PLUGINS", "0")
