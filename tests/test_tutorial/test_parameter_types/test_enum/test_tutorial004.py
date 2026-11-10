@@ -12,8 +12,8 @@ runner = CliRunner()
 @pytest.fixture(
     name="mod",
     params=[
-        pytest.param("tutorial004_py310"),
-        pytest.param("tutorial004_an_py310"),
+        pytest.param("tutorial004_non_an"),
+        pytest.param("tutorial004"),
     ],
 )
 def get_mod(request: pytest.FixtureRequest) -> ModuleType:

@@ -262,23 +262,33 @@ def test_cli_prints_current_version(tmp_path: Path) -> None:
     assert result.output == "0.26.2\n"
 
 
-def test_cli_prints_release_notes(tmp_path: Path) -> None:
+def test_cli_prints_release_notes_with_agent_skills_note(tmp_path: Path) -> None:
     version_file = tmp_path / "package" / "__init__.py"
     version_file.parent.mkdir()
-    version_file.write_text('__version__ = "0.26.3"\n')
+    version_content = '__version__ = "0.26.3"\n'
+    version_file.write_text(version_content)
     release_notes_file = tmp_path / "release-notes.md"
-    release_notes_file.write_text(
-        """# Release Notes
+    notes_content = """# Release Notes
 
 ## Latest Changes
+
+### Fixes
+
+* Unreleased fix.
 
 ## 0.26.3 (2026-05-28)
 
 ### Fixes
 
 * Fix something.
+
+## 0.26.2 (2026-05-23)
+
+### Fixes
+
+* Previous fix.
 """
-    )
+    release_notes_file.write_text(notes_content)
 
     result = runner.invoke(
         app,
@@ -292,4 +302,11 @@ def test_cli_prints_release_notes(tmp_path: Path) -> None:
     )
 
     assert result.exit_code == 0, result.output
-    assert result.output == "### Fixes\n\n* Fix something.\n"
+    note, separator, body = result.output.partition("\n\n")
+    assert note.startswith("> Typer includes an official skill")
+    assert note.count("`uvx library-skills`") == 1
+    assert "[Develop with AI](https://typer.tiangolo.com/ai-development/)" in note
+    assert separator
+    assert body == "### Fixes\n\n* Fix something.\n"
+    assert release_notes_file.read_text() == notes_content
+    assert version_file.read_text() == version_content

@@ -36,6 +36,8 @@ Typer is a library for building <abbr title="command line interface, programs ex
 
 It's also a command line tool to run scripts, automatically converting them to CLI applications.
 
+<!-- agent-banner -->
+
 The key features are:
 
 * **Intuitive to write**: Great editor support. <abbr title="also known as auto-complete, autocompletion, IntelliSense">Completion</abbr> everywhere. Less time debugging. Designed to be easy to use and learn. Less time reading docs.
@@ -360,9 +362,10 @@ For a more complete example including more features, see the <a href="https://ty
 
 ## Dependencies
 
-**Typer** requires only a few dependencies (most are tiny):
+**Typer** requires only a few dependencies:
 
 * [`rich`](https://rich.readthedocs.io/en/stable/index.html): to show nicely formatted errors automatically.
+* [`pydantic`](https://pydantic.dev/docs/validation/latest/get-started/): to validate input parameters.
 * [`shellingham`](https://github.com/sarugaku/shellingham): to automatically detect the current shell when installing completion.
 * [`annotated-doc`](https://github.com/fastapi/annotated-doc): to generate documentation from Python type annotations.
 * [`colorama`](https://github.com/tartley/colorama) (only on Windows): for producing colored terminal text on Windows.

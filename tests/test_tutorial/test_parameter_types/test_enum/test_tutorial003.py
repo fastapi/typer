@@ -12,8 +12,8 @@ runner = CliRunner()
 @pytest.fixture(
     name="mod",
     params=[
-        pytest.param("tutorial003_py310"),
-        pytest.param("tutorial003_an_py310"),
+        pytest.param("tutorial003_non_an"),
+        pytest.param("tutorial003"),
     ],
 )
 def get_mod(request: pytest.FixtureRequest) -> ModuleType:
@@ -26,7 +26,7 @@ def test_help(mod: ModuleType):
     result = runner.invoke(mod.app, ["--help"])
     assert result.exit_code == 0
     assert "--groceries" in result.output
-    assert "<Eggs|Bacon|Cheese>" in result.output
+    assert "<list[Eggs|Bacon|Cheese]>" in result.output
     assert "default: Eggs, Cheese" in result.output
 
 

@@ -12,8 +12,8 @@ runner = CliRunner()
 @pytest.fixture(
     name="mod",
     params=[
-        pytest.param("tutorial001_py310"),
-        pytest.param("tutorial001_an_py310"),
+        pytest.param("tutorial001_non_an"),
+        pytest.param("tutorial001"),
     ],
 )
 def get_mod(request: pytest.FixtureRequest) -> ModuleType:
@@ -58,6 +58,7 @@ def test_script(mod: ModuleType):
         encoding="utf-8",
     )
     assert "Usage" in result.stdout
+    assert "<str,int,bool>" in result.stdout
 
     # ensure that also tuple of None's isn't displayed
     assert "[default: None, None, None]" not in result.stdout

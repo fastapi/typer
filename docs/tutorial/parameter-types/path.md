@@ -4,7 +4,7 @@ You can declare a *CLI parameter* to be a standard Python [`pathlib.Path`](https
 
 This is what you would do for directory paths, file paths, etc:
 
-{* docs_src/parameter_types/path/tutorial001_an_py310.py hl[1,10] *}
+{* docs_src/parameter_types/path/tutorial001.py hl[1,10] *}
 
 And again, as you receive a standard Python `Path` object the same as the type annotation, your editor will give you autocompletion for all its attributes and methods.
 
@@ -59,7 +59,7 @@ It will not expand a tilde-prefix (something with `~`, like `~/Documents/`), as 
 
 For example:
 
-{* docs_src/parameter_types/path/tutorial002_an_py310.py hl[14:19] *}
+{* docs_src/parameter_types/path/tutorial002.py hl[14:19] *}
 
 Check it:
 
@@ -71,7 +71,7 @@ $ uv run python main.py --config config.txt
 Usage: main.py [OPTIONS]
 Try "main.py --help" for help.
 
-Error: Invalid value for '--config': File 'config.txt' does not exist.
+Error: Invalid value for '--config': file 'config.txt' does not exist.
 
 // Now create a quick config
 $ echo "some settings" > config.txt
@@ -87,7 +87,7 @@ $ uv run python main.py --config ./
 Usage: main.py [OPTIONS]
 Try "main.py --help" for help.
 
-Error: Invalid value for '--config': File './' is a directory.
+Error: Invalid value for '--config': file './' is a directory.
 ```
 
 </div>

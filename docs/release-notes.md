@@ -4,6 +4,41 @@
 
 ### Docs
 
+* 📝 Adopt unversioned documentation snippets. PR [#2010](https://github.com/fastapi/typer/pull/2010) by [@tiangolo](https://github.com/tiangolo).
+
+### Internal
+
+* 🔥 Remove obsolete documentation snippet generators. PR [#2012](https://github.com/fastapi/typer/pull/2012) by [@tiangolo](https://github.com/tiangolo).
+* 🔧 Preserve snippet variants in documentation cleanup. PR [#2011](https://github.com/fastapi/typer/pull/2011) by [@tiangolo](https://github.com/tiangolo).
+* ⬆️ Upgrade markdown-include-variants to 0.0.10. PR [#2009](https://github.com/fastapi/typer/pull/2009) by [@tiangolo](https://github.com/tiangolo).
+* 🔧 Add an agent skills note to GitHub releases. PR [#2008](https://github.com/fastapi/typer/pull/2008) by [@tiangolo](https://github.com/tiangolo).
+
+## 0.29.0 (2026-11-09)
+
+### Features
+
+* ✨ Use Pydantic for parameter validation. PR [#1831](https://github.com/fastapi/typer/pull/1831) by [@svlandeg](https://github.com/svlandeg).
+
+    Typer now uses Pydantic internally to validate command-line parameters. This is a gradual migration focused on preserving compatibility with existing Typer applications. Some validation error messages have changed.
+
+### Fixes
+
+* 🐛 Escape terminal controls in Pydantic validation errors. PR [#2005](https://github.com/fastapi/typer/pull/2005) by [@tiangolo](https://github.com/tiangolo).
+
+### Docs
+
+* 📝 Explain Pydantic validation in the release notes. PR [#2006](https://github.com/fastapi/typer/pull/2006) by [@tiangolo](https://github.com/tiangolo).
+* 🎨 Use the Zensical modern theme for docs. PR [#2004](https://github.com/fastapi/typer/pull/2004) by [@tiangolo](https://github.com/tiangolo).
+* 📝 Add AI development guidance and coding agent notices. PR [#2003](https://github.com/fastapi/typer/pull/2003) by [@tiangolo](https://github.com/tiangolo).
+
+## 0.28.0 (2026-11-06)
+
+### Fixes
+
+* 🐛 Ensure that the default option name is not changed by setting a metavar. PR [#1957](https://github.com/fastapi/typer/pull/1957) by [@svlandeg](https://github.com/svlandeg).
+
+### Docs
+
 * 🎨 Enable Ruff formatting for Python in Markdown. PR [#1978](https://github.com/fastapi/typer/pull/1978) by [@tiangolo](https://github.com/tiangolo).
 
 ### Internal

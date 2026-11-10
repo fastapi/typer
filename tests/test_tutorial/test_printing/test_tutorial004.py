@@ -3,7 +3,7 @@ import sys
 
 from typer.testing import CliRunner
 
-import docs_src.printing.tutorial004_py310 as mod
+import docs_src.printing.tutorial004 as mod
 
 app = mod.app
 

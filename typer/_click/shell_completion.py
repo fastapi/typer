@@ -179,8 +179,6 @@ def _is_incomplete_argument(ctx: Context, param: Parameter) -> bool:
     if not isinstance(param, TyperArgument):
         return False
 
-    assert param.name is not None
-    # Will be None if expose_value is False.
     value = ctx.params.get(param.name)
     return (
         param.nargs == -1

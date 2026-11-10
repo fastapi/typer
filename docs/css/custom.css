@@ -3,14 +3,14 @@
 /* Noto Color Emoji for emoji support with the same font everywhere */
 @import url(https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap);
 
-/* Override default code font in Material for MkDocs to Fira Code */
+/* Use Fira Code for code blocks */
 :root {
     --md-code-font: "Fira Code", monospace, "Noto Color Emoji";
 }
 
-/* Override default regular font in Material for MkDocs to include Noto Color Emoji */
+/* Keep the modern theme font and include Noto Color Emoji */
 :root {
-    --md-text-font: "Roboto", "Noto Color Emoji";
+    --md-text-font: "Inter", "Noto Color Emoji";
 }
 
 .termynal-comment {

@@ -4,7 +4,7 @@ import sys
 from typer.testing import CliRunner
 
 from docs_src.multiple_values.arguments_with_multiple_values import (
-    tutorial001_py310 as mod,
+    tutorial001 as mod,
 )
 
 runner = CliRunner()

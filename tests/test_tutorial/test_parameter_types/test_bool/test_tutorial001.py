@@ -4,7 +4,6 @@ import sys
 from types import ModuleType
 
 import pytest
-import typer
 from typer.testing import CliRunner
 
 runner = CliRunner()
@@ -13,20 +12,14 @@ runner = CliRunner()
 @pytest.fixture(
     name="mod",
     params=[
-        pytest.param("tutorial001_py310"),
-        pytest.param("tutorial001_an_py310"),
+        pytest.param("tutorial001_non_an"),
+        pytest.param("tutorial001"),
     ],
 )
 def get_mod(request: pytest.FixtureRequest) -> ModuleType:
     module_name = f"docs_src.parameter_types.bool.{request.param}"
     mod = importlib.import_module(module_name)
     return mod
-
-
-def test_type_repr(mod: ModuleType):
-    command = typer.main.get_command(mod.app)
-    force_param = next(param for param in command.params if param.name == "force")
-    assert repr(force_param.type) == "BOOL"
 
 
 def test_help(mod: ModuleType):

@@ -4,7 +4,7 @@ from pathlib import Path
 
 from typer.testing import CliRunner
 
-from docs_src.app_dir import tutorial001_py310 as mod
+from docs_src.app_dir import tutorial001 as mod
 
 runner = CliRunner()
 

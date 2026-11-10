@@ -820,14 +820,14 @@ wheels = [
 
 [[package]]
 name = "markdown-include-variants"
-version = "0.0.8"
+version = "0.0.10"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "markdown" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/c5/47/ec9eae4a6d2f336d95681df43720e2b25b045dc3ed44ae6d30a5ce2f5dff/markdown_include_variants-0.0.8.tar.gz", hash = "sha256:46d812340c64dcd3646b1eaa356bafb31626dd7b4955d15c44ff8c48c6357227", size = 46882, upload-time = "2025-12-12T16:11:04.254Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ab/dc/429e70f873f8460ea0d21405032dfb5322192a9376f539aa5cc0ccb7d9de/markdown_include_variants-0.0.10.tar.gz", hash = "sha256:55b73051c2f825f85f274eebd3fecb0e099dd25ec12e488471ee349e734d0396", size = 62994, upload-time = "2026-11-08T16:42:10.799Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/4e/0e/130958e7ec50d13f2ee7b6c142df5c352520a9251baf1652e41262703857/markdown_include_variants-0.0.8-py3-none-any.whl", hash = "sha256:425a300ae25fbcd598506cba67859a9dfa047333e869e0ff2e11a5e354b326dc", size = 8120, upload-time = "2025-12-12T16:11:02.881Z" },
+    { url = "https://files.pythonhosted.org/packages/50/55/bee38139f45ced70ce20d46cb18969602109bb14cb1c04c4749b3257dd2e/markdown_include_variants-0.0.10-py3-none-any.whl", hash = "sha256:fe889fd21ab85332814810108ae8b70ca1549818cfe349c3426025d9bc15855b", size = 8760, upload-time = "2026-11-08T16:42:09.337Z" },
 ]
 
 [[package]]
@@ -1900,6 +1900,7 @@ source = { editable = "." }
 dependencies = [
     { name = "annotated-doc" },
     { name = "colorama", marker = "sys_platform == 'win32'" },
+    { name = "pydantic" },
     { name = "rich" },
     { name = "shellingham" },
 ]
@@ -1963,6 +1964,7 @@ tests = [
 requires-dist = [
     { name = "annotated-doc", specifier = ">=0.0.2" },
     { name = "colorama", marker = "sys_platform == 'win32'" },
+    { name = "pydantic", specifier = ">=2.5.3" },
     { name = "rich", specifier = ">=13.8.0" },
     { name = "shellingham", specifier = ">=1.3.0" },
 ]
@@ -1973,7 +1975,7 @@ dev = [
     { name = "coverage", extras = ["toml"], specifier = ">=7.13" },
     { name = "griffe-typingdoc", specifier = ">=0.3.0" },
     { name = "griffe-warnings-deprecated", specifier = ">=1.1.0" },
-    { name = "markdown-include-variants", specifier = ">=0.0.8" },
+    { name = "markdown-include-variants", specifier = ">=0.0.10" },
     { name = "mdx-include", specifier = ">=1.4.1" },
     { name = "mkdocstrings", extras = ["python"], specifier = ">=1.0.3" },
     { name = "mypy", specifier = ">=1.19.1" },
@@ -1995,7 +1997,7 @@ docs = [
     { name = "cairosvg", specifier = ">=2.8.2" },
     { name = "griffe-typingdoc", specifier = ">=0.3.0" },
     { name = "griffe-warnings-deprecated", specifier = ">=1.1.0" },
-    { name = "markdown-include-variants", specifier = ">=0.0.8" },
+    { name = "markdown-include-variants", specifier = ">=0.0.10" },
     { name = "mdx-include", specifier = ">=1.4.1" },
     { name = "mkdocstrings", extras = ["python"], specifier = ">=1.0.3" },
     { name = "pillow", specifier = ">=11.3.0" },

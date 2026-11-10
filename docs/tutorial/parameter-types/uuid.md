@@ -22,7 +22,7 @@ This wouldn't be true if you just used `int`s as identifiers, as most databases 
 
 You can declare a *CLI parameter* as a UUID:
 
-{* docs_src/parameter_types/uuid/tutorial001_py310.py hl[1,9:11] *}
+{* docs_src/parameter_types/uuid/tutorial001.py hl[1,9:11] *}
 
 Your Python code will receive a standard Python [`UUID`](https://docs.python.org/3.8/library/uuid.html) object with all its attributes and methods, and as you are annotating your function parameter with that type, you will have type checks, autocompletion in your editor, etc.
 
@@ -43,7 +43,7 @@ $ uv run python main.py 7479706572-72756c6573
 Usage: main.py [OPTIONS] {user_id}
 Try "main.py --help" for help.
 
-Error: Invalid value for 'user_id': 7479706572-72756c6573 is not a valid UUID.
+Error: Invalid value for 'user_id': Input should be a valid UUID, invalid group count: expected 5, found 2
 ```
 
 </div>

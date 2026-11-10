@@ -4,7 +4,7 @@
 
 You can define the type of a *CLI argument* using `list`.
 
-{* docs_src/multiple_values/arguments_with_multiple_values/tutorial001_py310.py hl[9] *}
+{* docs_src/multiple_values/arguments_with_multiple_values/tutorial001.py hl[9] *}
 
 And then you can pass it as many *CLI arguments* of that type as you want:
 
@@ -37,7 +37,7 @@ A `list` can only be used in the last command (if there are subcommands), as thi
 
 If you want a specific number of values and types, you can use a tuple, and it can even have default values:
 
-{* docs_src/multiple_values/arguments_with_multiple_values/tutorial002_an_py310.py hl[10:12] *}
+{* docs_src/multiple_values/arguments_with_multiple_values/tutorial002.py hl[10:12] *}
 
 Check it:
 
@@ -50,7 +50,7 @@ $ uv run python main.py --help
 Usage: main.py [OPTIONS] [names]...
 
 Arguments:
-  names...  Select 3 characters to play with  [default: Harry, Hermione, Ron]
+  names... <str,str,str>  Select 3 characters to play with  [default: Harry, Hermione, Ron]
 
 Options:
   --help                Show this message and exit.

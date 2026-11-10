@@ -11,8 +11,8 @@ import pytest
 @pytest.fixture(
     name="mod",
     params=[
-        pytest.param("tutorial001_py310"),
-        pytest.param("tutorial001_an_py310"),
+        pytest.param("tutorial001_non_an"),
+        pytest.param("tutorial001"),
     ],
 )
 def get_mod(request: pytest.FixtureRequest) -> ModuleType:

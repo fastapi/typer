@@ -4,7 +4,7 @@ In the *First Steps* section you saw how to add help for a CLI app/command by ad
 
 Here's how that last example looked like:
 
-{* docs_src/first_steps/tutorial006_py310.py *}
+{* docs_src/first_steps/tutorial006.py *}
 
 Now that you also know how to use `typer.Argument()`, let's use it to add documentation specific for a *CLI argument*.
 
@@ -12,7 +12,7 @@ Now that you also know how to use `typer.Argument()`, let's use it to add docume
 
 You can use the `help` parameter to add a help text for a *CLI argument*:
 
-{* docs_src/arguments/help/tutorial001_an_py310.py hl[9] *}
+{* docs_src/arguments/help/tutorial001.py hl[9] *}
 
 And it will be used in the automatic `--help` option:
 
@@ -25,7 +25,7 @@ $ uv run python main.py --help
 Usage: main.py [OPTIONS] {name}
 
 Arguments:
-  name  The name of the user to greet  [required]
+  name <str>  The name of the user to greet  [required]
 
 Options:
   --help                Show this message and exit.
@@ -37,7 +37,7 @@ Options:
 
 And of course, you can also combine that `help` with the <abbr title="a multi-line string as the first expression inside a function (not assigned to any variable) used for documentation">docstring</abbr>:
 
-{* docs_src/arguments/help/tutorial002_an_py310.py hl[9:12] *}
+{* docs_src/arguments/help/tutorial002.py hl[9:12] *}
 
 And the `--help` option will combine all the information:
 
@@ -52,7 +52,7 @@ Usage: main.py [OPTIONS] {name}
   Say hi to 'name' very gently, like Dirk.
 
 Arguments:
-  name  The name of the user to greet  [required]
+  name <str>  The name of the user to greet  [required]
 
 Options:
   --help                Show this message and exit.
@@ -64,7 +64,7 @@ Options:
 
 If you have a *CLI argument* with a default value, like `"World"`:
 
-{* docs_src/arguments/help/tutorial003_an_py310.py hl[9] *}
+{* docs_src/arguments/help/tutorial003.py hl[9] *}
 
 It will show that default value in the help text:
 
@@ -79,7 +79,7 @@ Usage: main.py [OPTIONS] [name]
   Say hi to 'name' very gently, like Dirk.
 
 Arguments:
-  name  Who to greet  [default: World]
+  name <str>  Who to greet  [default: World]
 
 Options:
   --help                Show this message and exit.
@@ -89,7 +89,7 @@ Options:
 
 But you can disable that if you want to, with `show_default=False`:
 
-{* docs_src/arguments/help/tutorial004_an_py310.py hl[11] *}
+{* docs_src/arguments/help/tutorial004.py hl[11] *}
 
 And then it won't show the default value:
 
@@ -104,7 +104,7 @@ Usage: main.py [OPTIONS] [name]
   Say hi to 'name' very gently, like Dirk.
 
 Arguments:
-  name  Who to greet
+  name <str>  Who to greet
 
 Options:
   --help                Show this message and exit.
@@ -116,7 +116,7 @@ Options:
 
 You can use the same `show_default` to pass a custom string (instead of a `bool`) to customize the default value to be shown in the help text:
 
-{* docs_src/arguments/help/tutorial005_an_py310.py hl[13] *}
+{* docs_src/arguments/help/tutorial005.py hl[13] *}
 
 And it will be used in the help text:
 
@@ -128,7 +128,7 @@ $ uv run python main.py --help
 Usage: main.py [OPTIONS] [name]
 
 Arguments:
-  name  Who to greet  [default: (Deadpoolio the amazing's name)]
+  name <str>  Who to greet  [default: (Deadpoolio the amazing's name)]
 
 
 Options:
@@ -161,7 +161,7 @@ But you can customize it with the `metavar` parameter for `typer.Argument()`.
 
 For example, let's say you don't want to have the default of `name`, you want to have `username`, and you really want ✨ emojis ✨ everywhere:
 
-{* docs_src/arguments/help/tutorial006_an_py310.py hl[9] *}
+{* docs_src/arguments/help/tutorial006.py hl[9] *}
 
 Now the generated help text will have `✨username✨` instead of `name`:
 
@@ -173,7 +173,7 @@ $ uv run python main.py --help
 Usage: main.py [OPTIONS] [✨username✨]
 
 Arguments:
-  ✨username✨  [default: World]
+  ✨username✨ <str>  [default: World]
 
 Options:
   --help                Show this message and exit.
@@ -187,7 +187,7 @@ You might want to show the help information for *CLI arguments* in different pan
 
 If you have installed Rich as described in the docs for [Printing and Colors](../printing.md), you can set the `rich_help_panel` parameter to the name of the panel where you want this *CLI argument* to be shown:
 
-{* docs_src/arguments/help/tutorial007_an_py310.py hl[12,16] *}
+{* docs_src/arguments/help/tutorial007.py hl[12,16] *}
 
 Then, if you check the `--help` option, you will see a default panel named "`Arguments`" for the *CLI arguments* that don't have a custom `rich_help_panel`.
 
@@ -230,7 +230,7 @@ If you want, you can make a *CLI argument* **not** show up in the `Arguments` se
 
 You will probably not want to do this normally, but it's possible:
 
-{* docs_src/arguments/help/tutorial008_an_py310.py hl[9] *}
+{* docs_src/arguments/help/tutorial008.py hl[9] *}
 
 Check it:
 
