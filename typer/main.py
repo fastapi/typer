@@ -106,10 +106,9 @@ def get_install_completion_arguments() -> tuple[_click.Parameter, _click.Paramet
     return click_install_param, click_show_param
 
 
-def get_command_tree_parameter() -> _click.Parameter:
+def get_command_tree_parameter() -> TyperArgument | TyperOption:
     meta = get_command_tree_param_meta()
-    param, _ = get_click_param(meta)
-    return param
+    return _get_param(meta)
 
 
 class Typer:
