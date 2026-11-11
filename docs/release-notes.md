@@ -8,6 +8,7 @@
 
 ### Docs
 
+* 📝 Clarify compatibility changes in the 0.29.0 release notes. PR [#2014](https://github.com/fastapi/typer/pull/2014) by [@tiangolo](https://github.com/tiangolo).
 * 📝 Adopt unversioned documentation snippets. PR [#2010](https://github.com/fastapi/typer/pull/2010) by [@tiangolo](https://github.com/tiangolo).
 
 ### Internal
