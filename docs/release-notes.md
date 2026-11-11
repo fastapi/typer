@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.29.1 (2026-11-11)
+
 ### Upgrades
 
 * ⬆️ Add support for Python 3.15 and 3.15t. PR [#2013](https://github.com/fastapi/typer/pull/2013) by [@tiangolo](https://github.com/tiangolo).
