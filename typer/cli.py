@@ -307,7 +307,7 @@ def docs(
     docs = get_docs_for_click(obj=click_obj, ctx=ctx, name=name, title=title)
     clean_docs = f"{docs.strip()}\n"
     if output:
-        output.write_text(clean_docs)
+        output.write_text(clean_docs, encoding="utf-8")
         typer.echo(f"Docs saved to: {output}")
     else:
         typer.echo(clean_docs)
