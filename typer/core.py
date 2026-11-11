@@ -1326,4 +1326,4 @@ class TyperGroup(_click.Command):
 
     def list_commands(self, ctx: _click.Context) -> list[str]:
         """Returns a list of subcommand names, maintaining the original order of creation (cf Issue #933)"""
-        return [n for n, c in self.commands.items()]
+        return list(self.commands)
