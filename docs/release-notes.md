@@ -25,8 +25,8 @@
 
     * Pydantic `>=2.5.3` is now a required dependency.
     * `click_type` has been removed from `typer.Option()` and `typer.Argument()`. New ways to provide custom types will be provided with Pydantic, with much more flexibility.
-    * Some defaults are now validated more strictly. The previous [tuple example](tutorial/multiple-values/options-with-multiple-values.md)'s `(None, None, None)` default now fails validation. Use `tuple[str, int, bool] | None` with a default of `None` and check for `None` before unpacking. This also makes the code more correct, so you could consider this a bug fix, but if you depended on this behavior, there's a change needed in your code.
-    * Default [datetime parsing](tutorial/parameter-types/datetime.md) now follows Pydantic's rules, accepting Unix timestamps, timezone offsets, and fractional seconds.
+    * Some defaults are now validated more strictly. The previous [tuple example](https://typer.tiangolo.com/tutorial/multiple-values/options-with-multiple-values/)'s `(None, None, None)` default now fails validation. Use `tuple[str, int, bool] | None` with a default of `None` and check for `None` before unpacking. This also makes the code more correct, so you could consider this a bug fix, but if you depended on this behavior, there's a change needed in your code.
+    * Default [datetime parsing](https://typer.tiangolo.com/tutorial/parameter-types/datetime/) now follows Pydantic's rules, accepting Unix timestamps, timezone offsets, and fractional seconds.
     * Callback parameter objects no longer expose Click's `.type`, `.make_metavar()`, `.human_readable_name`, or `.type_cast_value()`. Custom integrations using these need updating.
 
 ### Fixes
