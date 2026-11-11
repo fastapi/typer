@@ -56,6 +56,30 @@ def test_doc_output(tmp_path: Path):
     assert "Docs saved to:" in result.stdout
 
 
+def test_doc_hidden_commands():
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "coverage",
+            "run",
+            "-m",
+            "typer",
+            "tests.assets.cli.hidden_app",
+            "utils",
+            "docs",
+            "--name",
+            "hiddenapp",
+        ],
+        capture_output=True,
+        encoding="utf-8",
+    )
+    assert "`hiddenapp public`" in result.stdout
+    assert "secret" not in result.stdout
+    assert "internal" not in result.stdout
+    assert "rebuild" not in result.stdout
+
+
 def test_doc_title_output(tmp_path: Path):
     out_file: Path = tmp_path / "out.md"
     result = subprocess.run(
