@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Upgrades
+
+* ⬆️ Add support for Python 3.15 and 3.15t. PR [#2013](https://github.com/fastapi/typer/pull/2013) by [@tiangolo](https://github.com/tiangolo).
+
 ### Docs
 
 * 📝 Adopt unversioned documentation snippets. PR [#2010](https://github.com/fastapi/typer/pull/2010) by [@tiangolo](https://github.com/tiangolo).
