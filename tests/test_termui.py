@@ -5,8 +5,9 @@ Created after vendoring Click to ensure test coverage is back up to 100%.
 
 import io
 import os
+import sys
 from contextlib import contextmanager
-from typing import Literal
+from typing import Literal, TextIO
 
 import pytest
 import typer
@@ -101,6 +102,38 @@ def test_clirunner_env_none(monkeypatch) -> None:
     assert result.exit_code == 0, result.output
     assert "inside=None" in result.stdout
     assert os.environ.get(env_key) == "present"
+
+
+def test_clirunner_stream_replaced_during_invoke() -> None:
+    # pytest's live logging suspends capturing mid-command: it swaps sys.stdout
+    # and sys.stderr, which drops the last reference to the runner's wrappers
+    runner = CliRunner()
+    app = typer.Typer()
+
+    @app.command()
+    def main() -> None:
+        sys.stdout = io.StringIO()
+        sys.stderr = io.StringIO()
+
+    result = runner.invoke(app, [])
+    assert result.exit_code == 0, result.output
+    assert result.output == ""
+
+
+def test_clirunner_stream_usable_after_invoke() -> None:
+    # A logging.StreamHandler created inside the command keeps writing here
+    runner = CliRunner()
+    app = typer.Typer()
+    streams: list[TextIO] = []
+
+    @app.command()
+    def main() -> None:
+        streams.append(sys.stderr)
+
+    result = runner.invoke(app, [])
+    assert result.exit_code == 0, result.output
+    streams[0].write("late")
+    streams[0].flush()
 
 
 @pytest.mark.parametrize(
