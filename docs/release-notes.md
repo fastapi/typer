@@ -23,7 +23,15 @@
 
 * ✨ Use Pydantic for parameter validation. PR [#1831](https://github.com/fastapi/typer/pull/1831) by [@svlandeg](https://github.com/svlandeg).
 
-    Typer now uses Pydantic internally to validate command-line parameters. This is a gradual migration focused on preserving compatibility with existing Typer applications. Some validation error messages have changed.
+    Typer now uses Pydantic internally to validate command-line parameters. This is a gradual migration focused on preserving compatibility with existing Typer applications. Some validation error messages, help text, and usage output have changed.
+
+    Compatibility changes:
+
+    * Pydantic `>=2.5.3` is now a required dependency.
+    * `click_type` has been removed from `typer.Option()` and `typer.Argument()`. New ways to provide custom types will be provided with Pydantic, with much more flexibility.
+    * Some defaults are now validated more strictly. The previous tuple example's `(None, None, None)` default now fails validation. Use `tuple[str, int, bool] | None` with a default of `None` and check for `None` before unpacking, as shown in the [updated tuple example](https://typer.tiangolo.com/tutorial/multiple-values/options-with-multiple-values/). This also makes the code more correct, so you could consider this a bug fix, but if you depended on this behavior, there's a change needed in your code.
+    * Default [datetime parsing](https://typer.tiangolo.com/tutorial/parameter-types/datetime/) now follows Pydantic's rules, accepting Unix timestamps, timezone offsets, and fractional seconds.
+    * Callback parameter objects no longer expose Click's `.type`, `.make_metavar()`, `.human_readable_name`, or `.type_cast_value()`. Custom integrations using these need updating.
 
 ### Fixes
 
