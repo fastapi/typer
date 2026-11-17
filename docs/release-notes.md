@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Internal
+
+* 👷 Limit the full test matrix to Python 3.15. PR [#2019](https://github.com/fastapi/typer/pull/2019) by [@tiangolo](https://github.com/tiangolo).
+
 ## 0.29.1 (2026-11-11)
 
 ### Upgrades
