@@ -6,7 +6,8 @@ from typer.testing import CliRunner
 app = typer.Typer(context_settings={"token_normalize_func": str.lower})
 
 
-class User(str, Enum):
+# Exercise the string enum style used by existing Typer apps.
+class User(str, Enum):  # noqa: UP042
     rick = "Rick"
     morty = "Morty"
 

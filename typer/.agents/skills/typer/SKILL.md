@@ -13,8 +13,6 @@ In a virtual environment, `pip install typer` (with pip) or `uv pip install type
 
 Do not install `typer-slim` or `typer-cli`, they are both deprecated and will now simply install `typer`.
 
-Typer supports Python 3.10 and above.
-
 ## Use an explicit `Typer` app
 
 For maximum generalizability, create an explicit Typer app and register subcommand(s), instead of using `typer.run`:
