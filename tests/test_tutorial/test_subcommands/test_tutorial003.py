@@ -166,7 +166,10 @@ def test_scripts(mod):
     )
 
     env = os.environ.copy()
-    env["PYTHONPATH"] = ":".join(list(tutorial003.__path__))
+    env["PYTHONPATH"] = ":".join(
+        list(tutorial003.__path__)
+        + ([env["PYTHONPATH"]] if "PYTHONPATH" in env else [])
+    )
 
     for module in [mod, items, lands, reigns, towns, users]:
         result = subprocess.run(
