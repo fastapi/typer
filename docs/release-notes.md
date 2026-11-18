@@ -4,6 +4,7 @@
 
 ### Internal
 
+* 💥 Drop support for Python 3.10. PR [#2021](https://github.com/fastapi/typer/pull/2021) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Limit the full test matrix to Python 3.15. PR [#2019](https://github.com/fastapi/typer/pull/2019) by [@tiangolo](https://github.com/tiangolo).
 
 ## 0.29.1 (2026-11-11)
