@@ -2,6 +2,8 @@
 
 ## Latest Changes
 
+## 0.29.2 (2026-11-18)
+
 ### Internal
 
 * 💥 Drop support for Python 3.10. PR [#2021](https://github.com/fastapi/typer/pull/2021) by [@tiangolo](https://github.com/tiangolo).
