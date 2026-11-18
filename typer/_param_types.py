@@ -241,7 +241,9 @@ def coerce_cli_path(
                 raise BadParameter(get_error_msg(exc), ctx=ctx, param=param) from exc
 
     is_dash = (
-        parameter_info.file_okay and parameter_info.allow_dash and rv in (b"-", "-")
+        parameter_info.file_okay
+        and parameter_info.allow_dash
+        and os.fspath(rv) in (b"-", "-")
     )
 
     if not is_dash:

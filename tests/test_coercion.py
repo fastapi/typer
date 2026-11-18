@@ -220,3 +220,20 @@ def test_plugin_when_previously_set(
     with disabled_pydantic_plugins():
         assert os.environ["PYDANTIC_DISABLE_PLUGINS"] == "1"
     assert os.environ["PYDANTIC_DISABLE_PLUGINS"] == "0"
+
+
+def test_coercion_path_allow_dash() -> None:
+    app = typer.Typer()
+    seen: list[Path] = []
+
+    @app.command()
+    def main(
+        config: Path = typer.Option(
+            ..., exists=True, resolve_path=True, allow_dash=True
+        ),
+    ):
+        seen.append(config)
+
+    result = runner.invoke(app, ["--config", "-"])
+    assert result.exit_code == 0, result.output
+    assert seen == [Path("-")]
