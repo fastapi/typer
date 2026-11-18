@@ -1,7 +1,7 @@
 import os
 import re
 import subprocess
-from enum import Enum
+from enum import StrEnum
 from pathlib import Path
 
 import shellingham
@@ -11,8 +11,7 @@ from ._click.globals import get_current_context
 from .exceptions import Exit
 
 
-# Keep str(Shells.bash) == "Shells.bash" for callers of typer.completion.
-class Shells(str, Enum):  # noqa: UP042
+class Shells(StrEnum):
     bash = "bash"
     zsh = "zsh"
     fish = "fish"
