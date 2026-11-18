@@ -25,4 +25,4 @@ COPY . /code
 
 WORKDIR /code
 
-RUN uv pip install -r requirements.txt
+RUN uv pip install -e .
