@@ -1,10 +1,10 @@
-from enum import Enum
+from enum import StrEnum
 from typing import Annotated
 
 import typer
 
 
-class NeuralNetwork(str, Enum):
+class NeuralNetwork(StrEnum):
     simple = "simple"
     conv = "conv"
     lstm = "lstm"
@@ -19,7 +19,7 @@ def main(
         NeuralNetwork, typer.Option(case_sensitive=False)
     ] = NeuralNetwork.simple,
 ):
-    print(f"Training neural network of type: {network.value}")
+    print(f"Training neural network of type: {network}")
 
 
 if __name__ == "__main__":

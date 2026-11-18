@@ -167,11 +167,6 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-# Keep the string representation of existing enums and their examples.
-"typer/_completion_shared.py" = ["UP042"]
-"tests/test_types.py" = ["UP042"]
-"tests/test_completion/choice*_example.py" = ["UP042"]
-"docs_src/parameter_types/enum/*.py" = ["UP042"]
 # "__init__.py" = ["F401"]
 # rich_utils is allowed to use rich imports
 "typer/rich_utils.py" = ["TID251"]

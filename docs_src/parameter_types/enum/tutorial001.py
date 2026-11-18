@@ -1,9 +1,9 @@
-from enum import Enum
+from enum import StrEnum
 
 import typer
 
 
-class NeuralNetwork(str, Enum):
+class NeuralNetwork(StrEnum):
     simple = "simple"
     conv = "conv"
     lstm = "lstm"
@@ -14,7 +14,7 @@ app = typer.Typer()
 
 @app.command()
 def main(network: NeuralNetwork = NeuralNetwork.simple):
-    print(f"Training neural network of type: {network.value}")
+    print(f"Training neural network of type: {network}")
 
 
 if __name__ == "__main__":

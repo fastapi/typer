@@ -11,7 +11,8 @@ from ._click.globals import get_current_context
 from .exceptions import Exit
 
 
-class Shells(str, Enum):
+# Keep str(Shells.bash) == "Shells.bash" for callers of typer.completion.
+class Shells(str, Enum):  # noqa: UP042
     bash = "bash"
     zsh = "zsh"
     fish = "fish"
