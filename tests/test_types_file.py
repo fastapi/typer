@@ -271,7 +271,10 @@ def test_format_filename() -> None:
 
 
 def test_file_error(monkeypatch, tmp_path: Path) -> None:
-    file_path = tmp_path / "cannot-open.txt"
+    monkeypatch.chdir(tmp_path)
+
+    # Keep the path short so Rich does not wrap the filename in the error.
+    file_path = Path("cannot-open.txt")
 
     def fake_open(path, *args, **kwargs):
         if Path(path) == file_path:
