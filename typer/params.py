@@ -414,9 +414,9 @@ def Option(
             **Example**
 
             ```python
-            from enum import Enum
+            from enum import StrEnum
 
-            class NeuralNetwork(str, Enum):
+            class NeuralNetwork(StrEnum):
                 simple = "simple"
                 conv = "conv"
                 lstm = "lstm"
@@ -424,7 +424,7 @@ def Option(
             @app.command()
             def main(
                 network: Annotated[NeuralNetwork, typer.Option(case_sensitive=False)]):
-                print(f"Training neural network of type: {network.value}")
+                print(f"Training neural network of type: {network}")
             ```
 
             With this setting, "LSTM" or "lstm" will both be valid values that will be resolved to `NeuralNetwork.lstm`.
@@ -1114,9 +1114,9 @@ def Argument(
             **Example**
 
             ```python
-            from enum import Enum
+            from enum import StrEnum
 
-            class NeuralNetwork(str, Enum):
+            class NeuralNetwork(StrEnum):
                 simple = "simple"
                 conv = "conv"
                 lstm = "lstm"
@@ -1124,7 +1124,7 @@ def Argument(
             @app.command()
             def main(
                 network: Annotated[NeuralNetwork, typer.Argument(case_sensitive=False)]):
-                print(f"Training neural network of type: {network.value}")
+                print(f"Training neural network of type: {network}")
             ```
 
             With this setting, "LSTM" or "lstm" will both be valid values that will be resolved to `NeuralNetwork.lstm`.

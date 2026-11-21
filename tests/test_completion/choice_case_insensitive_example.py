@@ -1,11 +1,11 @@
-from enum import Enum
+from enum import StrEnum
 
 import typer
 
 app = typer.Typer()
 
 
-class User(str, Enum):
+class User(StrEnum):
     rick = "rick"
     morty = "morty"
 

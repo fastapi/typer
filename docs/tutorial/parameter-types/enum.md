@@ -1,14 +1,12 @@
 # Enum - Choices
 
-To define a *CLI parameter* that can take a value from a predefined set of values you can use a standard Python [`enum.Enum`](https://docs.python.org/3/library/enum.html):
+Use Python's [`enum.StrEnum`](https://docs.python.org/3/library/enum.html#enum.StrEnum) to give a *CLI parameter* a fixed set of string choices.
 
 {* docs_src/parameter_types/enum/tutorial001.py hl[1,6:9,16:17] *}
 
 /// tip
 
-Notice that the function parameter `network` will be an `Enum`, not a `str`.
-
-To get the `str` value in your function's code use `network.value`.
+Your function receives a `NeuralNetwork` member. For example, passing `--network conv` gives you `NeuralNetwork.conv`, which prints as `conv`.
 
 ///
 
