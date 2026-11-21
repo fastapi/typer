@@ -131,7 +131,7 @@ class ZshComplete(ShellComplete):
         # the difference with and without escape
         # return f"{item.type}\n{item.value}\n{item.help if item.help else '_'}"
         if item.help:
-            return f'"{escape(item.value)}":"{_sanitize_help_text(escape(item.help))}"'
+            return f'"{escape(item.value)}":"{escape(_sanitize_help_text(item.help))}"'
         else:
             return f'"{escape(item.value)}"'
 
