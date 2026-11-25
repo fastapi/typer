@@ -250,7 +250,7 @@ def get_docs_for_click(
                 command_obj = group.get_command(ctx, command)
                 assert command_obj
                 docs += f"* `{command_obj.name}`"
-                command_help = command_obj.get_short_help_str()
+                command_help = command_obj.help
                 if command_help:
                     docs += f": {_parse_html(to_parse, command_help)}"
                 docs += "\n"
