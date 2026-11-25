@@ -6,6 +6,18 @@
 # compared to the original patches as we do not need to patch
 # the entire interpreter but just work in our little world of
 # echo and prompt.
+__lazy_modules__ = {
+    "collections.abc",
+    "ctypes",
+    "ctypes.wintypes",
+    "io",
+    "msvcrt",
+    "sys",
+    "time",
+    "typer._click._compat",
+    "typing",
+}
+
 import io
 import sys
 import time

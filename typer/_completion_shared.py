@@ -1,3 +1,15 @@
+__lazy_modules__ = {
+    "enum",
+    "os",
+    "pathlib",
+    "re",
+    "shellingham",
+    "subprocess",
+    "typer",
+    "typer._click.globals",
+    "typer.exceptions",
+}
+
 import os
 import re
 import subprocess

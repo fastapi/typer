@@ -1,3 +1,21 @@
+__lazy_modules__ = {
+    "collections.abc",
+    "datetime",
+    "enum",
+    "os",
+    "pathlib",
+    "stat",
+    "typer._click",
+    "typer._click._compat",
+    "typer._click.exceptions",
+    "typer._click.utils",
+    "typer._display",
+    "typer._typing",
+    "typer.models",
+    "typing",
+    "uuid",
+}
+
 import os
 import stat
 from collections.abc import Sequence

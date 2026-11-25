@@ -1,3 +1,12 @@
+__lazy_modules__ = {
+    "annotated_doc",
+    "collections.abc",
+    "typer",
+    "typer._click.shell_completion",
+    "typer.models",
+    "typing",
+}
+
 from collections.abc import Callable
 from typing import TYPE_CHECKING, Annotated, Any
 

@@ -1,3 +1,12 @@
+__lazy_modules__ = {
+    "collections.abc",
+    "typer._click._compat",
+    "typer._click.globals",
+    "typer._click.utils",
+    "typer.exceptions",
+    "typing",
+}
+
 from collections.abc import Sequence
 from typing import IO, TYPE_CHECKING, Any, Union
 

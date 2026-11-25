@@ -22,6 +22,13 @@ Copyright 2002-2006 Python Software Foundation. All rights reserved.
 # maintained by the Python Software Foundation.
 # Copyright 2001-2006 Gregory P. Ward
 # Copyright 2002-2006 Python Software Foundation
+__lazy_modules__ = {
+    "collections",
+    "collections.abc",
+    "typer._click.exceptions",
+    "typing",
+}
+
 from collections import deque
 from collections.abc import Sequence
 from typing import (

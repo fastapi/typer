@@ -1,5 +1,17 @@
 """Typer, build great CLIs. Easy to code. Based on Python type hints."""
 
+__lazy_modules__ = {
+    "shutil",
+    "typer",
+    "typer._click.exceptions",
+    "typer._click.termui",
+    "typer._click.utils",
+    "typer.exceptions",
+    "typer.main",
+    "typer.models",
+    "typer.params",
+}
+
 __version__ = "0.29.3"
 
 from shutil import get_terminal_size as get_terminal_size

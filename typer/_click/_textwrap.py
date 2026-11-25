@@ -1,3 +1,9 @@
+__lazy_modules__ = {
+    "collections.abc",
+    "contextlib",
+    "textwrap",
+}
+
 import textwrap
 from collections.abc import Generator
 from contextlib import contextmanager

@@ -3,6 +3,23 @@ To keep the import times down, some infrequently used termui functionality
 is placed here and only imported as needed.
 """
 
+__lazy_modules__ = {
+    "collections.abc",
+    "contextlib",
+    "io",
+    "math",
+    "msvcrt",
+    "os",
+    "sys",
+    "termios",
+    "time",
+    "tty",
+    "typer._click._compat",
+    "typer._click.utils",
+    "types",
+    "typing",
+}
+
 import contextlib
 import math
 import os

@@ -1,3 +1,20 @@
+__lazy_modules__ = {
+    "collections.abc",
+    "contextlib",
+    "datetime",
+    "enum",
+    "os",
+    "pathlib",
+    "pydantic",
+    "pydantic.errors",
+    "sys",
+    "typer._click",
+    "typer._param_types",
+    "typer._typing",
+    "typer.models",
+    "typing",
+}
+
 import os
 import sys
 from collections.abc import Generator, Sequence

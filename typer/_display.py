@@ -1,3 +1,8 @@
+__lazy_modules__ = {
+    "typer._click.utils",
+    "typing",
+}
+
 from typing import Any
 
 from ._click.utils import _escape_control_characters

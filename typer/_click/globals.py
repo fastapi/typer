@@ -1,3 +1,8 @@
+__lazy_modules__ = {
+    "threading",
+    "typing",
+}
+
 from threading import local
 from typing import TYPE_CHECKING, Literal, Union, cast, overload
 

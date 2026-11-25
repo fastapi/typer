@@ -1,3 +1,24 @@
+__lazy_modules__ = {
+    "collections.abc",
+    "difflib",
+    "enum",
+    "errno",
+    "gettext",
+    "inspect",
+    "os",
+    "sys",
+    "typer",
+    "typer._click.parser",
+    "typer._click.shell_completion",
+    "typer._coercion",
+    "typer._display",
+    "typer._param_types",
+    "typer._typing",
+    "typer.exceptions",
+    "typer.utils",
+    "typing",
+}
+
 import errno
 import inspect
 import os

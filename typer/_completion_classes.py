@@ -1,3 +1,14 @@
+__lazy_modules__ = {
+    "importlib.util",
+    "os",
+    "re",
+    "sys",
+    "typer",
+    "typer._click.shell_completion",
+    "typer._completion_shared",
+    "typing",
+}
+
 import importlib.util
 import os
 import re

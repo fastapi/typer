@@ -1,3 +1,17 @@
+__lazy_modules__ = {
+    "collections.abc",
+    "os",
+    "sys",
+    "typer",
+    "typer._click",
+    "typer._completion_classes",
+    "typer._completion_shared",
+    "typer.models",
+    "typer.params",
+    "typer.utils",
+    "typing",
+}
+
 import os
 import sys
 from collections.abc import MutableMapping

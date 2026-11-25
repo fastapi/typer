@@ -1,3 +1,15 @@
+__lazy_modules__ = {
+    "collections.abc",
+    "functools",
+    "os",
+    "re",
+    "sys",
+    "typer._click._compat",
+    "typer._click.globals",
+    "types",
+    "typing",
+}
+
 import os
 import re
 import sys

@@ -1,3 +1,12 @@
+__lazy_modules__ = {
+    "collections.abc",
+    "copy",
+    "inspect",
+    "typer._typing",
+    "typer.models",
+    "typing",
+}
+
 import inspect
 from collections.abc import Callable
 from copy import copy

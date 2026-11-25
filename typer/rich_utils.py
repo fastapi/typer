@@ -1,5 +1,32 @@
 # Extracted and modified from https://github.com/ewels/rich-click
 
+__lazy_modules__ = {
+    "collections",
+    "collections.abc",
+    "gettext",
+    "inspect",
+    "io",
+    "os",
+    "rich",
+    "rich.align",
+    "rich.columns",
+    "rich.console",
+    "rich.emoji",
+    "rich.highlighter",
+    "rich.markdown",
+    "rich.markup",
+    "rich.padding",
+    "rich.panel",
+    "rich.table",
+    "rich.text",
+    "rich.theme",
+    "rich.traceback",
+    "typer",
+    "typer.core",
+    "typer.models",
+    "typing",
+}
+
 import inspect
 import io
 from collections import defaultdict
