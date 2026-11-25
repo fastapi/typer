@@ -47,7 +47,7 @@ class UsageError(ClickException):
 
     def __init__(self, message: str, ctx: Union["Context", None] = None) -> None:
         super().__init__(message)
-        self.ctx = ctx
+        self.ctx: Context | None = ctx
         self.cmd: Command | None = self.ctx.command if self.ctx else None
 
     def show(self, file: IO[Any] | None = None) -> None:
@@ -87,8 +87,8 @@ class BadParameter(UsageError):
         param_hint: Sequence[str] | str | None = None,
     ) -> None:
         super().__init__(message, ctx)
-        self.param = param
-        self.param_hint = param_hint
+        self.param: _TyperParameter | None = param
+        self.param_hint: Sequence[str] | str | None = param_hint
 
     def format_message(self) -> str:
         if self.param_hint is not None:
@@ -116,7 +116,7 @@ class MissingParameter(BadParameter):
         param_type: str | None = None,
     ) -> None:
         super().__init__(message or "", ctx, param, param_hint)
-        self.param_type = param_type
+        self.param_type: str | None = param_type
 
     def format_message(self) -> str:
         if self.param_hint is not None:
@@ -174,8 +174,8 @@ class NoSuchOption(UsageError):
             message = f"No such option: {_escape_control_characters(option_name)}"
 
         super().__init__(message, ctx)
-        self.option_name = option_name
-        self.possibilities = possibilities
+        self.option_name: str = option_name
+        self.possibilities: Sequence[str] | None = possibilities
 
     def format_message(self) -> str:
         if not self.possibilities:
@@ -196,7 +196,7 @@ class BadOptionUsage(UsageError):
         self, option_name: str, message: str, ctx: Union["Context", None] = None
     ) -> None:
         super().__init__(message, ctx)
-        self.option_name = option_name
+        self.option_name: str = option_name
 
 
 class BadArgumentUsage(UsageError):
@@ -208,10 +208,10 @@ class BadArgumentUsage(UsageError):
 
 class NoArgsIsHelpError(UsageError):
     def __init__(self, ctx: "Context") -> None:
-        self.ctx: Context
         super().__init__(ctx.get_help(), ctx=ctx)
 
     def show(self, file: IO[Any] | None = None) -> None:
+        assert self.ctx is not None
         echo(self.format_message(), file=file, err=True, color=self.ctx.color)
 
 
@@ -224,7 +224,7 @@ class FileError(ClickException):
 
         super().__init__(hint)
         self.ui_filename: str = format_filename(filename)
-        self.filename = filename
+        self.filename: str = filename
 
     def format_message(self) -> str:
         return f"Could not open file {self.ui_filename!r}: {self.message}"
