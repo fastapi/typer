@@ -1,8 +1,6 @@
 __lazy_modules__ = {
-    "enum",
     "os",
     "pathlib",
-    "re",
     "shellingham",
     "subprocess",
     "typer",

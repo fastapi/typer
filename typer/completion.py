@@ -7,7 +7,6 @@ __lazy_modules__ = {
     "typer._completion_classes",
     "typer._completion_shared",
     "typer.models",
-    "typer.params",
     "typer.utils",
     "typing",
 }

@@ -1,6 +1,5 @@
 __lazy_modules__ = {
     "collections.abc",
-    "contextlib",
     "typer._click._compat",
     "typer._click.parser",
 }

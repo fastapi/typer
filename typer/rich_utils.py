@@ -3,16 +3,12 @@
 __lazy_modules__ = {
     "collections",
     "collections.abc",
-    "gettext",
     "inspect",
     "io",
-    "os",
     "rich",
     "rich.align",
     "rich.columns",
-    "rich.console",
     "rich.emoji",
-    "rich.highlighter",
     "rich.markdown",
     "rich.markup",
     "rich.padding",
@@ -24,7 +20,6 @@ __lazy_modules__ = {
     "typer",
     "typer.core",
     "typer.models",
-    "typing",
 }
 
 import inspect

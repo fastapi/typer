@@ -1,7 +1,5 @@
 __lazy_modules__ = {
     "collections.abc",
-    "contextlib",
-    "io",
     "os",
     "shlex",
     "sys",
@@ -9,7 +7,6 @@ __lazy_modules__ = {
     "typer._click",
     "typer.main",
     "types",
-    "typing",
 }
 
 import contextlib

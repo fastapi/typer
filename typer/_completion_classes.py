@@ -4,8 +4,6 @@ __lazy_modules__ = {
     "re",
     "sys",
     "typer",
-    "typer._click.shell_completion",
-    "typer._completion_shared",
     "typing",
 }
 

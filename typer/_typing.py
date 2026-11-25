@@ -5,7 +5,6 @@ __lazy_modules__ = {
     "collections.abc",
     "numbers",
     "types",
-    "typing",
 }
 
 import numbers

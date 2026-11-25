@@ -26,7 +26,6 @@ __lazy_modules__ = {
     "collections",
     "collections.abc",
     "typer._click.exceptions",
-    "typing",
 }
 
 from collections import deque

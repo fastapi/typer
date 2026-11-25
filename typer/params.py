@@ -4,7 +4,6 @@ __lazy_modules__ = {
     "typer",
     "typer._click.shell_completion",
     "typer.models",
-    "typing",
 }
 
 from collections.abc import Callable

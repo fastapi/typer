@@ -11,8 +11,6 @@ __lazy_modules__ = {
     "typer._click.utils",
     "typer._display",
     "typer._typing",
-    "typer.models",
-    "typing",
     "uuid",
 }
 

@@ -1,7 +1,5 @@
 __lazy_modules__ = {
-    "abc",
     "collections.abc",
-    "dataclasses",
     "datetime",
     "os",
     "typer._click",
@@ -10,7 +8,6 @@ __lazy_modules__ = {
     "typer._param_types",
     "typer._typing",
     "typer.models",
-    "typing",
 }
 
 import os

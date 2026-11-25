@@ -1,6 +1,5 @@
 __lazy_modules__ = {
     "collections.abc",
-    "contextlib",
     "datetime",
     "enum",
     "os",
@@ -12,7 +11,6 @@ __lazy_modules__ = {
     "typer._param_types",
     "typer._typing",
     "typer.models",
-    "typing",
 }
 
 import os

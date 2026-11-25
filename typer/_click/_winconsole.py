@@ -8,14 +8,9 @@
 # echo and prompt.
 __lazy_modules__ = {
     "collections.abc",
-    "ctypes",
-    "ctypes.wintypes",
-    "io",
     "msvcrt",
-    "sys",
     "time",
     "typer._click._compat",
-    "typing",
 }
 
 import io

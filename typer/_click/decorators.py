@@ -1,8 +1,5 @@
 __lazy_modules__ = {
-    "collections.abc",
-    "typer._click.core",
     "typer._click.utils",
-    "typing",
 }
 
 from collections.abc import Callable

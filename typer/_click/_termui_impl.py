@@ -9,15 +9,12 @@ __lazy_modules__ = {
     "io",
     "math",
     "msvcrt",
-    "os",
-    "sys",
     "termios",
     "time",
     "tty",
     "typer._click._compat",
     "typer._click.utils",
     "types",
-    "typing",
 }
 
 import contextlib

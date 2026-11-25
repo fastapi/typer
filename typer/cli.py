@@ -3,9 +3,7 @@ __lazy_modules__ = {
     "pathlib",
     "re",
     "sys",
-    "typer",
     "typer._click",
-    "typer.core",
     "typing",
 }
 

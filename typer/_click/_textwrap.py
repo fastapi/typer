@@ -1,7 +1,5 @@
 __lazy_modules__ = {
     "collections.abc",
-    "contextlib",
-    "textwrap",
 }
 
 import textwrap

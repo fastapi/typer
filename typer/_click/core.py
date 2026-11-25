@@ -1,19 +1,14 @@
 __lazy_modules__ = {
-    "abc",
     "collections.abc",
-    "contextlib",
-    "enum",
     "inspect",
     "os",
     "typer._click.exceptions",
-    "typer._click.formatting",
     "typer._click.globals",
     "typer._click.parser",
     "typer._click.termui",
     "typer._click.utils",
     "typer.exceptions",
     "types",
-    "typing",
 }
 
 import enum

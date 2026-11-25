@@ -7,7 +7,6 @@ __lazy_modules__ = {
     "typer._click._compat",
     "typer._click.globals",
     "types",
-    "typing",
 }
 
 import os

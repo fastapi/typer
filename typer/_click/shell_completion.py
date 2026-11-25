@@ -1,9 +1,7 @@
 __lazy_modules__ = {
-    "abc",
     "collections.abc",
     "re",
     "typer._click.core",
-    "typing",
 }
 
 import re
