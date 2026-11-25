@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Fixes
+
+* 🐛 Ensure that `allow_dash` works with a `Path` annotation. PR [#2029](https://github.com/fastapi/typer/pull/2029) by [@svlandeg](https://github.com/svlandeg).
+
 ## 0.29.2 (2026-11-18)
 
 ### Internal
