@@ -51,6 +51,32 @@ def test_coercion_path(tmp_path: Path) -> None:
     assert seen == [target]
 
 
+def test_coercion_path_dash(tmp_path: Path) -> None:
+    """Ensure that allow_dash=True is honored with a Path annotation."""
+    existing = tmp_path / "config.txt"
+    existing.write_text("hello\n", encoding="utf-8")
+    app = typer.Typer()
+    seen: list[Path] = []
+
+    @app.command()
+    def main(config: Path = typer.Argument(..., allow_dash=True, exists=True)):
+        seen.append(config)
+
+    # regression test, cf. #2020
+    result = runner.invoke(app, ["-"])
+    assert result.exit_code == 0, result.output
+    assert seen == [Path("-")]
+
+    # ensure an existing file still passes
+    result = runner.invoke(app, [str(existing)])
+    assert result.exit_code == 0, result.output
+    assert seen == [Path("-"), existing]
+
+    # ensure a missing file still errors
+    result = runner.invoke(app, [str(tmp_path / "missing.txt")])
+    assert result.exit_code == 2
+
+
 def test_coercion_tuple_files(tmp_path: Path) -> None:
     first = tmp_path / "first.txt"
     second = tmp_path / "second.txt"
