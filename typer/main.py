@@ -506,14 +506,14 @@ class Typer:
             ),
         ] = True,
     ):
-        self._add_completion = add_completion
+        self._add_completion: bool = add_completion
         self.rich_markup_mode: MarkupMode = rich_markup_mode
-        self.rich_help_panel = rich_help_panel
-        self.suggest_commands = suggest_commands
-        self.pretty_exceptions_enable = pretty_exceptions_enable
-        self.pretty_exceptions_show_locals = pretty_exceptions_show_locals
-        self.pretty_exceptions_short = pretty_exceptions_short
-        self.info = TyperInfo(
+        self.rich_help_panel: str | None = rich_help_panel
+        self.suggest_commands: bool = suggest_commands
+        self.pretty_exceptions_enable: bool = pretty_exceptions_enable
+        self.pretty_exceptions_show_locals: bool = pretty_exceptions_show_locals
+        self.pretty_exceptions_short: bool = pretty_exceptions_short
+        self.info: TyperInfo = TyperInfo(
             name=name,
             cls=cls,
             invoke_without_command=invoke_without_command,
