@@ -37,7 +37,7 @@ root@79c4b9b70cbe:/code#
 Then inside the container, you can install `typer` with:
 
 ```console
-$ uv pip install -r requirements.txt
+$ uv pip install -e .
 ```
 
 Then, you can start the shell you want to use, the one where you want to try out completion:
