@@ -5,7 +5,7 @@ class TyperException(Exception):
 
     def __init__(self, message: str) -> None:
         super().__init__(message)
-        self.message = message
+        self.message: str = message
 
     def __str__(self) -> str:
         return self.message  # pragma: no cover
