@@ -1,3 +1,4 @@
+import asyncio
 import inspect
 import os
 import platform
@@ -5,11 +6,11 @@ import shutil
 import subprocess
 import sys
 import traceback
-from collections.abc import Callable, Sequence
-from functools import update_wrapper
+from collections.abc import Awaitable, Callable, Sequence
+from functools import update_wrapper, wraps
 from traceback import FrameSummary, StackSummary
 from types import TracebackType
-from typing import Annotated, Any
+from typing import Annotated, Any, ParamSpec, TypeVar
 
 from annotated_doc import Doc
 
@@ -45,6 +46,8 @@ from .utils import get_params_from_function
 
 _original_except_hook = sys.excepthook
 _typer_developer_exception_attr_name = "__typer_developer_exception__"
+_P = ParamSpec("_P")
+_T = TypeVar("_T")
 
 
 def except_hook(
@@ -96,6 +99,13 @@ def except_hook(
     for line in tb_exc.format():
         print(line, file=sys.stderr)
     return
+
+
+def wrap_async_command(app: "Typer", func: Callable[_P, Awaitable[_T]]) -> Callable[_P, _T]:
+    @wraps(func)
+    def wrapper(*args: _P.args, **kwargs: _P.kwargs) -> _T:
+        return app.async_runner.run(func(*args, **kwargs))
+    return wrapper
 
 
 def get_install_completion_arguments() -> tuple[_click.Parameter, _click.Parameter]:
@@ -505,6 +515,13 @@ class Typer:
                 """
             ),
         ] = True,
+        loop_factory: Annotated[
+            asyncio.AbstractEventLoop | None,
+            Doc(
+                "Adds customizable event loop execution for commands and callbacks"
+            )
+        ] = None,
+
     ):
         self._add_completion = add_completion
         self.rich_markup_mode: MarkupMode = rich_markup_mode
@@ -534,6 +551,8 @@ class Typer:
         self.registered_groups: list[TyperInfo] = []
         self.registered_commands: list[CommandInfo] = []
         self.registered_callback: TyperInfo | None = None
+        self.loop_factory = loop_factory
+        self.async_runner = asyncio.Runner(loop_factory=loop_factory)
 
     def callback(
         self,
@@ -715,6 +734,12 @@ class Typer:
         """
 
         def decorator(f: CommandFunctionType) -> CommandFunctionType:
+            # Do not alter the original function instead alias
+            # the newly wrapped function.
+            if inspect.iscoroutinefunction(f):
+                callback = wrap_async_command(self, f)
+            else:
+                callback = f
             self.registered_callback = TyperInfo(
                 cls=cls,
                 invoke_without_command=invoke_without_command,
@@ -723,7 +748,7 @@ class Typer:
                 chain=chain,
                 result_callback=result_callback,
                 context_settings=context_settings,
-                callback=f,
+                callback=callback,
                 help=help,
                 epilog=epilog,
                 short_help=short_help,
@@ -877,12 +902,17 @@ class Typer:
             cls = TyperCommand
 
         def decorator(f: CommandFunctionType) -> CommandFunctionType:
+            if inspect.iscoroutinefunction(f):
+                callback = wrap_async_command(self, f)
+            else:
+                callback = f
+
             self.registered_commands.append(
                 CommandInfo(
                     name=name,
                     cls=cls,
                     context_settings=context_settings,
-                    callback=f,
+                    callback=callback,
                     help=help,
                     epilog=epilog,
                     short_help=short_help,
@@ -1123,7 +1153,8 @@ class Typer:
         if sys.excepthook != except_hook:
             sys.excepthook = except_hook
         try:
-            return get_command(self)(*args, **kwargs)
+            with self.async_runner:
+                return get_command(self)(*args, **kwargs)
         except Exception as e:
             # Set a custom attribute to tell the hook to show nice exceptions for user
             # code. An alternative/first implementation was a custom exception with
