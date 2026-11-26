@@ -16,11 +16,11 @@ jobs:
     continue-on-error: true
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
       - name: Checkout CPython main
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
           repository: python/cpython
@@ -33,7 +33,7 @@ jobs:
           cd ./.cpython
           ./configure && make -j $(nproc)
       - name: Setup uv
-        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        uses: astral-sh/setup-uv@v10.3.2
         with:
           version: "latest-known"
           enable-cache: true
@@ -52,7 +52,7 @@ jobs:
           COVERAGE_FILE: coverage/.coverage.ubuntu-cpython-main
           CONTEXT: ubuntu-cpython-main
       - name: Store coverage files
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: coverage-ubuntu-cpython-main
           path: coverage

@@ -2,6 +2,16 @@
 
 ## Latest Changes
 
+### Internal
+
+* 🔒️ Generate GH actions workflow lockfile and bump Zizmor. PR [#2026](https://github.com/fastapi/typer/pull/2026) by [@YuriiMotov](https://github.com/YuriiMotov).
+
+## 0.29.3 (2026-11-25)
+
+### Fixes
+
+* 🐛 Ensure that `allow_dash` works with a `Path` annotation. PR [#2029](https://github.com/fastapi/typer/pull/2029) by [@svlandeg](https://github.com/svlandeg).
+
 ## 0.29.2 (2026-11-18)
 
 ### Internal
