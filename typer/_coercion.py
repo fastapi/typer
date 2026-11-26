@@ -1,3 +1,15 @@
+__lazy_modules__ = {
+    "collections.abc",
+    "datetime",
+    "os",
+    "typer._click",
+    "typer._click.exceptions",
+    "typer._display",
+    "typer._param_types",
+    "typer._typing",
+    "typer.models",
+}
+
 import os
 from abc import ABC, abstractmethod
 from collections.abc import Callable

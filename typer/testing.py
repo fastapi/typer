@@ -1,3 +1,14 @@
+__lazy_modules__ = {
+    "collections.abc",
+    "os",
+    "shlex",
+    "sys",
+    "typer",
+    "typer._click",
+    "typer.main",
+    "types",
+}
+
 import contextlib
 import io
 import os

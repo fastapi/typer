@@ -1,3 +1,13 @@
+__lazy_modules__ = {
+    "collections.abc",
+    "contextlib",
+    "io",
+    "typer._click.exceptions",
+    "typer._click.globals",
+    "typer._click.utils",
+    "typer.exceptions",
+}
+
 import io
 from collections.abc import Callable, Iterable
 from contextlib import AbstractContextManager

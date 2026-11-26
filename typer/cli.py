@@ -1,3 +1,12 @@
+__lazy_modules__ = {
+    "importlib.util",
+    "pathlib",
+    "re",
+    "sys",
+    "typer._click",
+    "typing",
+}
+
 import importlib.util
 import re
 import sys

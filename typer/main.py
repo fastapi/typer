@@ -1,3 +1,24 @@
+__lazy_modules__ = {
+    "annotated_doc",
+    "collections.abc",
+    "functools",
+    "inspect",
+    "os",
+    "platform",
+    "shutil",
+    "subprocess",
+    "traceback",
+    "typer",
+    "typer._click.globals",
+    "typer._coercion",
+    "typer._param_types",
+    "typer._typing",
+    "typer.completion",
+    "typer.utils",
+    "types",
+    "typing",
+}
+
 import inspect
 import os
 import platform

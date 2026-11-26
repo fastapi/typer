@@ -1,3 +1,9 @@
+__lazy_modules__ = {
+    "collections.abc",
+    "typer._click._compat",
+    "typer._click.parser",
+}
+
 from collections.abc import Generator, Iterable, Iterator, Sequence
 from contextlib import contextmanager
 

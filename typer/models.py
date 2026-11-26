@@ -1,3 +1,7 @@
+__lazy_modules__ = {
+    "typer._click.shell_completion",
+}
+
 import inspect
 import io
 from collections.abc import Callable, Sequence

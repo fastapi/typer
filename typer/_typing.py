@@ -1,6 +1,12 @@
 # Adapted from pydantic 1.9.2
 # mypy: ignore-errors
 
+__lazy_modules__ = {
+    "collections.abc",
+    "numbers",
+    "types",
+}
+
 import numbers
 import types
 from collections.abc import Callable

@@ -1,3 +1,9 @@
+__lazy_modules__ = {
+    "collections.abc",
+    "re",
+    "typer._click.core",
+}
+
 import re
 from abc import ABC, abstractmethod
 from collections.abc import MutableMapping

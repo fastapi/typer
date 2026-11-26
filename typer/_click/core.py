@@ -1,3 +1,16 @@
+__lazy_modules__ = {
+    "collections.abc",
+    "inspect",
+    "os",
+    "typer._click.exceptions",
+    "typer._click.globals",
+    "typer._click.parser",
+    "typer._click.termui",
+    "typer._click.utils",
+    "typer.exceptions",
+    "types",
+}
+
 import enum
 import inspect
 import os

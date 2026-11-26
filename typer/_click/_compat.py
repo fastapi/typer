@@ -1,3 +1,13 @@
+__lazy_modules__ = {
+    "codecs",
+    "collections.abc",
+    "os",
+    "typer._click._winconsole",
+    "types",
+    "typing",
+    "weakref",
+}
+
 import codecs
 import io
 import os

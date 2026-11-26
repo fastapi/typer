@@ -1,3 +1,7 @@
+__lazy_modules__ = {
+    "typer._click.utils",
+}
+
 from collections.abc import Callable
 from typing import TYPE_CHECKING, Any, ParamSpec, TypeVar
 
