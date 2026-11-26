@@ -2,6 +2,10 @@
 
 ## Latest Changes
 
+### Internal
+
+* 🔒️ Generate GH actions workflow lockfile and bump Zizmor. PR [#2026](https://github.com/fastapi/typer/pull/2026) by [@YuriiMotov](https://github.com/YuriiMotov).
+
 ## 0.29.3 (2026-11-25)
 
 ### Fixes
