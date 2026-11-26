@@ -101,10 +101,13 @@ def except_hook(
     return
 
 
-def wrap_async_command(app: "Typer", func: Callable[_P, Awaitable[_T]]) -> Callable[_P, _T]:
+def wrap_async_command(
+    app: "Typer", func: Callable[_P, Awaitable[_T]]
+) -> Callable[_P, _T]:
     @wraps(func)
     def wrapper(*args: _P.args, **kwargs: _P.kwargs) -> _T:
         return app.async_runner.run(func(*args, **kwargs))
+
     return wrapper
 
 
@@ -517,11 +520,8 @@ class Typer:
         ] = True,
         loop_factory: Annotated[
             asyncio.AbstractEventLoop | None,
-            Doc(
-                "Adds customizable event loop execution for commands and callbacks"
-            )
+            Doc("Adds customizable event loop execution for commands and callbacks"),
         ] = None,
-
     ):
         self._add_completion = add_completion
         self.rich_markup_mode: MarkupMode = rich_markup_mode
